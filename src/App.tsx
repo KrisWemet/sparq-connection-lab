@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Quiz from "./pages/Quiz";
 import Journeys from "./pages/Journeys";
 import NotFound from "./pages/NotFound";
+import DailyActivity from "./pages/DailyActivity";
 
 // Create a client outside of the component
 const queryClient = new QueryClient({
@@ -32,6 +33,7 @@ export default function App() {
               <Route path="/" element={<Index />} />
               <Route path="/quiz" element={<Quiz />} />
               <Route path="/journeys" element={<Journeys />} />
+              <Route path="/daily-activity" element={<DailyActivity />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
