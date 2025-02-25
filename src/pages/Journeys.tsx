@@ -6,9 +6,11 @@ import { BottomNav } from "@/components/bottom-nav";
 import { ChevronLeft, Crown, MessageSquare, Search, BookOpen, Star, Clock, Pencil, Share2, HeartHandshake } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Journeys() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const { data: journeys, isLoading } = useQuery({
     queryKey: ['journeys'],
     queryFn: async () => {
@@ -22,6 +24,36 @@ export default function Journeys() {
   });
 
   const journey = journeys?.[0]; // For now, showing the first journey
+
+  const handleStartJourney = async () => {
+    if (!journey?.id) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('user_journeys')
+        .insert([
+          { journey_id: journey.id }
+        ])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      toast({
+        title: "Journey Started!",
+        description: "You've begun your Vision & Values Journey.",
+      });
+
+      // Navigate to the first question or overview
+      console.log("Journey started:", data);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to start journey. Please try again.",
+      });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -71,17 +103,27 @@ export default function Journeys() {
                 </div>
               )}
               <span className="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded-full">
-                25 days
+                28 days
               </span>
               <span className="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded-full">
                 Values & Goals
               </span>
             </div>
             <p className="text-lg text-gray-900 leading-relaxed">
-              Looking to align your dreams and life goals as a couple? Over the next 25 days, uncover your shared vision and create a strong foundation of core values that guide your future together.
+              Welcome to the Vision & Values Journey—a transformative 28-day program designed to help you and your partner explore your core values, enhance communication, and build a shared vision for your future.
             </p>
           </div>
         </div>
+
+        <section className="mt-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Benefits</h2>
+          <div className="space-y-3">
+            <p className="text-gray-600">• Deep Self-Discovery: Uncover your personal core values and the life experiences that shaped them.</p>
+            <p className="text-gray-600">• Enhanced Communication: Build trust and intimacy by openly sharing your personal stories and aspirations.</p>
+            <p className="text-gray-600">• Practical Application: Learn to recognize and reinforce how your values influence real-life decisions.</p>
+            <p className="text-gray-600">• Shared Vision & Goals: Develop a collaborative vision statement and set actionable goals.</p>
+          </div>
+        </section>
 
         <section className="mt-12">
           <h2 className="text-2xl font-semibold text-primary mb-8">How it works</h2>
@@ -90,39 +132,39 @@ export default function Journeys() {
               <div className="w-12 h-12 rounded-full bg-[#E2E5FF] flex items-center justify-center mb-4">
                 <Pencil className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Begin</h3>
-              <p className="text-gray-600">Start with a series of daily prompts that spark initial ideas about your personal and shared dreams.</p>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Phase 1: Begin (Days 1-7)</h3>
+              <p className="text-gray-600">Start with individual discovery and self-reflection. Identify your personal core values and see them in action during your day.</p>
             </div>
 
             <div className="bg-primary-100 rounded-2xl p-6">
               <div className="w-12 h-12 rounded-full bg-[#E2E5FF] flex items-center justify-center mb-4">
                 <Share2 className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Share</h3>
-              <p className="text-gray-600">Exchange your thoughts with your partner—openly discuss what values and goals matter most to each of you.</p>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Phase 2: Share (Days 8-14)</h3>
+              <p className="text-gray-600">Exchange your personal discoveries with your partner to build mutual understanding through structured activities and conversations.</p>
             </div>
 
             <div className="bg-primary-100 rounded-2xl p-6">
               <div className="w-12 h-12 rounded-full bg-[#E2E5FF] flex items-center justify-center mb-4">
                 <Search className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Reflect</h3>
-              <p className="text-gray-600">Review your combined answers to identify common themes and differences, gaining clarity on where you both stand.</p>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Phase 3: Reflect (Days 15-21)</h3>
+              <p className="text-gray-600">Review your combined insights, analyze patterns, and identify how your values shape your relationship dynamics.</p>
             </div>
 
             <div className="bg-primary-100 rounded-2xl p-6">
               <div className="w-12 h-12 rounded-full bg-[#E2E5FF] flex items-center justify-center mb-4">
                 <HeartHandshake className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Align</h3>
-              <p className="text-gray-600">Integrate your insights into a unified vision and set clear, shared goals that mark your journey's destination.</p>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Phase 4: Align (Days 22-28)</h3>
+              <p className="text-gray-600">Create your Vision & Values Manifesto—a clear, actionable roadmap that will guide your shared future together.</p>
             </div>
           </div>
         </section>
 
         <Button 
           className="w-full mt-12 py-6 text-lg bg-primary hover:bg-primary/90"
-          onClick={() => console.log("Starting journey", journey?.id)}
+          onClick={handleStartJourney}
         >
           <Crown className="w-5 h-5 mr-2" />
           Try Paired Premium
