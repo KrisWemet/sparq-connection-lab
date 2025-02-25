@@ -1,9 +1,9 @@
-
 import { Award, ChevronRight, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Question } from "@/types/quiz";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface QuestionViewProps {
   currentQuestion: Question;
@@ -22,7 +22,13 @@ export function QuestionView({
   onCustomAnswerChange,
   onNudgePartner
 }: QuestionViewProps) {
+  const navigate = useNavigate();
   const isMultipleChoice = currentQuestion.options && currentQuestion.options.length > 0;
+
+  const handleAnswer = (answer: string) => {
+    onAnswerSubmit(answer);
+    navigate('/daily-activity');
+  };
 
   return (
     <div className="space-y-6">
@@ -58,7 +64,7 @@ export function QuestionView({
                   key={index}
                   variant="outline"
                   className="w-full justify-between text-left font-normal hover:text-primary hover:border-primary"
-                  onClick={() => onAnswerSubmit(option)}
+                  onClick={() => handleAnswer(option)}
                 >
                   {option}
                   <ChevronRight className="w-4 h-4" />
@@ -83,7 +89,7 @@ export function QuestionView({
               />
               <Button 
                 className="w-full"
-                onClick={() => onAnswerSubmit(customAnswer.trim())}
+                onClick={() => handleAnswer(customAnswer.trim())}
                 disabled={!customAnswer.trim()}
               >
                 Submit Your Answer
@@ -101,7 +107,7 @@ export function QuestionView({
               />
               <Button 
                 className="w-full"
-                onClick={() => onAnswerSubmit(customAnswer.trim())}
+                onClick={() => handleAnswer(customAnswer.trim())}
                 disabled={!customAnswer.trim()}
               >
                 Submit Your Answer
