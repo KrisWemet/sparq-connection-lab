@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { Journey } from "@/types/quiz";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,11 +25,25 @@ export default function Journeys() {
 
   const handleStartJourney = async () => {
     if (!journey?.id) return;
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast({
+        variant: "destructive",
+        title: "Authentication Required",
+        description: "Please sign in to start a journey."
+      });
+      return;
+    }
+
     try {
       const { data, error } = await supabase
         .from('user_journeys')
         .insert([
-          { journey_id: journey.id }
+          { 
+            journey_id: journey.id,
+            user_id: user.id 
+          }
         ])
         .select()
         .single();
