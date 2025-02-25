@@ -63,6 +63,11 @@ const actionRoadmap = [
 export default function Index() {
   const navigate = useNavigate();
 
+  const scrollToPathToTogether = () => {
+    const section = document.getElementById('path-to-together');
+    section?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
       <div className="sticky top-0 z-50 bg-white border-b">
@@ -85,7 +90,7 @@ export default function Index() {
           <p className="text-gray-600 mb-8">
             Strengthen your bond through meaningful conversations and shared experiences
           </p>
-          <Button size="lg" className="bg-primary hover:bg-primary/90">
+          <Button size="lg" className="bg-primary hover:bg-primary/90" onClick={scrollToPathToTogether}>
             <HeartHandshake className="mr-2" />
             Begin Your Journey
           </Button>
@@ -146,7 +151,7 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="mt-12">
+        <section className="mt-12" id="path-to-together">
           <h2 className="text-2xl font-semibold text-gray-800 mb-6">Path to Together</h2>
           <div className="overflow-x-auto -mx-4 px-4 pb-6">
             <div className="flex gap-4">
@@ -172,3 +177,4 @@ export default function Index() {
     </div>
   );
 }
+
