@@ -71,4 +71,3 @@ export type PsychologyModality =
   | "Gottman Method"
   | "Emotional Focused Therapy"
   | "Attachment Theory";
-

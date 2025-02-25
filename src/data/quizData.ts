@@ -2,133 +2,124 @@
 import { Question, WeekendActivity } from "@/types/quiz";
 
 export const weekdayQuestions: Question[] = [
-  // Level 1 - Light & Playful
+  // Phase 1: Begin (Days 1-7)
   {
     id: 1,
-    category: "Physical Connection",
-    text: "What's a tiny touch (like brushing hands) that makes your heart feel lighter?",
+    category: "Core Values Discovery",
+    text: "What are 5-7 core values that define who you are? (e.g., honesty, compassion, creativity)",
     timeSlot: "AM",
     dayOfWeek: "MON",
     intimacyLevel: 1,
-    modality: "Love Languages",
-    explanation: "Based on Physical Touch love language, focusing on small but meaningful gestures"
+    modality: "Positive Psychology",
+    explanation: "Identifying personal core values is the foundation for self-awareness and relationship growth"
   },
   {
     id: 2,
-    category: "Communication",
-    text: "What's a moment when your partner's words made you feel truly understood?",
+    category: "Values in Action",
+    text: "Describe a moment today when one of your core values influenced a decision you made.",
     timeSlot: "PM",
     dayOfWeek: "MON",
     intimacyLevel: 1,
-    modality: "Nonviolent Communication",
-    explanation: "Emphasizes empathetic listening and expression of feelings"
+    modality: "CBT",
+    explanation: "Recognizing how values guide daily choices strengthens authentic living"
   },
-  
-  // Level 2 - Building Trust
   {
     id: 3,
-    category: "Emotional Connection",
-    text: "What's a pattern from your past relationships that you notice showing up in our relationship?",
+    category: "Value Origins",
+    text: "Think of one core value you listed. What life experience made this value important to you?",
     timeSlot: "AM",
     dayOfWeek: "TUE",
     intimacyLevel: 2,
-    modality: "Attachment Theory",
-    explanation: "Explores how past relationships influence current attachment patterns"
+    modality: "Narrative Therapy",
+    explanation: "Understanding the origins of our values helps us connect them to our life story"
   },
   {
     id: 4,
-    category: "Trust & Vulnerability",
-    text: "When do you feel most securely attached to me?",
+    category: "Value Priorities",
+    text: "Looking at your core values, which one feels most central to who you are right now?",
     timeSlot: "PM",
     dayOfWeek: "TUE",
     intimacyLevel: 2,
-    modality: "Emotional Focused Therapy",
-    explanation: "Focuses on emotional bonds and attachment needs"
+    modality: "Motivational Interviewing",
+    explanation: "Prioritizing values helps guide life decisions and relationship choices"
   },
-
-  // Level 3 - Deeper Connection
   {
     id: 5,
-    category: "Emotional Intimacy",
-    text: "What story about us do you love retelling to others?",
+    category: "Values & Aspirations",
+    text: "What's one personal dream or aspiration that connects directly to one of your top values?",
     timeSlot: "AM",
     dayOfWeek: "WED",
     intimacyLevel: 3,
-    modality: "Narrative Therapy",
-    explanation: "Uses storytelling to understand relationship dynamics"
+    modality: "Positive Psychology",
+    explanation: "Linking values to aspirations creates meaningful life direction"
   },
   {
     id: 6,
-    category: "Trust & Support",
-    text: "What's a thought pattern about our relationship you'd like to reframe?",
+    category: "Past Decisions",
+    text: "Recall a significant life decision you made. How did your values influence that choice?",
     timeSlot: "PM",
     dayOfWeek: "WED",
     intimacyLevel: 3,
-    modality: "CBT",
-    explanation: "Identifies and reshapes thought patterns affecting the relationship"
+    modality: "Narrative Therapy",
+    explanation: "Reflecting on past decisions reveals our values in action"
   },
-
-  // Level 4 - Vulnerability
   {
     id: 7,
-    category: "Boundaries & Trust",
-    text: "What's one way we could turn towards each other more in daily moments?",
+    category: "Values Visualization",
+    text: "If you had to create a symbol or image that represents your core values, what would it be?",
     timeSlot: "AM",
     dayOfWeek: "THU",
-    intimacyLevel: 4,
-    modality: "Gottman Method",
-    explanation: "Based on turning towards bids for connection"
+    intimacyLevel: 2,
+    modality: "Narrative Therapy",
+    explanation: "Visual representation of values enhances emotional connection"
   },
   {
     id: 8,
-    category: "Physical & Emotional",
-    text: "What strengths do you see in our relationship that we can build on?",
+    category: "Reflection & Integration",
+    text: "What's the most surprising insight you've gained about your values this week?",
     timeSlot: "PM",
     dayOfWeek: "THU",
-    intimacyLevel: 4,
-    modality: "Positive Psychology",
-    explanation: "Focuses on strengths and positive aspects of the relationship"
+    intimacyLevel: 3,
+    modality: "Nonviolent Communication",
+    explanation: "Integration of insights strengthens self-awareness"
   },
-
-  // Level 5 - Deep Intimacy
   {
     id: 9,
-    category: "Sacred Connection",
-    text: "How can we create a deeper sense of safety in our most vulnerable moments?",
+    category: "Value Challenges",
+    text: "What's one situation where it's challenging to live by your values? How do you handle it?",
     timeSlot: "AM",
     dayOfWeek: "FRI",
-    intimacyLevel: 5,
-    modality: "Imago Therapy",
-    explanation: "Creates safe space for deep emotional connection"
+    intimacyLevel: 4,
+    modality: "CBT",
+    explanation: "Identifying challenges helps develop coping strategies"
   },
   {
     id: 10,
-    category: "Lasting Bond",
-    text: "What's one change you'd like to make in our relationship, and how can we work towards it together?",
+    category: "Future Vision",
+    text: "How do you want your values to shape your life and relationships in the next year?",
     timeSlot: "PM",
     dayOfWeek: "FRI",
-    intimacyLevel: 5,
+    intimacyLevel: 4,
     modality: "Motivational Interviewing",
-    explanation: "Explores motivation and commitment to relationship growth"
+    explanation: "Future visioning creates motivation for value-aligned living"
   }
 ];
 
 export const weekendActivities: WeekendActivity[] = [
   {
     id: 1,
-    title: "Mindful Connection Practice",
-    description: "Create a dedicated space and time for mindful presence with each other. Take turns sharing what you notice in the present moment about your partner.",
-    category: "Physical & Emotional Connection",
-    modality: "Mindfulness",
-    explanation: "Uses mindfulness techniques to deepen present-moment awareness and connection"
+    title: "Values Story Sharing",
+    description: "Set aside 30 minutes to share the stories behind your core values with each other. Take turns explaining how specific life experiences shaped what matters most to you.",
+    category: "Deep Connection",
+    modality: "Narrative Therapy",
+    explanation: "Sharing personal stories builds intimacy and understanding"
   },
   {
     id: 2,
-    title: "Reciprocity Building",
-    description: "Each partner takes turns sharing a small request that would make them feel more loved, using the principle of fair exchange.",
-    category: "Physical Connection",
-    modality: "Influence & Persuasion",
-    explanation: "Based on Cialdini's principle of reciprocity to strengthen relationship bonds"
+    title: "Values Vision Board",
+    description: "Create a shared vision board that represents both of your core values and how they complement each other. Use images, words, or symbols that speak to your shared future.",
+    category: "Creative Expression",
+    modality: "Positive Psychology",
+    explanation: "Visual representation of shared values strengthens couple identity"
   }
 ];
-
