@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { Journey } from "@/types/quiz";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,41 +6,40 @@ import { ChevronLeft, Crown, MessageSquare, Search, BookOpen, Star, Clock, Penci
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
-
 export default function Journeys() {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const { data: journeys, isLoading } = useQuery({
+  const {
+    toast
+  } = useToast();
+  const {
+    data: journeys,
+    isLoading
+  } = useQuery({
     queryKey: ['journeys'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('journeys')
-        .select('*');
-      
+      const {
+        data,
+        error
+      } = await supabase.from('journeys').select('*');
       if (error) throw error;
       return data as Journey[];
     }
   });
-
   const journey = journeys?.[0]; // For now, showing the first journey
 
   const handleStartJourney = async () => {
     if (!journey?.id) return;
-    
     try {
-      const { data, error } = await supabase
-        .from('user_journeys')
-        .insert([
-          { journey_id: journey.id }
-        ])
-        .select()
-        .single();
-
+      const {
+        data,
+        error
+      } = await supabase.from('user_journeys').insert([{
+        journey_id: journey.id
+      }]).select().single();
       if (error) throw error;
-
       toast({
         title: "Journey Started!",
-        description: "You've begun your Vision & Values Journey.",
+        description: "You've begun your Vision & Values Journey."
       });
 
       // Navigate to the first question or overview
@@ -50,36 +48,26 @@ export default function Journeys() {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to start journey. Please try again.",
+        description: "Failed to start journey. Please try again."
       });
     }
   };
-
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 pb-24">
+    return <div className="min-h-screen bg-gray-50 pb-24">
         <main className="container max-w-lg mx-auto px-4 pt-8 animate-pulse">
           <div className="h-8 bg-gray-200 rounded w-3/4 mb-4" />
           <div className="h-32 bg-gray-200 rounded mb-8" />
           <div className="space-y-4">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-24 bg-gray-200 rounded" />
-            ))}
+            {[1, 2, 3, 4].map(i => <div key={i} className="h-24 bg-gray-200 rounded" />)}
           </div>
         </main>
         <BottomNav />
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="min-h-screen bg-white pb-24">
+  return <div className="min-h-screen bg-white pb-24">
       <header className="sticky top-0 z-50 bg-white border-b">
         <div className="container max-w-lg mx-auto px-4 py-3 flex items-center">
-          <button 
-            onClick={() => navigate(-1)}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
+          <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
             <ChevronLeft className="w-6 h-6" />
           </button>
           <h1 className="text-xl font-semibold text-gray-900 mx-auto">
@@ -95,13 +83,9 @@ export default function Journeys() {
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
-              {journey?.difficulty && (
-                <div className="flex items-center text-amber-500">
-                  {[...Array(journey.difficulty)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-current" />
-                  ))}
-                </div>
-              )}
+              {journey?.difficulty && <div className="flex items-center text-amber-500">
+                  {[...Array(journey.difficulty)].map((_, i) => <Star key={i} className="w-4 h-4 fill-current" />)}
+                </div>}
               <span className="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded-full">
                 28 days
               </span>
@@ -162,15 +146,8 @@ export default function Journeys() {
           </div>
         </section>
 
-        <Button 
-          className="w-full mt-12 py-6 text-lg bg-primary hover:bg-primary/90"
-          onClick={handleStartJourney}
-        >
-          <Crown className="w-5 h-5 mr-2" />
-          Try Paired Premium
-        </Button>
+        
       </main>
       <BottomNav />
-    </div>
-  );
+    </div>;
 }
