@@ -1,179 +1,145 @@
-
-import { HeartHandshake } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { ActivityCard } from "@/components/activity-card";
-import { CategoryCard } from "@/components/category-card";
-import { BottomNav } from "@/components/bottom-nav";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const categories = [
-  {
-    title: "Making Long-Distance Work",
-    image: "/lovable-uploads/c083302d-9da5-416b-a8ac-4e5a4c6285d1.png"
-  },
-  {
-    title: "Communication",
-    image: "/lovable-uploads/4598ee82-a0b5-40df-8e9d-14bc621abde2.png"
-  },
-  {
-    title: "Trust & Support",
-    image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=800&h=600"
-  },
-  {
-    title: "Future Goals",
-    image: "https://images.unsplash.com/photo-1501286353178-1ec871214838?auto=format&fit=crop&w=800&h=600"
-  },
-  {
-    title: "Shared Activities",
-    image: "https://images.unsplash.com/photo-1466721591366-2d5fba72006d?auto=format&fit=crop&w=800&h=600"
-  }
-];
-
-const actionRoadmap = [
-  {
-    title: "Vision & Values Journey",
-    image: "/lovable-uploads/18894602-f224-4cab-8f07-f6701ec2b7f4.png",
-    steps: "4 steps",
-    description: "Define your shared vision and values as a couple"
-  },
-  {
-    title: "How to Be a Better Partner",
-    image: "/lovable-uploads/18894602-f224-4cab-8f07-f6701ec2b7f4.png",
-    steps: "5 steps"
-  },
-  {
-    title: "The Five Love Languages",
-    image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=800&h=600",
-    steps: "5 steps",
-    description: "Discover and explore each other's love languages to deepen your connection"
-  },
-  {
-    title: "36 Questions to Fall in Love",
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?auto=format&fit=crop&w=800&h=600",
-    steps: "3 sets",
-    description: "Dr. Arthur Aron's famous questions that can create closeness between two people"
-  },
-  {
-    title: "Building Trust Together",
-    image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=800&h=600",
-    steps: "4 steps"
-  }
-];
+import { HeartHandshake, AlertCircle, Heart, Sparkles, Target, MessageCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/auth-provider";
 
 export default function Index() {
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
+  const [error, setError] = useState<string | null>(null);
 
-  const scrollToPathToTogether = () => {
-    const section = document.getElementById('path-to-together');
-    section?.scrollIntoView({ behavior: 'smooth' });
-  };
+  // Redirect to dashboard if already logged in
+  useEffect(() => {
+    if (!loading && user) {
+      navigate("/dashboard");
+    }
+  }, [user, loading, navigate]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+        <div className="text-center mb-8 animate-pulse">
+          <HeartHandshake className="w-16 h-16 text-primary mx-auto mb-4" />
+          <h1 className="text-3xl font-bold text-gray-900">Sparq Connect</h1>
+          <p className="text-gray-600 mt-2">
+            Loading...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
-      <div className="sticky top-0 z-50 bg-white border-b">
-        <div className="container max-w-lg mx-auto px-4 py-3 flex items-center">
-          <button 
-            onClick={() => navigate("/")}
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-          >
-            <HeartHandshake className="w-8 h-8 text-primary" />
-            <span className="font-semibold text-xl text-primary">Sparq</span>
-          </button>
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <div className="relative bg-gradient-to-b from-pink-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">
+        <div className="container max-w-6xl mx-auto px-4 py-24 sm:py-32">
+          <div className="text-center mb-12">
+            <div className="flex justify-center mb-6">
+              <div className="bg-white rounded-full p-4 shadow-md">
+                <HeartHandshake className="w-12 h-12 text-primary" />
+              </div>
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
+              Sparq Connect
+            </h1>
+            <p className="mt-6 text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              Strengthen your relationship with meaningful conversations, shared goals, and science-backed activities.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg" 
+                onClick={() => navigate("/auth")}
+                className="text-md px-8"
+              >
+                Get Started
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                onClick={() => navigate("/auth")}
+                className="text-md px-8"
+              >
+                Sign In
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <main className="container max-w-lg mx-auto px-4 pt-8 animate-slide-up">
-        <header className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Ignite Your Love Story
-          </h1>
-          <p className="text-gray-600 mb-8">
-            Strengthen your bond through meaningful conversations and shared experiences
-          </p>
-          <Button size="lg" className="bg-primary hover:bg-primary/90" onClick={scrollToPathToTogether}>
-            <HeartHandshake className="mr-2" />
-            Begin Your Journey
-          </Button>
-        </header>
-
-        <section className="space-y-6">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Daily Connection</h2>
+      {/* Features Section */}
+      <div className="py-16 bg-white dark:bg-gray-900">
+        <div className="container max-w-6xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+            Why Sparq Connect Works
+          </h2>
           
-          <ActivityCard 
-            title="Daily Relationship Quiz" 
-            type="quiz"
-            description="Mon-Fri: Two relationship questions daily (AM & PM). Weekend Connection Challenge on Sat & Sun. Complete today's quiz to earn points!"
-            progress={75}
-            actionLabel="Start Quiz"
-            onAction={() => navigate("/quiz")}
-          />
-
-          <ActivityCard 
-            title="Conversation Starter" 
-            type="question"
-            description="What's your idea of a perfect weekend together? Share your thoughts and dreams."
-            onAction={() => console.log("Answer opened")}
-            actionLabel="Share Answer"
-          />
-
-          <ActivityCard 
-            title="Love Language Game" 
-            type="game"
-            description="A fun way to learn and practice each other's love languages through interactive challenges."
-            locked
-            actionLabel="Play Game"
-            onAction={() => console.log("Game started")}
-          />
-
-          <ActivityCard 
-            title="Expert Tips & Exercises" 
-            type="quiz"
-            description="Research-based relationship exercises from relationship experts."
-            locked
-            actionLabel="View Exercises"
-            onAction={() => console.log("Exercises opened")}
-          />
-        </section>
-
-        <section className="mt-12">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Quiz Categories</h2>
-          <div className="overflow-x-auto -mx-4 px-4 pb-6">
-            <div className="flex gap-4">
-              {categories.map((category) => (
-                <CategoryCard
-                  key={category.title}
-                  title={category.title}
-                  imagePath={category.image}
-                  onClick={() => navigate("/quiz")}
-                />
-              ))}
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="p-6 rounded-lg bg-blue-50 dark:bg-gray-800">
+              <div className="bg-blue-100 dark:bg-blue-900/30 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+                <MessageCircle className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Daily Conversations</h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                Thoughtfully crafted questions that help you connect on a deeper level with your partner.
+              </p>
+            </div>
+            
+            <div className="p-6 rounded-lg bg-pink-50 dark:bg-gray-800">
+              <div className="bg-pink-100 dark:bg-pink-900/30 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+                <Heart className="w-6 h-6 text-pink-600 dark:text-pink-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Relationship Journeys</h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                Science-backed paths that help you grow together through intentional activities and reflection.
+              </p>
+            </div>
+            
+            <div className="p-6 rounded-lg bg-purple-50 dark:bg-gray-800">
+              <div className="bg-purple-100 dark:bg-purple-900/30 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+                <Sparkles className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Relationship Insights</h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                Track your progress and gain insights into your relationship strengths and growth areas.
+              </p>
             </div>
           </div>
-        </section>
-
-        <section className="mt-12" id="path-to-together">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Path to Together</h2>
-          <div className="overflow-x-auto -mx-4 px-4 pb-6">
-            <div className="flex gap-4">
-              {actionRoadmap.map((action) => (
-                <CategoryCard
-                  key={action.title}
-                  title={action.title}
-                  imagePath={action.image}
-                  onClick={() => navigate("/journeys")}
-                  className="relative"
-                >
-                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-purple-700">
-                    {action.steps}
-                  </div>
-                </CategoryCard>
-              ))}
+        </div>
+      </div>
+      
+      {/* Call to Action */}
+      <div className="py-16 bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+        <div className="container max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold mb-4">Ready to strengthen your relationship?</h2>
+          <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
+            Join thousands of couples who are deepening their connection and building stronger relationships.
+          </p>
+          <Button 
+            size="lg" 
+            onClick={() => navigate("/auth")}
+            className="bg-white text-indigo-600 hover:bg-white/90 text-md px-8"
+          >
+            Create Free Account
+          </Button>
+        </div>
+      </div>
+      
+      {/* Footer */}
+      <footer className="py-8 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="flex items-center mb-4 md:mb-0">
+              <HeartHandshake className="w-6 h-6 text-primary mr-2" />
+              <span className="font-semibold text-gray-900 dark:text-white">Sparq Connect</span>
+            </div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">
+              &copy; {new Date().getFullYear()} Sparq Connect. All rights reserved.
             </div>
           </div>
-        </section>
-      </main>
-
-      <BottomNav />
+        </div>
+      </footer>
     </div>
   );
 }

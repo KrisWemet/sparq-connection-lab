@@ -1,20 +1,19 @@
-
-import { Heart, Home, Search, Calendar, MessageCircle } from "lucide-react";
+import { Home, MessageCircle, Target, Calendar, Settings, User2 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
-  { icon: Home, label: "Home", path: "/" },
-  { icon: Search, label: "Explore", path: "/explore" },
-  { icon: MessageCircle, label: "Answers", path: "/answers" },
-  { icon: Calendar, label: "Timeline", path: "/timeline" },
-  { icon: Heart, label: "Us", path: "/us" },
+  { icon: Home, label: "Home", path: "/dashboard" },
+  { icon: MessageCircle, label: "Messages", path: "/messaging" },
+  { icon: Target, label: "Goals", path: "/goals" },
+  { icon: Calendar, label: "Dates", path: "/date-ideas" },
+  { icon: User2, label: "Profile", path: "/profile" },
 ];
 
 export function BottomNav() {
   const location = useLocation();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 py-3 px-6 flex justify-between items-center">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 py-3 px-6 flex justify-between items-center z-50">
       {navItems.map((item) => (
         <Link
           key={item.label}

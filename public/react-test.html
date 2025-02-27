@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React CDN Test</title>
+  <!-- React from CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    .container {
+      background-color: #f9fafb;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .btn {
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .btn:hover {
+      background-color: #2563eb;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>React CDN Test</h1>
+    <p>This page uses React loaded directly from a CDN</p>
+    
+    <!-- Root container for React app -->
+    <div id="react-root"></div>
+    
+    <div style="margin-top: 20px">
+      <h2>Links to Test:</h2>
+      <ul>
+        <li><a href="/">Main App</a></li>
+        <li><a href="/static-test.html">Static Test Page</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Simple React component
+    const { useState } = React;
+    
+    function Counter() {
+      const [count, setCount] = useState(0);
+      
+      return React.createElement('div', null, [
+        React.createElement('h2', { key: 'title' }, 'React Counter Component'),
+        React.createElement('p', { key: 'count' }, `Current count: ${count}`),
+        React.createElement(
+          'button', 
+          { 
+            key: 'button',
+            className: 'btn', 
+            onClick: () => setCount(count + 1)
+          }, 
+          'Increment'
+        ),
+        React.createElement('p', { key: 'info' }, 'If this counter works, React is functioning correctly in your browser.')
+      ]);
+    }
+    
+    // Render the component
+    const rootElement = document.getElementById('react-root');
+    if (rootElement) {
+      const root = ReactDOM.createRoot(rootElement);
+      root.render(React.createElement(Counter));
+      console.log('React component rendered successfully');
+    } else {
+      console.error('Could not find root element');
+    }
+    
+    // Log browser information
+    console.log('Browser information:', {
+      userAgent: navigator.userAgent,
+      language: navigator.language,
+      platform: navigator.platform,
+      vendor: navigator.vendor
+    });
+  </script>
+</body>
+</html> 
