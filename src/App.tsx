@@ -32,6 +32,8 @@ import JourneyDetails from "./pages/JourneyDetails";
 import JourneyStart from "./pages/JourneyStart";
 import Admin from "./pages/Admin";
 import TestPage from "./pages/TestPage";
+import JoinPartner from "./pages/JoinPartner";
+import LoveLanguagesJourney from "./pages/journeys/LoveLanguagesJourney";
 
 console.log("App component loaded");
 
@@ -157,6 +159,16 @@ export default function App() {
                       <ProtectedRoute>
                         <JourneyStart />
                       </ProtectedRoute>
+                    } />
+                    <Route path="/journey/love-languages" element={
+                      <ProtectedRoute>
+                        <LoveLanguagesJourney />
+                      </ProtectedRoute>
+                    } />
+                    
+                    {/* Partner invitation route */}
+                    <Route path="/join/:inviteCode" element={
+                      <JoinPartner />
                     } />
                     
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

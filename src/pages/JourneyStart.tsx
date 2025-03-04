@@ -22,6 +22,258 @@ import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar } from "@/components/ui/avatar";
 import { AnimatedContainer } from "@/components/ui/animated-container";
+import { sexualityJourneyData } from "@/data/relationshipContent";
+import { journeys } from "../data/journeys";
+
+interface JourneyStep {
+  title: string;
+  description: string;
+  steps: string[];
+  quote: string;
+}
+
+interface JourneyActivity extends JourneyStep {
+  video?: string;
+  funActivity?: {
+    title: string;
+    instructions: string;
+    examples: string[];
+    reflection: string;
+  };
+  questions?: string[];
+}
+
+interface JourneyIntro {
+  title: string;
+  description: string;
+  icon: JSX.Element;
+  color: string;
+  intro: string;
+  firstActivity: JourneyActivity;
+}
+
+interface StoredAnswer {
+  answer: string;
+  timestamp: string;
+  author: 'You' | 'Partner';
+}
+
+// Helper functions for generating journey-specific activities
+const generateLoveLanguagesActivity = (day: number, phase: any) => {
+  const activities = {
+    1: {
+      title: "Understanding Love Languages",
+      description: "Discover the five different ways people express and receive love",
+      steps: [
+        "Learn about the five love languages",
+        "Reflect on how you prefer to receive love",
+        "Notice love language moments in your day",
+        "Share your observations with your partner"
+      ],
+      quote: "Love is not one-size-fits-all. Understanding how we each experience love is the key to a deeper connection."
+    }
+  };
+
+  return activities[day] || {
+    title: `Day ${day}: Exploring Love Languages`,
+    description: phase?.description || "Discovering how you give and receive love",
+    steps: [
+      "Observe love languages in action",
+      "Practice expressing love in your partner's language",
+      "Reflect on your experiences",
+      "Plan future expressions of love"
+    ],
+    quote: "Understanding your partner's love language is like finding the key to their heart."
+  };
+};
+
+const generateCommunicationActivity = (day: number, phase: any) => {
+  const activities = {
+    1: {
+      title: "Active Listening Foundations",
+      description: "Learn the basics of truly hearing and understanding your partner",
+      steps: [
+        "Practice focused attention without interrupting",
+        "Use reflective listening techniques",
+        "Notice non-verbal cues",
+        "Share your experience of being heard"
+      ],
+      quote: "The biggest communication problem is we do not listen to understand. We listen to reply."
+    }
+  };
+
+  return activities[day] || {
+    title: `Day ${day}: Building Communication Skills`,
+    description: phase?.description || "Enhancing your connection through better communication",
+    steps: [
+      "Practice active listening",
+      "Express feelings using 'I' statements",
+      "Validate your partner's perspective",
+      "Create shared understanding"
+    ],
+    quote: "Every conversation is an opportunity to deepen your connection."
+  };
+};
+
+const generateConflictActivity = (day: number, phase: any) => {
+  const activities = {
+    1: {
+      title: "Understanding Conflict Patterns",
+      description: "Identify your typical responses to disagreements",
+      steps: [
+        "Recognize your conflict triggers",
+        "Notice your emotional responses",
+        "Practice self-regulation techniques",
+        "Share insights with your partner"
+      ],
+      quote: "Conflict is growth trying to happen."
+    }
+  };
+
+  return activities[day] || {
+    title: `Day ${day}: Healthy Conflict Resolution`,
+    description: phase?.description || "Transform conflicts into opportunities for growth",
+    steps: [
+      "Practice emotional awareness",
+      "Use repair attempts during disagreements",
+      "Focus on understanding, not winning",
+      "Build solutions together"
+    ],
+    quote: "Behind every complaint is a deep personal longing."
+  };
+};
+
+const generateIntimacyActivity = (day: number, phase: any) => {
+  const activities = {
+    1: {
+      title: "Building Emotional Safety",
+      description: "Create a foundation of trust and vulnerability",
+      steps: [
+        "Share a meaningful memory",
+        "Practice emotional presence",
+        "Express appreciation",
+        "Create a moment of connection"
+      ],
+      quote: "True intimacy is built on emotional safety and trust."
+    }
+  };
+
+  return activities[day] || {
+    title: `Day ${day}: Deepening Your Connection`,
+    description: phase?.description || "Strengthening your emotional and physical bond",
+    steps: [
+      "Practice emotional vulnerability",
+      "Share feelings and needs",
+      "Create intimate moments",
+      "Celebrate your connection"
+    ],
+    quote: "Intimacy is the courage to show up and let ourselves be seen."
+  };
+};
+
+const generateValuesActivity = (day: number, phase: any) => {
+  const activities = {
+    1: {
+      title: "Discovering Core Values",
+      description: "Identify what matters most to you individually",
+      steps: [
+        "Reflect on your personal values",
+        "Notice how values guide your choices",
+        "Share your values with your partner",
+        "Find common ground"
+      ],
+      quote: "When our actions align with our values, we create a life of meaning."
+    }
+  };
+
+  return activities[day] || {
+    title: `Day ${day}: Aligning Values`,
+    description: phase?.description || "Creating a shared vision based on your values",
+    steps: [
+      "Explore shared values",
+      "Set value-aligned goals",
+      "Make conscious choices",
+      "Build your future together"
+    ],
+    quote: "Shared values are the foundation of a lasting partnership."
+  };
+};
+
+const generateAppreciationActivity = (day: number, phase: any) => {
+  const activities = {
+    1: {
+      title: "Cultivating Gratitude",
+      description: "Develop the habit of noticing and expressing appreciation",
+      steps: [
+        "Notice positive moments",
+        "Express specific appreciation",
+        "Share the impact of kind actions",
+        "Create gratitude rituals"
+      ],
+      quote: "Gratitude turns what we have into enough."
+    }
+  };
+
+  return activities[day] || {
+    title: `Day ${day}: Building Appreciation`,
+    description: phase?.description || "Strengthening your bond through gratitude",
+    steps: [
+      "Practice daily appreciation",
+      "Notice partner's contributions",
+      "Share specific compliments",
+      "Celebrate your growth"
+    ],
+    quote: "In daily life we must see that it is not happiness that makes us grateful, but gratefulness that makes us happy."
+  };
+};
+
+// Add this function before it's used
+const getDayActivity = (journeyId: string, day: number) => {
+  // Get the journey data
+  const journey = journeys.find(j => j.id === journeyId);
+  if (!journey) {
+    console.error('Journey not found:', journeyId);
+    return null;
+  }
+
+  // Find which phase we're in based on the day number
+  const phase = journey.phases?.find(p => {
+    const dayRange = p.days.match(/Days (\d+)-(\d+)/);
+    if (dayRange) {
+      const [_, start, end] = dayRange;
+      return day >= parseInt(start) && day <= parseInt(end);
+    }
+    return false;
+  });
+
+  // Generate activity based on journey type and day
+  switch (journeyId) {
+    case "love-languages":
+      return generateLoveLanguagesActivity(day, phase);
+    case "communication":
+      return generateCommunicationActivity(day, phase);
+    case "conflict":
+      return generateConflictActivity(day, phase);
+    case "intimacy":
+      return generateIntimacyActivity(day, phase);
+    case "values":
+      return generateValuesActivity(day, phase);
+    case "appreciation":
+      return generateAppreciationActivity(day, phase);
+    default:
+      return {
+        title: `Day ${day}: ${phase?.description || "Continuing Your Journey"}`,
+        description: `Building on your progress from ${day === 1 ? "the beginning" : "day " + (day-1)}`,
+        steps: [
+          `Reflect on your learnings from ${day === 1 ? "previous experiences" : "day " + (day-1)}`,
+          "Practice new skills with your partner",
+          "Document your experiences and insights",
+          "Plan how to apply these lessons going forward"
+        ],
+        quote: "Every day is a new opportunity to strengthen your connection."
+      };
+  }
+};
 
 // This would normally be fetched from an API based on the journeyId
 const getJourneyIntro = (journeyId: string) => {
@@ -37,12 +289,11 @@ const getJourneyIntro = (journeyId: string) => {
           title: "Understanding the 5 Love Languages",
           description: "The concept of the 5 Love Languages was developed by Dr. Gary Chapman after years of counseling couples. He noticed patterns in how partners expressed love and what made them feel loved.",
           steps: [
-            "Watch the 5-minute introduction video",
             "Reflect on how you typically express love to others",
             "Consider moments when you've felt most loved - what made them special?",
-            "Journal your initial thoughts about which love language might be your primary one"
+            "Journal your initial thoughts about which love language might be your primary one",
+            "Share your reflections with your partner and listen to their perspective"
           ],
-          video: "", // Empty until we have a real video
           quote: "When you express love to your partner in a language that they understand, the relationship flourishes. But when you miss their language, understanding and connection break down."
         }
       };
@@ -57,12 +308,11 @@ const getJourneyIntro = (journeyId: string) => {
           title: "The Foundation of Communication",
           description: "Communication is more than just words. It involves listening, understanding, and creating a safe space for honest expression.",
           steps: [
-            "Watch the introduction to effective communication video",
             "Practice the 'speaker-listener' technique with a simple topic",
             "Reflect on your communication patterns in your journal",
-            "Identify one communication habit you'd like to improve"
+            "Identify one communication habit you'd like to improve",
+            "Share your insights with your partner and set a communication goal together"
           ],
-          video: "", // Empty until we have a real video
           quote: "The biggest communication problem is we do not listen to understand. We listen to reply."
         }
       };
@@ -77,12 +327,11 @@ const getJourneyIntro = (journeyId: string) => {
           title: "Understanding Conflict Patterns",
           description: "Conflict is natural in any relationship. The key is not to avoid it, but to handle it in ways that build trust and understanding.",
           steps: [
-            "Watch the introduction to conflict patterns video",
             "Reflect on your typical response to conflict (e.g., avoid, confront, compromise)",
             "Identify one recent conflict and write about it from your partner's perspective",
-            "Practice the pause technique when you feel triggered"
+            "Practice the pause technique when you feel triggered",
+            "Create a plan with your partner for handling future conflicts"
           ],
-          video: "", // Empty until we have a real video
           quote: "In the middle of difficulty lies opportunity. Conflict, when navigated skillfully, can be the pathway to deeper connection."
         }
       };
@@ -257,12 +506,11 @@ const getJourneyIntro = (journeyId: string) => {
           title: "Getting Started",
           description: "This journey is designed to help you develop new skills and insights for your relationship.",
           steps: [
-            "Watch the introduction video",
             "Set your intentions for this journey",
             "Reflect on what you hope to gain",
+            "Share your goals with your partner",
             "Commit to regular practice"
           ],
-          video: "", // Empty until we have a real video
           quote: "The quality of your relationships determines the quality of your life."
         }
       };
@@ -302,30 +550,124 @@ const notifyPartner = async (journeyId: string, questionIndex: number) => {
   return true;
 };
 
+const JourneyIcon = ({ journeyIntro }: { journeyIntro: any }) => {
+  const Icon = journeyIntro?.icon;
+  return Icon ? <Icon className="w-8 h-8 text-white" /> : null;
+};
+
 export default function JourneyStart() {
-  const navigate = useNavigate();
   const { journeyId } = useParams();
-  const [journeyIntro, setJourneyIntro] = useState<any>(null);
-  const [completed, setCompleted] = useState<boolean[]>([false, false, false, false]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
-  const [answer, setAnswer] = useState<string>("");
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [storedAnswers, setStoredAnswers] = useState<Record<string, any>>({});
-  const [answeredBy, setAnsweredBy] = useState<string>("you"); // 'you' or 'partner'
-  
+  const navigate = useNavigate();
+  const [journeyIntro, setJourneyIntro] = useState<JourneyIntro | null>(null);
+  const [dayActivity, setDayActivity] = useState<JourneyActivity | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [completed, setCompleted] = useState<boolean[]>([]);
+  const [allCompleted, setAllCompleted] = useState(false);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [answer, setAnswer] = useState('');
+  const [answeredBy, setAnsweredBy] = useState<'you' | 'partner'>('you');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [storedAnswers, setStoredAnswers] = useState<Record<number, StoredAnswer>>({});
+
   useEffect(() => {
-    if (journeyId) {
+    if (!journeyId) {
+      setError('No journey ID provided');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // Get the journey intro
       const intro = getJourneyIntro(journeyId);
-      setJourneyIntro(intro);
-      
-      // Load existing answers
-      if (journeyId === "36-questions") {
-        const answers = getStoredAnswers(journeyId);
-        setStoredAnswers(answers);
+      if (!intro) {
+        setError('Journey not found');
+        setLoading(false);
+        return;
       }
+      setJourneyIntro(intro);
+
+      // Get the day parameter from URL
+      const params = new URLSearchParams(window.location.search);
+      const day = parseInt(params.get('day') || '1', 10);
+
+      // Get the day's activity
+      const activity = getDayActivity(journeyId, day);
+      if (!activity) {
+        setError('Activity not found');
+        setLoading(false);
+        return;
+      }
+      setDayActivity(activity);
+
+      // Initialize completed steps array
+      setCompleted(new Array(activity.steps.length).fill(false));
+      
+      // Load stored answers if they exist
+      const storageKey = `journey-${journeyId}-answers`;
+      const savedAnswers = JSON.parse(localStorage.getItem(storageKey) || '{}');
+      setStoredAnswers(savedAnswers);
+
+      setLoading(false);
+    } catch (err) {
+      console.error('Error loading journey:', err);
+      setError('Failed to load journey content');
+      setLoading(false);
     }
   }, [journeyId]);
-  
+
+  // Update allCompleted when completed array changes
+  useEffect(() => {
+    if (completed.length > 0) {
+      setAllCompleted(completed.every(Boolean));
+    }
+  }, [completed]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading your journey...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-500 mb-4">
+            <Shield className="w-12 h-12 mx-auto" />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Oops! Something went wrong</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
+          <Button onClick={() => navigate('/journeys')}>
+            Return to Journeys
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!journeyIntro || !dayActivity) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-yellow-500 mb-4">
+            <Shield className="w-12 h-12 mx-auto" />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Journey Not Found</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">We couldn't find the journey you're looking for.</p>
+          <Button onClick={() => navigate('/journeys')}>
+            Return to Journeys
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   const handleMarkComplete = (index: number) => {
     const newCompleted = [...completed];
     newCompleted[index] = !newCompleted[index];
@@ -336,29 +678,30 @@ export default function JourneyStart() {
     }
   };
   
-  const allCompleted = completed.every(item => item);
-  
-  const handleContinue = () => {
-    toast.success("First activity completed! Moving to the next activity...");
-    // In a real app, you would save progress and navigate to the next activity
-    // For now, we'll just navigate back to the journey detail
-    navigate(`/journey/${journeyId}`);
+  const handleContinue = async () => {
+    if (!journeyId) return;
+    
+    const params = new URLSearchParams(window.location.search);
+    const currentDay = parseInt(params.get('day') || '1', 10);
+    
+    // Save progress before continuing
+    const progress = {
+      completed,
+      day: currentDay,
+      lastUpdated: new Date().toISOString()
+    };
+    localStorage.setItem(`journey-${journeyId}-progress`, JSON.stringify(progress));
+    
+    // Navigate to next day
+    navigate(`/journey/${journeyId}/start?day=${currentDay + 1}`);
   };
 
   const handleAnswerSubmit = async () => {
-    if (!answer.trim()) {
-      toast.error("Please enter your answer before submitting");
-      return;
-    }
-
-    setIsSubmitting(true);
+    if (!journeyId || !answer.trim()) return;
     
+    setIsSubmitting(true);
     try {
-      // Store the answer
-      await storeAnswer(journeyId || '', currentQuestionIndex, answer, answeredBy);
-      
-      // Notify partner
-      await notifyPartner(journeyId || '', currentQuestionIndex);
+      await storeAnswer(journeyId, currentQuestionIndex, answer, answeredBy);
       
       // Update local state
       setStoredAnswers(prev => ({
@@ -370,12 +713,13 @@ export default function JourneyStart() {
         }
       }));
       
-      toast.success("Answer saved! Your partner will be notified.");
-      setAnswer("");
-      
-      // Automatically move to next question if both partners have answered
-      if (currentQuestionIndex < (journeyIntro?.firstActivity?.questions?.length || 0) - 1) {
+      // Clear input and move to next question if available
+      setAnswer('');
+      if (journeyIntro?.firstActivity.questions && 
+          currentQuestionIndex < journeyIntro.firstActivity.questions.length - 1) {
         setCurrentQuestionIndex(prev => prev + 1);
+      } else {
+        toast.success("All questions completed!");
       }
     } catch (error) {
       toast.error("Failed to save your answer. Please try again.");
@@ -384,46 +728,11 @@ export default function JourneyStart() {
     }
   };
 
-  const handleNextQuestion = () => {
-    if (currentQuestionIndex < (journeyIntro?.firstActivity?.questions?.length || 0) - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
-    }
-  };
-
-  const handlePreviousQuestion = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(prev => prev - 1);
-    }
-  };
-  
   const toggleAnsweredBy = () => {
     setAnsweredBy(prev => prev === 'you' ? 'partner' : 'you');
     toast.info(`Now answering as: ${answeredBy === 'you' ? 'Partner' : 'You'}`);
   };
   
-  if (!journeyIntro) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-24">
-        <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b dark:border-gray-700">
-          <div className="container max-w-6xl mx-auto px-4 py-3 flex items-center">
-            <button 
-              onClick={() => navigate(-1)} 
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-            >
-              <ChevronLeft className="w-6 h-6 dark:text-gray-300" />
-            </button>
-            <h1 className="text-xl font-semibold text-gray-900 dark:text-white mx-auto">
-              Loading...
-            </h1>
-          </div>
-        </header>
-        <div className="flex justify-center items-center h-96">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-24">
       <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b dark:border-gray-700">
@@ -434,9 +743,12 @@ export default function JourneyStart() {
           >
             <ChevronLeft className="w-6 h-6 dark:text-gray-300" />
           </button>
-          <h1 className="text-xl font-semibold text-gray-900 dark:text-white mx-auto">
-            {journeyIntro.title} Journey
-          </h1>
+          <div className="text-center flex-1">
+            <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
+              {journeyIntro.title} Journey
+            </h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Day {currentQuestionIndex + 1}</p>
+          </div>
         </div>
       </header>
 
@@ -446,7 +758,7 @@ export default function JourneyStart() {
           <div className={`p-6 ${journeyIntro.color} text-white`}>
             <div className="flex items-center gap-4 mb-4">
               <div className="p-2 rounded-full bg-white/20 flex-shrink-0">
-                {journeyIntro.icon}
+                <JourneyIcon journeyIntro={journeyIntro} />
               </div>
               <div>
                 <h2 className="text-2xl font-bold">{journeyIntro.title}</h2>
@@ -454,15 +766,15 @@ export default function JourneyStart() {
               </div>
             </div>
             <p className="text-lg text-white/95">
-              {journeyIntro.intro}
+              {currentQuestionIndex === 0 ? journeyIntro.intro : `Welcome back to Day ${currentQuestionIndex + 1} of your journey!`}
             </p>
           </div>
           <div className="p-6 bg-white dark:bg-gray-800">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              Day 1: {journeyIntro.firstActivity.title}
+              {dayActivity.title}
             </h3>
             <p className="text-gray-700 dark:text-gray-300 mb-6">
-              {journeyIntro.firstActivity.description}
+              {dayActivity.description}
             </p>
             
             {/* Video section */}
@@ -483,7 +795,7 @@ export default function JourneyStart() {
             
             {/* Quote */}
             <blockquote className="border-l-4 border-primary pl-4 italic text-gray-600 dark:text-gray-400 mb-6">
-              "{journeyIntro.firstActivity.quote}"
+              "{dayActivity.quote}"
             </blockquote>
             
             {/* Fun Activity section for the playful-connection journey */}
@@ -529,7 +841,11 @@ export default function JourneyStart() {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      onClick={handlePreviousQuestion}
+                      onClick={() => {
+                        if (currentQuestionIndex > 0) {
+                          setCurrentQuestionIndex(prev => prev - 1);
+                        }
+                      }}
                       disabled={currentQuestionIndex === 0}
                     >
                       Previous
@@ -537,7 +853,11 @@ export default function JourneyStart() {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      onClick={handleNextQuestion}
+                      onClick={() => {
+                        if (currentQuestionIndex < journeyIntro.firstActivity.questions.length - 1) {
+                          setCurrentQuestionIndex(prev => prev + 1);
+                        }
+                      }}
                       disabled={currentQuestionIndex === journeyIntro.firstActivity.questions.length - 1}
                     >
                       Next
@@ -641,7 +961,7 @@ export default function JourneyStart() {
             {/* Steps - keep these for non-36-questions journeys or as general guidance */}
             <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Today's Activity Steps:</h4>
             <div className="space-y-3 mb-6">
-              {journeyIntro.firstActivity.steps.map((step: string, index: number) => (
+              {dayActivity.steps.map((step: string, index: number) => (
                 <div 
                   key={index}
                   className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors cursor-pointer"
@@ -663,7 +983,7 @@ export default function JourneyStart() {
               onClick={handleContinue}
               disabled={!allCompleted}
             >
-              Continue to Next Activity
+              Continue Your Journey
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
             {!allCompleted && (

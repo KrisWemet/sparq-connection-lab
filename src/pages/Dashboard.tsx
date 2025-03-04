@@ -35,6 +35,8 @@ import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AnimatedContainer } from "@/components/ui/animated-container";
 import { dailyEncouragementMessages, funActivitiesAndQuestions } from "@/data/relationshipContent";
+import { PartnerInvite } from "@/components/PartnerInvite";
+import { supabase } from "@/integrations/supabase/client";
 
 // Color themes based on style
 export const colorThemes = {
@@ -100,6 +102,10 @@ export default function Dashboard() {
   
   // Add state to track if 36 Questions has been completed
   const [has36QuestionsCompleted, setHas36QuestionsCompleted] = useState(false);
+  
+  // Add state for partner status
+  const [hasPartner, setHasPartner] = useState(false);
+  const [isLoadingPartner, setIsLoadingPartner] = useState(true);
   
   // Sample user data
   const userData = {
@@ -278,6 +284,26 @@ export default function Dashboard() {
     }
   }, []);
 
+  // Check if user has a partner
+  useEffect(() => {
+    const checkPartnerStatus = async () => {
+      try {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('partner_id')
+          .single();
+        
+        setHasPartner(!!profile?.partner_id);
+      } catch (error) {
+        console.error('Error checking partner status:', error);
+      } finally {
+        setIsLoadingPartner(false);
+      }
+    };
+
+    checkPartnerStatus();
+  }, []);
+
   useEffect(() => {
     setColors(colorThemes[userTheme as keyof typeof colorThemes]);
     console.log("Dashboard visited:", new Date().toISOString());
@@ -399,6 +425,13 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+
+        {/* Partner Invitation - show only if user doesn't have a partner */}
+        {!isLoadingPartner && !hasPartner && (
+          <div className="mb-6">
+            <PartnerInvite />
+          </div>
+        )}
 
         {/* Relationship Insights Card - Moved right after daily inspiration */}
         <Card className="mb-6 overflow-hidden">

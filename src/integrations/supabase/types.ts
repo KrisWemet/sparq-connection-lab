@@ -181,6 +181,163 @@ export type Database = {
         }
         Relationships: []
       }
+      partner_invitations: {
+        Row: {
+          id: string;
+          created_at: string;
+          inviter_id: string;
+          partner_email: string;
+          status: 'pending' | 'accepted' | 'rejected' | 'expired';
+          invitation_code: string;
+          accepted_at: string | null;
+          expires_at: string;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          inviter_id: string;
+          partner_email: string;
+          status?: 'pending' | 'accepted' | 'rejected' | 'expired';
+          invitation_code: string;
+          accepted_at?: string | null;
+          expires_at?: string;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          inviter_id?: string;
+          partner_email?: string;
+          status?: 'pending' | 'accepted' | 'rejected' | 'expired';
+          invitation_code?: string;
+          accepted_at?: string | null;
+          expires_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "partner_invitations_inviter_id_fkey"
+            columns: ["inviter_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ];
+      }
+      profiles: {
+        Row: {
+          id: string;
+          created_at: string;
+          full_name: string;
+          email: string;
+          gender: string;
+          relationship_type: string;
+          partner_id: string | null;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          full_name: string;
+          email: string;
+          gender?: string;
+          relationship_type?: string;
+          partner_id?: string | null;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          full_name?: string;
+          email?: string;
+          gender?: string;
+          relationship_type?: string;
+          partner_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "profiles_id_fkey"
+            columns: ["id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_partner_id_fkey"
+            columns: ["partner_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ];
+      };
+      analytics_events: {
+        Row: {
+          id: string;
+          created_at: string;
+          user_id: string;
+          event_type: string;
+          properties: Record<string, any>;
+          timestamp: string;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          user_id: string;
+          event_type: string;
+          properties?: Record<string, any>;
+          timestamp: string;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          user_id?: string;
+          event_type?: string;
+          properties?: Record<string, any>;
+          timestamp?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "analytics_events_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ];
+      };
+      journey_progress: {
+        Row: {
+          id: string;
+          created_at: string;
+          user_id: string;
+          journey_id: string;
+          day: number;
+          completed: boolean;
+          responses: Record<string, any>;
+          completed_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          user_id: string;
+          journey_id: string;
+          day: number;
+          completed?: boolean;
+          responses?: Record<string, any>;
+          completed_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          user_id?: string;
+          journey_id?: string;
+          day?: number;
+          completed?: boolean;
+          responses?: Record<string, any>;
+          completed_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "journey_progress_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ];
+      };
     }
     Views: {
       [_ in never]: never

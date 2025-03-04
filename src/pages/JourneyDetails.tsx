@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BottomNav } from "@/components/bottom-nav";
-import { ChevronLeft, Heart, MessageCircle, Shield, Flame, Target, Lightbulb, HeartHandshake, ArrowRight, Sparkles, Brain, Zap, PartyPopper } from "lucide-react";
+import { ChevronLeft, Heart, MessageCircle, Shield, Flame, Target, Lightbulb, HeartHandshake, ArrowRight, Sparkles, Brain, Zap, PartyPopper, Check } from "lucide-react";
 import { toast } from "sonner";
 import { sexualityJourneyData } from "@/data/relationshipContent";
 
@@ -542,12 +542,21 @@ export default function JourneyDetails() {
   const navigate = useNavigate();
   const { journeyId } = useParams();
   const [journey, setJourney] = useState<any>(null);
+  const [completedDays, setCompletedDays] = useState<number[]>([]);
+  const [nextDay, setNextDay] = useState<number>(1);
   
   useEffect(() => {
     // Find the journey that matches the ID from the URL
     const foundJourney = journeys.find(j => j.id === journeyId);
     if (foundJourney) {
       setJourney(foundJourney);
+      
+      // Load completed days from local storage
+      const completed = JSON.parse(localStorage.getItem(`${journeyId}_completed_days`) || '[]');
+      setCompletedDays(completed);
+      
+      // Set the next day based on completed days
+      setNextDay(completed.length + 1);
     } else {
       // If journey not found, redirect to journeys list
       navigate("/path-to-together");
@@ -555,13 +564,32 @@ export default function JourneyDetails() {
     }
   }, [journeyId, navigate]);
   
-  const handleStartJourney = () => {
-    toast.success(`Starting the ${journey?.title} journey`);
-    // In a real app, you would save this to the user's profile
-    // For demo, just navigate to a confirmation page
-    navigate(`/journey/${journeyId}/start`);
+  const handleStartDay = (dayNumber: number) => {
+    if (dayNumber === 1 || completedDays.includes(dayNumber - 1)) {
+      navigate(`/journey/${journeyId}/start?day=${dayNumber}`);
+    } else {
+      toast.error("Please complete the previous day first!");
+    }
   };
-  
+
+  const getButtonText = () => {
+    if (completedDays.length === 0) {
+      return (
+        <>
+          Begin This Journey
+          <ArrowRight className="w-4 h-4 ml-2" />
+        </>
+      );
+    } else {
+      return (
+        <>
+          Continue Day {nextDay}
+          <ArrowRight className="w-4 h-4 ml-2" />
+        </>
+      );
+    }
+  };
+
   if (!journey) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-24">
@@ -702,22 +730,27 @@ export default function JourneyDetails() {
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                     {journey.title}
                   </h2>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{journey.duration}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {completedDays.length > 0 
+                      ? `Day ${completedDays.length} completed`
+                      : journey.duration}
+                  </p>
                 </div>
               </div>
               
               <Button 
                 className={`w-full mb-4 py-6 ${getCategoryColor()}`}
-                onClick={handleStartJourney}
+                onClick={() => handleStartDay(nextDay)}
               >
-                Begin This Journey
-                <ArrowRight className="w-4 h-4 ml-2" />
+                {getButtonText()}
               </Button>
               
               <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-                {journey.free 
-                  ? "This journey is completely free! Begin anytime and progress at your own pace." 
-                  : "You can begin this journey at any time and progress at your own pace."}
+                {completedDays.length > 0 
+                  ? `You've completed ${completedDays.length} ${completedDays.length === 1 ? 'day' : 'days'} of your journey`
+                  : journey.free 
+                    ? "This journey is completely free! Begin anytime and progress at your own pace."
+                    : "You can begin this journey at any time and progress at your own pace."}
               </p>
               
               {journey.free && (
@@ -794,7 +827,7 @@ export default function JourneyDetails() {
           <Button 
             size="lg"
             className={`px-8 ${getCategoryColor()}`}
-            onClick={handleStartJourney}
+            onClick={() => handleStartDay(1)}
           >
             Begin Your {journey.title} Journey
             <ArrowRight className="w-4 h-4 ml-2" />

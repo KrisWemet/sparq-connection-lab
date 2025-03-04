@@ -108,12 +108,15 @@ export default function Auth() {
     setError("");
     try {
       await signIn(values.email, values.password);
+      toast.success("Login successful!");
       const redirectTo = sessionStorage.getItem("redirectUrl") || "/dashboard";
       sessionStorage.removeItem("redirectUrl");
       navigate(redirectTo);
     } catch (err) {
       console.error("Login error:", err);
-      setError(err instanceof Error ? err.message : "Failed to sign in. Please try again.");
+      const errorMessage = err instanceof Error ? err.message : "Failed to sign in. Please try again.";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -128,10 +131,13 @@ export default function Auth() {
         values.password,
         values.fullName || ""
       );
+      toast.success("Account created successfully!");
       navigate("/onboarding");
     } catch (err) {
       console.error("Signup error:", err);
-      setError(err instanceof Error ? err.message : "Failed to sign up. Please try again.");
+      const errorMessage = err instanceof Error ? err.message : "Failed to sign up. Please try again.";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -201,6 +207,11 @@ export default function Auth() {
                         </FormItem>
                       )}
                     />
+                    {error && (
+                      <div className="text-sm text-red-500 dark:text-red-400">
+                        {error}
+                      </div>
+                    )}
                     <Button disabled={isLoading} type="submit" className="w-full">
                       {isLoading ? (
                         <>
