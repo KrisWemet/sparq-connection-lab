@@ -34,6 +34,18 @@ import Admin from "./pages/Admin";
 import TestPage from "./pages/TestPage";
 import JoinPartner from "./pages/JoinPartner";
 import LoveLanguagesJourney from "./pages/journeys/LoveLanguagesJourney";
+import ConflictResolutionJourney from "./pages/journeys/ConflictResolutionJourney";
+import EmotionalIntelligenceJourney from "./pages/journeys/EmotionalIntelligenceJourney";
+import CommunicationJourney from "./pages/journeys/CommunicationJourney";
+import IntimacyJourney from "./pages/journeys/IntimacyJourney";
+import SexualIntimacyJourney from "./pages/journeys/SexualIntimacyJourney";
+import TrustRebuildingJourney from "./pages/journeys/TrustRebuildingJourney";
+import ValuesJourney from "./pages/journeys/ValuesJourney";
+import AttachmentHealingJourney from "./pages/journeys/AttachmentHealingJourney";
+import RelationshipRenewalJourney from "./pages/journeys/RelationshipRenewalJourney";
+import MindfulSexualityJourney from "./pages/journeys/MindfulSexualityJourney";
+import PowerDynamicsJourney from "./pages/journeys/PowerDynamicsJourney";
+import FantasyExplorationJourney from "./pages/journeys/FantasyExplorationJourney";
 
 console.log("App component loaded");
 
@@ -163,6 +175,66 @@ export default function App() {
                     <Route path="/journey/love-languages" element={
                       <ProtectedRoute>
                         <LoveLanguagesJourney />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/journey/conflict-resolution" element={
+                      <ProtectedRoute>
+                        <ConflictResolutionJourney />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/journey/emotional-intelligence" element={
+                      <ProtectedRoute>
+                        <EmotionalIntelligenceJourney />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/journey/communication" element={
+                      <ProtectedRoute>
+                        <CommunicationJourney />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/journey/intimacy" element={
+                      <ProtectedRoute>
+                        <IntimacyJourney />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/journey/sexual-intimacy" element={
+                      <ProtectedRoute>
+                        <SexualIntimacyJourney />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/journey/trust-rebuilding" element={
+                      <ProtectedRoute>
+                        <TrustRebuildingJourney />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/journey/values" element={
+                      <ProtectedRoute>
+                        <ValuesJourney />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/journey/attachment-healing" element={
+                      <ProtectedRoute>
+                        <AttachmentHealingJourney />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/journey/relationship-renewal" element={
+                      <ProtectedRoute>
+                        <RelationshipRenewalJourney />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/journey/mindful-sexuality" element={
+                      <ProtectedRoute>
+                        <MindfulSexualityJourney />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/journey/power-dynamics" element={
+                      <ProtectedRoute>
+                        <PowerDynamicsJourney />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/journey/fantasy-exploration" element={
+                      <ProtectedRoute>
+                        <FantasyExplorationJourney />
                       </ProtectedRoute>
                     } />
                     

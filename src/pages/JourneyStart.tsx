@@ -24,6 +24,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { AnimatedContainer } from "@/components/ui/animated-container";
 import { sexualityJourneyData } from "@/data/relationshipContent";
 import { journeys } from "../data/journeys";
+import { marked } from "marked";
 
 interface JourneyStep {
   title: string;
@@ -41,6 +42,7 @@ interface JourneyActivity extends JourneyStep {
     reflection: string;
   };
   questions?: string[];
+  content?: string;
 }
 
 interface JourneyIntro {
@@ -60,7 +62,7 @@ interface StoredAnswer {
 
 // Helper functions for generating journey-specific activities
 const generateLoveLanguagesActivity = (day: number, phase: any) => {
-  const activities = {
+  const activities: Record<number, JourneyActivity> = {
     1: {
       title: "Understanding Love Languages",
       description: "Discover the five different ways people express and receive love",
@@ -70,7 +72,26 @@ const generateLoveLanguagesActivity = (day: number, phase: any) => {
         "Notice love language moments in your day",
         "Share your observations with your partner"
       ],
-      quote: "Love is not one-size-fits-all. Understanding how we each experience love is the key to a deeper connection."
+      quote: "Love is not one-size-fits-all. Understanding how we each experience love is the key to a deeper connection.",
+      content: `
+## Welcome to Day 1 of your Love Languages journey!
+
+Today, we're diving into what love languages are and why they matter in your relationship.
+
+Have you ever felt like you're showing love to your partner, but somehow they don't seem to feel it? Or maybe your partner does things that they think are loving, but they don't quite hit the mark for you? That's where love languages come in.
+
+The concept of love languages, developed by Dr. Gary Chapman, is pretty simple but incredibly powerful: we all have different ways we prefer to give and receive love. Think of it like speaking different languages. If you're speaking French and your partner only understands Spanish, there's going to be a disconnect—even though you're both trying to communicate!
+
+### Here's what's important to know right from the start:
+
+**No love language is better than another.** Just like there's no "best" language in the world, there's no best love language. Each one is valid and meaningful.
+
+**You don't need to have the same love language as your partner.** In fact, most couples have different primary love languages, and that's perfectly fine! The goal isn't to match each other, but to understand and speak each other's language.
+
+**Love languages can change over time.** While we usually have a primary love language that stays fairly consistent, life circumstances and different phases of your relationship can shift how you prefer to receive love.
+
+**Learning your partner's love language is one of the most loving things you can do.** When you make the effort to "speak" their language, you're showing that you care enough to step outside your comfort zone for them.
+      `
     }
   };
 
@@ -738,17 +759,14 @@ export default function JourneyStart() {
       <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b dark:border-gray-700">
         <div className="container max-w-6xl mx-auto px-4 py-3 flex items-center">
           <button 
-            onClick={() => navigate(-1)} 
+            onClick={() => navigate(`/journey/${journeyId}`)} 
             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
           >
             <ChevronLeft className="w-6 h-6 dark:text-gray-300" />
           </button>
-          <div className="text-center flex-1">
-            <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
-              {journeyIntro.title} Journey
-            </h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Day {currentQuestionIndex + 1}</p>
-          </div>
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-white mx-auto">
+            {journeyIntro?.title || "Journey"} - Day {currentQuestionIndex + 1}
+          </h1>
         </div>
       </header>
 
@@ -797,6 +815,13 @@ export default function JourneyStart() {
             <blockquote className="border-l-4 border-primary pl-4 italic text-gray-600 dark:text-gray-400 mb-6">
               "{dayActivity.quote}"
             </blockquote>
+            
+            {/* Enhanced content for Love Languages journey */}
+            {journeyId === "love-languages" && dayActivity.content && (
+              <div className="prose dark:prose-invert max-w-none mb-6">
+                <div dangerouslySetInnerHTML={{ __html: marked.parse(dayActivity.content) }} />
+              </div>
+            )}
             
             {/* Fun Activity section for the playful-connection journey */}
             {journeyIntro.firstActivity.funActivity && (
@@ -1014,6 +1039,52 @@ export default function JourneyStart() {
         </Card>
       </main>
       
+      <div className="container max-w-4xl mx-auto px-4 pb-6">
+        <div className="flex justify-between mt-8">
+          <Button
+            variant="outline"
+            onClick={() => navigate(`/journey/${journeyId}/start?day=${Math.max(1, Number(currentQuestionIndex) - 1)}`)}
+            disabled={currentQuestionIndex === 0}
+          >
+            <ChevronLeft className="mr-2 h-4 w-4" />
+            Previous Day
+          </Button>
+          
+          <Button
+            onClick={handleContinue}
+            disabled={!allCompleted}
+          >
+            Next Day
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+        
+        {/* New section for choosing a different journey */}
+        <div className="mt-8 border-t pt-6">
+          <Card className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <div className="p-4">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Want to try a different journey?</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
+                You're making great progress on your {journeyIntro?.title || "current"} journey! 
+                Continuing this journey will help you build momentum and see real results in your relationship.
+                However, if you'd like to explore other areas, you can choose a different journey.
+              </p>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => {
+                  // Store current progress before navigating
+                  localStorage.setItem(`${journeyId}_last_day`, String(currentQuestionIndex));
+                  navigate("/path-to-together");
+                }}
+              >
+                Explore Other Journeys
+              </Button>
+            </div>
+          </Card>
+        </div>
+      </div>
+
       <BottomNav />
     </div>
   );

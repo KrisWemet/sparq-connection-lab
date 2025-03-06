@@ -100,6 +100,9 @@ export default function Dashboard() {
   const [userTheme, setUserTheme] = useState("azure");
   const [colors, setColors] = useState(colorThemes[userTheme as keyof typeof colorThemes]);
   
+  // Add state to track active journey
+  const [activeJourney, setActiveJourney] = useState<{id: string, day: number} | null>(null);
+  
   // Add state to track if 36 Questions has been completed
   const [has36QuestionsCompleted, setHas36QuestionsCompleted] = useState(false);
   
@@ -277,11 +280,14 @@ export default function Dashboard() {
 
   // Use effect to check if 36 Questions has been completed
   useEffect(() => {
-    // In a real app, this would be fetched from an API or local storage
+    // Check local storage for 36 Questions completion
     const completed36Questions = localStorage.getItem('completed36Questions');
     if (completed36Questions === 'true') {
       setHas36QuestionsCompleted(true);
     }
+    
+    // Check for active journey
+    checkActiveJourney();
   }, []);
 
   // Check if user has a partner
@@ -340,15 +346,76 @@ export default function Dashboard() {
     toast.success(`Switched to ${newTheme} color theme`);
   };
 
+  // Function to check if the user has an active journey
+  const checkActiveJourney = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      
+      // Get the user's journey progress
+      const { data: journeyProgress } = await supabase
+        .from('journey_progress')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('updated_at', { ascending: false })
+        .limit(1);
+        
+      if (journeyProgress && journeyProgress.length > 0) {
+        // Get the journey details
+        const { data: journeyDetails } = await supabase
+          .from('journeys')
+          .select('*')
+          .eq('id', journeyProgress[0].journey_id)
+          .single();
+          
+        if (journeyDetails) {
+          setActiveJourney({
+            id: journeyProgress[0].journey_id,
+            day: journeyProgress[0].day
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error checking active journey:', error);
+    }
+  };
+  
+  // Function to continue the user's active journey
+  const continueUserJourney = () => {
+    if (activeJourney) {
+      // Navigate to the specific journey
+      switch(activeJourney.id) {
+        case 'love-languages':
+          navigate("/journey/love-languages");
+          break;
+        case 'sexual-intimacy':
+          navigate("/journey/sexual-intimacy");
+          break;
+        case '36-questions':
+          navigate("/journey/36-questions");
+          break;
+        case 'conflict-resolution':
+          navigate("/journey/conflict-resolution");
+          break;
+        default:
+          // If no active journey or unknown journey, go to the journeys list
+          navigate("/path-to-together");
+      }
+    } else {
+      // If no active journey, go to the journeys list
+      navigate("/path-to-together");
+    }
+  };
+
   return (
-    <div className={`min-h-screen pb-24 ${
+    <div className={`min-h-[100dvh] pb-16 ${
       userTheme === "azure" ? "bg-blue-50/40" : 
       userTheme === "rose" ? "bg-rose-50/30" : 
       userTheme === "indigo" ? "bg-indigo-50/40" : 
       "bg-purple-50/30"
     } dark:bg-gray-900`}>
       <header className={`sticky top-0 z-50 bg-white border-b dark:bg-gray-800 dark:border-gray-700`}>
-        <div className="container max-w-lg mx-auto px-4 py-3">
+        <div className="container max-w-lg mx-auto px-4 py-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Heart className={`w-6 h-6 ${colors.textPrimary}`} />
@@ -366,8 +433,8 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main className="container max-w-lg mx-auto px-4 pt-6 animate-slide-up">
-        <div className={`bg-gradient-to-r ${colors.cardGradient} text-white rounded-lg p-6 mb-6`}>
+      <main className="container max-w-lg mx-auto px-4 pt-3 pb-20 animate-slide-up">
+        <div className={`bg-gradient-to-r ${colors.cardGradient} text-white rounded-lg p-5 mb-5`}>
           <div className="flex justify-between items-start mb-4">
             <div>
               <h2 className="text-2xl font-bold">Hi, {userData.name}!</h2>
@@ -408,8 +475,48 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* Free "36 Questions" Card - only shown if not completed - MOVED to top position */}
+        {!has36QuestionsCompleted && (
+          <Card className="mb-4 overflow-hidden border border-green-200 dark:border-green-800/30 shadow-md hover:shadow-lg transition-shadow">
+            <div className="p-4">
+              <div className="flex items-start gap-3 mb-3">
+                <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full flex-shrink-0 mt-1">
+                  <HeartHandshake className="w-5 h-5 text-green-600 dark:text-green-400" />
+                </div>
+                <div>
+                  <div className="flex items-center">
+                    <h3 className="font-semibold text-gray-900 dark:text-white">36 Questions to Fall in Love</h3>
+                    <Badge className="ml-2 bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">Free</Badge>
+                  </div>
+                  <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+                    Try this science-backed method to deepen your connection through carefully sequenced questions.
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 italic">
+                    "The 36 questions that lead to love" - NY Times
+                  </p>
+                  <Button 
+                    className="w-full border-green-200 hover:bg-green-600 hover:text-white"
+                    onClick={() => {
+                      // In a real app, you'd navigate and then handle completion after the journey
+                      navigate("/journey/36-questions");
+                      // For demo purposes, simulate completing the journey after clicking
+                      localStorage.setItem('completed36Questions', 'true');
+                    }}
+                  >
+                    Explore Free Journey
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Card>
+        )}
+
         {/* Daily encouragement - enhanced language */}
-        <div className="relative bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100 dark:from-amber-950 dark:to-amber-900 dark:border-amber-800 rounded-lg p-5 mb-6">
+        <div 
+          className="relative bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100 dark:from-amber-950 dark:to-amber-900 dark:border-amber-800 rounded-lg p-4 mb-4 cursor-pointer hover:shadow-md transition-shadow"
+          onClick={() => navigate("/daily-questions")}
+        >
           <div className="flex items-start gap-3">
             <div className="bg-amber-100 dark:bg-amber-800 p-2 rounded-full mt-1">
               <Sparkles className="w-5 h-5 text-amber-600 dark:text-amber-400" />
@@ -428,13 +535,16 @@ export default function Dashboard() {
 
         {/* Partner Invitation - show only if user doesn't have a partner */}
         {!isLoadingPartner && !hasPartner && (
-          <div className="mb-6">
+          <div className="mb-4">
             <PartnerInvite />
           </div>
         )}
 
         {/* Relationship Insights Card - Moved right after daily inspiration */}
-        <Card className="mb-6 overflow-hidden">
+        <Card 
+          className="mb-4 overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
+          onClick={() => navigate("/insights")}
+        >
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center">
               <Sparkles className={`w-5 h-5 mr-2 ${colors.textPrimary}`} />
@@ -524,8 +634,11 @@ export default function Dashboard() {
         </Card>
 
         {/* Fun Activity - now placed BEFORE daily questions */}
-        <div className="relative mb-6">
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 dark:from-blue-950 dark:to-indigo-900 dark:border-blue-800 rounded-lg p-5">
+        <div 
+          className="relative mb-4 cursor-pointer hover:shadow-md transition-shadow"
+          onClick={() => navigate("/date-ideas")}
+        >
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 dark:from-blue-950 dark:to-indigo-900 dark:border-blue-800 rounded-lg p-4">
             <div className="flex items-start gap-3">
               <div className="bg-blue-100 dark:bg-blue-800 p-2 rounded-full mt-1">
                 <PartyPopper className="w-5 h-5 text-blue-600 dark:text-blue-400" />
@@ -564,8 +677,11 @@ export default function Dashboard() {
         </div>
 
         {/* Daily Questions - with more emotionally enticing language */}
-        <div className="relative mb-6">
-          <Card className={`border-2 ${colors.borderAccent} shadow-md overflow-hidden`}>
+        <div 
+          className="relative mb-4 cursor-pointer"
+          onClick={() => navigate("/daily-questions")}
+        >
+          <Card className={`border-2 ${colors.borderAccent} shadow-md overflow-hidden hover:shadow-lg transition-shadow`}>
             <div className={`${colors.bgSubtle} p-4`}>
               <div className="flex items-center gap-3 mb-2">
                 <div className={`p-2 rounded-full ${colors.primary} text-white`}>
@@ -595,8 +711,11 @@ export default function Dashboard() {
         </div>
         
         {/* Path to Together / Journey - with more emotionally enticing language */}
-        <div className="relative mb-6">
-          <Card className="overflow-hidden border-2 border-purple-200 dark:border-purple-800 shadow-md">
+        <div className="relative mb-4">
+          <Card 
+            className="overflow-hidden border-2 border-purple-200 dark:border-purple-800 shadow-md cursor-pointer hover:shadow-lg transition-shadow"
+            onClick={() => continueUserJourney()}
+          >
             <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950/40 dark:to-indigo-950/40 p-4">
               <div className="flex items-center gap-3 mb-2">
                 <div className="p-2 rounded-full bg-purple-500 text-white">
@@ -636,54 +755,19 @@ export default function Dashboard() {
               
               <Button 
                 className="w-full bg-purple-500 hover:bg-purple-600 text-white border-none"
-                onClick={() => navigate("/path-to-together")}
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent triggering the parent onClick
+                  continueUserJourney();
+                }}
               >
-                Begin Your Transformation
+                {activeJourney ? 'Continue Your Journey' : 'Begin Your Transformation'}
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
           </Card>
         </div>
 
-        {/* Free "36 Questions" Card - only shown if not completed */}
-        {!has36QuestionsCompleted && (
-          <Card className="mb-6 overflow-hidden border border-green-200 dark:border-green-800/30 shadow-sm">
-            <div className="p-4">
-              <div className="flex items-start gap-3 mb-3">
-                <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full flex-shrink-0 mt-1">
-                  <HeartHandshake className="w-5 h-5 text-green-600 dark:text-green-400" />
-                </div>
-                <div>
-                  <div className="flex items-center">
-                    <h3 className="font-semibold text-gray-900 dark:text-white">36 Questions to Fall in Love</h3>
-                    <Badge className="ml-2 bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">Free</Badge>
-                  </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-                    Try this science-backed method to deepen your connection through carefully sequenced questions.
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 italic">
-                    "The 36 questions that lead to love" - NY Times
-                  </p>
-                  <Button 
-                    variant="outline" 
-                    className="w-full border-green-200 hover:border-green-300 dark:border-green-800/50 dark:hover:border-green-700"
-                    onClick={() => {
-                      // In a real app, you'd navigate and then handle completion after the journey
-                      navigate("/journey/36-questions");
-                      // For demo purposes, simulate completing the journey after clicking
-                      localStorage.setItem('completed36Questions', 'true');
-                    }}
-                  >
-                    Explore Free Journey
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </Card>
-        )}
-
-        <Tabs defaultValue="today" className="mb-8" onValueChange={setActiveTab}>
+        <Tabs defaultValue="today" className="mb-4" onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="today">Daily</TabsTrigger>
             <TabsTrigger value="goals">Goals</TabsTrigger>

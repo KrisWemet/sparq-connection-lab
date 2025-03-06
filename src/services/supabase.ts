@@ -1,13 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 import { Journey, UserJourneyProgress, JourneyInvitation } from '../types/journey';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabaseUrl = "https://nbljcvqiiurfbjquhbxu.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ibGpjdnFpaXVyZmJqcXVoYnh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA0MzUzMzAsImV4cCI6MjA1NjAxMTMzMH0.pDb4vjIdSTvRPGHAtolC47Icu2o3DXKhlwVllv6GvOY";
 
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error('Missing Supabase environment variables');
-}
-
+// No need to check for environment variables since we're using hardcoded values
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Journey functions

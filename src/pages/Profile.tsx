@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth-provider";
 import { Button } from "@/components/ui/button";
@@ -10,23 +10,85 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BottomNav } from "@/components/bottom-nav";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChevronLeft, User, Heart, Calendar, Bell, Shield, LogOut, Users, HeartHandshake, Zap } from "lucide-react";
+import { ChevronLeft, User, Heart, Calendar, Bell, Shield, LogOut, Users, HeartHandshake, Zap, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import type { Profile, ProfileFormData } from "@/types/profile";
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { signOut } = useAuth();
-  const [name, setName] = useState("Chris Smith");
-  const [email, setEmail] = useState("chris@example.com");
-  const [partnerName, setPartnerName] = useState("Alex Johnson");
-  const [anniversary, setAnniversary] = useState("2020-06-15");
-  const [sexualPreference, setSexualPreference] = useState("straight");
-  const [relationshipStructure, setRelationshipStructure] = useState("monogamous");
-  
-  const handleSaveProfile = () => {
-    toast.success("Profile updated successfully!");
+  const { user, signOut } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [profile, setProfile] = useState<ProfileFormData>({
+    full_name: "",
+    email: "",
+    partner_name: "",
+    anniversary_date: "",
+    sexual_orientation: "straight",
+    relationship_structure: "monogamous",
+    avatar_url: ""
+  });
+
+  useEffect(() => {
+    if (user) {
+      loadProfile();
+    }
+  }, [user]);
+
+  const loadProfile = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', user?.id)
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setProfile({
+          full_name: data.full_name || "",
+          email: data.email || user?.email || "",
+          partner_name: data.partner_name || "",
+          anniversary_date: data.anniversary_date || "",
+          sexual_orientation: data.sexual_orientation || "straight",
+          relationship_structure: data.relationship_structure || "monogamous",
+          avatar_url: data.avatar_url || ""
+        });
+      }
+    } catch (error) {
+      console.error('Error loading profile:', error);
+      toast.error('Failed to load profile');
+    } finally {
+      setLoading(false);
+    }
   };
-  
+
+  const handleSaveProfile = async () => {
+    if (!user) return;
+
+    try {
+      setSaving(true);
+      const { error } = await supabase
+        .from('profiles')
+        .upsert({
+          user_id: user.id,
+          updated_at: new Date().toISOString(),
+          ...profile
+        });
+
+      if (error) throw error;
+      toast.success("Profile updated successfully!");
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error('Failed to update profile');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleLogout = async () => {
     try {
       await signOut();
@@ -37,6 +99,14 @@ export default function Profile() {
       toast.error("Failed to log out. Please try again.");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
@@ -57,17 +127,21 @@ export default function Profile() {
       <main className="container max-w-lg mx-auto px-4 pt-6 animate-slide-up">
         <div className="flex flex-col items-center mb-8">
           <Avatar className="w-24 h-24 mb-4">
-            <AvatarImage src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=256&h=256" />
-            <AvatarFallback>{name.charAt(0)}</AvatarFallback>
+            <AvatarImage src={profile.avatar_url || undefined} />
+            <AvatarFallback>{profile.full_name.charAt(0)}</AvatarFallback>
           </Avatar>
-          <h2 className="text-2xl font-bold text-gray-900">{name}</h2>
-          <p className="text-gray-500">Connected with {partnerName}</p>
-          <div className="flex items-center gap-2 mt-2">
-            <div className="bg-primary/10 text-primary text-sm px-3 py-1 rounded-full flex items-center gap-1">
-              <Heart className="w-3.5 h-3.5" />
-              <span>Together for 3 years</span>
+          <h2 className="text-2xl font-bold text-gray-900">{profile.full_name}</h2>
+          {profile.partner_name && (
+            <p className="text-gray-500">Connected with {profile.partner_name}</p>
+          )}
+          {profile.anniversary_date && (
+            <div className="flex items-center gap-2 mt-2">
+              <div className="bg-primary/10 text-primary text-sm px-3 py-1 rounded-full flex items-center gap-1">
+                <Heart className="w-3.5 h-3.5" />
+                <span>Together since {new Date(profile.anniversary_date).toLocaleDateString()}</span>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         <Tabs defaultValue="account" className="w-full">
@@ -86,8 +160,8 @@ export default function Profile() {
                   <Label htmlFor="name">Full Name</Label>
                   <Input 
                     id="name" 
-                    value={name} 
-                    onChange={(e) => setName(e.target.value)} 
+                    value={profile.full_name} 
+                    onChange={(e) => setProfile({ ...profile, full_name: e.target.value })} 
                   />
                 </div>
                 <div className="space-y-2">
@@ -95,8 +169,16 @@ export default function Profile() {
                   <Input 
                     id="email" 
                     type="email" 
-                    value={email} 
-                    onChange={(e) => setEmail(e.target.value)} 
+                    value={profile.email} 
+                    onChange={(e) => setProfile({ ...profile, email: e.target.value })} 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="partner_name">Partner's Name</Label>
+                  <Input 
+                    id="partner_name" 
+                    value={profile.partner_name} 
+                    onChange={(e) => setProfile({ ...profile, partner_name: e.target.value })} 
                   />
                 </div>
                 <div className="space-y-2">
@@ -104,38 +186,54 @@ export default function Profile() {
                   <Input 
                     id="anniversary" 
                     type="date" 
-                    value={anniversary} 
-                    onChange={(e) => setAnniversary(e.target.value)} 
+                    value={profile.anniversary_date} 
+                    onChange={(e) => setProfile({ ...profile, anniversary_date: e.target.value })} 
                   />
                 </div>
-                <Button onClick={handleSaveProfile} className="w-full">
-                  Save Changes
+                <Button 
+                  onClick={handleSaveProfile} 
+                  className="w-full"
+                  disabled={saving}
+                >
+                  {saving ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    'Save Changes'
+                  )}
                 </Button>
               </CardContent>
             </Card>
             
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Partner Connection</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <Avatar>
-                      <AvatarImage src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&h=256" />
-                      <AvatarFallback>{partnerName.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-medium">{partnerName}</p>
-                      <p className="text-xs text-gray-500">Connected since June 2020</p>
+            {profile.partner_name && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Partner Connection</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Avatar>
+                        <AvatarFallback>{profile.partner_name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-medium">{profile.partner_name}</p>
+                        {profile.anniversary_date && (
+                          <p className="text-xs text-gray-500">
+                            Connected since {new Date(profile.anniversary_date).toLocaleDateString()}
+                          </p>
+                        )}
+                      </div>
                     </div>
+                    <Button variant="outline" size="sm">
+                      View
+                    </Button>
                   </div>
-                  <Button variant="outline" size="sm">
-                    View
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            )}
             
             <Card className="border-destructive/50">
               <CardContent className="pt-6">
@@ -160,8 +258,8 @@ export default function Profile() {
                 <div className="space-y-3">
                   <Label htmlFor="sexual-preference">Sexual Orientation</Label>
                   <Select 
-                    value={sexualPreference} 
-                    onValueChange={setSexualPreference}
+                    value={profile.sexual_orientation} 
+                    onValueChange={(value) => setProfile({ ...profile, sexual_orientation: value })}
                   >
                     <SelectTrigger id="sexual-preference">
                       <SelectValue placeholder="Select your sexual orientation" />
@@ -182,8 +280,8 @@ export default function Profile() {
                 <div className="space-y-3">
                   <Label>Relationship Structure</Label>
                   <RadioGroup 
-                    value={relationshipStructure} 
-                    onValueChange={setRelationshipStructure}
+                    value={profile.relationship_structure} 
+                    onValueChange={(value) => setProfile({ ...profile, relationship_structure: value })}
                     className="grid gap-3"
                   >
                     <div className="flex items-start space-x-3 border p-3 rounded-lg cursor-pointer hover:border-primary">
@@ -235,8 +333,19 @@ export default function Profile() {
                   </p>
                 </div>
                 
-                <Button onClick={handleSaveProfile} className="w-full">
-                  Save Preferences
+                <Button 
+                  onClick={handleSaveProfile} 
+                  className="w-full"
+                  disabled={saving}
+                >
+                  {saving ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    'Save Preferences'
+                  )}
                 </Button>
               </CardContent>
             </Card>

@@ -6,7 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { BottomNav } from "@/components/bottom-nav";
 import { ChevronLeft, Heart, MessageCircle, Shield, Flame, Target, Lightbulb, HeartHandshake, ArrowRight, Sparkles, Brain, Zap, PartyPopper, Check } from "lucide-react";
 import { toast } from "sonner";
-import { sexualityJourneyData } from "@/data/relationshipContent";
+import { loadJourneyContent, type JourneyContent } from "@/services/journeyService";
+import ReactMarkdown from 'react-markdown';
 
 // This array matches the one in PathToTogether.tsx - in a real app, this would be fetched from an API
 const journeys = [
@@ -541,300 +542,131 @@ const journeys = [
 export default function JourneyDetails() {
   const navigate = useNavigate();
   const { journeyId } = useParams();
-  const [journey, setJourney] = useState<any>(null);
-  const [completedDays, setCompletedDays] = useState<number[]>([]);
-  const [nextDay, setNextDay] = useState<number>(1);
-  
+  const [journey, setJourney] = useState<JourneyContent | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [activeJourney, setActiveJourney] = useState<string | null>(null);
+  const [activeJourneyDay, setActiveJourneyDay] = useState<string | null>(null);
+
   useEffect(() => {
-    // Find the journey that matches the ID from the URL
-    const foundJourney = journeys.find(j => j.id === journeyId);
-    if (foundJourney) {
-      setJourney(foundJourney);
-      
-      // Load completed days from local storage
-      const completed = JSON.parse(localStorage.getItem(`${journeyId}_completed_days`) || '[]');
-      setCompletedDays(completed);
-      
-      // Set the next day based on completed days
-      setNextDay(completed.length + 1);
-    } else {
-      // If journey not found, redirect to journeys list
-      navigate("/path-to-together");
-      toast.error("Journey not found");
-    }
-  }, [journeyId, navigate]);
-  
-  const handleStartDay = (dayNumber: number) => {
-    if (dayNumber === 1 || completedDays.includes(dayNumber - 1)) {
-      navigate(`/journey/${journeyId}/start?day=${dayNumber}`);
-    } else {
-      toast.error("Please complete the previous day first!");
-    }
-  };
+    // Check if there's an active journey in localStorage
+    const checkActiveJourney = () => {
+      if (journeyId) {
+        const lastDay = localStorage.getItem(`${journeyId}_last_day`);
+        if (lastDay) {
+          setActiveJourney(journeyId);
+          setActiveJourneyDay(lastDay);
+        }
+      }
+    };
 
-  const getButtonText = () => {
-    if (completedDays.length === 0) {
-      return (
-        <>
-          Begin This Journey
-          <ArrowRight className="w-4 h-4 ml-2" />
-        </>
-      );
-    } else {
-      return (
-        <>
-          Continue Day {nextDay}
-          <ArrowRight className="w-4 h-4 ml-2" />
-        </>
-      );
-    }
-  };
+    checkActiveJourney();
+  }, [journeyId]);
 
-  if (!journey) {
+  useEffect(() => {
+    async function fetchJourneyContent() {
+      if (!journeyId) {
+        setError('No journey ID provided');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const content = await loadJourneyContent(journeyId);
+        if (!content) {
+          setError('Journey not found');
+          setLoading(false);
+          return;
+        }
+        setJourney(content);
+      } catch (err) {
+        setError('Failed to load journey content');
+        console.error('Error loading journey:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchJourneyContent();
+  }, [journeyId]);
+
+  if (loading) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
+
+  if (error || !journey) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-24">
-        <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b dark:border-gray-700">
-          <div className="container max-w-6xl mx-auto px-4 py-3 flex items-center">
-            <button 
-              onClick={() => navigate(-1)} 
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-            >
-              <ChevronLeft className="w-6 h-6 dark:text-gray-300" />
-            </button>
-            <h1 className="text-xl font-semibold text-gray-900 dark:text-white mx-auto">
-              Loading Journey...
-            </h1>
-          </div>
-        </header>
-        <div className="flex justify-center items-center h-96">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
+      <div className="flex flex-col items-center justify-center min-h-screen p-4">
+        <p className="text-red-500 mb-4">{error || 'Journey not found'}</p>
+        <Button onClick={() => navigate('/path-to-together')}>
+          Return to Journeys
+        </Button>
       </div>
     );
   }
 
-  const JourneyIcon = () => {
-    switch (journeyId) {
-      case 'love-languages':
-        return <Heart className="w-8 h-8 text-white" />;
-      case 'communication':
-        return <MessageCircle className="w-8 h-8 text-white" />;
-      case 'conflict':
-        return <Shield className="w-8 h-8 text-white" />;
-      case 'intimacy':
-        return <Flame className="w-8 h-8 text-white" />;
-      case 'values':
-        return <Target className="w-8 h-8 text-white" />;
-      default:
-        return <HeartHandshake className="w-8 h-8 text-white" />;
-    }
-  };
-
-  const getCategoryColor = () => {
-    switch (journey.category) {
-      case 'Foundation':
-        return 'bg-green-600';
-      case 'Skills':
-        return 'bg-indigo-600';
-      case 'Connection':
-        return 'bg-rose-500';
-      default:
-        return 'bg-primary';
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-24">
-      <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b dark:border-gray-700">
-        <div className="container max-w-6xl mx-auto px-4 py-3 flex items-center">
-          <button 
-            onClick={() => navigate(-1)} 
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-          >
-            <ChevronLeft className="w-6 h-6 dark:text-gray-300" />
-          </button>
-          <h1 className="text-xl font-semibold text-gray-900 dark:text-white mx-auto">
-            {journey.title}
-          </h1>
-        </div>
-      </header>
+    <div className="container mx-auto px-4 py-8">
+      <Button
+        variant="ghost"
+        className="mb-4"
+        onClick={() => navigate('/path-to-together')}
+      >
+        <ChevronLeft className="mr-2 h-4 w-4" />
+        Back to Journeys
+      </Button>
 
-      <main className="container max-w-4xl mx-auto px-4 pt-6 animate-slide-up">
-        {/* Hero section with image */}
-        <div className="relative rounded-xl overflow-hidden mb-8 h-64 md:h-80">
-          <img 
-            src={journey.image} 
-            alt={journey.title} 
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6">
-            <div className="flex items-center gap-2 mb-2">
-              {journey.sequence && (
-                <Badge className="bg-white/20 text-white">Journey {journey.sequence} of 5</Badge>
-              )}
-              <Badge className="bg-white/20 text-white">{journey.duration}</Badge>
-              <Badge className={`text-white ${getCategoryColor()}`}>{journey.category}</Badge>
-              {journey.free && (
-                <Badge className="bg-green-500 text-white">Free Access</Badge>
-              )}
-            </div>
-            <h1 className="text-3xl font-bold text-white mb-2">{journey.title}</h1>
-            <p className="text-white/90 max-w-2xl">{journey.description}</p>
-          </div>
-        </div>
-
-        {/* Journey Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="md:col-span-2">
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
-              <div className="flex items-center gap-3 mb-4">
-                <div className={`p-2 rounded-full ${getCategoryColor()} flex-shrink-0`}>
-                  <Brain className="w-5 h-5 text-white" />
-                </div>
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Journey Overview
-                </h2>
+      {activeJourney && activeJourneyDay && (
+        <div className="mb-6">
+          <Card className="bg-blue-50 border border-blue-100 dark:bg-blue-900/20 dark:border-blue-800/30 p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-medium text-gray-900 dark:text-gray-100 text-sm">Continue your journey</h3>
+                <p className="text-gray-600 dark:text-gray-300 text-xs">
+                  You're on day {parseInt(activeJourneyDay) + 1} of this journey
+                </p>
               </div>
-              <p className="text-gray-700 dark:text-gray-300 mb-6">
-                {journey.overview}
-              </p>
-              
-              <h3 className="font-medium text-gray-900 dark:text-white mb-3">Psychological Foundations</h3>
-              <div className="flex flex-wrap gap-2 mb-6">
-                {journey.psychology.map((item: string, i: number) => (
-                  <Badge key={i} variant="outline" className="bg-gray-100/80 dark:bg-gray-700/80 text-gray-700 dark:text-gray-300">
-                    {item}
-                  </Badge>
-                ))}
-              </div>
-              
-              <h3 className="font-medium text-gray-900 dark:text-white mb-3">What You'll Gain</h3>
-              <ul className="space-y-2 mb-6">
-                {journey.benefits.map((benefit: string, i: number) => (
-                  <li key={i} className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
-                    <div className="mt-1 text-primary">✓</div>
-                    <span>{benefit}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          
-          <div>
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm mb-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className={`p-2 rounded-full ${getCategoryColor()} flex-shrink-0`}>
-                  {JourneyIcon()}
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    {journey.title}
-                  </h2>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {completedDays.length > 0 
-                      ? `Day ${completedDays.length} completed`
-                      : journey.duration}
-                  </p>
-                </div>
-              </div>
-              
               <Button 
-                className={`w-full mb-4 py-6 ${getCategoryColor()}`}
-                onClick={() => handleStartDay(nextDay)}
+                size="sm" 
+                onClick={() => navigate(`/journey/${journeyId}/start?day=${activeJourneyDay}`)}
               >
-                {getButtonText()}
+                Continue
               </Button>
-              
-              <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-                {completedDays.length > 0 
-                  ? `You've completed ${completedDays.length} ${completedDays.length === 1 ? 'day' : 'days'} of your journey`
-                  : journey.free 
-                    ? "This journey is completely free! Begin anytime and progress at your own pace."
-                    : "You can begin this journey at any time and progress at your own pace."}
-              </p>
-              
-              {journey.free && (
-                <div className="mt-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800/30 rounded-lg">
-                  <div className="flex items-start gap-2">
-                    <div className="p-1 bg-green-100 dark:bg-green-800/30 rounded-full mt-0.5">
-                      <Zap className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-green-800 dark:text-green-400">No Subscription Required</p>
-                      <p className="text-xs text-green-700 dark:text-green-500">Experience this evidence-based journey completely free of charge.</p>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
-            
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
-              <h3 className="font-medium text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                <span className="p-1.5 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                  <Lightbulb className="w-4 h-4 text-amber-500" />
-                </span>
-                Did You Know?
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm italic">
-                Couples who deliberately focus on improving specific aspects of their relationship report 3x more satisfaction compared to those who don't use structured approaches.
-              </p>
-            </div>
-          </div>
+          </Card>
         </div>
+      )}
+
+      <Card className="p-6">
+        <h1 className="text-3xl font-bold mb-4">{journey.title}</h1>
         
-        {/* Journey Phases */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm mb-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 rounded-full bg-primary/10 dark:bg-primary/20">
-              <Sparkles className="w-5 h-5 text-primary" />
-            </div>
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Your {journey.duration} Path
-            </h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {journey.phases.map((phase: any, index: number) => (
-              <Card key={index} className="overflow-hidden border border-gray-200 dark:border-gray-700">
-                <div className="p-5">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-4xl">{phase.icon}</span>
-                    <Badge variant="outline" className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
-                      {phase.days}
-                    </Badge>
-                  </div>
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">
-                    Phase {index + 1}: {phase.name}
-                  </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {phase.description}
-                  </p>
-                </div>
-              </Card>
-            ))}
-          </div>
+        <div className="flex gap-2 mb-4">
+          <Badge>{journey.metadata.category}</Badge>
+          <Badge variant="outline">{journey.metadata.duration}</Badge>
         </div>
-        
-        {/* Start Journey CTA */}
-        <div className="bg-gradient-to-r from-primary/20 to-primary/10 dark:from-primary/30 dark:to-primary/20 rounded-xl p-8 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
-            Ready to Start Your Journey?
-          </h2>
-          <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto mb-6">
-            Begin your path to a deeper, more connected relationship. 
-            Each day brings new insights and growth opportunities.
-          </p>
+
+        <div className="prose max-w-none">
+          <ReactMarkdown>{journey.content}</ReactMarkdown>
+        </div>
+
+        <div className="mt-8">
           <Button 
-            size="lg"
-            className={`px-8 ${getCategoryColor()}`}
-            onClick={() => handleStartDay(1)}
+            className="w-full"
+            onClick={() => {
+              // If there's an active journey, continue from where they left off
+              if (activeJourney && activeJourneyDay) {
+                navigate(`/journey/${journeyId}/start?day=${activeJourneyDay}`);
+              } else {
+                // Otherwise start from day 1
+                navigate(`/journey/${journeyId}/start?day=1`);
+              }
+            }}
           >
-            Begin Your {journey.title} Journey
-            <ArrowRight className="w-4 h-4 ml-2" />
+            {activeJourney ? 'Continue Journey' : 'Start Journey'}
           </Button>
         </div>
-      </main>
-      
+      </Card>
+
       <BottomNav />
     </div>
   );

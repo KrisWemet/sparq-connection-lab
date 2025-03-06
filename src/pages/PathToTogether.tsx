@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,276 +21,177 @@ import {
   Zap,
   ArrowRight,
   RocketIcon,
-  Hash
+  Hash,
+  Info
 } from "lucide-react";
 import { toast } from "sonner";
 import { sexualityJourneyData } from "@/data/relationshipContent";
+import { loadJourneyContent, type JourneyContent } from "@/services/journeyService";
 
-// Journey data with psychological foundations
-const journeys = [
-  {
-    id: "love-languages",
-    title: "5 Love Languages",
-    description: "Discover the primary ways you and your partner express and receive love",
-    duration: "2 weeks",
-    category: "Foundation",
-    sequence: 1,
-    image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&h=500",
-    psychology: [
-      "Love Languages Framework (Chapman)",
-      "Attachment Theory",
-      "Emotional Intelligence"
-    ],
-    benefits: [
-      "Identify your primary love language",
-      "Recognize your partner's love language",
-      "Learn to express love effectively",
-      "Reduce misunderstandings about affection"
-    ],
-    icon: <Heart className="w-5 h-5" />
-  },
-  {
-    id: "communication",
-    title: "Effective Communication",
-    description: "Master the art of truly understanding each other through validated techniques",
-    duration: "3 weeks",
-    category: "Skills",
-    sequence: 2,
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&h=500",
-    psychology: [
-      "Gottman Method",
-      "Nonviolent Communication (Rosenberg)",
-      "Active Listening Techniques"
-    ],
-    benefits: [
-      "Reduce misunderstandings and conflicts",
-      "Express needs clearly and compassionately",
-      "Develop deeper understanding",
-      "Create meaningful dialogue"
-    ],
-    icon: <MessageCircle className="w-5 h-5" />
-  },
-  {
-    id: "conflict",
-    title: "Healthy Conflict Resolution",
-    description: "Transform disagreements into opportunities for growth and understanding",
-    duration: "4 weeks",
-    category: "Skills",
-    sequence: 3,
-    image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&h=500",
-    psychology: [
-      "Gottman's Four Horsemen",
-      "Fair Fighting Techniques",
-      "Emotion-Focused Therapy Principles"
-    ],
-    benefits: [
-      "Identify destructive conflict patterns",
-      "Learn repair techniques",
-      "Transform arguments into growth",
-      "Develop collaborative problem-solving"
-    ],
-    icon: <Shield className="w-5 h-5" />
-  },
-  {
-    id: "intimacy",
-    title: "Deepening Intimacy",
-    description: "Strengthen your emotional and physical connection through evidence-based approaches",
-    duration: "5 weeks",
-    category: "Connection",
-    sequence: 4,
-    image: "https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=800&h=500",
-    psychology: [
-      "Sternberg's Triangular Theory of Love",
-      "Sensate Focus Techniques",
-      "Emotional Vulnerability"
-    ],
-    benefits: [
-      "Deepen emotional connection",
-      "Enhance physical intimacy",
-      "Build lasting passion",
-      "Create meaningful rituals of connection"
-    ],
-    icon: <Flame className="w-5 h-5" />
-  },
-  {
-    id: "values",
-    title: "Values & Vision Alignment",
-    description: "Create a shared vision for your future based on aligned core values",
-    duration: "3 weeks",
-    category: "Foundation",
-    sequence: 5,
-    image: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=800&h=500",
-    psychology: [
-      "Acceptance and Commitment Therapy",
-      "Positive Psychology",
-      "Goal-Setting Theory"
-    ],
-    benefits: [
-      "Identify individual and shared values",
-      "Create a compelling relationship vision",
-      "Set meaningful goals together",
-      "Build a roadmap for your future"
-    ],
-    icon: <Target className="w-5 h-5" />
-  },
-  {
-    id: "appreciation",
-    title: "Gratitude & Appreciation",
-    description: "Cultivate a culture of appreciation and positivity in your relationship",
-    duration: "2 weeks",
-    category: "Connection",
-    image: "https://images.unsplash.com/photo-1516575334481-f85287c2c82d?auto=format&fit=crop&w=800&h=500",
-    psychology: [
-      "Positive Psychology",
-      "Gottman's 5:1 Ratio",
-      "Mindfulness Practices"
-    ],
-    benefits: [
-      "Increase positive interactions",
-      "Develop appreciation rituals",
-      "Enhance relationship satisfaction",
-      "Build emotional resilience"
-    ],
-    icon: <Sparkles className="w-5 h-5" />
-  },
-  {
-    id: "36-questions",
-    title: "36 Questions to Fall in Love",
-    description: "Foster intimacy through a scientifically-designed question sequence",
-    duration: "3 sessions",
-    category: "Connection",
-    image: "https://images.unsplash.com/photo-1474552226712-ac0f0961a954?auto=format&fit=crop&w=800&h=500",
-    psychology: [
-      "Self-Disclosure Theory",
-      "Interpersonal Process Model",
-      "Psychological Intimacy Research"
-    ],
-    benefits: [
-      "Accelerate emotional intimacy",
-      "Deepen mutual understanding",
-      "Create lasting vulnerability",
-      "Build empathetic connection"
-    ],
-    free: true,
-    icon: <HeartHandshake className="w-5 h-5" />,
-    badge: "Free Access"
-  },
-  {
-    id: "growth",
-    title: "Individual & Relationship Growth",
-    description: "Balance personal development with relationship nurturing",
-    duration: "4 weeks",
-    category: "Growth",
-    image: "https://images.unsplash.com/photo-1499952127939-9bbf5af6c51c?auto=format&fit=crop&w=800&h=500",
-    psychology: [
-      "Self-Determination Theory",
-      "Differentiation in Relationships",
-      "Growth Mindset (Dweck)"
-    ],
-    benefits: [
-      "Support each other's personal growth",
-      "Balance autonomy and togetherness",
-      "Develop a growth mindset as a couple",
-      "Create shared learning experiences"
-    ],
-    icon: <Sparkles className="w-5 h-5" />
-  },
-  {
-    id: "trust",
-    title: "Trust Rebuilding",
-    description: "Heal past wounds and rebuild trust through proven therapeutic approaches",
-    duration: "6 weeks",
-    category: "Healing",
-    image: "https://images.unsplash.com/photo-1516575334481-f85287c2c82d?auto=format&fit=crop&w=800&h=500",
-    psychology: [
-      "Trauma-Informed Approaches",
-      "Forgiveness Research",
-      "Attachment Repair"
-    ],
-    benefits: [
-      "Process past hurts safely",
-      "Rebuild trust systematically",
-      "Develop new patterns of security",
-      "Create a foundation for healing"
-    ],
-    icon: <HeartHandshake className="w-5 h-5" />
-  },
-  {
-    id: "intimate-connection",
-    title: "Intimate Connection",
-    description: "Build deeper physical and emotional intimacy through mindful connection practices",
-    duration: "2 weeks",
-    category: "Intimacy",
-    image: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=800&h=500",
-    psychology: [
-      "Attachment Theory",
-      "Sensate Focus Techniques",
-      "Mindful Sexuality"
-    ],
-    benefits: [
-      "Enhance physical connection",
-      "Deepen emotional intimacy",
-      "Improve communication about desires",
-      "Build trust and safety"
-    ],
-    icon: <Flame className="w-5 h-5" />
-  },
-  {
-    id: "desire-exploration",
-    title: "Desire Exploration",
-    description: "Discover and communicate desires, fantasies, and preferences in a safe, supportive space",
-    duration: "3 weeks",
-    category: "Intimacy",
-    image: "https://images.unsplash.com/photo-1516585427167-9f4af9627e6c?auto=format&fit=crop&w=800&h=500",
-    psychology: [
-      "Erotic Intelligence Research",
-      "Cognitive Flexibility",
-      "Desire Mapping Techniques"
-    ],
-    benefits: [
-      "Expand understanding of personal desires",
-      "Improve communication about fantasies",
-      "Reduce shame around sexual preferences",
-      "Create space for playful exploration"
-    ],
-    icon: <Flame className="w-5 h-5" />
-  },
-  {
-    id: "boundaries-beyond",
-    title: "Boundaries & Beyond",
-    description: "Explore advanced intimate practices with clear communication, consent, and trust",
-    duration: "4 weeks",
-    category: "Intimacy",
-    image: "https://images.unsplash.com/photo-1624523439904-d392af8c4354?auto=format&fit=crop&w=800&h=500",
-    psychology: [
-      "Consent Psychology",
-      "Power Dynamics Research",
-      "Transformative Experience Studies"
-    ],
-    benefits: [
-      "Master consent communication",
-      "Establish clear boundaries for exploration",
-      "Deepen trust through vulnerability",
-      "Experience new dimensions of connection"
-    ],
-    icon: <Flame className="w-5 h-5" />
-  }
+// Journey IDs that correspond to our markdown files
+const JOURNEY_IDS = [
+  'love-languages',
+  'communication',
+  'conflict',
+  'intimacy',
+  'values',
+  'sexual-intimacy',
+  'emotional-intelligence',
+  'fantasy-exploration',
+  'trust-rebuilding',
+  'power-dynamics',
+  'mindful-sexuality',
+  'relationship-renewal',
+  'attachment-healing',
+  'conflict-resolution'
 ];
+
+// Category colors for consistent styling
+const CATEGORY_COLORS = {
+  "foundation": {
+    bg: "bg-green-100 dark:bg-green-900/30",
+    text: "text-green-800 dark:text-green-300",
+    border: "border-green-200 dark:border-green-800/50",
+    badge: "bg-green-500",
+    hover: "hover:bg-green-50 dark:hover:bg-green-900/20",
+    button: "bg-green-500 hover:bg-green-600",
+    description: "Foundation journeys help you build the essential elements of a strong relationship."
+  },
+  "skills": {
+    bg: "bg-indigo-100 dark:bg-indigo-900/30",
+    text: "text-indigo-800 dark:text-indigo-300",
+    border: "border-indigo-200 dark:border-indigo-800/50",
+    badge: "bg-indigo-500",
+    hover: "hover:bg-indigo-50 dark:hover:bg-indigo-900/20",
+    button: "bg-indigo-500 hover:bg-indigo-600",
+    description: "Skills journeys help you develop practical abilities to enhance your relationship."
+  },
+  "connection": {
+    bg: "bg-rose-100 dark:bg-rose-900/30",
+    text: "text-rose-800 dark:text-rose-300",
+    border: "border-rose-200 dark:border-rose-800/50",
+    badge: "bg-rose-500",
+    hover: "hover:bg-rose-50 dark:hover:bg-rose-900/20",
+    button: "bg-rose-500 hover:bg-rose-600",
+    description: "Connection journeys help you deepen your emotional and physical bond."
+  },
+  "intimacy": {
+    bg: "bg-pink-100 dark:bg-pink-900/30",
+    text: "text-pink-800 dark:text-pink-300",
+    border: "border-pink-200 dark:border-pink-800/50",
+    badge: "bg-pink-500",
+    hover: "hover:bg-pink-50 dark:hover:bg-pink-900/20",
+    button: "bg-pink-500 hover:bg-pink-600",
+    description: "Intimacy journeys help you explore and enhance your physical connection."
+  },
+  "healing": {
+    bg: "bg-amber-100 dark:bg-amber-900/30",
+    text: "text-amber-800 dark:text-amber-300",
+    border: "border-amber-200 dark:border-amber-800/50",
+    badge: "bg-amber-500",
+    hover: "hover:bg-amber-50 dark:hover:bg-amber-900/20",
+    button: "bg-amber-500 hover:bg-amber-600",
+    description: "Healing journeys help you overcome challenges and rebuild trust in your relationship."
+  },
+  "growth": {
+    bg: "bg-cyan-100 dark:bg-cyan-900/30",
+    text: "text-cyan-800 dark:text-cyan-300",
+    border: "border-cyan-200 dark:border-cyan-800/50",
+    badge: "bg-cyan-500",
+    hover: "hover:bg-cyan-50 dark:hover:bg-cyan-900/20",
+    button: "bg-cyan-500 hover:bg-cyan-600",
+    description: "Growth journeys help you evolve together and prevent relationship stagnation."
+  }
+};
 
 export default function PathToTogether() {
   const navigate = useNavigate();
-  const [activeCategory, setActiveCategory] = useState<string>("all");
-  
-  const filteredJourneys = activeCategory === "all" 
+  const [journeys, setJourneys] = useState<JourneyContent[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("all");
+  const [activeJourney, setActiveJourney] = useState<string | null>(null);
+  const [activeJourneyDay, setActiveJourneyDay] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Check if there's an active journey in localStorage
+    const checkActiveJourney = () => {
+      for (const id of JOURNEY_IDS) {
+        const lastDay = localStorage.getItem(`${id}_last_day`);
+        if (lastDay) {
+          setActiveJourney(id);
+          setActiveJourneyDay(lastDay);
+          break;
+        }
+      }
+    };
+
+    checkActiveJourney();
+  }, []);
+
+  useEffect(() => {
+    async function loadJourneys() {
+      try {
+        const loadedJourneys = await Promise.all(
+          JOURNEY_IDS.map(id => loadJourneyContent(id))
+        );
+        
+        // Filter out any null results and sort by sequence
+        setJourneys(
+          loadedJourneys
+            .filter((j): j is JourneyContent => j !== null)
+            .sort((a, b) => (a.metadata.sequence || 0) - (b.metadata.sequence || 0))
+        );
+      } catch (error) {
+        console.error('Error loading journeys:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadJourneys();
+  }, []);
+
+  const filteredJourneys = activeTab === "all" 
     ? journeys 
-    : journeys.filter(journey => journey.category.toLowerCase() === activeCategory.toLowerCase());
+    : journeys.filter(journey => journey.metadata.category.toLowerCase() === activeTab);
+
+  const handleBackNavigation = () => {
+    if (activeJourney && activeJourneyDay) {
+      // Navigate back to the active journey
+      navigate(`/journey/${activeJourney}/start?day=${activeJourneyDay}`);
+      toast.info(`Returning to your ${activeJourney.replace('-', ' ')} journey`);
+    } else {
+      // No active journey, go back to previous page
+      navigate(-1);
+    }
+  };
+
+  // Get the color theme for a category
+  const getCategoryColors = (category: string) => {
+    const lowerCategory = category.toLowerCase();
+    return CATEGORY_COLORS[lowerCategory as keyof typeof CATEGORY_COLORS] || CATEGORY_COLORS.foundation;
+  };
+
+  // Get all unique categories from journeys
+  const getCategories = () => {
+    const categories = journeys.map(journey => journey.metadata.category.toLowerCase());
+    return [...new Set(categories)];
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-24">
       <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b dark:border-gray-700">
         <div className="container max-w-6xl mx-auto px-4 py-3 flex items-center">
           <button 
-            onClick={() => navigate(-1)} 
+            onClick={handleBackNavigation} 
             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
           >
             <ChevronLeft className="w-6 h-6 dark:text-gray-300" />
@@ -301,7 +202,34 @@ export default function PathToTogether() {
         </div>
       </header>
 
-      <main className="container max-w-6xl mx-auto px-4 pt-6 animate-slide-up">
+      {activeJourney && (
+        <div className="container max-w-6xl mx-auto px-4 pt-4">
+          <div className="bg-blue-50 border border-blue-100 dark:bg-blue-900/20 dark:border-blue-800/30 rounded-lg p-4 mb-4">
+            <div className="flex items-start gap-3">
+              <div className="bg-blue-100 dark:bg-blue-800/30 p-2 rounded-full mt-0.5">
+                <Lightbulb className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div>
+                <h3 className="font-medium text-gray-900 dark:text-gray-100 text-sm">You have an active journey</h3>
+                <p className="text-gray-600 dark:text-gray-300 text-xs mb-2">
+                  Continue your progress on the {activeJourney.replace('-', ' ')} journey for the best results.
+                </p>
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="text-xs"
+                  onClick={() => navigate(`/journey/${activeJourney}/start?day=${activeJourneyDay}`)}
+                >
+                  Continue Journey
+                  <ArrowRight className="w-3 h-3 ml-1" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <main className="container max-w-6xl mx-auto px-4 pt-2 animate-slide-up">
         <div className="bg-gradient-to-r from-primary/20 to-primary/10 dark:from-primary/30 dark:to-primary/20 rounded-lg p-6 mb-6">
           <div className="max-w-3xl mx-auto">
             <div className="flex items-center gap-3 mb-3">
@@ -338,150 +266,109 @@ export default function PathToTogether() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-6">
-          <button
-            onClick={() => setActiveCategory("all")}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-              activeCategory === "all" 
-                ? "bg-primary text-white" 
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-            }`}
-          >
-            All Journeys
-          </button>
-          <button
-            onClick={() => setActiveCategory("foundation")}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-              activeCategory === "foundation" 
-                ? "bg-green-600 text-white" 
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-            }`}
-          >
-            Foundation
-          </button>
-          <button
-            onClick={() => setActiveCategory("skills")}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-              activeCategory === "skills" 
-                ? "bg-indigo-600 text-white" 
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-            }`}
-          >
-            Skills
-          </button>
-          <button
-            onClick={() => setActiveCategory("connection")}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-              activeCategory === "connection" 
-                ? "bg-rose-500 text-white" 
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-            }`}
-          >
-            Connection
-          </button>
-          <button
-            onClick={() => setActiveCategory("intimacy")}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-              activeCategory === "intimacy" 
-                ? "bg-pink-500 text-white" 
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-            }`}
-          >
-            Intimacy
-          </button>
-        </div>
-
-        {/* Recommended Sequence Banner */}
-        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700/30 rounded-lg p-4 mb-6">
+        <div className="bg-amber-50 border border-amber-100 dark:bg-amber-900/20 dark:border-amber-800/30 rounded-lg p-4 mb-6">
           <div className="flex items-start gap-3">
-            <div className="p-2 bg-amber-100 dark:bg-amber-800/30 rounded-full">
-              <Lightbulb className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+            <div className="bg-amber-100 dark:bg-amber-800/30 p-2 rounded-full mt-0.5">
+              <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-400" />
             </div>
             <div>
-              <h3 className="font-medium text-gray-900 dark:text-amber-100 mb-1">Recommended Journey Sequence</h3>
-              <p className="text-sm text-gray-700 dark:text-amber-200/70">
+              <h3 className="font-medium text-gray-900 dark:text-gray-100">Recommended Journey Sequence</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
                 For the best results, we recommend completing the first five journeys in sequence. Start with 5 Love Languages (1), then proceed to Effective Communication (2), Healthy Conflict Resolution (3), Deepening Intimacy (4), and finally Values & Vision Alignment (5).
               </p>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-          {filteredJourneys.map((journey) => (
-            <div 
-              key={journey.id}
-              className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow group cursor-pointer"
-              onClick={() => navigate(`/journey/${journey.id}`)}
-            >
-              <div className="relative h-48 overflow-hidden">
-                <img 
-                  src={journey.image} 
-                  alt={journey.title} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute top-2 right-2 flex flex-col gap-2">
-                  <span className="px-2 py-1 bg-white/90 dark:bg-gray-900/90 text-gray-800 dark:text-gray-200 rounded text-xs font-medium">
-                    {journey.duration}
-                  </span>
-                  {journey.sequence && (
-                    <div className="px-2 py-1 bg-primary/90 text-white rounded text-xs font-medium flex items-center gap-1.5">
-                      <Hash className="w-3 h-3" />
-                      <span>Journey {journey.sequence}</span>
-                    </div>
-                  )}
-                  {journey.free && (
-                    <div className="px-2 py-1 bg-green-500/90 text-white rounded text-xs font-medium flex items-center gap-1.5">
-                      <Zap className="w-3 h-3" />
-                      <span>Free Access</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="p-5">
-                <div className="flex items-center justify-between mb-1">
-                  <div className="flex items-center gap-2">
-                    <span className={`flex items-center justify-center w-6 h-6 rounded-full text-white
-                      ${journey.category === "Foundation" ? "bg-green-600" : 
-                        journey.category === "Skills" ? "bg-indigo-600" : "bg-rose-500"}`}
-                    >
-                      {journey.icon}
-                    </span>
-                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{journey.category}</span>
-                  </div>
-                  {journey.badge && (
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
-                      {journey.badge}
-                    </Badge>
-                  )}
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{journey.title}</h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">{journey.description}</p>
-                
-                <div className="mb-4">
-                  <h4 className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Psychological Foundation</h4>
-                  <div className="flex flex-wrap gap-1">
-                    {journey.psychology.map((item, i) => (
-                      <span key={i} className="inline-block px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded text-xs">
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                
-                <button 
-                  className="w-full py-2 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-foreground font-medium text-sm group-hover:bg-primary group-hover:text-white transition-colors flex items-center justify-center gap-2"
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent triggering the parent onClick
-                    navigate(`/journey/${journey.id}`);
-                  }}
-                >
-                  Explore Journey
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
+        <Tabs defaultValue="all" className="mb-8" onValueChange={setActiveTab}>
+          <TabsList className="flex flex-wrap">
+            <TabsTrigger value="all">All Journeys</TabsTrigger>
+            <TabsTrigger value="foundation" className="bg-green-500 data-[state=active]:bg-green-600 text-white">Foundation</TabsTrigger>
+            <TabsTrigger value="skills" className="bg-indigo-500 data-[state=active]:bg-indigo-600 text-white">Skills</TabsTrigger>
+            <TabsTrigger value="connection" className="bg-rose-500 data-[state=active]:bg-rose-600 text-white">Connection</TabsTrigger>
+            <TabsTrigger value="intimacy" className="bg-pink-500 data-[state=active]:bg-pink-600 text-white">Intimacy</TabsTrigger>
+            <TabsTrigger value="healing" className="bg-amber-500 data-[state=active]:bg-amber-600 text-white">Healing</TabsTrigger>
+            <TabsTrigger value="growth" className="bg-cyan-500 data-[state=active]:bg-cyan-600 text-white">Growth</TabsTrigger>
+          </TabsList>
+
+          {activeTab !== "all" && (
+            <div className="mt-4 mb-2 flex items-start gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <Info className="w-5 h-5 text-gray-500 dark:text-gray-400 mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-gray-700 dark:text-gray-300">
+                {CATEGORY_COLORS[activeTab as keyof typeof CATEGORY_COLORS]?.description || 
+                "These journeys focus on a specific aspect of your relationship."}
+              </p>
             </div>
+          )}
+
+          <TabsContent value="all" className="mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredJourneys.map((journey) => {
+                const categoryColors = getCategoryColors(journey.metadata.category);
+                return (
+                  <Card 
+                    key={journey.id} 
+                    className={`cursor-pointer hover:shadow-lg transition-shadow border-2 ${categoryColors.border}`}
+                    onClick={() => navigate(`/journey/${journey.id}`)}
+                  >
+                    <CardHeader className={`${categoryColors.bg} ${categoryColors.hover}`}>
+                      <div className="flex justify-between items-start">
+                        <Badge className={`${categoryColors.badge} text-white`}>{journey.metadata.category}</Badge>
+                        <Badge variant="outline">{journey.metadata.duration}</Badge>
+                      </div>
+                      <CardTitle className={`mt-2 ${categoryColors.text}`}>{journey.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-4">
+                      <p className="text-gray-600 dark:text-gray-400">
+                        {journey.metadata.description || "Start your journey to a better relationship."}
+                      </p>
+                    </CardContent>
+                    <CardFooter>
+                      <Button className={`w-full ${categoryColors.button} text-white`}>
+                        View Journey
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                );
+              })}
+            </div>
+          </TabsContent>
+
+          {["foundation", "skills", "connection", "intimacy", "healing", "growth"].map((tab) => (
+            <TabsContent key={tab} value={tab} className="mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredJourneys.map((journey) => {
+                  const categoryColors = getCategoryColors(journey.metadata.category);
+                  return (
+                    <Card 
+                      key={journey.id} 
+                      className={`cursor-pointer hover:shadow-lg transition-shadow border-2 ${categoryColors.border}`}
+                      onClick={() => navigate(`/journey/${journey.id}`)}
+                    >
+                      <CardHeader className={`${categoryColors.bg} ${categoryColors.hover}`}>
+                        <div className="flex justify-between items-start">
+                          <Badge className={`${categoryColors.badge} text-white`}>{journey.metadata.category}</Badge>
+                          <Badge variant="outline">{journey.metadata.duration}</Badge>
+                        </div>
+                        <CardTitle className={`mt-2 ${categoryColors.text}`}>{journey.title}</CardTitle>
+                      </CardHeader>
+                      <CardContent className="pt-4">
+                        <p className="text-gray-600 dark:text-gray-400">
+                          {journey.metadata.description || "Start your journey to a better relationship."}
+                        </p>
+                      </CardContent>
+                      <CardFooter>
+                        <Button className={`w-full ${categoryColors.button} text-white`}>
+                          View Journey
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  );
+                })}
+              </div>
+            </TabsContent>
           ))}
-        </div>
+        </Tabs>
 
         <div className="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg p-6 mb-8">
           <div className="max-w-3xl mx-auto">
