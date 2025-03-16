@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -20,17 +21,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [initializationComplete, setInitializationComplete] = useState(false);
 
   useEffect(() => {
+    console.log("Auth provider initialized");
     // Check for existing session on mount
     const getInitialSession = async () => {
       try {
         setLoading(true);
+        console.log("Getting initial session...");
         
         // Get current session
         const { data: { session } } = await supabase.auth.getSession();
+        console.log("Session retrieved:", !!session);
         
         if (session?.user) {
+          console.log("User found in session");
           setUser(session.user);
           
           // Get user profile
@@ -42,6 +48,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               .single();
               
             if (profile) {
+              console.log("Profile found");
               setProfile(profile as UserProfile);
             }
             
@@ -51,11 +58,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           } catch (error) {
             console.error('Error fetching profile:', error);
           }
+        } else {
+          console.log("No user in session");
         }
       } catch (error) {
         console.error('Error getting initial session:', error);
       } finally {
         setLoading(false);
+        setInitializationComplete(true);
+        console.log("Auth initialization complete");
       }
     };
 
@@ -64,9 +75,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log("Auth state changed:", event);
         setLoading(true);
         
         if (session?.user) {
+          console.log("User found in auth change");
           setUser(session.user);
           
           // Get user profile on auth change
@@ -171,7 +184,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     <AuthContext.Provider value={{ 
       user, 
       profile, 
-      loading, 
+      loading: loading && !initializationComplete, // Only consider loading if initialization isn't complete
       signIn, 
       signUp, 
       signOut,
@@ -188,4 +201,4 @@ export function useAuth() {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-} 
+}

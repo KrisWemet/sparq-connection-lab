@@ -10,10 +10,25 @@ export default function Index() {
   const { user, loading } = useAuth();
   const [error, setError] = useState<string | null>(null);
 
-  // Add some debug logging
+  // Add detailed debug logging
   useEffect(() => {
     console.log("Index page - Auth state:", { user, loading });
   }, [user, loading]);
+
+  // Add timeout to recover from infinite loading
+  useEffect(() => {
+    const loadingTimeout = setTimeout(() => {
+      if (loading) {
+        console.log("Loading timeout reached, forcing state reset");
+        // If still loading after 5 seconds, assume there's an issue
+        if (user) {
+          navigate("/dashboard");
+        }
+      }
+    }, 5000);
+
+    return () => clearTimeout(loadingTimeout);
+  }, [loading, user, navigate]);
 
   // Redirect to dashboard if already logged in
   useEffect(() => {
@@ -26,12 +41,13 @@ export default function Index() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-        <div className="text-center mb-8 animate-pulse">
+        <div className="text-center mb-8">
           <HeartHandshake className="w-16 h-16 text-primary mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-gray-900">Sparq Connect</h1>
           <p className="text-gray-600 mt-2">
             Loading...
           </p>
+          <div className="mt-4 animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto"></div>
         </div>
       </div>
     );

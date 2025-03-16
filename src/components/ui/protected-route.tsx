@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -14,9 +14,29 @@ interface ProtectedRouteProps {
 export function ProtectedRoute({ children, adminOnly = false }: ProtectedRouteProps) {
   const { user, loading, isAdmin } = useAuth();
   const location = useLocation();
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
+  
+  // Add a timeout to prevent infinite loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (loading) {
+        console.log("Protected route loading timeout reached");
+        setLoadingTimeout(true);
+      }
+    }, 3000);
+    
+    return () => clearTimeout(timer);
+  }, [loading]);
+
+  // If loading times out, redirect to auth page
+  if (loadingTimeout && !user) {
+    console.log("Loading timed out, redirecting to auth page");
+    sessionStorage.setItem('redirectUrl', location.pathname);
+    return <Navigate to="/auth" replace />;
+  }
 
   // Show loading state while checking authentication
-  if (loading) {
+  if (loading && !loadingTimeout) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
