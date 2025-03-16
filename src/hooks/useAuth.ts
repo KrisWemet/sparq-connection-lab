@@ -1,5 +1,5 @@
 
-import { useAuth as useAuthProvider } from '@/lib/auth-provider';
+import { useAuth as useAuthFromModule } from '@/lib/auth';
 
 // Re-export the hook to maintain consistent imports across the app
-export const useAuth = useAuthProvider;
+export const useAuth = useAuthFromModule;

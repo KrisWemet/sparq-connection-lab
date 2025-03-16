@@ -1,31 +1,11 @@
 
-import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { User, Subscription } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { authService, UserProfile } from '@/services/supabaseService';
-
-interface AuthContextType {
-  user: User | null;
-  profile: UserProfile | null;
-  loading: boolean;
-  signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, fullName: string, gender?: string, relationshipType?: string) => Promise<void>;
-  signOut: () => Promise<void>;
-  isAdmin: boolean;
-  isOnboarded: boolean;
-  refreshProfile: () => Promise<void>;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// Create a cached auth state to persist between renders/navigations
-const cachedAuthState = {
-  user: null as User | null,
-  profile: null as UserProfile | null,
-  isAdmin: false,
-  isOnboarded: false,
-  initialized: false
-};
+import { AuthContext } from './auth-context';
+import { cachedAuthState } from './auth-state';
+import { signIn, signUp, signOut, refreshProfile } from './auth-operations';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(cachedAuthState.user);
@@ -37,16 +17,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const authSubscription = useRef<{ unsubscribe: () => void } | null>(null);
 
   // Function to refresh profile data
-  const refreshProfile = async () => {
+  const handleRefreshProfile = async () => {
     if (!user) return;
     
     try {
-      console.log("Refreshing profile data for user:", user.id);
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
+      const profile = await refreshProfile(user.id);
         
       if (profile) {
         console.log("Refreshed profile data:", profile);
@@ -195,62 +170,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  const signIn = async (email: string, password: string) => {
+  const handleSignIn = async (email: string, password: string) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      
-      // For development, also set localStorage values
-      const isAdminUser = email.includes('admin@');
-      localStorage.setItem('userRole', isAdminUser ? 'admin' : 'user');
-    } catch (error: any) {
-      console.error('Error signing in:', error.message);
-      throw error;
+      await signIn(email, password);
     } finally {
       setLoading(false);
     }
   };
 
-  const signUp = async (
-    email: string, 
-    password: string, 
-    fullName: string, 
-    gender = 'prefer-not-to-say', 
+  const handleSignUp = async (
+    email: string,
+    password: string,
+    fullName: string,
+    gender = 'prefer-not-to-say',
     relationshipType = 'monogamous'
   ) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      
-      await authService.signUp({
-        email,
-        password,
-        fullName,
-        gender: gender as any,
-        relationshipType: relationshipType as any
-      });
-      
-      // For development, also set localStorage values
-      const isAdminUser = email.includes('admin@');
-      localStorage.setItem('userRole', isAdminUser ? 'admin' : 'user');
-    } catch (error: any) {
-      console.error('Error signing up:', error.message);
-      throw error;
+      await signUp(email, password, fullName, gender, relationshipType);
     } finally {
       setLoading(false);
     }
   };
 
-  const signOut = async () => {
+  const handleSignOut = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      await supabase.auth.signOut();
-      
-      // Clear localStorage values
-      localStorage.removeItem('userRole');
-    } catch (error: any) {
-      console.error('Error signing out:', error.message);
-      throw error;
+      await signOut();
     } finally {
       setLoading(false);
     }
@@ -261,22 +208,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       user, 
       profile, 
       loading: loading && !initializationComplete, // Only consider loading if initialization isn't complete
-      signIn, 
-      signUp, 
-      signOut,
+      signIn: handleSignIn, 
+      signUp: handleSignUp, 
+      signOut: handleSignOut,
       isAdmin,
       isOnboarded,
-      refreshProfile
+      refreshProfile: handleRefreshProfile
     }}>
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 }
