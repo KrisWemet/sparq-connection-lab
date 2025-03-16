@@ -58,8 +58,7 @@ export function useAuthSubscription(onChange: AuthChangeHandler) {
       }
     );
 
-    // Store the subscription with proper unsubscribe method
-    // Fix: The data object itself has the unsubscribe method we need
+    // The data object from supabase.auth.onAuthStateChange() contains the unsubscribe method
     authSubscription.current = data;
 
     // Cleanup subscription
