@@ -2,8 +2,12 @@
 import { supabase } from '@/integrations/supabase/client';
 import { MemoryInterface } from '@/types/memory';
 
-export interface SupabaseMemory implements MemoryInterface {
+export class SupabaseMemory implements MemoryInterface {
   userId: string;
+
+  constructor(userId: string) {
+    this.userId = userId;
+  }
 
   // Core memory operations
   async get(key: string): Promise<any> {
@@ -238,9 +242,4 @@ export interface SupabaseMemory implements MemoryInterface {
 // Function to create memory service for a specific user
 export function getMemoryService(userId: string): SupabaseMemory {
   return new SupabaseMemory(userId);
-}
-
-// Initialize the memory service
-function SupabaseMemory(userId: string) {
-  this.userId = userId;
 }
