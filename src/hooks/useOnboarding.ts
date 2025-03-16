@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
@@ -7,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 export function useOnboarding() {
   const navigate = useNavigate();
-  const { user, profile, refreshProfile } = useAuth();
+  const { user, profile, handleRefreshProfile } = useAuth();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [fullName, setFullName] = useState("");
@@ -100,7 +101,7 @@ export function useOnboarding() {
           }
         }
         
-        await refreshProfile();
+        await handleRefreshProfile();
         
         toast.success("Onboarding completed successfully!");
         
