@@ -30,13 +30,14 @@ export function useAuthSubscription({
           
           // Get user profile on auth change
           try {
-            const { data: profile } = await supabase
+            const { data: profile, error } = await supabase
               .from('profiles')
               .select('*')
               .eq('id', session.user.id)
               .single();
               
             if (profile) {
+              console.log("Profile found in auth state change:", profile);
               setProfile(profile as UserProfile);
               cachedAuthState.profile = profile as UserProfile;
               
@@ -44,9 +45,17 @@ export function useAuthSubscription({
               const profileIsOnboarded = !!profile.isOnboarded;
               setIsOnboarded(profileIsOnboarded);
               cachedAuthState.isOnboarded = profileIsOnboarded;
+            } else {
+              console.log("No profile found for user, may need to create one");
+              // Setting null profile rather than leaving the previous state
+              setProfile(null);
+              cachedAuthState.profile = null;
             }
           } catch (error) {
             console.error('Error fetching profile:', error);
+            // Setting null profile on error rather than leaving previous state
+            setProfile(null);
+            cachedAuthState.profile = null;
           }
         } else {
           // Clear state

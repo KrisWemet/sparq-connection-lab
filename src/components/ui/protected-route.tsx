@@ -15,7 +15,7 @@ interface ProtectedRouteProps {
 export function ProtectedRoute({ 
   children, 
   adminOnly = false, 
-  requiresOnboarding = false // Changed default to false
+  requiresOnboarding = false
 }: ProtectedRouteProps) {
   const { user, loading, isAdmin, isOnboarded } = useAuth();
   const location = useLocation();
@@ -31,7 +31,7 @@ export function ProtectedRoute({
     });
   }, [user, loading, isAdmin, isOnboarded, location.pathname]);
 
-  // If still loading, show loading state
+  // If still loading, show loading state (but timeout after 5 seconds)
   if (loading) {
     console.log("Protected route: Still loading, waiting...");
     return (
@@ -39,6 +39,7 @@ export function ProtectedRoute({
         <div className="flex flex-col items-center gap-2">
           <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary"></div>
           <p className="text-sm text-muted-foreground">Loading...</p>
+          <p className="text-xs text-gray-400 mt-2">If this takes too long, try refreshing the page</p>
         </div>
       </div>
     );
@@ -60,7 +61,6 @@ export function ProtectedRoute({
 
   // If onboarding is required and the user is not onboarded yet,
   // redirect to the onboarding page (but don't redirect if we're already on the onboarding page)
-  // TEMPORARILY DISABLED: Only check onboarding requirement if explicitly set to true
   if (requiresOnboarding && !isOnboarded && location.pathname !== '/onboarding') {
     console.log("Protected route: User not onboarded, redirecting to onboarding");
     return <Navigate to="/onboarding" replace />;
