@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -43,7 +44,18 @@ function App() {
               <Route path="/settings" element={<Settings />} />
               <Route path="/goals" element={<Goals />} />
               <Route path="/journeys" element={<Journeys />} />
-              <Route path="/journeys/:journeyId" element={<JourneyTemplate />} />
+              <Route 
+                path="/journeys/:journeyId" 
+                element={
+                  <JourneyTemplate 
+                    journeyId="" 
+                    title="Journey"
+                    totalDays={1}
+                    conceptItems={[]}
+                    backPath="/journeys"
+                  />
+                } 
+              />
               <Route path="/path-to-together" element={<PathToTogether />} />
               <Route path="/quiz" element={<Quiz />} />
               <Route path="/daily-questions" element={<DailyQuestions />} />
