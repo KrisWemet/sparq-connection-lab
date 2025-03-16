@@ -12,7 +12,7 @@ export interface AuthContextType {
   signOut: () => Promise<void>;
   isAdmin: boolean;
   isOnboarded: boolean;
-  refreshProfile: () => Promise<void>;
+  handleRefreshProfile: () => Promise<any>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);

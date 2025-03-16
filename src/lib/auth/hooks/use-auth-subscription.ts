@@ -1,70 +1,67 @@
 
 import { useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
-import { cachedAuthState } from '../auth-state';
+import { User } from '@supabase/supabase-js';
 import { UserProfile } from '@/services/supabaseService';
+import { supabase } from '@/lib/supabase';
+import { refreshProfile } from '../auth-operations';
+import { cachedAuthState } from '../auth-state';
 
-interface UseAuthSubscriptionProps {
-  setUser: (user: any) => void;
+export interface UseAuthSubscriptionProps {
+  setUser: (user: User | null) => void;
   setProfile: (profile: UserProfile | null) => void;
   setIsAdmin: (isAdmin: boolean) => void;
   setIsOnboarded: (isOnboarded: boolean) => void;
+  setLoading: (loading: boolean) => void;
 }
 
-export function useAuthSubscription({
-  setUser,
-  setProfile,
+export function useAuthSubscription({ 
+  setUser, 
+  setProfile, 
   setIsAdmin,
-  setIsOnboarded
+  setIsOnboarded,
+  setLoading
 }: UseAuthSubscriptionProps) {
   useEffect(() => {
-    // Subscribe to auth changes
-    const { data } = supabase.auth.onAuthStateChange(
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log("Auth state changed:", event);
+        console.log('Auth state changed:', event);
         
-        if (session?.user) {
-          console.log("User found in auth state change");
+        if (event === 'SIGNED_IN' && session?.user) {
+          console.log('User found in auth state change');
           setUser(session.user);
           cachedAuthState.user = session.user;
+          setLoading(true); // Set loading state while we fetch the profile
           
-          // Get user profile on auth change
           try {
-            const { data: profile, error } = await supabase
-              .from('profiles')
-              .select('*')
-              .eq('id', session.user.id)
-              .single();
-              
+            // Fetch profile for the user
+            const profile = await refreshProfile(session.user.id);
+            
             if (profile) {
-              console.log("Profile found in auth state change:", profile);
               setProfile(profile as UserProfile);
               cachedAuthState.profile = profile as UserProfile;
               
-              // Set onboarded status based on profile data
-              const profileIsOnboarded = !!profile.isOnboarded;
-              setIsOnboarded(profileIsOnboarded);
-              cachedAuthState.isOnboarded = profileIsOnboarded;
-            } else {
-              console.log("No profile found for user, may need to create one");
-              // Setting null profile rather than leaving the previous state
-              setProfile(null);
-              cachedAuthState.profile = null;
+              // Set admin status
+              const isAdminUser = session.user.email?.includes('admin@') || false;
+              setIsAdmin(isAdminUser);
+              cachedAuthState.isAdmin = isAdminUser;
+              
+              // Set onboarded status
+              const isOnboardedStatus = !!profile.isOnboarded;
+              setIsOnboarded(isOnboardedStatus);
+              cachedAuthState.isOnboarded = isOnboardedStatus;
             }
           } catch (error) {
-            console.error('Error fetching profile:', error);
-            // Setting null profile on error rather than leaving previous state
-            setProfile(null);
-            cachedAuthState.profile = null;
+            console.error('Error fetching profile during auth state change:', error);
+          } finally {
+            setLoading(false);
           }
-        } else {
-          // Clear state
+        } else if (event === 'SIGNED_OUT') {
+          console.log('User signed out in auth state change');
           setUser(null);
           setProfile(null);
           setIsAdmin(false);
           setIsOnboarded(false);
           
-          // Clear cached state
           cachedAuthState.user = null;
           cachedAuthState.profile = null;
           cachedAuthState.isAdmin = false;
@@ -72,12 +69,9 @@ export function useAuthSubscription({
         }
       }
     );
-
-    const authSubscription = { unsubscribe: () => { data.subscription.unsubscribe(); } };
-
-    // Cleanup subscription
+    
     return () => {
-      authSubscription.unsubscribe();
+      subscription?.unsubscribe();
     };
-  }, [setUser, setProfile, setIsAdmin, setIsOnboarded]);
+  }, [setUser, setProfile, setIsAdmin, setIsOnboarded, setLoading]);
 }

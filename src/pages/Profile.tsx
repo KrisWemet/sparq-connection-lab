@@ -139,6 +139,7 @@ export default function Profile() {
       // Refresh profile data in auth context
       if (handleRefreshProfile) {
         await handleRefreshProfile();
+        console.log("Profile refreshed successfully after save");
       }
       
       toast.success("Profile updated successfully!");

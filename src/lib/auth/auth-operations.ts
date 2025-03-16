@@ -70,6 +70,7 @@ export async function refreshProfile(userId: string) {
       .eq('id', userId)
       .single();
       
+    console.log("Fetched profile:", profile);
     return profile;
   } catch (error) {
     console.error('Error refreshing profile:', error);
