@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/auth-provider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { toast } from "sonner";
+import { ArrowRight } from "lucide-react"; // Added missing import
 import { OnboardingStepOne } from "@/components/onboarding/OnboardingStepOne";
 import { OnboardingStepTwo } from "@/components/onboarding/OnboardingStepTwo";
 import { OnboardingStepThree } from "@/components/onboarding/OnboardingStepThree";
