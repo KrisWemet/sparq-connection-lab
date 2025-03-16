@@ -1,303 +1,246 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { MemoryInterface, MemoryRecord } from '@/types/memory';
-import { toast } from 'sonner';
+import { MemoryInterface } from '@/types/memory';
 
-export class SupabaseMemory implements MemoryInterface {
-  private userId: string | null = null;
-  
-  constructor(userId?: string) {
-    this.userId = userId || null;
-  }
-  
-  /**
-   * Set the user ID for memory operations
-   */
-  setUserId(userId: string) {
-    this.userId = userId;
-  }
-  
-  /**
-   * Get current user ID or throw if not available
-   */
-  private getUserId(): string {
-    if (!this.userId) {
-      throw new Error('User not authenticated. Memory operations require authentication.');
-    }
-    return this.userId;
-  }
-  
-  /**
-   * Get a memory value by key
-   */
+export interface SupabaseMemory implements MemoryInterface {
+  userId: string;
+
+  // Core memory operations
   async get(key: string): Promise<any> {
     try {
-      const userId = this.getUserId();
-      
       const { data, error } = await supabase
-        .from('memory_storage')
-        .select('value')
-        .eq('user_id', userId)
-        .eq('key', key)
-        .single();
-        
-      if (error) {
-        if (error.code === 'PGRST116') {
-          // No data found
-          return null;
-        }
-        throw error;
-      }
+        .from('conversation_memories')
+        .select('content')
+        .eq('user_id', this.userId)
+        .ilike('content', `%"key":"${key}"%`)
+        .maybeSingle();
+
+      if (error) throw error;
+      if (!data) return null;
       
-      return data?.value || null;
+      try {
+        // Extract value from stored JSON string
+        const parsed = JSON.parse(data.content);
+        return parsed.value;
+      } catch (e) {
+        return null;
+      }
     } catch (error) {
       console.error('Error getting memory:', error);
       return null;
     }
   }
-  
-  /**
-   * Set a memory value by key
-   */
+
   async set(key: string, value: any): Promise<void> {
     try {
-      const userId = this.getUserId();
-      
-      // Check if the key already exists
-      const { data: existingData } = await supabase
-        .from('memory_storage')
+      // Store as JSON object with key and value
+      const content = JSON.stringify({
+        key,
+        value,
+        timestamp: new Date().toISOString()
+      });
+
+      // Check if memory with this key already exists
+      const { data: existing } = await supabase
+        .from('conversation_memories')
         .select('id')
-        .eq('user_id', userId)
-        .eq('key', key)
+        .eq('user_id', this.userId)
+        .ilike('content', `%"key":"${key}"%`)
         .maybeSingle();
-      
-      if (existingData) {
-        // Update existing record
+
+      if (existing) {
+        // Update existing memory
         const { error } = await supabase
-          .from('memory_storage')
-          .update({ 
-            value, 
-            timestamp: new Date().toISOString() 
-          })
-          .eq('id', existingData.id);
-          
+          .from('conversation_memories')
+          .update({ content })
+          .eq('id', existing.id);
+
         if (error) throw error;
       } else {
-        // Insert new record
+        // Create new memory
         const { error } = await supabase
-          .from('memory_storage')
+          .from('conversation_memories')
           .insert({
-            user_id: userId,
-            key,
-            value,
-            timestamp: new Date().toISOString()
+            user_id: this.userId,
+            content
           });
-          
+
         if (error) throw error;
       }
     } catch (error) {
       console.error('Error setting memory:', error);
-      toast.error('Failed to save to memory');
       throw error;
     }
   }
-  
-  /**
-   * Delete a memory entry by key
-   */
+
   async delete(key: string): Promise<void> {
     try {
-      const userId = this.getUserId();
-      
       const { error } = await supabase
-        .from('memory_storage')
+        .from('conversation_memories')
         .delete()
-        .eq('user_id', userId)
-        .eq('key', key);
-        
+        .eq('user_id', this.userId)
+        .ilike('content', `%"key":"${key}"%`);
+
       if (error) throw error;
     } catch (error) {
       console.error('Error deleting memory:', error);
-      toast.error('Failed to delete from memory');
       throw error;
     }
   }
-  
-  /**
-   * Get multiple memory values by keys
-   */
+
+  // Batch operations
   async batchGet(keys: string[]): Promise<Record<string, any>> {
     try {
-      const userId = this.getUserId();
+      const result: Record<string, any> = {};
+      
+      // For each key, create a condition for the ilike query
+      const conditions = keys.map(key => `content.ilike.%"key":"${key}"%`);
       
       const { data, error } = await supabase
-        .from('memory_storage')
-        .select('key, value')
-        .eq('user_id', userId)
-        .in('key', keys);
-        
+        .from('conversation_memories')
+        .select('content')
+        .eq('user_id', this.userId)
+        .or(conditions.join(','));
+
       if (error) throw error;
       
-      // Convert array to record object
-      const result: Record<string, any> = {};
-      data?.forEach(item => {
-        result[item.key] = item.value;
-      });
+      if (data && data.length > 0) {
+        // Process each result to extract the key-value pairs
+        data.forEach(item => {
+          try {
+            const parsed = JSON.parse(item.content);
+            if (parsed.key && keys.includes(parsed.key)) {
+              result[parsed.key] = parsed.value;
+            }
+          } catch (e) {
+            console.error('Error parsing memory item:', e);
+          }
+        });
+      }
       
       return result;
     } catch (error) {
-      console.error('Error batch getting memory:', error);
+      console.error('Error batch getting memories:', error);
       return {};
     }
   }
-  
-  /**
-   * Set multiple memory values at once
-   */
+
   async batchSet(entries: Record<string, any>): Promise<void> {
     try {
-      const userId = this.getUserId();
-      const now = new Date().toISOString();
-      
-      // Get existing keys
-      const keys = Object.keys(entries);
-      const { data: existingRecords } = await supabase
-        .from('memory_storage')
-        .select('id, key')
-        .eq('user_id', userId)
-        .in('key', keys);
-      
-      // Prepare updates and inserts
-      const existingKeys = new Set(existingRecords?.map(r => r.key) || []);
-      const keyToIdMap = new Map(existingRecords?.map(r => [r.key, r.id]) || []);
-      
-      const updates = [];
-      const inserts = [];
-      
-      for (const [key, value] of Object.entries(entries)) {
-        if (existingKeys.has(key)) {
-          updates.push({
-            id: keyToIdMap.get(key),
-            value,
-            timestamp: now
-          });
-        } else {
-          inserts.push({
-            user_id: userId,
-            key,
-            value,
-            timestamp: now
-          });
-        }
-      }
-      
-      // Execute updates
-      if (updates.length > 0) {
-        const { error: updateError } = await supabase
-          .from('memory_storage')
-          .upsert(updates);
-          
-        if (updateError) throw updateError;
-      }
-      
-      // Execute inserts
-      if (inserts.length > 0) {
-        const { error: insertError } = await supabase
-          .from('memory_storage')
-          .insert(inserts);
-          
-        if (insertError) throw insertError;
-      }
+      const memoryEntries = Object.entries(entries).map(([key, value]) => ({
+        user_id: this.userId,
+        content: JSON.stringify({
+          key,
+          value,
+          timestamp: new Date().toISOString()
+        })
+      }));
+
+      // Insert all memories in a batch
+      const { error } = await supabase
+        .from('conversation_memories')
+        .upsert(
+          memoryEntries,
+          { 
+            onConflict: 'user_id, content->key',
+            ignoreDuplicates: false 
+          }
+        );
+
+      if (error) throw error;
     } catch (error) {
-      console.error('Error batch setting memory:', error);
-      toast.error('Failed to save multiple items to memory');
+      console.error('Error batch setting memories:', error);
       throw error;
     }
   }
-  
-  /**
-   * List all memory keys for the user
-   */
+
+  // Query operations
   async listKeys(): Promise<string[]> {
     try {
-      const userId = this.getUserId();
-      
       const { data, error } = await supabase
-        .from('memory_storage')
-        .select('key')
-        .eq('user_id', userId);
-        
+        .from('conversation_memories')
+        .select('content')
+        .eq('user_id', this.userId);
+
       if (error) throw error;
       
-      return data?.map(item => item.key) || [];
+      if (!data || data.length === 0) return [];
+      
+      // Extract keys from all memories
+      const keys: string[] = [];
+      data.forEach(item => {
+        try {
+          const parsed = JSON.parse(item.content);
+          if (parsed.key) {
+            keys.push(parsed.key);
+          }
+        } catch (e) {
+          console.error('Error parsing memory item:', e);
+        }
+      });
+      
+      return keys;
     } catch (error) {
       console.error('Error listing memory keys:', error);
       return [];
     }
   }
-  
-  /**
-   * Search memory by text in keys
-   */
+
   async search(query: string): Promise<Record<string, any>> {
     try {
-      const userId = this.getUserId();
-      
-      // Basic text search on keys
+      // Simple text search in the content field
       const { data, error } = await supabase
-        .from('memory_storage')
-        .select('key, value')
-        .eq('user_id', userId)
-        .ilike('key', `%${query}%`);
-        
+        .from('conversation_memories')
+        .select('content')
+        .eq('user_id', this.userId)
+        .ilike('content', `%${query}%`);
+
       if (error) throw error;
       
-      // Convert to record
-      const result: Record<string, any> = {};
-      data?.forEach(item => {
-        result[item.key] = item.value;
+      if (!data || data.length === 0) return {};
+      
+      // Process results
+      const results: Record<string, any> = {};
+      data.forEach(item => {
+        try {
+          const parsed = JSON.parse(item.content);
+          if (parsed.key) {
+            results[parsed.key] = parsed.value;
+          }
+        } catch (e) {
+          console.error('Error parsing memory item:', e);
+        }
       });
       
-      return result;
+      return results;
     } catch (error) {
-      console.error('Error searching memory:', error);
+      console.error('Error searching memories:', error);
       return {};
     }
   }
-  
-  /**
-   * Clear all memory for the user
-   */
+
+  // Memory management
   async clear(): Promise<void> {
     try {
-      const userId = this.getUserId();
-      
       const { error } = await supabase
-        .from('memory_storage')
+        .from('conversation_memories')
         .delete()
-        .eq('user_id', userId);
-        
+        .eq('user_id', this.userId);
+
       if (error) throw error;
     } catch (error) {
-      console.error('Error clearing memory:', error);
-      toast.error('Failed to clear memory');
+      console.error('Error clearing memories:', error);
       throw error;
     }
   }
 }
 
-// Singleton instance for global memory access
-let memoryInstance: SupabaseMemory | null = null;
+// Function to create memory service for a specific user
+export function getMemoryService(userId: string): SupabaseMemory {
+  return new SupabaseMemory(userId);
+}
 
-/**
- * Get the memory service instance
- */
-export function getMemoryService(userId?: string): SupabaseMemory {
-  if (!memoryInstance) {
-    memoryInstance = new SupabaseMemory(userId);
-  } else if (userId) {
-    memoryInstance.setUserId(userId);
-  }
-  
-  return memoryInstance;
+// Initialize the memory service
+function SupabaseMemory(userId: string) {
+  this.userId = userId;
 }
