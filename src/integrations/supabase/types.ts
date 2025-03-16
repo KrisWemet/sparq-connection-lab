@@ -225,6 +225,7 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          isonboarded: boolean | null
           name: string
           partner_code: string | null
           partner_id: string | null
@@ -235,6 +236,7 @@ export type Database = {
           created_at?: string
           email: string
           id: string
+          isonboarded?: boolean | null
           name: string
           partner_code?: string | null
           partner_id?: string | null
@@ -245,6 +247,7 @@ export type Database = {
           created_at?: string
           email?: string
           id?: string
+          isonboarded?: boolean | null
           name?: string
           partner_code?: string | null
           partner_id?: string | null
@@ -259,6 +262,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      quiz_results: {
+        Row: {
+          answers: Json | null
+          id: string
+          quiz_type: string
+          score: number
+          taken_at: string
+          user_id: string
+        }
+        Insert: {
+          answers?: Json | null
+          id?: string
+          quiz_type: string
+          score: number
+          taken_at?: string
+          user_id: string
+        }
+        Update: {
+          answers?: Json | null
+          id?: string
+          quiz_type?: string
+          score?: number
+          taken_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_journeys: {
         Row: {
