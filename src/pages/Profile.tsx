@@ -17,7 +17,7 @@ import type { Profile, ProfileFormData } from "@/types/profile";
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { user, profile: authProfile, signOut } = useAuth();
+  const { user, profile: authProfile, signOut, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [profile, setProfile] = useState<ProfileFormData>({
@@ -31,6 +31,7 @@ export default function Profile() {
   });
 
   useEffect(() => {
+    console.log("Profile component received authProfile:", authProfile);
     if (authProfile) {
       setProfile({
         full_name: authProfile.fullName || "",
@@ -41,14 +42,28 @@ export default function Profile() {
         relationship_structure: authProfile.relationshipStructure || "monogamous",
         avatar_url: authProfile.avatarUrl || ""
       });
+      setLoading(false);
     }
   }, [authProfile, user]);
 
   useEffect(() => {
-    if (user) {
+    if (user && !authProfile) {
       loadProfile();
+    } else if (!user && !authLoading) {
+      navigate("/auth");
     }
-  }, [user]);
+  }, [user, authLoading, authProfile]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (loading) {
+        console.log("Profile loading timeout reached, forcing state reset");
+        setLoading(false);
+      }
+    }, 8000);
+    
+    return () => clearTimeout(timeout);
+  }, [loading]);
 
   const loadProfile = async () => {
     try {
@@ -59,7 +74,7 @@ export default function Profile() {
         .from('profiles')
         .select('*')
         .eq('id', user?.id)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Error loading profile:', error);
@@ -79,6 +94,13 @@ export default function Profile() {
         });
       } else {
         console.log("No profile data found, using defaults");
+        if (user?.email) {
+          setProfile(prev => ({
+            ...prev,
+            email: user.email || "",
+            full_name: user.email.split('@')[0] || ""
+          }));
+        }
       }
     } catch (error) {
       console.error('Error loading profile:', error);
@@ -126,12 +148,13 @@ export default function Profile() {
     }
   };
 
-  if (loading && !authProfile) {
+  if ((loading && !authProfile) || authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-2" />
           <p className="text-gray-500">Loading your profile...</p>
+          <p className="text-xs text-gray-400 mt-2">If this takes too long, try refreshing the page</p>
         </div>
       </div>
     );

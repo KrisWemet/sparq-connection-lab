@@ -14,12 +14,12 @@ export function useAuthLoading(initialLoading: boolean) {
         clearTimeout(timeoutRef.current);
       }
       
-      // Set new timeout - 10 second timeout (increased from 5 seconds)
+      // Set new timeout - 8 second timeout
       timeoutRef.current = setTimeout(() => {
         console.log("Auth loading timeout reached, forcing state reset");
         setLoadingTimeout(true);
         setLoading(false); // Force loading state to false on timeout
-      }, 10000); // 10 second timeout
+      }, 8000); // 8 second timeout
     } else {
       // Clear timeout when not loading
       if (timeoutRef.current) {

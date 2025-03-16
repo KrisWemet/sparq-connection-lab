@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/lib/auth';
 
@@ -19,6 +19,7 @@ export function ProtectedRoute({
 }: ProtectedRouteProps) {
   const { user, loading, isAdmin, isOnboarded } = useAuth();
   const location = useLocation();
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
   
   // Log authentication state for debugging
   useEffect(() => {
@@ -31,8 +32,24 @@ export function ProtectedRoute({
     });
   }, [user, loading, isAdmin, isOnboarded, location.pathname]);
 
-  // If still loading, show loading state (but timeout after 5 seconds)
-  if (loading) {
+  // Set a timeout to prevent infinite loading
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout | null = null;
+    
+    if (loading && !loadingTimeout) {
+      timeoutId = setTimeout(() => {
+        console.log("Loading timeout reached for protected route");
+        setLoadingTimeout(true);
+      }, 5000); // 5 second timeout
+    }
+    
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [loading, loadingTimeout]);
+
+  // If still loading but timeout not reached, show loading state
+  if (loading && !loadingTimeout) {
     console.log("Protected route: Still loading, waiting...");
     return (
       <div className="flex h-screen w-full items-center justify-center">
@@ -43,6 +60,12 @@ export function ProtectedRoute({
         </div>
       </div>
     );
+  }
+
+  // If loading timed out but we have a user, continue to render the page to prevent getting stuck
+  if (loadingTimeout && user) {
+    console.log("Protected route: Loading timeout reached, but user exists. Continuing to render.");
+    return <>{children}</>;
   }
 
   // If not authenticated, redirect to login page
