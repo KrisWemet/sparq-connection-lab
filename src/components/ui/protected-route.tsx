@@ -15,7 +15,7 @@ interface ProtectedRouteProps {
 export function ProtectedRoute({ 
   children, 
   adminOnly = false, 
-  requiresOnboarding = true 
+  requiresOnboarding = false // Changed default to false
 }: ProtectedRouteProps) {
   const { user, loading, isAdmin, isOnboarded } = useAuth();
   const location = useLocation();
@@ -60,6 +60,7 @@ export function ProtectedRoute({
 
   // If onboarding is required and the user is not onboarded yet,
   // redirect to the onboarding page (but don't redirect if we're already on the onboarding page)
+  // TEMPORARILY DISABLED: Only check onboarding requirement if explicitly set to true
   if (requiresOnboarding && !isOnboarded && location.pathname !== '/onboarding') {
     console.log("Protected route: User not onboarded, redirecting to onboarding");
     return <Navigate to="/onboarding" replace />;

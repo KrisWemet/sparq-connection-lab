@@ -44,39 +44,39 @@ function App() {
               </ProtectedRoute>
             } />
             <Route path="/dashboard" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiresOnboarding={false}>
                 <Dashboard />
               </ProtectedRoute>
             } />
             <Route path="/profile" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiresOnboarding={false}>
                 <Profile />
               </ProtectedRoute>
             } />
             <Route path="/subscription" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiresOnboarding={false}>
                 <Subscription />
               </ProtectedRoute>
             } />
             <Route path="/settings" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiresOnboarding={false}>
                 <Settings />
               </ProtectedRoute>
             } />
             <Route path="/goals" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiresOnboarding={false}>
                 <Goals />
               </ProtectedRoute>
             } />
             <Route path="/journeys" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiresOnboarding={false}>
                 <Journeys />
               </ProtectedRoute>
             } />
             <Route 
               path="/journeys/:journeyId" 
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiresOnboarding={false}>
                   <JourneyTemplate 
                     journeyId="" 
                     title="Journey"
@@ -88,42 +88,42 @@ function App() {
               } 
             />
             <Route path="/path-to-together" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiresOnboarding={false}>
                 <PathToTogether />
               </ProtectedRoute>
             } />
             <Route path="/quiz" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiresOnboarding={false}>
                 <Quiz />
               </ProtectedRoute>
             } />
             <Route path="/daily-questions" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiresOnboarding={false}>
                 <DailyQuestions />
               </ProtectedRoute>
             } />
             <Route path="/daily-activity" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiresOnboarding={false}>
                 <DailyActivity />
               </ProtectedRoute>
             } />
             <Route path="/date-ideas" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiresOnboarding={false}>
                 <DateIdeas />
               </ProtectedRoute>
             } />
             <Route path="/ai-therapist" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiresOnboarding={false}>
                 <AITherapist />
               </ProtectedRoute>
             } />
             <Route path="/messaging" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiresOnboarding={false}>
                 <Messaging />
               </ProtectedRoute>
             } />
             <Route path="/reflect" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiresOnboarding={false}>
                 <Reflect />
               </ProtectedRoute>
             } />
