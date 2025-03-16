@@ -58,8 +58,12 @@ export function useAuthSubscription(onChange: AuthChangeHandler) {
       }
     );
 
-    // The data object from supabase.auth.onAuthStateChange() contains the unsubscribe method
-    authSubscription.current = data;
+    // Fix for TypeScript error - correctly extract the unsubscribe method
+    authSubscription.current = {
+      unsubscribe: () => {
+        data.subscription.unsubscribe();
+      }
+    };
 
     // Cleanup subscription
     return () => {
