@@ -38,7 +38,11 @@ function App() {
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/onboarding" element={
+              <ProtectedRoute requiresOnboarding={false}>
+                <Onboarding />
+              </ProtectedRoute>
+            } />
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />

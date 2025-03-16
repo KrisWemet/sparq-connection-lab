@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -42,7 +41,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function Auth() {
   const navigate = useNavigate();
-  const { signIn, user } = useAuth();
+  const { signIn, user, isOnboarded } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string>("");
@@ -50,11 +49,18 @@ export default function Auth() {
   // Check if user is already authenticated
   useEffect(() => {
     if (user) {
+      // If user is not onboarded, redirect to onboarding
+      if (!isOnboarded) {
+        navigate('/onboarding');
+        return;
+      }
+      
+      // Otherwise redirect to dashboard or saved redirect URL
       const redirectUrl = sessionStorage.getItem('redirectUrl') || '/dashboard';
       navigate(redirectUrl);
       sessionStorage.removeItem('redirectUrl');
     }
-  }, [user, navigate]);
+  }, [user, isOnboarded, navigate]);
 
   // Login form
   const loginForm = useForm<LoginFormValues>({
@@ -71,9 +77,7 @@ export default function Auth() {
     try {
       await signIn(values.email, values.password);
       toast.success("Login successful!");
-      const redirectTo = sessionStorage.getItem("redirectUrl") || "/dashboard";
-      sessionStorage.removeItem("redirectUrl");
-      navigate(redirectTo);
+      // Note: The redirect will be handled by the useEffect above
     } catch (err) {
       console.error("Login error:", err);
       const errorMessage = err instanceof Error ? err.message : "Failed to sign in. Please try again.";

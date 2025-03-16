@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/lib/auth';
@@ -5,7 +6,7 @@ import { useAuth } from '@/lib/auth';
 interface ProtectedRouteProps {
   children: React.ReactNode;
   adminOnly?: boolean;
-  requiresOnboarding?: boolean; // Add new prop to control onboarding requirement
+  requiresOnboarding?: boolean;
 }
 
 /**

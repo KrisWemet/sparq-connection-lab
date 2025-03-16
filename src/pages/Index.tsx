@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HeartHandshake, Heart, Sparkles, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/lib/auth";
 
 export default function Index() {
   const navigate = useNavigate();
@@ -137,7 +137,7 @@ export default function Index() {
           </p>
           <Button 
             size="lg" 
-            onClick={() => navigate("/auth")}
+            onClick={() => navigate("/signup")}
             className="bg-white text-indigo-600 hover:bg-white/90 text-md px-8"
           >
             Create Free Account
