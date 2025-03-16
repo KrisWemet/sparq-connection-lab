@@ -27,7 +27,7 @@ import {
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
 import { debugSupabaseInfo } from "@/lib/supabase";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 
 // Define schema for the login form
 const loginSchema = z.object({
@@ -60,6 +60,8 @@ export default function Auth() {
   // Check Supabase session directly
   useEffect(() => {
     const checkSession = async () => {
+      if (isLoading || authLoading) return; // Don't check if we're already loading
+      
       try {
         const { data } = await supabase.auth.getSession();
         console.log("Direct session check result:", !!data.session);
@@ -117,14 +119,21 @@ export default function Auth() {
     console.log("Login attempt started with email:", values.email);
     
     try {
-      await signIn(values.email, values.password);
-      toast.success("Login successful!");
-      
-      // Check if we have a session immediately after signing in
-      const { data } = await supabase.auth.getSession();
-      if (data.session?.user) {
-        console.log("Session available after login - redirecting", data.session.user);
-        handleRedirect(data.session.user, isOnboarded);
+      const result = await signIn(values.email, values.password);
+      if (result?.user) {
+        toast.success("Login successful!");
+        console.log("Login successful, user:", result.user);
+        
+        // User should be redirected automatically by the useEffect above
+        // But let's also manually check for the session
+        const { data } = await supabase.auth.getSession();
+        if (data.session?.user) {
+          console.log("Session available after login - redirecting", data.session.user);
+          handleRedirect(data.session.user, isOnboarded);
+        }
+      } else {
+        console.error("Login returned success but no user");
+        setError("Login succeeded but user information was not returned");
       }
     } catch (err) {
       console.error("Login error:", err);

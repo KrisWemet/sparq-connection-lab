@@ -1,10 +1,9 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { AuthContext } from './auth-context';
 import { cachedAuthState } from './auth-state';
 import { signIn, signUp, signOut, refreshProfile } from './auth-operations';
 import { useAuthLoading } from './hooks/use-auth-loading';
-import { useAuthSubscription } from './hooks/use-auth-subscription';
-import { useInitialSession } from './hooks/use-initial-session';
 import { User } from '@supabase/supabase-js';
 import { UserProfile } from '@/services/supabaseService';
 import { supabase } from '@/lib/supabase';
@@ -23,43 +22,97 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       hasSupabase: !!supabase, 
       hasAuth: !!(supabase && supabase.auth)
     });
-  }, []);
-
-  const handleSessionLoaded = useCallback((
-    sessionUser: User | null, 
-    sessionProfile: UserProfile | null, 
-    adminStatus: boolean, 
-    onboardedStatus: boolean
-  ) => {
-    console.log("Session loaded with user:", !!sessionUser, "profile:", !!sessionProfile);
-    setUser(sessionUser);
-    setProfile(sessionProfile);
-    setIsAdmin(adminStatus);
-    setIsOnboarded(onboardedStatus);
-    setInitializationComplete(true);
-    setLoading(false);
-  }, [setLoading]);
-
-  useInitialSession(setLoading, handleSessionLoaded);
-
-  const handleAuthChange = useCallback((changedUser: User | null, changedProfile: UserProfile | null) => {
-    console.log("Auth state changed, user:", !!changedUser, "profile:", !!changedProfile);
-    setUser(changedUser);
-    setProfile(changedProfile);
     
-    if (changedProfile) {
-      const profileIsOnboarded = !!changedProfile.isOnboarded;
-      setIsOnboarded(profileIsOnboarded);
-      setIsAdmin(cachedAuthState.isAdmin);
-    } else if (!changedUser) {
-      setIsAdmin(false);
-      setIsOnboarded(false);
-    }
+    // Check if we already have a session
+    const checkSession = async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (data.session?.user) {
+          console.log("Found existing session, setting user");
+          setUser(data.session.user);
+          cachedAuthState.user = data.session.user;
+          
+          try {
+            const { data: profileData } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', data.session.user.id)
+              .single();
+              
+            if (profileData) {
+              setProfile(profileData as UserProfile);
+              cachedAuthState.profile = profileData as UserProfile;
+              setIsOnboarded(!!profileData.isOnboarded);
+              cachedAuthState.isOnboarded = !!profileData.isOnboarded;
+            }
+          } catch (error) {
+            console.error("Error loading profile:", error);
+          }
+        }
+        setInitializationComplete(true);
+        cachedAuthState.initialized = true;
+        setLoading(false);
+      } catch (error) {
+        console.error("Error checking session:", error);
+        setInitializationComplete(true);
+        cachedAuthState.initialized = true;
+        setLoading(false);
+      }
+    };
     
-    setLoading(false);
-  }, [setLoading]);
+    checkSession();
+    
+    // Subscribe to auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        console.log("Auth state changed:", event);
+        
+        if (session?.user) {
+          console.log("User found in auth state change");
+          setUser(session.user);
+          cachedAuthState.user = session.user;
+          
+          // Get user profile on auth change
+          try {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', session.user.id)
+              .single();
+              
+            if (profile) {
+              setProfile(profile as UserProfile);
+              cachedAuthState.profile = profile as UserProfile;
+              
+              // Set onboarded status based on profile data
+              const profileIsOnboarded = !!profile.isOnboarded;
+              setIsOnboarded(profileIsOnboarded);
+              cachedAuthState.isOnboarded = profileIsOnboarded;
+            }
+          } catch (error) {
+            console.error('Error fetching profile:', error);
+          }
+        } else {
+          // Clear state
+          setUser(null);
+          setProfile(null);
+          setIsAdmin(false);
+          setIsOnboarded(false);
+          
+          // Clear cached state
+          cachedAuthState.user = null;
+          cachedAuthState.profile = null;
+          cachedAuthState.isAdmin = false;
+          cachedAuthState.isOnboarded = false;
+        }
+      }
+    );
 
-  useAuthSubscription(handleAuthChange);
+    // Cleanup subscription
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [setLoading]);
 
   const handleRefreshProfile = async () => {
     if (!user) return;
@@ -87,33 +140,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log("Starting sign in process with email:", email);
       const result = await signIn(email, password);
       console.log("Sign in result:", !!result);
-      
-      const { data } = await supabase.auth.getSession();
-      if (data.session?.user) {
-        console.log("Sign in successful, setting user directly");
-        setUser(data.session.user);
-        cachedAuthState.user = data.session.user;
-        
-        try {
-          const { data: profileData } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', data.session.user.id)
-            .single();
-            
-          if (profileData) {
-            console.log("Profile found in sign in process");
-            setProfile(profileData as UserProfile);
-            cachedAuthState.profile = profileData as UserProfile;
-            setIsOnboarded(!!profileData.isOnboarded);
-            cachedAuthState.isOnboarded = !!profileData.isOnboarded;
-          }
-        } catch (profileError) {
-          console.error("Error fetching profile during sign in:", profileError);
-        }
-      }
-      
-      console.log("Sign in operation completed");
       return result;
     } catch (error) {
       console.error("Sign in error:", error);

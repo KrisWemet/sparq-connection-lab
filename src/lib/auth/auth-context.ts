@@ -7,7 +7,7 @@ export interface AuthContextType {
   user: User | null;
   profile: UserProfile | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<any>; // Changed return type from void to any
+  signIn: (email: string, password: string) => Promise<any>; 
   signUp: (email: string, password: string, fullName: string, gender?: string, relationshipType?: string) => Promise<void>;
   signOut: () => Promise<void>;
   isAdmin: boolean;

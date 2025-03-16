@@ -1,6 +1,6 @@
 
 import { useRef, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { UserProfile } from '@/services/supabaseService';
 import { authService } from '@/services/supabaseService';
@@ -59,7 +59,7 @@ export function useAuthSubscription(onChange: AuthChangeHandler) {
     );
 
     // Store the subscription with proper unsubscribe method
-    authSubscription.current = { unsubscribe: () => data.subscription.unsubscribe() };
+    authSubscription.current = data;
 
     // Cleanup subscription
     return () => {
