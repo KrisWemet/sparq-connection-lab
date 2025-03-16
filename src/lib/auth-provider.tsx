@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
-import { User } from '@supabase/supabase-js';
+import { User, Subscription } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { authService, UserProfile } from '@/services/supabaseService';
 
@@ -95,8 +95,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     getInitialSession();
 
-    // Listen for auth changes
-    authSubscription.current = supabase.auth.onAuthStateChange(
+    // Listen for auth changes - Fix the subscription handling
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log("Auth state changed:", event);
         setLoading(true);
@@ -140,6 +140,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setLoading(false);
       }
     );
+
+    // Store the subscription with proper unsubscribe method
+    authSubscription.current = { unsubscribe: () => subscription.unsubscribe() };
 
     // Cleanup subscription
     return () => {
