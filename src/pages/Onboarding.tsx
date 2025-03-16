@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/auth-provider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { toast } from "sonner";
-import { ArrowRight } from "lucide-react"; // Added missing import
+import { ArrowRight } from "lucide-react";
 import { OnboardingStepOne } from "@/components/onboarding/OnboardingStepOne";
 import { OnboardingStepTwo } from "@/components/onboarding/OnboardingStepTwo";
 import { OnboardingStepThree } from "@/components/onboarding/OnboardingStepThree";
@@ -30,10 +30,11 @@ export default function Onboarding() {
   const [relationshipGoals, setRelationshipGoals] = useState<string[]>([]);
   
   // If user is not logged in, redirect to auth
-  if (!user) {
-    navigate("/auth");
-    return null;
-  }
+  useEffect(() => {
+    if (!user) {
+      navigate("/auth");
+    }
+  }, [user, navigate]);
   
   // Populate fields with existing data if available
   useEffect(() => {
@@ -66,10 +67,14 @@ export default function Onboarding() {
   };
   
   const handleComplete = async () => {
+    if (loading) return; // Prevent multiple submissions
+    
     setLoading(true);
     try {
       // Save all the onboarding data directly to the profile
       if (user?.id) {
+        console.log("Saving onboarding data for user:", user.id);
+        
         // Update the profile with onboarding data
         const { error } = await supabase
           .from('profiles')
@@ -86,7 +91,12 @@ export default function Onboarding() {
           })
           .eq('id', user.id);
 
-        if (error) throw error;
+        if (error) {
+          console.error("Error updating profile:", error);
+          throw error;
+        }
+        
+        console.log("Profile updated successfully");
 
         // If partner email was provided, send invitation
         if (partnerEmail && partnerEmail.trim() !== "") {
@@ -96,20 +106,28 @@ export default function Onboarding() {
           } catch (partnerError) {
             console.error("Error sending partner invitation:", partnerError);
             toast.error("Could not send invitation to your partner. You can try again later.");
+            // Continue with redirect even if partner invitation fails
           }
         }
+        
+        toast.success("Onboarding completed successfully!");
+        
+        // Ensure we redirect regardless of the state of the partner invitation
+        navigate("/dashboard");
+      } else {
+        throw new Error("User ID not available");
       }
-      
-      toast.success("Onboarding completed successfully!");
-      // Redirect to dashboard after completion
-      navigate("/dashboard");
     } catch (error) {
       console.error("Error completing onboarding:", error);
-      toast.error("There was an error completing your onboarding.");
+      toast.error("There was an error completing your onboarding. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+  
+  if (!user) {
+    return null; // Don't render anything while redirecting
+  }
   
   // Render the current step content
   const renderStepContent = () => {
@@ -158,14 +176,16 @@ export default function Onboarding() {
     <div className="min-h-screen bg-slate-50 py-8 px-4">
       <div className="max-w-md mx-auto">
         <div className="mb-8 space-y-4">
-          <OnboardingProgress
-            step={step}
-            totalSteps={totalSteps}
-            handleBack={handleBack}
-            handleNext={handleNext}
-            handleComplete={handleComplete}
-            loading={loading}
-          />
+          <h1 className="text-xl font-bold text-gray-900">Onboarding</h1>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-500">Step {step} of {totalSteps}</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div 
+              className="bg-primary h-2 rounded-full transition-all" 
+              style={{ width: `${(step / totalSteps) * 100}%` }}
+            ></div>
+          </div>
         </div>
         
         <Card className="mb-6">
@@ -176,13 +196,16 @@ export default function Onboarding() {
             <Button 
               variant="outline" 
               onClick={handleBack}
-              disabled={step === 1}
+              disabled={step === 1 || loading}
             >
               Back
             </Button>
             
             {step < totalSteps ? (
-              <Button onClick={handleNext}>
+              <Button 
+                onClick={handleNext}
+                disabled={loading}
+              >
                 Continue
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -206,6 +229,7 @@ export default function Onboarding() {
               setStep(totalSteps);
               window.scrollTo(0, 0);
             }}
+            disabled={loading}
           >
             Skip for now
           </Button>

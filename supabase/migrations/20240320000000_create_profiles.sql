@@ -1,7 +1,8 @@
+
 -- Create profiles table
 create table if not exists public.profiles (
-    id uuid primary key default uuid_generate_v4(),
-    user_id uuid references auth.users(id) on delete cascade not null,
+    id uuid primary key references auth.users(id) on delete cascade,
+    user_id uuid references auth.users(id) on delete cascade,
     full_name text,
     email text,
     avatar_url text,
@@ -9,9 +10,11 @@ create table if not exists public.profiles (
     anniversary_date date,
     sexual_orientation text,
     relationship_structure text,
+    relationship_duration text,
+    relationship_goals text[],
+    isOnboarded boolean default false,
     created_at timestamp with time zone default timezone('utc'::text, now()) not null,
-    updated_at timestamp with time zone default timezone('utc'::text, now()) not null,
-    unique(user_id)
+    updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
 -- Enable RLS
@@ -20,21 +23,21 @@ alter table public.profiles enable row level security;
 -- Create policies
 create policy "Users can view their own profile"
     on public.profiles for select
-    using (auth.uid() = user_id);
+    using (auth.uid() = id);
 
 create policy "Users can insert their own profile"
     on public.profiles for insert
-    with check (auth.uid() = user_id);
+    with check (auth.uid() = id);
 
 create policy "Users can update their own profile"
     on public.profiles for update
-    using (auth.uid() = user_id);
+    using (auth.uid() = id);
 
 -- Create function to handle user creation
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-    insert into public.profiles (user_id, email, full_name)
+    insert into public.profiles (id, email, full_name)
     values (new.id, new.email, new.raw_user_meta_data->>'full_name');
     return new;
 end;

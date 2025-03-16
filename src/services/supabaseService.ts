@@ -223,14 +223,27 @@ export const profileService = {
       const user = await authService.getCurrentUser();
       if (!user) throw new Error('Not authenticated');
       
+      console.log("Updating profile with data:", profile);
+      
+      const updateData: any = {};
+      
+      // Map the profile fields to database column names
+      if (profile.fullName !== undefined) updateData.full_name = profile.fullName;
+      if (profile.gender !== undefined) updateData.gender = profile.gender;
+      if (profile.relationshipType !== undefined) updateData.relationship_type = profile.relationshipType;
+      if (profile.avatarUrl !== undefined) updateData.avatar_url = profile.avatarUrl;
+      if (profile.partnerName !== undefined) updateData.partner_name = profile.partnerName;
+      if (profile.anniversaryDate !== undefined) updateData.anniversary_date = profile.anniversaryDate;
+      if (profile.sexualOrientation !== undefined) updateData.sexual_orientation = profile.sexualOrientation;
+      if (profile.relationshipStructure !== undefined) updateData.relationship_structure = profile.relationshipStructure;
+      if (profile.isOnboarded !== undefined) updateData.isOnboarded = profile.isOnboarded;
+      
+      // Set updated_at timestamp
+      updateData.updated_at = new Date().toISOString();
+      
       const { error } = await supabase
         .from('profiles')
-        .update({
-          full_name: profile.fullName,
-          gender: profile.gender,
-          relationship_type: profile.relationshipType,
-          avatar_url: profile.avatarUrl
-        })
+        .update(updateData)
         .eq('id', user.id);
         
       if (error) throw error;
@@ -982,7 +995,6 @@ function generateSessionId() {
 }
 
 // Helper functions to transform database records to frontend models
-// Update the transformProfile function to properly map database fields to the UserProfile interface
 function transformProfile(data: any): UserProfile {
   return {
     id: data.id,

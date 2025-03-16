@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { User, Subscription } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -12,6 +13,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   isAdmin: boolean;
   isOnboarded: boolean;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -33,6 +35,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isOnboarded, setIsOnboarded] = useState(cachedAuthState.isOnboarded);
   const [initializationComplete, setInitializationComplete] = useState(cachedAuthState.initialized);
   const authSubscription = useRef<{ unsubscribe: () => void } | null>(null);
+
+  // Function to refresh profile data
+  const refreshProfile = async () => {
+    if (!user) return;
+    
+    try {
+      console.log("Refreshing profile data for user:", user.id);
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+        
+      if (profile) {
+        console.log("Refreshed profile data:", profile);
+        setProfile(profile as UserProfile);
+        cachedAuthState.profile = profile as UserProfile;
+        
+        // Set onboarded status based on profile data
+        const profileIsOnboarded = !!profile.isOnboarded;
+        setIsOnboarded(profileIsOnboarded);
+        cachedAuthState.isOnboarded = profileIsOnboarded;
+      }
+    } catch (error) {
+      console.error('Error refreshing profile:', error);
+    }
+  };
 
   useEffect(() => {
     if (cachedAuthState.initialized) {
@@ -236,7 +265,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signUp, 
       signOut,
       isAdmin,
-      isOnboarded
+      isOnboarded,
+      refreshProfile
     }}>
       {children}
     </AuthContext.Provider>
