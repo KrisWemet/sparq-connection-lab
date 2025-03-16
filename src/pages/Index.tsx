@@ -1,17 +1,24 @@
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HeartHandshake, AlertCircle, Heart, Sparkles, Target, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/lib/auth-provider";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Index() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const [error, setError] = useState<string | null>(null);
 
+  // Add some debug logging
+  useEffect(() => {
+    console.log("Index page - Auth state:", { user, loading });
+  }, [user, loading]);
+
   // Redirect to dashboard if already logged in
   useEffect(() => {
     if (!loading && user) {
+      console.log("User is logged in, redirecting to dashboard");
       navigate("/dashboard");
     }
   }, [user, loading, navigate]);
@@ -143,4 +150,3 @@ export default function Index() {
     </div>
   );
 }
-
