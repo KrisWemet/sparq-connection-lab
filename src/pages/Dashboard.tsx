@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { BottomNav } from "@/components/bottom-nav";
@@ -312,7 +311,6 @@ export default function Dashboard() {
               variants={itemVariants}
               initial="initial"
               animate="pulse"
-              variants={pulseVariants}
             >
               <Card 
                 className="cursor-pointer overflow-hidden hover:shadow-md transition-all duration-300 border-amber-200 bg-gradient-to-br from-amber-50 to-white relative" 
