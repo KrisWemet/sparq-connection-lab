@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase';
 import { UserJourneyProgress } from '@/types/journey';
 import { useAuth } from './useAuth';
 import { toast } from 'sonner';
-import { RealtimeChannel } from '@supabase/supabase-js';
+import { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 
 interface UseRealtimeSyncReturn {
   partnerProgress: UserJourneyProgress | null;
@@ -12,7 +12,7 @@ interface UseRealtimeSyncReturn {
   lastSyncTime: string | null;
 }
 
-interface ProgressPayload {
+interface ProgressPayload extends RealtimePostgresChangesPayload<UserJourneyProgress> {
   eventType: 'INSERT' | 'UPDATE' | 'DELETE';
   new: UserJourneyProgress;
   old?: UserJourneyProgress;
@@ -47,7 +47,6 @@ export function useRealtimeSync(
     // Subscribe to partner's progress updates
     const progressChannel = supabase
       .channel('journey_progress')
-      // @ts-ignore - The type definition doesn't match the actual API
       .on(
         'postgres_changes',
         {
@@ -78,7 +77,6 @@ export function useRealtimeSync(
     // Subscribe to partner's activity responses
     const responsesChannel = supabase
       .channel('activity_responses')
-      // @ts-ignore - The type definition doesn't match the actual API
       .on(
         'postgres_changes',
         {
