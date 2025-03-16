@@ -1,5 +1,6 @@
+
 import { useEffect, useState } from 'react';
-import { supabase } from '@/services/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { UserJourneyProgress } from '@/types/journey';
 import { useAuth } from './useAuth';
 import { toast } from 'sonner';
@@ -47,7 +48,7 @@ export function useRealtimeSync(
     const progressChannel = supabase
       .channel('journey_progress')
       .on(
-        'postgres_changes',
+        'postgres_changes', // Fixed: this is the correct event type for supabase
         {
           event: '*',
           schema: 'public',
@@ -77,7 +78,7 @@ export function useRealtimeSync(
     const responsesChannel = supabase
       .channel('activity_responses')
       .on(
-        'postgres_changes',
+        'postgres_changes', // Fixed: this is the correct event type for supabase
         {
           event: 'INSERT',
           schema: 'public',
@@ -128,4 +129,4 @@ export function useRealtimeSync(
     partnerIsOnline,
     lastSyncTime
   };
-} 
+}
