@@ -1,5 +1,5 @@
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 import { authService } from '@/services/supabaseService';
 
 export async function signIn(email: string, password: string) {

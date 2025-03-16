@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { AuthContext } from './auth-context';
 import { cachedAuthState } from './auth-state';
@@ -8,7 +7,7 @@ import { useAuthSubscription } from './hooks/use-auth-subscription';
 import { useInitialSession } from './hooks/use-initial-session';
 import { User } from '@supabase/supabase-js';
 import { UserProfile } from '@/services/supabaseService';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(cachedAuthState.user);
@@ -19,7 +18,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   
   const { loading, setLoading } = useAuthLoading(!cachedAuthState.initialized);
 
-  // Log some debug info about supabase client
   useEffect(() => {
     console.log("AuthProvider initialized with supabase client", {
       hasSupabase: !!supabase, 
@@ -27,7 +25,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
-  // Handle session setup
   const handleSessionLoaded = useCallback((
     sessionUser: User | null, 
     sessionProfile: UserProfile | null, 
@@ -40,21 +37,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsAdmin(adminStatus);
     setIsOnboarded(onboardedStatus);
     setInitializationComplete(true);
-    setLoading(false); // Ensure loading is set to false when session is loaded
+    setLoading(false);
   }, [setLoading]);
 
-  // Initialize session
   useInitialSession(setLoading, handleSessionLoaded);
 
-  // Handle auth state changes
   const handleAuthChange = useCallback((changedUser: User | null, changedProfile: UserProfile | null) => {
     console.log("Auth state changed, user:", !!changedUser, "profile:", !!changedProfile);
-    // Set user and profile first, so they are available for navigation decisions
     setUser(changedUser);
     setProfile(changedProfile);
     
     if (changedProfile) {
-      // Set onboarded status based on profile data
       const profileIsOnboarded = !!changedProfile.isOnboarded;
       setIsOnboarded(profileIsOnboarded);
       setIsAdmin(cachedAuthState.isAdmin);
@@ -63,14 +56,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsOnboarded(false);
     }
     
-    // Important: Set loading to false immediately after processing auth change
     setLoading(false);
   }, [setLoading]);
 
-  // Subscribe to auth changes
   useAuthSubscription(handleAuthChange);
 
-  // Function to refresh profile data
   const handleRefreshProfile = async () => {
     if (!user) return;
     
@@ -82,7 +72,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setProfile(profile as UserProfile);
         cachedAuthState.profile = profile as UserProfile;
         
-        // Set onboarded status based on profile data
         const profileIsOnboarded = !!profile.isOnboarded;
         setIsOnboarded(profileIsOnboarded);
         cachedAuthState.isOnboarded = profileIsOnboarded;
@@ -99,7 +88,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const result = await signIn(email, password);
       console.log("Sign in result:", !!result);
       
-      // Check if we have a session immediately to speed up redirection
       const { data } = await supabase.auth.getSession();
       if (data.session?.user) {
         console.log("Sign in successful, setting user directly");
@@ -107,7 +95,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         cachedAuthState.user = data.session.user;
         
         try {
-          // Get profile data
           const { data: profileData } = await supabase
             .from('profiles')
             .select('*')
@@ -130,7 +117,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return result;
     } catch (error) {
       console.error("Sign in error:", error);
-      setLoading(false); // Make sure to set loading to false on error
+      setLoading(false);
       throw error;
     }
   };
@@ -145,10 +132,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       await signUp(email, password, fullName, gender, relationshipType);
-      // Auth state change will set loading to false
     } catch (error) {
       console.error("Sign up error:", error);
-      setLoading(false); // Make sure to set loading to false on error
+      setLoading(false);
       throw error;
     }
   };
@@ -157,26 +143,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       await signOut();
-      // Clear user and profile immediately for faster UI updates
       setUser(null);
       setProfile(null);
       setIsAdmin(false);
       setIsOnboarded(false);
       
-      // Update cached state
       cachedAuthState.user = null;
       cachedAuthState.profile = null;
       cachedAuthState.isAdmin = false;
       cachedAuthState.isOnboarded = false;
       
-      // Auth state change will confirm this change
+      setLoading(false);
     } catch (error) {
-      setLoading(false); // Make sure to set loading to false on error
+      setLoading(false);
       throw error;
     }
   };
 
-  // Provide auth context values to children
   return (
     <AuthContext.Provider value={{ 
       user, 
