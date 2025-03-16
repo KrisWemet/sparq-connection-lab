@@ -8,6 +8,7 @@ import { useAuthSubscription } from './hooks/use-auth-subscription';
 import { useInitialSession } from './hooks/use-initial-session';
 import { User } from '@supabase/supabase-js';
 import { UserProfile } from '@/services/supabaseService';
+import { supabase } from '@/integrations/supabase/client';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(cachedAuthState.user);
@@ -18,6 +19,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   
   const { loading, setLoading } = useAuthLoading(!cachedAuthState.initialized);
 
+  // Log some debug info about supabase client
+  useEffect(() => {
+    console.log("AuthProvider initialized with supabase client", {
+      hasSupabase: !!supabase, 
+      hasAuth: !!(supabase && supabase.auth)
+    });
+  }, []);
+
   // Handle session setup
   const handleSessionLoaded = useCallback((
     sessionUser: User | null, 
@@ -25,7 +34,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     adminStatus: boolean, 
     onboardedStatus: boolean
   ) => {
-    console.log("Session loaded with user:", !!sessionUser);
+    console.log("Session loaded with user:", !!sessionUser, "profile:", !!sessionProfile);
     setUser(sessionUser);
     setProfile(sessionProfile);
     setIsAdmin(adminStatus);
@@ -39,7 +48,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Handle auth state changes
   const handleAuthChange = useCallback((changedUser: User | null, changedProfile: UserProfile | null) => {
-    console.log("Auth state changed, user:", !!changedUser);
+    console.log("Auth state changed, user:", !!changedUser, "profile:", !!changedProfile);
     // Set user and profile first, so they are available for navigation decisions
     setUser(changedUser);
     setProfile(changedProfile);
@@ -86,8 +95,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const handleSignIn = async (email: string, password: string) => {
     setLoading(true);
     try {
+      console.log("Starting sign in process with email:", email);
       await signIn(email, password);
-      // Auth state change will set loading to false through the subscription
+      
+      // Check if we have a session immediately to speed up redirection
+      const { data } = await supabase.auth.getSession();
+      if (data.session?.user) {
+        console.log("Sign in successful, setting user directly");
+        setUser(data.session.user);
+        
+        try {
+          // Get profile data
+          const { data: profileData } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', data.session.user.id)
+            .single();
+            
+          if (profileData) {
+            console.log("Profile found in sign in process");
+            setProfile(profileData as UserProfile);
+            setIsOnboarded(!!profileData.isOnboarded);
+          }
+        } catch (profileError) {
+          console.error("Error fetching profile during sign in:", profileError);
+        }
+      }
+      
       console.log("Sign in operation completed");
     } catch (error) {
       console.error("Sign in error:", error);
@@ -118,13 +152,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       await signOut();
-      // Auth state change will set loading to false
+      // Clear user and profile immediately for faster UI updates
+      setUser(null);
+      setProfile(null);
+      setIsAdmin(false);
+      setIsOnboarded(false);
+      
+      // Auth state change will confirm this change
     } catch (error) {
       setLoading(false); // Make sure to set loading to false on error
       throw error;
     }
   };
 
+  // Provide auth context values to children
   return (
     <AuthContext.Provider value={{ 
       user, 

@@ -20,11 +20,28 @@ export function ProtectedRoute({
   const { user, loading, isAdmin, isOnboarded } = useAuth();
   const location = useLocation();
   
-  // Simple redirect for loading state with no user
-  if (loading && !user) {
-    console.log("Protected route: Loading state with no user, redirecting to auth");
-    sessionStorage.setItem('redirectUrl', location.pathname);
-    return <Navigate to="/auth" replace />;
+  // Log authentication state for debugging
+  useEffect(() => {
+    console.log("Protected route state:", { 
+      path: location.pathname,
+      user: !!user, 
+      loading, 
+      isAdmin, 
+      isOnboarded
+    });
+  }, [user, loading, isAdmin, isOnboarded, location.pathname]);
+
+  // If still loading and no user, show loading state
+  if (loading) {
+    console.log("Protected route: Still loading, waiting...");
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <div className="flex flex-col items-center gap-2">
+          <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary"></div>
+          <p className="text-sm text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   // If not authenticated, redirect to login page

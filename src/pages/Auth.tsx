@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
+import { debugSupabaseInfo } from "@/lib/supabase";
 
 // Define schema for the login form
 const loginSchema = z.object({
@@ -45,34 +46,34 @@ export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string>("");
-  const [authAttempted, setAuthAttempted] = useState(false);
+  const [loginAttempted, setLoginAttempted] = useState(false);
   
-  // Fix redirect logic - check if we have a user
+  console.log("Auth page render - Debug Supabase info:", debugSupabaseInfo);
+  console.log("Auth page render - Auth state:", { user, isOnboarded, authLoading, isLoading });
+  
+  // Immediately redirect if user is authenticated
   useEffect(() => {
     if (user) {
-      console.log("User authenticated, redirecting now:", user);
+      console.log("User authenticated, redirecting from Auth page", user);
+      
+      // Determine redirect path
       const redirectTo = !isOnboarded ? '/onboarding' : (sessionStorage.getItem('redirectUrl') || '/dashboard');
       console.log(`Redirecting to: ${redirectTo}`);
       
-      // Use a setTimeout of 0 to allow the render cycle to complete
-      setTimeout(() => {
-        navigate(redirectTo, { replace: true });
-        sessionStorage.removeItem('redirectUrl');
-      }, 0);
+      navigate(redirectTo, { replace: true });
+      sessionStorage.removeItem('redirectUrl');
     }
   }, [user, isOnboarded, navigate]);
   
-  // Additional effect to handle when initial loading completes
+  // Check for authentication issues
   useEffect(() => {
-    if (authAttempted && !isLoading && !authLoading) {
-      console.log("Auth attempt completed, checking user state:", !!user);
-      if (!user) {
-        // If authentication completed but no user, display error
-        toast.error("Authentication failed. Please try again.");
-        setAuthAttempted(false);
-      }
+    if (loginAttempted && !isLoading && !authLoading && !user) {
+      console.log("Login attempt completed but no user - possible auth failure");
+      
+      // Reset login attempt flag
+      setLoginAttempted(false);
     }
-  }, [authAttempted, isLoading, authLoading, user]);
+  }, [loginAttempted, isLoading, authLoading, user]);
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -83,14 +84,18 @@ export default function Auth() {
   });
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
-    if (isLoading || authLoading) return; // Prevent multiple submissions
+    if (isLoading || authLoading) {
+      console.log("Submit blocked - already loading");
+      return; // Prevent multiple submissions
+    }
     
     setIsLoading(true);
     setError("");
-    setAuthAttempted(true);
+    setLoginAttempted(true);
+    
+    console.log("Login attempt started with email:", values.email);
     
     try {
-      console.log("Attempting to sign in...");
       await signIn(values.email, values.password);
       toast.success("Login successful!");
       // Redirect will be handled by the useEffect above
@@ -99,7 +104,7 @@ export default function Auth() {
       const errorMessage = err instanceof Error ? err.message : "Failed to sign in. Please try again.";
       setError(errorMessage);
       toast.error(errorMessage);
-      setAuthAttempted(false);
+      setLoginAttempted(false);
       setIsLoading(false);
     }
   };
