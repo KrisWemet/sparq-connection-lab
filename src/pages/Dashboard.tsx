@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { BottomNav } from "@/components/bottom-nav";
@@ -13,8 +12,8 @@ import { AchievementBadge } from "@/components/AchievementBadge";
 import { RelationshipProgress } from "@/components/RelationshipProgress";
 import { SocialProofNotification } from "@/components/SocialProofNotification";
 import { toast } from "sonner";
+import { colorThemes } from "@/lib/colorThemes";
 
-// Animation variants for staggered animations
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -30,7 +29,6 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
 };
 
-// Mock data - In a real app, this would come from an API
 const MOCK_DATA = {
   streak: 3,
   relationshipLevel: "Silver" as const,
@@ -44,14 +42,12 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [showSocialProof, setShowSocialProof] = useState(true);
   
-  // In a real app, these would be fetched from an API
   const streak = MOCK_DATA.streak;
   const badges = ["communication", "dedication"];
   
   useEffect(() => {
     console.log("Dashboard visited:", new Date().toISOString());
     
-    // Simulate a notification after a short delay
     const timer = setTimeout(() => {
       toast.success("New weekend activity available! 🎉", {
         description: "Explore a special activity designed to deepen your connection",
@@ -100,7 +96,6 @@ export default function Dashboard() {
           />
         )}
         
-        {/* Badges Section */}
         <motion.div 
           className="flex flex-wrap gap-2 mt-4"
           variants={containerVariants}
@@ -122,14 +117,12 @@ export default function Dashboard() {
           </motion.div>
         </motion.div>
         
-        {/* Cards Section */}
         <motion.div 
           className="space-y-4"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          {/* Daily Connect Card */}
           <motion.div variants={itemVariants}>
             <Card 
               className="cursor-pointer overflow-hidden hover:shadow-md transition-all duration-300 border-primary/20 bg-gradient-to-br from-white to-primary-100" 
@@ -156,7 +149,6 @@ export default function Dashboard() {
             </Card>
           </motion.div>
 
-          {/* Relationship Progress */}
           <motion.div variants={itemVariants}>
             <RelationshipProgress 
               level={MOCK_DATA.relationshipLevel}
@@ -165,12 +157,10 @@ export default function Dashboard() {
             />
           </motion.div>
 
-          {/* Relationship Insights Card */}
           <motion.div variants={itemVariants}>
             <RelationshipInsightCard />
           </motion.div>
           
-          {/* Weekend Activity Card (conditional) */}
           {MOCK_DATA.hasWeekendActivity && (
             <motion.div
               variants={itemVariants}
@@ -205,7 +195,6 @@ export default function Dashboard() {
             </motion.div>
           )}
           
-          {/* Date Ideas Card */}
           <motion.div variants={itemVariants}>
             <Card 
               className="cursor-pointer overflow-hidden hover:shadow-md transition-all duration-300 bg-gradient-to-br from-white to-green-50" 
@@ -232,7 +221,6 @@ export default function Dashboard() {
             </Card>
           </motion.div>
           
-          {/* Relationship Journeys Card */}
           <motion.div variants={itemVariants}>
             <Card 
               className="cursor-pointer overflow-hidden hover:shadow-md transition-all duration-300 bg-gradient-to-br from-white to-blue-50" 
@@ -260,7 +248,6 @@ export default function Dashboard() {
           </motion.div>
         </motion.div>
         
-        {/* Partner Connect Section */}
         <motion.div
           variants={itemVariants}
           initial={{ opacity: 0, y: 20 }}
