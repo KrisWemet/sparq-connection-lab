@@ -32,6 +32,7 @@ const itemVariants = {
 };
 
 const pulseVariants = {
+  initial: { scale: 1, opacity: 0.9 },
   pulse: {
     scale: [1, 1.03, 1],
     opacity: [0.9, 1, 0.9],
@@ -309,6 +310,7 @@ export default function Dashboard() {
           {MOCK_DATA.hasWeekendActivity && (
             <motion.div
               variants={itemVariants}
+              initial="initial"
               animate="pulse"
               variants={pulseVariants}
             >
