@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { authService, UserProfile } from '@/services/supabaseService';
@@ -16,14 +16,29 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Create a cached auth state to persist between renders/navigations
+const cachedAuthState = {
+  user: null as User | null,
+  profile: null as UserProfile | null,
+  isAdmin: false,
+  initialized: false
+};
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [initializationComplete, setInitializationComplete] = useState(false);
+  const [user, setUser] = useState<User | null>(cachedAuthState.user);
+  const [profile, setProfile] = useState<UserProfile | null>(cachedAuthState.profile);
+  const [loading, setLoading] = useState(!cachedAuthState.initialized);
+  const [isAdmin, setIsAdmin] = useState(cachedAuthState.isAdmin);
+  const [initializationComplete, setInitializationComplete] = useState(cachedAuthState.initialized);
+  const authSubscription = useRef<{ unsubscribe: () => void } | null>(null);
 
   useEffect(() => {
+    // Skip initial loading if we already have cached auth state
+    if (cachedAuthState.initialized) {
+      console.log("Using cached auth state, skipping initialization");
+      return;
+    }
+
     console.log("Auth provider initialized");
     // Check for existing session on mount
     const getInitialSession = async () => {
@@ -38,6 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (session?.user) {
           console.log("User found in session");
           setUser(session.user);
+          cachedAuthState.user = session.user;
           
           // Get user profile
           try {
@@ -50,22 +66,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (profile) {
               console.log("Profile found");
               setProfile(profile as UserProfile);
+              cachedAuthState.profile = profile as UserProfile;
             }
             
             // Check if user is admin
             const adminStatus = await authService.isAdmin();
             setIsAdmin(adminStatus);
+            cachedAuthState.isAdmin = adminStatus;
           } catch (error) {
             console.error('Error fetching profile:', error);
           }
         } else {
           console.log("No user in session");
+          // Clear cached state if no user
+          cachedAuthState.user = null;
+          cachedAuthState.profile = null;
+          cachedAuthState.isAdmin = false;
         }
       } catch (error) {
         console.error('Error getting initial session:', error);
       } finally {
         setLoading(false);
         setInitializationComplete(true);
+        cachedAuthState.initialized = true;
         console.log("Auth initialization complete");
       }
     };
@@ -73,7 +96,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     getInitialSession();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+    authSubscription.current = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log("Auth state changed:", event);
         setLoading(true);
@@ -81,6 +104,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (session?.user) {
           console.log("User found in auth change");
           setUser(session.user);
+          cachedAuthState.user = session.user;
           
           // Get user profile on auth change
           try {
@@ -92,11 +116,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               
             if (profile) {
               setProfile(profile as UserProfile);
+              cachedAuthState.profile = profile as UserProfile;
             }
             
             // Check if user is admin
             const adminStatus = await authService.isAdmin();
             setIsAdmin(adminStatus);
+            cachedAuthState.isAdmin = adminStatus;
           } catch (error) {
             console.error('Error fetching profile:', error);
           }
@@ -104,6 +130,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(null);
           setProfile(null);
           setIsAdmin(false);
+          
+          // Clear cached state
+          cachedAuthState.user = null;
+          cachedAuthState.profile = null;
+          cachedAuthState.isAdmin = false;
         }
         
         setLoading(false);
@@ -112,7 +143,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Cleanup subscription
     return () => {
-      subscription.unsubscribe();
+      if (authSubscription.current) {
+        authSubscription.current.unsubscribe();
+      }
     };
   }, []);
 

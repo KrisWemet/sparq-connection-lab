@@ -16,14 +16,14 @@ export function ProtectedRoute({ children, adminOnly = false }: ProtectedRoutePr
   const location = useLocation();
   const [loadingTimeout, setLoadingTimeout] = useState(false);
   
-  // Add a timeout to prevent infinite loading
+  // Add a timeout to prevent infinite loading - reduced from 3000ms to 1500ms
   useEffect(() => {
     const timer = setTimeout(() => {
       if (loading) {
         console.log("Protected route loading timeout reached");
         setLoadingTimeout(true);
       }
-    }, 3000);
+    }, 1500); // Reduced timeout for faster experience
     
     return () => clearTimeout(timer);
   }, [loading]);
@@ -35,13 +35,13 @@ export function ProtectedRoute({ children, adminOnly = false }: ProtectedRoutePr
     return <Navigate to="/auth" replace />;
   }
 
-  // Show loading state while checking authentication
-  if (loading && !loadingTimeout) {
+  // Only show loading state if absolutely necessary - reduced visibility of loader
+  if (loading && !loadingTimeout && !user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin h-10 w-10 border-4 border-primary border-t-transparent rounded-full inline-block mb-3"></div>
-          <p className="text-gray-600">Loading...</p>
+          <div className="animate-spin h-8 w-8 border-3 border-primary border-t-transparent rounded-full inline-block mb-2"></div>
+          <p className="text-gray-500 text-sm">Loading...</p>
         </div>
       </div>
     );
@@ -61,4 +61,4 @@ export function ProtectedRoute({ children, adminOnly = false }: ProtectedRoutePr
 
   // If authenticated, render the protected content
   return <>{children}</>;
-} 
+}

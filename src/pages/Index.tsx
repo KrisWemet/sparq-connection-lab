@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HeartHandshake, AlertCircle, Heart, Sparkles, Target, MessageCircle } from "lucide-react";
@@ -9,28 +8,26 @@ export default function Index() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const [error, setError] = useState<string | null>(null);
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
 
   // Add detailed debug logging
   useEffect(() => {
     console.log("Index page - Auth state:", { user, loading });
   }, [user, loading]);
 
-  // Add timeout to recover from infinite loading
+  // Add a shorter timeout to recover from infinite loading
   useEffect(() => {
     const loadingTimeout = setTimeout(() => {
       if (loading) {
         console.log("Loading timeout reached, forcing state reset");
-        // If still loading after 5 seconds, assume there's an issue
-        if (user) {
-          navigate("/dashboard");
-        }
+        setLoadingTimeout(true);
       }
-    }, 5000);
+    }, 2000); // Reduced from 5000ms to 2000ms
 
     return () => clearTimeout(loadingTimeout);
-  }, [loading, user, navigate]);
+  }, [loading]);
 
-  // Redirect to dashboard if already logged in
+  // Redirect to dashboard if already logged in - use a separate effect for better performance
   useEffect(() => {
     if (!loading && user) {
       console.log("User is logged in, redirecting to dashboard");
@@ -38,16 +35,14 @@ export default function Index() {
     }
   }, [user, loading, navigate]);
 
-  if (loading) {
+  // Use simplified loading state - only show if not timed out
+  if (loading && !loadingTimeout) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
         <div className="text-center mb-8">
-          <HeartHandshake className="w-16 h-16 text-primary mx-auto mb-4" />
-          <h1 className="text-3xl font-bold text-gray-900">Sparq Connect</h1>
-          <p className="text-gray-600 mt-2">
-            Loading...
-          </p>
-          <div className="mt-4 animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto"></div>
+          <HeartHandshake className="w-12 h-12 text-primary mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-gray-900">Sparq Connect</h1>
+          <div className="mt-3 animate-spin h-6 w-6 border-3 border-primary border-t-transparent rounded-full mx-auto"></div>
         </div>
       </div>
     );
