@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -17,7 +18,7 @@ import type { Profile, ProfileFormData } from "@/types/profile";
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { user, profile: authProfile, signOut, loading: authLoading } = useAuth();
+  const { user, profile: authProfile, signOut, loading: authLoading, handleRefreshProfile } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [profile, setProfile] = useState<ProfileFormData>({
@@ -123,11 +124,23 @@ export default function Profile() {
           id: user.id,
           user_id: user.id,
           updated_at: new Date().toISOString(),
-          ...profile,
+          full_name: profile.full_name,
+          email: profile.email,
+          partner_name: profile.partner_name,
+          anniversary_date: profile.anniversary_date,
+          sexual_orientation: profile.sexual_orientation,
+          relationship_structure: profile.relationship_structure,
+          avatar_url: profile.avatar_url,
           isOnboarded: true
         });
 
       if (error) throw error;
+      
+      // Refresh profile data in auth context
+      if (handleRefreshProfile) {
+        await handleRefreshProfile();
+      }
+      
       toast.success("Profile updated successfully!");
     } catch (error) {
       console.error('Error updating profile:', error);

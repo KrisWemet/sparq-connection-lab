@@ -20,6 +20,7 @@ export function useAuthOperations() {
     if (!user) return;
     
     try {
+      console.log("Refreshing profile data for user:", user.id);
       const profile = await refreshProfile(user.id);
         
       if (profile) {
@@ -30,6 +31,8 @@ export function useAuthOperations() {
         const profileIsOnboarded = !!profile.isOnboarded;
         setIsOnboarded(profileIsOnboarded);
         cachedAuthState.isOnboarded = profileIsOnboarded;
+        
+        return profile;
       }
     } catch (error) {
       console.error('Error refreshing profile:', error);

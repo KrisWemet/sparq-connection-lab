@@ -1,9 +1,11 @@
 
-import React from 'react';
+import React, { createContext, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
 import { AuthContext } from './auth-context';
 import { useAuthOperations } from './hooks/use-auth-operations';
 import { useInitialSession } from './hooks/use-initial-session';
 import { useAuthSubscription } from './hooks/use-auth-subscription';
+import { cachedAuthState } from './auth-state';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const {
@@ -25,35 +27,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     handleSignOut
   } = useAuthOperations();
 
-  // Initialize session
+  // Initialize session from localStorage and Supabase
   useInitialSession({
     setUser,
     setProfile,
+    setIsAdmin,
     setIsOnboarded,
-    setInitializationComplete,
-    setLoading
+    setLoading,
+    setInitializationComplete
   });
 
-  // Subscribe to auth changes
+  // Set up auth state change subscription
   useAuthSubscription({
     setUser,
     setProfile,
     setIsAdmin,
-    setIsOnboarded
+    setIsOnboarded,
+    setLoading
   });
 
-  return (
-    <AuthContext.Provider value={{ 
-      user, 
-      profile, 
-      loading,
-      signIn: handleSignIn, 
-      signUp: handleSignUp, 
-      signOut: handleSignOut,
-      isAdmin,
+  // Log auth state for debugging
+  useEffect(() => {
+    console.log("Auth Provider State:", { 
+      isInitialized: initializationComplete,
+      user: !!user, 
+      profile: !!profile,
+      isAdmin, 
       isOnboarded,
-      refreshProfile: handleRefreshProfile
-    }}>
+      loading 
+    });
+  }, [user, profile, isAdmin, isOnboarded, loading, initializationComplete]);
+
+  // Make auth state available to app
+  const value = {
+    user,
+    profile,
+    isAdmin,
+    isOnboarded,
+    loading,
+    handleRefreshProfile,
+    signIn: handleSignIn,
+    signUp: handleSignUp,
+    signOut: handleSignOut
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
