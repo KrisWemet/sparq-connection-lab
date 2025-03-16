@@ -2,14 +2,22 @@
 import { supabase } from '@/integrations/supabase/client';
 import { authService } from '@/services/supabaseService';
 
-export async function signIn(email: string, password: string): Promise<void> {
+export async function signIn(email: string, password: string) {
   try {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) throw error;
+    console.log("Attempting to sign in with email:", email);
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      console.error("Supabase sign in error:", error);
+      throw error;
+    }
+    
+    console.log("Sign in successful, got user:", !!data.user);
     
     // For development, also set localStorage values
     const isAdminUser = email.includes('admin@');
     localStorage.setItem('userRole', isAdminUser ? 'admin' : 'user');
+    
+    return data;
   } catch (error: any) {
     console.error('Error signing in:', error.message);
     throw error;

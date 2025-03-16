@@ -8,6 +8,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.error('Missing Supabase credentials. Please check your environment variables.');
 }
 
+// Create a singleton instance of the Supabase client
 export const supabase = createClient(
   supabaseUrl || '',
   supabaseAnonKey || ''

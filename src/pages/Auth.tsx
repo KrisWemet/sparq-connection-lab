@@ -27,6 +27,7 @@ import {
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
 import { debugSupabaseInfo } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 
 // Define schema for the login form
 const loginSchema = z.object({
@@ -46,34 +47,55 @@ export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string>("");
-  const [loginAttempted, setLoginAttempted] = useState(false);
   
+  // Debug auth state on each render
   console.log("Auth page render - Debug Supabase info:", debugSupabaseInfo);
-  console.log("Auth page render - Auth state:", { user, isOnboarded, authLoading, isLoading });
+  console.log("Auth page render - Auth state:", { 
+    user, 
+    isOnboarded, 
+    authLoading, 
+    isLoading 
+  });
   
-  // Immediately redirect if user is authenticated
+  // Check Supabase session directly
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        console.log("Direct session check result:", !!data.session);
+        
+        if (data.session?.user) {
+          console.log("Session exists, redirecting");
+          handleRedirect(data.session.user, isOnboarded);
+        }
+      } catch (err) {
+        console.error("Error checking session:", err);
+      }
+    };
+    
+    checkSession();
+  }, []);
+  
+  // Redirect if user is authenticated
   useEffect(() => {
     if (user) {
-      console.log("User authenticated, redirecting from Auth page", user);
-      
-      // Determine redirect path
-      const redirectTo = !isOnboarded ? '/onboarding' : (sessionStorage.getItem('redirectUrl') || '/dashboard');
-      console.log(`Redirecting to: ${redirectTo}`);
-      
-      navigate(redirectTo, { replace: true });
-      sessionStorage.removeItem('redirectUrl');
+      console.log("User authenticated in useEffect, redirecting", user);
+      handleRedirect(user, isOnboarded);
     }
   }, [user, isOnboarded, navigate]);
   
-  // Check for authentication issues
-  useEffect(() => {
-    if (loginAttempted && !isLoading && !authLoading && !user) {
-      console.log("Login attempt completed but no user - possible auth failure");
-      
-      // Reset login attempt flag
-      setLoginAttempted(false);
-    }
-  }, [loginAttempted, isLoading, authLoading, user]);
+  // Function to handle redirect logic
+  const handleRedirect = (user: any, onboarded: boolean) => {
+    // Determine redirect path
+    const redirectTo = !onboarded ? '/onboarding' : (sessionStorage.getItem('redirectUrl') || '/dashboard');
+    console.log(`Redirecting to: ${redirectTo}`, { user, onboarded });
+    
+    // Clear redirect URL from storage
+    sessionStorage.removeItem('redirectUrl');
+    
+    // Navigate to destination
+    navigate(redirectTo, { replace: true });
+  };
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -91,20 +113,25 @@ export default function Auth() {
     
     setIsLoading(true);
     setError("");
-    setLoginAttempted(true);
     
     console.log("Login attempt started with email:", values.email);
     
     try {
       await signIn(values.email, values.password);
       toast.success("Login successful!");
-      // Redirect will be handled by the useEffect above
+      
+      // Check if we have a session immediately after signing in
+      const { data } = await supabase.auth.getSession();
+      if (data.session?.user) {
+        console.log("Session available after login - redirecting", data.session.user);
+        handleRedirect(data.session.user, isOnboarded);
+      }
     } catch (err) {
       console.error("Login error:", err);
       const errorMessage = err instanceof Error ? err.message : "Failed to sign in. Please try again.";
       setError(errorMessage);
       toast.error(errorMessage);
-      setLoginAttempted(false);
+    } finally {
       setIsLoading(false);
     }
   };

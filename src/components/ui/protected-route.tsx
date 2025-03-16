@@ -31,7 +31,7 @@ export function ProtectedRoute({
     });
   }, [user, loading, isAdmin, isOnboarded, location.pathname]);
 
-  // If still loading and no user, show loading state
+  // If still loading, show loading state
   if (loading) {
     console.log("Protected route: Still loading, waiting...");
     return (

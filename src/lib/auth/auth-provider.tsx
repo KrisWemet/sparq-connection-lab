@@ -96,13 +96,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       console.log("Starting sign in process with email:", email);
-      await signIn(email, password);
+      const result = await signIn(email, password);
+      console.log("Sign in result:", !!result);
       
       // Check if we have a session immediately to speed up redirection
       const { data } = await supabase.auth.getSession();
       if (data.session?.user) {
         console.log("Sign in successful, setting user directly");
         setUser(data.session.user);
+        cachedAuthState.user = data.session.user;
         
         try {
           // Get profile data
@@ -115,7 +117,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (profileData) {
             console.log("Profile found in sign in process");
             setProfile(profileData as UserProfile);
+            cachedAuthState.profile = profileData as UserProfile;
             setIsOnboarded(!!profileData.isOnboarded);
+            cachedAuthState.isOnboarded = !!profileData.isOnboarded;
           }
         } catch (profileError) {
           console.error("Error fetching profile during sign in:", profileError);
@@ -123,6 +127,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       
       console.log("Sign in operation completed");
+      return result;
     } catch (error) {
       console.error("Sign in error:", error);
       setLoading(false); // Make sure to set loading to false on error
@@ -157,6 +162,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setProfile(null);
       setIsAdmin(false);
       setIsOnboarded(false);
+      
+      // Update cached state
+      cachedAuthState.user = null;
+      cachedAuthState.profile = null;
+      cachedAuthState.isAdmin = false;
+      cachedAuthState.isOnboarded = false;
       
       // Auth state change will confirm this change
     } catch (error) {
