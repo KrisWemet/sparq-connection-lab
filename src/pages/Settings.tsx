@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/lib/theme-provider";
 import { useSubscription } from "@/lib/subscription-provider";
-import { useAuth } from "@/lib/auth-provider";
+import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -348,4 +348,4 @@ export default function SettingsPage() {
       <BottomNav />
     </div>
   );
-} 
+}

@@ -1,22 +1,21 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/lib/auth-provider";
-import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/auth";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { toast } from "sonner";
-import { ArrowRight } from "lucide-react";
 import { OnboardingStepOne } from "@/components/onboarding/OnboardingStepOne";
 import { OnboardingStepTwo } from "@/components/onboarding/OnboardingStepTwo";
 import { OnboardingStepThree } from "@/components/onboarding/OnboardingStepThree";
 import { OnboardingStepFour } from "@/components/onboarding/OnboardingStepFour";
-import { OnboardingProgress } from "@/components/onboarding/OnboardingProgress";
+import { OnboardingHeader } from "@/components/onboarding/OnboardingHeader";
+import { OnboardingControls } from "@/components/onboarding/OnboardingControls";
 import { partnerService } from "@/services/supabaseService";
 import { supabase } from "@/integrations/supabase/client";
 
 export default function Onboarding() {
   const navigate = useNavigate();
-  const { user, profile } = useAuth();
+  const { user, profile, refreshProfile } = useAuth();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [fullName, setFullName] = useState("");
@@ -65,6 +64,12 @@ export default function Onboarding() {
       window.scrollTo(0, 0);
     }
   };
+
+  const handleSkip = () => {
+    // Skip the rest of onboarding
+    setStep(totalSteps);
+    window.scrollTo(0, 0);
+  }
   
   const handleComplete = async () => {
     if (loading) return; // Prevent multiple submissions
@@ -109,6 +114,9 @@ export default function Onboarding() {
             // Continue with redirect even if partner invitation fails
           }
         }
+        
+        // Refresh profile data after update
+        await refreshProfile();
         
         toast.success("Onboarding completed successfully!");
         
@@ -175,65 +183,24 @@ export default function Onboarding() {
   return (
     <div className="min-h-screen bg-slate-50 py-8 px-4">
       <div className="max-w-md mx-auto">
-        <div className="mb-8 space-y-4">
-          <h1 className="text-xl font-bold text-gray-900">Onboarding</h1>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-500">Step {step} of {totalSteps}</span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className="bg-primary h-2 rounded-full transition-all" 
-              style={{ width: `${(step / totalSteps) * 100}%` }}
-            ></div>
-          </div>
-        </div>
+        <OnboardingHeader step={step} totalSteps={totalSteps} />
         
         <Card className="mb-6">
           <CardContent className="pt-6">
             {renderStepContent()}
           </CardContent>
-          <CardFooter className="flex justify-between border-t p-6">
-            <Button 
-              variant="outline" 
-              onClick={handleBack}
-              disabled={step === 1 || loading}
-            >
-              Back
-            </Button>
-            
-            {step < totalSteps ? (
-              <Button 
-                onClick={handleNext}
-                disabled={loading}
-              >
-                Continue
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            ) : (
-              <Button 
-                onClick={handleComplete} 
-                disabled={loading}
-              >
-                {loading ? 'Saving...' : 'Complete Setup'}
-              </Button>
-            )}
+          <CardFooter className="p-0">
+            <OnboardingControls
+              step={step}
+              totalSteps={totalSteps}
+              loading={loading}
+              onBack={handleBack}
+              onNext={handleNext}
+              onComplete={handleComplete}
+              onSkip={handleSkip}
+            />
           </CardFooter>
         </Card>
-        
-        {step < totalSteps && (
-          <Button 
-            variant="link" 
-            className="w-full"
-            onClick={() => {
-              // Skip the rest of onboarding
-              setStep(totalSteps);
-              window.scrollTo(0, 0);
-            }}
-            disabled={loading}
-          >
-            Skip for now
-          </Button>
-        )}
       </div>
     </div>
   );

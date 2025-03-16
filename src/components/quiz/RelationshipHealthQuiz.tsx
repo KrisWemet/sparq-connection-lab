@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,7 +6,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { ArrowLeft, ArrowRight, Brain, Heart } from "lucide-react";
-import { useAuth } from "@/lib/auth-provider";
+import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 
 // Define the quiz questions

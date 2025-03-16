@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Question } from "@/types/quiz";
 import { weekdayQuestions, weekendActivities } from "@/data/quizData";
@@ -11,7 +10,7 @@ import { BottomNav } from "@/components/bottom-nav";
 import { Award, Brain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/lib/auth-provider";
+import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { NoQuestionView } from "@/components/quiz/NoQuestionView";
 import { HealthScoreView } from "@/components/quiz/HealthScoreView";

@@ -28,7 +28,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useAuth } from "@/lib/auth-provider";
+import { useAuth } from "@/lib/auth";
 
 // Define schemas for the forms
 const loginSchema = z.object({
@@ -405,4 +405,4 @@ export default function Auth() {
       </div>
     </div>
   );
-} 
+}
