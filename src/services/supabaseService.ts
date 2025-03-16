@@ -30,6 +30,7 @@ export interface UserProfile {
   isOnboarded: boolean;
   lastActive: Date;
   gender?: string;
+  relationshipType?: string;
 }
 
 export interface PartnerInvitation {
@@ -985,11 +986,12 @@ function generateSessionId() {
 function transformProfile(data: any): UserProfile {
   return {
     id: data.id,
-    fullName: data.full_name,
+    fullName: data.full_name || data.name,
     email: data.email,
     avatarUrl: data.avatar_url,
     gender: data.gender,
     relationshipStructure: data.relationship_structure,
+    relationshipType: data.relationship_type,
     partnerId: data.partner_id,
     partnerName: data.partner_name,
     anniversaryDate: data.anniversary_date,

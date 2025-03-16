@@ -11,6 +11,7 @@ export interface Profile {
   relationship_structure?: string;
   created_at: string;
   updated_at: string;
+  isOnboarded?: boolean;
 }
 
 export interface ProfileFormData {
