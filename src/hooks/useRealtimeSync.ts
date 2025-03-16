@@ -47,8 +47,9 @@ export function useRealtimeSync(
     // Subscribe to partner's progress updates
     const progressChannel = supabase
       .channel('journey_progress')
+      // @ts-ignore - The type definition doesn't match the actual API
       .on(
-        'postgres_changes', // Use this as a string literal
+        'postgres_changes',
         {
           event: '*',
           schema: 'public',
@@ -77,8 +78,9 @@ export function useRealtimeSync(
     // Subscribe to partner's activity responses
     const responsesChannel = supabase
       .channel('activity_responses')
+      // @ts-ignore - The type definition doesn't match the actual API
       .on(
-        'postgres_changes', // Use this as a string literal
+        'postgres_changes',
         {
           event: 'INSERT',
           schema: 'public',
