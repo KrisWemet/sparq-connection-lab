@@ -38,7 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Handle auth state changes
   const handleAuthChange = useCallback((changedUser: User | null, changedProfile: UserProfile | null) => {
-    setLoading(true);
+    // Set user and profile first, so they are available for navigation decisions
     setUser(changedUser);
     setProfile(changedProfile);
     
@@ -52,7 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsOnboarded(false);
     }
     
-    // Important: Set loading to false after processing the auth change
+    // Important: Set loading to false immediately after processing auth change
     setLoading(false);
   }, [setLoading]);
 
@@ -85,7 +85,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       await signIn(email, password);
-      // We don't set loading to false here because the auth state change will do that
+      // Auth state change will set loading to false
     } catch (error) {
       setLoading(false); // Make sure to set loading to false on error
       throw error;
@@ -102,7 +102,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       await signUp(email, password, fullName, gender, relationshipType);
-      // We don't set loading to false here because the auth state change will do that
+      // Auth state change will set loading to false
     } catch (error) {
       setLoading(false); // Make sure to set loading to false on error
       throw error;
@@ -113,7 +113,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       await signOut();
-      // We don't set loading to false here because the auth state change will do that
+      // Auth state change will set loading to false
     } catch (error) {
       setLoading(false); // Make sure to set loading to false on error
       throw error;
@@ -124,7 +124,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     <AuthContext.Provider value={{ 
       user, 
       profile, 
-      loading: loading && !initializationComplete, // Only consider loading if initialization isn't complete
+      loading, // Use loading directly without additional conditions
       signIn: handleSignIn, 
       signUp: handleSignUp, 
       signOut: handleSignOut,

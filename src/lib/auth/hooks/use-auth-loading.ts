@@ -6,7 +6,7 @@ export function useAuthLoading(initialLoading: boolean) {
   const [loadingTimeout, setLoadingTimeout] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Set up timeout to prevent infinite loading - reduced timeout
+  // Set up timeout to prevent infinite loading - significantly reduced timeout
   useEffect(() => {
     if (loading) {
       // Clear any existing timeout
@@ -14,12 +14,12 @@ export function useAuthLoading(initialLoading: boolean) {
         clearTimeout(timeoutRef.current);
       }
       
-      // Set new timeout - reduced from 5000ms to 2000ms
+      // Set new timeout - reduced from 2000ms to 800ms for faster response
       timeoutRef.current = setTimeout(() => {
         console.log("Auth loading timeout reached, forcing state reset");
         setLoadingTimeout(true);
         setLoading(false); // Force loading state to false on timeout
-      }, 2000); // Reduced timeout for better UX
+      }, 800); // Very short timeout for better UX
     } else {
       // Clear timeout when not loading
       if (timeoutRef.current) {

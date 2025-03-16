@@ -21,35 +21,23 @@ export function ProtectedRoute({
   const location = useLocation();
   const [loadingTimeout, setLoadingTimeout] = useState(false);
   
-  // Add a timeout to prevent infinite loading - reduced to 1000ms (1 second)
+  // Add a timeout to prevent infinite loading - reduced to 700ms
   useEffect(() => {
     const timer = setTimeout(() => {
       if (loading) {
         console.log("Protected route loading timeout reached");
         setLoadingTimeout(true);
       }
-    }, 1000); // Very short timeout for faster experience
+    }, 700); // Very short timeout for faster experience
     
     return () => clearTimeout(timer);
   }, [loading]);
 
   // If loading times out, redirect to auth page
-  if (loadingTimeout && !user) {
-    console.log("Loading timed out, redirecting to auth page");
+  if ((loadingTimeout || loading) && !user) {
+    console.log("Auth loading, redirecting to auth page");
     sessionStorage.setItem('redirectUrl', location.pathname);
     return <Navigate to="/auth" replace />;
-  }
-
-  // Only show loading state for a very brief moment
-  if (loading && !loadingTimeout && !user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin h-6 w-6 border-2 border-primary border-t-transparent rounded-full inline-block"></div>
-          <p className="text-gray-400 text-xs mt-1">Loading...</p>
-        </div>
-      </div>
-    );
   }
 
   // If not authenticated, redirect to login page

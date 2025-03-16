@@ -1,5 +1,6 @@
+
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -24,7 +25,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/lib/auth";
 
 // Define schema for the login form
@@ -45,46 +45,25 @@ export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string>("");
-  const [redirectTimer, setRedirectTimer] = useState<NodeJS.Timeout | null>(null);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
-  // Check if user is already authenticated
+  // Check if user is already authenticated and handle redirect
   useEffect(() => {
+    // If we're already in the process of redirecting, don't do anything
+    if (isRedirecting) return;
+    
     if (user) {
-      // Clear any existing timer
-      if (redirectTimer) {
-        clearTimeout(redirectTimer);
-      }
+      console.log("User is authenticated, preparing to redirect...");
+      setIsRedirecting(true);
       
-      // Set a short timer to navigate (prevents flashing)
-      const timer = setTimeout(() => {
-        // If user is not onboarded, redirect to onboarding
-        if (!isOnboarded) {
-          navigate('/onboarding');
-          return;
-        }
-        
-        // Otherwise redirect to dashboard or saved redirect URL
-        const redirectUrl = sessionStorage.getItem('redirectUrl') || '/dashboard';
-        navigate(redirectUrl);
-        sessionStorage.removeItem('redirectUrl');
-      }, 300);
+      // Redirect immediately without delay
+      const redirectTo = !isOnboarded ? '/onboarding' : (sessionStorage.getItem('redirectUrl') || '/dashboard');
+      console.log(`Redirecting to: ${redirectTo}`);
       
-      setRedirectTimer(timer);
-      
-      return () => {
-        if (timer) clearTimeout(timer);
-      };
+      navigate(redirectTo);
+      sessionStorage.removeItem('redirectUrl'); 
     }
-  }, [user, isOnboarded, navigate]);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (redirectTimer) {
-        clearTimeout(redirectTimer);
-      }
-    };
-  }, []);
+  }, [user, isOnboarded, navigate, isRedirecting]);
 
   // Login form
   const loginForm = useForm<LoginFormValues>({
@@ -96,21 +75,22 @@ export default function Auth() {
   });
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
-    if (isLoading) return; // Prevent multiple submissions
+    if (isLoading || authLoading) return; // Prevent multiple submissions
     
     setIsLoading(true);
     setError("");
+    
     try {
+      console.log("Attempting to sign in...");
       await signIn(values.email, values.password);
       toast.success("Login successful!");
-      // Note: The redirect will be handled by the useEffect above
+      // Redirect will be handled by the useEffect above
     } catch (err) {
       console.error("Login error:", err);
       const errorMessage = err instanceof Error ? err.message : "Failed to sign in. Please try again.";
       setError(errorMessage);
       toast.error(errorMessage);
-    } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Only reset loading on error
     }
   };
 
