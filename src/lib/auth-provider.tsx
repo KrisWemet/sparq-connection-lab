@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { User, Subscription } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -36,7 +35,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const authSubscription = useRef<{ unsubscribe: () => void } | null>(null);
 
   useEffect(() => {
-    // Skip initial loading if we already have cached auth state
     if (cachedAuthState.initialized) {
       console.log("Using cached auth state, skipping initialization");
       return;
@@ -168,7 +166,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  // Sign in function
   const signIn = async (email: string, password: string) => {
     try {
       setLoading(true);
@@ -186,7 +183,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Sign up function
   const signUp = async (
     email: string, 
     password: string, 
@@ -216,7 +212,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Sign out function
   const signOut = async () => {
     try {
       setLoading(true);

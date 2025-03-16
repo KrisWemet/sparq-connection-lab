@@ -14,18 +14,22 @@ export interface SignUpData extends AuthCredentials {
   relationshipType?: 'monogamous' | 'polyamorous' | 'open' | 'long-distance';
 }
 
+// Update the UserProfile type to include the additional properties needed in the Profile component
 export interface UserProfile {
   id: string;
   fullName: string;
   email: string;
   avatarUrl?: string;
-  gender?: string;
-  relationshipType?: string;
+  partnerName?: string;
+  anniversaryDate?: string;
+  sexualOrientation?: string;
+  relationshipStructure?: string;
   partnerId?: string;
   subscriptionTier: 'free' | 'premium' | 'platinum';
   subscriptionExpiry?: Date;
   isOnboarded: boolean;
   lastActive: Date;
+  gender?: string;
 }
 
 export interface PartnerInvitation {
@@ -977,6 +981,7 @@ function generateSessionId() {
 }
 
 // Helper functions to transform database records to frontend models
+// Update the transformProfile function to properly map database fields to the UserProfile interface
 function transformProfile(data: any): UserProfile {
   return {
     id: data.id,
@@ -984,12 +989,15 @@ function transformProfile(data: any): UserProfile {
     email: data.email,
     avatarUrl: data.avatar_url,
     gender: data.gender,
-    relationshipType: data.relationship_type,
+    relationshipStructure: data.relationship_structure,
     partnerId: data.partner_id,
-    subscriptionTier: data.subscription_tier,
+    partnerName: data.partner_name,
+    anniversaryDate: data.anniversary_date,
+    sexualOrientation: data.sexual_orientation,
+    subscriptionTier: data.subscription_tier || 'free',
     subscriptionExpiry: data.subscription_expiry ? new Date(data.subscription_expiry) : undefined,
-    isOnboarded: data.is_onboarded,
-    lastActive: new Date(data.last_active)
+    isOnboarded: !!data.isOnboarded,
+    lastActive: new Date(data.last_active || data.updated_at || data.created_at || Date.now())
   };
 }
 
@@ -1001,4 +1009,4 @@ function transformInvitation(data: any): PartnerInvitation {
     status: data.status,
     expiresAt: new Date(data.expires_at)
   };
-} 
+}

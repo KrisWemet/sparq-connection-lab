@@ -33,13 +33,13 @@ export default function Profile() {
   useEffect(() => {
     if (authProfile) {
       setProfile({
-        full_name: authProfile.full_name || "",
+        full_name: authProfile.fullName || "",
         email: authProfile.email || user?.email || "",
-        partner_name: authProfile.partner_name || "",
-        anniversary_date: authProfile.anniversary_date || "",
-        sexual_orientation: authProfile.sexual_orientation || "straight",
-        relationship_structure: authProfile.relationship_structure || "monogamous",
-        avatar_url: authProfile.avatar_url || ""
+        partner_name: authProfile.partnerName || "",
+        anniversary_date: authProfile.anniversaryDate || "",
+        sexual_orientation: authProfile.sexualOrientation || "straight",
+        relationship_structure: authProfile.relationshipStructure || "monogamous",
+        avatar_url: authProfile.avatarUrl || ""
       });
     }
   }, [authProfile, user]);
