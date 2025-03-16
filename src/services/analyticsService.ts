@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 
 export interface AnalyticsEvent {
@@ -23,12 +24,23 @@ export const analyticsService = {
         timestamp: new Date().toISOString()
       };
 
-      // Store event in analytics_events table
-      const { error } = await supabase
-        .from('analytics_events')
-        .insert([event]);
+      // Log to console in development
+      console.log('Analytics event:', event);
+      
+      // In a production environment, we would store this in the database
+      try {
+        // Store event in analytics_events table if it exists
+        const { error } = await supabase
+          .from('analytics_events')
+          .insert([event]);
 
-      if (error) throw error;
+        if (error && error.code !== '42P01') { // Ignore "relation does not exist" errors
+          console.error('Error storing analytics event:', error);
+        }
+      } catch (error) {
+        // Silently fail if table doesn't exist yet
+        console.log('Analytics table not configured yet, skipping storage');
+      }
     } catch (error) {
       console.error('Error tracking event:', error);
     }
@@ -67,4 +79,4 @@ export const analyticsService = {
   async trackEngagement(action: string, properties: Record<string, any> = {}) {
     await this.trackEvent(`engagement_${action}`, properties);
   }
-} as const; 
+};
