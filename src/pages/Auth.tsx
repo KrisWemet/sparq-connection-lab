@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -68,7 +67,8 @@ export default function Auth() {
         
         if (data.session?.user) {
           console.log("Session exists, redirecting");
-          handleRedirect(data.session.user, isOnboarded);
+          // Always redirect to dashboard after login, not onboarding
+          navigate('/dashboard', { replace: true });
         }
       } catch (err) {
         console.error("Error checking session:", err);
@@ -82,22 +82,10 @@ export default function Auth() {
   useEffect(() => {
     if (user) {
       console.log("User authenticated in useEffect, redirecting", user);
-      handleRedirect(user, isOnboarded);
+      // Always redirect to dashboard after login
+      navigate('/dashboard', { replace: true });
     }
-  }, [user, isOnboarded, navigate]);
-  
-  // Function to handle redirect logic
-  const handleRedirect = (user: any, onboarded: boolean) => {
-    // Determine redirect path
-    const redirectTo = !onboarded ? '/onboarding' : (sessionStorage.getItem('redirectUrl') || '/dashboard');
-    console.log(`Redirecting to: ${redirectTo}`, { user, onboarded });
-    
-    // Clear redirect URL from storage
-    sessionStorage.removeItem('redirectUrl');
-    
-    // Navigate to destination
-    navigate(redirectTo, { replace: true });
-  };
+  }, [user, navigate]);
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -124,13 +112,8 @@ export default function Auth() {
         toast.success("Login successful!");
         console.log("Login successful, user:", result.user);
         
-        // User should be redirected automatically by the useEffect above
-        // But let's also manually check for the session
-        const { data } = await supabase.auth.getSession();
-        if (data.session?.user) {
-          console.log("Session available after login - redirecting", data.session.user);
-          handleRedirect(data.session.user, isOnboarded);
-        }
+        // Always redirect to dashboard after login
+        navigate('/dashboard', { replace: true });
       } else {
         console.error("Login returned success but no user");
         setError("Login succeeded but user information was not returned");
