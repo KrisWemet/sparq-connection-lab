@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/lib/auth-provider";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -17,7 +17,7 @@ import type { Profile, ProfileFormData } from "@/types/profile";
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
+  const { user, profile: authProfile, signOut } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [profile, setProfile] = useState<ProfileFormData>({
@@ -31,6 +31,20 @@ export default function Profile() {
   });
 
   useEffect(() => {
+    if (authProfile) {
+      setProfile({
+        full_name: authProfile.full_name || "",
+        email: authProfile.email || user?.email || "",
+        partner_name: authProfile.partner_name || "",
+        anniversary_date: authProfile.anniversary_date || "",
+        sexual_orientation: authProfile.sexual_orientation || "straight",
+        relationship_structure: authProfile.relationship_structure || "monogamous",
+        avatar_url: authProfile.avatar_url || ""
+      });
+    }
+  }, [authProfile, user]);
+
+  useEffect(() => {
     if (user) {
       loadProfile();
     }
@@ -39,15 +53,21 @@ export default function Profile() {
   const loadProfile = async () => {
     try {
       setLoading(true);
+      console.log("Loading profile data for user:", user?.id);
+      
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('user_id', user?.id)
+        .eq('id', user?.id)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error loading profile:', error);
+        throw error;
+      }
 
       if (data) {
+        console.log("Profile data loaded:", data);
         setProfile({
           full_name: data.full_name || "",
           email: data.email || user?.email || "",
@@ -57,6 +77,8 @@ export default function Profile() {
           relationship_structure: data.relationship_structure || "monogamous",
           avatar_url: data.avatar_url || ""
         });
+      } else {
+        console.log("No profile data found, using defaults");
       }
     } catch (error) {
       console.error('Error loading profile:', error);
@@ -71,12 +93,16 @@ export default function Profile() {
 
     try {
       setSaving(true);
+      console.log("Saving profile:", profile);
+      
       const { error } = await supabase
         .from('profiles')
         .upsert({
+          id: user.id,
           user_id: user.id,
           updated_at: new Date().toISOString(),
-          ...profile
+          ...profile,
+          isOnboarded: true
         });
 
       if (error) throw error;
@@ -100,10 +126,13 @@ export default function Profile() {
     }
   };
 
-  if (loading) {
+  if (loading && !authProfile) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-2" />
+          <p className="text-gray-500">Loading your profile...</p>
+        </div>
       </div>
     );
   }
@@ -434,4 +463,4 @@ export default function Profile() {
       <BottomNav />
     </div>
   );
-} 
+}

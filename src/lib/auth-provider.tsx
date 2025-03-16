@@ -12,6 +12,7 @@ interface AuthContextType {
   signUp: (email: string, password: string, fullName: string, gender?: string, relationshipType?: string) => Promise<void>;
   signOut: () => Promise<void>;
   isAdmin: boolean;
+  isOnboarded: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,6 +22,7 @@ const cachedAuthState = {
   user: null as User | null,
   profile: null as UserProfile | null,
   isAdmin: false,
+  isOnboarded: false,
   initialized: false
 };
 
@@ -29,6 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(cachedAuthState.profile);
   const [loading, setLoading] = useState(!cachedAuthState.initialized);
   const [isAdmin, setIsAdmin] = useState(cachedAuthState.isAdmin);
+  const [isOnboarded, setIsOnboarded] = useState(cachedAuthState.isOnboarded);
   const [initializationComplete, setInitializationComplete] = useState(cachedAuthState.initialized);
   const authSubscription = useRef<{ unsubscribe: () => void } | null>(null);
 
@@ -67,6 +70,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               console.log("Profile found");
               setProfile(profile as UserProfile);
               cachedAuthState.profile = profile as UserProfile;
+              
+              // Set onboarded status based on profile data
+              const profileIsOnboarded = !!profile.isOnboarded;
+              setIsOnboarded(profileIsOnboarded);
+              cachedAuthState.isOnboarded = profileIsOnboarded;
             }
             
             // Check if user is admin
@@ -82,6 +90,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           cachedAuthState.user = null;
           cachedAuthState.profile = null;
           cachedAuthState.isAdmin = false;
+          cachedAuthState.isOnboarded = false;
         }
       } catch (error) {
         console.error('Error getting initial session:', error);
@@ -96,7 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     getInitialSession();
 
     // Listen for auth changes - Fix the subscription handling
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+    const { data } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log("Auth state changed:", event);
         setLoading(true);
@@ -117,6 +126,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (profile) {
               setProfile(profile as UserProfile);
               cachedAuthState.profile = profile as UserProfile;
+              
+              // Set onboarded status based on profile data
+              const profileIsOnboarded = !!profile.isOnboarded;
+              setIsOnboarded(profileIsOnboarded);
+              cachedAuthState.isOnboarded = profileIsOnboarded;
             }
             
             // Check if user is admin
@@ -130,11 +144,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(null);
           setProfile(null);
           setIsAdmin(false);
+          setIsOnboarded(false);
           
           // Clear cached state
           cachedAuthState.user = null;
           cachedAuthState.profile = null;
           cachedAuthState.isAdmin = false;
+          cachedAuthState.isOnboarded = false;
         }
         
         setLoading(false);
@@ -142,7 +158,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
 
     // Store the subscription with proper unsubscribe method
-    authSubscription.current = { unsubscribe: () => subscription.unsubscribe() };
+    authSubscription.current = { unsubscribe: () => data.subscription.unsubscribe() };
 
     // Cleanup subscription
     return () => {
@@ -224,7 +240,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signIn, 
       signUp, 
       signOut,
-      isAdmin
+      isAdmin,
+      isOnboarded
     }}>
       {children}
     </AuthContext.Provider>

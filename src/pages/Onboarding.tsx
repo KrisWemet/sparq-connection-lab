@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/lib/auth-provider";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -10,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { profileService, partnerService } from "@/services/supabaseService";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function Onboarding() {
   const navigate = useNavigate();
@@ -55,14 +57,21 @@ export default function Onboarding() {
   const handleComplete = async () => {
     setLoading(true);
     try {
-      // Save all the onboarding data
-      if (profile) {
-        await profileService.updateProfile({
-          ...profile,
-          isOnboarded: true,
-          relationshipType: relationshipStatus,
-          // Other fields from onboarding
-        });
+      // Save all the onboarding data directly to the profile
+      if (user?.id) {
+        // Update the profile with onboarding data
+        const { error } = await supabase
+          .from('profiles')
+          .update({
+            relationship_structure: relationshipStatus,
+            relationship_duration: relationshipDuration,
+            relationship_goals: relationshipGoals,
+            isOnboarded: true,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', user.id);
+
+        if (error) throw error;
 
         // If partner email was provided, send invitation
         if (partnerEmail && partnerEmail.trim() !== "") {
@@ -77,6 +86,7 @@ export default function Onboarding() {
       }
       
       toast.success("Onboarding completed successfully!");
+      // Redirect to dashboard after completion
       navigate("/dashboard");
     } catch (error) {
       console.error("Error completing onboarding:", error);
@@ -328,4 +338,4 @@ export default function Onboarding() {
       </div>
     </div>
   );
-} 
+}
