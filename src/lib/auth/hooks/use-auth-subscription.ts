@@ -59,6 +59,7 @@ export function useAuthSubscription(onChange: AuthChangeHandler) {
     );
 
     // Store the subscription with proper unsubscribe method
+    // Fix: The data object itself has the unsubscribe method we need
     authSubscription.current = data;
 
     // Cleanup subscription
