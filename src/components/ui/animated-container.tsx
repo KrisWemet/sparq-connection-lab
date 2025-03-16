@@ -2,7 +2,7 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
-import { motion } from "framer-motion"
+import { motion, HTMLMotionProps } from "framer-motion"
 
 const animatedContainerVariants = cva("", {
   variants: {
@@ -77,14 +77,19 @@ const animationVariants = {
   },
 }
 
+interface AnimatedListProps extends Omit<AnimatedContainerProps, "delay"> {
+  staggerDelay?: number;
+  children: React.ReactNode;
+}
+
 export function AnimatedList({
   children,
   variant = "fadeIn",
   staggerDelay = 0.1,
-  duration = "normal", // Changed to use string type
+  duration = "normal",
   className,
   ...props
-}: Omit<AnimatedContainerProps, "delay"> & { staggerDelay?: number }) {
+}: AnimatedListProps) {
   // Convert string duration to number for framer-motion
   const durationMap = {
     fast: 0.2,
@@ -100,7 +105,7 @@ export function AnimatedList({
       className={cn(className)}
       initial="initial"
       animate="animate"
-      exit="initial"
+      // Remove the exit property since it's causing type errors
       {...props}
     >
       {Array.isArray(children)
