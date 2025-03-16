@@ -128,6 +128,30 @@ export type Database = {
         }
         Relationships: []
       }
+      memory_storage: {
+        Row: {
+          id: string
+          key: string
+          timestamp: string
+          user_id: string | null
+          value: Json
+        }
+        Insert: {
+          id?: string
+          key: string
+          timestamp?: string
+          user_id?: string | null
+          value: Json
+        }
+        Update: {
+          id?: string
+          key?: string
+          timestamp?: string
+          user_id?: string | null
+          value?: Json
+        }
+        Relationships: []
+      }
       user_journeys: {
         Row: {
           completed_at: string | null

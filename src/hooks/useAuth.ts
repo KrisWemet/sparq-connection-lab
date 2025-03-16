@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from 'react';
 import { User } from '@supabase/supabase-js';
-import { supabase } from '../services/supabase';
+import { supabase } from '@/integrations/supabase/client';
 
 interface UseAuthReturn {
   user: User | null;
@@ -102,4 +103,4 @@ export function useAuth(): UseAuthReturn {
     signOut,
     resetPassword,
   };
-} 
+}
