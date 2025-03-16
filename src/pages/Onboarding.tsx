@@ -120,7 +120,7 @@ export default function Onboarding() {
         
         toast.success("Onboarding completed successfully!");
         
-        // Ensure we redirect regardless of the state of the partner invitation
+        // Navigate to dashboard after successful completion
         navigate("/dashboard");
       } else {
         throw new Error("User ID not available");
@@ -128,8 +128,7 @@ export default function Onboarding() {
     } catch (error) {
       console.error("Error completing onboarding:", error);
       toast.error("There was an error completing your onboarding. Please try again.");
-    } finally {
-      setLoading(false);
+      setLoading(false);  // Only set loading to false on error since we navigate on success
     }
   };
   

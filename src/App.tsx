@@ -3,11 +3,12 @@ import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/lib/auth";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import { ProtectedRoute } from "@/components/ui/protected-route";
 
 // Pages
 import Index from "@/pages/Index";
 import Auth from "@/pages/Auth";
+import Signup from "@/pages/Signup";
 import Onboarding from "@/pages/Onboarding";
 import Dashboard from "@/pages/Dashboard";
 import Profile from "@/pages/Profile";
@@ -36,17 +37,42 @@ function App() {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/signup" element={<Signup />} />
             <Route path="/onboarding" element={<Onboarding />} />
-            <Route element={<ProtectedRoute />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/subscription" element={<Subscription />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/goals" element={<Goals />} />
-              <Route path="/journeys" element={<Journeys />} />
-              <Route 
-                path="/journeys/:journeyId" 
-                element={
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } />
+            <Route path="/subscription" element={
+              <ProtectedRoute>
+                <Subscription />
+              </ProtectedRoute>
+            } />
+            <Route path="/settings" element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            } />
+            <Route path="/goals" element={
+              <ProtectedRoute>
+                <Goals />
+              </ProtectedRoute>
+            } />
+            <Route path="/journeys" element={
+              <ProtectedRoute>
+                <Journeys />
+              </ProtectedRoute>
+            } />
+            <Route 
+              path="/journeys/:journeyId" 
+              element={
+                <ProtectedRoute>
                   <JourneyTemplate 
                     journeyId="" 
                     title="Journey"
@@ -54,17 +80,49 @@ function App() {
                     conceptItems={[]}
                     backPath="/journeys"
                   />
-                } 
-              />
-              <Route path="/path-to-together" element={<PathToTogether />} />
-              <Route path="/quiz" element={<Quiz />} />
-              <Route path="/daily-questions" element={<DailyQuestions />} />
-              <Route path="/daily-activity" element={<DailyActivity />} />
-              <Route path="/date-ideas" element={<DateIdeas />} />
-              <Route path="/ai-therapist" element={<AITherapist />} />
-              <Route path="/messaging" element={<Messaging />} />
-              <Route path="/reflect" element={<Reflect />} />
-            </Route>
+                </ProtectedRoute>
+              } 
+            />
+            <Route path="/path-to-together" element={
+              <ProtectedRoute>
+                <PathToTogether />
+              </ProtectedRoute>
+            } />
+            <Route path="/quiz" element={
+              <ProtectedRoute>
+                <Quiz />
+              </ProtectedRoute>
+            } />
+            <Route path="/daily-questions" element={
+              <ProtectedRoute>
+                <DailyQuestions />
+              </ProtectedRoute>
+            } />
+            <Route path="/daily-activity" element={
+              <ProtectedRoute>
+                <DailyActivity />
+              </ProtectedRoute>
+            } />
+            <Route path="/date-ideas" element={
+              <ProtectedRoute>
+                <DateIdeas />
+              </ProtectedRoute>
+            } />
+            <Route path="/ai-therapist" element={
+              <ProtectedRoute>
+                <AITherapist />
+              </ProtectedRoute>
+            } />
+            <Route path="/messaging" element={
+              <ProtectedRoute>
+                <Messaging />
+              </ProtectedRoute>
+            } />
+            <Route path="/reflect" element={
+              <ProtectedRoute>
+                <Reflect />
+              </ProtectedRoute>
+            } />
             <Route path="/join/:inviteCode" element={<JoinPartner />} />
             <Route path="/test" element={<TestPage />} />
             <Route path="*" element={<NotFound />} />

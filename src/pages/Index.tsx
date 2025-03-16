@@ -1,6 +1,7 @@
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { HeartHandshake, AlertCircle, Heart, Sparkles, Target, MessageCircle } from "lucide-react";
+import { HeartHandshake, Heart, Sparkles, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -68,7 +69,7 @@ export default function Index() {
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg" 
-                onClick={() => navigate("/auth")}
+                onClick={() => navigate("/signup")}
                 className="text-md px-8"
               >
                 Get Started
