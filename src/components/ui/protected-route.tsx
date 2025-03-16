@@ -21,14 +21,14 @@ export function ProtectedRoute({
   const location = useLocation();
   const [loadingTimeout, setLoadingTimeout] = useState(false);
   
-  // Add a timeout to prevent infinite loading - reduced from 3000ms to 1500ms
+  // Add a timeout to prevent infinite loading - reduced to 1000ms (1 second)
   useEffect(() => {
     const timer = setTimeout(() => {
       if (loading) {
         console.log("Protected route loading timeout reached");
         setLoadingTimeout(true);
       }
-    }, 1500); // Reduced timeout for faster experience
+    }, 1000); // Very short timeout for faster experience
     
     return () => clearTimeout(timer);
   }, [loading]);
@@ -40,13 +40,13 @@ export function ProtectedRoute({
     return <Navigate to="/auth" replace />;
   }
 
-  // Only show loading state if absolutely necessary - reduced visibility of loader
+  // Only show loading state for a very brief moment
   if (loading && !loadingTimeout && !user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin h-8 w-8 border-3 border-primary border-t-transparent rounded-full inline-block mb-2"></div>
-          <p className="text-gray-500 text-sm">Loading...</p>
+          <div className="animate-spin h-6 w-6 border-2 border-primary border-t-transparent rounded-full inline-block"></div>
+          <p className="text-gray-400 text-xs mt-1">Loading...</p>
         </div>
       </div>
     );

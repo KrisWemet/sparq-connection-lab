@@ -41,26 +41,50 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function Auth() {
   const navigate = useNavigate();
-  const { signIn, user, isOnboarded } = useAuth();
+  const { signIn, user, isOnboarded, loading: authLoading } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string>("");
+  const [redirectTimer, setRedirectTimer] = useState<NodeJS.Timeout | null>(null);
 
   // Check if user is already authenticated
   useEffect(() => {
     if (user) {
-      // If user is not onboarded, redirect to onboarding
-      if (!isOnboarded) {
-        navigate('/onboarding');
-        return;
+      // Clear any existing timer
+      if (redirectTimer) {
+        clearTimeout(redirectTimer);
       }
       
-      // Otherwise redirect to dashboard or saved redirect URL
-      const redirectUrl = sessionStorage.getItem('redirectUrl') || '/dashboard';
-      navigate(redirectUrl);
-      sessionStorage.removeItem('redirectUrl');
+      // Set a short timer to navigate (prevents flashing)
+      const timer = setTimeout(() => {
+        // If user is not onboarded, redirect to onboarding
+        if (!isOnboarded) {
+          navigate('/onboarding');
+          return;
+        }
+        
+        // Otherwise redirect to dashboard or saved redirect URL
+        const redirectUrl = sessionStorage.getItem('redirectUrl') || '/dashboard';
+        navigate(redirectUrl);
+        sessionStorage.removeItem('redirectUrl');
+      }, 300);
+      
+      setRedirectTimer(timer);
+      
+      return () => {
+        if (timer) clearTimeout(timer);
+      };
     }
   }, [user, isOnboarded, navigate]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (redirectTimer) {
+        clearTimeout(redirectTimer);
+      }
+    };
+  }, []);
 
   // Login form
   const loginForm = useForm<LoginFormValues>({
@@ -72,6 +96,8 @@ export default function Auth() {
   });
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+    if (isLoading) return; // Prevent multiple submissions
+    
     setIsLoading(true);
     setError("");
     try {
@@ -150,8 +176,8 @@ export default function Auth() {
                     {error}
                   </div>
                 )}
-                <Button disabled={isLoading} type="submit" className="w-full">
-                  {isLoading ? (
+                <Button disabled={isLoading || authLoading} type="submit" className="w-full">
+                  {isLoading || authLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Please wait

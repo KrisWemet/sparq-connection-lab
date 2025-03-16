@@ -30,7 +30,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsAdmin(adminStatus);
     setIsOnboarded(onboardedStatus);
     setInitializationComplete(true);
-  }, []);
+    setLoading(false); // Ensure loading is set to false when session is loaded
+  }, [setLoading]);
 
   // Initialize session
   useInitialSession(setLoading, handleSessionLoaded);
@@ -51,6 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsOnboarded(false);
     }
     
+    // Important: Set loading to false after processing the auth change
     setLoading(false);
   }, [setLoading]);
 
@@ -83,8 +85,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       await signIn(email, password);
-    } finally {
-      setLoading(false);
+      // We don't set loading to false here because the auth state change will do that
+    } catch (error) {
+      setLoading(false); // Make sure to set loading to false on error
+      throw error;
     }
   };
 
@@ -98,8 +102,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       await signUp(email, password, fullName, gender, relationshipType);
-    } finally {
-      setLoading(false);
+      // We don't set loading to false here because the auth state change will do that
+    } catch (error) {
+      setLoading(false); // Make sure to set loading to false on error
+      throw error;
     }
   };
 
@@ -107,8 +113,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       await signOut();
-    } finally {
-      setLoading(false);
+      // We don't set loading to false here because the auth state change will do that
+    } catch (error) {
+      setLoading(false); // Make sure to set loading to false on error
+      throw error;
     }
   };
 
