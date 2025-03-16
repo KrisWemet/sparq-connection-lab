@@ -1,9 +1,9 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
-import { partnerService, supabase } from "@/services/supabaseService";
+import { partnerService } from "@/services/supabaseService";
+import { supabase } from "@/integrations/supabase/client";
 
 export function useOnboarding() {
   const navigate = useNavigate();
@@ -20,14 +20,12 @@ export function useOnboarding() {
   const [sexualOrientation, setSexualOrientation] = useState("straight");
   const [relationshipGoals, setRelationshipGoals] = useState<string[]>([]);
   
-  // If user is not logged in, redirect to auth
   useEffect(() => {
     if (!user) {
       navigate("/auth");
     }
   }, [user, navigate]);
   
-  // Populate fields with existing data if available
   useEffect(() => {
     if (profile) {
       setFullName(profile.fullName || "");
@@ -58,7 +56,6 @@ export function useOnboarding() {
   };
 
   const handleSkip = () => {
-    // Skip the rest of onboarding
     setStep(totalSteps);
     window.scrollTo(0, 0);
   }
@@ -68,11 +65,9 @@ export function useOnboarding() {
     
     setLoading(true);
     try {
-      // Save all the onboarding data directly to the profile
       if (user?.id) {
         console.log("Saving onboarding data for user:", user.id);
         
-        // Update the profile with onboarding data
         const { error } = await supabase
           .from('profiles')
           .update({
@@ -95,7 +90,6 @@ export function useOnboarding() {
         
         console.log("Profile updated successfully");
 
-        // If partner email was provided, send invitation
         if (partnerEmail && partnerEmail.trim() !== "") {
           try {
             await partnerService.sendInvitation(partnerEmail);
@@ -103,16 +97,13 @@ export function useOnboarding() {
           } catch (partnerError) {
             console.error("Error sending partner invitation:", partnerError);
             toast.error("Could not send invitation to your partner. You can try again later.");
-            // Continue with redirect even if partner invitation fails
           }
         }
         
-        // Refresh profile data after update
         await refreshProfile();
         
         toast.success("Onboarding completed successfully!");
         
-        // Navigate to dashboard after successful completion
         navigate("/dashboard");
       } else {
         throw new Error("User ID not available");
@@ -120,7 +111,7 @@ export function useOnboarding() {
     } catch (error) {
       console.error("Error completing onboarding:", error);
       toast.error("There was an error completing your onboarding. Please try again.");
-      setLoading(false);  // Only set loading to false on error since we navigate on success
+      setLoading(false);
     }
   };
 
