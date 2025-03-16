@@ -43,14 +43,14 @@ export function StreakIndicator({ streak }: StreakIndicatorProps) {
                   className={`${color} font-bold`}
                   initial={{ scale: 1 }}
                   animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 1.5, delay: 0.5 }}
+                  transition={{ duration: 1.5, delay: 0.5, type: "keyframes" }}
                 >
                   {streak}-Day
                 </motion.span>
                 <span>Streak!</span>
                 <motion.div
                   initial={{ scale: 0 }}
-                  animate={{ scale: 1, rotate: [0, 15, 0] }}
+                  animate={{ scale: 1, rotate: 15 }}
                   transition={{ duration: 0.5, delay: 0.8, type: "spring" }}
                 >
                   <Zap className={`h-3.5 w-3.5 ${color}`} />

@@ -87,13 +87,13 @@ export function AchievementBadge({ type, achieved = true, level = 1 }: Achieveme
             className={`h-1.5 w-1.5 rounded-full ${i <= level ? "bg-current" : "bg-current/30"}`}
             initial={{ scale: i <= level ? 0 : 1 }}
             animate={{ 
-              scale: i <= level ? [0, 1.5, 1] : 1,
+              scale: i <= level ? [0, 1] : 1,
               opacity: i <= level ? [0, 1] : 0.3
             }}
             transition={{ 
               duration: 0.5, 
               delay: i * 0.15 + 0.5,
-              type: "spring"
+              type: "keyframes"
             }}
           />
         ))}
@@ -123,13 +123,15 @@ export function AchievementBadge({ type, achieved = true, level = 1 }: Achieveme
             >
               <motion.div
                 animate={achieved ? { 
-                  rotate: [0, 15, 0],
-                  scale: [1, 1.2, 1]
+                  rotate: [0, 15],
+                  scale: [1, 1.2]
                 } : {}}
                 transition={{ 
                   duration: 1.5, 
                   repeat: achieved ? Infinity : 0, 
-                  repeatDelay: 5
+                  repeatDelay: 5,
+                  repeatType: "reverse",
+                  type: "keyframes"
                 }}
               >
                 <Icon className={`h-3.5 w-3.5 ${!achieved && "opacity-50"}`} />

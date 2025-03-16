@@ -31,21 +31,23 @@ export function LoadingIndicator({
         <motion.div
           className={cn("rounded-full border-2 border-t-transparent", sizeMap[size])}
           style={{ borderColor: `${color}40`, borderTopColor: 'transparent' }}
-          animate={{ rotate: 360 }}
+          animate={{ rotate: [0, 360] }}
           transition={{ 
             duration: 1.5, 
             repeat: Infinity, 
-            ease: "linear" 
+            ease: "linear",
+            type: "keyframes"
           }}
         />
         <motion.div
           className={cn("rounded-full border-2 border-l-transparent absolute inset-0", sizeMap[size])}
           style={{ borderColor: color, borderLeftColor: 'transparent', opacity: 0.8 }}
-          animate={{ rotate: -360 }}
+          animate={{ rotate: [0, -360] }}
           transition={{ 
             duration: 2, 
             repeat: Infinity, 
-            ease: "linear" 
+            ease: "linear",
+            type: "keyframes"
           }}
         />
       </div>

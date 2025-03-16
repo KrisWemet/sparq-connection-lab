@@ -21,7 +21,8 @@ const confettiPieceVariants = {
     rotate: [0, Math.random() * 360],
     transition: {
       duration: 1 + Math.random(),
-      ease: "easeOut"
+      ease: "easeOut",
+      type: "keyframes"
     }
   })
 };
