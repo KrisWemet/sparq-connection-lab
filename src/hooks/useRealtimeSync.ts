@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { UserJourneyProgress } from '@/types/journey';
-import { useAuth } from './useAuth';
+import { useAuth } from '@/lib/auth-provider';
 import { toast } from 'sonner';
 import { RealtimeChannel } from '@supabase/supabase-js';
 
