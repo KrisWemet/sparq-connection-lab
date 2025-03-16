@@ -39,6 +39,6 @@ refresh_token_reuse_interval = 10
 [realtime]
 enabled = true
 
-[edge_functions]
-[edge_functions.memory-operations]
+[functions]
+[functions.memory-operations]
 verify_jwt = true
