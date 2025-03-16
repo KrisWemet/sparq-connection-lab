@@ -77,9 +77,13 @@ const animationVariants = {
   },
 }
 
-interface AnimatedListProps extends Omit<AnimatedContainerProps, "delay"> {
-  staggerDelay?: number;
+// Create a specific interface for the AnimatedList component that extends the motion div props
+interface AnimatedListProps {
   children: React.ReactNode;
+  variant?: keyof typeof animationVariants;
+  staggerDelay?: number;
+  duration?: "fast" | "normal" | "slow" | "slower";
+  className?: string;
 }
 
 export function AnimatedList({
