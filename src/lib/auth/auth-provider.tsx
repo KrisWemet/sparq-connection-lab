@@ -25,6 +25,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     adminStatus: boolean, 
     onboardedStatus: boolean
   ) => {
+    console.log("Session loaded with user:", !!sessionUser);
     setUser(sessionUser);
     setProfile(sessionProfile);
     setIsAdmin(adminStatus);
@@ -38,6 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Handle auth state changes
   const handleAuthChange = useCallback((changedUser: User | null, changedProfile: UserProfile | null) => {
+    console.log("Auth state changed, user:", !!changedUser);
     // Set user and profile first, so they are available for navigation decisions
     setUser(changedUser);
     setProfile(changedProfile);
@@ -85,8 +87,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       await signIn(email, password);
-      // Auth state change will set loading to false
+      // Auth state change will set loading to false through the subscription
+      console.log("Sign in operation completed");
     } catch (error) {
+      console.error("Sign in error:", error);
       setLoading(false); // Make sure to set loading to false on error
       throw error;
     }
@@ -104,6 +108,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await signUp(email, password, fullName, gender, relationshipType);
       // Auth state change will set loading to false
     } catch (error) {
+      console.error("Sign up error:", error);
       setLoading(false); // Make sure to set loading to false on error
       throw error;
     }
@@ -124,7 +129,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     <AuthContext.Provider value={{ 
       user, 
       profile, 
-      loading, // Use loading directly without additional conditions
+      loading,
       signIn: handleSignIn, 
       signUp: handleSignUp, 
       signOut: handleSignOut,

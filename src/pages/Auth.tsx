@@ -45,27 +45,35 @@ export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string>("");
-  const [isRedirecting, setIsRedirecting] = useState(false);
-
-  // Check if user is already authenticated and handle redirect
+  const [authAttempted, setAuthAttempted] = useState(false);
+  
+  // Fix redirect logic - check if we have a user
   useEffect(() => {
-    // If we're already in the process of redirecting, don't do anything
-    if (isRedirecting) return;
-    
     if (user) {
-      console.log("User is authenticated, preparing to redirect...");
-      setIsRedirecting(true);
-      
-      // Redirect immediately without delay
+      console.log("User authenticated, redirecting now:", user);
       const redirectTo = !isOnboarded ? '/onboarding' : (sessionStorage.getItem('redirectUrl') || '/dashboard');
       console.log(`Redirecting to: ${redirectTo}`);
       
-      navigate(redirectTo);
-      sessionStorage.removeItem('redirectUrl'); 
+      // Use a setTimeout of 0 to allow the render cycle to complete
+      setTimeout(() => {
+        navigate(redirectTo, { replace: true });
+        sessionStorage.removeItem('redirectUrl');
+      }, 0);
     }
-  }, [user, isOnboarded, navigate, isRedirecting]);
+  }, [user, isOnboarded, navigate]);
+  
+  // Additional effect to handle when initial loading completes
+  useEffect(() => {
+    if (authAttempted && !isLoading && !authLoading) {
+      console.log("Auth attempt completed, checking user state:", !!user);
+      if (!user) {
+        // If authentication completed but no user, display error
+        toast.error("Authentication failed. Please try again.");
+        setAuthAttempted(false);
+      }
+    }
+  }, [authAttempted, isLoading, authLoading, user]);
 
-  // Login form
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -79,6 +87,7 @@ export default function Auth() {
     
     setIsLoading(true);
     setError("");
+    setAuthAttempted(true);
     
     try {
       console.log("Attempting to sign in...");
@@ -90,7 +99,8 @@ export default function Auth() {
       const errorMessage = err instanceof Error ? err.message : "Failed to sign in. Please try again.";
       setError(errorMessage);
       toast.error(errorMessage);
-      setIsLoading(false); // Only reset loading on error
+      setAuthAttempted(false);
+      setIsLoading(false);
     }
   };
 
