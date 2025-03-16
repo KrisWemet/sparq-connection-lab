@@ -1,16 +1,22 @@
 
-import { useRef, useEffect } from 'react';
+import { useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { User } from '@supabase/supabase-js';
-import { UserProfile } from '@/services/supabaseService';
-import { authService } from '@/services/supabaseService';
 import { cachedAuthState } from '../auth-state';
+import { UserProfile } from '@/services/supabaseService';
 
-type AuthChangeHandler = (user: User | null, profile: UserProfile | null) => void;
+interface UseAuthSubscriptionProps {
+  setUser: (user: any) => void;
+  setProfile: (profile: UserProfile | null) => void;
+  setIsAdmin: (isAdmin: boolean) => void;
+  setIsOnboarded: (isOnboarded: boolean) => void;
+}
 
-export function useAuthSubscription(onChange: AuthChangeHandler) {
-  const authSubscription = useRef<{ unsubscribe: () => void } | null>(null);
-
+export function useAuthSubscription({
+  setUser,
+  setProfile,
+  setIsAdmin,
+  setIsOnboarded
+}: UseAuthSubscriptionProps) {
   useEffect(() => {
     // Subscribe to auth changes
     const { data } = supabase.auth.onAuthStateChange(
@@ -18,7 +24,8 @@ export function useAuthSubscription(onChange: AuthChangeHandler) {
         console.log("Auth state changed:", event);
         
         if (session?.user) {
-          console.log("User found in auth change");
+          console.log("User found in auth state change");
+          setUser(session.user);
           cachedAuthState.user = session.user;
           
           // Get user profile on auth change
@@ -30,46 +37,38 @@ export function useAuthSubscription(onChange: AuthChangeHandler) {
               .single();
               
             if (profile) {
+              setProfile(profile as UserProfile);
               cachedAuthState.profile = profile as UserProfile;
               
               // Set onboarded status based on profile data
               const profileIsOnboarded = !!profile.isOnboarded;
+              setIsOnboarded(profileIsOnboarded);
               cachedAuthState.isOnboarded = profileIsOnboarded;
             }
-            
-            // Check if user is admin
-            const adminStatus = await authService.isAdmin();
-            cachedAuthState.isAdmin = adminStatus;
-
-            onChange(session.user, profile as UserProfile);
           } catch (error) {
             console.error('Error fetching profile:', error);
-            onChange(session.user, null);
           }
         } else {
+          // Clear state
+          setUser(null);
+          setProfile(null);
+          setIsAdmin(false);
+          setIsOnboarded(false);
+          
           // Clear cached state
           cachedAuthState.user = null;
           cachedAuthState.profile = null;
           cachedAuthState.isAdmin = false;
           cachedAuthState.isOnboarded = false;
-          
-          onChange(null, null);
         }
       }
     );
 
-    // Fix for TypeScript error - correctly extract the unsubscribe method
-    authSubscription.current = {
-      unsubscribe: () => {
-        data.subscription.unsubscribe();
-      }
-    };
+    const authSubscription = { unsubscribe: () => { data.subscription.unsubscribe(); } };
 
     // Cleanup subscription
     return () => {
-      if (authSubscription.current) {
-        authSubscription.current.unsubscribe();
-      }
+      authSubscription.unsubscribe();
     };
-  }, [onChange]);
+  }, [setUser, setProfile, setIsAdmin, setIsOnboarded]);
 }
