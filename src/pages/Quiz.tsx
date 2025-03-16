@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Question } from "@/types/quiz";
 import { weekdayQuestions, weekendActivities } from "@/data/quizData";
@@ -7,8 +8,7 @@ import { CompletionView } from "@/components/quiz/CompletionView";
 import { RelationshipHealthQuiz } from "@/components/quiz/RelationshipHealthQuiz";
 import { toast } from "sonner";
 import { BottomNav } from "@/components/bottom-nav";
-import { Award, Brain } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Brain } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,7 +24,7 @@ export default function Quiz() {
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [isWeekend, setIsWeekend] = useState(false);
-  const [showHealthQuiz, setShowHealthQuiz] = useState(false);
+  const [showHealthQuiz, setShowHealthQuiz] = useState(true); // Changed to default to true
   const [relationshipScore, setRelationshipScore] = useState<number | null>(null);
   const [loadingScore, setLoadingScore] = useState(true);
 
@@ -138,7 +138,10 @@ export default function Quiz() {
         <main className="container max-w-lg mx-auto px-4 pt-8 animate-slide-up">
           <RelationshipHealthQuiz 
             onComplete={handleHealthQuizComplete}
-            onCancel={() => setShowHealthQuiz(false)}
+            onCancel={() => {
+              setShowHealthQuiz(false);
+              navigate("/dashboard");
+            }}
           />
         </main>
         <BottomNav />

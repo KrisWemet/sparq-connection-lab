@@ -74,6 +74,10 @@ export function AccountTab({ profile, setProfile }: AccountTabProps) {
     }
   };
 
+  const handleViewPartner = () => {
+    navigate("/partner-profile");
+  };
+
   return (
     <div className="space-y-6 mt-0">
       <Card>
@@ -152,7 +156,7 @@ export function AccountTab({ profile, setProfile }: AccountTabProps) {
                   )}
                 </div>
               </div>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={handleViewPartner}>
                 View
               </Button>
             </div>
