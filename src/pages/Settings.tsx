@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { colorThemes } from "@/pages/Dashboard";
+import { colorThemes } from "@/lib/colorThemes";
 
 export default function SettingsPage() {
   const navigate = useNavigate();
