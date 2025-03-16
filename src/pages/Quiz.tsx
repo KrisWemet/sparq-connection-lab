@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Question } from "@/types/quiz";
 import { weekdayQuestions, weekendActivities } from "@/data/quizData";
@@ -8,7 +7,6 @@ import { CompletionView } from "@/components/quiz/CompletionView";
 import { RelationshipHealthQuiz } from "@/components/quiz/RelationshipHealthQuiz";
 import { toast } from "sonner";
 import { BottomNav } from "@/components/bottom-nav";
-import { Brain } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,7 +22,7 @@ export default function Quiz() {
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [isWeekend, setIsWeekend] = useState(false);
-  const [showHealthQuiz, setShowHealthQuiz] = useState(true); // Changed to default to true
+  const [showHealthQuiz, setShowHealthQuiz] = useState(true);
   const [relationshipScore, setRelationshipScore] = useState<number | null>(null);
   const [loadingScore, setLoadingScore] = useState(true);
 
@@ -52,7 +50,6 @@ export default function Quiz() {
       setCurrentQuestion(availableQuestion || null);
     }
     
-    // Fetch the relationship health score if available
     if (user) {
       fetchRelationshipScore();
     } else {
@@ -65,7 +62,6 @@ export default function Quiz() {
     
     setLoadingScore(true);
     try {
-      // Try to fetch the most recent quiz result
       try {
         const { data, error } = await supabase
           .from('quiz_results')
@@ -124,7 +120,6 @@ export default function Quiz() {
       duration: 5000,
     });
     
-    // Navigate to dashboard after quiz completion
     navigate("/dashboard");
   };
   
