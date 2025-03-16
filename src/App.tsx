@@ -2,6 +2,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider } from "@/lib/auth";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Auth from "@/pages/Auth";
@@ -23,120 +24,122 @@ import NotFound from "@/pages/NotFound";
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="light" storageKey="sparq-connect-theme">
-        <Router>
-          <Toaster position="top-center" richColors closeButton />
-          <Routes>
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/onboarding"
-              element={
-                <ProtectedRoute>
-                  <Onboarding />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/partner-profile"
-              element={
-                <ProtectedRoute>
-                  <PartnerProfile />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/partner-invite"
-              element={
-                <ProtectedRoute>
-                  <JoinPartner />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/journeys"
-              element={
-                <ProtectedRoute>
-                  <Journeys />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/journey/:id"
-              element={
-                <ProtectedRoute>
-                  <JourneyDetails />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/journey/:id/start"
-              element={
-                <ProtectedRoute>
-                  <JourneyStart />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/date-ideas"
-              element={
-                <ProtectedRoute>
-                  <DateIdeas />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/quiz"
-              element={
-                <ProtectedRoute>
-                  <Quiz />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/path-to-together"
-              element={
-                <ProtectedRoute>
-                  <PathToTogether />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <ProtectedRoute>
-                  <Settings />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Router>
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider defaultTheme="light" storageKey="sparq-connect-theme">
+          <Router>
+            <Toaster position="top-center" richColors closeButton />
+            <Routes>
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/onboarding"
+                element={
+                  <ProtectedRoute>
+                    <Onboarding />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/partner-profile"
+                element={
+                  <ProtectedRoute>
+                    <PartnerProfile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/partner-invite"
+                element={
+                  <ProtectedRoute>
+                    <JoinPartner />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/journeys"
+                element={
+                  <ProtectedRoute>
+                    <Journeys />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/journey/:id"
+                element={
+                  <ProtectedRoute>
+                    <JourneyDetails />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/journey/:id/start"
+                element={
+                  <ProtectedRoute>
+                    <JourneyStart />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/date-ideas"
+                element={
+                  <ProtectedRoute>
+                    <DateIdeas />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/quiz"
+                element={
+                  <ProtectedRoute>
+                    <Quiz />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/path-to-together"
+                element={
+                  <ProtectedRoute>
+                    <PathToTogether />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Router>
+        </ThemeProvider>
+      </AuthProvider>
     </ErrorBoundary>
   );
 }
