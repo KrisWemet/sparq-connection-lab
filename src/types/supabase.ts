@@ -1,3 +1,4 @@
+
 export type Json =
   | string
   | number
@@ -13,40 +14,39 @@ export interface Database {
         Row: {
           id: string
           user_id: string
-          full_name: string | null
-          email: string | null
-          avatar_url: string | null
-          partner_name: string | null
-          anniversary_date: string | null
-          sexual_orientation: string | null
-          relationship_structure: string | null
+          full_name: string
+          email: string
+          avatar_url?: string
+          partner_name?: string
+          anniversary_date?: string
+          sexual_orientation?: string
+          relationship_structure?: string
           created_at: string
           updated_at: string
         }
         Insert: {
           id?: string
           user_id: string
-          full_name?: string | null
-          email?: string | null
-          avatar_url?: string | null
-          partner_name?: string | null
-          anniversary_date?: string | null
-          sexual_orientation?: string | null
-          relationship_structure?: string | null
+          full_name: string
+          email: string
+          avatar_url?: string
+          partner_name?: string
+          anniversary_date?: string
+          sexual_orientation?: string
+          relationship_structure?: string
           created_at?: string
           updated_at?: string
         }
         Update: {
           id?: string
           user_id?: string
-          full_name?: string | null
-          email?: string | null
-          avatar_url?: string | null
-          partner_name?: string | null
-          anniversary_date?: string | null
-          sexual_orientation?: string | null
-          relationship_structure?: string | null
-          created_at?: string
+          full_name?: string
+          email?: string
+          avatar_url?: string
+          partner_name?: string
+          anniversary_date?: string
+          sexual_orientation?: string
+          relationship_structure?: string
           updated_at?: string
         }
       }
@@ -61,4 +61,4 @@ export interface Database {
       [_ in never]: never
     }
   }
-} 
+}
