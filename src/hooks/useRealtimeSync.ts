@@ -48,7 +48,7 @@ export function useRealtimeSync(
     const progressChannel = supabase
       .channel('journey_progress')
       .on(
-        'postgres_changes',
+        'postgres_changes', // Use this as a string literal
         {
           event: '*',
           schema: 'public',
@@ -78,7 +78,7 @@ export function useRealtimeSync(
     const responsesChannel = supabase
       .channel('activity_responses')
       .on(
-        'postgres_changes',
+        'postgres_changes', // Use this as a string literal
         {
           event: 'INSERT',
           schema: 'public',
