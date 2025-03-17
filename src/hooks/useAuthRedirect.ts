@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
-import { debugSupabaseInfo } from "@/lib/supabase";
 
 export function useAuthRedirect(redirectPath = "/dashboard") {
   const navigate = useNavigate();
@@ -11,7 +10,6 @@ export function useAuthRedirect(redirectPath = "/dashboard") {
   const [isLoading, setIsLoading] = useState(false);
   
   // Debug auth state on each render
-  console.log("Auth redirect hook - Debug Supabase info:", debugSupabaseInfo);
   console.log("Auth redirect hook - Auth state:", { 
     user, 
     authLoading, 
