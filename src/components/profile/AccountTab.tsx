@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LoadingIndicator } from "@/components/ui/loading-indicator";
-import { LogOut, Heart, Award, Star } from "lucide-react";
+import { LogOut, Heart, Award, Star, Camera } from "lucide-react";
 import { toast } from "sonner";
 import { ProfileFormData, UserBadge } from "@/types/profile";
 import { useState, useEffect } from "react";
@@ -29,6 +29,8 @@ export function AccountTab({ profile, setProfile }: AccountTabProps) {
   const [relationshipPoints, setRelationshipPoints] = useState(0);
   const [pointsToNextLevel, setPointsToNextLevel] = useState(100);
   const [loading, setLoading] = useState(true);
+  const [partnerAvatarUrl, setPartnerAvatarUrl] = useState("");
+  const [uploadingPartnerAvatar, setUploadingPartnerAvatar] = useState(false);
   
   const navigate = useNavigate();
   const { signOut, handleRefreshProfile, user } = useAuth();
@@ -37,6 +39,7 @@ export function AccountTab({ profile, setProfile }: AccountTabProps) {
     if (user) {
       fetchUserStats();
       fetchUserBadges();
+      fetchPartnerProfile();
     }
   }, [user]);
 
@@ -93,6 +96,28 @@ export function AccountTab({ profile, setProfile }: AccountTabProps) {
       }
     } catch (error) {
       console.error('Error fetching user badges:', error);
+    }
+  };
+
+  const fetchPartnerProfile = async () => {
+    try {
+      if (!user || !profile.partner_name) return;
+      
+      // This is simplified - in a real app you'd have a proper partner_id relationship
+      // For now, we'll just check if any profiles match the partner name
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('avatar_url')
+        .ilike('full_name', profile.partner_name)
+        .maybeSingle();
+      
+      if (error) throw error;
+      
+      if (data && data.avatar_url) {
+        setPartnerAvatarUrl(data.avatar_url);
+      }
+    } catch (error) {
+      console.error('Error fetching partner profile:', error);
     }
   };
 
@@ -153,6 +178,49 @@ export function AccountTab({ profile, setProfile }: AccountTabProps) {
 
   const handleViewPartner = () => {
     navigate("/partner-profile");
+  };
+
+  const handlePartnerAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      if (!event.target.files || event.target.files.length === 0 || !user || !profile.partner_name) {
+        return;
+      }
+      
+      const file = event.target.files[0];
+      const fileExt = file.name.split('.').pop();
+      const filePath = `partner-${user.id}-${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+      
+      setUploadingPartnerAvatar(true);
+      
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file);
+        
+      if (uploadError) {
+        throw uploadError;
+      }
+      
+      const { data } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+        
+      if (data) {
+        setPartnerAvatarUrl(data.publicUrl);
+        
+        // In a real app, you would associate this with the partner's profile
+        // For now, we'll just show it in the UI without saving it to the partner's profile
+        toast.success("Partner avatar uploaded!");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Error uploading partner avatar");
+      console.error("Error uploading partner avatar:", error);
+    } finally {
+      setUploadingPartnerAvatar(false);
+    }
+  };
+
+  const handleUpdateAvatar = (url: string) => {
+    setProfile({ ...profile, avatar_url: url });
   };
 
   return (
@@ -261,9 +329,28 @@ export function AccountTab({ profile, setProfile }: AccountTabProps) {
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3">
-                <Avatar>
-                  <AvatarFallback>{profile.partner_name?.charAt(0) || '?'}</AvatarFallback>
-                </Avatar>
+                <div className="relative">
+                  <Avatar>
+                    <AvatarImage src={partnerAvatarUrl} />
+                    <AvatarFallback>{profile.partner_name?.charAt(0) || '?'}</AvatarFallback>
+                  </Avatar>
+                  
+                  <label 
+                    htmlFor="partner-avatar-upload" 
+                    className="absolute bottom-0 right-0 bg-primary text-white p-1 rounded-full cursor-pointer shadow-md hover:bg-primary/80 transition-colors"
+                    style={{ width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    <Camera className="w-2.5 h-2.5" />
+                    <input 
+                      id="partner-avatar-upload" 
+                      type="file" 
+                      accept="image/*" 
+                      className="hidden" 
+                      onChange={handlePartnerAvatarUpload}
+                      disabled={uploadingPartnerAvatar}
+                    />
+                  </label>
+                </div>
                 <div>
                   <p className="font-medium">{profile.partner_name}</p>
                   {profile.anniversary_date && (

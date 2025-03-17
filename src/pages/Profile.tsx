@@ -107,6 +107,13 @@ export default function Profile() {
     }
   };
 
+  const handleAvatarUpdate = (url: string) => {
+    setProfile(prev => ({
+      ...prev,
+      avatar_url: url
+    }));
+  };
+
   if ((loading && !authProfile) || authLoading) {
     return <LoadingProfile />;
   }
@@ -116,7 +123,10 @@ export default function Profile() {
       <ProfileHeader />
 
       <main className="container max-w-lg mx-auto px-4 pt-6 animate-slide-up">
-        <ProfileAvatar profile={profile} />
+        <ProfileAvatar 
+          profile={profile} 
+          onAvatarUpdate={handleAvatarUpdate}
+        />
 
         <Tabs defaultValue="account" className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-6">
