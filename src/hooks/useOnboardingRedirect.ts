@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/lib/auth';
 import { onboardingService } from '@/services/onboardingService';
 
-export function useOnboardingRedirect(skipCheck = false) {
+export function useOnboardingRedirect(skipCheck = true) { // Default changed to true
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [isChecking, setIsChecking] = useState(!skipCheck);
@@ -26,9 +26,12 @@ export function useOnboardingRedirect(skipCheck = false) {
     
     const checkOnboarding = async () => {
       try {
-        const wasRedirected = await onboardingService.checkAndRedirectToOnboarding(user.id, navigate);
+        // Store onboarding status but don't redirect
+        const needsOnboarding = !(await onboardingService.hasCompletedOnboarding(user.id));
         
-        if (!wasRedirected) {
+        if (needsOnboarding) {
+          console.log('User needs onboarding, but skipping redirect');
+        } else {
           console.log('User has already completed onboarding');
         }
       } catch (error) {

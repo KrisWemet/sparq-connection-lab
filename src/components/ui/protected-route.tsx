@@ -57,12 +57,11 @@ export function ProtectedRoute({
       return <Navigate to="/dashboard" replace />;
     }
 
-    // If onboarding is required and the user is not onboarded yet,
-    // redirect to the onboarding page (but don't redirect if we're already on the onboarding page)
-    if (requiresOnboarding && !isOnboarded && location.pathname !== '/onboarding') {
-      console.log("Protected route: User not onboarded, redirecting to onboarding");
-      return <Navigate to="/onboarding" replace />;
-    }
+    // Temporarily disable onboarding redirect
+    // if (requiresOnboarding && !isOnboarded && location.pathname !== '/onboarding') {
+    //   console.log("Protected route: User not onboarded, redirecting to onboarding");
+    //   return <Navigate to="/onboarding" replace />;
+    // }
 
     // If all checks passed, render the protected content
     console.log("Protected route: Rendering protected content");

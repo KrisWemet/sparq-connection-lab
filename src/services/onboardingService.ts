@@ -68,7 +68,7 @@ export const onboardingService = {
   },
   
   /**
-   * Check if the user needs onboarding, and redirect if necessary
+   * Check if the user needs onboarding, but don't redirect (stored for future use)
    */
   async checkAndRedirectToOnboarding(userId: string, navigate: any): Promise<boolean> {
     if (!userId) return false;
@@ -76,8 +76,10 @@ export const onboardingService = {
     const hasCompleted = await this.hasCompletedOnboarding(userId);
     
     if (!hasCompleted) {
-      navigate('/onboarding');
-      return true;
+      // Temporarily disable redirect
+      // navigate('/onboarding');
+      console.log("User needs onboarding but redirect is currently disabled");
+      return false;
     }
     
     return false;
