@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../lib/auth-context';
@@ -13,6 +14,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   useEffect(() => {
     if (!loading && !user) {
       // Redirect to login if not authenticated
+      console.log('Protected route: No user found, redirecting to login');
       router.push('/login');
     }
   }, [user, loading, router]);
@@ -21,10 +23,10 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-50 to-blue-100">
-        <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <h2 className="text-xl font-semibold text-indigo-700 mb-2">Preparing Your Experience</h2>
+        <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <h2 className="text-xl font-semibold text-indigo-700 mb-2">Just a moment...</h2>
         <p className="text-gray-600 max-w-md text-center">
-          Just a moment as we connect you to your relationship journey. Notice how anticipation builds your readiness for meaningful connection...
+          Preparing your relationship journey
         </p>
       </div>
     );
@@ -36,5 +38,6 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   }
 
   // User is authenticated, render children
+  console.log('Protected route: Rendering protected content');
   return <>{children}</>;
-} 
+}

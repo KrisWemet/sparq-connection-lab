@@ -9,6 +9,72 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          awarded_at: string | null
+          created_at: string | null
+          description: string
+          icon: string
+          id: string
+          title: string
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          awarded_at?: string | null
+          created_at?: string | null
+          description: string
+          icon: string
+          id?: string
+          title: string
+          type: string
+          user_id?: string | null
+        }
+        Update: {
+          awarded_at?: string | null
+          created_at?: string | null
+          description?: string
+          icon?: string
+          id?: string
+          title?: string
+          type?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      activities: {
+        Row: {
+          completed_at: string | null
+          content_id: string
+          created_at: string | null
+          id: string
+          mood_rating: number | null
+          notes: string | null
+          type: string | null
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          content_id: string
+          created_at?: string | null
+          id?: string
+          mood_rating?: number | null
+          notes?: string | null
+          type?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          content_id?: string
+          created_at?: string | null
+          id?: string
+          mood_rating?: number | null
+          notes?: string | null
+          type?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       conversation_memories: {
         Row: {
           content: string
@@ -192,6 +258,42 @@ export type Database = {
           modality?: string | null
           title?: string
           type?: Database["public"]["Enums"]["journey_type"]
+        }
+        Relationships: []
+      }
+      memories: {
+        Row: {
+          created_at: string | null
+          date: string | null
+          description: string
+          id: string
+          related_to: string[] | null
+          sentiment: string | null
+          tags: string[] | null
+          title: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          date?: string | null
+          description: string
+          id?: string
+          related_to?: string[] | null
+          sentiment?: string | null
+          tags?: string[] | null
+          title: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          date?: string | null
+          description?: string
+          id?: string
+          related_to?: string[] | null
+          sentiment?: string | null
+          tags?: string[] | null
+          title?: string
+          user_id?: string | null
         }
         Relationships: []
       }

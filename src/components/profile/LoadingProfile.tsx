@@ -1,12 +1,12 @@
 
-import { Loader2 } from "lucide-react";
+import React from 'react';
 
 export function LoadingProfile() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center max-w-xs mx-auto">
-        <Loader2 className="w-4 h-4 animate-spin text-primary mx-auto mb-1" /> {/* Reduced size further */}
-        <p className="text-gray-700 font-medium text-sm">Loading profile...</p> {/* Reduced text size */}
+    <div className="flex items-center justify-center p-8">
+      <div className="text-center">
+        <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+        <p className="text-gray-700 text-sm">Loading profile...</p>
       </div>
     </div>
   );
