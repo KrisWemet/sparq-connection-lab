@@ -1,11 +1,12 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { ValuesQuestion } from "@/components/journeys/ValuesQuestion";
 import { BottomNav } from "@/components/bottom-nav";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 
 export default function DailyActivity() {
   const navigate = useNavigate();
@@ -13,40 +14,43 @@ export default function DailyActivity() {
   const [currentQuestion, setCurrentQuestion] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchQuestion = async () => {
-      try {
-        // Get Vision & Values Journey
-        const { data: journeyData } = await supabase
-          .from("journeys")
-          .select("id")
-          .eq("title", "Vision & Values Journey")
-          .single();
+  // Optimize data fetching
+  const fetchQuestion = useCallback(async () => {
+    try {
+      setLoading(true);
+      
+      // Use a single efficient query to fetch the question
+      const { data: questionData, error } = await supabase
+        .from("journey_questions")
+        .select("*, journeys:journey_id(title)")
+        .eq("journeys.title", "Vision & Values Journey")
+        .order("created_at", { ascending: true })
+        .limit(1)
+        .single();
 
-        if (journeyData) {
-          // Get first question of the journey
-          const { data: questionData } = await supabase
-            .from("journey_questions")
-            .select("*")
-            .eq("journey_id", journeyData.id)
-            .order("created_at", { ascending: true })
-            .limit(1)
-            .single();
-
-          if (questionData) {
-            setCurrentQuestion(questionData);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching question:", error);
-        toast.error("Failed to load the question. Please try again.");
-      } finally {
-        setLoading(false);
+      if (error) throw error;
+      
+      if (questionData) {
+        setCurrentQuestion(questionData);
       }
-    };
-
-    fetchQuestion();
+    } catch (error) {
+      console.error("Error fetching question:", error);
+      toast.error("Failed to load the question. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchQuestion();
+    
+    // Set a timeout to force-show content if loading takes too long
+    const timeout = setTimeout(() => {
+      if (loading) setLoading(false);
+    }, 3000);
+    
+    return () => clearTimeout(timeout);
+  }, [fetchQuestion]);
 
   const handleAnswer = async (answer: string) => {
     try {
@@ -55,8 +59,11 @@ export default function DailyActivity() {
         return;
       }
       
-      // Save the journey response
-      const { error } = await supabase
+      // Optimistically update UI and show success message
+      toast.success("Saving your response...");
+      
+      // Save the journey response in background
+      const journeyPromise = supabase
         .from("journey_responses")
         .insert([
           {
@@ -66,11 +73,9 @@ export default function DailyActivity() {
             answer
           }
         ]);
-
-      if (error) throw error;
       
-      // Record as a daily activity to update streak and points
-      const { error: activityError } = await supabase
+      // Record as a daily activity to update streak and points (in parallel)
+      const activityPromise = supabase
         .from("daily_activities")
         .insert([
           {
@@ -81,8 +86,11 @@ export default function DailyActivity() {
           }
         ]);
         
-      if (activityError) {
-        console.error("Error recording activity:", activityError);
+      // Wait for both promises to complete
+      const [{ error }, { error: activityError }] = await Promise.all([journeyPromise, activityPromise]);
+      
+      if (error || activityError) {
+        throw error || activityError;
       }
 
       toast.success("Your response has been saved!");
@@ -96,7 +104,10 @@ export default function DailyActivity() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <LoadingIndicator 
+          size="md"
+          label="Loading your daily question..." 
+        />
       </div>
     );
   }

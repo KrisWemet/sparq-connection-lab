@@ -32,7 +32,7 @@ export function ProtectedRoute({
     });
   }, [user, loading, isAdmin, isOnboarded, location.pathname]);
 
-  // Set a timeout to prevent infinite loading
+  // Set a timeout to prevent infinite loading - reduced to improve perceived performance
   useEffect(() => {
     let timeoutId: NodeJS.Timeout | null = null;
     
@@ -40,7 +40,7 @@ export function ProtectedRoute({
       timeoutId = setTimeout(() => {
         console.log("Loading timeout reached for protected route");
         setLoadingTimeout(true);
-      }, 5000); // 5 second timeout
+      }, 3000); // Reduced from 5000ms to 3000ms for faster fallback
     }
     
     return () => {
@@ -53,10 +53,12 @@ export function ProtectedRoute({
     console.log("Protected route: Still loading, waiting...");
     return (
       <div className="flex h-screen w-full items-center justify-center">
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-3 max-w-xs text-center">
           <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary"></div>
-          <p className="text-sm text-muted-foreground">Loading...</p>
-          <p className="text-xs text-gray-400 mt-2">If this takes too long, try refreshing the page</p>
+          <p className="text-sm text-gray-700 font-medium">Loading your journey...</p>
+          <p className="text-xs text-gray-500">
+            Like relationships, the best connections are worth the wait.
+          </p>
         </div>
       </div>
     );

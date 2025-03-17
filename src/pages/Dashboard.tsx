@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
@@ -29,14 +29,14 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1
+      staggerChildren: 0.08 // Reduced from 0.1 for faster animation
     }
   }
 };
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3 } } // Reduced from 0.4 for faster animation
 };
 
 export default function Dashboard() {
@@ -57,26 +57,32 @@ export default function Dashboard() {
   // Check if user needs to be redirected to onboarding
   const { isChecking } = useOnboardingRedirect();
   
-  // Fetch user data from Supabase
-  useEffect(() => {
-    if (user) {
-      fetchUserData();
-    }
-  }, [user]);
-  
-  const fetchUserData = async () => {
+  // Fetch user data from Supabase - optimized with useCallback
+  const fetchUserData = useCallback(async () => {
+    if (!user) return;
+    
     try {
       setLoading(true);
       
-      // Fetch profile data for streak and relationship level
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('streak_count, relationship_level, relationship_points')
-        .eq('id', user?.id)
-        .single();
+      // Perform parallel requests for better performance
+      const [profileResponse, badgesResponse] = await Promise.all([
+        supabase
+          .from('profiles')
+          .select('streak_count, relationship_level, relationship_points')
+          .eq('id', user.id)
+          .single(),
+        
+        supabase
+          .from('user_badges')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('achieved', true)
+      ]);
       
-      if (profileError) throw profileError;
+      if (profileResponse.error) throw profileResponse.error;
+      if (badgesResponse.error) throw badgesResponse.error;
       
+      const profileData = profileResponse.data;
       if (profileData) {
         setStreakCount(profileData.streak_count || 0);
         setRelationshipLevel(profileData.relationship_level as any || 'Bronze');
@@ -94,25 +100,27 @@ export default function Dashboard() {
         }
       }
       
-      // Fetch badges
-      const { data: badgesData, error: badgesError } = await supabase
-        .from('user_badges')
-        .select('*')
-        .eq('user_id', user?.id)
-        .eq('achieved', true);
-      
-      if (badgesError) throw badgesError;
-      
-      if (badgesData) {
-        setBadges(badgesData);
+      if (badgesResponse.data) {
+        setBadges(badgesResponse.data);
       }
       
-      setLoading(false);
     } catch (error) {
       console.error('Error fetching user data:', error);
+    } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+  
+  useEffect(() => {
+    fetchUserData();
+    
+    // Set a timeout to force-show dashboard if loading takes too long
+    const timeout = setTimeout(() => {
+      if (loading) setLoading(false);
+    }, 3000);
+    
+    return () => clearTimeout(timeout);
+  }, [fetchUserData]);
   
   // Show confetti on first load for celebration moments
   useEffect(() => {
@@ -125,7 +133,10 @@ export default function Dashboard() {
     }
   }, [badges]);
   
+  // Show weekend activity toast after a short delay
   useEffect(() => {
+    if (loading) return; // Don't show toast while loading
+    
     const timer = setTimeout(() => {
       toast.success("Weekend activity unlocked! 🎉", {
         description: "A special activity to bring you closer has been unlocked! Don't miss it!",
@@ -138,7 +149,7 @@ export default function Dashboard() {
     }, 2000);
     
     return () => clearTimeout(timer);
-  }, [navigate]);
+  }, [navigate, loading]);
   
   if (isChecking || loading) {
     return (
@@ -197,7 +208,7 @@ export default function Dashboard() {
           )}
         </motion.div>
         
-        <AnimatedList variant="slideUp" staggerDelay={0.08} className="space-y-4">
+        <AnimatedList variant="slideUp" staggerDelay={0.06} className="space-y-4">
           <motion.div variants={itemVariants}>
             <DailyConnectCard />
           </motion.div>
@@ -231,7 +242,7 @@ export default function Dashboard() {
           variants={itemVariants}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.3 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
           whileHover={{ scale: 1.02 }}
         >
           <PartnerConnectionCard />

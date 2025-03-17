@@ -42,7 +42,7 @@ export default function Index() {
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
         <div className="text-center mb-8">
           <HeartHandshake className="w-12 h-12 text-primary mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-900">Sparq Connect</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Sparq Connection</h1>
           <div className="mt-3 animate-spin h-6 w-6 border-3 border-primary border-t-transparent rounded-full mx-auto"></div>
         </div>
       </div>
@@ -61,7 +61,7 @@ export default function Index() {
               </div>
             </div>
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
-              Sparq Connect
+              Sparq Connection
             </h1>
             <p className="mt-6 text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
               Strengthen your relationship with meaningful conversations, shared goals, and science-backed activities.
@@ -91,7 +91,7 @@ export default function Index() {
       <div className="py-16 bg-white dark:bg-gray-900">
         <div className="container max-w-6xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">
-            Why Sparq Connect Works
+            Why Sparq Connection Works
           </h2>
           
           <div className="grid md:grid-cols-3 gap-8">
@@ -151,10 +151,10 @@ export default function Index() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
               <HeartHandshake className="w-6 h-6 text-primary mr-2" />
-              <span className="font-semibold text-gray-900 dark:text-white">Sparq Connect</span>
+              <span className="font-semibold text-gray-900 dark:text-white">Sparq Connection</span>
             </div>
             <div className="text-sm text-gray-500 dark:text-gray-400">
-              &copy; {new Date().getFullYear()} Sparq Connect. All rights reserved.
+              &copy; {new Date().getFullYear()} Sparq Connection. All rights reserved.
             </div>
           </div>
         </div>
