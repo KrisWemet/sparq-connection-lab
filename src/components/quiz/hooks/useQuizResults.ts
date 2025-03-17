@@ -42,6 +42,59 @@ export function useQuizResults() {
             toast.error("There was an error saving your quiz results.");
           } else {
             console.log("Quiz results saved successfully");
+            
+            // Save as a daily activity to count for streaks and points
+            const activityData = {
+              user_id: user.id,
+              activity_type: 'quiz',
+              response: 'completed',
+              points_earned: 10 // Quizzes are worth more points
+            };
+            
+            try {
+              const { error: activityError } = await supabase
+                .from('daily_activities')
+                .insert(activityData);
+                
+              if (!activityError) {
+                console.log("Activity recorded successfully");
+                
+                // Add communication badge if score is good
+                if (percentageScore >= 70) {
+                  const { data: existingBadge } = await supabase
+                    .from('user_badges')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .eq('badge_type', 'communication')
+                    .single();
+                    
+                  if (existingBadge) {
+                    if (!existingBadge.achieved || existingBadge.badge_level < 1) {
+                      await supabase
+                        .from('user_badges')
+                        .update({ 
+                          achieved: true, 
+                          badge_level: 1,
+                          achieved_at: new Date().toISOString()
+                        })
+                        .eq('id', existingBadge.id);
+                    }
+                  } else {
+                    await supabase
+                      .from('user_badges')
+                      .insert({
+                        user_id: user.id,
+                        badge_type: 'communication',
+                        badge_level: 1,
+                        achieved: true,
+                        achieved_at: new Date().toISOString()
+                      });
+                  }
+                }
+              }
+            } catch (err) {
+              console.error("Error recording activity:", err);
+            }
           }
         } catch (err) {
           console.error("Error with quiz results table:", err);

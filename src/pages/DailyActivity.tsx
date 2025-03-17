@@ -5,9 +5,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { ValuesQuestion } from "@/components/journeys/ValuesQuestion";
 import { BottomNav } from "@/components/bottom-nav";
 import { toast } from "sonner";
+import { useAuth } from "@/lib/auth";
 
 export default function DailyActivity() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [currentQuestion, setCurrentQuestion] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -48,17 +50,40 @@ export default function DailyActivity() {
 
   const handleAnswer = async (answer: string) => {
     try {
+      if (!user) {
+        toast.error("You must be logged in to save your response");
+        return;
+      }
+      
+      // Save the journey response
       const { error } = await supabase
         .from("journey_responses")
         .insert([
           {
             journey_id: currentQuestion.journey_id,
             question_id: currentQuestion.id,
+            user_id: user.id,
             answer
           }
         ]);
 
       if (error) throw error;
+      
+      // Record as a daily activity to update streak and points
+      const { error: activityError } = await supabase
+        .from("daily_activities")
+        .insert([
+          {
+            user_id: user.id,
+            activity_type: "daily_question",
+            response: answer.substring(0, 100) + (answer.length > 100 ? "..." : ""),
+            points_earned: 5
+          }
+        ]);
+        
+      if (activityError) {
+        console.error("Error recording activity:", activityError);
+      }
 
       toast.success("Your response has been saved!");
       navigate("/reflect");

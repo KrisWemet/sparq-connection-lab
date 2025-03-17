@@ -21,6 +21,8 @@ import { DateIdeasCard } from "@/components/dashboard/DateIdeasCard";
 import { RelationshipJourneysCard } from "@/components/dashboard/RelationshipJourneysCard";
 import { PartnerConnectionCard } from "@/components/dashboard/PartnerConnectionCard";
 import { ConfettiAnimation } from "@/components/dashboard/ConfettiAnimation";
+import { supabase } from "@/integrations/supabase/client";
+import { UserBadge } from "@/types/profile";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -37,21 +39,17 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
 };
 
-const MOCK_DATA = {
-  streak: 3,
-  relationshipLevel: "Silver" as const,
-  points: 215,
-  pointsToNextLevel: 300,
-  hasWeekendActivity: true,
-  lastActivityCompleted: true,
-  specialEvent: true
-};
-
 export default function Dashboard() {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const [showSocialProof, setShowSocialProof] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [streakCount, setStreakCount] = useState(0);
+  const [badges, setBadges] = useState<UserBadge[]>([]);
+  const [relationshipLevel, setRelationshipLevel] = useState<"Bronze" | "Silver" | "Gold" | "Diamond">("Bronze");
+  const [relationshipPoints, setRelationshipPoints] = useState(0);
+  const [pointsToNextLevel, setPointsToNextLevel] = useState(100);
+  const [loading, setLoading] = useState(true);
   
   // Use our custom analytics hook
   useAnalytics('dashboard');
@@ -59,19 +57,73 @@ export default function Dashboard() {
   // Check if user needs to be redirected to onboarding
   const { isChecking } = useOnboardingRedirect();
   
-  const streak = MOCK_DATA.streak;
-  const badges = ["communication", "dedication"];
+  // Fetch user data from Supabase
+  useEffect(() => {
+    if (user) {
+      fetchUserData();
+    }
+  }, [user]);
+  
+  const fetchUserData = async () => {
+    try {
+      setLoading(true);
+      
+      // Fetch profile data for streak and relationship level
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('streak_count, relationship_level, relationship_points')
+        .eq('id', user?.id)
+        .single();
+      
+      if (profileError) throw profileError;
+      
+      if (profileData) {
+        setStreakCount(profileData.streak_count || 0);
+        setRelationshipLevel(profileData.relationship_level as any || 'Bronze');
+        setRelationshipPoints(profileData.relationship_points || 0);
+        
+        // Calculate points needed for next level
+        if (profileData.relationship_level === 'Bronze') {
+          setPointsToNextLevel(100);
+        } else if (profileData.relationship_level === 'Silver') {
+          setPointsToNextLevel(300);
+        } else if (profileData.relationship_level === 'Gold') {
+          setPointsToNextLevel(500);
+        } else {
+          setPointsToNextLevel(500); // Max level
+        }
+      }
+      
+      // Fetch badges
+      const { data: badgesData, error: badgesError } = await supabase
+        .from('user_badges')
+        .select('*')
+        .eq('user_id', user?.id)
+        .eq('achieved', true);
+      
+      if (badgesError) throw badgesError;
+      
+      if (badgesData) {
+        setBadges(badgesData);
+      }
+      
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      setLoading(false);
+    }
+  };
   
   // Show confetti on first load for celebration moments
   useEffect(() => {
-    if (MOCK_DATA.lastActivityCompleted) {
+    if (badges.some(badge => badge.achieved)) {
       const timer = setTimeout(() => {
         setShowConfetti(true);
         setTimeout(() => setShowConfetti(false), 3000);
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [badges]);
   
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -88,7 +140,7 @@ export default function Dashboard() {
     return () => clearTimeout(timer);
   }, [navigate]);
   
-  if (isChecking) {
+  if (isChecking || loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <LoadingIndicator size="lg" label="Loading your relationship dashboard..." />
@@ -105,7 +157,7 @@ export default function Dashboard() {
           {showConfetti && <ConfettiAnimation show={showConfetti} />}
         </AnimatePresence>
         
-        {streak > 0 && <StreakIndicator streak={streak} />}
+        {streakCount > 0 && <StreakIndicator streak={streakCount} />}
         
         {showSocialProof && (
           <SocialProofNotification 
@@ -121,19 +173,28 @@ export default function Dashboard() {
           initial="hidden"
           animate="visible"
         >
-          {badges.includes("communication") && (
+          {badges.map(badge => (
+            badge.achieved && (
+              <motion.div 
+                key={badge.id}
+                variants={itemVariants} 
+                whileHover={{ scale: 1.05 }} 
+                whileTap={{ scale: 0.95 }}
+              >
+                <AchievementBadge 
+                  type={badge.badge_type as any}
+                  level={badge.badge_level as any}
+                  achieved={badge.achieved}
+                />
+              </motion.div>
+            )
+          ))}
+          
+          {badges.length === 0 && (
             <motion.div variants={itemVariants} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <AchievementBadge type="communication" level={2} />
+              <AchievementBadge type="communication" achieved={false} />
             </motion.div>
           )}
-          {badges.includes("dedication") && (
-            <motion.div variants={itemVariants} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <AchievementBadge type="dedication" level={1} />
-            </motion.div>
-          )}
-          <motion.div variants={itemVariants} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <AchievementBadge type="connection" achieved={false} />
-          </motion.div>
         </motion.div>
         
         <AnimatedList variant="slideUp" staggerDelay={0.08} className="space-y-4">
@@ -143,9 +204,9 @@ export default function Dashboard() {
 
           <motion.div variants={itemVariants}>
             <RelationshipProgress 
-              level={MOCK_DATA.relationshipLevel}
-              pointsEarned={MOCK_DATA.points}
-              pointsNeeded={MOCK_DATA.pointsToNextLevel}
+              level={relationshipLevel}
+              pointsEarned={relationshipPoints}
+              pointsNeeded={pointsToNextLevel}
             />
           </motion.div>
 
@@ -153,18 +214,16 @@ export default function Dashboard() {
             <RelationshipInsightCard />
           </motion.div>
           
-          {MOCK_DATA.hasWeekendActivity && (
-            <motion.div variants={itemVariants}>
-              <WeekendSpecialCard />
-            </motion.div>
-          )}
+          <motion.div variants={itemVariants}>
+            <WeekendSpecialCard />
+          </motion.div>
           
           <motion.div variants={itemVariants}>
             <DateIdeasCard />
           </motion.div>
           
           <motion.div variants={itemVariants}>
-            <RelationshipJourneysCard hasSpecialEvent={MOCK_DATA.specialEvent} />
+            <RelationshipJourneysCard hasSpecialEvent={true} />
           </motion.div>
         </AnimatedList>
         

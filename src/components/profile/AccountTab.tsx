@@ -5,13 +5,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { LoadingIndicator } from "@/components/ui/loading-indicator";
-import { LogOut } from "lucide-react";
+import { LogOut, Heart, Award, Star } from "lucide-react";
 import { toast } from "sonner";
-import { ProfileFormData } from "@/types/profile";
-import { useState } from "react";
+import { ProfileFormData, UserBadge } from "@/types/profile";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
+import { AchievementBadge } from "@/components/AchievementBadge";
+import { RelationshipProgress } from "@/components/RelationshipProgress";
+import { StreakIndicator } from "@/components/StreakIndicator";
 
 interface AccountTabProps {
   profile: ProfileFormData;
@@ -20,8 +23,78 @@ interface AccountTabProps {
 
 export function AccountTab({ profile, setProfile }: AccountTabProps) {
   const [saving, setSaving] = useState(false);
+  const [badges, setBadges] = useState<UserBadge[]>([]);
+  const [streakCount, setStreakCount] = useState(0);
+  const [relationshipLevel, setRelationshipLevel] = useState("Bronze");
+  const [relationshipPoints, setRelationshipPoints] = useState(0);
+  const [pointsToNextLevel, setPointsToNextLevel] = useState(100);
+  const [loading, setLoading] = useState(true);
+  
   const navigate = useNavigate();
-  const { signOut, handleRefreshProfile } = useAuth();
+  const { signOut, handleRefreshProfile, user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      fetchUserStats();
+      fetchUserBadges();
+    }
+  }, [user]);
+
+  const fetchUserStats = async () => {
+    try {
+      if (!user) return;
+      
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('streak_count, relationship_level, relationship_points')
+        .eq('id', user.id)
+        .single();
+      
+      if (error) throw error;
+      
+      if (data) {
+        setStreakCount(data.streak_count || 0);
+        setRelationshipLevel(data.relationship_level || 'Bronze');
+        setRelationshipPoints(data.relationship_points || 0);
+        
+        // Calculate points needed for next level
+        if (data.relationship_level === 'Bronze') {
+          setPointsToNextLevel(100);
+        } else if (data.relationship_level === 'Silver') {
+          setPointsToNextLevel(300);
+        } else if (data.relationship_level === 'Gold') {
+          setPointsToNextLevel(500);
+        } else {
+          setPointsToNextLevel(500); // Max level
+        }
+      }
+      
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching user stats:', error);
+      setLoading(false);
+    }
+  };
+
+  const fetchUserBadges = async () => {
+    try {
+      if (!user) return;
+      
+      const { data, error } = await supabase
+        .from('user_badges')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('badge_level', { ascending: false });
+      
+      if (error) throw error;
+      
+      if (data) {
+        setBadges(data);
+      }
+    } catch (error) {
+      console.error('Error fetching user badges:', error);
+    }
+  };
 
   const handleSaveProfile = async () => {
     try {
@@ -84,6 +157,46 @@ export function AccountTab({ profile, setProfile }: AccountTabProps) {
 
   return (
     <div className="space-y-6 mt-0">
+      {!loading && streakCount > 0 && (
+        <StreakIndicator streak={streakCount} />
+      )}
+      
+      {!loading && (
+        <RelationshipProgress 
+          level={relationshipLevel as any}
+          pointsEarned={relationshipPoints}
+          pointsNeeded={pointsToNextLevel}
+        />
+      )}
+      
+      {!loading && badges.length > 0 && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">Your Achievements</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {badges.map(badge => (
+                badge.achieved && (
+                  <AchievementBadge 
+                    key={badge.id}
+                    type={badge.badge_type as any}
+                    achieved={badge.achieved}
+                    level={badge.badge_level as any}
+                  />
+                )
+              ))}
+              
+              {badges.filter(b => b.achieved).length === 0 && (
+                <p className="text-sm text-gray-500 italic">
+                  Complete daily activities and quizzes to earn badges!
+                </p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+      
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">Personal Information</CardTitle>

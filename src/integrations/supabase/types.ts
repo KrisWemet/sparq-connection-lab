@@ -41,6 +41,41 @@ export type Database = {
           },
         ]
       }
+      daily_activities: {
+        Row: {
+          activity_type: string
+          completed_at: string | null
+          id: string
+          points_earned: number | null
+          response: string | null
+          user_id: string | null
+        }
+        Insert: {
+          activity_type: string
+          completed_at?: string | null
+          id?: string
+          points_earned?: number | null
+          response?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          activity_type?: string
+          completed_at?: string | null
+          id?: string
+          points_earned?: number | null
+          response?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_activities_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       journey_questions: {
         Row: {
           category: string
@@ -226,9 +261,13 @@ export type Database = {
           email: string
           id: string
           isonboarded: boolean | null
+          last_daily_activity: string | null
           name: string
           partner_code: string | null
           partner_id: string | null
+          relationship_level: string | null
+          relationship_points: number | null
+          streak_count: number | null
           updated_at: string
         }
         Insert: {
@@ -237,9 +276,13 @@ export type Database = {
           email: string
           id: string
           isonboarded?: boolean | null
+          last_daily_activity?: string | null
           name: string
           partner_code?: string | null
           partner_id?: string | null
+          relationship_level?: string | null
+          relationship_points?: number | null
+          streak_count?: number | null
           updated_at?: string
         }
         Update: {
@@ -248,9 +291,13 @@ export type Database = {
           email?: string
           id?: string
           isonboarded?: boolean | null
+          last_daily_activity?: string | null
           name?: string
           partner_code?: string | null
           partner_id?: string | null
+          relationship_level?: string | null
+          relationship_points?: number | null
+          streak_count?: number | null
           updated_at?: string
         }
         Relationships: [
@@ -289,6 +336,41 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_badges: {
+        Row: {
+          achieved: boolean | null
+          achieved_at: string | null
+          badge_level: number | null
+          badge_type: string
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          achieved?: boolean | null
+          achieved_at?: string | null
+          badge_level?: number | null
+          badge_type: string
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          achieved?: boolean | null
+          achieved_at?: string | null
+          badge_level?: number | null
+          badge_type?: string
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_badges_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_journeys: {
         Row: {
