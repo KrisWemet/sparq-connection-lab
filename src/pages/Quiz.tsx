@@ -8,12 +8,12 @@ import { CompletionView } from "@/components/quiz/CompletionView";
 import { RelationshipHealthQuiz } from "@/components/quiz/RelationshipHealthQuiz";
 import { toast } from "sonner";
 import { BottomNav } from "@/components/bottom-nav";
-import { Brain } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { NoQuestionView } from "@/components/quiz/NoQuestionView";
 import { HealthScoreView } from "@/components/quiz/HealthScoreView";
+import { ConfettiAnimation } from "@/components/dashboard/ConfettiAnimation";
 
 export default function Quiz() {
   const navigate = useNavigate();
@@ -27,6 +27,7 @@ export default function Quiz() {
   const [showHealthQuiz, setShowHealthQuiz] = useState(true); // Changed to default to true
   const [relationshipScore, setRelationshipScore] = useState<number | null>(null);
   const [loadingScore, setLoadingScore] = useState(true);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
     const now = new Date();
@@ -118,14 +119,18 @@ export default function Quiz() {
   const handleHealthQuizComplete = async (score: number) => {
     setRelationshipScore(score);
     setShowHealthQuiz(false);
+    setShowConfetti(true);
     
     toast.success("Relationship health quiz completed!", {
       description: `Your relationship health score is ${score}%`,
       duration: 5000,
     });
     
-    // Navigate to dashboard after quiz completion
-    navigate("/dashboard");
+    // Give time for the confetti animation to be seen
+    setTimeout(() => {
+      // Navigate to dashboard after quiz completion
+      navigate("/dashboard");
+    }, 2000);
   };
   
   const handleStartHealthQuiz = () => {
@@ -144,6 +149,7 @@ export default function Quiz() {
             }}
           />
         </main>
+        <ConfettiAnimation show={showConfetti} />
         <BottomNav />
       </div>
     );

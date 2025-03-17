@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,6 +9,7 @@ import { toast } from "sonner";
 import { ArrowLeft, ArrowRight, Brain, Heart } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 
 // Define the quiz questions
 const healthQuizQuestions = [
@@ -196,6 +198,7 @@ export function RelationshipHealthQuiz({ onComplete, onCancel }: RelationshipHea
             
           if (error) {
             console.error("Error saving quiz results:", error);
+            toast.error("There was an error saving your quiz results.");
           }
         } catch (err) {
           console.error("Error with quiz results table:", err);
@@ -207,8 +210,8 @@ export function RelationshipHealthQuiz({ onComplete, onCancel }: RelationshipHea
     } catch (error) {
       console.error("Error calculating quiz results:", error);
       toast.error("There was an error processing your quiz results.");
-    } finally {
-      setLoading(false);
+      // Even if there's an error, complete the quiz to prevent getting stuck
+      onComplete(0);
     }
   };
   
@@ -222,8 +225,7 @@ export function RelationshipHealthQuiz({ onComplete, onCancel }: RelationshipHea
           </CardTitle>
         </CardHeader>
         <CardContent className="text-center">
-          <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p>Analyzing your relationship health...</p>
+          <LoadingIndicator size="lg" label="Analyzing your relationship health..." />
         </CardContent>
       </Card>
     );
