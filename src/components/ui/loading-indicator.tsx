@@ -21,8 +21,8 @@ export function LoadingIndicator({
 
   return (
     <div className={cn("flex flex-col items-center justify-center", className)}>
-      <Loader2 className={cn("animate-spin text-primary", sizeClasses[size], "mx-auto mb-2")} />
-      {label && <p className="text-sm text-muted-foreground">{label}</p>}
+      <Loader2 className={cn("animate-spin text-primary", sizeClasses[size])} />
+      {label && <p className="text-sm text-muted-foreground mt-2">{label}</p>}
     </div>
   );
 }

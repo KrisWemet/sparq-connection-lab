@@ -32,7 +32,6 @@ export function useQuizResults() {
           taken_at: new Date().toISOString()
         };
         
-        // Check if the quiz_results table exists, if not we'll just skip saving
         try {
           const { error } = await supabase
             .from('quiz_results')
@@ -41,6 +40,8 @@ export function useQuizResults() {
           if (error) {
             console.error("Error saving quiz results:", error);
             toast.error("There was an error saving your quiz results.");
+          } else {
+            console.log("Quiz results saved successfully");
           }
         } catch (err) {
           console.error("Error with quiz results table:", err);
@@ -48,12 +49,15 @@ export function useQuizResults() {
       }
       
       // Call the onComplete callback with the score
+      console.log("Quiz completed with score:", percentageScore);
       onComplete(percentageScore);
     } catch (error) {
       console.error("Error calculating quiz results:", error);
       toast.error("There was an error processing your quiz results.");
       // Even if there's an error, complete the quiz to prevent getting stuck
       onComplete(0);
+    } finally {
+      setLoading(false);
     }
   };
 

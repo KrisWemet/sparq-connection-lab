@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Loader2, LogOut } from "lucide-react";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
+import { LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { ProfileFormData } from "@/types/profile";
 import { useState } from "react";
@@ -23,19 +24,21 @@ export function AccountTab({ profile, setProfile }: AccountTabProps) {
   const { signOut, handleRefreshProfile } = useAuth();
 
   const handleSaveProfile = async () => {
-    const user = await supabase.auth.getUser();
-    if (!user.data.user) return;
-
     try {
       setSaving(true);
       console.log("Saving profile:", profile);
       
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error("You must be logged in to save your profile");
+        setSaving(false);
+        return;
+      }
+
       const { error } = await supabase
         .from('profiles')
         .upsert({
-          id: user.data.user.id,
-          user_id: user.data.user.id,
-          updated_at: new Date().toISOString(),
+          id: user.id,
           full_name: profile.full_name,
           email: profile.email,
           partner_name: profile.partner_name,
@@ -43,7 +46,8 @@ export function AccountTab({ profile, setProfile }: AccountTabProps) {
           sexual_orientation: profile.sexual_orientation,
           relationship_structure: profile.relationship_structure,
           avatar_url: profile.avatar_url,
-          isOnboarded: true
+          isOnboarded: true,
+          updated_at: new Date().toISOString()
         });
 
       if (error) throw error;
@@ -106,7 +110,7 @@ export function AccountTab({ profile, setProfile }: AccountTabProps) {
             <Label htmlFor="partner_name">Partner's Name</Label>
             <Input 
               id="partner_name" 
-              value={profile.partner_name} 
+              value={profile.partner_name || ''} 
               onChange={(e) => setProfile({ ...profile, partner_name: e.target.value })} 
             />
           </div>
@@ -115,7 +119,7 @@ export function AccountTab({ profile, setProfile }: AccountTabProps) {
             <Input 
               id="anniversary" 
               type="date" 
-              value={profile.anniversary_date} 
+              value={profile.anniversary_date || ''} 
               onChange={(e) => setProfile({ ...profile, anniversary_date: e.target.value })} 
             />
           </div>
@@ -125,10 +129,10 @@ export function AccountTab({ profile, setProfile }: AccountTabProps) {
             disabled={saving}
           >
             {saving ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Saving...
-              </>
+              <div className="flex items-center justify-center">
+                <LoadingIndicator size="sm" className="mr-2" />
+                <span>Saving...</span>
+              </div>
             ) : (
               'Save Changes'
             )}
@@ -145,7 +149,7 @@ export function AccountTab({ profile, setProfile }: AccountTabProps) {
             <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3">
                 <Avatar>
-                  <AvatarFallback>{profile.partner_name.charAt(0)}</AvatarFallback>
+                  <AvatarFallback>{profile.partner_name?.charAt(0) || '?'}</AvatarFallback>
                 </Avatar>
                 <div>
                   <p className="font-medium">{profile.partner_name}</p>

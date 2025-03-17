@@ -6,9 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { ChevronLeft } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import { BottomNav } from "@/components/bottom-nav";
-import { LoadingProfile } from "@/components/profile/LoadingProfile";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { toast } from "sonner";
 
 export default function PartnerProfile() {
@@ -16,6 +15,7 @@ export default function PartnerProfile() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [partnerProfile, setPartnerProfile] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -28,6 +28,7 @@ export default function PartnerProfile() {
   const loadPartnerProfile = async () => {
     try {
       setLoading(true);
+      setError(null);
       
       // In a real app, you would fetch the partner's profile using their ID
       // For now, we'll just use the partner_name from the current user's profile
@@ -40,6 +41,13 @@ export default function PartnerProfile() {
       if (error) throw error;
       
       if (data) {
+        // If partner_name is not provided, show an error
+        if (!data.partner_name) {
+          setError("No partner information found. Add your partner's name in your profile first.");
+          setLoading(false);
+          return;
+        }
+        
         // Simulate partner profile with data we have
         setPartnerProfile({
           full_name: data.partner_name || "Partner",
@@ -48,17 +56,14 @@ export default function PartnerProfile() {
           anniversary_date: data.anniversary_date
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error loading partner profile:', error);
+      setError("Failed to load partner profile. Please try again later.");
       toast.error('Failed to load partner profile');
     } finally {
       setLoading(false);
     }
   };
-
-  if (loading) {
-    return <LoadingProfile />;
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
@@ -77,7 +82,31 @@ export default function PartnerProfile() {
       </header>
 
       <main className="container max-w-lg mx-auto px-4 pt-6 animate-slide-up">
-        {partnerProfile && (
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-16">
+            <LoadingIndicator size="lg" label="Loading partner profile..." />
+          </div>
+        ) : error ? (
+          <Card className="mb-6">
+            <CardContent className="pt-6 flex flex-col items-center text-center">
+              <div className="text-amber-500 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Partner Information Not Available</h3>
+              <p className="text-gray-500 mb-4">{error}</p>
+              <button 
+                onClick={() => navigate("/profile")}
+                className="px-4 py-2 bg-primary text-white rounded-lg"
+              >
+                Go to Your Profile
+              </button>
+            </CardContent>
+          </Card>
+        ) : partnerProfile && (
           <>
             <div className="flex flex-col items-center mb-8">
               <Avatar className="w-24 h-24 mb-4">
