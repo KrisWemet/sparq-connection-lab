@@ -33,9 +33,13 @@ import {
   User,
   Settings,
   Sun,
-  Moon
+  Moon,
+  Check
 } from "lucide-react";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
+import { StreakIndicator } from "@/components/ui/streak-indicator";
+import { SocialProofNotification } from "@/components/ui/social-proof-notification";
 
 // Question categories based on GitHub repository
 const questionCategories = [
@@ -323,6 +327,44 @@ const sampleQuestions = [
   }
 ];
 
+// Add embedded commands to questions
+const addEmbeddedCommands = (question: string) => {
+  // List of embedded commands to randomly insert
+  const embeddedCommands = [
+    "notice how you feel as you consider this",
+    "imagine sharing openly with your partner",
+    "feel the connection growing stronger",
+    "discover new insights about each other",
+    "experience deeper understanding naturally",
+    "sense the trust building between you",
+    "enjoy how easily you can open up",
+    "find yourself connecting more deeply",
+  ];
+  
+  // 50% chance to add an embedded command
+  if (Math.random() > 0.5) {
+    const command = embeddedCommands[Math.floor(Math.random() * embeddedCommands.length)];
+    return `${question} As you reflect on this, ${command}.`;
+  }
+  
+  return question;
+};
+
+// Add future pacing to follow-up questions
+const addFuturePacing = (question: string) => {
+  // List of future pacing phrases to randomly insert
+  const futurePacingPhrases = [
+    "Imagine how this understanding will strengthen your relationship in the coming weeks",
+    "Picture how this insight will help you connect more deeply in the future",
+    "Think about how this conversation will benefit your relationship a month from now",
+    "Visualize how this shared moment creates a stronger foundation for your future together",
+    "Consider how this exchange will lead to more meaningful conversations going forward",
+  ];
+  
+  const phrase = futurePacingPhrases[Math.floor(Math.random() * futurePacingPhrases.length)];
+  return `${question} ${phrase}.`;
+};
+
 export default function DailyQuestions() {
   const navigate = useNavigate();
   const { subscription, remainingMorningQuestions, remainingEveningQuestions, setRemainingMorningQuestions, setRemainingEveningQuestions } = useSubscription();
@@ -337,6 +379,8 @@ export default function DailyQuestions() {
   const [completedQuestions, setCompletedQuestions] = useState<string[]>([]);
   const [showFollowUp, setShowFollowUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showCompletionAnimation, setShowCompletionAnimation] = useState(false);
+  const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
   
   // Determine if it's morning or evening
   const getCurrentPeriod = () => {
@@ -449,6 +493,19 @@ export default function DailyQuestions() {
       toast.success("Answer submitted successfully!");
       setIsLoading(false);
       setShowPartnerAnswer(true);
+      
+      // Show completion animation for a moment
+      setShowCompletionAnimation(true);
+      setTimeout(() => {
+        setShowCompletionAnimation(false);
+        
+        // Show upgrade prompt with 30% chance if user is not premium and has answered at least 3 questions
+        if (!subscription.isPremium && completedQuestions.length >= 3 && Math.random() < 0.3) {
+          setShowUpgradePrompt(true);
+        } else {
+          handleNextQuestion();
+        }
+      }, 2000);
     }, 1500);
   };
   
@@ -564,6 +621,19 @@ export default function DailyQuestions() {
       case "afternoon": return "Good Afternoon";
       case "evening": return "Good Evening";
       default: return "Hello";
+    }
+  };
+
+  // Get a motivational message based on streak
+  const getMotivationalMessage = () => {
+    if (completedQuestions.length >= 10) {
+      return "You're building an extraordinary relationship through consistent connection. Feel how much stronger your bond has become.";
+    } else if (completedQuestions.length >= 5) {
+      return "Your dedication to your relationship is creating beautiful results. Notice how much more connected you feel already.";
+    } else if (completedQuestions.length >= 3) {
+      return "You're creating a wonderful habit of connection. Enjoy how your relationship naturally strengthens each day.";
+    } else {
+      return "Every question you answer creates a deeper connection. Feel free to open up and discover each other more fully.";
     }
   };
 
@@ -818,129 +888,128 @@ export default function DailyQuestions() {
               </button>
               
               {currentQuestion ? (
-                <Card>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <Badge className={selectedCategoryObj?.color}>
-                        {selectedCategoryObj?.name}
-                      </Badge>
-                      <Badge variant="outline">
-                        Level {currentQuestion.level}
-                      </Badge>
-                    </div>
-                    <CardTitle className="text-xl mt-2">
-                      {currentQuestion.text}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {!showPartnerAnswer ? (
-                      <div className="space-y-4">
-                        <Textarea
-                          placeholder="Type your answer here..."
-                          className="min-h-32"
-                          value={userAnswer}
-                          onChange={(e) => setUserAnswer(e.target.value)}
-                        />
-                        <Button 
-                          onClick={handleSubmitAnswer} 
-                          className="w-full"
-                          disabled={isLoading}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-6"
+                >
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <Badge variant="outline" className="bg-gray-100">
+                          {selectedCategoryObj?.name}
+                        </Badge>
+                        <div className="flex items-center">
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="h-8 w-8 p-0 rounded-full"
+                            onClick={handleSaveQuestion}
+                          >
+                            <Bookmark className="h-4 w-4" />
+                            <span className="sr-only">Save</span>
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="h-8 w-8 p-0 rounded-full"
+                            onClick={handleShareQuestion}
+                          >
+                            <Share2 className="h-4 w-4" />
+                            <span className="sr-only">Share</span>
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <h2 className="text-xl font-semibold mb-6">
+                        {addEmbeddedCommands(currentQuestion.text)}
+                      </h2>
+                      
+                      {showFollowUp && currentQuestion.followUp && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          className="mb-4 p-3 bg-primary-50 rounded-lg"
                         >
-                          {isLoading ? "Submitting..." : "Submit Answer"}
+                          <p className="text-sm text-primary-700 italic">
+                            {addFuturePacing(currentQuestion.followUp)}
+                          </p>
+                        </motion.div>
+                      )}
+                      
+                      <Textarea
+                        placeholder="Type your answer here..."
+                        className="min-h-[120px]"
+                        value={userAnswer}
+                        onChange={(e) => setUserAnswer(e.target.value)}
+                      />
+                      
+                      <div className="flex justify-between items-center mt-4">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={handleShowFollowUp}
+                          disabled={showFollowUp}
+                        >
+                          <Lightbulb className="h-4 w-4 mr-1" />
+                          Reflection Prompt
+                        </Button>
+                        
+                        <Button onClick={handleSubmitAnswer}>
+                          Submit Answer
                         </Button>
                       </div>
-                    ) : (
-                      <div className="space-y-6">
-                        <div>
-                          <h4 className="font-medium mb-2 flex items-center">
-                            <User className="w-4 h-4 mr-2 text-blue-500" />
-                            Your Answer
-                          </h4>
-                          <div className="bg-blue-50 p-4 rounded-lg">
-                            <p>{userAnswer}</p>
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <h4 className="font-medium mb-2 flex items-center">
-                            <Heart className="w-4 h-4 mr-2 text-rose-500" />
-                            Partner's Response
-                          </h4>
-                          <div className="bg-rose-50 p-4 rounded-lg">
-                            <p>{partnerAnswer}</p>
-                          </div>
-                        </div>
-                        
-                        {!showFollowUp && currentQuestion.followUp && (
-                          <Button 
-                            variant="outline" 
-                            onClick={handleShowFollowUp}
-                            className="w-full"
-                          >
-                            <Sparkles className="w-4 h-4 mr-2" />
-                            Show Follow-Up Question
-                          </Button>
-                        )}
-                        
-                        {showFollowUp && currentQuestion.followUp && (
-                          <div>
-                            <h4 className="font-medium mb-2">Follow-Up Question</h4>
-                            <div className="bg-purple-50 p-4 rounded-lg mb-4">
-                              <p>{currentQuestion.followUp}</p>
-                            </div>
-                            <Textarea
-                              placeholder="Type your answer to the follow-up..."
-                              className="min-h-24 mb-4"
-                            />
-                          </div>
-                        )}
-                        
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              onClick={handleSaveQuestion}
-                            >
-                              <Bookmark className="w-4 h-4 mr-1" />
-                              Save
-                            </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              onClick={handleShareQuestion}
-                            >
-                              <Share2 className="w-4 h-4 mr-1" />
-                              Share
-                            </Button>
-                          </div>
-                          <Button onClick={handleNextQuestion}>
-                            Next Question
-                            <ArrowRight className="w-4 h-4 ml-1" />
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-                  </CardContent>
-                  <CardFooter className="flex justify-between border-t pt-4">
-                    <div className="text-xs text-muted-foreground">
-                      {subscription.tier === "free" && (
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {currentPeriod === "morning" || currentPeriod === "afternoon" ? (
-                            <span>{remainingMorningQuestions} morning questions left</span>
-                          ) : (
-                            <span>{remainingEveningQuestions} evening questions left</span>
-                          )}
-                        </div>
-                      )}
+                    </CardContent>
+                  </Card>
+                  
+                  {/* Motivational message */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="text-center"
+                  >
+                    <p className="text-sm text-primary-600 italic font-medium">
+                      {getMotivationalMessage()}
+                    </p>
+                  </motion.div>
+                  
+                  {/* Streak indicator */}
+                  {completedQuestions.length > 0 && (
+                    <div className="mt-2">
+                      <StreakIndicator 
+                        streak={completedQuestions.length} 
+                        onShare={() => {
+                          toast.success("Shared your streak with your partner!");
+                        }}
+                      />
                     </div>
-                    <div className="text-xs text-muted-foreground flex items-center gap-1">
-                      <Lightbulb className="w-3 h-3 text-amber-500" />
-                      <span>Based on {currentQuestion.theory}</span>
-                    </div>
-                  </CardFooter>
-                </Card>
+                  )}
+                  
+                  {/* Social proof notification - show randomly */}
+                  {Math.random() > 0.7 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 1 }}
+                    >
+                      <SocialProofNotification 
+                        message={
+                          subscription.isPremium
+                            ? "93% of couples report feeling closer after answering questions together for 2 weeks 💕"
+                            : "Premium users are 3x more likely to have meaningful conversations daily 💬"
+                        }
+                        icon={subscription.isPremium ? "heart" : "trending"}
+                        type={subscription.isPremium ? "achievement" : "social"}
+                        statistic={subscription.isPremium ? "You're part of this success story!" : undefined}
+                        tier={subscription.isPremium ? undefined : "premium"}
+                        onClick={subscription.isPremium ? undefined : () => navigate("/subscription")}
+                      />
+                    </motion.div>
+                  )}
+                </motion.div>
               ) : (
                 <Card className="text-center p-6">
                   <div className="flex flex-col items-center gap-4">
@@ -969,6 +1038,88 @@ export default function DailyQuestions() {
                 </Card>
               )}
             </div>
+          )}
+          
+          {/* Completion animation */}
+          {showCompletionAnimation && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
+            >
+              <motion.div
+                initial={{ scale: 0.5 }}
+                animate={{ scale: [0.5, 1.2, 1] }}
+                transition={{ duration: 0.5 }}
+                className="bg-white rounded-full p-8"
+              >
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: 1 }}
+                >
+                  <Heart className="h-16 w-16 text-red-500" />
+                </motion.div>
+              </motion.div>
+            </motion.div>
+          )}
+          
+          {/* Upgrade prompt */}
+          {showUpgradePrompt && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
+              onClick={() => setShowUpgradePrompt(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.9, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                className="bg-white rounded-lg p-6 m-4 max-w-md"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h3 className="text-xl font-bold mb-2">Deepen Your Connection</h3>
+                <p className="mb-4">
+                  You're building a beautiful connection. Imagine how much deeper your relationship could grow with Premium features:
+                </p>
+                <ul className="space-y-2 mb-6">
+                  <li className="flex items-start">
+                    <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
+                    <span>3x more daily questions to explore together</span>
+                  </li>
+                  <li className="flex items-start">
+                    <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
+                    <span>Guided visualizations for deeper intimacy</span>
+                  </li>
+                  <li className="flex items-start">
+                    <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
+                    <span>Relationship analytics to track your growth</span>
+                  </li>
+                </ul>
+                <div className="flex space-x-3">
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => {
+                      setShowUpgradePrompt(false);
+                      handleNextQuestion();
+                    }}
+                  >
+                    Continue Free
+                  </Button>
+                  <Button
+                    className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600"
+                    onClick={() => navigate("/subscription")}
+                  >
+                    Upgrade Now
+                  </Button>
+                </div>
+                <p className="text-xs text-center mt-4 text-gray-500">
+                  "Premium transformed how we communicate. We're closer than ever." - Jamie & Alex
+                </p>
+              </motion.div>
+            </motion.div>
           )}
         </AnimatedContainer>
       </main>

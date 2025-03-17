@@ -1,161 +1,241 @@
+import React from 'react';
+import Link from 'next/link';
+import { useAuth } from '../lib/auth-context';
+import MetaphorAnimation from '../components/MetaphorAnimation';
+import { useState } from 'react';
 
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { HeartHandshake, Heart, Sparkles, MessageCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/lib/auth";
+export default function Home() {
+  const { user } = useAuth();
+  const [showMetaphor, setShowMetaphor] = useState(false);
+  const [currentMetaphor, setCurrentMetaphor] = useState<'bridge' | 'flower' | 'river'>('bridge');
 
-export default function Index() {
-  const navigate = useNavigate();
-  const { user, loading } = useAuth();
-  const [error, setError] = useState<string | null>(null);
-  const [loadingTimeout, setLoadingTimeout] = useState(false);
-
-  // Add detailed debug logging
-  useEffect(() => {
-    console.log("Index page - Auth state:", { user, loading });
-  }, [user, loading]);
-
-  // Add a shorter timeout to recover from infinite loading
-  useEffect(() => {
-    const loadingTimeout = setTimeout(() => {
-      if (loading) {
-        console.log("Loading timeout reached, forcing state reset");
-        setLoadingTimeout(true);
-      }
-    }, 1500); // Reduced from 2000ms to 1500ms
-
-    return () => clearTimeout(loadingTimeout);
-  }, [loading]);
-
-  // Redirect to dashboard if already logged in - use a separate effect for better performance
-  useEffect(() => {
-    if (!loading && user) {
-      console.log("User is logged in, redirecting to dashboard");
-      navigate("/dashboard");
-    }
-  }, [user, loading, navigate]);
-
-  // Use simplified loading state - only show if not timed out
-  if (loading && !loadingTimeout) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-        <div className="text-center mb-8">
-          <HeartHandshake className="w-10 h-10 text-primary mx-auto mb-3" /> {/* Reduced from w-12 h-12 */}
-          <h1 className="text-2xl font-bold text-gray-900">Sparq Connection</h1>
-          <div className="mt-2 animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full mx-auto"></div> {/* Reduced size and border */}
-        </div>
-      </div>
-    );
-  }
+  const handleShowMetaphor = (type: 'bridge' | 'flower' | 'river') => {
+    setCurrentMetaphor(type);
+    setShowMetaphor(true);
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-b from-pink-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">
-        <div className="container max-w-6xl mx-auto px-4 py-24 sm:py-32">
-          <div className="text-center mb-12">
-            <div className="flex justify-center mb-6">
-              <div className="bg-white rounded-full p-4 shadow-md">
-                <HeartHandshake className="w-12 h-12 text-primary" />
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100">
+      {showMetaphor && (
+        <MetaphorAnimation
+          metaphorKey={currentMetaphor}
+          onComplete={() => setShowMetaphor(false)}
+        />
+      )}
+      
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-indigo-700">Sparq</h1>
+          <div>
+            {user ? (
+              <Link href="/dashboard">
+                <span className="px-4 py-2 border border-indigo-600 text-indigo-600 rounded-md hover:bg-indigo-50 transition-colors cursor-pointer">
+                  Go to Dashboard
+                </span>
+              </Link>
+            ) : (
+              <div className="space-x-4">
+                <Link href="/login">
+                  <span className="px-4 py-2 border border-indigo-600 text-indigo-600 rounded-md hover:bg-indigo-50 transition-colors cursor-pointer">
+                    Login
+                  </span>
+                </Link>
+                <Link href="/login">
+                  <span className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors cursor-pointer">
+                    Sign Up
+                  </span>
+                </Link>
               </div>
-            </div>
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
-              Sparq Connection
+            )}
+          </div>
+        </div>
+      </header>
+      
+      <main>
+        {/* Hero Section */}
+        <section className="py-20 px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-5xl font-extrabold text-gray-900 mb-6">
+              Transform Your Relationship
+              <span className="text-indigo-600"> Starting Today</span>
             </h1>
-            <p className="mt-6 text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              Strengthen your relationship with meaningful conversations, shared goals, and science-backed activities.
+            <p className="text-xl text-gray-600 mb-10 max-w-3xl mx-auto">
+              Experience deeper connection, improved communication, and a more fulfilling relationship through powerful psychological techniques that <span className="italic">actually work</span>.
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                onClick={() => navigate("/signup")}
-                className="text-md px-8"
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <Link href="/login">
+                <span className="px-8 py-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors font-medium text-lg cursor-pointer">
+                  Start Your Journey
+                </span>
+              </Link>
+              <button 
+                onClick={() => handleShowMetaphor('bridge')}
+                className="px-8 py-4 border border-indigo-600 text-indigo-600 rounded-md hover:bg-indigo-50 transition-colors font-medium text-lg"
               >
-                Get Started
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                onClick={() => navigate("/auth")}
-                className="text-md px-8"
-              >
-                Sign In
-              </Button>
+                Experience a Demo
+              </button>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Features Section */}
-      <div className="py-16 bg-white dark:bg-gray-900">
-        <div className="container max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">
-            Why Sparq Connection Works
-          </h2>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="p-6 rounded-lg bg-blue-50 dark:bg-gray-800">
-              <div className="bg-blue-100 dark:bg-blue-900/30 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                <MessageCircle className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Daily Conversations</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                Thoughtfully crafted questions that help you connect on a deeper level with your partner.
+        </section>
+        
+        {/* Features Section */}
+        <section className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">How Sparq Transforms Relationships</h2>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                Our science-backed approach combines the latest in relationship psychology with proven persuasive techniques to create lasting change.
               </p>
             </div>
             
-            <div className="p-6 rounded-lg bg-pink-50 dark:bg-gray-800">
-              <div className="bg-pink-100 dark:bg-pink-900/30 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                <Heart className="w-6 h-6 text-pink-600 dark:text-pink-400" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+              <div 
+                className="bg-indigo-50 p-6 rounded-lg cursor-pointer hover:shadow-md transition-shadow" 
+                onClick={() => handleShowMetaphor('bridge')}
+              >
+                <h3 className="text-xl font-semibold text-indigo-700 mb-3">
+                  Meaningful Communication
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  Learn to truly hear and be heard by your partner, creating a bridge of understanding that grows stronger with every conversation.
+                </p>
+                <p className="text-indigo-600 font-medium">
+                  Experience the bridge metaphor →
+                </p>
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Relationship Journeys</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                Science-backed paths that help you grow together through intentional activities and reflection.
+              
+              <div 
+                className="bg-purple-50 p-6 rounded-lg cursor-pointer hover:shadow-md transition-shadow"
+                onClick={() => handleShowMetaphor('flower')}
+              >
+                <h3 className="text-xl font-semibold text-purple-700 mb-3">
+                  Nurture Intimacy
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  Discover how to nurture the delicate bloom of intimacy with consistent attention and care, creating a relationship that continuously flourishes.
+                </p>
+                <p className="text-purple-600 font-medium">
+                  Experience the flower metaphor →
+                </p>
+              </div>
+              
+              <div 
+                className="bg-blue-50 p-6 rounded-lg cursor-pointer hover:shadow-md transition-shadow"
+                onClick={() => handleShowMetaphor('river')}
+              >
+                <h3 className="text-xl font-semibold text-blue-700 mb-3">
+                  Navigate Challenges
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  Learn to flow like water around obstacles, turning relationship challenges into opportunities for deeper connection and growth.
+                </p>
+                <p className="text-blue-600 font-medium">
+                  Experience the river metaphor →
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* Testimonials Section */}
+        <section className="py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Stories of Transformation</h2>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                Hear from couples who have experienced profound changes in their relationships through Sparq.
               </p>
             </div>
             
-            <div className="p-6 rounded-lg bg-purple-50 dark:bg-gray-800">
-              <div className="bg-purple-100 dark:bg-purple-900/30 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                <Sparkles className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="bg-white p-6 rounded-lg shadow-sm">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-indigo-200 rounded-full flex items-center justify-center text-indigo-700 font-bold mr-4">
+                    JM
+                  </div>
+                  <div>
+                    <h3 className="font-medium">John & Maria</h3>
+                    <p className="text-sm text-gray-500">Together 5 years</p>
+                  </div>
+                </div>
+                <p className="text-gray-600 italic">
+                  "Before Sparq, we were talking but not communicating. Now we truly understand each other, and our connection is deeper than ever before."
+                </p>
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Relationship Insights</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                Track your progress and gain insights into your relationship strengths and growth areas.
-              </p>
+              
+              <div className="bg-white p-6 rounded-lg shadow-sm">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-purple-200 rounded-full flex items-center justify-center text-purple-700 font-bold mr-4">
+                    SK
+                  </div>
+                  <div>
+                    <h3 className="font-medium">Sarah & Kevin</h3>
+                    <p className="text-sm text-gray-500">Together 3 years</p>
+                  </div>
+                </div>
+                <p className="text-gray-600 italic">
+                  "The metaphor exercises completely changed how we view our relationship. We now have a shared language that helps us navigate challenges together."
+                </p>
+              </div>
+              
+              <div className="bg-white p-6 rounded-lg shadow-sm">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center text-blue-700 font-bold mr-4">
+                    LD
+                  </div>
+                  <div>
+                    <h3 className="font-medium">Lisa & David</h3>
+                    <p className="text-sm text-gray-500">Together 10 years</p>
+                  </div>
+                </div>
+                <p className="text-gray-600 italic">
+                  "After years of feeling stuck, Sparq helped us rediscover each other. The future pacing exercises gave us a shared vision that we're excited to build together."
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </section>
+        
+        {/* CTA Section */}
+        <section className="py-20 bg-indigo-600 text-white">
+          <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-bold mb-6">Begin Your Transformation Today</h2>
+            <p className="text-xl mb-10 opacity-90">
+              Join thousands of couples who have discovered a deeper, more fulfilling relationship through Sparq.
+            </p>
+            <Link href="/login">
+              <span className="px-8 py-4 bg-white text-indigo-600 rounded-md hover:bg-indigo-50 transition-colors font-medium text-lg inline-block cursor-pointer">
+                Start Your Free Journey
+              </span>
+            </Link>
+          </div>
+        </section>
+      </main>
       
-      {/* Call to Action */}
-      <div className="py-16 bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
-        <div className="container max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to strengthen your relationship?</h2>
-          <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-            Join thousands of couples who are deepening their connection and building stronger relationships.
-          </p>
-          <Button 
-            size="lg" 
-            onClick={() => navigate("/signup")}
-            className="bg-white text-indigo-600 hover:bg-white/90 text-md px-8"
-          >
-            Create Free Account
-          </Button>
-        </div>
-      </div>
-      
-      {/* Footer */}
-      <footer className="py-8 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
-        <div className="container max-w-6xl mx-auto px-4">
+      <footer className="bg-gray-800 text-gray-300 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center mb-4 md:mb-0">
-              <HeartHandshake className="w-6 h-6 text-primary mr-2" />
-              <span className="font-semibold text-gray-900 dark:text-white">Sparq Connection</span>
+            <div className="mb-4 md:mb-0">
+              <h2 className="text-xl font-bold text-white">Sparq</h2>
+              <p className="text-sm opacity-75">Transforming relationships through science and connection.</p>
             </div>
-            <div className="text-sm text-gray-500 dark:text-gray-400">
-              &copy; {new Date().getFullYear()} Sparq Connection. All rights reserved.
+            <div className="flex space-x-6">
+              <Link href="/about">
+                <span className="hover:text-white transition-colors cursor-pointer">About</span>
+              </Link>
+              <Link href="/privacy">
+                <span className="hover:text-white transition-colors cursor-pointer">Privacy</span>
+              </Link>
+              <Link href="/terms">
+                <span className="hover:text-white transition-colors cursor-pointer">Terms</span>
+              </Link>
+              <Link href="/contact">
+                <span className="hover:text-white transition-colors cursor-pointer">Contact</span>
+              </Link>
             </div>
+          </div>
+          <div className="mt-8 text-center text-sm opacity-75">
+            &copy; {new Date().getFullYear()} Sparq Connection Lab. All rights reserved.
           </div>
         </div>
       </footer>

@@ -1,18 +1,23 @@
-
 import { motion } from "framer-motion";
-import { Users, Clock, TrendingUp, ThumbsUp, Heart } from "lucide-react";
+import { Users, Clock, TrendingUp, ThumbsUp, Heart, Award, Zap, Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface SocialProofNotificationProps {
   message: string;
-  icon?: "users" | "time" | "trending" | "like" | "heart";
-  type?: "social" | "urgency" | "achievement";
+  icon?: "users" | "time" | "trending" | "like" | "heart" | "award" | "zap" | "star";
+  type?: "social" | "urgency" | "achievement" | "scarcity" | "upgrade";
+  statistic?: string;
+  tier?: "premium" | "ultimate";
+  onClick?: () => void;
 }
 
 export function SocialProofNotification({ 
   message, 
   icon = "users", 
-  type = "social" 
+  type = "social",
+  statistic,
+  tier,
+  onClick
 }: SocialProofNotificationProps) {
   
   const icons = {
@@ -20,7 +25,10 @@ export function SocialProofNotification({
     time: Clock,
     trending: TrendingUp,
     like: ThumbsUp,
-    heart: Heart
+    heart: Heart,
+    award: Award,
+    zap: Zap,
+    star: Star
   };
   
   const Icon = icons[icon];
@@ -28,17 +36,24 @@ export function SocialProofNotification({
   const backgrounds = {
     social: "bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-100",
     urgency: "bg-gradient-to-r from-amber-50 to-orange-50 border-amber-100",
-    achievement: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-100"
+    achievement: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-100",
+    scarcity: "bg-gradient-to-r from-purple-50 to-fuchsia-50 border-purple-100",
+    upgrade: "bg-gradient-to-r from-indigo-50 to-violet-50 border-indigo-100"
   };
   
   const iconColors = {
     social: "text-blue-500",
     urgency: "text-amber-500",
-    achievement: "text-green-500"
+    achievement: "text-green-500",
+    scarcity: "text-purple-500",
+    upgrade: "text-indigo-500"
   };
   
   // Split message to find and animate emojis
   const messageParts = message.split(/([\uD800-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27FF])/g);
+  
+  // Determine if this is a premium/ultimate tier notification
+  const isPremiumNotification = tier !== undefined;
   
   return (
     <motion.div
@@ -46,6 +61,8 @@ export function SocialProofNotification({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, type: "spring" }}
       whileHover={{ scale: 1.02 }}
+      onClick={onClick}
+      className={onClick ? "cursor-pointer" : ""}
     >
       <Card className={`${backgrounds[type]} border shadow-sm overflow-hidden`}>
         <CardContent className="p-3">
@@ -57,32 +74,62 @@ export function SocialProofNotification({
             >
               <Icon className="h-4 w-4" />
             </motion.div>
-            <p className="text-xs text-gray-700 font-medium">
-              {messageParts.map((part, index) => {
-                // Check if part is emoji (simple check)
-                const isEmoji = /[\uD800-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27FF]/.test(part);
-                
-                return isEmoji ? (
-                  <motion.span 
-                    key={index}
-                    className="inline-block"
-                    animate={{ 
-                      scale: [1, 1.3, 1],
-                      rotate: [0, 15, 0]
-                    }}
-                    transition={{ 
-                      duration: 1.5, 
-                      repeat: Infinity, 
-                      repeatDelay: 3
-                    }}
-                  >
-                    {part}
-                  </motion.span>
-                ) : (
-                  <span key={index}>{part}</span>
-                );
-              })}
-            </p>
+            
+            <div className="flex-1">
+              <p className="text-xs text-gray-700 font-medium">
+                {messageParts.map((part, index) => {
+                  // Check if part is emoji (simple check)
+                  const isEmoji = /[\uD800-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27FF]/.test(part);
+                  
+                  return isEmoji ? (
+                    <motion.span 
+                      key={index}
+                      className="inline-block"
+                      animate={{ 
+                        scale: [1, 1.3, 1],
+                        rotate: [0, 15, 0]
+                      }}
+                      transition={{ 
+                        duration: 1.5, 
+                        repeat: Infinity, 
+                        repeatDelay: 3
+                      }}
+                    >
+                      {part}
+                    </motion.span>
+                  ) : (
+                    <span key={index}>{part}</span>
+                  );
+                })}
+              </p>
+              
+              {/* Display statistic if provided */}
+              {statistic && (
+                <motion.p 
+                  className="text-xs font-bold mt-0.5 text-gray-800"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  {statistic}
+                </motion.p>
+              )}
+            </div>
+            
+            {/* Premium/Ultimate badge if applicable */}
+            {isPremiumNotification && (
+              <motion.div
+                className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                  tier === "premium" 
+                    ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white" 
+                    : "bg-gradient-to-r from-amber-500 to-purple-500 text-white"
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {tier === "premium" ? "Premium" : "Ultimate"}
+              </motion.div>
+            )}
           </div>
         </CardContent>
       </Card>

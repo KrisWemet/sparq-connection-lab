@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,6 +19,7 @@ import {
   Lock
 } from "lucide-react";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 // Pricing plans data
 const plans = [
@@ -43,7 +44,12 @@ const plans = [
     ],
     popular: false,
     buttonText: "Current Plan",
-    disabled: true
+    disabled: true,
+    testimonial: {
+      quote: "We started with the free plan and saw immediate improvements in our communication.",
+      author: "Jamie & Alex",
+      relationship: "Dating 2 years"
+    }
   },
   {
     id: "premium",
@@ -64,10 +70,19 @@ const plans = [
       { name: "Premium conversation topics", included: true },
       { name: "Relationship timeline", included: true },
       { name: "Basic compatibility assessments", included: true },
+      { name: "Guided visualizations", included: true, new: true },
+      { name: "Hypnotic relationship stories", included: true, new: true },
     ],
     popular: true,
     buttonText: "Upgrade Now",
-    disabled: false
+    disabled: false,
+    testimonial: {
+      quote: "Premium helped us discover parts of our relationship we never knew existed. We feel closer than ever.",
+      author: "Taylor & Jordan",
+      relationship: "Married 3 years",
+      statistic: "90% of Premium users report deeper emotional connection within 30 days"
+    },
+    persuasiveText: "Experience how naturally your connection deepens with Premium features"
   },
   {
     id: "ultimate",
@@ -91,10 +106,20 @@ const plans = [
       { name: "AI Therapist access", included: true, new: true },
       { name: "Add additional partners ($9.99/mo each)", included: true, new: true },
       { name: "Dark mode", included: true },
+      { name: "Advanced guided visualizations with audio", included: true, new: true },
+      { name: "Future pacing exercises", included: true, new: true },
+      { name: "Relationship metaphor animations", included: true, new: true },
     ],
     popular: false,
     buttonText: "Get Ultimate",
-    disabled: false
+    disabled: false,
+    testimonial: {
+      quote: "Ultimate transformed our relationship. The guided visualizations and future pacing exercises helped us create a vision for our future that we're excited about every day.",
+      author: "Sam & Riley",
+      relationship: "Engaged after 1 year",
+      statistic: "Ultimate users are 3.5x more likely to report 'extremely satisfied' with their relationship"
+    },
+    persuasiveText: "Feel the transformation in your relationship as you explore Ultimate features together"
   }
 ];
 
@@ -192,312 +217,364 @@ const testimonials = [
 
 export default function Subscription() {
   const navigate = useNavigate();
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
+  const [billingCycle, setBillingCycle] = useState("monthly");
+  const [showTestimonial, setShowTestimonial] = useState<string | null>(null);
+  const [highlightFeature, setHighlightFeature] = useState<{planId: string, featureIndex: number} | null>(null);
   
-  const handleSubscribe = (planId: string) => {
-    toast.success(`Subscribing to ${planId} plan`);
-    // In a real app, this would redirect to a payment processor
-  };
-  
-  const handlePurchaseJourney = (journeyId: string) => {
-    toast.success(`Purchasing ${journeyId} journey`);
-    // In a real app, this would redirect to a payment processor
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-24">
-      <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b dark:border-gray-700">
-        <div className="container max-w-6xl mx-auto px-4 py-3 flex items-center">
-          <button 
-            onClick={() => navigate(-1)} 
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-          >
-            <ChevronLeft className="w-6 h-6 dark:text-gray-300" />
-          </button>
-          <h1 className="text-xl font-semibold text-gray-900 dark:text-white mx-auto">
-            Upgrade Your Relationship
-          </h1>
-        </div>
-      </header>
-
-      <main className="container max-w-6xl mx-auto px-4 pt-6 animate-slide-up">
-        <div className="bg-gradient-to-r from-primary/20 to-primary/10 rounded-lg p-6 mb-8 dark:from-primary/30 dark:to-primary/20">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3">
-              Invest in Your Relationship
-            </h2>
-            <p className="text-gray-700 dark:text-gray-300 mb-6">
-              Unlock premium features designed to deepen your connection and strengthen your bond.
-            </p>
-            <div className="flex items-center justify-center gap-4">
-              <Button 
-                variant="default" 
-                size="lg"
-                onClick={() => window.scrollTo({ top: document.getElementById('pricing')?.offsetTop, behavior: 'smooth' })}
-              >
-                <Sparkles className="w-4 h-4 mr-2" />
-                See Plans
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg"
-                onClick={() => window.scrollTo({ top: document.getElementById('journeys')?.offsetTop, behavior: 'smooth' })}
-                className="dark:bg-gray-800 dark:text-white dark:border-gray-700"
-              >
-                <Heart className="w-4 h-4 mr-2" />
-                Explore Journeys
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        <section id="pricing" className="mb-16">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Choose Your Plan</h2>
-            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Select the perfect plan to nurture and grow your relationship
-            </p>
-            
-            <div className="flex items-center justify-center mt-6 mb-8">
-              <div className="bg-gray-100 dark:bg-gray-800 p-1 rounded-full inline-flex">
-                <button
-                  className={`px-4 py-2 rounded-full text-sm font-medium ${
-                    billingCycle === "monthly" 
-                      ? "bg-white dark:bg-gray-700 shadow-sm" 
-                      : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300"
-                  }`}
-                  onClick={() => setBillingCycle("monthly")}
-                >
-                  Monthly
-                </button>
-                <button
-                  className={`px-4 py-2 rounded-full text-sm font-medium ${
-                    billingCycle === "yearly" 
-                      ? "bg-white dark:bg-gray-700 shadow-sm" 
-                      : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300"
-                  }`}
-                  onClick={() => setBillingCycle("yearly")}
-                >
-                  Yearly <span className="text-green-600 dark:text-green-400 font-medium">Save 2 months</span>
-                </button>
-              </div>
-            </div>
-          </div>
+  // Highlight a random premium feature every few seconds
+  useEffect(() => {
+    if (billingCycle === "yearly") {
+      const premiumPlan = plans.find(p => p.id === "premium");
+      const ultimatePlan = plans.find(p => p.id === "ultimate");
+      
+      if (premiumPlan && ultimatePlan) {
+        const interval = setInterval(() => {
+          const planId = Math.random() > 0.5 ? "premium" : "ultimate";
+          const plan = planId === "premium" ? premiumPlan : ultimatePlan;
+          const includedFeatures = plan.features
+            .map((f, i) => ({ ...f, index: i }))
+            .filter(f => f.included);
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {plans.map((plan) => (
-              <Card 
-                key={plan.id} 
-                className={`relative overflow-hidden ${
-                  plan.popular ? "border-primary shadow-lg" : ""
-                }`}
-              >
+          if (includedFeatures.length > 0) {
+            const randomFeature = includedFeatures[Math.floor(Math.random() * includedFeatures.length)];
+            setHighlightFeature({ planId, featureIndex: randomFeature.index });
+            
+            // Reset highlight after 2 seconds
+            setTimeout(() => setHighlightFeature(null), 2000);
+          }
+        }, 5000);
+        
+        return () => clearInterval(interval);
+      }
+    }
+  }, [billingCycle]);
+
+  const handleSubscribe = (planId: string) => {
+    toast.success(
+      planId === "premium" 
+        ? "You've upgraded to Premium! Notice how your connection naturally deepens as you explore new features together."
+        : "You've upgraded to Ultimate! Feel the transformation in your relationship as you access all premium features.",
+      { duration: 5000 }
+    );
+  };
+  
+  // Calculate savings for yearly billing
+  const calculateYearlySavings = (plan: any) => {
+    if (!plan.yearlyPrice || !plan.price) return 0;
+    const monthlyCost = plan.price * 12;
+    return Math.round((monthlyCost - plan.yearlyPrice) / monthlyCost * 100);
+  };
+  
+  // Format price with appropriate billing cycle
+  const formatPrice = (plan: any) => {
+    if (plan.price === 0) return "Free";
+    
+    const price = billingCycle === "yearly" && plan.yearlyPrice 
+      ? plan.yearlyPrice 
+      : plan.price;
+      
+    return `$${price}${billingCycle === "yearly" ? "/year" : "/month"}`;
+  };
+  
+  return (
+    <div className="container max-w-6xl py-8">
+      <div className="flex items-center mb-8">
+        <Button 
+          variant="ghost" 
+          onClick={() => navigate(-1)}
+          className="mr-2"
+        >
+          <ChevronLeft className="h-4 w-4 mr-1" />
+          Back
+        </Button>
+        <h1 className="text-2xl font-bold">Subscription Plans</h1>
+      </div>
+      
+      {/* Billing cycle toggle */}
+      <div className="flex justify-center mb-8">
+        <div className="bg-gray-100 p-1 rounded-full flex items-center">
+          <button
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              billingCycle === "monthly" 
+                ? "bg-white shadow text-primary-700" 
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+            onClick={() => setBillingCycle("monthly")}
+          >
+            Monthly
+          </button>
+          <button
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              billingCycle === "yearly" 
+                ? "bg-white shadow text-primary-700" 
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+            onClick={() => setBillingCycle("yearly")}
+          >
+            Yearly
+            <span className="ml-1 text-xs font-bold text-green-600">Save up to 17%</span>
+          </button>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {plans.map((plan) => {
+          const yearlySavings = calculateYearlySavings(plan);
+          
+          return (
+            <motion.div 
+              key={plan.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: plans.indexOf(plan) * 0.1 }}
+              whileHover={!plan.disabled ? { scale: 1.02 } : {}}
+              className="relative"
+            >
+              <Card className={`h-full overflow-hidden ${
+                plan.popular 
+                  ? "border-primary-200 shadow-lg" 
+                  : "border-gray-200"
+              }`}>
                 {plan.popular && (
-                  <div className="absolute top-0 right-0">
-                    <div className="bg-primary text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
-                      MOST POPULAR
-                    </div>
+                  <div className="absolute top-0 right-0 bg-gradient-to-r from-primary-500 to-primary-600 text-white px-3 py-1 text-xs font-bold uppercase transform translate-x-2 -translate-y-0 rotate-45 origin-bottom-left shadow-sm">
+                    Most Popular
                   </div>
                 )}
+                
                 <CardHeader>
-                  <CardTitle className="text-xl">{plan.name}</CardTitle>
+                  <CardTitle className="flex items-center">
+                    {plan.id === "premium" && <Sparkles className="h-5 w-5 mr-2 text-primary-500" />}
+                    {plan.id === "ultimate" && <Heart className="h-5 w-5 mr-2 text-red-500" />}
+                    {plan.name}
+                  </CardTitle>
                   <CardDescription>{plan.description}</CardDescription>
-                  <div className="mt-4">
-                    <span className="text-3xl font-bold">
-                      ${billingCycle === "yearly" 
-                        ? (plan.price * 10).toFixed(2) 
-                        : plan.price.toFixed(2)}
-                    </span>
-                    {plan.price > 0 && (
-                      <span className="text-gray-500 ml-1">
-                        /{billingCycle === "yearly" ? "year" : "month"}
-                      </span>
-                    )}
-                    {billingCycle === "yearly" && plan.price > 0 && (
-                      <Badge className="ml-2 bg-green-100 text-green-800 hover:bg-green-100">
-                        2 months free
+                  <div className="mt-2">
+                    <span className="text-3xl font-bold">{formatPrice(plan)}</span>
+                    {billingCycle === "yearly" && plan.yearlyPrice && (
+                      <Badge variant="outline" className="ml-2 bg-green-50 text-green-700 border-green-200">
+                        Save {yearlySavings}%
                       </Badge>
                     )}
                   </div>
                 </CardHeader>
+                
                 <CardContent className="space-y-4">
+                  {/* Persuasive text for premium/ultimate plans */}
+                  {plan.persuasiveText && (
+                    <motion.p 
+                      className="text-sm italic text-primary-600 font-medium"
+                      initial={{ opacity: 0.7 }}
+                      animate={{ opacity: [0.7, 1, 0.7] }}
+                      transition={{ duration: 4, repeat: Infinity }}
+                    >
+                      {plan.persuasiveText}
+                    </motion.p>
+                  )}
+                  
                   <div className="space-y-2">
                     {plan.features.map((feature, index) => (
-                      <div key={index} className="flex items-start">
+                      <motion.div 
+                        key={index}
+                        className={`flex items-start ${
+                          highlightFeature?.planId === plan.id && 
+                          highlightFeature?.featureIndex === index
+                            ? "bg-primary-50 -mx-4 px-4 py-1 rounded-md"
+                            : ""
+                        }`}
+                        animate={
+                          highlightFeature?.planId === plan.id && 
+                          highlightFeature?.featureIndex === index
+                            ? { 
+                                backgroundColor: ["rgba(236, 254, 255, 0.5)", "rgba(236, 254, 255, 1)", "rgba(236, 254, 255, 0.5)"],
+                              }
+                            : {}
+                        }
+                        transition={{ duration: 2 }}
+                      >
                         {feature.included ? (
-                          <Check className="w-5 h-5 text-green-500 mr-2 flex-shrink-0" />
+                          <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
                         ) : (
-                          <X className="w-5 h-5 text-gray-300 mr-2 flex-shrink-0" />
+                          <X className="h-5 w-5 text-gray-300 mr-2 flex-shrink-0" />
                         )}
                         <span className={feature.included ? "text-gray-700" : "text-gray-400"}>
                           {feature.name}
+                          {feature.new && (
+                            <Badge className="ml-2 bg-amber-100 text-amber-800 border-amber-200">
+                              New
+                            </Badge>
+                          )}
                         </span>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
+                  
+                  {/* Testimonial preview */}
+                  {plan.testimonial && (
+                    <div 
+                      className="mt-4 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors"
+                      onClick={() => setShowTestimonial(plan.id)}
+                    >
+                      <div className="flex items-center text-sm">
+                        <span className="text-gray-600 italic line-clamp-1">"{plan.testimonial.quote.substring(0, 60)}..."</span>
+                        <Button variant="ghost" size="sm" className="ml-auto h-6 text-xs">
+                          Read
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
+                
                 <CardFooter>
                   <Button 
-                    className="w-full" 
-                    variant={plan.popular ? "default" : "outline"}
+                    className={`w-full ${
+                      plan.popular 
+                        ? "bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700" 
+                        : ""
+                    }`}
                     disabled={plan.disabled}
                     onClick={() => handleSubscribe(plan.id)}
                   >
-                    {plan.price > 0 && <CreditCard className="w-4 h-4 mr-2" />}
+                    {plan.id === "premium" && <Zap className="h-4 w-4 mr-1" />}
                     {plan.buttonText}
                   </Button>
                 </CardFooter>
               </Card>
-            ))}
+            </motion.div>
+          );
+        })}
+      </div>
+      
+      {/* Social proof section */}
+      <div className="mt-12 bg-gray-50 p-6 rounded-lg">
+        <h2 className="text-xl font-bold mb-4 text-center">What Our Users Are Saying</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <p className="italic text-gray-700 mb-2">
+              "Premium helped us have conversations we'd been avoiding for years. Now we talk about everything!"
+            </p>
+            <p className="text-sm font-medium">- Chris & Pat, Together 7 years</p>
+            <p className="text-xs text-primary-600 mt-1">Upgraded to Premium 3 months ago</p>
           </div>
-        </section>
-
-        <section id="journeys" className="mb-16">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Relationship Journeys</h2>
-            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Guided experiences designed to transform specific areas of your relationship
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <p className="italic text-gray-700 mb-2">
+              "The guided visualizations in Ultimate helped us create a shared vision for our future. It's like couples therapy but more fun!"
+            </p>
+            <p className="text-sm font-medium">- Morgan & Jamie, Engaged</p>
+            <p className="text-xs text-primary-600 mt-1">Ultimate users for 6 months</p>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <p className="italic text-gray-700 mb-2">
+              "We started with Free, then quickly upgraded to Premium. The difference was night and day. Worth every penny!"
+            </p>
+            <p className="text-sm font-medium">- Alex & Jordan, Dating 1 year</p>
+            <p className="text-xs text-primary-600 mt-1">Upgraded from Free to Premium</p>
+          </div>
+        </div>
+      </div>
+      
+      {/* Statistics section */}
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-primary-50 p-4 rounded-lg text-center">
+          <h3 className="text-2xl font-bold text-primary-700 mb-1">87%</h3>
+          <p className="text-sm text-primary-600">of couples report improved communication within 2 weeks</p>
+        </div>
+        <div className="bg-primary-50 p-4 rounded-lg text-center">
+          <h3 className="text-2xl font-bold text-primary-700 mb-1">94%</h3>
+          <p className="text-sm text-primary-600">of Premium users would recommend Sparq to friends</p>
+        </div>
+        <div className="bg-primary-50 p-4 rounded-lg text-center">
+          <h3 className="text-2xl font-bold text-primary-700 mb-1">3.5x</h3>
+          <p className="text-sm text-primary-600">higher relationship satisfaction for Ultimate users</p>
+        </div>
+      </div>
+      
+      {/* FAQ section */}
+      <div className="mt-12">
+        <h2 className="text-xl font-bold mb-4">Frequently Asked Questions</h2>
+        <div className="space-y-4">
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <h3 className="font-medium">Can I switch between plans?</h3>
+            <p className="text-sm text-gray-600 mt-1">
+              Yes! You can upgrade at any time. When you upgrade, you'll immediately gain access to all the features of your new plan.
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {journeys.map((journey) => (
-              <Card key={journey.id} className="overflow-hidden">
-                <div className="relative h-48">
-                  <img 
-                    src={journey.image} 
-                    alt={journey.title} 
-                    className="w-full h-full object-cover"
-                  />
-                  {journey.popular && (
-                    <div className="absolute top-3 left-3">
-                      <Badge className="bg-primary text-white">Popular</Badge>
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <h3 className="font-medium">How do the guided visualizations work?</h3>
+            <p className="text-sm text-gray-600 mt-1">
+              Our guided visualizations use proven techniques to help you and your partner imagine and create your ideal relationship future together. They're available in Premium and Ultimate tiers.
+            </p>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <h3 className="font-medium">Is there a money-back guarantee?</h3>
+            <p className="text-sm text-gray-600 mt-1">
+              Absolutely! We offer a 30-day satisfaction guarantee. If you're not completely satisfied, contact us for a full refund.
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      {/* Testimonial modal */}
+      {showTestimonial && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+          onClick={() => setShowTestimonial(null)}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white rounded-lg p-6 max-w-md w-full"
+            onClick={e => e.stopPropagation()}
+          >
+            {plans.find(p => p.id === showTestimonial)?.testimonial && (
+              <>
+                <div className="mb-4">
+                  <p className="text-lg italic text-gray-700 mb-3">
+                    "{plans.find(p => p.id === showTestimonial)?.testimonial.quote}"
+                  </p>
+                  <div className="flex items-center">
+                    <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold">
+                      {plans.find(p => p.id === showTestimonial)?.testimonial.author.split(' ')[0][0]}
+                      {plans.find(p => p.id === showTestimonial)?.testimonial.author.split(' ')[2] ? 
+                        plans.find(p => p.id === showTestimonial)?.testimonial.author.split(' ')[2][0] : 
+                        plans.find(p => p.id === showTestimonial)?.testimonial.author.split(' ')[1][0]}
                     </div>
-                  )}
-                  <div className="absolute top-3 right-3">
-                    <Badge className="bg-white/90 text-primary">{journey.steps} Steps</Badge>
+                    <div className="ml-3">
+                      <p className="font-medium">{plans.find(p => p.id === showTestimonial)?.testimonial.author}</p>
+                      <p className="text-sm text-gray-500">{plans.find(p => p.id === showTestimonial)?.testimonial.relationship}</p>
+                    </div>
                   </div>
                 </div>
-                <CardContent className="pt-4">
-                  <h3 className="text-lg font-semibold mb-1">{journey.title}</h3>
-                  <p className="text-gray-600 text-sm mb-4">{journey.description}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xl font-bold">${journey.price.toFixed(2)}</span>
-                    <Button 
-                      onClick={() => handlePurchaseJourney(journey.id)}
-                      size="sm"
-                    >
-                      Purchase
-                    </Button>
+                
+                {plans.find(p => p.id === showTestimonial)?.testimonial.statistic && (
+                  <div className="bg-primary-50 p-3 rounded-lg text-sm text-primary-700 font-medium mb-4">
+                    {plans.find(p => p.id === showTestimonial)?.testimonial.statistic}
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          
-          <div className="mt-8 text-center">
-            <Button variant="outline" size="lg" onClick={() => navigate("/journeys")}>
-              View All Journeys
-            </Button>
-          </div>
-        </section>
-
-        <section className="mb-16">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">What Couples Are Saying</h2>
-            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Join thousands of couples who have transformed their relationships with Sparq Connect
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {testimonials.map((testimonial) => (
-              <Card key={testimonial.id}>
-                <CardContent className="pt-6">
-                  <div className="flex flex-col items-center text-center">
-                    <div className="w-16 h-16 rounded-full overflow-hidden mb-4">
-                      <img 
-                        src={testimonial.image} 
-                        alt={testimonial.name} 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <p className="text-gray-700 dark:text-gray-300 mb-4 italic">"{testimonial.text}"</p>
-                    <p className="font-medium">{testimonial.name}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        <section className="bg-primary/10 rounded-lg p-6 mb-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
-              Ready to Transform Your Relationship?
-            </h2>
-            <p className="text-gray-700 dark:text-gray-300 mb-6">
-              Join thousands of couples who are growing stronger together every day.
-            </p>
-            <Button 
-              size="lg" 
-              onClick={() => window.scrollTo({ top: document.getElementById('pricing')?.offsetTop, behavior: 'smooth' })}
-            >
-              Get Started Today
-            </Button>
-          </div>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Frequently Asked Questions</h2>
-          
-          <div className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">What's included in the free plan?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 dark:text-gray-400">
-                  The free plan includes basic features like daily relationship quizzes, basic conversation starters, limited goal tracking, and access to a few date ideas each month. It's a great way to get started and see how Sparq Connect can benefit your relationship.
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Can I cancel my subscription anytime?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Yes, you can cancel your subscription at any time. Your premium features will remain active until the end of your current billing period.
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">What are Relationship Journeys?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Relationship Journeys are guided experiences designed to help you and your partner grow in specific areas of your relationship. Each journey consists of a series of activities, reflections, and conversations that build upon each other.
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Is my data private and secure?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Absolutely. We take privacy very seriously. Your relationship data is encrypted and never shared with third parties. Only you and your partner have access to your shared content.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-      </main>
+                )}
+                
+                <div className="flex justify-end">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowTestimonial(null)}
+                    className="mr-2"
+                  >
+                    Close
+                  </Button>
+                  <Button 
+                    onClick={() => {
+                      setShowTestimonial(null);
+                      handleSubscribe(showTestimonial);
+                    }}
+                  >
+                    {showTestimonial === "premium" ? "Get Premium" : "Get Ultimate"}
+                  </Button>
+                </div>
+              </>
+            )}
+          </motion.div>
+        </motion.div>
+      )}
       
       <BottomNav />
     </div>
