@@ -29,14 +29,14 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.08 // Reduced from 0.1 for faster animation
+      staggerChildren: 0.05 // Reduced from 0.08 for faster animation
     }
   }
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.3 } } // Reduced from 0.4 for faster animation
+  hidden: { opacity: 0, y: 15 }, // Reduced from y: 20
+  visible: { opacity: 1, y: 0, transition: { duration: 0.2 } } // Reduced from 0.3 for faster animation
 };
 
 export default function Dashboard() {
@@ -117,7 +117,7 @@ export default function Dashboard() {
     // Set a timeout to force-show dashboard if loading takes too long
     const timeout = setTimeout(() => {
       if (loading) setLoading(false);
-    }, 3000);
+    }, 1500); // Reduced from 3000ms to 1500ms
     
     return () => clearTimeout(timeout);
   }, [fetchUserData]);
@@ -127,8 +127,8 @@ export default function Dashboard() {
     if (badges.some(badge => badge.achieved)) {
       const timer = setTimeout(() => {
         setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 3000);
-      }, 500);
+        setTimeout(() => setShowConfetti(false), 2000); // Reduced from 3000ms to 2000ms
+      }, 300); // Reduced from 500ms to 300ms
       return () => clearTimeout(timer);
     }
   }, [badges]);
@@ -146,7 +146,7 @@ export default function Dashboard() {
         },
         icon: "✨"
       });
-    }, 2000);
+    }, 1000); // Reduced from 2000ms to 1000ms
     
     return () => clearTimeout(timer);
   }, [navigate, loading]);
@@ -154,11 +154,12 @@ export default function Dashboard() {
   if (isChecking || loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <LoadingIndicator size="lg" label="Loading your relationship dashboard..." />
+        <LoadingIndicator size="md" label="Loading your relationship dashboard..." />
       </div>
     );
   }
   
+  // Rest of component stays the same
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 pb-24">
       <DashboardHeader />

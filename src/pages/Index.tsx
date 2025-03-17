@@ -23,7 +23,7 @@ export default function Index() {
         console.log("Loading timeout reached, forcing state reset");
         setLoadingTimeout(true);
       }
-    }, 2000); // Reduced from 5000ms to 2000ms
+    }, 1500); // Reduced from 2000ms to 1500ms
 
     return () => clearTimeout(loadingTimeout);
   }, [loading]);
@@ -41,9 +41,9 @@ export default function Index() {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
         <div className="text-center mb-8">
-          <HeartHandshake className="w-12 h-12 text-primary mx-auto mb-4" />
+          <HeartHandshake className="w-10 h-10 text-primary mx-auto mb-3" /> {/* Reduced from w-12 h-12 */}
           <h1 className="text-2xl font-bold text-gray-900">Sparq Connection</h1>
-          <div className="mt-3 animate-spin h-6 w-6 border-3 border-primary border-t-transparent rounded-full mx-auto"></div>
+          <div className="mt-2 animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full mx-auto"></div> {/* Reduced size and border */}
         </div>
       </div>
     );

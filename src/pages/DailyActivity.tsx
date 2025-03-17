@@ -47,7 +47,7 @@ export default function DailyActivity() {
     // Set a timeout to force-show content if loading takes too long
     const timeout = setTimeout(() => {
       if (loading) setLoading(false);
-    }, 2000); // Reduced from 3000ms to 2000ms
+    }, 1500); // Reduced from 2000ms to 1500ms
     
     return () => clearTimeout(timeout);
   }, [fetchQuestion]);

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/lib/auth';
+import { LoadingIndicator } from './loading-indicator';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -40,7 +41,7 @@ export function ProtectedRoute({
       timeoutId = setTimeout(() => {
         console.log("Loading timeout reached for protected route");
         setLoadingTimeout(true);
-      }, 2000); // Reduced from 3000ms to 2000ms for faster fallback
+      }, 1500); // Reduced from 2000ms to 1500ms for faster fallback
     }
     
     return () => {
@@ -53,13 +54,10 @@ export function ProtectedRoute({
     console.log("Protected route: Still loading, waiting...");
     return (
       <div className="flex h-screen w-full items-center justify-center">
-        <div className="flex flex-col items-center gap-3 max-w-xs text-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary"></div>
-          <p className="text-sm text-gray-700 font-medium">Loading your journey...</p>
-          <p className="text-xs text-gray-500">
-            Like relationships, the best connections take time to nurture.
-          </p>
-        </div>
+        <LoadingIndicator 
+          size="md"
+          label="Almost ready..."
+        />
       </div>
     );
   }

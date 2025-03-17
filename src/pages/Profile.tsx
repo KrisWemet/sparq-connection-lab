@@ -98,7 +98,7 @@ export default function Profile() {
         console.log("Profile loading timeout reached, forcing state reset");
         setLoading(false);
       }
-    }, 4000); // Reduced from 8000ms to 4000ms
+    }, 2000); // Reduced from 4000ms to 2000ms
     
     return () => clearTimeout(timeout);
   }, [loading]);
