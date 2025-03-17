@@ -62,14 +62,20 @@ export function LoginForm({ redirectTo = "/dashboard" }: LoginFormProps) {
     console.log("Login attempt started with email:", values.email);
     
     try {
+      // Show optimistic toast for better perceived performance
+      const toastId = toast.loading("Signing in...");
+      
       const result = await signIn(values.email, values.password);
+      
       if (result?.user) {
+        toast.dismiss(toastId);
         toast.success("Login successful!");
         console.log("Login successful, user:", result.user);
         
-        // Always redirect to dashboard after login
+        // Navigate immediately, don't wait for any other processes
         navigate(redirectTo, { replace: true });
       } else {
+        toast.dismiss(toastId);
         console.error("Login returned success but no user");
         setError("Login succeeded but user information was not returned");
       }

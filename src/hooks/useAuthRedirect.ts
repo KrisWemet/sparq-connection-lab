@@ -20,35 +20,36 @@ export function useAuthRedirect(redirectPath = "/dashboard") {
   
   // Check Supabase session directly - highly optimized
   useEffect(() => {
+    // Immediately redirect if user is available - don't wait for any checks
+    if (user) {
+      console.log("User authenticated, redirecting immediately", user);
+      navigate(redirectPath, { replace: true });
+      return;
+    }
+    
+    // Only proceed with session check if we're not already loading
+    if (isLoading || authLoading) return;
+    
     const checkSession = async () => {
-      if (isLoading || authLoading) return; // Don't check if we're already loading
-      
       try {
+        setIsLoading(true);
         const { data } = await supabase.auth.getSession();
         console.log("Direct session check result:", !!data.session);
         
         if (data.session?.user) {
           console.log("Session exists, redirecting");
-          // Navigate immediately without setting loading state to minimize delay
           navigate(redirectPath, { replace: true });
         }
       } catch (err) {
         console.error("Error checking session:", err);
+      } finally {
+        setIsLoading(false);
       }
     };
     
     // Run immediately for faster response
     checkSession();
-  }, [navigate, redirectPath, isLoading, authLoading]);
-  
-  // Redirect if user is authenticated - separate effect for better performance
-  useEffect(() => {
-    if (user) {
-      console.log("User authenticated in useEffect, redirecting", user);
-      // Always redirect to dashboard after login - immediate navigation
-      navigate(redirectPath, { replace: true });
-    }
-  }, [user, navigate, redirectPath]);
+  }, [navigate, redirectPath, user, isLoading, authLoading]);
 
   return { isAuthLoading: authLoading || isLoading };
 }

@@ -34,41 +34,62 @@ export function useInitialSession({
         }
         
         if (session?.user) {
-          // We have a user
+          // Immediately set user to improve perceived performance
           setUser(session.user);
           cachedAuthState.user = session.user;
           
-          try {
-            // Load user profile
-            const profile = await refreshProfile(session.user.id);
-            
-            if (profile) {
-              setProfile(profile as UserProfile);
-              cachedAuthState.profile = profile as UserProfile;
-              
-              // Set admin status
-              const isAdminUser = session.user.email?.includes('admin@') || false;
-              setIsAdmin(isAdminUser);
-              cachedAuthState.isAdmin = isAdminUser;
-              
-              // Set onboarded status
-              const isOnboardedStatus = !!profile.isOnboarded;
-              setIsOnboarded(isOnboardedStatus);
-              cachedAuthState.isOnboarded = isOnboardedStatus;
-            }
-          } catch (profileError) {
-            console.error('Error loading profile during initialization:', profileError);
-          }
+          // Set admin status immediately (don't wait for profile)
+          const isAdminUser = session.user.email?.includes('admin@') || false;
+          setIsAdmin(isAdminUser);
+          cachedAuthState.isAdmin = isAdminUser;
+          
+          // Set initialization complete to allow UI to render
+          setInitializationComplete(true);
+          cachedAuthState.initialized = true;
+          
+          // Fetch profile in the background
+          refreshProfile(session.user.id)
+            .then(profile => {
+              if (profile) {
+                setProfile(profile as UserProfile);
+                cachedAuthState.profile = profile as UserProfile;
+                
+                // Set onboarded status
+                const isOnboardedStatus = !!profile.isOnboarded;
+                setIsOnboarded(isOnboardedStatus);
+                cachedAuthState.isOnboarded = isOnboardedStatus;
+              }
+            })
+            .catch(profileError => {
+              console.error('Error loading profile during initialization:', profileError);
+            })
+            .finally(() => {
+              setLoading(false);
+            });
+        } else {
+          // No session, set initialization complete and stop loading
+          setInitializationComplete(true);
+          cachedAuthState.initialized = true;
+          setLoading(false);
         }
       } catch (error) {
         console.error('Error initializing auth session:', error);
-      } finally {
-        setLoading(false);
+        // Even on error, set initialization complete and stop loading
         setInitializationComplete(true);
         cachedAuthState.initialized = true;
+        setLoading(false);
       }
     };
     
-    initSession();
+    // Set a timeout to force-complete initialization if it takes too long
+    const timeoutId = setTimeout(() => {
+      setInitializationComplete(true);
+      cachedAuthState.initialized = true;
+      setLoading(false);
+    }, 1000); // 1 second timeout as a safety net
+    
+    initSession().finally(() => clearTimeout(timeoutId));
+    
+    return () => clearTimeout(timeoutId);
   }, [setUser, setProfile, setIsAdmin, setIsOnboarded, setLoading, setInitializationComplete]);
 }

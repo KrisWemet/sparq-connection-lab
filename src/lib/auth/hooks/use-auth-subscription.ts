@@ -28,33 +28,36 @@ export function useAuthSubscription({
         
         if (event === 'SIGNED_IN' && session?.user) {
           console.log('User found in auth state change');
+          
+          // Immediately update user to improve perceived performance
           setUser(session.user);
           cachedAuthState.user = session.user;
-          setLoading(true); // Set loading state while we fetch the profile
           
-          try {
-            // Fetch profile for the user
-            const profile = await refreshProfile(session.user.id);
-            
-            if (profile) {
-              setProfile(profile as UserProfile);
-              cachedAuthState.profile = profile as UserProfile;
-              
-              // Set admin status
-              const isAdminUser = session.user.email?.includes('admin@') || false;
-              setIsAdmin(isAdminUser);
-              cachedAuthState.isAdmin = isAdminUser;
-              
-              // Set onboarded status
-              const isOnboardedStatus = !!profile.isOnboarded;
-              setIsOnboarded(isOnboardedStatus);
-              cachedAuthState.isOnboarded = isOnboardedStatus;
-            }
-          } catch (error) {
-            console.error('Error fetching profile during auth state change:', error);
-          } finally {
-            setLoading(false);
-          }
+          // Set admin status immediately (don't wait for profile)
+          const isAdminUser = session.user.email?.includes('admin@') || false;
+          setIsAdmin(isAdminUser);
+          cachedAuthState.isAdmin = isAdminUser;
+          
+          // Fetch profile in the background
+          setLoading(true);
+          refreshProfile(session.user.id)
+            .then(profile => {
+              if (profile) {
+                setProfile(profile as UserProfile);
+                cachedAuthState.profile = profile as UserProfile;
+                
+                // Set onboarded status
+                const isOnboardedStatus = !!profile.isOnboarded;
+                setIsOnboarded(isOnboardedStatus);
+                cachedAuthState.isOnboarded = isOnboardedStatus;
+              }
+            })
+            .catch(error => {
+              console.error('Error fetching profile during auth state change:', error);
+            })
+            .finally(() => {
+              setLoading(false);
+            });
         } else if (event === 'SIGNED_OUT') {
           console.log('User signed out in auth state change');
           setUser(null);

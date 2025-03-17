@@ -5,17 +5,26 @@ import { useAuth } from '@/lib/auth';
 import { onboardingService } from '@/services/onboardingService';
 
 export function useOnboardingRedirect(skipCheck = false) {
-  const { user, loading } = useAuth(); // Changed from isLoading to loading to match AuthContextType
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [isChecking, setIsChecking] = useState(!skipCheck);
   
   useEffect(() => {
-    const checkOnboarding = async () => {
-      if (skipCheck || loading || !user) {
+    // If we should skip the check or user is not loaded yet, don't do anything
+    if (skipCheck || loading || !user) {
+      setIsChecking(false);
+      return;
+    }
+    
+    // Set a timeout to force completion after a short delay
+    const timeoutId = setTimeout(() => {
+      if (isChecking) {
+        console.log('Onboarding check timeout reached, forcing state reset');
         setIsChecking(false);
-        return;
       }
-      
+    }, 800); // 800ms timeout as a safety net
+    
+    const checkOnboarding = async () => {
       try {
         const wasRedirected = await onboardingService.checkAndRedirectToOnboarding(user.id, navigate);
         
@@ -26,11 +35,14 @@ export function useOnboardingRedirect(skipCheck = false) {
         console.error('Error checking onboarding status:', error);
       } finally {
         setIsChecking(false);
+        clearTimeout(timeoutId);
       }
     };
     
     checkOnboarding();
-  }, [user, loading, navigate, skipCheck]);
+    
+    return () => clearTimeout(timeoutId);
+  }, [user, loading, navigate, skipCheck, isChecking]);
   
   return { isChecking };
 }
