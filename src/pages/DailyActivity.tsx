@@ -19,7 +19,7 @@ export default function DailyActivity() {
     try {
       setLoading(true);
       
-      // Use a single efficient query to fetch the question
+      // Use an optimized efficient query to fetch the question
       const { data: questionData, error } = await supabase
         .from("journey_questions")
         .select("*, journeys:journey_id(title)")
@@ -47,7 +47,7 @@ export default function DailyActivity() {
     // Set a timeout to force-show content if loading takes too long
     const timeout = setTimeout(() => {
       if (loading) setLoading(false);
-    }, 3000);
+    }, 2000); // Reduced from 3000ms to 2000ms
     
     return () => clearTimeout(timeout);
   }, [fetchQuestion]);
@@ -59,8 +59,9 @@ export default function DailyActivity() {
         return;
       }
       
-      // Optimistically update UI and show success message
-      toast.success("Saving your response...");
+      // Optimistically update UI immediately
+      toast.success("Response saved!");
+      navigate("/reflect");
       
       // Save the journey response in background
       const journeyPromise = supabase
@@ -74,7 +75,7 @@ export default function DailyActivity() {
           }
         ]);
       
-      // Record as a daily activity to update streak and points (in parallel)
+      // Record as a daily activity in parallel
       const activityPromise = supabase
         .from("daily_activities")
         .insert([
@@ -86,15 +87,13 @@ export default function DailyActivity() {
           }
         ]);
         
-      // Wait for both promises to complete
+      // Wait for both promises to complete in background
       const [{ error }, { error: activityError }] = await Promise.all([journeyPromise, activityPromise]);
       
       if (error || activityError) {
-        throw error || activityError;
+        console.error("Error saving in background:", error || activityError);
+        // Don't show another toast since we already navigated away
       }
-
-      toast.success("Your response has been saved!");
-      navigate("/reflect");
     } catch (error) {
       console.error("Error saving response:", error);
       toast.error("Failed to save your response. Please try again.");

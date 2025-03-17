@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -27,8 +27,8 @@ export default function Profile() {
     avatar_url: ""
   });
 
+  // Optimize by setting profile data immediately when authProfile is available
   useEffect(() => {
-    console.log("Profile component received authProfile:", authProfile);
     if (authProfile) {
       setProfile({
         full_name: authProfile.fullName || "",
@@ -43,29 +43,10 @@ export default function Profile() {
     }
   }, [authProfile, user]);
 
-  useEffect(() => {
-    if (user && !authProfile) {
-      loadProfile();
-    } else if (!user && !authLoading) {
-      navigate("/auth");
-    }
-  }, [user, authLoading, authProfile]);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (loading) {
-        console.log("Profile loading timeout reached, forcing state reset");
-        setLoading(false);
-      }
-    }, 8000);
-    
-    return () => clearTimeout(timeout);
-  }, [loading]);
-
-  const loadProfile = async () => {
+  // Memoize loadProfile function to improve performance
+  const loadProfile = useCallback(async () => {
     try {
       setLoading(true);
-      console.log("Loading profile data for user:", user?.id);
       
       const { data, error } = await supabase
         .from('profiles')
@@ -74,12 +55,10 @@ export default function Profile() {
         .maybeSingle();
 
       if (error) {
-        console.error('Error loading profile:', error);
         throw error;
       }
 
       if (data) {
-        console.log("Profile data loaded:", data);
         setProfile({
           full_name: data.full_name || "",
           email: data.email || user?.email || "",
@@ -89,15 +68,12 @@ export default function Profile() {
           relationship_structure: data.relationship_structure || "monogamous",
           avatar_url: data.avatar_url || ""
         });
-      } else {
-        console.log("No profile data found, using defaults");
-        if (user?.email) {
-          setProfile(prev => ({
-            ...prev,
-            email: user.email || "",
-            full_name: user.email.split('@')[0] || ""
-          }));
-        }
+      } else if (user?.email) {
+        setProfile(prev => ({
+          ...prev,
+          email: user.email || "",
+          full_name: user.email.split('@')[0] || ""
+        }));
       }
     } catch (error) {
       console.error('Error loading profile:', error);
@@ -105,7 +81,27 @@ export default function Profile() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user && !authProfile) {
+      loadProfile();
+    } else if (!user && !authLoading) {
+      navigate("/auth");
+    }
+  }, [user, authLoading, authProfile, loadProfile, navigate]);
+
+  useEffect(() => {
+    // Reduce timeout for profile loading
+    const timeout = setTimeout(() => {
+      if (loading) {
+        console.log("Profile loading timeout reached, forcing state reset");
+        setLoading(false);
+      }
+    }, 4000); // Reduced from 8000ms to 4000ms
+    
+    return () => clearTimeout(timeout);
+  }, [loading]);
 
   const handleAvatarUpdate = (url: string) => {
     setProfile(prev => ({

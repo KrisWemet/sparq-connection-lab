@@ -40,7 +40,7 @@ export function ProtectedRoute({
       timeoutId = setTimeout(() => {
         console.log("Loading timeout reached for protected route");
         setLoadingTimeout(true);
-      }, 3000); // Reduced from 5000ms to 3000ms for faster fallback
+      }, 2000); // Reduced from 3000ms to 2000ms for faster fallback
     }
     
     return () => {
@@ -57,7 +57,7 @@ export function ProtectedRoute({
           <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary"></div>
           <p className="text-sm text-gray-700 font-medium">Loading your journey...</p>
           <p className="text-xs text-gray-500">
-            Like relationships, the best connections are worth the wait.
+            Like relationships, the best connections take time to nurture.
           </p>
         </div>
       </div>

@@ -15,8 +15,8 @@ export function LoadingIndicator({
 }: LoadingIndicatorProps) {
   const sizeClasses = {
     sm: "w-4 h-4",
-    md: "w-8 h-8",
-    lg: "w-12 h-12"
+    md: "w-6 h-6", // Reduced from w-8 h-8 for lighter feel
+    lg: "w-10 h-10" // Reduced from w-12 h-12 for lighter feel
   };
 
   const inspirationalMessages = [
@@ -33,8 +33,8 @@ export function LoadingIndicator({
   return (
     <div className={cn("flex flex-col items-center justify-center", className)}>
       <Loader2 className={cn("animate-spin text-primary", sizeClasses[size])} />
-      {label && <p className="text-sm text-gray-700 font-medium mt-3">{label}</p>}
-      <p className="text-sm text-gray-500 mt-2 max-w-xs text-center">{randomMessage}</p>
+      {label && <p className="text-sm text-gray-700 font-medium mt-2">{label}</p>} {/* Reduced mt-3 to mt-2 */}
+      <p className="text-xs text-gray-500 mt-1 max-w-xs text-center">{randomMessage}</p> {/* Reduced mt-2 to mt-1 */}
     </div>
   );
 }
