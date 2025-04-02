@@ -48,17 +48,17 @@ export default function Index() {
               Strengthen your relationship with meaningful conversations, shared goals, and science-backed activities.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                onClick={() => navigate("/auth")}
+              <Button
+                size="lg"
+                onClick={() => navigate("/auth?mode=signup")}
                 className="text-md px-8"
               >
                 Get Started
               </Button>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                onClick={() => navigate("/auth")}
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => navigate("/auth?mode=login")}
                 className="text-md px-8"
               >
                 Sign In

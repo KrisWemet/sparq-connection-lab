@@ -31,7 +31,7 @@ const mockedPromptService = vi.mocked(promptService);
 
 describe('useDashboardData', () => {
   // Mock data - adjusted to match actual types
-  const mockProfile: UserProfile = { id: 'user-1', fullName: 'Test User', email: 'test@example.com', partnerId: 'user-2', subscriptionTier: 'free', isOnboarded: true, lastActive: new Date() };
+  const mockProfile: UserProfile = { id: 'user-1', username: 'Test User', email: 'test@example.com', partnerId: 'user-2', subscriptionTier: 'free', isOnboarded: true, lastActive: new Date() };
   const mockEvents: SharedEvent[] = [{ id: 'event-1', title: 'Date Night', eventDatetime: new Date().toISOString(), description: 'Movie', creatorId: 'user-1', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), status: 'planned' }];
   const mockGoals: Goal[] = [{ id: 'goal-1', userId: 'user-1', title: 'Save for vacation', description: 'Save $1000', dueDate: new Date(Date.now() + 86400000 * 30).toISOString(), category: 'finance', progress: 50, isCompleted: false, createdAt: new Date(), updatedAt: new Date(), isShared: false }];
   const mockDailyPrompt: CommunicationPrompt = { id: 'prompt-1', text: 'What are you grateful for today?', category: 'gratitude', createdAt: new Date().toISOString() };
@@ -49,14 +49,19 @@ describe('useDashboardData', () => {
   });
 
   it('should be in a loading state initially', () => {
-    const { result } = renderHook(() => useDashboardData());
+    let result;
+    act(() => {
+      result = renderHook(() => useDashboardData()).result;
+    });
 
-    expect(result.current.loading).toBe(true);
-    expect(result.current.error).toBeNull();
-    expect(result.current.profile).toBeNull();
-    expect(result.current.events).toEqual([]);
-    expect(result.current.goals).toEqual([]);
-    expect(result.current.dailyPrompt).toBeNull();
+    act(() => {
+      expect(result.current.loading).toBe(true);
+      expect(result.current.error).toBeNull();
+      expect(result.current.profile).toBeNull();
+      expect(result.current.events).toEqual([]);
+      expect(result.current.goals).toEqual([]);
+      expect(result.current.dailyPrompt).toBeNull();
+    });
   });
 
   it('should fetch data successfully and update state', async () => {
@@ -84,14 +89,18 @@ describe('useDashboardData', () => {
   it('should handle errors during data fetching', async () => {
     // Arrange: Mock one service to throw an error
     const mockError = new Error('Failed to fetch profile');
-    mockedProfileService.getCurrentProfile.mockRejectedValue(mockError);
+    mockedProfileService.getCurrentProfile.mockImplementation(() => {
+      return new Promise((_, reject) => {
+        setTimeout(() => reject(mockError), 200); // Reject after 200ms
+      });
+    });
 
     // Act: Render the hook
     const { result } = renderHook(() => useDashboardData());
 
     // Assert: Wait for loading to finish and check error state
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for 500ms
     });
 
     expect(result.current.error).toBe(mockError);
@@ -132,7 +141,7 @@ describe('useDashboardData', () => {
     mockedPromptService.getRandomPrompt.mockClear();
 
     // Optional: Prepare different data for refetch if needed
-    const refetchProfile: UserProfile = { ...mockProfile, fullName: 'Refetched User' };
+    const refetchProfile: UserProfile = { ...mockProfile, username: 'Refetched User' };
     mockedProfileService.getCurrentProfile.mockResolvedValue(refetchProfile);
 
     // Act: Call refetchData

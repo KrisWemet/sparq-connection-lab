@@ -1,5 +1,6 @@
 import { BaseService } from './BaseService';
 import { UserProfile, transformProfile } from './types';
+import { ProfileUpdate } from '@/integrations/supabase/types';
 import { authService } from './AuthService';
 
 /**
@@ -9,15 +10,15 @@ export class ProfileService extends BaseService {
   /**
    * Get the current user's profile
    */
-  async getCurrentProfile() {
+  async getCurrentProfile(): Promise<UserProfile | null> {
     try {
       const user = await authService.getCurrentUser();
       if (!user) return null;
       
       // Use the same approach as getProfileById to avoid recursion
       return this.getProfileById(user.id);
-    } catch (error: any) {
-      console.error('Error getting profile:', error.message);
+    } catch (error: unknown) {
+      console.error('Error getting profile:', error);
       return null;
     }
   }
@@ -25,46 +26,43 @@ export class ProfileService extends BaseService {
   /**
    * Update the current user's profile
    */
-  async updateProfile(profile: Partial<UserProfile>) {
+  async updateProfile(username: string): Promise<boolean> {
     try {
       const user = await authService.getCurrentUser();
       if (!user) throw new Error('Not authenticated');
-      
-      // Ultra-minimal approach: only update the name field
-      // This should work as long as the profiles table exists and has a name column
+
       const { error } = await this.supabase
         .from('profiles')
-        .update({
-          full_name: profile.fullName
-        })
+        .update<ProfileUpdate>({ username: username })
         .eq('id', user.id);
         
       if (error) throw error;
       
       return true;
-    } catch (error: any) {
-      return this.handleError(error, 'Failed to update profile');
+    } catch (error: unknown) {
+      console.error("Failed to update profile", error);
+      return false;
     }
   }
   
   /**
    * Get a user's profile by ID
    */
-  async getProfileById(userId: string) {
+  async getProfileById(userId: string): Promise<UserProfile | null> {
     try {
       // Use direct query with absolute minimum fields to avoid errors
       // Only select the most basic columns that must exist
       const { data, error } = await this.supabase
         .from('profiles')
-        .select('id, full_name, email')
+        .select('id, email')
         .eq('id', userId)
         .single();
         
       if (error) throw error;
       
       return transformProfile(data);
-    } catch (error: any) {
-      console.error('Error getting profile by ID:', error.message);
+    } catch (error: unknown) {
+      console.error("Error getting profile by ID", error);
       return null;
     }
   }
@@ -72,14 +70,14 @@ export class ProfileService extends BaseService {
   /**
    * Get the partner's profile for the current user
    */
-  async getPartnerProfile() {
+  async getPartnerProfile(): Promise<UserProfile | null> {
     try {
       const profile = await this.getCurrentProfile();
       if (!profile || !profile.partnerId) return null;
       
       return this.getProfileById(profile.partnerId);
-    } catch (error: any) {
-      console.error('Error getting partner profile:', error.message);
+    } catch (error: unknown) {
+      console.error("Error getting partner profile", error);
       return null;
     }
   }

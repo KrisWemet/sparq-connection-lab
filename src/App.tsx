@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { clearCache } from "@/integrations/supabase/client";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -47,6 +48,9 @@ const queryClient = new QueryClient({
 });
 
 export default function App() {
+  useEffect(() => {
+    //clearCache();
+  }, []);
   console.log("App component rendering");
 
   return (
@@ -63,6 +67,7 @@ export default function App() {
                     <Route path="/" element={<Index />} />
                     <Route path="/test" element={<TestPage />} />
                     <Route path="/auth" element={<Auth />} />
+                    <Route path="/signup" element={<Auth />} />
                     <Route path="/onboarding" element={
                       <ProtectedRoute>
                         <Onboarding />

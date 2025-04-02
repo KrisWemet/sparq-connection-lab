@@ -13,7 +13,7 @@ export interface SignUpData extends AuthCredentials {
 // User profile types
 export interface UserProfile {
   id: string;
-  fullName: string;
+  username: string;
   email: string;
   avatarUrl?: string;
   gender?: string;
@@ -138,7 +138,7 @@ export function transformProfile(data: any): UserProfile {
   // Create a profile with all default values, only using what we know exists in the database
   const profile: UserProfile = {
     id: data.id,
-    fullName: data.full_name || '', // Corrected to use full_name from schema
+    username: data.username || '', // Corrected to use username from schema
     email: data.email || '',
     avatarUrl: null, // Default value
     gender: 'prefer-not-to-say', // Default value

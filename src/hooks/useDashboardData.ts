@@ -54,6 +54,7 @@ export const useDashboardData = (): UseDashboardDataReturn => {
 
     } catch (err) {
       console.error("Failed to fetch dashboard data:", err);
+      console.log("Error caught:", err);
       // Set the error state with the actual error object
       setError(err instanceof Error ? err : new Error('An unknown error occurred'));
       // Optionally, use toast notifications here if desired, but keep hook logic clean

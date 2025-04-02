@@ -23,6 +23,7 @@ ALTER TABLE auth.users ENABLE ROW LEVEL SECURITY;
 CREATE TABLE public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   full_name TEXT NOT NULL,
+  username TEXT UNIQUE,
   email TEXT NOT NULL UNIQUE,
   gender public.gender DEFAULT 'prefer-not-to-say',
   relationship_type public.relationship_type DEFAULT 'monogamous',
@@ -154,6 +155,22 @@ CREATE TABLE public.daily_question_responses (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
   UNIQUE(user_id, question_id, created_at::date)
 );
+
+ALTER TABLE public.daily_question_responses ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own daily question responses" ON public.daily_question_responses FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert their own daily question responses" ON public.daily_question_responses FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update their own daily question responses" ON public.daily_question_responses FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete their own daily question responses" ON public.daily_question_responses FOR DELETE USING (auth.uid() = user_id);
+
+ALTER TABLE public.daily_question_responses ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE DEFAULT now();
+
+CREATE TRIGGER set_updated_at_daily_question_responses
+BEFORE UPDATE ON public.daily_question_responses
+FOR EACH ROW EXECUTE FUNCTION public.trigger_set_updated_at();
 
 -- Date ideas table
 CREATE TABLE public.date_ideas (
@@ -371,6 +388,4 @@ VALUES
   ('enable_premium_features', 'true', 'Enable premium features for subscribers'),
   ('enable_user_registration', 'true', 'Allow new users to register'),
   ('enable_partner_invites', 'true', 'Allow users to invite partners'),
-  ('maintenance_mode', 'false', 'Put the application in maintenance mode'),
-  ('debug_mode', 'false', 'Enable detailed error logging'),
-  ('system_announcement', '{"enabled": false, "message": "", "level": "info"}', 'System-wide announcement message');
+  ('maintenance_mode', 'false

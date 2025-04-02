@@ -20,7 +20,7 @@ export class GoalService extends BaseService {
 
       // Cast table name to 'any' as types might be outdated
       let query = this.supabase
-        .from('goals' as any)
+        .from('goals')
         .select('*');
 
       // Build the OR condition
@@ -117,7 +117,7 @@ await this.logActivity(user.id, 'goal_created', {
 
       // Assuming a 'goal_milestones' table exists
       const { error } = await this.supabase
-        .from('goal_milestones')
+        .from('goal_milestones' as any)
         .update({ is_completed: isCompleted, updated_at: new Date().toISOString() })
         .eq('id', milestoneId)
         // Add authorization check if needed, potentially joining with goals table
@@ -148,7 +148,7 @@ await this.logActivity(user.id, 'goal_created', {
        }));
 
        const { data, error } = await this.supabase
-         .from('goal_milestones')
+         .from('goal_milestones' as any)
          .insert(milestoneRecords)
          .select();
 

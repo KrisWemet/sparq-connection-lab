@@ -109,6 +109,7 @@ export default function Auth() {
     try {
       await signIn(values.email, values.password);
       const redirectTo = sessionStorage.getItem("redirectUrl") || "/dashboard";
+      console.log("Login redirecting to:", redirectTo); // Add console log
       sessionStorage.removeItem("redirectUrl");
       navigate(redirectTo);
     } catch (err) {
@@ -124,14 +125,19 @@ export default function Auth() {
     setError("");
     try {
       await signUp(
-        values.email, 
+        values.email,
         values.password,
         values.fullName || ""
       );
+      console.log("Signup redirecting to: /onboarding"); // Add console log
       navigate("/onboarding");
-    } catch (err) {
+    } catch (err: any) {
       console.error("Signup error:", err);
-      setError(err instanceof Error ? err.message : "Failed to sign up. Please try again.");
+      if (err?.message === "User already registered") {
+        setError("This email is already registered. Please use a different email or sign in.");
+      } else {
+        setError(err instanceof Error ? err.message : "Failed to sign up. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }

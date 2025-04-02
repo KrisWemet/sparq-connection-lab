@@ -40,6 +40,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               
             if (profile) {
               setProfile(profile);
+            } else {
+              setProfile(null);
             }
             
             // Check if user is admin
@@ -69,9 +71,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           // Get user profile using the profileService
           try {
             const profile = await profileService.getProfileById(session.user.id);
-              
+            console.log('Profile (useEffect):', profile);
             if (profile) {
               setProfile(profile);
+            } else {
+              console.log('No profile found (useEffect), redirecting to /signup');
+              window.location.href = '/signup';
             }
             
             // Check if user is admin
@@ -80,7 +85,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           } catch (error) {
             console.error('Error fetching profile:', error);
           }
-        } else {
+        }
+        else {
           setUser(null);
           setProfile(null);
           setIsAdmin(false);
@@ -100,12 +106,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signIn = async (email: string, password: string) => {
     try {
       setLoading(true);
+
+      // Check if a user exists with the given email
+      const user = await authService.getUserByEmail(email);
+
+      if (user) {
+        // Check if the user has a profile
+        const profile = await profileService.getProfileById(user.id);
+
+        if (!profile) {
+          console.log('No profile found, redirecting to /signup');
+          window.location.href = '/signup';
+          return;
+        }
+      }
+
+      // Proceed with sign-in
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      
+
       // For development, also set localStorage values
       const isAdminUser = email.includes('admin@');
       localStorage.setItem('userRole', isAdminUser ? 'admin' : 'user');
+
+      return;
     } catch (error: any) {
       console.error('Error signing in:', error.message);
       throw error;
