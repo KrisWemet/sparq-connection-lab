@@ -32,6 +32,7 @@ import JourneyDetails from "./pages/JourneyDetails";
 import JourneyStart from "./pages/JourneyStart";
 import Admin from "./pages/Admin";
 import TestPage from "./pages/TestPage";
+import SharedPlanner from "./pages/SharedPlanner"; // Import the new page
 
 console.log("App component loaded");
 
@@ -47,7 +48,7 @@ const queryClient = new QueryClient({
 
 export default function App() {
   console.log("App component rendering");
-  
+
   return (
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
@@ -67,7 +68,7 @@ export default function App() {
                         <Onboarding />
                       </ProtectedRoute>
                     } />
-                    
+
                     {/* Protected Routes */}
                     <Route path="/quiz" element={
                       <ProtectedRoute>
@@ -139,14 +140,7 @@ export default function App() {
                         <PathToTogether />
                       </ProtectedRoute>
                     } />
-                    
-                    {/* Admin route */}
-                    <Route path="/admin" element={
-                      <ProtectedRoute adminOnly={true}>
-                        <Admin />
-                      </ProtectedRoute>
-                    } />
-                    
+
                     {/* Path to Together Journey routes */}
                     <Route path="/journey/:journeyId" element={
                       <ProtectedRoute>
@@ -158,7 +152,19 @@ export default function App() {
                         <JourneyStart />
                       </ProtectedRoute>
                     } />
-                    
+                    <Route path="/shared-planner" element={ // Add the new route
+                      <ProtectedRoute>
+                        <SharedPlanner />
+                      </ProtectedRoute>
+                    } />
+
+                    {/* Admin route */}
+                    <Route path="/admin" element={
+                      <ProtectedRoute adminOnly={true}>
+                        <Admin />
+                      </ProtectedRoute>
+                    } />
+
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>

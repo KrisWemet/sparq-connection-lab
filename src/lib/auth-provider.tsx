@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { authService, UserProfile } from '@/services/supabaseService';
+import { authService, profileService, UserProfile } from '@/services/supabaseService';
 
 interface AuthContextType {
   user: User | null;
@@ -33,16 +33,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (session?.user) {
           setUser(session.user);
           
-          // Get user profile
+          // Get user profile using the profileService
           try {
-            const { data: profile } = await supabase
-              .from('profiles')
-              .select('*')
-              .eq('id', session.user.id)
-              .single();
+            const profile = await authService.getCurrentUser()
+              .then(user => user ? profileService.getProfileById(user.id) : null);
               
             if (profile) {
-              setProfile(profile as UserProfile);
+              setProfile(profile);
             }
             
             // Check if user is admin
@@ -69,16 +66,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (session?.user) {
           setUser(session.user);
           
-          // Get user profile on auth change
+          // Get user profile using the profileService
           try {
-            const { data: profile } = await supabase
-              .from('profiles')
-              .select('*')
-              .eq('id', session.user.id)
-              .single();
+            const profile = await profileService.getProfileById(session.user.id);
               
             if (profile) {
-              setProfile(profile as UserProfile);
+              setProfile(profile);
             }
             
             // Check if user is admin
