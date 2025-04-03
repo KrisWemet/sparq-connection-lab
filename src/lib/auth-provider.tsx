@@ -21,6 +21,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
 
+  // Helper function to force redirect to signup
+  const redirectToSignup = () => {
+    console.log('Forcing redirect to /signup');
+    // Clear any existing user/profile state to prevent race conditions
+    setUser(null);
+    setProfile(null);
+    // Use location.replace instead of window.location.href to force a complete navigation
+    window.location.replace('/signup');
+  };
+
   useEffect(() => {
     // Check for existing session on mount
     const getInitialSession = async () => {
@@ -31,22 +41,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const { data: { session } } = await supabase.auth.getSession();
         
         if (session?.user) {
-          setUser(session.user);
-          
           // Get user profile using the profileService
           try {
             const profile = await authService.getCurrentUser()
               .then(user => user ? profileService.getProfileById(user.id) : null);
               
             if (profile) {
+              setUser(session.user);
               setProfile(profile);
+              
+              // Check if user is admin
+              const adminStatus = await authService.isAdmin();
+              setIsAdmin(adminStatus);
             } else {
-              setProfile(null);
+              console.log('No profile found (initial session), redirecting to /signup');
+              setTimeout(() => {
+                redirectToSignup();
+              }, 100);
             }
-            
-            // Check if user is admin
-            const adminStatus = await authService.isAdmin();
-            setIsAdmin(adminStatus);
           } catch (error) {
             console.error('Error fetching profile:', error);
           }
@@ -66,22 +78,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setLoading(true);
         
         if (session?.user) {
-          setUser(session.user);
-          
+          // Don't set user immediately
           // Get user profile using the profileService
           try {
             const profile = await profileService.getProfileById(session.user.id);
             console.log('Profile (useEffect):', profile);
             if (profile) {
+              // Only set user and profile if profile exists
+              setUser(session.user);
               setProfile(profile);
+              
+              // Check if user is admin
+              const adminStatus = await authService.isAdmin();
+              setIsAdmin(adminStatus);
             } else {
               console.log('No profile found (useEffect), redirecting to /signup');
-              window.location.href = '/signup';
+              setTimeout(() => {
+                redirectToSignup();
+              }, 100);
             }
-            
-            // Check if user is admin
-            const adminStatus = await authService.isAdmin();
-            setIsAdmin(adminStatus);
           } catch (error) {
             console.error('Error fetching profile:', error);
           }
@@ -106,28 +121,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signIn = async (email: string, password: string) => {
     try {
       setLoading(true);
-
-      // Check if a user exists with the given email
-      const user = await authService.getUserByEmail(email);
-
-      if (user) {
-        // Check if the user has a profile
-        const profile = await profileService.getProfileById(user.id);
-
-        if (!profile) {
-          console.log('No profile found, redirecting to /signup');
-          window.location.href = '/signup';
-          return;
-        }
-      }
+      console.log('Starting sign in process...');
 
       // Proceed with sign-in
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        console.error('Sign in failed:', error);
+        throw error;
+      }
 
-      // For development, also set localStorage values
-      const isAdminUser = email.includes('admin@');
-      localStorage.setItem('userRole', isAdminUser ? 'admin' : 'user');
+      console.log('Sign in successful, checking for profile...');
+
+      // Check if the user has a profile
+      if (data.user) {
+        // For development, set localStorage values
+        const isAdminUser = email.includes('admin@');
+        localStorage.setItem('userRole', isAdminUser ? 'admin' : 'user');
+
+        const profile = await profileService.getProfileById(data.user.id);
+        console.log('Profile check result:', profile ? 'Profile found' : 'No profile found');
+        
+        if (!profile) {
+          // No profile found, redirect to signup
+          console.log('No profile found during sign in, redirecting to /signup');
+          // Clear any user data to prevent the Auth component from redirecting elsewhere
+          setTimeout(() => {
+            redirectToSignup();
+          }, 100);
+          return;
+        }
+
+        console.log('Profile exists, setting user state');
+        // Only set the user state if we have a profile
+        setProfile(profile);
+        setUser(data.user);
+        
+        // Update admin status
+        const adminStatus = await authService.isAdmin();
+        setIsAdmin(adminStatus);
+      }
 
       return;
     } catch (error: any) {
@@ -148,19 +180,145 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   ) => {
     try {
       setLoading(true);
+      console.log('Starting signup process for:', email);
+
+      let userId = null;
+      let isNewUser = false;
       
-      await authService.signUp({
-        email,
-        password,
-        fullName,
-        gender: gender as any,
-        relationshipType: relationshipType as any
-      });
+      // First, try to authenticate with given credentials 
+      console.log('Attempting to sign in to check if user exists...');
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       
-      // For development, also set localStorage values
-      const isAdminUser = email.includes('admin@');
-      localStorage.setItem('userRole', isAdminUser ? 'admin' : 'user');
+      if (!error && data.user) {
+        // User exists, we'll create a profile
+        userId = data.user.id;
+        console.log('User exists with id:', userId);
+      } else {
+        // Create new user
+        console.log('Creating new user account...');
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              full_name: fullName,
+            }
+          }
+        });
+        
+        if (authError) {
+          console.error('Error during auth signup:', authError);
+          
+          // If user already exists but wrong password
+          if (authError.message.includes('already registered')) {
+            throw new Error('This email is already registered. Please sign in with correct password or use the password reset feature.');
+          }
+          
+          throw authError;
+        }
+        
+        if (authData?.user) {
+          userId = authData.user.id;
+          isNewUser = true;
+          // Set user state immediately to allow navigation
+          setUser(authData.user);
+          console.log('New user created with id:', userId);
+        } else {
+          console.error('No user data returned from signup');
+          throw new Error('Account creation failed');
+        }
+      }
+      
+      // At this point, we have a userId, so we can create a profile
+      if (userId) {
+        try {
+          console.log('Creating profile for user ID:', userId);
+          
+          // Create profile with all possible field names
+          const profileData: any = {
+            id: userId,
+            email: email,
+            full_name: fullName,
+            name: fullName,
+            username: fullName.toLowerCase().replace(/\s+/g, '.'),
+            gender: gender,
+            relationship_type: relationshipType
+          };
+          
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .insert(profileData);
+            
+          if (profileError) {
+            console.error('Error creating profile:', profileError);
+            // Continue anyway - we'll allow the onboarding to proceed
+          } else {
+            console.log('Profile created successfully');
+          }
+          
+          // Try to create user role
+          try {
+            const { error: roleError } = await supabase
+              .from('user_roles')
+              .insert({
+                user_id: userId,
+                role: 'user'
+              });
+              
+            if (roleError) {
+              console.error('Error creating user role:', roleError);
+            } else {
+              console.log('User role created successfully');
+            }
+          } catch (roleErr) {
+            console.error('Error in role creation:', roleErr);
+          }
+        } catch (profileErr) {
+          console.error('Error in profile creation process:', profileErr);
+          // We'll continue anyway - don't block the flow
+        }
+        
+        // For new users, we need to set the user state
+        if (isNewUser) {
+          // We already set the user state above for new users
+          console.log('New user created, profile process attempted');
+        } else {
+          // For existing users, set the user state
+          setUser(data.user);
+          console.log('Existing user, profile process attempted');
+        }
+        
+        // We'll set a minimal profile to allow navigation even if DB creation failed
+        const minimalProfile: UserProfile = {
+          id: userId,
+          username: fullName.toLowerCase().replace(/\s+/g, '.'),
+          email: email,
+          gender: gender as any,
+          relationshipType: relationshipType as any,
+          subscriptionTier: 'free',
+          isOnboarded: false,
+          lastActive: new Date()
+        };
+        
+        setProfile(minimalProfile);
+        console.log('Setting minimal profile to allow navigation');
+        
+        // Set localStorage values for development
+        const isAdminUser = email.includes('admin@');
+        localStorage.setItem('userRole', isAdminUser ? 'admin' : 'user');
+        
+        console.log('Signup process completed, returning to caller');
+        return;
+      }
+      
+      throw new Error('Failed to create or identify user');
     } catch (error: any) {
+      // Special handling for "User already registered" error
+      if (error.message === 'User already registered' || error.message?.includes('already registered')) {
+        console.log('User exists in auth but password may be wrong. Try password reset.');
+        throw new Error('This email is already registered. Please use the password reset feature if you cannot remember your password.');
+      }
+      
       console.error('Error signing up:', error.message);
       throw error;
     } finally {

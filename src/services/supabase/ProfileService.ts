@@ -48,21 +48,52 @@ export class ProfileService extends BaseService {
   /**
    * Get a user's profile by ID
    */
-  async getProfileById(userId: string): Promise<UserProfile | null> {
+  async getProfileById(userId: string, retryCount = 0): Promise<UserProfile | null> {
     try {
-      // Use direct query with absolute minimum fields to avoid errors
-      // Only select the most basic columns that must exist
-      const { data, error } = await this.supabase
+      console.log('Fetching profile for user ID:', userId);
+      
+      // First, check what columns are available in the profiles table
+      // This makes our code resilient to schema changes
+      const { data: profileData, error } = await this.supabase
         .from('profiles')
-        .select('id, email')
+        .select('*')
         .eq('id', userId)
         .single();
         
-      if (error) throw error;
+      if (error) {
+        if (error.code === 'PGRST116') {
+          // Record not found
+          console.log('No profile found for user ID:', userId);
+          
+          // Retry up to 3 times with exponential backoff if this is a new account
+          if (retryCount < 3) {
+            console.log(`Retrying profile fetch (attempt ${retryCount + 1} of 3)...`);
+            const delay = 500 * Math.pow(2, retryCount);
+            await new Promise(resolve => setTimeout(resolve, delay));
+            return this.getProfileById(userId, retryCount + 1);
+          }
+          
+          return null;
+        }
+        throw error;
+      }
       
-      return transformProfile(data);
+      if (!profileData) {
+        console.log('No profile data returned for user ID:', userId);
+        return null;
+      }
+      
+      console.log('Profile data found:', profileData);
+      return transformProfile(profileData);
     } catch (error: unknown) {
       console.error("Error getting profile by ID", error);
+      // Retry on errors if this isn't the last retry
+      if (retryCount < 2) {
+        console.log(`Retrying profile fetch after error (attempt ${retryCount + 1} of 3)...`);
+        const delay = 500 * Math.pow(2, retryCount);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        return this.getProfileById(userId, retryCount + 1);
+      }
       return null;
     }
   }

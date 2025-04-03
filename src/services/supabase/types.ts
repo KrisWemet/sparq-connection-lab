@@ -135,22 +135,27 @@ export interface UserStats {
 
 // Helper functions to transform database records to frontend models
 export function transformProfile(data: any): UserProfile {
-  // Create a profile with all default values, only using what we know exists in the database
+  if (!data) return null;
+  
+  console.log('Transforming profile data:', data);
+  
+  // Create a profile with all default values, only using what exists in the data
   const profile: UserProfile = {
-    id: data.id,
-    username: data.username || '', // Corrected to use username from schema
+    id: data.id || '',
+    username: data.username || data.name || '',
     email: data.email || '',
-    avatarUrl: null, // Default value
-    gender: 'prefer-not-to-say', // Default value
-    relationshipType: 'monogamous', // Default value
-    partnerId: null, // Default value
-    anniversaryDate: null, // Default value
-    subscriptionTier: 'free', // Default value
-    subscriptionExpiry: undefined, // Default value
-    isOnboarded: true, // Default value
-    lastActive: new Date() // Default to current date
+    avatarUrl: data.avatar_url || null,
+    gender: data.gender || 'prefer-not-to-say',
+    relationshipType: data.relationship_type || data.relationshipType || 'monogamous',
+    partnerId: data.partner_id || data.partnerId || null,
+    anniversaryDate: data.anniversary_date || data.anniversaryDate || null,
+    subscriptionTier: data.subscription_tier || data.subscriptionTier || 'free',
+    subscriptionExpiry: data.subscription_expiry ? new Date(data.subscription_expiry) : undefined,
+    isOnboarded: Boolean(data.is_onboarded ?? data.isOnboarded ?? true),
+    lastActive: data.last_active ? new Date(data.last_active) : new Date()
   };
   
+  console.log('Transformed profile:', profile);
   return profile;
 }
 

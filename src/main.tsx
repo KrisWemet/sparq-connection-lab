@@ -1,7 +1,23 @@
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import SimpleTest from './SimpleTest.tsx'  // Keep this for reference
 import './index.css'
+import { Toaster } from './components/ui/toaster.tsx'
+import { Toaster as SonnerToaster } from 'sonner'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { AuthProvider } from './lib/auth-provider.tsx'
+
+// PWA feature detection and initialization
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').then(registration => {
+      console.log('Service Worker registered with scope:', registration.scope);
+    }).catch(error => {
+      console.error('Service Worker registration failed:', error);
+    });
+  });
+}
 
 console.log("Application starting...");
 
@@ -36,7 +52,11 @@ if (rootElement) {
     // Try rendering the App component
     try {
       console.log("About to render App component...");
-      root.render(<App />);
+      root.render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      );
       console.log("App rendered successfully");
     } catch (renderError) {
       console.error("Error rendering App component:", renderError);

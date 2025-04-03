@@ -27,6 +27,8 @@ export class AuthService extends BaseService {
     const { email, password, fullName, gender, relationshipType } = signUpData;
     
     try {
+      console.log('AuthService.signUp: Starting signup for', email);
+      
       // Create the user in Supabase Auth
       const { data: authData, error: authError } = await this.supabase.auth.signUp({
         email,
@@ -38,7 +40,12 @@ export class AuthService extends BaseService {
         }
       });
       
-      if (authError) throw authError;
+      if (authError) {
+        console.error('AuthService.signUp: Auth signup error:', authError);
+        throw authError;
+      }
+      
+      console.log('AuthService.signUp: Auth signup successful:', authData?.user?.id);
       
       if (authData?.user) {
         // Create the user profile with only essential fields we're confident exist
@@ -46,17 +53,24 @@ export class AuthService extends BaseService {
         const profileData: any = {
           id: authData.user.id,
           name: fullName,
-          email
+          email,
+          username: fullName.toLowerCase().replace(/\s+/g, '.'),
+          gender: gender || 'prefer-not-to-say',
+          relationship_type: relationshipType || 'monogamous'
         };
         
-        // We'll skip the gender and relationship_type fields since we're not sure
-        // which column names are correct in the database
+        console.log('AuthService.signUp: Creating profile with data:', profileData);
         
         const { error: profileError } = await this.supabase
           .from('profiles')
           .insert(profileData);
           
-        if (profileError) throw profileError;
+        if (profileError) {
+          console.error('AuthService.signUp: Profile creation error:', profileError);
+          throw profileError;
+        }
+        
+        console.log('AuthService.signUp: Profile created successfully');
         
         // Create user role (default to 'user')
         const { error: roleError } = await this.supabase
@@ -66,12 +80,19 @@ export class AuthService extends BaseService {
             role: 'user'
           });
           
-        if (roleError) throw roleError;
+        if (roleError) {
+          console.error('AuthService.signUp: Role creation error:', roleError);
+          throw roleError;
+        }
+        
+        console.log('AuthService.signUp: User role created successfully');
       }
       
+      console.log('AuthService.signUp: Signup process complete');
       return authData;
     } catch (error: any) {
-      return this.handleError(error, 'Failed to create account');
+      console.error('AuthService.signUp: Error in signup process:', error);
+      throw error; // Throw directly instead of using handleError to avoid toast
     }
   }
 

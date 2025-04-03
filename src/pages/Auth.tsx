@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -29,6 +29,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/lib/auth-provider";
+import { supabase } from "@/integrations/supabase/client";
 
 // Define schemas for the forms
 const loginSchema = z.object({
@@ -65,21 +66,54 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function Auth() {
   const navigate = useNavigate();
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, signUp, user, profile } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("login");
   const [error, setError] = useState<string>("");
 
+  // Helper function to clear any existing session
+  const clearExistingSession = async () => {
+    console.log("Clearing any existing auth session");
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error("Error clearing session:", error);
+      } else {
+        console.log("Session cleared successfully");
+      }
+    } catch (err) {
+      console.error("Failed to clear session:", err);
+    }
+  };
+
+  // Set the active tab based on the URL path
+  useEffect(() => {
+    // If we're on /signup, activate the signup tab
+    if (window.location.pathname === '/signup') {
+      setActiveTab("signup");
+    } else if (window.location.search.includes('mode=signup')) {
+      setActiveTab("signup");
+    } else if (window.location.search.includes('mode=login')) {
+      setActiveTab("login");
+    }
+    console.log("Auth page loaded with tab:", window.location.pathname === '/signup' ? 'signup' : activeTab);
+  }, []);
+  
   // Check if user is already authenticated
   useEffect(() => {
-    if (user) {
+    // Only redirect if both user and profile exist
+    if (user && profile) {
+      console.log("Auth useEffect: User and profile exist, redirecting to dashboard");
       const redirectUrl = sessionStorage.getItem('redirectUrl') || '/dashboard';
       navigate(redirectUrl);
       sessionStorage.removeItem('redirectUrl');
+    } else if (user && !profile) {
+      console.log("Auth useEffect: User exists but no profile, staying on signup page");
+      setActiveTab("signup");
     }
-  }, [user, navigate]);
+  }, [user, profile, navigate]);
 
   // Login form
   const loginForm = useForm<LoginFormValues>({
@@ -107,11 +141,19 @@ export default function Auth() {
     setIsLoading(true);
     setError("");
     try {
+      console.log("Beginning sign in...");
       await signIn(values.email, values.password);
-      const redirectTo = sessionStorage.getItem("redirectUrl") || "/dashboard";
-      console.log("Login redirecting to:", redirectTo); // Add console log
-      sessionStorage.removeItem("redirectUrl");
-      navigate(redirectTo);
+      console.log("Sign in completed, current pathname:", window.location.pathname);
+      
+      // The auth provider will handle navigation if there's no profile
+      // Only navigate programmatically if we have a profile
+      if (window.location.pathname.includes('/auth') || window.location.pathname.includes('/login')) {
+        console.log("Still on auth page, profile likely exists, redirecting...");
+        const redirectTo = sessionStorage.getItem("redirectUrl") || "/dashboard";
+        console.log("Redirecting to:", redirectTo);
+        sessionStorage.removeItem("redirectUrl");
+        navigate(redirectTo);
+      }
     } catch (err) {
       console.error("Login error:", err);
       setError(err instanceof Error ? err.message : "Failed to sign in. Please try again.");
@@ -120,25 +162,206 @@ export default function Auth() {
     }
   };
 
+  // Direct signup logic for better error handling
   const onSignupSubmit = async (values: z.infer<typeof signupSchema>) => {
+    console.log("Starting direct signup with values:", values);
     setIsLoading(true);
     setError("");
+
     try {
-      await signUp(
-        values.email,
-        values.password,
-        values.fullName || ""
-      );
-      console.log("Signup redirecting to: /onboarding"); // Add console log
-      navigate("/onboarding");
-    } catch (err: any) {
-      console.error("Signup error:", err);
-      if (err?.message === "User already registered") {
-        setError("This email is already registered. Please use a different email or sign in.");
+      // Clear any existing session first
+      await clearExistingSession();
+      
+      // First check if we can find the email in the profiles table
+      console.log("Checking if email exists in profiles table:", values.email);
+      const { data: existingProfiles, error: profileCheckError } = await supabase
+        .from('profiles')
+        .select('id, email')
+        .eq('email', values.email);
+        
+      if (profileCheckError) {
+        console.error("Error checking profiles:", profileCheckError);
       } else {
-        setError(err instanceof Error ? err.message : "Failed to sign up. Please try again.");
+        console.log("Profile check results:", existingProfiles);
+        if (existingProfiles && existingProfiles.length > 0) {
+          console.log("Email found in profiles table");
+        } else {
+          console.log("Email NOT found in profiles table");
+        }
       }
-    } finally {
+      
+      console.log("Attempting direct signup with Supabase...");
+      // Try signup first
+      const { data, error } = await supabase.auth.signUp({
+        email: values.email,
+        password: values.password,
+      });
+
+      if (error) {
+        console.log("Signup error:", error);
+        // If user already exists, try to sign in instead
+        if (error.message.includes("already registered") || error.message.includes("already exists")) {
+          console.log("User already exists, trying to sign in instead...");
+          
+          // Save email for onboarding if needed
+          localStorage.setItem('user_email', values.email);
+          
+          // EMERGENCY FIX: Force delete user if "force_new_account" flag is set
+          const forceNewAccount = localStorage.getItem('force_new_account') === 'true';
+          if (forceNewAccount) {
+            console.log("EMERGENCY MODE: Attempting to bypass existing account");
+            localStorage.removeItem('force_new_account');
+            
+            // Instead of deleting, try to sign in and force create a new profile
+            try {
+              // Try to sign in with provided credentials
+              const { data: emergencySignIn, error: emergencySignInError } = await supabase.auth.signInWithPassword({
+                email: values.email,
+                password: values.password,
+              });
+              
+              if (emergencySignInError) {
+                console.error("Emergency sign-in failed:", emergencySignInError);
+                toast.error("Could not sign in with provided credentials. Try a different password or contact support.");
+                setIsLoading(false);
+                return;
+              }
+              
+              if (emergencySignIn?.user) {
+                console.log("Emergency sign-in successful, creating/updating profile");
+                
+                // Ensure relationship_type is compatible with database schema
+                let relationshipType = values.relationshipType;
+                if (relationshipType === "open") {
+                  relationshipType = "polyamorous";
+                }
+                
+                // Force update or create profile
+                const profileData = {
+                  id: emergencySignIn.user.id,
+                  email: values.email,
+                  full_name: values.fullName,
+                  name: values.fullName,
+                  username: values.fullName.toLowerCase().replace(/\s+/g, '.'),
+                  gender: values.gender,
+                  relationship_type: relationshipType,
+                  is_onboarded: false,
+                  updated_at: new Date().toISOString()
+                };
+                
+                // Try upsert - insert if not exists, update if exists
+                const { error: upsertError } = await supabase
+                  .from('profiles')
+                  .upsert(profileData, { onConflict: 'id' });
+                  
+                if (upsertError) {
+                  console.error("Failed to upsert profile:", upsertError);
+                  toast.error("Failed to create profile. Please try again.");
+                  setIsLoading(false);
+                  return;
+                } else {
+                  console.log("Emergency profile upsert successful");
+                }
+                
+                // Continue to onboarding
+                localStorage.setItem('just_signed_up', 'true');
+                localStorage.setItem('user_email', values.email);
+                navigate("/onboarding");
+                return;
+              }
+            } catch (emergencyError) {
+              console.error("Emergency process failed:", emergencyError);
+              toast.error("Emergency account creation failed. Please try again later.");
+              setIsLoading(false);
+              return;
+            }
+          }
+          
+          // Regular flow: Try to sign in directly
+          const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+            email: values.email,
+            password: values.password,
+          });
+
+          if (signInError) {
+            console.log("Sign in error:", signInError);
+            toast.error("Invalid credentials. Please check your email and password.");
+            setIsLoading(false);
+            return;
+          }
+
+          // Sign in successful
+          console.log("Sign in successful:", signInData);
+          
+          // Flag that this is a direct sign-in for onboarding component
+          localStorage.setItem('just_signed_up', 'true');
+          localStorage.setItem('user_email', values.email);
+          
+          // Force redirect to onboarding without checking profile
+          console.log("Force redirecting to onboarding...");
+          navigate("/onboarding");
+          return;
+        }
+        
+        toast.error(error.message);
+        setIsLoading(false);
+        return;
+      }
+
+      // New user created successfully
+      console.log("Signup successful, new user created:", data);
+      
+      // For new users, let's create a profile immediately
+      if (data.user) {
+        console.log("Creating profile for new user:", data.user.id);
+        
+        // Ensure relationship_type is compatible with database schema
+        let relationshipType = values.relationshipType;
+        if (relationshipType === "open") {
+          // Map "open" to a valid database type
+          relationshipType = "polyamorous";
+        }
+        
+        const newProfile = {
+          id: data.user.id,
+          email: values.email,
+          full_name: values.fullName,
+          name: values.fullName,
+          username: values.fullName.toLowerCase().replace(/\s+/g, '.'),
+          gender: values.gender,
+          relationship_type: relationshipType,
+          is_onboarded: false
+        };
+        
+        try {
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .insert(newProfile);
+            
+          if (profileError) {
+            console.error("Error creating profile for new user:", profileError);
+            toast.error("Account created but profile setup failed. Please try continuing to onboarding.");
+            // Continue anyway - we'll handle it in onboarding
+          } else {
+            console.log("Profile created successfully for new user");
+            toast.success("Account created successfully!");
+          }
+        } catch (profileInsertError) {
+          console.error("Exception during profile creation:", profileInsertError);
+          toast.error("Account created but profile setup encountered an error.");
+        }
+      }
+      
+      localStorage.setItem('just_signed_up', 'true');
+      localStorage.setItem('user_email', values.email);
+      
+      // Redirect to onboarding using React Router navigate instead of window.location
+      console.log("Redirecting to onboarding page...");
+      navigate("/onboarding");
+      
+    } catch (error) {
+      console.error("Unexpected error during signup:", error);
+      toast.error("An unexpected error occurred. Please try again.");
       setIsLoading(false);
     }
   };

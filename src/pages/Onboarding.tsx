@@ -1,29 +1,115 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth-provider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
-import { Heart, Sparkles, Brain, Users, ArrowRight, Check, ThumbsUp } from "lucide-react";
+import { Heart, Sparkles, Brain, Users, ArrowRight, Check, ThumbsUp, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { profileService, partnerService } from "@/services/supabaseService";
+import { supabase } from "@/integrations/supabase/client";
+
+// Import type for profile
+type Profile = {
+  id: string;
+  email?: string;
+  full_name?: string;
+  name?: string;
+  username?: string;
+  gender?: string;
+  relationship_type?: string;
+  is_onboarded?: boolean;
+};
 
 export default function Onboarding() {
   const navigate = useNavigate();
-  const { user, profile } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [partnerEmail, setPartnerEmail] = useState("");
   const [relationshipStatus, setRelationshipStatus] = useState("dating");
   const [relationshipDuration, setRelationshipDuration] = useState("< 1 year");
   const [relationshipGoals, setRelationshipGoals] = useState<string[]>([]);
+  const [directSignup, setDirectSignup] = useState(false);
+  const [creatingProfile, setCreatingProfile] = useState(false);
   
-  // If user is not logged in, redirect to auth
-  if (!user) {
-    navigate("/auth");
+  // Check if user came directly from signup
+  useEffect(() => {
+    const justSignedUp = localStorage.getItem('just_signed_up');
+    if (justSignedUp === 'true') {
+      setDirectSignup(true);
+      // Clear the flag
+      localStorage.removeItem('just_signed_up');
+    }
+  }, []);
+
+  // Force create profile if needed
+  useEffect(() => {
+    const createProfileIfNeeded = async () => {
+      if (user && !profile && !creatingProfile) {
+        console.log("No profile found for user, creating one now");
+        setCreatingProfile(true);
+        
+        try {
+          // Get email from local storage or user object
+          const email = localStorage.getItem('user_email') || user.email;
+          const fullName = localStorage.getItem('user_fullname') || user.user_metadata?.full_name || 'New User';
+          
+          // Create basic profile
+          const newProfile = {
+            id: user.id,
+            email: email || '',  // Make email required by providing default empty string
+            full_name: fullName || '',  // Make full_name required by providing default empty string
+            name: fullName || '',
+            username: (fullName || '').toLowerCase().replace(/\s+/g, '.'),
+            is_onboarded: false
+          };
+          
+          console.log("Creating basic profile:", newProfile);
+          
+          // Try to insert or update profile
+          const { error } = await supabase
+            .from('profiles')
+            .upsert(newProfile, { onConflict: 'id' });
+            
+          if (error) {
+            console.error("Error creating profile in onboarding:", error);
+            toast.error("Failed to create your profile. Please try again.");
+          } else {
+            console.log("Successfully created profile in onboarding");
+            toast.success("Profile created successfully");
+          }
+        } catch (err) {
+          console.error("Error in profile creation:", err);
+        } finally {
+          setCreatingProfile(false);
+        }
+      } else if (profile) {
+        console.log("Profile already exists:", profile);
+      }
+    };
+    
+    if (!authLoading) {
+      createProfileIfNeeded();
+    }
+  }, [user, profile, authLoading, creatingProfile]);
+  
+  // Show loading state if auth is still loading
+  if (authLoading || creatingProfile) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="mt-4 text-muted-foreground">Setting up your profile...</p>
+      </div>
+    );
+  }
+
+  // Redirect if no user
+  if (!user && !authLoading) {
+    navigate("/login");
     return null;
   }
   
@@ -55,24 +141,61 @@ export default function Onboarding() {
   const handleComplete = async () => {
     setLoading(true);
     try {
-      // Save all the onboarding data
+      // If we have a profile, update it, otherwise try to create one
       if (profile) {
-        await profileService.updateProfile({
-          ...profile,
-          isOnboarded: true,
-          relationshipType: relationshipStatus,
-          // Other fields from onboarding
-        });
-
-        // If partner email was provided, send invitation
-        if (partnerEmail && partnerEmail.trim() !== "") {
-          try {
-            await partnerService.sendInvitation(partnerEmail);
-            toast.success("Invitation sent to your partner!");
-          } catch (partnerError) {
-            console.error("Error sending partner invitation:", partnerError);
-            toast.error("Could not send invitation to your partner. You can try again later.");
+        // Update profile using the profileService method
+        // Note: The method only takes a username parameter right now
+        const username = profile.username || user?.user_metadata?.name?.toLowerCase().replace(/\s+/g, '.') || 'user';
+        await profileService.updateProfile(username);
+        
+        // We'll handle the rest directly with Supabase since the service doesn't support it
+        try {
+          await supabase
+            .from('profiles')
+            .update({
+              is_onboarded: true,
+              relationship_type: relationshipStatus as any
+            })
+            .eq('id', profile.id);
+        } catch (updateError) {
+          console.error("Error updating profile fields:", updateError);
+        }
+      } else {
+        // User has no profile yet (came from direct signup)
+        try {
+          // Create a minimal profile using any type to bypass type checking
+          const newProfile: any = {
+            id: user.id,
+            full_name: user.user_metadata?.full_name || 'User',
+            email: user.email || localStorage.getItem('user_email') || '',
+            username: (user.user_metadata?.full_name || 'User').toLowerCase().replace(/\s+/g, '.'),
+            gender: 'prefer-not-to-say',
+            relationship_type: relationshipStatus,
+            is_onboarded: true
+          };
+          
+          // Try to create the profile directly
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .insert(newProfile);
+            
+          if (profileError) {
+            console.error("Error creating profile during onboarding:", profileError);
+            // Continue anyway - we'll try to update later
           }
+        } catch (profileErr) {
+          console.error("Error creating profile:", profileErr);
+        }
+      }
+
+      // If partner email was provided, send invitation
+      if (partnerEmail && partnerEmail.trim() !== "") {
+        try {
+          await partnerService.sendInvitation(partnerEmail);
+          toast.success("Invitation sent to your partner!");
+        } catch (partnerError) {
+          console.error("Error sending partner invitation:", partnerError);
+          toast.error("Could not send invitation to your partner. You can try again later.");
         }
       }
       

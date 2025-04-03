@@ -11,8 +11,9 @@ interface ProtectedRouteProps {
  * A wrapper component that protects routes from unauthenticated access
  */
 export function ProtectedRoute({ children, adminOnly = false }: ProtectedRouteProps) {
-  const { user, loading, isAdmin } = useAuth();
+  const { user, loading, isAdmin, profile } = useAuth();
   const location = useLocation();
+  const isOnboardingRoute = location.pathname === '/onboarding';
 
   // Show loading state while checking authentication
   if (loading) {
@@ -28,9 +29,22 @@ export function ProtectedRoute({ children, adminOnly = false }: ProtectedRoutePr
 
   // If not authenticated, redirect to login page
   if (!user) {
+    console.log("ProtectedRoute: No user, redirecting to /auth");
     // Save the attempted URL for redirecting after login
     sessionStorage.setItem('redirectUrl', location.pathname);
     return <Navigate to="/auth" replace />;
+  }
+
+  // Special case - if this is the onboarding route, allow access regardless of profile
+  if (isOnboardingRoute) {
+    console.log("ProtectedRoute: Allowing access to onboarding route");
+    return <>{children}</>;
+  }
+  
+  // If user has no profile, redirect to signup unless this is the onboarding route
+  if (user && !profile) {
+    console.log("ProtectedRoute: User exists but no profile, redirecting to /signup");
+    return <Navigate to="/signup" replace />;
   }
 
   // For admin-only routes, check admin status
