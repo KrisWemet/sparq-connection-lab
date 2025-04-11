@@ -1,0 +1,228 @@
+.
+├── index.html
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── public
+│   ├── favicon.ico
+│   ├── lovable-uploads
+│   │   ├── 18894602-f224-4cab-8f07-f6701ec2b7f4.png
+│   │   ├── 4598ee82-a0b5-40df-8e9d-14bc621abde2.png
+│   │   └── c083302d-9da5-416b-a8ac-4e5a4c6285d1.png
+│   ├── manifest.json
+│   ├── og-image.png
+│   ├── placeholder.svg
+│   ├── pwa-192x192.png
+│   ├── pwa-512x512.png
+│   ├── react-test.html
+│   ├── service-worker.js
+│   ├── static-test.html
+│   └── sw.js
+├── short-filelist.txt
+├── src
+│   ├── App.css
+│   ├── App.test.tsx
+│   ├── App.tsx
+│   ├── SimpleApp.tsx
+│   ├── SimpleTest.tsx
+│   ├── components
+│   │   ├── DailyQuestions
+│   │   │   ├── AnswerInput.tsx
+│   │   │   ├── CategoryDetails.tsx
+│   │   │   ├── CategoryList.tsx
+│   │   │   ├── CategoryProgress.tsx
+│   │   │   ├── CategorySelection.tsx
+│   │   │   ├── CelebrationFeedback.tsx
+│   │   │   ├── DailyQuestionView.tsx
+│   │   │   ├── MiniChallengePrompt.tsx
+│   │   │   ├── ProgressIndicator.tsx
+│   │   │   ├── QuestionCard.tsx
+│   │   │   ├── QuestionDisplay.tsx
+│   │   │   └── QuestionSection.tsx
+│   │   ├── DailyView.tsx
+│   │   ├── Goals.tsx
+│   │   ├── ProgressTracker.tsx
+│   │   ├── ReflectionInput.tsx
+│   │   ├── activity-card.tsx
+│   │   ├── bottom-nav.tsx
+│   │   ├── category-card.tsx
+│   │   ├── common
+│   │   │   ├── EmptyState.tsx
+│   │   │   ├── ErrorState.tsx
+│   │   │   └── LoadingState.tsx
+│   │   ├── dashboard
+│   │   │   ├── ActivityListItem.tsx
+│   │   │   ├── ComingSoonSection.tsx
+│   │   │   ├── DailyActivitiesTab.tsx
+│   │   │   ├── DailyPromptCard.tsx
+│   │   │   ├── DashboardHeader.tsx
+│   │   │   ├── EventListItem.tsx
+│   │   │   ├── EventsTab.tsx
+│   │   │   ├── GoalListItem.tsx
+│   │   │   ├── GoalsTab.tsx
+│   │   │   ├── GreetingCard.tsx
+│   │   │   ├── InfoSnippetCard.tsx
+│   │   │   ├── InsightsTab.tsx
+│   │   │   ├── PromoCard.tsx
+│   │   │   └── UpcomingFeatureListItem.tsx
+│   │   ├── journeys
+│   │   │   ├── ActivityComponent.tsx
+│   │   │   ├── ContentBlockRenderer.tsx
+│   │   │   ├── DailyView.tsx
+│   │   │   ├── JourneyCard.tsx
+│   │   │   ├── ProgressTracker.tsx
+│   │   │   ├── ReflectionInput.tsx
+│   │   │   └── ValuesQuestion.tsx
+│   │   ├── messaging
+│   │   │   ├── ConversationList.test.tsx
+│   │   │   ├── ConversationList.tsx
+│   │   │   ├── MessageInput.tsx
+│   │   │   └── MessageView.tsx
+│   │   ├── partner
+│   │   │   └── PendingInvites.tsx
+│   │   ├── quiz
+│   │   │   ├── CompletionView.tsx
+│   │   │   ├── QuestionView.tsx
+│   │   │   └── WeekendActivities.tsx
+│   │   └── ui
+│   │       ├── accordion.tsx
+│   │       ├── alert-dialog.tsx
+│   │       ├── alert.tsx
+│   │       ├── animated-container.tsx
+│   │       ├── aspect-ratio.tsx
+│   │       ├── avatar.tsx
+│   │       ├── badge.tsx
+│   │       ├── breadcrumb.tsx
+│   │       ├── button.tsx
+│   │       ├── calendar.tsx
+│   │       ├── card.tsx
+│   │       ├── carousel.tsx
+│   │       ├── chart.tsx
+│   │       ├── checkbox.tsx
+│   │       ├── collapsible.tsx
+│   │       ├── command.tsx
+│   │       ├── context-menu.tsx
+│   │       ├── date-picker.tsx
+│   │       ├── dialog.tsx
+│   │       ├── drawer.tsx
+│   │       ├── dropdown-menu.tsx
+│   │       ├── form.tsx
+│   │       ├── hover-card.tsx
+│   │       ├── input-otp.tsx
+│   │       ├── input.tsx
+│   │       ├── label.tsx
+│   │       ├── menubar.tsx
+│   │       ├── navigation-menu.tsx
+│   │       ├── pagination.tsx
+│   │       ├── popover.tsx
+│   │       ├── progress.tsx
+│   │       ├── protected-route.tsx
+│   │       ├── radio-group.tsx
+│   │       ├── resizable.tsx
+│   │       ├── scroll-area.tsx
+│   │       ├── select.tsx
+│   │       ├── separator.tsx
+│   │       ├── sheet.tsx
+│   │       ├── sidebar.tsx
+│   │       ├── skeleton.tsx
+│   │       ├── slider.tsx
+│   │       ├── sonner.tsx
+│   │       ├── switch.tsx
+│   │       ├── table.tsx
+│   │       ├── tabs.tsx
+│   │       ├── textarea.tsx
+│   │       ├── theme-toggle.tsx
+│   │       ├── toast.tsx
+│   │       ├── toaster.tsx
+│   │       ├── toggle-group.tsx
+│   │       ├── toggle.tsx
+│   │       ├── tooltip.tsx
+│   │       └── use-toast.ts
+│   ├── data
+│   │   ├── dashboardConstants.tsx
+│   │   ├── questionCategories.ts
+│   │   ├── quizData.ts
+│   │   ├── relationshipContent.ts
+│   │   └── sampleQuestions.ts
+│   ├── hooks
+│   │   ├── use-mobile.tsx
+│   │   ├── use-toast.ts
+│   │   ├── useDailyQuestion.ts
+│   │   ├── useDashboardData.test.ts
+│   │   └── useDashboardData.ts
+│   ├── index.css
+│   ├── integrations
+│   │   └── supabase
+│   │       ├── client.ts
+│   │       └── types.ts
+│   ├── lib
+│   │   ├── api-config.ts
+│   │   ├── auth-provider.tsx
+│   │   ├── auth-utils.ts
+│   │   ├── colorThemes.ts
+│   │   ├── subscription-provider.tsx
+│   │   ├── theme-provider.tsx
+│   │   └── utils.ts
+│   ├── main.tsx
+│   ├── pages
+│   │   ├── AITherapist.tsx
+│   │   ├── Admin.tsx
+│   │   ├── Auth.tsx
+│   │   ├── DailyActivity.tsx
+│   │   ├── DailyQuestions.tsx
+│   │   ├── Dashboard.tsx
+│   │   ├── DateIdeas.tsx
+│   │   ├── Goals.tsx
+│   │   ├── Index.tsx
+│   │   ├── JourneyComplete.tsx
+│   │   ├── JourneyDay.tsx
+│   │   ├── JourneyDetails.tsx
+│   │   ├── JourneyStart.tsx
+│   │   ├── Journeys.tsx
+│   │   ├── Messages.tsx
+│   │   ├── Messaging.tsx
+│   │   ├── NotFound.tsx
+│   │   ├── Onboarding.tsx
+│   │   ├── PartnerInvite.tsx
+│   │   ├── PathToTogether.tsx
+│   │   ├── Profile.tsx
+│   │   ├── Quiz.tsx
+│   │   ├── Reflect.tsx
+│   │   ├── RelationshipType.tsx
+│   │   ├── Settings.tsx
+│   │   ├── SharedPlanner.tsx
+│   │   ├── Subscription.tsx
+│   │   ├── TestDailyQuestion.tsx
+│   │   └── TestPage.tsx
+│   ├── services
+│   │   ├── aiService.ts
+│   │   ├── dataLogger.ts
+│   │   ├── supabase
+│   │   │   ├── ActivityService.ts
+│   │   │   ├── AdminService.ts
+│   │   │   ├── AuthService.ts
+│   │   │   ├── BaseService.ts
+│   │   │   ├── GoalService.ts
+│   │   │   ├── JourneyService.ts
+│   │   │   ├── MessageService.ts
+│   │   │   ├── PartnerService.ts
+│   │   │   ├── ProfileService.ts
+│   │   │   ├── PromptService.ts
+│   │   │   ├── SharedEventService.ts
+│   │   │   ├── index.ts
+│   │   │   └── types.ts
+│   │   └── supabaseService.ts
+│   ├── setupTests.ts
+│   ├── types
+│   │   ├── quiz.ts
+│   │   └── supabase.ts
+│   ├── utils
+│   │   └── dailyQuestionsHelpers.ts
+│   └── vite-env.d.ts
+├── tailwind.config.ts
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
+
+23 directories, 203 files

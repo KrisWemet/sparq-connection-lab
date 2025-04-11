@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#8b5cf6" />
+    <meta name="description" content="Build a stronger, healthier relationship with guided journeys using Lovable" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Lovable" />
+    
+    <!-- PWA support -->
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/logo192.png" />
+    
+    <!-- Cache control -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    
+    <title>Lovable - Relationship Growth App</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Offline fallback -->
+    <div id="offline-message" style="display: none; text-align: center; padding: 2rem; font-family: system-ui, sans-serif;">
+      <h2>You're offline</h2>
+      <p>But don't worry! You can still use most features of Lovable offline.</p>
+    </div>
+    
+    <script>
+      // Check if the user is offline
+      window.addEventListener('online', function() {
+        document.getElementById('offline-message').style.display = 'none';
+      });
+      
+      window.addEventListener('offline', function() {
+        document.getElementById('offline-message').style.display = 'block';
+        setTimeout(() => {
+          document.getElementById('offline-message').style.display = 'none';
+        }, 3000);
+      });
+      
+      // Service Worker Registration and Update Handling
+      if ('serviceWorker' in navigator) {
+        // Check for service worker updates
+        const checkForSWUpdate = async () => {
+          try {
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            for (const registration of registrations) {
+              try {
+                await registration.update();
+              } catch (err) {
+                console.error('Error updating service worker:', err);
+              }
+            }
+          } catch (err) {
+            console.error('Error getting service worker registrations:', err);
+          }
+        };
+        
+        window.addEventListener('load', async () => {
+          try {
+            // Register service worker
+            const registration = await navigator.serviceWorker.register('/service-worker.js');
+            console.log('ServiceWorker registered with scope:', registration.scope);
+            
+            // Check for updates
+            checkForSWUpdate();
+          } catch (err) {
+            console.error('ServiceWorker registration failed:', err);
+          }
+        });
+      }
+    </script>
+    
+    <noscript>
+      <div style="padding: 2rem; text-align: center; font-family: system-ui, sans-serif;">
+        <h1>JavaScript Required</h1>
+        <p>You need to enable JavaScript to run this app.</p>
+      </div>
+    </noscript>
+  </body>
+</html>

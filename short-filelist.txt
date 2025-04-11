@@ -1,0 +1,354 @@
+.
+├── Path to Together
+│   ├── 5_Love_Languages.md
+│   ├── Communication_Mastery_Journey.md
+│   ├── Conflict&Resolution.md
+│   ├── Intimacy&Connection.md
+│   ├── Vision&Values_Journey.md
+│   ├── attachment-healing.md
+│   ├── communication.md
+│   ├── conflict.md
+│   ├── emotional-intelligence.md
+│   ├── emotional_safety_journey.md
+│   ├── fantasy-exploration.md
+│   ├── five-love-languages.md
+│   ├── intimacy.md
+│   ├── love-languages.md
+│   ├── mindful-sexuality.md
+│   ├── power-dynamics.md
+│   ├── relationship-renewal.md
+│   ├── sexual-intimacy.md
+│   ├── trust-rebuilding.md
+│   └── values.md
+├── README.md
+├── components.json
+├── create_messages_table.sql
+├── create_messages_table_fixed.sql
+├── create_partner_invites_table.sql
+├── create_partner_invites_table_fixed.sql
+├── create_profile.sql
+├── create_tables.sql
+├── deno.lock
+├── eslint.config.js
+├── filelist.txt
+├── gemini-web-wrapper
+├── index.html
+├── insert_adventure_fun_questions.sql
+├── insert_adventure_fun_questions_v2.sql
+├── insert_initial_user_progress.sql
+├── insert_initial_user_progress_v2.sql
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── public
+│   ├── favicon.ico
+│   ├── lovable-uploads
+│   │   ├── 18894602-f224-4cab-8f07-f6701ec2b7f4.png
+│   │   ├── 4598ee82-a0b5-40df-8e9d-14bc621abde2.png
+│   │   └── c083302d-9da5-416b-a8ac-4e5a4c6285d1.png
+│   ├── manifest.json
+│   ├── og-image.png
+│   ├── placeholder.svg
+│   ├── pwa-192x192.png
+│   ├── pwa-512x512.png
+│   ├── react-test.html
+│   ├── service-worker.js
+│   ├── static-test.html
+│   └── sw.js
+├── short-filelist.txt
+├── sparq-connection-lab
+│   └── supabase
+│       └── migrations
+│           └── 20240912_test_data.sql
+├── specs
+│   ├── daily_questions
+│   │   ├── Architecture.md
+│   │   ├── CoreLogic.pseudo.md
+│   │   ├── DataStructures.pseudo.md
+│   │   ├── FrontendComponents.pseudo.md
+│   │   └── InitialData.pseudo.md
+│   ├── e2ee_key_management.pseudo.md
+│   ├── e2ee_message_encryption.pseudo.md
+│   ├── image_handling.pseudo.md
+│   ├── journeys
+│   │   ├── PathToTogether.pseudo.md
+│   │   └── implementation
+│   │       └── EmotionalSafety.md
+│   ├── message_status_updates.pseudo.md
+│   ├── messaging
+│   │   ├── ConversationList.pseudo.md
+│   │   ├── MessageInput.pseudo.md
+│   │   └── MessageView.pseudo.md
+│   ├── realtime_handling.pseudo.md
+│   ├── supabase_schema_rls.sql
+│   └── ui_logic.pseudo.md
+├── src
+│   ├── App.css
+│   ├── App.test.tsx
+│   ├── App.tsx
+│   ├── SimpleApp.tsx
+│   ├── SimpleTest.tsx
+│   ├── components
+│   │   ├── DailyQuestions
+│   │   │   ├── AnswerInput.tsx
+│   │   │   ├── CategoryDetails.tsx
+│   │   │   ├── CategoryList.tsx
+│   │   │   ├── CategoryProgress.tsx
+│   │   │   ├── CategorySelection.tsx
+│   │   │   ├── CelebrationFeedback.tsx
+│   │   │   ├── DailyQuestionView.tsx
+│   │   │   ├── MiniChallengePrompt.tsx
+│   │   │   ├── ProgressIndicator.tsx
+│   │   │   ├── QuestionCard.tsx
+│   │   │   ├── QuestionDisplay.tsx
+│   │   │   └── QuestionSection.tsx
+│   │   ├── DailyView.tsx
+│   │   ├── Goals.tsx
+│   │   ├── ProgressTracker.tsx
+│   │   ├── ReflectionInput.tsx
+│   │   ├── activity-card.tsx
+│   │   ├── bottom-nav.tsx
+│   │   ├── category-card.tsx
+│   │   ├── common
+│   │   │   ├── EmptyState.tsx
+│   │   │   ├── ErrorState.tsx
+│   │   │   └── LoadingState.tsx
+│   │   ├── dashboard
+│   │   │   ├── ActivityListItem.tsx
+│   │   │   ├── ComingSoonSection.tsx
+│   │   │   ├── DailyActivitiesTab.tsx
+│   │   │   ├── DailyPromptCard.tsx
+│   │   │   ├── DashboardHeader.tsx
+│   │   │   ├── EventListItem.tsx
+│   │   │   ├── EventsTab.tsx
+│   │   │   ├── GoalListItem.tsx
+│   │   │   ├── GoalsTab.tsx
+│   │   │   ├── GreetingCard.tsx
+│   │   │   ├── InfoSnippetCard.tsx
+│   │   │   ├── InsightsTab.tsx
+│   │   │   ├── PromoCard.tsx
+│   │   │   └── UpcomingFeatureListItem.tsx
+│   │   ├── journeys
+│   │   │   ├── ActivityComponent.tsx
+│   │   │   ├── ContentBlockRenderer.tsx
+│   │   │   ├── DailyView.tsx
+│   │   │   ├── JourneyCard.tsx
+│   │   │   ├── ProgressTracker.tsx
+│   │   │   ├── ReflectionInput.tsx
+│   │   │   └── ValuesQuestion.tsx
+│   │   ├── messaging
+│   │   │   ├── ConversationList.test.tsx
+│   │   │   ├── ConversationList.tsx
+│   │   │   ├── MessageInput.tsx
+│   │   │   └── MessageView.tsx
+│   │   ├── partner
+│   │   │   └── PendingInvites.tsx
+│   │   ├── quiz
+│   │   │   ├── CompletionView.tsx
+│   │   │   ├── QuestionView.tsx
+│   │   │   └── WeekendActivities.tsx
+│   │   └── ui
+│   │       ├── accordion.tsx
+│   │       ├── alert-dialog.tsx
+│   │       ├── alert.tsx
+│   │       ├── animated-container.tsx
+│   │       ├── aspect-ratio.tsx
+│   │       ├── avatar.tsx
+│   │       ├── badge.tsx
+│   │       ├── breadcrumb.tsx
+│   │       ├── button.tsx
+│   │       ├── calendar.tsx
+│   │       ├── card.tsx
+│   │       ├── carousel.tsx
+│   │       ├── chart.tsx
+│   │       ├── checkbox.tsx
+│   │       ├── collapsible.tsx
+│   │       ├── command.tsx
+│   │       ├── context-menu.tsx
+│   │       ├── date-picker.tsx
+│   │       ├── dialog.tsx
+│   │       ├── drawer.tsx
+│   │       ├── dropdown-menu.tsx
+│   │       ├── form.tsx
+│   │       ├── hover-card.tsx
+│   │       ├── input-otp.tsx
+│   │       ├── input.tsx
+│   │       ├── label.tsx
+│   │       ├── menubar.tsx
+│   │       ├── navigation-menu.tsx
+│   │       ├── pagination.tsx
+│   │       ├── popover.tsx
+│   │       ├── progress.tsx
+│   │       ├── protected-route.tsx
+│   │       ├── radio-group.tsx
+│   │       ├── resizable.tsx
+│   │       ├── scroll-area.tsx
+│   │       ├── select.tsx
+│   │       ├── separator.tsx
+│   │       ├── sheet.tsx
+│   │       ├── sidebar.tsx
+│   │       ├── skeleton.tsx
+│   │       ├── slider.tsx
+│   │       ├── sonner.tsx
+│   │       ├── switch.tsx
+│   │       ├── table.tsx
+│   │       ├── tabs.tsx
+│   │       ├── textarea.tsx
+│   │       ├── theme-toggle.tsx
+│   │       ├── toast.tsx
+│   │       ├── toaster.tsx
+│   │       ├── toggle-group.tsx
+│   │       ├── toggle.tsx
+│   │       ├── tooltip.tsx
+│   │       └── use-toast.ts
+│   ├── data
+│   │   ├── dashboardConstants.tsx
+│   │   ├── questionCategories.ts
+│   │   ├── quizData.ts
+│   │   ├── relationshipContent.ts
+│   │   └── sampleQuestions.ts
+│   ├── hooks
+│   │   ├── use-mobile.tsx
+│   │   ├── use-toast.ts
+│   │   ├── useDailyQuestion.ts
+│   │   ├── useDashboardData.test.ts
+│   │   └── useDashboardData.ts
+│   ├── index.css
+│   ├── integrations
+│   │   └── supabase
+│   │       ├── client.ts
+│   │       └── types.ts
+│   ├── lib
+│   │   ├── api-config.ts
+│   │   ├── auth-provider.tsx
+│   │   ├── auth-utils.ts
+│   │   ├── colorThemes.ts
+│   │   ├── subscription-provider.tsx
+│   │   ├── theme-provider.tsx
+│   │   └── utils.ts
+│   ├── main.tsx
+│   ├── pages
+│   │   ├── AITherapist.tsx
+│   │   ├── Admin.tsx
+│   │   ├── Auth.tsx
+│   │   ├── DailyActivity.tsx
+│   │   ├── DailyQuestions.tsx
+│   │   ├── Dashboard.tsx
+│   │   ├── DateIdeas.tsx
+│   │   ├── Goals.tsx
+│   │   ├── Index.tsx
+│   │   ├── JourneyComplete.tsx
+│   │   ├── JourneyDay.tsx
+│   │   ├── JourneyDetails.tsx
+│   │   ├── JourneyStart.tsx
+│   │   ├── Journeys.tsx
+│   │   ├── Messages.tsx
+│   │   ├── Messaging.tsx
+│   │   ├── NotFound.tsx
+│   │   ├── Onboarding.tsx
+│   │   ├── PartnerInvite.tsx
+│   │   ├── PathToTogether.tsx
+│   │   ├── Profile.tsx
+│   │   ├── Quiz.tsx
+│   │   ├── Reflect.tsx
+│   │   ├── RelationshipType.tsx
+│   │   ├── Settings.tsx
+│   │   ├── SharedPlanner.tsx
+│   │   ├── Subscription.tsx
+│   │   ├── TestDailyQuestion.tsx
+│   │   └── TestPage.tsx
+│   ├── services
+│   │   ├── aiService.ts
+│   │   ├── dataLogger.ts
+│   │   ├── supabase
+│   │   │   ├── ActivityService.ts
+│   │   │   ├── AdminService.ts
+│   │   │   ├── AuthService.ts
+│   │   │   ├── BaseService.ts
+│   │   │   ├── GoalService.ts
+│   │   │   ├── JourneyService.ts
+│   │   │   ├── MessageService.ts
+│   │   │   ├── PartnerService.ts
+│   │   │   ├── ProfileService.ts
+│   │   │   ├── PromptService.ts
+│   │   │   ├── SharedEventService.ts
+│   │   │   ├── index.ts
+│   │   │   └── types.ts
+│   │   └── supabaseService.ts
+│   ├── setupTests.ts
+│   ├── types
+│   │   ├── quiz.ts
+│   │   └── supabase.ts
+│   ├── utils
+│   │   └── dailyQuestionsHelpers.ts
+│   └── vite-env.d.ts
+├── supabase
+│   ├── config.toml
+│   ├── functions
+│   │   ├── _shared
+│   │   │   ├── auth.ts
+│   │   │   └── cors.ts
+│   │   ├── accept-partner-invite
+│   │   │   └── index.ts
+│   │   ├── add_username_column
+│   │   │   ├── deno.json
+│   │   │   └── index.ts
+│   │   ├── cancel-partner-invite
+│   │   │   └── index.ts
+│   │   ├── create-partner-invite
+│   │   │   └── index.ts
+│   │   ├── daily-question
+│   │   │   └── index.ts
+│   │   ├── daily-question-answer
+│   │   │   └── index.ts
+│   │   ├── daily-question-pause
+│   │   │   └── index.ts
+│   │   ├── daily-question-resume
+│   │   │   └── index.ts
+│   │   ├── get-my-invites
+│   │   │   └── index.ts
+│   │   ├── journey-detail
+│   │   │   └── index.ts
+│   │   ├── journeys
+│   │   │   └── index.ts
+│   │   ├── me-journey-day-reflection
+│   │   │   └── index.ts
+│   │   ├── me-journey-progress-detail
+│   │   │   └── index.ts
+│   │   ├── me-journey-progress-update
+│   │   │   └── index.ts
+│   │   ├── me-journey-start
+│   │   │   └── index.ts
+│   │   ├── me-journeys-progress
+│   │   │   └── index.ts
+│   │   ├── me-partner-reflections
+│   │   │   └── index.ts
+│   │   ├── me-relationship
+│   │   │   └── index.ts
+│   │   ├── reject-partner-invite
+│   │   │   └── index.ts
+│   │   ├── test-daily-question
+│   │   │   └── index.ts
+│   │   └── tsconfig.json
+│   ├── migrations
+│   │   ├── 20250401140938_apply_full_schema.sql
+│   │   ├── 20250401143000_create_trigger_function.sql
+│   │   ├── 20250401150000_create_daily_questions.sql
+│   │   ├── 20250402000000_enums.sql
+│   │   ├── 20250402100000_daily_question_responses.sql
+│   │   ├── 20250405124300_create_journey_tables.sql
+│   │   ├── 20250405161446_realtime_messaging_schema_rls_broken.sql
+│   │   ├── 20250405161446_realtime_messaging_schema_rls_fixed.sql
+│   │   ├── 20250406125700_create_partner_connection_schema.sql
+│   │   ├── 20250406201906_create_daily_question_tables.sql
+│   │   ├── 20250406202133_seed_adventure_fun_data.sql
+│   │   ├── 20250406212943_add_last_answered_to_progress.sql
+│   │   └── 20250406213037_create_random_challenge_rpc.sql
+│   └── schema.sql
+├── tailwind.config.ts
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
+
+57 directories, 295 files

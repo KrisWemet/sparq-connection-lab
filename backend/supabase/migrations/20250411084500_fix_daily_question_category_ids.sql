@@ -1,0 +1,2 @@
+-- This migration is intentionally empty.
+-- Category insertions are now handled in 20250401150000_create_daily_questions.sql

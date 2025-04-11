@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "esnext", // Use modern ECMAScript features
+    "module": "esnext", // Use ES modules
+    "moduleResolution": "bundler", // Or "nodenext", aligns with modern tooling and URL imports
+    "lib": ["esnext", "dom"], // Include ESNext and DOM features (Deno uses standard web APIs)
+    "types": ["deno"], // Add Deno specific types
+    "strict": true, // Enable strict type checking
+    "esModuleInterop": true, // Allows default imports from commonjs modules
+    "skipLibCheck": true, // Skip type checking of declaration files
+    "forceConsistentCasingInFileNames": true, // Ensure consistent file casing
+    "isolatedModules": true, // Treat each file as a separate module
+    "noEmit": true, // Don't emit output files (Supabase CLI handles bundling/deployment)
+    "allowImportingTsExtensions": true, // Required for Deno-style imports with extensions
+    "jsx": "react-jsx", // Or "preserve" if needed, though less common in backend functions
+  },
+  "include": [
+    "./**/*.ts", // Include all TypeScript files within the functions directory
+    "../_shared/**/*.ts" // Include shared utilities if they exist outside the immediate function folder
+  ],
+  "exclude": [
+    "node_modules" // Exclude node_modules if present
+  ]
+}

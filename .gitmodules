@@ -1,3 +1,6 @@
 [submodule "gemini-web-wrapper"]
 	path = gemini-web-wrapper
 	url = https://github.com/eriksonssilva/gemini-web-wrapper
+[submodule ".roomodes"]
+	path = .roomodes
+	url = https://github.com/KrisWemet/rooworkspace

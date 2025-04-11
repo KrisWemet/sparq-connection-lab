@@ -1,1 +1,0 @@
--- This migration is now empty. The schema is managed in schema.sql.
