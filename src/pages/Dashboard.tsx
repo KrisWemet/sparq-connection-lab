@@ -3,7 +3,7 @@ import { useAuth } from '../lib/auth-context';
 import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Award, Bell, Clock, Heart, Sparkles, Star, 
+  Award, Bell, Clock, Heart, Sparkles, Star, Flame, ArrowRight,
   TrendingUp, Trophy, Users, Calendar, ChevronRight 
 } from 'lucide-react';
 import { MetaphorAnimation } from '../components/MetaphorAnimation';
@@ -381,6 +381,45 @@ export default function Dashboard() {
             />
           </AnimatePresence>
         </div>
+
+        {/* Daily Question CTA - Main Feature */}
+        <section className="mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-white shadow-xl"
+          >
+            <div className="flex flex-col md:flex-row items-center justify-between">
+              <div className="mb-6 md:mb-0 md:mr-8">
+                <h2 className="text-3xl font-bold mb-2">Today's Question</h2>
+                <p className="text-indigo-100 text-lg mb-4">
+                  Build your relationship, one conversation at a time
+                </p>
+                <div className="flex items-center space-x-4 text-sm">
+                  <span className="flex items-center">
+                    <Sparkles className="w-4 h-4 mr-1" />
+                    AI-Personalized
+                  </span>
+                  <span className="flex items-center">
+                    <Clock className="w-4 h-4 mr-1" />
+                    2-3 minutes
+                  </span>
+                  <span className="flex items-center">
+                    <Flame className="w-4 h-4 mr-1" />
+                    {streakCount} day streak
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={() => navigate('/daily-questions')}
+                className="px-8 py-4 bg-white text-indigo-600 rounded-xl font-semibold text-lg hover:bg-indigo-50 transition-colors shadow-lg flex items-center"
+              >
+                Answer Now
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </button>
+            </div>
+          </motion.div>
+        </section>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">

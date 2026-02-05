@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import { useSubscription } from "@/lib/subscription-provider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -366,7 +366,7 @@ const addFuturePacing = (question: string) => {
 };
 
 export default function DailyQuestions() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { subscription, remainingMorningQuestions, remainingEveningQuestions, setRemainingMorningQuestions, setRemainingEveningQuestions } = useSubscription();
   
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -445,7 +445,7 @@ export default function DailyQuestions() {
             description: `Wait until ${nextPeriod} for more questions, or upgrade for unlimited access.`,
             action: {
               label: "Upgrade",
-              onClick: () => navigate("/subscription")
+              onClick: () => router.push("/subscription")
             }
           });
           setCurrentQuestion(null);
@@ -546,7 +546,7 @@ export default function DailyQuestions() {
           description: `Wait until ${nextPeriod} for more questions, or upgrade for unlimited access.`,
           action: {
             label: "Upgrade",
-            onClick: () => navigate("/subscription")
+            onClick: () => router.push("/subscription")
           }
         });
         setCurrentQuestion(null);
@@ -583,7 +583,7 @@ export default function DailyQuestions() {
         description: "Upgrade to access all categories and unlimited questions.",
         action: {
           label: "Upgrade",
-          onClick: () => navigate("/subscription")
+          onClick: () => router.push("/subscription")
         }
       });
       return;
@@ -651,7 +651,7 @@ export default function DailyQuestions() {
             Daily Questions
           </h1>
           <button 
-            onClick={() => navigate("/settings")} 
+            onClick={() => router.push("/settings")} 
             className="p-2 hover:bg-muted rounded-lg transition-colors"
           >
             <Settings className="w-6 h-6" />
@@ -724,7 +724,7 @@ export default function DailyQuestions() {
                   </p>
                   <Button 
                     size="sm" 
-                    onClick={() => navigate("/subscription")}
+                    onClick={() => router.push("/subscription")}
                     className="w-full"
                   >
                     Upgrade for Unlimited Access
@@ -1005,7 +1005,7 @@ export default function DailyQuestions() {
                         type={subscription.isPremium ? "achievement" : "social"}
                         statistic={subscription.isPremium ? "You're part of this success story!" : undefined}
                         tier={subscription.isPremium ? undefined : "premium"}
-                        onClick={subscription.isPremium ? undefined : () => navigate("/subscription")}
+                        onClick={subscription.isPremium ? undefined : () => router.push("/subscription")}
                       />
                     </motion.div>
                   )}
@@ -1028,7 +1028,7 @@ export default function DailyQuestions() {
                           Choose Another Category
                         </Button>
                         {subscription.tier === "free" && (
-                          <Button onClick={() => navigate("/subscription")}>
+                          <Button onClick={() => router.push("/subscription")}>
                             Upgrade for More
                           </Button>
                         )}
@@ -1110,7 +1110,7 @@ export default function DailyQuestions() {
                   </Button>
                   <Button
                     className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600"
-                    onClick={() => navigate("/subscription")}
+                    onClick={() => router.push("/subscription")}
                   >
                     Upgrade Now
                   </Button>
