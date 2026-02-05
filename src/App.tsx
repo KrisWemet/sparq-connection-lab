@@ -19,6 +19,7 @@ import PartnerProfile from "@/pages/PartnerProfile";
 import JoinPartner from "@/pages/JoinPartner";
 import PathToTogether from "@/pages/PathToTogether";
 import Settings from "@/pages/Settings";
+import DailyQuestions from "@/pages/DailyQuestions";
 import NotFound from "@/pages/NotFound";
 
 function App() {
@@ -132,6 +133,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Settings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/daily-questions"
+                element={
+                  <ProtectedRoute>
+                    <DailyQuestions />
                   </ProtectedRoute>
                 }
               />
