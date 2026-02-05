@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useRouter, useParams } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
@@ -10,7 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 export default function JoinPartner() {
   const { inviteCode } = useParams();
-  const navigate = useNavigate();
+  const router = useRouter();
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [invitation, setInvitation] = useState<any>(null);
@@ -63,7 +63,7 @@ export default function JoinPartner() {
     try {
       await partnerService.acceptInvitation(inviteCode);
       toast.success("Invitation accepted successfully!");
-      navigate('/dashboard');
+      router.push('/dashboard');
     } catch (err: any) {
       console.error('Error accepting invitation:', err);
       toast.error(err.message || "Failed to accept invitation");
@@ -95,7 +95,7 @@ export default function JoinPartner() {
               Invalid Invitation
             </h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6">{error}</p>
-            <Button onClick={() => navigate('/')} variant="outline">
+            <Button onClick={() => router.push('/')} variant="outline">
               Return Home
             </Button>
           </div>
@@ -125,10 +125,10 @@ export default function JoinPartner() {
                 Please sign in or create an account to accept this invitation.
               </p>
               <div className="flex flex-col gap-2">
-                <Button onClick={() => navigate('/login')}>
+                <Button onClick={() => router.push('/login')}>
                   Sign In
                 </Button>
-                <Button variant="outline" onClick={() => navigate('/signup')}>
+                <Button variant="outline" onClick={() => router.push('/signup')}>
                   Create Account
                 </Button>
               </div>

@@ -1,11 +1,11 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import { ArrowRight, Flame, Users } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 
 export default function Dashboard() {
   const { user, profile, loading, signOut } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   if (loading) {
     return (
@@ -67,7 +67,7 @@ export default function Dashboard() {
                 </div>
               </div>
               <button
-                onClick={() => navigate("/daily-questions")}
+                onClick={() => router.push("/daily-questions")}
                 className="px-8 py-4 bg-white text-indigo-600 rounded-xl font-semibold text-lg hover:bg-indigo-50 transition-colors shadow-lg flex items-center"
               >
                 Answer Now
@@ -128,7 +128,7 @@ export default function Dashboard() {
               )}
             </div>
             <button
-              onClick={() => navigate("/partner-invite")}
+              onClick={() => router.push("/partner-invite")}
               className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
             >
               Invite Partner

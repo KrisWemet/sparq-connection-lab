@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 
 export default function Auth() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { isAuthLoading } = useAuthRedirect("/dashboard");
   
   return (
@@ -14,7 +14,7 @@ export default function Auth() {
       title="Login to your account"
       description="Enter your credentials to access your account"
       footer={
-        <Button variant="link" onClick={() => navigate("/signup")}>
+        <Button variant="link" onClick={() => router.push("/signup")}>
           Don't have an account? Sign up
         </Button>
       }

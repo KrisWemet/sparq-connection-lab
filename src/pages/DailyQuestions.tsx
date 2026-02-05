@@ -642,7 +642,7 @@ export default function DailyQuestions() {
       <header className="sticky top-0 z-50 bg-background border-b">
         <div className="container max-w-4xl mx-auto px-4 py-3 flex items-center">
           <button 
-            onClick={() => navigate(-1)} 
+            onClick={() => router.push(-1)} 
             className="p-2 hover:bg-muted rounded-lg transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />
