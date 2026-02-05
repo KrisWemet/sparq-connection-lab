@@ -9,16 +9,16 @@ import Auth from "@/pages/Auth";
 import Dashboard from "@/pages/Dashboard";
 import Signup from "@/pages/Signup";
 import Onboarding from "@/pages/Onboarding";
-import Profile from "@/pages/Profile";
-import DateIdeas from "@/pages/DateIdeas";
-import Quiz from "@/pages/Quiz";
-import Journeys from "@/pages/Journeys";
-import JourneyDetails from "@/pages/JourneyDetails";
-import JourneyStart from "@/pages/JourneyStart";
-import PartnerProfile from "@/pages/PartnerProfile";
+// import Profile from "@/pages/Profile";
+// import DateIdeas from "@/pages/DateIdeas";
+// import Quiz from "@/pages/Quiz";
+// import Journeys from "@/pages/Journeys";
+// import JourneyDetails from "@/pages/JourneyDetails";
+// import JourneyStart from "@/pages/JourneyStart";
+// import PartnerProfile from "@/pages/PartnerProfile";
 import JoinPartner from "@/pages/JoinPartner";
-import PathToTogether from "@/pages/PathToTogether";
-import Settings from "@/pages/Settings";
+// import PathToTogether from "@/pages/PathToTogether";
+// import Settings from "@/pages/Settings";
 import DailyQuestions from "@/pages/DailyQuestions";
 import NotFound from "@/pages/NotFound";
 
@@ -56,6 +56,8 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              {/* Non-MVP routes disabled */}
+              {/*
               <Route
                 path="/profile"
                 element={
@@ -72,6 +74,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              */}
               <Route
                 path="/partner-invite"
                 element={
@@ -80,6 +83,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              {/*
               <Route
                 path="/journeys"
                 element={
@@ -136,6 +140,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              */}
               <Route
                 path="/daily-questions"
                 element={
