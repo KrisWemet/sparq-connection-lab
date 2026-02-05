@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -216,7 +216,7 @@ const testimonials = [
 ];
 
 export default function Subscription() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [billingCycle, setBillingCycle] = useState("monthly");
   const [showTestimonial, setShowTestimonial] = useState<string | null>(null);
   const [highlightFeature, setHighlightFeature] = useState<{planId: string, featureIndex: number} | null>(null);
@@ -281,7 +281,7 @@ export default function Subscription() {
       <div className="flex items-center mb-8">
         <Button 
           variant="ghost" 
-          onClick={() => navigate(-1)}
+          onClick={() => router.push(-1)}
           className="mr-2"
         >
           <ChevronLeft className="h-4 w-4 mr-1" />
