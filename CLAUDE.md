@@ -62,17 +62,22 @@ src/
 ├── services/                # Business logic & API layer
 │   ├── supabaseService.ts   # Core Supabase CRUD operations (largest service)
 │   ├── aiService.ts         # OpenAI integration for date ideas (singleton pattern)
+│   ├── personalityInferenceService.ts  # AI-powered personality signal extraction
+│   ├── personalityProfileService.ts    # Profile aggregation & context builder
+│   ├── discoveryQuestionService.ts     # AI question generation for 14-day arc
+│   ├── mirrorNarrativeService.ts       # Day 14 "we see you" narrative generator
 │   ├── journeyService.ts    # Journey progress tracking
 │   ├── journeyContentService.ts
 │   ├── partnerService.ts    # Partner invitation and connection
 │   ├── analyticsService.ts  # Relationship health metrics
-│   ├── memoryService.ts     # Mem0 memory integration
+│   ├── memoryService.ts     # Supabase key-value persistence (used by personality system)
 │   ├── notificationService.ts
 │   ├── onboardingService.ts
 │   └── dataLogger.ts        # Activity logging
 ├── hooks/                   # Custom React hooks
 │   ├── useAuth.ts / .tsx    # Auth state access
 │   ├── useAuthRedirect.ts   # Auth-based navigation
+│   ├── usePersonalityDiscovery.ts  # 14-day personality discovery orchestrator
 │   ├── useDashboardData.ts  # Dashboard data fetching (React Query)
 │   ├── useJourney.ts        # Journey-specific state
 │   ├── useOnboarding.ts     # Onboarding flow state
@@ -91,6 +96,7 @@ src/
 │   ├── auth-utils.ts
 │   └── mem0.ts              # Mem0 client (mock implementation)
 ├── types/                   # TypeScript type definitions
+│   ├── personality.ts       # PersonalityProfile, signals, dimensions, discovery arc
 │   ├── profile.ts           # Profile, UserBadge, DailyActivity
 │   ├── journey.ts           # Journey, JourneyPhase, UserJourneyProgress
 │   ├── quiz.ts              # Question, WeekendActivity, PsychologyModality
@@ -192,6 +198,92 @@ No test framework is currently configured. No test files exist in the repository
 - **Host**: Vercel
 - **Config**: `vercel.json` — framework `vite`, output `dist/`
 - **Security headers**: CSP, X-Frame-Options (DENY), X-Content-Type-Options, X-XSS-Protection configured in `vercel.json`
+
+## Personality Discovery System (NEW)
+
+The core differentiator of Sparq Connection Lab is its **14-day progressive personality discovery** system. Instead of upfront assessments, the app learns who users are through their natural daily responses — then reflects that understanding back to them.
+
+### Architecture Overview
+
+```
+User answers daily question
+        ↓
+PersonalityInferenceService    ← Extracts personality signals via AI
+        ↓
+PersonalityProfileService      ← Aggregates signals into structured profile
+        ↓
+DiscoveryQuestionService       ← Generates next questions based on what's known/unknown
+        ↓
+MirrorNarrativeService         ← Day 14: generates "we see you" reflection
+```
+
+### Key Files
+
+- **Types**: `src/types/personality.ts` — Complete type system for personality dimensions, signals, profiles, discovery phases
+- **Inference**: `src/services/personalityInferenceService.ts` — AI-powered response analysis, extracts personality signals
+- **Profile Builder**: `src/services/personalityProfileService.ts` — Aggregates signals, calculates dimension scores, persists via SupabaseMemory
+- **Question Generator**: `src/services/discoveryQuestionService.ts` — AI-generated personalized questions for each discovery phase
+- **Mirror Narrative**: `src/services/mirrorNarrativeService.ts` — Day 14 warm personal narrative reflecting the user's profile
+- **React Hook**: `src/hooks/usePersonalityDiscovery.ts` — Orchestrates all services, provides state to UI components
+
+### The 7 Personality Dimensions
+
+| Dimension | What It Reveals | Key Modalities |
+|-----------|----------------|----------------|
+| **Attachment Style** | Secure, anxious, avoidant, fearful-avoidant | Attachment Theory, EFT |
+| **Love Language** | Words, quality time, touch, acts, gifts | Love Languages |
+| **Conflict Style** | Pursuer, withdrawer, validator, volatile, avoidant | Gottman Method, NVC |
+| **Emotional Expression** | Vulnerability openness, vocabulary depth, processing style | EFT, Attachment Theory |
+| **Values** | Core values, growth orientation, autonomy-interdependence | Narrative Therapy, CBT, Positive Psych |
+| **Intimacy Profile** | Emotional/physical comfort, novelty preference, progression rate | Mindfulness, Sensate Focus |
+| **Relational Identity** | How they see themselves as a partner, role patterns | Imago Therapy |
+
+### The 14-Day Discovery Arc
+
+| Phase | Days | Focus | Intimacy Level |
+|-------|------|-------|---------------|
+| **Rhythm** | 1-3 | Light, warm — values, positive memories, dreams | 1-2 |
+| **Deepening** | 4-6 | Emotional depth — attachment, needs, what they cherish | 2-3 |
+| **Navigating** | 7-9 | Challenge — conflict styles, love language confirmation, repair | 2-4 |
+| **Layers** | 10-12 | Vulnerability — intimacy preferences, deeper patterns, identity | 3-4 |
+| **Mirror** | 13-14 | Integration — celebrate discoveries, deliver the narrative | 3-5 |
+
+### How to Use in Components
+
+```typescript
+import { usePersonalityDiscovery } from "@/hooks/usePersonalityDiscovery";
+
+function DailyQuestionFlow() {
+  const {
+    discoveryDay, discoveryPhase, dailyQuestions,
+    submitResponse, generateQuestions, mirrorReady,
+    generateMirror, mirrorNarrative, profile
+  } = usePersonalityDiscovery();
+
+  // Generate today's questions
+  useEffect(() => { generateQuestions("AM", 2); }, []);
+
+  // After user answers
+  const handleAnswer = (answer: string) => {
+    submitResponse(question.text, question.modality, question.category, question.intimacyLevel, answer);
+  };
+
+  // Day 14: show the mirror
+  if (mirrorReady) { generateMirror(); }
+}
+```
+
+### ProfileContext for AI Calls
+
+Every AI-powered feature should include the `ProfileContext` in its prompts. Get it via `getProfileContext()` from the hook. This ensures date ideas, journey recommendations, and coaching are all personalized to who the user actually is.
+
+### Design Principles
+
+1. **Discovery, not assessment** — Questions feel like connection exercises, not personality tests
+2. **Strength-framed** — All traits described as natural tendencies, never diagnoses
+3. **Confidence-tracked** — Each dimension has a confidence score; low-confidence findings are flagged as "emerging"
+4. **Sensitivity-aware** — The system tracks topics to approach gently based on attachment/intimacy signals
+5. **Progressive** — Profile keeps refining after Day 14 as the user continues engaging
 
 ## Common Gotchas
 
