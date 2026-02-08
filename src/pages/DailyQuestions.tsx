@@ -1,19 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
 import { useSubscription } from "@/lib/subscription-provider";
+import { usePersonalityDiscovery } from "@/hooks/usePersonalityDiscovery";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
 import { BottomNav } from "@/components/bottom-nav";
 import { AnimatedContainer } from "@/components/ui/animated-container";
-import { 
-  ChevronLeft, 
-  Heart, 
-  MessageCircle, 
-  Bookmark, 
-  Share2, 
+import {
+  ChevronLeft,
+  Heart,
+  MessageCircle,
+  Bookmark,
+  Share2,
   ArrowRight,
   ThumbsUp,
   Sparkles,
@@ -34,12 +36,14 @@ import {
   Settings,
   Sun,
   Moon,
-  Check
+  Check,
+  Eye
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { StreakIndicator } from "@/components/ui/streak-indicator";
 import { SocialProofNotification } from "@/components/ui/social-proof-notification";
+import type { GeneratedQuestion } from "@/types/personality";
 
 // Question categories based on GitHub repository
 const questionCategories = [
@@ -368,7 +372,30 @@ const addFuturePacing = (question: string) => {
 export default function DailyQuestions() {
   const router = useRouter();
   const { subscription, remainingMorningQuestions, remainingEveningQuestions, setRemainingMorningQuestions, setRemainingEveningQuestions } = useSubscription();
-  
+
+  // ─── Personality Discovery System ───────────────────────────────────
+  const {
+    profile: personalityProfile,
+    discoveryDay,
+    discoveryPhase,
+    isAnalyzing,
+    isGenerating,
+    dailyQuestions: discoveryQuestions,
+    mirrorNarrative,
+    mirrorReady,
+    submitResponse: submitDiscoveryResponse,
+    generateQuestions: generateDiscoveryQuestions,
+    generateMirror,
+    dimensionsRevealed,
+    totalDimensions,
+  } = usePersonalityDiscovery();
+
+  const [discoveryMode, setDiscoveryMode] = useState(true);
+  const [activeDiscoveryQuestion, setActiveDiscoveryQuestion] = useState<GeneratedQuestion | null>(null);
+  const [discoveryQueueIndex, setDiscoveryQueueIndex] = useState(0);
+  const [showMirror, setShowMirror] = useState(false);
+
+  // ─── Legacy category-based state ────────────────────────────────────
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [viewingCategoryDetails, setViewingCategoryDetails] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState<any>(null);
@@ -401,10 +428,83 @@ export default function DailyQuestions() {
     return () => clearInterval(intervalId);
   }, []);
   
+  // ─── Discovery: Generate questions on mount / phase change ──────────
+  useEffect(() => {
+    if (discoveryMode && discoveryQuestions.length === 0 && !isGenerating) {
+      const timeSlot: "AM" | "PM" = currentPeriod === "evening" ? "PM" : "AM";
+      generateDiscoveryQuestions(timeSlot, 2);
+    }
+  }, [discoveryMode, discoveryQuestions.length, isGenerating, currentPeriod]);
+
+  // Set first discovery question when they arrive
+  useEffect(() => {
+    if (discoveryQuestions.length > 0 && !activeDiscoveryQuestion) {
+      setActiveDiscoveryQuestion(discoveryQuestions[0]);
+      setDiscoveryQueueIndex(0);
+    }
+  }, [discoveryQuestions, activeDiscoveryQuestion]);
+
+  // Check if mirror is ready (Day 13-14)
+  useEffect(() => {
+    if (mirrorReady && !mirrorNarrative && !showMirror) {
+      generateMirror();
+    }
+  }, [mirrorReady, mirrorNarrative, showMirror]);
+
+  // ─── Discovery: Submit answer and advance ─────────────────────────
+  const handleDiscoverySubmit = useCallback(async () => {
+    if (!userAnswer.trim() || !activeDiscoveryQuestion) {
+      toast.error("Please enter your answer before submitting");
+      return;
+    }
+
+    // Send to personality inference
+    await submitDiscoveryResponse(
+      activeDiscoveryQuestion.text,
+      activeDiscoveryQuestion.modality,
+      activeDiscoveryQuestion.category,
+      activeDiscoveryQuestion.intimacyLevel,
+      userAnswer
+    );
+
+    setCompletedQuestions(prev => [...prev, activeDiscoveryQuestion.id]);
+    toast.success("Response saved — learning more about you!");
+
+    // Show completion animation
+    setShowCompletionAnimation(true);
+    setTimeout(() => {
+      setShowCompletionAnimation(false);
+
+      // Advance to next question in queue or generate more
+      const nextIndex = discoveryQueueIndex + 1;
+      if (nextIndex < discoveryQuestions.length) {
+        setDiscoveryQueueIndex(nextIndex);
+        setActiveDiscoveryQuestion(discoveryQuestions[nextIndex]);
+        setUserAnswer("");
+      } else {
+        // All questions for this session answered
+        setActiveDiscoveryQuestion(null);
+        setUserAnswer("");
+        toast("You're done for now!", {
+          description: `Day ${discoveryDay} of 14 — ${dimensionsRevealed} of ${totalDimensions} dimensions discovered so far.`,
+        });
+      }
+    }, 1500);
+  }, [userAnswer, activeDiscoveryQuestion, discoveryQueueIndex, discoveryQuestions, discoveryDay, dimensionsRevealed, totalDimensions]);
+
+  // ─── Discovery phase display names ────────────────────────────────
+  const phaseNames: Record<string, string> = {
+    rhythm: "Getting to Know Your Rhythm",
+    deepening: "Going a Little Deeper",
+    navigating: "How You Navigate Together",
+    layers: "The Deeper Layers",
+    mirror: "The Mirror Moment",
+  };
+
   // Get remaining questions based on current period
   const getRemainingQuestions = () => {
-    return currentPeriod === "morning" || currentPeriod === "afternoon" 
-      ? remainingMorningQuestions 
+    return currentPeriod === "morning" || currentPeriod === "afternoon"
+      ? remainingMorningQuestions
       : remainingEveningQuestions;
   };
   
@@ -472,9 +572,21 @@ export default function DailyQuestions() {
       toast.error("Please enter your answer before submitting");
       return;
     }
-    
+
     setIsLoading(true);
-    
+
+    // Also feed response to personality discovery system
+    if (currentQuestion) {
+      const categoryObj = questionCategories.find(c => c.id === currentQuestion.category);
+      submitDiscoveryResponse(
+        currentQuestion.text,
+        (categoryObj?.theory || "Positive Psychology") as any,
+        currentQuestion.category,
+        currentQuestion.level || 1,
+        userAnswer
+      ).catch(console.error);
+    }
+
     // Simulate sending answer to backend and getting partner's response
     setTimeout(() => {
       // In a real app, this would come from the database or partner's actual response
@@ -485,7 +597,7 @@ export default function DailyQuestions() {
         "I love learning new things about you, even after all this time together.",
         "Your perspective on this is really valuable to me."
       ];
-      
+
       const randomAnswer = simulatedPartnerAnswers[Math.floor(Math.random() * simulatedPartnerAnswers.length)];
       setPartnerAnswer(randomAnswer);
       setCompletedQuestions([...completedQuestions, currentQuestion.id]);
@@ -661,7 +773,230 @@ export default function DailyQuestions() {
 
       <main className="container max-w-4xl mx-auto px-4 pt-6">
         <AnimatedContainer className="mb-6" variant="fadeIn">
-          {!selectedCategory && (
+          {/* ─── Mirror Narrative Modal (Day 14) ──────────────── */}
+          {showMirror && mirrorNarrative && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="fixed inset-0 flex items-center justify-center bg-black/60 z-50 p-4"
+              onClick={() => setShowMirror(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.9, y: 30 }}
+                animate={{ scale: 1, y: 0 }}
+                className="bg-background rounded-2xl p-6 max-w-lg max-h-[85vh] overflow-y-auto"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-3 bg-primary/10 rounded-full">
+                    <Eye className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold">We See You</h2>
+                    <p className="text-sm text-muted-foreground">Your 14-day discovery reflection</p>
+                  </div>
+                </div>
+
+                {mirrorNarrative.coreInsight && (
+                  <p className="text-primary font-medium italic mb-4 text-center">
+                    "{mirrorNarrative.coreInsight}"
+                  </p>
+                )}
+
+                <div className="prose prose-sm dark:prose-invert mb-6 whitespace-pre-line">
+                  {mirrorNarrative.narrative}
+                </div>
+
+                {mirrorNarrative.dimensionSummaries.length > 0 && (
+                  <div className="space-y-3 mb-6">
+                    <h3 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">What We Discovered</h3>
+                    {mirrorNarrative.dimensionSummaries.map((dim) => (
+                      <div key={dim.dimension} className="bg-muted/50 rounded-lg p-3">
+                        <h4 className="font-medium text-sm">{dim.title}</h4>
+                        <p className="text-sm text-muted-foreground mt-1">{dim.description}</p>
+                        <p className="text-xs text-primary mt-1 italic">{dim.strengthFrame}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {mirrorNarrative.recommendations.length > 0 && (
+                  <div className="mb-4">
+                    <h3 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground mb-2">Recommended Next Steps</h3>
+                    {mirrorNarrative.recommendations.map((rec, i) => (
+                      <Button
+                        key={i}
+                        variant="outline"
+                        className="w-full justify-start mb-2 text-left h-auto py-3"
+                        onClick={() => router.push(`/journeys/${rec.journeyId}`)}
+                      >
+                        <Sparkles className="w-4 h-4 mr-2 text-primary flex-shrink-0" />
+                        <span className="text-sm">{rec.reason}</span>
+                      </Button>
+                    ))}
+                  </div>
+                )}
+
+                <Button className="w-full" onClick={() => setShowMirror(false)}>
+                  Continue Your Journey
+                </Button>
+              </motion.div>
+            </motion.div>
+          )}
+
+          {/* ─── Discovery Mode: AI-generated personalized questions ── */}
+          {discoveryMode && discoveryDay <= 14 && !selectedCategory && (
+            <div className="mb-8">
+              {/* Discovery progress header */}
+              <div className="bg-gradient-to-r from-primary/20 to-primary/10 rounded-lg p-6 mb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    {currentPeriod === "evening" ? (
+                      <Moon className="w-6 h-6 text-indigo-400" />
+                    ) : (
+                      <Sun className="w-6 h-6 text-amber-500" />
+                    )}
+                    <h2 className="text-2xl font-bold">
+                      {getGreeting()}!
+                    </h2>
+                  </div>
+                  <Badge variant="secondary" className="text-xs">
+                    Day {discoveryDay}/14
+                  </Badge>
+                </div>
+
+                <p className="text-sm font-medium text-primary mb-1">
+                  {phaseNames[discoveryPhase] || discoveryPhase}
+                </p>
+                <p className="text-muted-foreground text-sm mb-4">
+                  {discoveryPhase === "rhythm" && "Let's start with what makes you and your relationship special."}
+                  {discoveryPhase === "deepening" && "We're going a little deeper now — into what you need and cherish."}
+                  {discoveryPhase === "navigating" && "Let's explore how you navigate the harder moments together."}
+                  {discoveryPhase === "layers" && "You've built trust over these days. Let's explore the deeper layers."}
+                  {discoveryPhase === "mirror" && "Something beautiful has come into focus. Let's celebrate what we've discovered."}
+                </p>
+
+                {/* Discovery progress bar */}
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span>{dimensionsRevealed} of {totalDimensions} dimensions discovered</span>
+                    <span>{Math.round((discoveryDay / 14) * 100)}%</span>
+                  </div>
+                  <Progress value={(discoveryDay / 14) * 100} className="h-2" />
+                </div>
+
+                {/* Mirror CTA on Day 13-14 */}
+                {mirrorReady && mirrorNarrative && (
+                  <Button
+                    className="w-full mt-4"
+                    onClick={() => setShowMirror(true)}
+                  >
+                    <Eye className="w-4 h-4 mr-2" />
+                    View Your Reflection
+                  </Button>
+                )}
+              </div>
+
+              {/* Discovery question card */}
+              {activeDiscoveryQuestion && (
+                <motion.div
+                  key={activeDiscoveryQuestion.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <Badge variant="outline" className="text-xs">
+                          {activeDiscoveryQuestion.category}
+                        </Badge>
+                        <div className="flex items-center gap-1">
+                          {Array.from({ length: activeDiscoveryQuestion.intimacyLevel }).map((_, i) => (
+                            <Heart key={i} className="w-3 h-3 text-primary fill-primary" />
+                          ))}
+                          {Array.from({ length: 5 - activeDiscoveryQuestion.intimacyLevel }).map((_, i) => (
+                            <Heart key={i} className="w-3 h-3 text-muted-foreground/30" />
+                          ))}
+                        </div>
+                      </div>
+
+                      <h2 className="text-xl font-semibold mb-6">
+                        {activeDiscoveryQuestion.text}
+                      </h2>
+
+                      <Textarea
+                        placeholder="Take your time... share what comes to mind."
+                        className="min-h-[120px]"
+                        value={userAnswer}
+                        onChange={(e) => setUserAnswer(e.target.value)}
+                      />
+
+                      <div className="flex justify-between items-center mt-4">
+                        <p className="text-xs text-muted-foreground">
+                          {isAnalyzing ? "Understanding your response..." : `Question ${discoveryQueueIndex + 1} of ${discoveryQuestions.length}`}
+                        </p>
+                        <Button
+                          onClick={handleDiscoverySubmit}
+                          disabled={isAnalyzing || !userAnswer.trim()}
+                        >
+                          {isAnalyzing ? "Reflecting..." : "Share"}
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
+
+              {/* Loading state for question generation */}
+              {isGenerating && !activeDiscoveryQuestion && (
+                <Card className="text-center p-8">
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    className="inline-block mb-4"
+                  >
+                    <Sparkles className="w-8 h-8 text-primary" />
+                  </motion.div>
+                  <p className="text-muted-foreground">Crafting today's questions just for you...</p>
+                </Card>
+              )}
+
+              {/* Session complete */}
+              {!activeDiscoveryQuestion && !isGenerating && discoveryQuestions.length > 0 && (
+                <Card className="text-center p-6">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="p-3 bg-primary/10 rounded-full">
+                      <Check className="w-6 h-6 text-primary" />
+                    </div>
+                    <h3 className="text-lg font-medium">Today's discovery complete!</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Come back {currentPeriod === "evening" ? "tomorrow morning" : "this evening"} for your next questions.
+                      {discoveryDay < 14 && ` Day ${discoveryDay + 1} will explore ${
+                        discoveryDay < 3 ? "more about your rhythm" :
+                        discoveryDay < 6 ? "deeper emotional territory" :
+                        discoveryDay < 9 ? "how you navigate challenges" :
+                        discoveryDay < 12 ? "your deeper layers" :
+                        "your reflection"
+                      }.`}
+                    </p>
+                  </div>
+                </Card>
+              )}
+
+              {/* Option to browse categories instead */}
+              <button
+                onClick={() => setDiscoveryMode(false)}
+                className="w-full text-center text-sm text-muted-foreground hover:text-foreground mt-4 py-2"
+              >
+                Or browse question categories →
+              </button>
+            </div>
+          )}
+
+          {/* ─── Category Browser (legacy / post-discovery) ──────── */}
+          {(!discoveryMode || discoveryDay > 14) && !selectedCategory && (
             <div className="bg-gradient-to-r from-primary/20 to-primary/10 rounded-lg p-6 mb-8">
               <div className="flex items-center gap-3 mb-3">
                 {currentPeriod === "morning" || currentPeriod === "afternoon" ? (
@@ -676,16 +1011,15 @@ export default function DailyQuestions() {
               <p className="text-muted-foreground mb-4">
                 Daily questions help you discover new dimensions of your relationship through meaningful conversations. Each category focuses on different aspects of your connection.
               </p>
-              <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-amber-500" />
-                <p className="text-sm text-muted-foreground italic">
-                  "The quality of your relationship depends on the quality of your questions." — Esther Perel
-                </p>
-              </div>
+              {discoveryDay <= 14 && (
+                <Button variant="outline" size="sm" onClick={() => setDiscoveryMode(true)}>
+                  ← Back to Discovery Questions
+                </Button>
+              )}
             </div>
           )}
 
-          {!selectedCategory && (
+          {(!discoveryMode || discoveryDay > 14) && !selectedCategory && (
             <>
               {subscription.tier === "free" && (
                 <div className="bg-muted p-4 rounded-lg mb-6">

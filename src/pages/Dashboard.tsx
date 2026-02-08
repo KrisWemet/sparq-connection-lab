@@ -1,7 +1,8 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { ArrowRight, Flame, Users } from "lucide-react";
+import { ArrowRight, Flame, Users, Sparkles, Eye } from "lucide-react";
 import { useAuth } from "@/lib/auth";
+import { usePersonalityDiscovery } from "@/hooks/usePersonalityDiscovery";
 
 export default function Dashboard() {
   const { user, profile, loading, signOut } = useAuth();
@@ -22,11 +23,27 @@ export default function Dashboard() {
     return null;
   }
 
+  const {
+    discoveryDay,
+    discoveryPhase,
+    dimensionsRevealed,
+    totalDimensions,
+    mirrorReady,
+  } = usePersonalityDiscovery();
+
   const streakCount = (profile as any)?.streak_count ?? 0;
   const connectionScore = Math.min(100, 50 + streakCount * 5);
   const displayName =
     profile?.fullName || (profile as any)?.name || user.email?.split("@")[0] || "there";
   const partnerName = profile?.partnerName || (profile as any)?.partner_name;
+
+  const phaseLabels: Record<string, string> = {
+    rhythm: "Getting to Know Your Rhythm",
+    deepening: "Going a Little Deeper",
+    navigating: "How You Navigate Together",
+    layers: "The Deeper Layers",
+    mirror: "The Mirror Moment",
+  };
 
   const handleSignOut = async () => {
     await signOut();
@@ -76,6 +93,54 @@ export default function Dashboard() {
             </div>
           </div>
         </section>
+
+        {/* Personality Discovery Progress */}
+        {discoveryDay <= 14 && (
+          <section className="mb-8">
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-purple-500" />
+                  <h3 className="text-lg font-medium text-gray-800">
+                    Personality Discovery
+                  </h3>
+                </div>
+                <span className="text-sm text-gray-500">Day {discoveryDay} of 14</span>
+              </div>
+              <p className="text-sm text-gray-600 mb-3">
+                {phaseLabels[discoveryPhase] || "Discovery"} — {dimensionsRevealed} of {totalDimensions} dimensions revealed
+              </p>
+              <div className="h-2 bg-gray-200 rounded-full overflow-hidden mb-3">
+                <div
+                  className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-500"
+                  style={{ width: `${(discoveryDay / 14) * 100}%` }}
+                ></div>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-500">
+                  {discoveryPhase === "mirror"
+                    ? "Your reflection is ready!"
+                    : `Next phase: ${
+                        discoveryDay <= 3 ? "Deepening (Day 4)" :
+                        discoveryDay <= 6 ? "Navigating (Day 7)" :
+                        discoveryDay <= 9 ? "Layers (Day 10)" :
+                        "Mirror (Day 13)"
+                      }`
+                  }
+                </span>
+                {mirrorReady && (
+                  <button
+                    onClick={() => router.push("/daily-questions")}
+                    className="flex items-center gap-1 text-sm text-purple-600 hover:text-purple-700 font-medium"
+                  >
+                    <Eye className="w-4 h-4" />
+                    View Reflection
+                  </button>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Core Metrics */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
