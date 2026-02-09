@@ -1,4 +1,5 @@
-import { PsychologyModality } from "./quiz";
+import type { PsychologyModality } from "./quiz";
+import type { IdentityArchetype, RelationshipMode } from "./session";
 
 // ─── Attachment Style ────────────────────────────────────────────────────────
 
@@ -221,6 +222,14 @@ export interface ProfileContext {
   preferredModalities: PsychologyModality[];
   /** Topics/themes to avoid or approach gently */
   sensitivities: string[];
+  /** User's chosen growth identity archetype */
+  identityArchetype?: IdentityArchetype;
+  /** Solo or partner mode */
+  relationshipMode: RelationshipMode;
+  /** Goals from onboarding */
+  onboardingGoals: string[];
+  /** Total sessions completed so far */
+  sessionsCompleted: number;
 }
 
 // ─── Response Analysis Request ──────────────────────────────────────────────
