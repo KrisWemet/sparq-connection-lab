@@ -5,6 +5,7 @@ import { DailySessionService } from "@/services/dailySessionService";
 import { PersonalityInferenceService } from "@/services/personalityInferenceService";
 import { PersonalityProfileService } from "@/services/personalityProfileService";
 import { PHASE_FORMAT_PREFERENCES } from "@/types/session";
+import { useSessionPsychology } from "@/hooks/useSessionPsychology";
 import { SessionGreeting } from "@/components/session/SessionGreeting";
 import { StepIndicator } from "@/components/session/StepIndicator";
 import type { SessionStep } from "@/components/session/StepIndicator";
@@ -66,6 +67,10 @@ export default function DailyQuestions() {
   const relationshipMode = (profile as any)?.relationship_mode || "solo";
   const userName = profile?.full_name || "there";
   const partnerName = profile?.partner_name || undefined;
+
+  // Phase-aware psychology (color schemes, priming)
+  const phase = getPhaseForDay(discoveryDay);
+  const { phaseColors, cssVars } = useSessionPsychology(phase, identityArchetype);
 
   // ─── Generate Session ─────────────────────────────────────────────
 
@@ -259,7 +264,13 @@ export default function DailyQuestions() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div
+      className="min-h-screen pb-24 transition-colors duration-700"
+      style={{
+        ...cssVars,
+        background: `linear-gradient(135deg, ${phaseColors.gradientFrom} 0%, ${phaseColors.gradientTo} 100%)`,
+      }}
+    >
       <main className="container max-w-lg mx-auto px-4 pt-6">
         {/* Loading state */}
         {sessionState === "loading" && (

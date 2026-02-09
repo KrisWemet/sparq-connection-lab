@@ -9,8 +9,8 @@ interface FuturePacingProps {
   description: string;
   timeframes: {
     label: string; // e.g., "1 Month", "6 Months", "1 Year"
-    vision: string; // The future vision text
-    embedCommand?: string; // Optional embedded command
+    vision: string; // The therapeutic visualization text
+    reflectionPrompt?: string; // Transparent reflection invitation
   }[];
   onComplete?: () => void;
 }
@@ -33,29 +33,18 @@ export function FuturePacing({
     if (onComplete) onComplete();
   };
   
-  // Format text with embedded commands (wrapped in *asterisks*)
-  const formatWithEmbeddedCommands = (text: string) => {
+  // Format text with emphasis markers (wrapped in *asterisks*)
+  const formatWithEmphasis = (text: string) => {
     return text.split(/(\*[^*]+\*)/g).map((part, index) => {
       if (part.startsWith('*') && part.endsWith('*')) {
-        // This is an embedded command - style it differently
-        const command = part.slice(1, -1);
+        const emphasized = part.slice(1, -1);
         return (
-          <motion.span 
+          <span
             key={index}
             className="font-medium text-indigo-600"
-            initial={{ opacity: 0.8 }}
-            animate={{ 
-              opacity: [0.8, 1, 0.8],
-              scale: [1, 1.02, 1]
-            }}
-            transition={{ 
-              duration: 3,
-              repeat: Infinity,
-              repeatDelay: 1
-            }}
           >
-            {command}
-          </motion.span>
+            {emphasized}
+          </span>
         );
       }
       return <span key={index}>{part}</span>;
@@ -123,17 +112,17 @@ export function FuturePacing({
                 
                 <div className="min-h-[120px] text-gray-700 leading-relaxed mb-4">
                   <p className="text-sm">
-                    {formatWithEmbeddedCommands(timeframes[activeTimeframe].vision)}
+                    {formatWithEmphasis(timeframes[activeTimeframe].vision)}
                   </p>
-                  
-                  {timeframes[activeTimeframe].embedCommand && (
+
+                  {timeframes[activeTimeframe].reflectionPrompt && (
                     <motion.p
                       className="text-sm font-medium text-indigo-600 mt-3 italic"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 1.5 }}
                     >
-                      {timeframes[activeTimeframe].embedCommand}
+                      {timeframes[activeTimeframe].reflectionPrompt}
                     </motion.p>
                   )}
                 </div>

@@ -379,6 +379,69 @@ Every AI-powered feature should include the `ProfileContext` in its prompts. Get
 4. **Sensitivity-aware** — The system tracks topics to approach gently based on attachment/intimacy signals
 5. **Progressive** — Profile keeps refining after Day 14 as the user continues engaging
 
+## Psychology Framework
+
+The app embeds evidence-based psychology at every layer — not as manipulation, but as transparent therapeutic techniques that help users genuinely rewire patterns. The philosophy is: **the user is always the agent of their own growth.**
+
+Config: `src/config/psychologyFramework.ts`
+
+### Color Psychology (Phase-Aware)
+
+Session backgrounds change based on the user's discovery phase. Each color scheme supports the emotional work of that phase:
+
+| Phase | Colors | Psychology |
+|-------|--------|-----------|
+| **Rhythm** (Days 1-3) | Soft lavender → warm pink | Safety, welcome. Reduces new-user anxiety. |
+| **Deepening** (Days 4-6) | Violet mist → soft indigo | Introspection, invitation to go deeper. |
+| **Navigating** (Days 7-9) | Mint → soft blue | Teal promotes calm and trust during conflict exploration. |
+| **Layers** (Days 10-12) | Soft gold → warm amber | Warmth and vulnerability for intimate exploration. |
+| **Mirror** (Days 13-14) | Soft rose → lavender | Celebration and integration; full-circle feeling. |
+
+Hook: `useSessionPsychology(phase, archetype)` returns `phaseColors`, `cssVars`, `archetypeAccent`.
+
+### Therapeutic Language Patterns
+
+Used in AI prompts throughout session generation (not visible as UI, but shapes all generated content):
+
+- **Presuppositions** (SFBT): "When you notice..." (assumes positive change is happening)
+- **Validation-first** (Gottman/DBT): Always acknowledge the feeling before inviting change
+- **Reframing** (CBT): Challenges → information, not failure
+- **Solution-focused** (SFBT): "What would be different if this was just a little bit better?"
+- **Growth mindset** (Dweck): "This is something you're building, not something you have or don't"
+- **Externalization** (Narrative Therapy): "When anxiety shows up..." (not "when you're anxious")
+
+### Framework-Specific Techniques (18 techniques across 8 frameworks)
+
+| Framework | Techniques | Best Phases |
+|-----------|-----------|-------------|
+| **CBT** | Thought Records, Cognitive Reframing, Behavioral Experiments | Navigating, Layers |
+| **NVC** | Observation-Feeling-Need-Request, Empathic Listening | Navigating, Layers |
+| **EFT** | Emotion Cycle Awareness, Attachment Need Expression | Deepening, Layers |
+| **Gottman** | Soft Startup, Repair Attempts, Positive Sentiment Override | Navigating, Rhythm |
+| **Attachment Theory** | Safe Base Exploration, Protest Behavior Awareness | Rhythm, Deepening |
+| **Narrative Therapy** | Story Re-authoring, Externalization | Layers, Mirror |
+| **Positive Psychology** | Targeted Gratitude, Character Strengths Spotting | Rhythm, Mirror |
+| **Mindfulness** | Mindful Pause, Body-Based Emotion Awareness | Navigating, Layers |
+
+### Session Design Psychology (Peak-End Rule)
+
+The session flow is designed around Kahneman's peak-end rule — people judge experiences based on the emotional peak and the ending:
+
+- **Greeting** (Priming): Sets the emotional frame with archetype warmth + phase priming message
+- **Check-in** (Commitment-Consistency): Validates yesterday's action — all responses affirmed
+- **Learn** (Elaborative Interrogation): Questions feel like conversation, MC options are "which resonates?" not "which is correct?"
+- **Micro-Insight** (**THE PEAK**): Validate → Reframe → Connect to growth. Deliberately slow animation (2s delay on CTA) forces the insight to land
+- **Implement** (Implementation Intentions): Specific micro-action + swap option preserves autonomy (Self-Determination Theory)
+- **Celebration** (**THE END**): Warm, proportional, archetype-flavored. Streak shown subtly, not as pressure
+
+### Content Philosophy
+
+- **Therapeutic, not manipulative**: All techniques are transparent and used to help users genuinely change
+- **No fake statistics**: Removed unsourced "78% of couples" claims; replaced with honest growth messaging
+- **No embedded commands**: Renamed NLP `embedCommand` fields to transparent `reflectionPrompt`
+- **Stories use Narrative Therapy**: The therapeutic stories (`persuasiveContent.ts`) use genuine narrative therapy techniques (externalization, unique outcomes, reauthoring)
+- **Scale anchoring is growth-oriented**: Low end = "still growing into this" (not failure), high end = "comes naturally" (not perfection)
+
 ## Common Gotchas
 
 1. **package.json scripts are wrong**: They reference `next dev`/`next build` but the project uses Vite. Use `npx vite` for dev and `npx vite build` for builds.
