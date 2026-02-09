@@ -2,7 +2,9 @@
 
 ## Project Overview
 
-Sparq Connection Lab is a relationship enhancement web application that guides couples through psychology-backed journeys, daily activities, quizzes, and partner connection features. It uses techniques from Love Languages, Gottman Method, CBT, Attachment Theory, and other frameworks to strengthen relationships.
+Sparq Connection Lab is a **solo-first relationship enhancement app** that helps users become better partners through daily 5-7 minute sessions. The core philosophy is **"Making me a better me for us"** — the app delivers immediate value from Day 1 while progressively discovering each user's personality profile over 14 days.
+
+The app uses a **Learn → Implement → Reflect** daily cycle powered by AI, with content drawn from Love Languages, Gottman Method, CBT, Attachment Theory, EFT, Narrative Therapy, and other psychology frameworks.
 
 **Live domain**: sharedjourney.ai
 
@@ -14,6 +16,7 @@ Sparq Connection Lab is a relationship enhancement web application that guides c
 - **Styling**: Tailwind CSS 3 with `tailwindcss-animate` plugin, dark mode via `class` strategy
 - **UI components**: shadcn/ui (53 components in `src/components/ui/`)
 - **State management**: React Context API (AuthContext, SubscriptionProvider, ThemeProvider) + React Query for server state
+- **AI layer**: Multi-provider abstraction (`AIModelService`) — Gemini Flash (free), Claude Sonnet 4.5 (premium), Claude Opus 4.5 (reports)
 - **Backend**: Supabase (PostgreSQL, Auth, Edge Functions, Realtime)
 - **Animations**: Framer Motion
 - **Icons**: Lucide React
@@ -45,7 +48,8 @@ src/
 │   ├── auth/                # LoginForm, AuthLayout, ProtectedRoute
 │   ├── dashboard/           # Dashboard cards and layout
 │   ├── journey/             # Journey content views, partner sync, activity cards
-│   ├── onboarding/          # 5-step onboarding flow
+│   ├── onboarding/          # 3-step onboarding flow (welcome, goals, archetype)
+│   ├── session/             # Daily session UI (Learn→Implement→Reflect components)
 │   ├── profile/             # Profile header, achievements, personal info
 │   ├── quiz/                # Relationship health quiz views
 │   ├── insights/            # Relationship insight cards
@@ -56,10 +60,12 @@ src/
 │   ├── Auth.tsx             # Login/signup
 │   ├── Journeys.tsx         # Journey selection
 │   ├── journeys/            # 13 specific journey pages
-│   ├── DailyQuestions.tsx   # Daily question flow
+│   ├── DailyQuestions.tsx   # Learn→Implement→Reflect daily session flow
 │   ├── Quiz.tsx             # Relationship quiz
 │   └── ...                  # ~30 total pages
 ├── services/                # Business logic & API layer
+│   ├── aiModelService.ts    # AI model abstraction (Gemini/Claude/OpenAI routing)
+│   ├── dailySessionService.ts  # Core Learn→Implement→Reflect session orchestrator
 │   ├── supabaseService.ts   # Core Supabase CRUD operations (largest service)
 │   ├── aiService.ts         # OpenAI integration for date ideas (singleton pattern)
 │   ├── personalityInferenceService.ts  # AI-powered personality signal extraction
@@ -96,13 +102,17 @@ src/
 │   ├── auth-utils.ts
 │   └── mem0.ts              # Mem0 client (mock implementation)
 ├── types/                   # TypeScript type definitions
+│   ├── session.ts           # DailySession, LearnStep, ImplementStep, ReflectStep, archetypes
 │   ├── personality.ts       # PersonalityProfile, signals, dimensions, discovery arc
-│   ├── profile.ts           # Profile, UserBadge, DailyActivity
+│   ├── profile.ts           # Profile, UserBadge, DailyActivity (+ archetype, mode fields)
 │   ├── journey.ts           # Journey, JourneyPhase, UserJourneyProgress
 │   ├── quiz.ts              # Question, WeekendActivity, PsychologyModality
 │   ├── memory.ts
 │   └── supabase.ts          # Database types
+├── config/
+│   └── archetypes.ts        # 4 identity archetype configurations
 ├── data/                    # Static content data
+│   ├── microActions.ts      # 65 curated micro-action templates (5 categories)
 │   ├── journeys.ts          # 14 journey definitions with phases
 │   ├── quizData.ts          # Questions & weekend activities
 │   ├── persuasiveContent.ts # Psychological technique content
@@ -199,7 +209,91 @@ No test framework is currently configured. No test files exist in the repository
 - **Config**: `vercel.json` — framework `vite`, output `dist/`
 - **Security headers**: CSP, X-Frame-Options (DENY), X-Content-Type-Options, X-XSS-Protection configured in `vercel.json`
 
-## Personality Discovery System (NEW)
+## Daily Session System (Learn → Implement → Reflect)
+
+The core user experience. Every day, users complete a 5-7 minute session:
+
+1. **Yesterday Check-in** (Day 2+, 30s) — Quick MC about how yesterday's micro-action went
+2. **Learn** (2-3 min) — AI-generated question that teaches AND reveals personality signals
+3. **Implement** (1 min) — Personalized micro-action from curated template library
+4. **Session Complete** — Archetype-flavored celebration + streak
+
+### Architecture Flow
+
+```
+User opens DailyQuestions page
+        ↓
+DailySessionService.generateSession()
+  ├── AIModelService (routes to Gemini/Sonnet/Opus by tier)
+  ├── ArchetypeConfig (personalizes greeting, framing, celebration)
+  ├── DiscoveryQuestionService (generates Learn question)
+  └── MicroAction templates + AI personalization (Implement step)
+        ↓
+User answers Learn question
+        ↓
+PersonalityInferenceService.analyzeResponse()
+  → Extracts personality signals → feeds to PersonalityProfileService
+  → Shows warm "micro-insight" to user
+        ↓
+User accepts micro-action → Session complete
+```
+
+### Key Files
+- **Orchestrator**: `src/services/dailySessionService.ts`
+- **AI Routing**: `src/services/aiModelService.ts`
+- **Types**: `src/types/session.ts`
+- **Components**: `src/components/session/` (7 components)
+- **Page**: `src/pages/DailyQuestions.tsx` (state machine flow)
+
+### Identity Archetypes
+
+Users choose one during onboarding. It deeply personalizes all content:
+
+| Archetype | Tagline | Content Frame |
+|-----------|---------|---------------|
+| **Calm Anchor** | "I want to be the steady, grounding presence" | Stability, grounding |
+| **Compassionate Listener** | "I want to truly hear and understand" | Empathy, understanding |
+| **Growth Seeker** | "I want to keep evolving and learning" | Progress, evolution |
+| **Connection Builder** | "I want to create deeper bonds" | Intimacy, closeness |
+
+Config: `src/config/archetypes.ts`
+
+### Micro-Action Template Library
+
+65 curated templates across 5 categories: communication (15), conflict (10), connection (15), awareness (12), behavior (13). Each has solo/partner versions, archetype variants, difficulty ratings, and AI personalization slots.
+
+Data: `src/data/microActions.ts`
+
+### Question Format Progression
+
+| Days | Phase | MC % | Open % | Scale % |
+|------|-------|------|--------|---------|
+| 1-5 | Self-Awareness | 70 | 10 | 20 |
+| 6-10 | Behavior Change | 50 | 25 | 15 |
+| 11-14 | Skill Building | 35 | 40 | 15 |
+| 15+ | Integration | 20 | 55 | 15 |
+
+### Onboarding (3 screens, ~2 min)
+
+1. **Welcome** — Name, solo/partner mode
+2. **What brings you** — Goals (max 3), preferred session time
+3. **Growth Identity** — Choose archetype
+
+## AI Model Abstraction Layer
+
+All AI calls route through `AIModelService` (`src/services/aiModelService.ts`):
+
+| Task | Free (Gemini Flash) | Premium (Claude Sonnet 4.5) | Reports (Claude Opus 4.5) |
+|------|--------------------|-----------------------------|---------------------------|
+| Daily sessions | Yes | Yes | - |
+| Question generation | Yes | Yes | - |
+| Personality inference | Yes | Yes | - |
+| Mirror narrative | - | - | Yes |
+| Weekly insights | - | Yes | - |
+
+The service handles provider routing, fallback chains, and request throttling.
+
+## Personality Discovery System
 
 The core differentiator of Sparq Connection Lab is its **14-day progressive personality discovery** system. Instead of upfront assessments, the app learns who users are through their natural daily responses — then reflects that understanding back to them.
 
