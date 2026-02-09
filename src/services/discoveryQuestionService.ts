@@ -1,4 +1,4 @@
-import { apiConfig } from "@/lib/api-config";
+import { AIModelService } from "@/services/aiModelService";
 import type {
   ProfileContext,
   DiscoveryPhase,
@@ -7,6 +7,7 @@ import type {
   QuestionGenerationInput,
 } from "@/types/personality";
 import type { PsychologyModality } from "@/types/quiz";
+import type { SessionQuestion, MCOption, QuestionFormat } from "@/types/session";
 import { generateId } from "@/lib/utils";
 
 /**
@@ -38,46 +39,21 @@ export class DiscoveryQuestionService {
    * Generate questions for a specific day in the discovery arc.
    */
   async generateDailyQuestions(input: QuestionGenerationInput): Promise<GeneratedQuestion[]> {
-    const { openai } = apiConfig.apiKeys;
-
-    if (!openai) {
-      return this.getFallbackQuestions(input.discoveryPhase, input.timeSlot, input.count);
-    }
-
     const systemPrompt = this.buildSystemPrompt();
     const userPrompt = this.buildGenerationPrompt(input);
 
     try {
-      const response = await fetch(`${apiConfig.endpoints.openai}/chat/completions`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${openai}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userPrompt },
-          ],
-          temperature: 0.8,
-          max_tokens: 1500,
-          response_format: { type: "json_object" },
-        }),
+      const aiService = AIModelService.getInstance();
+      const response = await aiService.complete({
+        taskType: "question-generation",
+        systemPrompt: systemPrompt,
+        userPrompt: userPrompt,
+        temperature: 0.8,
+        maxTokens: 2000,
+        jsonMode: true,
       });
 
-      if (!response.ok) {
-        throw new Error(`Question generation failed: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const content = data.choices[0]?.message?.content;
-
-      if (!content) {
-        throw new Error("Empty response from question generation");
-      }
-
-      return this.parseGeneratedQuestions(content, input);
+      return this.parseGeneratedQuestions(response.content, input);
     } catch (error) {
       console.error("Question generation failed:", error);
       return this.getFallbackQuestions(input.discoveryPhase, input.timeSlot, input.count);
@@ -85,7 +61,7 @@ export class DiscoveryQuestionService {
   }
 
   private buildSystemPrompt(): string {
-    return `You are a relationship psychologist crafting personalized daily questions for couples. Your questions serve two purposes:
+    return `You are a relationship psychologist crafting personalized daily questions for someone working on their relationship growth. Your questions serve two purposes:
 
 1. **Connection**: Help the couple deepen their understanding of each other through meaningful conversation.
 2. **Discovery**: Naturally reveal personality dimensions (attachment style, love language, conflict patterns, emotional expression, values, intimacy preferences, relational identity) without feeling like an assessment.
@@ -188,6 +164,172 @@ Generate questions that feel like natural conversation starters while revealing 
       console.error("Failed to parse generated questions:", error);
       return this.getFallbackQuestions(input.discoveryPhase, input.timeSlot, input.count);
     }
+  }
+
+  // ─── Session-Aware Question Generation ──────────────────────────────────
+
+  /**
+   * Generate a single session-aware question for the Learn step.
+   * Supports MC, open-ended, scale, and ranking formats.
+   */
+  async generateSessionQuestion(
+    profileContext: ProfileContext,
+    discoveryDay: number,
+    phase: DiscoveryPhase,
+    targetDimensions: PersonalityDimension[],
+    format: QuestionFormat,
+    previousQuestionIds: string[],
+    archetypeInsightStyle: string,
+    archetypeQuestionTone: string
+  ): Promise<SessionQuestion> {
+    const aiService = AIModelService.getInstance();
+
+    const systemPrompt = this.buildSessionQuestionSystemPrompt(format, archetypeInsightStyle, archetypeQuestionTone);
+    const userPrompt = this.buildSessionQuestionUserPrompt(
+      profileContext, discoveryDay, phase, targetDimensions, format, previousQuestionIds
+    );
+
+    try {
+      const response = await aiService.complete({
+        taskType: "question-generation",
+        systemPrompt,
+        userPrompt,
+        temperature: 0.8,
+        maxTokens: 1500,
+        jsonMode: true,
+      });
+
+      return this.parseSessionQuestion(response.content, format);
+    } catch (error) {
+      console.error("Session question generation failed:", error);
+      return this.getFallbackSessionQuestion(phase, format);
+    }
+  }
+
+  private buildSessionQuestionSystemPrompt(
+    format: QuestionFormat,
+    insightStyle: string,
+    questionTone: string
+  ): string {
+    const formatInstructions = this.getFormatInstructions(format);
+
+    return `You are a warm, knowledgeable relationship coach crafting a daily question. You speak like a trusted friend who happens to know psychology.
+
+STYLE: ${insightStyle}
+TONE: ${questionTone}
+
+This is a SOLO-FIRST app — frame everything as personal growth for better relationships. Not "what does your partner think?" but "what do you notice about yourself?"
+
+${formatInstructions}
+
+RULES:
+- Questions should feel like connection exercises, NOT personality tests
+- Use warm, conversational language — no clinical terms
+- Match intimacy to the discovery day (lower early, higher later)
+- Each question should naturally reveal personality signals without feeling like an assessment
+
+Respond with JSON:
+{
+  "text": "the question text",
+  "targetDimensions": ["dimension1"],
+  "modality": "PsychologyModality name",
+  "intimacyLevel": 1-5,
+  ${format === "multiple-choice" ? '"options": [{"id": "a", "text": "option text", "signalHints": [{"dimension": "attachment", "indicator": "secure-base", "strength": 0.7}]}],' : ''}
+  ${format === "scale" ? '"scaleLabels": ["Low end label", "High end label"],' : ''}
+  ${format === "ranking" ? '"rankingItems": ["item1", "item2", "item3", "item4"],' : ''}
+}`;
+  }
+
+  private getFormatInstructions(format: QuestionFormat): string {
+    switch (format) {
+      case "multiple-choice":
+        return `Generate a MULTIPLE CHOICE question with 3-4 options. Each option should naturally map to different personality signals. The user picks the one that resonates most. Make options feel like genuine choices, not right/wrong answers. Include signalHints for each option specifying which personality dimension and indicator it reveals.`;
+      case "open-ended":
+        return `Generate an OPEN-ENDED question that invites a narrative response (2-3 sentences). Frame it as a reflection or memory prompt.`;
+      case "scale":
+        return `Generate a SCALE question (1-5) with clear, meaningful labels for each end. Include scaleLabels array with [lowLabel, highLabel].`;
+      case "ranking":
+        return `Generate a RANKING question with 4 items to rank in order of importance. Include rankingItems array.`;
+      default:
+        return `Generate an open-ended question.`;
+    }
+  }
+
+  private buildSessionQuestionUserPrompt(
+    profileContext: ProfileContext,
+    discoveryDay: number,
+    phase: DiscoveryPhase,
+    targetDimensions: PersonalityDimension[],
+    format: QuestionFormat,
+    previousQuestionIds: string[]
+  ): string {
+    return `Generate a ${format} question for ${profileContext.userName}.
+
+Day ${discoveryDay} of 14 | Phase: ${phase} | Comfort: ${Math.round(profileContext.comfortLevel * 100)}%
+What we know: ${profileContext.knownTraits}
+Dimensions needing signal: ${targetDimensions.slice(0, 3).join(", ")}
+${profileContext.sensitivities.length > 0 ? `Be gentle around: ${profileContext.sensitivities.join(", ")}` : ""}
+${previousQuestionIds.length > 0 ? `Avoid repeating themes from ${previousQuestionIds.length} previous questions.` : ""}`;
+  }
+
+  private parseSessionQuestion(raw: string, expectedFormat: QuestionFormat): SessionQuestion {
+    try {
+      const parsed = JSON.parse(raw);
+
+      const question: SessionQuestion = {
+        id: generateId(),
+        text: parsed.text,
+        format: expectedFormat,
+        targetDimensions: (parsed.targetDimensions || []) as PersonalityDimension[],
+        intimacyLevel: Math.min(5, Math.max(1, parsed.intimacyLevel || 2)) as 1 | 2 | 3 | 4 | 5,
+        modality: (parsed.modality || "Positive Psychology") as PsychologyModality,
+      };
+
+      if (expectedFormat === "multiple-choice" && parsed.options) {
+        question.options = parsed.options.map((opt: any, i: number) => ({
+          id: opt.id || String.fromCharCode(97 + i), // a, b, c, d
+          text: opt.text,
+          signalHints: opt.signalHints || [],
+        }));
+      }
+
+      if (expectedFormat === "scale") {
+        question.scaleMin = 1;
+        question.scaleMax = 5;
+        question.scaleLabels = parsed.scaleLabels || ["Not at all", "Very much"];
+      }
+
+      if (expectedFormat === "ranking" && parsed.rankingItems) {
+        question.rankingItems = parsed.rankingItems;
+      }
+
+      return question;
+    } catch (error) {
+      console.error("Failed to parse session question:", error);
+      return this.getFallbackSessionQuestion("rhythm", expectedFormat);
+    }
+  }
+
+  private getFallbackSessionQuestion(phase: DiscoveryPhase, format: QuestionFormat): SessionQuestion {
+    // Always fall back to open-ended — safer than broken MC
+    const fallbacks: Record<DiscoveryPhase, { text: string; dims: PersonalityDimension[]; modality: PsychologyModality; level: 1 | 2 | 3 | 4 | 5 }> = {
+      rhythm: { text: "What's one thing that always makes you feel connected to the people you love?", dims: ["values", "emotionalExpression"], modality: "Positive Psychology", level: 1 },
+      deepening: { text: "When you've had a difficult day, what does support look like for you?", dims: ["attachment", "loveLanguage"], modality: "Attachment Theory", level: 2 },
+      navigating: { text: "Think of a recent disagreement — what would you do differently if you could replay it?", dims: ["conflict", "emotionalExpression"], modality: "Gottman Method", level: 3 },
+      layers: { text: "What part of yourself are you most proud of in how you show up in relationships?", dims: ["relationalIdentity", "values"], modality: "Narrative Therapy", level: 3 },
+      mirror: { text: "Looking back on these two weeks, what's one thing you've noticed about yourself that surprised you?", dims: ["relationalIdentity", "emotionalExpression"], modality: "Narrative Therapy", level: 3 },
+    };
+
+    const fb = fallbacks[phase] || fallbacks.rhythm;
+
+    return {
+      id: generateId(),
+      text: fb.text,
+      format: "open-ended",  // Always fall back to open-ended
+      targetDimensions: fb.dims,
+      intimacyLevel: fb.level,
+      modality: fb.modality,
+    };
   }
 
   // ─── Phase-Specific Dimension Targeting ─────────────────────────────────

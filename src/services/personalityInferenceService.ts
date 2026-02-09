@@ -1,4 +1,4 @@
-import { apiConfig } from "@/lib/api-config";
+import { AIModelService } from "@/services/aiModelService";
 import type {
   PersonalitySignal,
   ResponseAnalysisInput,
@@ -6,6 +6,7 @@ import type {
   DimensionConfidence,
   PersonalityDimension,
 } from "@/types/personality";
+import type { PsychologyModality } from "@/types/quiz";
 
 /**
  * PersonalityInferenceService
@@ -37,57 +38,69 @@ export class PersonalityInferenceService {
    * 14-day discovery period (and continues refining after).
    */
   async analyzeResponse(input: ResponseAnalysisInput): Promise<ResponseAnalysisOutput> {
-    const { openai } = apiConfig.apiKeys;
-
-    if (!openai) {
-      console.warn("OpenAI API key not configured — skipping personality inference");
-      return { signals: [], confidenceUpdates: [], memoryNotes: [] };
-    }
-
-    const systemPrompt = this.buildSystemPrompt();
-    const userPrompt = this.buildAnalysisPrompt(input);
-
     try {
-      const response = await fetch(`${apiConfig.endpoints.openai}/chat/completions`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${openai}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userPrompt },
-          ],
-          temperature: 0.3,
-          max_tokens: 1200,
-          response_format: { type: "json_object" },
-        }),
+      const aiService = AIModelService.getInstance();
+      const response = await aiService.complete({
+        taskType: "personality-inference",
+        systemPrompt: this.buildSystemPrompt(),
+        userPrompt: this.buildAnalysisPrompt(input),
+        temperature: 0.3,
+        maxTokens: 1200,
+        jsonMode: true,
       });
 
-      if (!response.ok) {
-        throw new Error(`Inference API request failed: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const content = data.choices[0]?.message?.content;
-
-      if (!content) {
-        throw new Error("Empty response from inference API");
-      }
-
-      return this.parseAnalysisResponse(content, input);
+      return this.parseAnalysisResponse(response.content, input);
     } catch (error) {
       console.error("Personality inference failed:", error);
       return { signals: [], confidenceUpdates: [], memoryNotes: [] };
     }
   }
 
+  /**
+   * Analyze a multiple-choice answer using the signalHints from the selected option.
+   * This is faster and doesn't require an AI call — the signals are pre-defined.
+   */
+  analyzeMCResponse(
+    selectedOption: {
+      id: string;
+      text: string;
+      signalHints?: { dimension: string; indicator: string; strength: number }[];
+    },
+    questionText: string,
+    questionModality: PsychologyModality,
+    discoveryDay: number
+  ): ResponseAnalysisOutput {
+    if (!selectedOption.signalHints || selectedOption.signalHints.length === 0) {
+      return { signals: [], confidenceUpdates: [], memoryNotes: [] };
+    }
+
+    const now = new Date().toISOString();
+
+    const signals: PersonalitySignal[] = selectedOption.signalHints.map(hint => ({
+      dimension: hint.dimension as PersonalityDimension,
+      sourceModality: questionModality,
+      observation: `Selected "${selectedOption.text}" in response to: "${questionText}"`,
+      strength: hint.strength,
+      indicator: hint.indicator,
+      capturedAt: now,
+      discoveryDay,
+    }));
+
+    const confidenceUpdates = this.calculateConfidenceUpdates(signals, discoveryDay);
+
+    return {
+      signals,
+      confidenceUpdates,
+      memoryNotes: [],
+    };
+  }
+
   private buildSystemPrompt(): string {
     return `You are a relationship psychology expert analyzing user responses to extract personality signals. You specialize in Attachment Theory, Gottman Method, Love Languages, CBT, and Emotional Focused Therapy.
 
-Your job is to read a user's response to a relationship question and identify what it reveals about their personality across these dimensions:
+Your job is to read a user's response to a relationship growth question and identify what it reveals about their personality. This is a SOLO-FIRST app — the user is working on being a better partner, so responses may be about themselves rather than their relationship directly.
+
+Analyze their personality across these dimensions:
 
 1. **attachment** — Attachment style signals. Look for: proximity-seeking vs. independence, fear of abandonment vs. discomfort with closeness, how they describe needing their partner.
 2. **loveLanguage** — How they give and receive love. Look for: references to words/verbal affirmation, quality time together, physical closeness, doing things for partner, gift-giving/thoughtfulness.
@@ -126,7 +139,7 @@ Respond with a JSON object containing:
 **Discovery day**: ${input.discoveryDay} of 14
 **What we already know about this user**: ${existingContext}
 
-Extract personality signals from the response. Focus on what's genuinely revealed, not what you'd expect. If the response is brief or surface-level, that itself is a signal about emotional expression style.`;
+Extract personality signals from the response. Focus on what's genuinely revealed, not what you'd expect. If the response is brief or surface-level, that itself is a signal about emotional expression style. Remember this is a solo-first app — the user may be reflecting on themselves as a partner.`;
   }
 
   private summarizeExistingProfile(profile: Partial<ResponseAnalysisInput["existingProfile"]>): string {
