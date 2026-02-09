@@ -434,13 +434,29 @@ The session flow is designed around Kahneman's peak-end rule — people judge ex
 - **Implement** (Implementation Intentions): Specific micro-action + swap option preserves autonomy (Self-Determination Theory)
 - **Celebration** (**THE END**): Warm, proportional, archetype-flavored. Streak shown subtly, not as pressure
 
+### Attachment-Style Language Adaptation
+
+Different attachment styles hear the SAME words completely differently. The app adapts its language based on the user's emerging attachment signals:
+
+| Style | Core Need | Words That Work | Words to AVOID |
+|-------|-----------|-----------------|----------------|
+| **Secure** | Growth, deepening | "let's explore", "try this", "deepen" | "you must", forced urgency |
+| **Anxious** | Reassurance, stability | "you're doing great", "this is normal", "you matter" | "give them space", "calm down", "too much", "needy" |
+| **Avoidant** | Autonomy, respect | "at your own pace", "when you're ready", "notice" | "need", "depend", "open up", "share your feelings" |
+| **Fearful-Avoidant** | Safety + closeness (both feel risky) | "no pressure", "whatever feels right", "safe" | "commit", "decide", "just do it", "push through" |
+
+Config: `ATTACHMENT_LANGUAGE` in `src/config/psychologyFramework.ts`
+Helper: `buildAttachmentPromptSection(style)` generates AI prompt rules
+
 ### Content Philosophy
 
-- **Therapeutic, not manipulative**: All techniques are transparent and used to help users genuinely change
-- **No fake statistics**: Removed unsourced "78% of couples" claims; replaced with honest growth messaging
-- **No embedded commands**: Renamed NLP `embedCommand` fields to transparent `reflectionPrompt`
-- **Stories use Narrative Therapy**: The therapeutic stories (`persuasiveContent.ts`) use genuine narrative therapy techniques (externalization, unique outcomes, reauthoring)
-- **Scale anchoring is growth-oriented**: Low end = "still growing into this" (not failure), high end = "comes naturally" (not perfection)
+- **4th grade reading level**: All user-facing text uses simple words and short sentences. No jargon, ever.
+- **Psychology is invisible**: The user never sees framework names, technique names, or clinical labels. They get the transformation, not the textbook.
+- **Therapeutic, not manipulative**: Techniques help users genuinely change — not trick them
+- **No fake statistics**: Removed unsourced claims; replaced with honest growth messaging
+- **No embedded commands**: NLP `embedCommand` fields renamed to transparent `reflectionPrompt`
+- **Attachment-aware**: The same insight is worded differently for anxious vs. avoidant users
+- **Scale anchoring is growth-oriented**: Low end = "still working on this" (not failure), high end = "this comes easy" (not perfection)
 
 ## Common Gotchas
 

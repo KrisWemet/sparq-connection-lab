@@ -149,28 +149,27 @@ export const THERAPEUTIC_LANGUAGE_PATTERNS = {
   ],
 
   /**
-   * Validation patterns — acknowledging emotions before inviting change.
-   * Research: Validation is the #1 predictor of therapeutic alliance (Gottman, Linehan DBT).
+   * Validation patterns — saying "that makes sense" before anything else.
+   * The user needs to feel heard before they can hear us.
    */
   validation: [
-    "It makes complete sense that you'd feel {emotion} about this.",
-    "That's a really natural response to {situation}.",
-    "Most people in your position would feel exactly the same way.",
-    "There's nothing wrong with feeling {emotion} — it's telling you something important.",
-    "Your feelings about this are valid and worth paying attention to.",
+    "It makes sense you'd feel that way.",
+    "That's a really normal thing to feel.",
+    "A lot of people feel the same way about this.",
+    "That feeling is telling you something — and it's worth listening to.",
+    "What you're feeling? It matters. Don't brush it off.",
   ],
 
   /**
-   * Growth mindset language — framing abilities as developable.
-   * Research: Carol Dweck's growth mindset research shows that framing traits as
-   * learnable (vs. fixed) significantly increases effort and resilience.
+   * Growth mindset language — "you're getting better at this."
+   * Simple framing: abilities grow with practice.
    */
   growthMindset: [
-    "This is something you're building, not something you either have or don't.",
-    "Every time you practice this, the neural pathways get a little stronger.",
-    "You're not starting from zero — you're building on everything you've already learned.",
-    "This skill develops over time, and you're exactly where you need to be right now.",
-    "Progress isn't always visible day-to-day, but it compounds.",
+    "This is something you build over time. You don't just have it or not.",
+    "Every time you try, it gets a little easier.",
+    "You're not starting from scratch. Everything you've been through got you here.",
+    "This gets better with practice. And you're already practicing.",
+    "You might not see the change day by day, but it's adding up.",
   ],
 };
 
@@ -444,29 +443,29 @@ export const SESSION_DESIGN = {
  */
 export const PHASE_PRIMING_MESSAGES: Record<DiscoveryPhase, string[]> = {
   rhythm: [
-    "Today's about noticing what already works...",
-    "Let's start with something that feels good...",
-    "This one's about the moments that matter...",
+    "Let's notice what's already good...",
+    "Starting with something that feels right...",
+    "Today's about the little things that matter...",
   ],
   deepening: [
-    "Let's go a little deeper today...",
-    "Today's about understanding what's underneath...",
-    "This one invites you to look inward...",
+    "Going a little deeper today...",
+    "Let's see what's under the surface...",
+    "Today's about the real you...",
   ],
   navigating: [
-    "Today's about building skills for the tough moments...",
-    "Let's explore how you handle the real stuff...",
-    "This one is about growth through challenge...",
+    "Let's work on the tough stuff today...",
+    "Today's about the hard moments...",
+    "Building new skills for real life...",
   ],
   layers: [
-    "Today's about the parts of you that matter most...",
-    "Let's explore what lives beneath the surface...",
-    "This one takes a bit of courage — and you have it...",
+    "Today's about what matters most to you...",
+    "Let's go somewhere that takes a little courage...",
+    "Digging into the important stuff...",
   ],
   mirror: [
-    "Today's about seeing how far you've come...",
-    "Let's celebrate what you've discovered...",
-    "This one is about the whole picture of who you are...",
+    "Look how far you've come...",
+    "Let's see the big picture...",
+    "Time to see what you've built...",
   ],
 };
 
@@ -479,12 +478,176 @@ export const PHASE_PRIMING_MESSAGES: Record<DiscoveryPhase, string[]> = {
  * — this frames the low end as growth-in-progress, not failure.
  */
 export const ANCHORING_LABELS = {
-  growthOriented: ["Still growing into this", "This comes naturally to me"],
-  comfortLevel: ["Just beginning to explore this", "Very comfortable with this"],
-  frequency: ["Rarely, but working on it", "Often — it's part of who I am"],
-  importance: ["Less central to my identity", "Core to who I am"],
-  awareness: ["Just starting to notice", "Very aware of this in myself"],
+  growthOriented: ["Still working on this", "This comes easy to me"],
+  comfortLevel: ["Just starting here", "Really good at this"],
+  frequency: ["Not often yet", "All the time — it's just who I am"],
+  importance: ["Not a big focus for me", "Super important to me"],
+  awareness: ["Just starting to notice this", "I know this about myself"],
 };
+
+// ─── Attachment-Style Language Adaptation ────────────────────────────────────
+
+/**
+ * Attachment-style-aware language rules.
+ *
+ * Different attachment styles process the SAME words completely differently.
+ * "I need you" feels warm to a secure person, terrifying to an avoidant,
+ * and not-enough to an anxious person. We must adapt.
+ *
+ * This config tells the AI what words to USE and AVOID for each style,
+ * plus the core emotional need that drives the style. The user never sees
+ * any of this — it just shapes how we talk to them.
+ */
+export interface AttachmentLanguageProfile {
+  /** What this person needs to feel safe in the app */
+  coreNeed: string;
+  /** What triggers their defenses */
+  coreFear: string;
+  /** Words/phrases that land well with this style */
+  wordsToUse: string[];
+  /** Words/phrases that trigger defensiveness or anxiety */
+  wordsToAvoid: string[];
+  /** How to frame micro-actions so they'll actually do them */
+  actionFraming: string;
+  /** How to deliver insights without triggering defenses */
+  insightFraming: string;
+  /** How to handle "didn't try it" in check-ins */
+  missedActionResponse: string;
+  /** Pacing — how fast to push toward vulnerability */
+  pacing: string;
+}
+
+export const ATTACHMENT_LANGUAGE: Record<string, AttachmentLanguageProfile> = {
+  "secure": {
+    coreNeed: "Growth and deepening",
+    coreFear: "Stagnation",
+    wordsToUse: [
+      "let's explore", "what do you think about", "try this",
+      "deepen", "grow together", "build on this",
+      "you and your partner", "next step",
+    ],
+    wordsToAvoid: [
+      // Secure people are generally flexible — fewer triggers
+      "you must", "you should always",
+    ],
+    actionFraming: "Direct and confident. 'Here's something to try today.' They don't need lots of reassurance — just a clear action.",
+    insightFraming: "Straightforward. 'Here's what we see in you.' They can handle direct feedback without feeling threatened.",
+    missedActionResponse: "Light and easy. 'No worries — today's a new day.' Don't over-explain.",
+    pacing: "Can go deeper earlier. Comfortable with vulnerability by Day 3-4.",
+  },
+
+  "anxious-preoccupied": {
+    coreNeed: "Reassurance that the connection is stable and they matter",
+    coreFear: "Being abandoned, forgotten, or not enough",
+    wordsToUse: [
+      "you're doing great", "this is normal", "you're not alone in this",
+      "I'm here", "consistent", "steady", "always",
+      "this shows how much you care", "that's a strength",
+      "you matter", "your feelings make sense",
+    ],
+    wordsToAvoid: [
+      "give them space", "back off", "too much", "clingy",
+      "needy", "overthinking", "calm down", "relax",
+      "you don't need", "stop worrying", "it's not a big deal",
+      "independent", "on your own",
+    ],
+    actionFraming: "Warm and reassuring. Frame the action as something that will bring them CLOSER: 'This small step helps you feel more connected.' Always confirm the action is enough — they'll worry it's not.",
+    insightFraming: "Extra validation before the insight. 'The way you care so deeply? That's not too much — it's a gift.' Never suggest they should feel LESS. Help them channel the intensity, not reduce it.",
+    missedActionResponse: "Extra warmth. 'That's completely okay. The fact that you're here today shows how committed you are. That matters more than any single action.'",
+    pacing: "Move slowly into vulnerability. They may SEEM open fast, but premature depth triggers anxiety spirals. Build safety first.",
+  },
+
+  "dismissive-avoidant": {
+    coreNeed: "Autonomy, respect for their space, feeling competent",
+    coreFear: "Losing independence, being controlled, being overwhelmed by emotion",
+    wordsToUse: [
+      "at your own pace", "when you're ready", "in your own way",
+      "you get to choose", "notice", "observe", "interesting",
+      "makes sense", "logical", "practical", "effective",
+      "strength", "capable", "on your terms",
+    ],
+    wordsToAvoid: [
+      "need", "depend", "vulnerable", "open up", "let me in",
+      "share your feelings", "get closer", "deeper connection",
+      "you should talk about", "how does that make you feel",
+      "we need to discuss", "commit to", "promise",
+    ],
+    actionFraming: "Frame as an experiment or skill, not an emotional exercise. 'Try this and see what you notice.' Keep it practical and short. Give them an exit: 'Even 30 seconds counts.' NEVER frame it as something they 'need to do for the relationship.'",
+    insightFraming: "Frame as something interesting they're good at, not something emotional. 'You have a real ability to stay calm under pressure — that's actually rare.' Respect their self-sufficiency. Never imply they're missing something emotional.",
+    missedActionResponse: "Brief and no-pressure. 'All good. Let's move on.' The WORST thing is making them feel guilty — guilt triggers withdrawal.",
+    pacing: "Very gradual. They need 2-3x longer before vulnerability feels safe. Respect their pace. Small observations, not big emotional questions early on.",
+  },
+
+  "fearful-avoidant": {
+    coreNeed: "Safety AND closeness — but both feel risky",
+    coreFear: "Being hurt if they get close, AND being alone if they pull away",
+    wordsToUse: [
+      "it's okay to feel both", "take your time", "no pressure",
+      "whatever feels right", "there's no wrong answer",
+      "this is just for you", "safe", "gentle", "small step",
+      "you're in control", "you can always come back to this",
+    ],
+    wordsToAvoid: [
+      "you need to decide", "commit", "pick one", "always",
+      "never", "you should", "most people", "just do it",
+      "trust the process", "let go", "push through",
+    ],
+    actionFraming: "Extra gentle. Frame everything as optional and safe: 'If it feels right, you might try... and if not, that's okay too.' Give double permission — to try AND to not try. Small steps only.",
+    insightFraming: "Normalize the push-pull: 'It makes total sense to want closeness and space at the same time. Most people feel that way sometimes.' Never force them to pick a side. Hold both.",
+    missedActionResponse: "Gentle and normalizing. 'Some days feel harder than others. That's part of the journey, not a step backward. You showed up today — that counts.'",
+    pacing: "Slowest of all. They need to feel safe before ANY vulnerability. Days 1-5 should feel very light. Watch for signs of overwhelm.",
+  },
+
+  // Default fallback — used when attachment style isn't known yet (Days 1-3)
+  "unknown": {
+    coreNeed: "Feeling safe and welcome in the app",
+    coreFear: "Being judged or getting it wrong",
+    wordsToUse: [
+      "no right or wrong answer", "just notice", "whatever feels true",
+      "take your time", "you're doing great", "this is just for you",
+    ],
+    wordsToAvoid: [
+      "you must", "you should", "you need to",
+      "most people", "normal couples",
+    ],
+    actionFraming: "Warm, simple, low-pressure. 'Here's something small you could try today.' Always emphasize choice.",
+    insightFraming: "Warm and general. 'That tells us something lovely about you.' Don't assume too much before we know them.",
+    missedActionResponse: "Warm and no-judgment. 'No worries at all — every day is a fresh start.'",
+    pacing: "Keep it light. Build trust first. Go deeper only when we see signals of readiness.",
+  },
+};
+
+/**
+ * Get the language profile for a given attachment style.
+ * Falls back to "unknown" if the style hasn't been identified yet.
+ */
+export function getAttachmentLanguage(
+  attachmentStyle?: string
+): AttachmentLanguageProfile {
+  if (!attachmentStyle || !ATTACHMENT_LANGUAGE[attachmentStyle]) {
+    return ATTACHMENT_LANGUAGE["unknown"];
+  }
+  return ATTACHMENT_LANGUAGE[attachmentStyle];
+}
+
+/**
+ * Build an AI prompt section with attachment-aware language rules.
+ * This goes into the system prompt so the AI adapts its wording.
+ */
+export function buildAttachmentPromptSection(
+  attachmentStyle?: string
+): string {
+  const lang = getAttachmentLanguage(attachmentStyle);
+
+  return `LANGUAGE ADAPTATION (critical — the user processes words differently based on who they are):
+Core need: ${lang.coreNeed}
+What to avoid: ${lang.coreFear}
+Words that work well: ${lang.wordsToUse.join(", ")}
+Words to NEVER use: ${lang.wordsToAvoid.join(", ")}
+How to frame actions: ${lang.actionFraming}
+How to frame insights: ${lang.insightFraming}
+Pacing: ${lang.pacing}`;
+}
 
 // ─── Helper Functions ──────────────────────────────────────────────────────
 

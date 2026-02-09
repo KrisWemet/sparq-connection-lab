@@ -25,6 +25,8 @@ import {
   getTherapeuticPattern,
   THERAPEUTIC_LANGUAGE_PATTERNS,
   ANCHORING_LABELS,
+  buildAttachmentPromptSection,
+  getAttachmentLanguage,
 } from "@/config/psychologyFramework";
 import { selectTemplate, getTemplatesForDay } from "@/data/microActions";
 import type { MicroActionTemplate } from "@/data/microActions";
@@ -84,7 +86,8 @@ export class DailySessionService {
       input.discoveryDay > 1 && input.yesterdayAction
         ? this.buildYesterdayCheckIn(
             input.yesterdayAction,
-            input.identityArchetype
+            input.identityArchetype,
+            input.attachmentStyle
           )
         : undefined;
 
@@ -142,29 +145,27 @@ export class DailySessionService {
    */
   private buildYesterdayCheckIn(
     yesterdayAction: string,
-    archetype: string
+    archetype: string,
+    attachmentStyle?: string
   ): YesterdayCheckIn {
+    const lang = getAttachmentLanguage(attachmentStyle);
+
     return {
       actionReminder: `Yesterday you planned to: "${yesterdayAction}"`,
       options: [
-        { id: "loved-it", text: "Tried it and it felt great", emoji: "✨" },
-        {
-          id: "felt-awkward",
-          text: "Tried it, felt a bit awkward",
-          emoji: "😅",
-        },
+        { id: "loved-it", text: "Did it — felt good!", emoji: "✨" },
+        { id: "felt-awkward", text: "Tried it, felt weird", emoji: "😅" },
         { id: "didnt-try", text: "Didn't get to it", emoji: "🤷" },
-        { id: "modified-it", text: "Did my own version of it", emoji: "🔄" },
+        { id: "modified-it", text: "Did my own version", emoji: "🔄" },
       ],
       acknowledgments: {
         "loved-it":
-          "That's wonderful! Those moments of intentional action really add up.",
+          "That's awesome. Small things like this really add up over time.",
         "felt-awkward":
-          "That's completely normal — growth always feels a bit uncomfortable at first. The fact that you tried matters.",
-        "didnt-try":
-          "No judgment at all. Every day is a fresh start. Let's focus on today.",
+          "That's totally normal! New things feel weird at first. The fact that you tried? That's the part that counts.",
+        "didnt-try": lang.missedActionResponse,
         "modified-it":
-          "Love that you made it your own. That shows real self-awareness.",
+          "Love that you made it your own. That shows you know yourself well.",
       },
     };
   }
@@ -193,39 +194,48 @@ export class DailySessionService {
     const technique = selectTechniqueForContext(input.discoveryPhase, "learn");
     const insightTechnique = selectTechniqueForContext(input.discoveryPhase, "insight");
 
+    // Build attachment-aware language rules
+    const attachmentRules = buildAttachmentPromptSection(input.attachmentStyle);
+    const attachmentLang = getAttachmentLanguage(input.attachmentStyle);
+
     // Build psychology-enriched system prompt
-    const systemPrompt = `You are a warm, knowledgeable relationship coach creating a daily session for someone working on their personal growth. You speak like a trusted friend who deeply understands psychology — and you USE that knowledge to create genuinely transformative experiences.
+    const systemPrompt = `You are a warm, caring friend helping someone become a better partner. You know a lot about relationships and people — but you never show off that knowledge. You just use it to say the right thing at the right time.
 
-This user identifies as a "${archetype.label}" — ${archetype.contentFraming.insightStyle}
+VOICE AND READING LEVEL:
+- Write at a 4th grade reading level. Short sentences. Simple words. No jargon.
+- Sound like a kind friend, not a therapist or textbook.
+- NEVER mention psychology terms, framework names, or technique names. The user doesn't want to know WHY it works — they want the transformation.
+- NEVER use words like: "attachment style", "CBT", "NVC", "cognitive reframing", "presupposition", "narrative therapy", "emotional regulation", "vulnerability", "intimacy profile", "therapeutic", "modality", "framework"
+- DO use words like: "notice", "try", "feels like", "what works for you", "that makes sense", "here's what's cool about that"
+- Keep everything warm and real. Like texting a friend who really gets you.
 
-Their question tone preference: ${archetype.contentFraming.questionTone}
+WHO THIS PERSON IS:
+They see themselves as a "${archetype.label}" — ${archetype.contentFraming.insightStyle}
+Tone: ${archetype.contentFraming.questionTone}
 
-PSYCHOLOGY FRAMEWORK FOR THIS SESSION:
-${technique ? `Primary technique: ${technique.name} (${technique.framework})
-How to apply: ${technique.promptInstruction}` : "Use general positive psychology framing."}
+${attachmentRules}
 
-THERAPEUTIC LANGUAGE PATTERNS — use these naturally (not formulaically):
-- Presuppositions: Use "When you notice..." and "As you continue..." (assumes positive change is happening)
-- Validation first: Always acknowledge the feeling before inviting growth
-- Growth mindset: Frame abilities as developable ("This is something you're building...")
-- Reframing: Help users see challenges as information, not failure
-- Solution-focused: Orient toward what's working, not what's broken
-- Externalization: "When anxiety shows up..." (the problem is the problem, not the person)
+HOW TO WRITE QUESTIONS AND INSIGHTS:
+${technique ? technique.promptInstruction : "Ask about their real life. Keep it simple and warm."}
+- Questions should feel like a good conversation, not a test
+- "Which of these sounds most like you?" not "Select the option that best describes your behavior pattern"
+- Always make every answer feel like a good answer
+- Say "When you notice..." not "If you notice..." (assume good things are happening)
+- Always say something kind about what they shared before suggesting anything new
+- When something is hard, call it "a tough spot" not "a challenge to your emotional processing"
 
-MICRO-INSIGHT PSYCHOLOGY (this is the PEAK moment of the session):
-${insightTechnique ? `Use ${insightTechnique.name}: ${insightTechnique.promptInstruction}` : "Frame as warm validation + growth observation."}
-The micro-insight should:
-1. VALIDATE what they shared ("The way you described X shows...")
-2. REFRAME it as a strength ("That's actually a sign of...")
-3. CONNECT it to growth ("As you continue to notice this...")
+THE INSIGHT AFTER THEY ANSWER (this is the most important part):
+${insightTechnique ? insightTechnique.promptInstruction : "Say something warm about what their answer shows."}
+1. Say back what you heard: "The way you talked about X..."
+2. Name it as a strength: "That shows you really..."
+3. Connect it to their life: "As you keep noticing this..."
+Keep it to 2-3 short sentences. Make them feel seen.
+${attachmentLang.insightFraming}
 
-IMPORTANT RULES:
-- This is a SOLO-FIRST app. Frame everything as "making me a better me for us"
-- Questions should feel like connection exercises, NOT personality tests
-- Use warm, conversational language — no clinical jargon
-- NEVER sound like an assessment or quiz
-- Match the intimacy level to their comfort (currently Day ${input.discoveryDay})
-- Use the user's actual life context, not generic examples`;
+CORE RULES:
+- This is a SOLO-FIRST app. "Making me a better me for us"
+- Day ${input.discoveryDay} — ${input.discoveryDay <= 3 ? "keep it light and warm, we're just getting to know them" : input.discoveryDay <= 7 ? "they're settling in, can go a bit deeper" : input.discoveryDay <= 12 ? "they trust us now, okay to explore harder stuff gently" : "celebrate how far they've come"}
+- Simple words. Short sentences. Warm tone. No labels. Just help.`;
 
     // Build psychology-enriched user prompt
     const scaleAnchoring = questionFormat === "scale"
@@ -543,126 +553,124 @@ RESPOND IN JSON FORMAT:
   // ==========================================================================
 
   /**
-   * Build the Reflect step with psychology-informed prompts.
+   * Build the Reflect step.
    *
-   * Psychology techniques applied:
-   * - Archetype-specific framing (keeps the user in their identity)
-   * - Phase-appropriate depth (CBT thought records in navigating, gratitude in rhythm)
-   * - Presuppositional language ("As you notice..." assumes they will)
-   * - Body-based awareness prompts (where do you feel it?)
-   * - Narrative therapy reauthoring (later phases)
+   * All prompts are written at a 4th grade reading level.
+   * No psychology labels or clinical terms appear in user-facing text.
+   * Techniques are embedded invisibly in HOW we ask, not labeled.
    */
   private buildReflectStep(input: SessionGenerationInput): ReflectStep {
     const reflectTechnique = selectTechniqueForContext(input.discoveryPhase, "reflect");
 
-    // Archetype × Phase reflection matrix — deeper than static prompts
+    // Simple, warm reflection prompts — archetype × phase
+    // No jargon. No labels. Just good questions.
     const reflectionPrompts: Record<string, Record<string, string[]>> = {
       "calm-anchor": {
         rhythm: [
-          "As you wind down tonight, notice: What moment today made you feel most grounded?",
-          "Before bed, take three slow breaths and notice where calm lives in your body right now.",
-          "Tonight, gently observe: What one thing anchored you today?",
+          "Before bed tonight: What moment today made you feel most at peace?",
+          "Take three slow breaths. Where do you feel calm in your body right now?",
+          "What one thing kept you steady today?",
         ],
         deepening: [
-          "As you settle in tonight, notice: What emotion surprised you today? Where did you feel it in your body?",
-          "Before sleep, reflect: When did your steadiness create safety for someone else today?",
-          "Tonight, sit with this: What feeling did you notice but choose not to react to today?",
+          "What feeling surprised you today? Where in your body did you feel it?",
+          "When did your calm help someone else feel safe today?",
+          "What feeling came up today that you chose not to react to?",
         ],
         navigating: [
-          "Tonight, reflect: When tension arose today, what helped you stay grounded instead of reactive?",
-          "Before bed, notice: What was the thought that came before the feeling? (Situation → Thought → Feeling → Response)",
-          "As you wind down: If you could replay one moment today with even more calm, what would you do differently?",
+          "When things got tense today, what helped you stay steady?",
+          "Think about a hard moment today. What thought came first, then what feeling followed?",
+          "If you could redo one moment with even more calm, what would you change?",
         ],
         layers: [
-          "Tonight, go deeper: What part of your steadiness are you most proud of? What does it cost you?",
-          "Before sleep, notice: When do you use calm as a strength, and when might it be a shield?",
-          "As you wind down: What would it look like to be both grounded AND fully vulnerable?",
+          "What part of your calm are you most proud of? Does it ever cost you something?",
+          "When is your calm a strength, and when might it be a wall?",
+          "What would it look like to be steady AND open at the same time?",
         ],
         mirror: [
-          "Tonight, celebrate: How has your sense of calm evolved over these past days?",
-          "Before sleep, notice: What new understanding of yourself feels most true right now?",
-          "As you wind down: Write one sentence that captures who you're becoming as a partner.",
+          "How has your sense of calm changed over these past days?",
+          "What new thing about yourself feels most true right now?",
+          "Finish this sentence: As a partner, I'm becoming someone who...",
         ],
       },
       "compassionate-listener": {
         rhythm: [
-          "Tonight, check in with yourself: What did you hear today that you might normally have missed?",
-          "Before sleep, reflect: When did you truly listen — not just with your ears, but with your heart?",
-          "As you wind down: What emotion did someone share today, and how did it land in you?",
+          "What did you hear today that you might normally have missed?",
+          "When did you really listen today — not just the words, but what was behind them?",
+          "What feeling did someone share with you today? How did it land?",
         ],
         deepening: [
-          "Tonight, turn your empathy inward: What are YOU feeling right now? Name it without judging it.",
-          "Before sleep: What need were you aware of in someone today? What need of yours went unspoken?",
-          "As you wind down, notice: Where does empathy live in your body?",
+          "Check in with yourself: How are YOU feeling right now? Just name it.",
+          "What did someone need from you today? What did you need that you didn't say?",
+          "Where in your body do you feel it when you care about someone?",
         ],
         navigating: [
-          "Tonight, reflect: When someone expressed frustration today, what was the feeling underneath the words?",
-          "Before bed: When you heard something hard today, what was your first instinct — to fix, to feel, or to flee?",
-          "As you wind down: What would it look like to listen to yourself with the same compassion you give others?",
+          "When someone was upset today, what was the real feeling under their words?",
+          "When you heard something hard today, did you want to fix it, feel it, or step back?",
+          "What would it look like to listen to yourself the way you listen to others?",
         ],
         layers: [
-          "Tonight, go deeper: Is there a feeling you're better at hearing in others than in yourself?",
-          "Before sleep: What part of your listening is pure gift, and what part is avoiding your own voice?",
-          "As you wind down: What would you hear if you listened to your own heart as deeply as you listen to others?",
+          "Is there a feeling you hear better in other people than in yourself?",
+          "Which part of your listening is a gift, and which part keeps you from speaking up?",
+          "What would you hear if you listened to your own heart the way you listen to everyone else?",
         ],
         mirror: [
-          "Tonight, celebrate: How has your capacity for empathy grown — and what have you learned about your own needs?",
-          "Before sleep: What's the most important thing these days have taught you about listening to yourself?",
-          "As you wind down: Write one sentence about the listener you're becoming.",
+          "How has your ability to really hear people grown? And what have you learned about your own needs?",
+          "What's the biggest thing these days have taught you about listening to yourself?",
+          "Finish this sentence: As a listener, I'm becoming someone who...",
         ],
       },
       "growth-seeker": {
         rhythm: [
-          "Tonight, track your progress: What did you learn about yourself today that you didn't know yesterday?",
-          "Before bed, reflect: What's one thing you did today that your past self wouldn't have done?",
-          "As you wind down: Where do you feel your growth edge right now?",
+          "What did you learn about yourself today that you didn't know yesterday?",
+          "What's one thing you did today that your past self wouldn't have?",
+          "Where do you feel yourself stretching right now?",
         ],
         deepening: [
-          "Tonight, go deeper: What pattern did you notice in yourself today? What does it tell you?",
-          "Before sleep: What emotion felt unfamiliar today? Lean into it — that's where growth lives.",
-          "As you wind down, notice: Where in your body do you feel the pull toward growth?",
+          "What pattern did you spot in yourself today? What might it mean?",
+          "What feeling was new or unfamiliar today? That's usually where the good stuff is.",
+          "Where in your body do you feel it when you're growing?",
         ],
         navigating: [
-          "Tonight, experiment: Replay one challenging moment from today. What was your automatic thought? What's an alternative thought? (CBT thought record)",
-          "Before bed: What assumption about yourself got challenged today? How does it feel to hold that uncertainty?",
-          "As you wind down: What skill are you building right now that will matter six months from now?",
+          "Pick one hard moment from today. What was your first thought? Now — what's another way to see it?",
+          "What did you believe about yourself that got shaken up today?",
+          "What skill are you building right now that will matter six months from now?",
         ],
         layers: [
-          "Tonight, go deeper: What's a growth edge that scares you? What would it mean to lean into it?",
-          "Before sleep: Is there a story you tell yourself about relationships that might be worth rewriting?",
-          "As you wind down: If you could send a message to yourself six months from now, what would you say about today's work?",
+          "What growth edge scares you a little? What would it mean to go there?",
+          "Is there a story you tell yourself about love that might be ready for an update?",
+          "If you could send a note to yourself six months from now, what would it say about today?",
         ],
         mirror: [
-          "Tonight, celebrate: Map your growth from Day 1 to now. What's changed that you can name?",
-          "Before sleep: What discovery about yourself surprised you most during this journey?",
-          "As you wind down: Write one sentence about the partner you're evolving into.",
+          "Look back at Day 1. What's different now? Name it.",
+          "What surprised you most about what you learned about yourself?",
+          "Finish this sentence: As a partner, I'm growing into someone who...",
         ],
       },
       "connection-builder": {
         rhythm: [
-          "Tonight, appreciate: What moment of connection did you create or notice today?",
-          "Before sleep, reflect: When did you feel closest to someone today? What made it special?",
-          "As you wind down: What small gesture today carried more meaning than its size?",
+          "What moment of closeness did you notice or create today?",
+          "When did you feel closest to someone today? What made it special?",
+          "What small thing today meant more than it looked?",
         ],
         deepening: [
-          "Tonight, go deeper: What connection did you crave today? What would have fulfilled it?",
-          "Before sleep: What emotion did you share openly today? How did it feel to be seen?",
-          "As you wind down, notice: What does connection feel like in your body?",
+          "What kind of closeness did you want today? What would have given you that?",
+          "What did you share openly today? How did it feel to be really seen?",
+          "Where in your body do you feel it when you're connected to someone?",
         ],
         navigating: [
-          "Tonight, reflect: When distance appeared between you and someone today, what was underneath it?",
-          "Before bed: Think of a repair attempt you made or received today. What made it work (or not)?",
-          "As you wind down: What's one thing you could say tomorrow to create a moment of reconnection?",
+          "When you felt distance from someone today, what was really going on underneath?",
+          "Did you try to fix things with someone today? What worked? What didn't?",
+          "What's one thing you could say tomorrow to feel closer to someone?",
         ],
         layers: [
-          "Tonight, go deeper: What's the connection you want most that you haven't asked for yet?",
-          "Before sleep: Is there a way you seek connection that sometimes pushes it away? What would the alternative look like?",
-          "As you wind down: What does your ideal moment of deep connection look and feel like?",
+          "What's the closeness you want most but haven't asked for yet?",
+          "Is there a way you try to connect that sometimes pushes people away? What would you try instead?",
+          "Picture your best moment of real closeness. What does it look and feel like?",
         ],
         mirror: [
-          "Tonight, celebrate: How has the quality of your connections shifted over these days?",
-          "Before sleep: What new thread of connection have you woven that didn't exist before?",
-          "As you wind down: Write one sentence about the connector you're becoming.",
+          "How have your connections changed over these past days?",
+          "What new kind of closeness have you built that wasn't there before?",
+          "Finish this sentence: As a connector, I'm becoming someone who...",
         ],
       },
     };
@@ -671,7 +679,7 @@ RESPOND IN JSON FORMAT:
     const phasePrompts = archetypePrompts[input.discoveryPhase] || archetypePrompts["rhythm"];
     const prompt = phasePrompts[Math.floor(Math.random() * phasePrompts.length)];
 
-    // For navigating/layers phases, use guided format with sub-prompts
+    // For navigating/layers phases, add gentle guided sub-prompts
     if (
       (input.discoveryPhase === "navigating" || input.discoveryPhase === "layers") &&
       reflectTechnique
@@ -681,8 +689,8 @@ RESPOND IN JSON FORMAT:
         format: "guided",
         guidedPrompts: [
           prompt,
-          "What did you notice in your body as you reflected on this?",
-          "What's one small thing you could do differently tomorrow based on this awareness?",
+          "Where did you feel that in your body?",
+          "What's one small thing you could try differently tomorrow?",
         ],
         relatedToLearn: true,
       };

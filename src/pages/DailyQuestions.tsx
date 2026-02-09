@@ -86,8 +86,9 @@ export default function DailyQuestions() {
       const formatPrefs =
         PHASE_FORMAT_PREFERENCES[phase] || PHASE_FORMAT_PREFERENCES.rhythm;
 
-      // Build lightweight profile context summary
+      // Build lightweight profile context summary + extract attachment signals
       let profileContextSummary = "";
+      let attachmentStyle: string | undefined;
       try {
         const profileService = PersonalityProfileService.getInstance();
         await profileService.initialize(user.id);
@@ -98,6 +99,8 @@ export default function DailyQuestions() {
         );
         if (ctx) {
           profileContextSummary = ctx.knownTraits;
+          // Extract attachment style from profile if available
+          attachmentStyle = (ctx as any)?.attachmentStyle;
         }
       } catch {
         // Profile not initialized yet — that's fine for Day 1
@@ -113,6 +116,7 @@ export default function DailyQuestions() {
         discoveryPhase: phase,
         onboardingGoals: (profile as any)?.onboarding_goals || [],
         profileContextSummary,
+        attachmentStyle,
         yesterdayAction: undefined, // TODO: load from last session
         previousQuestionIds: [],
         formatPreferences: formatPrefs,

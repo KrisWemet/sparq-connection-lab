@@ -255,6 +255,8 @@ export interface SessionGenerationInput {
   onboardingGoals: string[];
   /** Profile context string for AI prompts */
   profileContextSummary: string;
+  /** Emerging attachment style (may be undefined early on) */
+  attachmentStyle?: string;
   /** Yesterday's micro-action text (for check-in) */
   yesterdayAction?: string;
   /** Previously asked question IDs to avoid repetition */
