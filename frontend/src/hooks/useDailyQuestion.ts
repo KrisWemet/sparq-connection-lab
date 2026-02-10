@@ -85,6 +85,7 @@ export function useDailyQuestion(): DailyQuestionState & DailyQuestionActions {
       // Construct the URL with the category parameter if provided
       // Either use the provided categoryId or use the one from state if available
       const effectiveCategoryId = categoryId || state.selectedCategoryId;
+      console.log('Fetching for category:', effectiveCategoryId);
       const params = effectiveCategoryId ? `?category_id=${effectiveCategoryId}` : '';
       
       // Use supabase.functions.invoke which handles auth implicitly

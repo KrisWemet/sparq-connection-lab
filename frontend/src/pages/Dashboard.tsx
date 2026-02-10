@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BottomNav } from "@/components/bottom-nav";
 import { useDashboardData } from "@/hooks/useDashboardData";
+import { useStreaks } from "@/hooks/useStreaks";
 import { colorThemes } from "@/lib/colorThemes";
 import { dailyActivities, upcomingFeatures } from "@/data/dashboardConstants"; // Keep static constants
 
@@ -10,7 +11,7 @@ import { LoadingState } from "@/components/common/LoadingState";
 import { ErrorState } from "@/components/common/ErrorState";
 import { EmptyState } from "@/components/common/EmptyState"; // Added
 import { Button } from "@/components/ui/button";
-import { Heart } from "lucide-react";
+import { Heart, Trophy } from "lucide-react";
 
 // Dashboard Components
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
@@ -23,6 +24,7 @@ import { GoalsTab } from "@/components/dashboard/GoalsTab";
 import { EventsTab } from "@/components/dashboard/EventsTab";
 import { InsightsTab } from "@/components/dashboard/InsightsTab";
 import { ComingSoonSection } from "@/components/dashboard/ComingSoonSection";
+import { StreakIndicator } from "@/components/StreakIndicator";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -35,6 +37,7 @@ export default function Dashboard() {
     error,
     refetchData,
   } = useDashboardData();
+  const { streak } = useStreaks();
 
   // Derive theme from profile or default
   // TODO: Update UserProfile type and ProfileService to include preferences.theme
@@ -81,6 +84,20 @@ export default function Dashboard() {
       />
 
       <main className="container max-w-lg mx-auto px-4 pt-6 animate-slide-up space-y-6">
+        {/* Streak and Achievements Row */}
+        <div className="flex items-center justify-between">
+          <StreakIndicator streak={streak} size="md" />
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => navigate('/achievements')}
+            className="gap-2"
+          >
+            <Trophy className="w-4 h-4 text-amber-500" />
+            Achievements
+          </Button>
+        </div>
+
         <GreetingCard
           profile={profile}
           colors={colors}

@@ -9,6 +9,8 @@ export { activityService } from './ActivityService';
 export { sharedEventService } from './SharedEventService'; // Added export
 export { promptService } from './PromptService';
 export { messageService } from './MessageService';
+export { streakService } from './StreakService';
+export { achievementService } from './AchievementService';
 
 // Export types
 export * from './types';

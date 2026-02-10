@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDailyQuestion } from '@/hooks/useDailyQuestion';
+import { useStreaks } from '@/hooks/useStreaks';
+import { useAchievements } from '@/hooks/useAchievements';
 import DailyQuestionView from '@/components/DailyQuestions/DailyQuestionView';
 import CategorySelection, { CategoryStatus } from '@/components/DailyQuestions/CategorySelection';
 import PastAnswers from '@/components/DailyQuestions/PastAnswers';
 import { BottomNav } from '@/components/bottom-nav';
 import { AnimatedContainer } from '@/components/ui/animated-container';
-import { Loader2, Settings, ChevronLeft, RefreshCw, AlertCircle, BookOpen } from 'lucide-react'; // Added BookOpen
+import { Loader2, Settings, ChevronLeft, RefreshCw, AlertCircle, BookOpen, Trophy } from 'lucide-react'; // Added BookOpen, Trophy
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
@@ -17,6 +19,7 @@ import { User } from '@supabase/supabase-js';
 // Removed: import { useSupabaseClient } from "@supabase/auth-helpers-react"; - Use standard client
 import { LoadingState } from "@/components/common/LoadingState"; // Use named import
 import { ErrorState } from "@/components/common/ErrorState"; // Use named import
+import { StreakIndicator } from "@/components/StreakIndicator";
 // Removed import for non-existent DashboardShell
 
 // Define a type for the category data fetched from Supabase
@@ -106,7 +109,10 @@ export default function DailyQuestions() {
     fetchPastAnswers,
     // Add any other state properties needed from DailyQuestionState if used below
   } = useDailyQuestion();
+  const { streak, updateStreak } = useStreaks();
+  const { checkAchievements } = useAchievements();
   const { toast } = useToast();
+  const [showStreakCelebration, setShowStreakCelebration] = useState(false);
 
   // Removed redundant destructuring block
 
@@ -319,6 +325,34 @@ export default function DailyQuestions() {
     setShowReview(true);
   };
 
+  // Handle answer submission with streak and achievement tracking
+  const handleSubmitAnswer = async (answerText: string) => {
+    await submitAnswer(answerText);
+    
+    // Update streak after successful submission
+    const { streakIncreased } = await updateStreak();
+    if (streakIncreased) {
+      setShowStreakCelebration(true);
+      setTimeout(() => setShowStreakCelebration(false), 3000);
+    }
+    
+    // Check for achievements
+    // Get current session count (you may want to fetch this from the backend)
+    const completedCategories = Object.entries(categoryStatuses)
+      .filter(([_, status]) => status.completed)
+      .map(([id, _]) => id);
+    
+    await checkAchievements({
+      currentStreak: streak?.currentStreak || 0,
+      longestStreak: streak?.longestStreak || 0,
+      sessionsCompleted: 1, // This should be fetched from backend ideally
+      categoriesCompleted: completedCategories,
+      day14Viewed: false,
+      answersShared: 0,
+      phasesCompleted: [],
+    });
+  };
+
   // Render content based on state
   const renderContent = () => {
     // Show Review Section first if active
@@ -347,7 +381,7 @@ export default function DailyQuestions() {
       return (
         <DailyQuestionView
           question={currentQuestion}
-          onSubmit={submitAnswer}
+          onSubmit={handleSubmitAnswer}
           onPause={pauseDailyQuestions}
         />
       );
@@ -378,7 +412,7 @@ export default function DailyQuestions() {
       return (
         <DailyQuestionView
           question={currentQuestion}
-          onSubmit={submitAnswer}
+          onSubmit={handleSubmitAnswer}
           onPause={pauseDailyQuestions}
         />
       );
@@ -405,16 +439,24 @@ export default function DailyQuestions() {
 
   // Render the main page structure
   return (
-    <div className="p-4 md:p-6"> {/* Replace DashboardShell with a simple div */}
+    <div className="p-4 md:p-6 pb-24"> {/* Replace DashboardShell with a simple div, add bottom padding */}
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Daily Questions</h1>
-        {!showReview && ( // Only show review button when not already reviewing
-          <Button variant="outline" size="sm" onClick={handleShowReview}>
-            <BookOpen className="mr-2 h-4 w-4" /> Review Past Answers
-          </Button>
-        )}
+        <div className="flex items-center gap-2">
+          <StreakIndicator 
+            streak={streak} 
+            showCelebration={showStreakCelebration}
+            size="sm" 
+          />
+          {!showReview && ( // Only show review button when not already reviewing
+            <Button variant="outline" size="sm" onClick={handleShowReview}>
+              <BookOpen className="mr-2 h-4 w-4" /> Review
+            </Button>
+          )}
+        </div>
       </div>
       {renderContent()}
+      <BottomNav />
     </div>
   );
 }

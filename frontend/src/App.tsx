@@ -39,6 +39,7 @@ import TestPage from "./pages/TestPage";
 import SharedPlanner from "./pages/SharedPlanner";
 import PartnerInvite from "./pages/PartnerInvite"; // Import the partner invite page
 import TestDailyQuestion from "./pages/TestDailyQuestion"; // Import our test page
+import Achievements from "./pages/Achievements"; // Import achievements page
 
 console.log("App component loaded");
 
@@ -194,6 +195,13 @@ export default function App() {
                       <Route path="/accept-invite" element={
                         <ProtectedRoute>
                           <PartnerInvite />
+                        </ProtectedRoute>
+                      } />
+
+                      {/* Achievements route */}
+                      <Route path="/achievements" element={
+                        <ProtectedRoute>
+                          <Achievements />
                         </ProtectedRoute>
                       } />
 
