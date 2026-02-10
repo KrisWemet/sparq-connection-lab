@@ -23,10 +23,25 @@ export function YesterdayCheckIn({ checkIn, onResponse }: YesterdayCheckInProps)
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
+      style={{
+        background: "var(--archetype-glow, transparent)",
+        borderRadius: "0.75rem",
+        padding: "0.5rem",
+      }}
     >
-      <Card className="bg-muted/30">
+      <Card 
+        className="bg-muted/30"
+        style={{
+          borderColor: "var(--session-primary, hsl(var(--border)))",
+        }}
+      >
         <CardHeader>
-          <CardTitle className="text-lg font-medium">How did it go?</CardTitle>
+          <CardTitle
+            className="text-lg font-medium"
+            style={{ color: "var(--session-primary, hsl(var(--card-foreground)))" }}
+          >
+            As you look back...
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground italic">
@@ -46,7 +61,18 @@ export function YesterdayCheckIn({ checkIn, onResponse }: YesterdayCheckInProps)
                   <Button
                     key={option.id}
                     variant="outline"
-                    className="h-auto py-3 flex flex-col items-center justify-center gap-1 hover:bg-primary/10"
+                    className="h-auto py-3 flex flex-col items-center justify-center gap-1"
+                    style={{
+                      ['--tw-bg-opacity' as string]: '0.1',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = "var(--session-primary, hsl(var(--primary)))";
+                      e.currentTarget.style.backgroundColor = "var(--session-surface, hsl(var(--primary) / 0.1))";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = "";
+                      e.currentTarget.style.backgroundColor = "";
+                    }}
                     onClick={() => handleSelect(option.id)}
                   >
                     <span className="text-2xl">{option.emoji}</span>

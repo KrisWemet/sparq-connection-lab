@@ -42,11 +42,11 @@ export const ARCHETYPE_CONFIGS: Record<IdentityArchetype, ArchetypeConfig> = {
     icon: "anchor",
 
     greetingTemplates: [
-      "Take a breath, {name}. You're already showing up.",
-      "Good morning, {name}. Let's start today grounded.",
-      "Hey {name}. A few quiet minutes for yourself today.",
-      "Morning, {name}. Steady as always — let's begin.",
-      "{name}, today's a good day to be the calm in the storm.",
+      "As you take a breath, {name}, notice that you're already showing up.",
+      "Good morning, {name}. As you begin today, let's start grounded.",
+      "Hey {name}. As you step into today, a few quiet minutes just for you.",
+      "Morning, {name}. As you arrive, steady as always — let's begin.",
+      "{name}, as you begin today, notice you're already being the calm in the storm.",
       "Welcome back, {name}. Your consistency matters more than you know."
     ],
 
@@ -69,11 +69,11 @@ export const ARCHETYPE_CONFIGS: Record<IdentityArchetype, ArchetypeConfig> = {
 
     celebrationMessages: {
       sessionComplete: [
-        "Another layer of foundation laid. Steady work, {name}.",
+        "Another layer of foundation laid. As you pause, notice your steady progress, {name}.",
         "You showed up again. That consistency is your superpower.",
         "Grounded and growing. That's the way.",
         "The calm you're building radiates further than you think.",
-        "Steady steps forward. Well done."
+        "As you complete today, notice the steady steps you've taken. Well done."
       ],
       streakMilestone: [
         "{count} days of showing up. Your roots grow deeper every day.",
@@ -98,12 +98,12 @@ export const ARCHETYPE_CONFIGS: Record<IdentityArchetype, ArchetypeConfig> = {
     icon: "heart-handshake",
 
     greetingTemplates: [
-      "How's your heart today, {name}?",
-      "Good morning, {name}. Ready to tune in?",
+      "As you check in, how's your heart today, {name}?",
+      "Good morning, {name}. As you begin, ready to tune in?",
       "{name}, your willingness to listen is already a gift.",
-      "Hey {name}. Let's practice the art of really hearing today.",
+      "Hey {name}. As you start today, let's practice really hearing.",
       "Morning, {name}. The world needs more listeners like you.",
-      "Welcome back, {name}. Your empathy makes a difference."
+      "Welcome back, {name}. Your empathy is making a difference."
     ],
 
     contentFraming: {
@@ -154,11 +154,11 @@ export const ARCHETYPE_CONFIGS: Record<IdentityArchetype, ArchetypeConfig> = {
     icon: "sprout",
 
     greetingTemplates: [
-      "What will you discover about yourself today, {name}?",
-      "Good morning, {name}. Ready to level up?",
-      "{name}, your curiosity is about to pay off.",
-      "Hey {name}. Every day you grow, your relationship grows too.",
-      "Morning, {name}. Let's unlock something new today.",
+      "As you step into today, what will you discover about yourself, {name}?",
+      "Good morning, {name}. Ready to see what's possible today?",
+      "{name}, as you begin today, your curiosity is opening doors.",
+      "Hey {name}. As you grow today, your relationship grows with you.",
+      "Morning, {name}. As you begin, let's discover something new.",
       "Welcome back, {name}. Growth looks good on you."
     ],
 
@@ -181,10 +181,10 @@ export const ARCHETYPE_CONFIGS: Record<IdentityArchetype, ArchetypeConfig> = {
 
     celebrationMessages: {
       sessionComplete: [
-        "Look at you, {name} — already growing.",
-        "Another insight absorbed. You're building something incredible.",
-        "Progress isn't always visible, but it's happening. Trust the process.",
-        "Your willingness to grow is rare. Don't underestimate it.",
+        "As you pause to notice, {name}, you're already growing in ways you might not see yet.",
+        "Another insight absorbed. As you reflect, you're building something incredible.",
+        "Progress isn't always visible, but it's happening. Trust the journey.",
+        "Your willingness to grow is rare. As you continue, you're becoming more you.",
         "Every session is a step forward. You're on your way."
       ],
       streakMilestone: [
@@ -210,10 +210,10 @@ export const ARCHETYPE_CONFIGS: Record<IdentityArchetype, ArchetypeConfig> = {
     icon: "link",
 
     greetingTemplates: [
-      "Ready to build some bridges today, {name}?",
-      "Good morning, {name}. Let's create something together.",
+      "As you begin today, ready to build some bridges, {name}?",
+      "Good morning, {name}. As you start, let's create something together.",
       "{name}, your desire for connection is powerful.",
-      "Hey {name}. Today's about weaving closer bonds.",
+      "Hey {name}. As you step into today, it's about weaving closer bonds.",
       "Morning, {name}. Connection starts with intention — and you have plenty.",
       "Welcome back, {name}. Every thread you add strengthens the whole fabric."
     ],

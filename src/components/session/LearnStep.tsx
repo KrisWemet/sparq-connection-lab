@@ -66,9 +66,14 @@ export function LearnStep({ learn, onAnswer, isAnalyzing }: LearnStepProps) {
               disabled={submitted}
               className={`w-full text-left p-4 rounded-lg border transition-colors ${
                 selectedOption?.id === option.id
-                  ? "border-primary bg-primary/5"
-                  : "border-border hover:border-primary/50"
+                  ? "bg-primary/5"
+                  : "hover:border-primary/50"
               } ${submitted ? "cursor-default opacity-70" : "cursor-pointer"}`}
+              style={{
+                borderColor: selectedOption?.id === option.id 
+                  ? "var(--session-primary, hsl(var(--primary)))" 
+                  : "hsl(var(--border))",
+              }}
             >
               <span className="text-sm">{option.text}</span>
             </motion.button>
@@ -88,7 +93,7 @@ export function LearnStep({ learn, onAnswer, isAnalyzing }: LearnStepProps) {
           <textarea
             value={textValue}
             onChange={(e) => setTextValue(e.target.value)}
-            placeholder="Share your thoughts..."
+            placeholder="What's coming up for you?"
             disabled={submitted}
             className="w-full rounded-lg border p-3 min-h-[100px] resize-none focus:ring-2 focus:ring-primary/30 focus:outline-none bg-background text-foreground"
           />
@@ -126,9 +131,17 @@ export function LearnStep({ learn, onAnswer, isAnalyzing }: LearnStepProps) {
                   disabled={submitted}
                   className={`w-10 h-10 rounded-full border-2 font-medium transition-all ${
                     scaleValue === value
-                      ? "bg-primary text-white border-primary"
-                      : "border-border hover:border-primary/50"
+                      ? "text-white"
+                      : "hover:border-primary/50"
                   } ${submitted ? "cursor-default opacity-70" : "cursor-pointer"}`}
+                  style={{
+                    backgroundColor: scaleValue === value 
+                      ? "var(--session-primary, hsl(var(--primary)))" 
+                      : "transparent",
+                    borderColor: scaleValue === value 
+                      ? "var(--session-primary, hsl(var(--primary)))" 
+                      : "hsl(var(--border))",
+                  }}
                 >
                   {value}
                 </button>
@@ -206,7 +219,13 @@ export function LearnStep({ learn, onAnswer, isAnalyzing }: LearnStepProps) {
       </motion.h2>
 
       {/* Question input based on format */}
-      {renderQuestionInput()}
+      <div style={{
+        padding: "1rem",
+        borderRadius: "0.75rem",
+        background: "var(--archetype-glow, transparent)",
+      }}>
+        {renderQuestionInput()}
+      </div>
 
       {/* Loading indicator when analyzing */}
       {isAnalyzing && (
@@ -215,8 +234,11 @@ export function LearnStep({ learn, onAnswer, isAnalyzing }: LearnStepProps) {
           animate={{ opacity: 1 }}
           className="flex items-center justify-center gap-2 text-sm text-muted-foreground pt-4"
         >
-          <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-          <span>Reflecting on your answer...</span>
+          <div 
+            className="w-2 h-2 rounded-full animate-pulse" 
+            style={{ backgroundColor: "var(--session-primary, hsl(var(--primary)))" }}
+          />
+          <span>As we reflect on what you shared...</span>
         </motion.div>
       )}
     </motion.div>

@@ -17,13 +17,37 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { ShareAnswerButton } from "@/components/share/ShareAnswerButton";
 
 interface MicroInsightProps {
   insight: string;
   onContinue: () => void;
+  /** Original question text for sharing */
+  questionText?: string;
+  /** User's answer text for sharing */
+  answerText?: string;
+  /** Session ID for tracking */
+  sessionId?: string;
+  /** Question category */
+  category?: string;
+  /** Current discovery day */
+  discoveryDay?: number;
+  /** Whether sharing is enabled for this insight */
+  allowSharing?: boolean;
 }
 
-export function MicroInsight({ insight, onContinue }: MicroInsightProps) {
+export function MicroInsight({ 
+  insight, 
+  onContinue, 
+  questionText,
+  answerText,
+  sessionId,
+  category,
+  discoveryDay,
+  allowSharing = true,
+}: MicroInsightProps) {
+  const hasShareData = questionText && answerText && allowSharing;
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.92 }}
@@ -57,7 +81,7 @@ export function MicroInsight({ insight, onContinue }: MicroInsightProps) {
             className="text-sm font-medium text-center"
             style={{ color: "var(--session-primary, hsl(var(--primary)))" }}
           >
-            Here's what we noticed...
+            As we listened to what you shared...
           </motion.p>
 
           {/* The insight itself — the emotional peak.
@@ -70,6 +94,26 @@ export function MicroInsight({ insight, onContinue }: MicroInsightProps) {
           >
             {insight}
           </motion.p>
+
+          {/* Share button — allows users to share their insight with partner */}
+          {hasShareData && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.4 }}
+              className="flex justify-center pt-2"
+            >
+              <ShareAnswerButton
+                questionText={questionText}
+                answerText={answerText}
+                sessionId={sessionId}
+                category={category}
+                discoveryDay={discoveryDay}
+                variant="outline"
+                size="sm"
+              />
+            </motion.div>
+          )}
 
           {/* Continue button — delayed further to give the insight time to land.
               Psychology: Forcing a brief pause before the CTA ensures the user

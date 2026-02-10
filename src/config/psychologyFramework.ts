@@ -124,6 +124,11 @@ export const COACHING_LANGUAGE_PATTERNS = {
     "The next time you find yourself {behavior}...",
     "As this becomes more natural for you...",
     "Now that you're aware of {insight}...",
+    "As you become more aware of {behavior}...",
+    "When {behavior} shows up...",
+    "As you begin to notice {behavior}...",
+    "The more you practice {behavior}, the more you'll notice...",
+    "As you get curious about {behavior}...",
   ],
 
   /**
@@ -137,6 +142,11 @@ export const COACHING_LANGUAGE_PATTERNS = {
     "The fact that you noticed {observation} shows real self-awareness.",
     "This isn't a setback — it's information about what matters to you.",
     "Feeling {emotion} about this means you care deeply. That's a strength.",
+    "When {challenge} shows up, it's really an invitation to {positive_interpretation}.",
+    "What if that {negative} was actually {positive} in disguise?",
+    "The way {behavior} shows up for you is trying to protect something important.",
+    "That {challenge} is feedback, not failure.",
+    "What would be different if you saw {challenge} as an opportunity to {positive_interpretation}?",
   ],
 
   /**
@@ -149,6 +159,11 @@ export const COACHING_LANGUAGE_PATTERNS = {
     "On a scale of 1-10, where are you now — and what would move you one point higher?",
     "What's one small thing that's already going right?",
     "If you woke up tomorrow and this was resolved, what would you notice first?",
+    "As you imagine this working out, what do you see?",
+    "When this is going well, what's different about how you show up?",
+    "What would you be doing differently if you trusted that everything will work out?",
+    "As you look back from a place where this is resolved, what helped get you there?",
+    "What small sign would tell you that things are already starting to shift?",
   ],
 
   /**
@@ -161,6 +176,11 @@ export const COACHING_LANGUAGE_PATTERNS = {
     "A lot of people feel the same way about this.",
     "That feeling is telling you something — and it's worth listening to.",
     "What you're feeling? It matters. Don't brush it off.",
+    "Of course you feel {emotion} — that makes complete sense.",
+    "That feeling is completely understandable given what you're experiencing.",
+    "It makes sense that {behavior} shows up when {context}.",
+    "What you're noticing? That's valuable information.",
+    "Before we go further — yes, this is hard. And that's okay.",
   ],
 
   /**
@@ -543,21 +563,23 @@ export const ATTACHMENT_LANGUAGE: Record<string, AttachmentLanguageProfile> = {
     coreNeed: "Reassurance that the connection is stable and they matter",
     coreFear: "Being abandoned, forgotten, or not enough",
     wordsToUse: [
-      "you're doing great", "this is normal", "you're not alone in this",
+      "you're doing great", "this is completely normal", "you're not alone in this",
       "I'm here", "consistent", "steady", "always",
-      "this shows how much you care", "that's a strength",
-      "you matter", "your feelings make sense",
+      "this shows how much you care", "that's a gift",
+      "you matter", "your feelings make complete sense",
+      "as you notice", "what you're feeling is valuable",
+      "that makes sense", "of course you feel that way",
     ],
     wordsToAvoid: [
       "give them space", "back off", "too much", "clingy",
       "needy", "overthinking", "calm down", "relax",
       "you don't need", "stop worrying", "it's not a big deal",
-      "independent", "on your own",
+      "independent", "on your own", "just chill",
     ],
-    actionFraming: "Warm and reassuring. Frame the action as something that will bring them CLOSER: 'This small step helps you feel more connected.' Always confirm the action is enough — they'll worry it's not.",
-    insightFraming: "Extra validation before the insight. 'The way you care so deeply? That's not too much — it's a gift.' Never suggest they should feel LESS. Help them channel the intensity, not reduce it.",
-    missedActionResponse: "Extra warmth. 'That's completely okay. The fact that you're here today shows how committed you are. That matters more than any single action.'",
-    pacing: "Move slowly into vulnerability. They may SEEM open fast, but premature depth triggers anxiety spirals. Build safety first.",
+    actionFraming: "Warm and reassuring. Frame the action as something that will bring them CLOSER: 'As you try this, notice how it helps you feel more connected.' Always confirm the action is enough — they'll worry it's not. Use presuppositions that assume success.",
+    insightFraming: "Extra validation before the insight. Start with 'The way you care so deeply? That's not too much — it's a gift.' Never suggest they should feel LESS. Help them channel the intensity, not reduce it. Use externalization: 'When that worry shows up...' not 'When you worry...'",
+    missedActionResponse: "Extra warmth and validation-first: 'That's completely okay. The fact that you're here today shows how committed you are. That matters more than any single action. You're doing great just by showing up.'",
+    pacing: "Move slowly into vulnerability. They may SEEM open fast, but premature depth triggers anxiety spirals. Build safety first with consistent validation before every invitation to change.",
   },
 
   "dismissive-avoidant": {
@@ -568,17 +590,20 @@ export const ATTACHMENT_LANGUAGE: Record<string, AttachmentLanguageProfile> = {
       "you get to choose", "notice", "observe", "interesting",
       "makes sense", "logical", "practical", "effective",
       "strength", "capable", "on your terms",
+      "try this and see", "experiment", "optional",
+      "when you want to", "if it feels right",
     ],
     wordsToAvoid: [
       "need", "depend", "vulnerable", "open up", "let me in",
       "share your feelings", "get closer", "deeper connection",
       "you should talk about", "how does that make you feel",
       "we need to discuss", "commit to", "promise",
+      "require", "necessary", "must",
     ],
-    actionFraming: "Frame as an experiment or skill, not an emotional exercise. 'Try this and see what you notice.' Keep it practical and short. Give them an exit: 'Even 30 seconds counts.' NEVER frame it as something they 'need to do for the relationship.'",
-    insightFraming: "Frame as something interesting they're good at, not something emotional. 'You have a real ability to stay calm under pressure — that's actually rare.' Respect their self-sufficiency. Never imply they're missing something emotional.",
-    missedActionResponse: "Brief and no-pressure. 'All good. Let's move on.' The WORST thing is making them feel guilty — guilt triggers withdrawal.",
-    pacing: "Very gradual. They need 2-3x longer before vulnerability feels safe. Respect their pace. Small observations, not big emotional questions early on.",
+    actionFraming: "Frame as an experiment or skill, not an emotional exercise. 'Try this and see what you notice.' Keep it practical and short. Give them an exit: 'Even 30 seconds counts.' NEVER frame it as something they 'need to do for the relationship.' Use observation-focused language: 'As you notice what happens when...'",
+    insightFraming: "Frame as something interesting they're good at, not something emotional. 'You have a real ability to stay calm under pressure — that's actually rare.' Respect their self-sufficiency. Never imply they're missing something emotional. Use externalization: 'When that pattern shows up...' not 'When you do this...'",
+    missedActionResponse: "Brief and no-pressure. 'All good. Let's move on.' The WORST thing is making them feel guilty — guilt triggers withdrawal. No explanations or reassurances needed.",
+    pacing: "Very gradual. They need 2-3x longer before vulnerability feels safe. Respect their pace. Small observations, not big emotional questions early on. Always emphasize choice and control.",
   },
 
   "fearful-avoidant": {
@@ -589,16 +614,19 @@ export const ATTACHMENT_LANGUAGE: Record<string, AttachmentLanguageProfile> = {
       "whatever feels right", "there's no wrong answer",
       "this is just for you", "safe", "gentle", "small step",
       "you're in control", "you can always come back to this",
+      "as you notice", "when you're ready", "at your own pace",
+      "it's understandable", "that makes sense",
     ],
     wordsToAvoid: [
       "you need to decide", "commit", "pick one", "always",
       "never", "you should", "most people", "just do it",
       "trust the process", "let go", "push through",
+      "choose", "make up your mind", "figure it out",
     ],
-    actionFraming: "Extra gentle. Frame everything as optional and safe: 'If it feels right, you might try... and if not, that's okay too.' Give double permission — to try AND to not try. Small steps only.",
-    insightFraming: "Normalize the push-pull: 'It makes total sense to want closeness and space at the same time. Most people feel that way sometimes.' Never force them to pick a side. Hold both.",
-    missedActionResponse: "Gentle and normalizing. 'Some days feel harder than others. That's part of the journey, not a step backward. You showed up today — that counts.'",
-    pacing: "Slowest of all. They need to feel safe before ANY vulnerability. Days 1-5 should feel very light. Watch for signs of overwhelm.",
+    actionFraming: "Extra gentle. Frame everything as optional and safe: 'If it feels right, you might try... and if not, that's okay too.' Give double permission — to try AND to not try. Small steps only. Use externalization: 'When that conflicted feeling shows up...' not 'When you feel conflicted...'",
+    insightFraming: "Normalize the push-pull with validation: 'It makes total sense to want closeness and space at the same time. A lot of people feel that way.' Never force them to pick a side. Hold both. Use presuppositions that honor both needs: 'As you honor both parts of yourself...'",
+    missedActionResponse: "Gentle and normalizing with validation: 'Some days feel harder than others. That's part of the journey, not a step backward. You showed up today — that counts. Whatever you're feeling right now is completely okay.'",
+    pacing: "Slowest of all. They need to feel safe before ANY vulnerability. Days 1-5 should feel very light. Watch for signs of overwhelm. Validate every step, even the smallest.",
   },
 
   // Default fallback — used when attachment style isn't known yet (Days 1-3)

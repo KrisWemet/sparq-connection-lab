@@ -61,6 +61,12 @@ export default function DailyQuestions() {
   const [showAlternativeAction, setShowAlternativeAction] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Store user's answer for sharing
+  const [lastAnswer, setLastAnswer] = useState<{
+    value: string;
+    selectedOption?: MCOption;
+  } | null>(null);
+
   // Derive from profile
   const discoveryDay = (profile as any)?.discovery_day || 1;
   const identityArchetype = (profile as any)?.identity_archetype || "growth-seeker";
@@ -158,6 +164,9 @@ export default function DailyQuestions() {
     selectedOption?: MCOption
   ) => {
     if (!session || !user?.id) return;
+
+    // Store answer for sharing
+    setLastAnswer({ value, selectedOption });
 
     setIsAnalyzing(true);
 
@@ -273,6 +282,7 @@ export default function DailyQuestions() {
       style={{
         ...cssVars,
         background: `linear-gradient(135deg, ${phaseColors.gradientFrom} 0%, ${phaseColors.gradientTo} 100%)`,
+        boxShadow: `inset 0 0 100px ${phaseColors.surface}`,
       }}
     >
       <main className="container max-w-lg mx-auto px-4 pt-6">
@@ -282,7 +292,7 @@ export default function DailyQuestions() {
             {error ? (
               <>
                 <p className="text-muted-foreground text-center">{error}</p>
-                <Button onClick={generateSession}>Try Again</Button>
+                <Button onClick={generateSession}>Let's try again</Button>
               </>
             ) : (
               <>
@@ -297,7 +307,7 @@ export default function DailyQuestions() {
                   <Sparkles className="w-8 h-8 text-primary" />
                 </motion.div>
                 <p className="text-muted-foreground">
-                  Preparing your session...
+                  As we prepare your session...
                 </p>
               </>
             )}
@@ -325,6 +335,7 @@ export default function DailyQuestions() {
                   <SessionGreeting
                     greeting={session.greeting.text}
                     subtitle={session.greeting.subtitle}
+                    archetype={identityArchetype}
                   />
                 </motion.div>
               )}
@@ -371,6 +382,12 @@ export default function DailyQuestions() {
                   <MicroInsight
                     insight={session.learn.microInsight}
                     onContinue={handleMicroInsightContinue}
+                    questionText={session.learn.question.text}
+                    answerText={lastAnswer?.selectedOption?.text || lastAnswer?.value || ""}
+                    sessionId={session.id}
+                    category={session.learn.question.targetDimensions[0]}
+                    discoveryDay={discoveryDay}
+                    allowSharing={relationshipMode === "partner"}
                   />
                 </motion.div>
               )}

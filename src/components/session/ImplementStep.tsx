@@ -11,13 +11,19 @@ interface ImplementStepProps {
   showAlternative: boolean;
 }
 
+// Helper to get difficulty color based on phase
 function DifficultyDots({ level }: { level: 1 | 2 | 3 }) {
   return (
     <div className="flex gap-1">
       {[1, 2, 3].map(i => (
         <div
           key={i}
-          className={`w-1.5 h-1.5 rounded-full ${i <= level ? 'bg-primary' : 'bg-muted'}`}
+          className="w-1.5 h-1.5 rounded-full"
+          style={{
+            backgroundColor: i <= level 
+              ? "var(--session-primary, hsl(var(--primary)))" 
+              : "hsl(var(--muted))"
+          }}
         />
       ))}
     </div>
@@ -45,16 +51,35 @@ export function ImplementStep({ implement, onAccept, onSwap, showAlternative }: 
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
+      style={{
+        background: "var(--archetype-glow, transparent)",
+        borderRadius: "0.75rem",
+        padding: "0.5rem",
+      }}
     >
-      <Card className="bg-white dark:bg-card">
+      <Card 
+        className="bg-white dark:bg-card"
+        style={{
+          borderColor: "var(--session-primary, hsl(var(--border)))",
+        }}
+      >
         <CardContent className="pt-6 space-y-4">
           <div className="text-center space-y-3">
-            <p className="text-sm font-medium text-muted-foreground">
+            <p 
+              className="text-sm font-medium"
+              style={{ color: "var(--session-accent, hsl(var(--muted-foreground)))" }}
+            >
               Today's micro-action
             </p>
 
             <div className="flex justify-center">
-              <span className="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full">
+              <span 
+                className="text-xs px-2 py-0.5 rounded-full"
+                style={{
+                  background: "var(--session-surface, hsl(var(--primary) / 0.1))",
+                  color: "var(--session-primary, hsl(var(--primary)))",
+                }}
+              >
                 {currentAction.category}
               </span>
             </div>
@@ -88,7 +113,7 @@ export function ImplementStep({ implement, onAccept, onSwap, showAlternative }: 
               className="w-full"
               onClick={handleAccept}
             >
-              I'll try this today
+              I'm ready to try this
             </Button>
 
             {implement.alternative && !showAlternative && !showingAlternative && (
@@ -97,7 +122,7 @@ export function ImplementStep({ implement, onAccept, onSwap, showAlternative }: 
                 className="w-full text-sm"
                 onClick={handleSwap}
               >
-                Show me another
+                What else feels right?
               </Button>
             )}
           </div>

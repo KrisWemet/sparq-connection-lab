@@ -48,15 +48,15 @@ const communicationTemplates: MicroActionTemplate[] = [
   },
   {
     id: "comm-2",
-    text: "When you notice a complaint forming in your mind, pause and reframe it as a specific request",
+    text: "When frustration shows up, pause and reframe it as a specific request",
     category: "communication",
     difficulty: 2,
     estimatedMinutes: 3,
-    soloVersion: "Notice when a complaint forms and write down how you'd reframe it as a specific, actionable request",
-    partnerVersion: "When you notice a complaint about {partner} forming, pause and say it as a specific request instead",
+    soloVersion: "As you notice frustration arising, write down how you'd express it as a specific, actionable request",
+    partnerVersion: "When frustration about {partner} shows up, pause and express it as a specific request instead",
     archetypeVariants: {
-      "growth-seeker": "When frustration arises, transform it into a clear invitation for what you need to grow together",
-      "calm-anchor": "When you feel critical, pause and ask yourself what you really need — then request it directly"
+      "growth-seeker": "As frustration shows up, notice how you can transform it into a clear invitation for what you need",
+      "calm-anchor": "When criticism arises, pause and ask yourself what you really need — then request it directly"
     },
     personalizable: true,
     personalizationSlots: ["common_complaint_area"],
@@ -82,14 +82,14 @@ const communicationTemplates: MicroActionTemplate[] = [
   },
   {
     id: "comm-4",
-    text: "Share one thing about your day that made you feel something — not just what happened, but how it felt",
+    text: "Share one thing about your day that stirred something in you — not just what happened, but how it felt",
     category: "communication",
     difficulty: 2,
     estimatedMinutes: 3,
-    soloVersion: "Write down one thing from today that stirred an emotion in you — name both the event and the feeling",
-    partnerVersion: "Tell {partner} about one moment today that made you feel something — describe both what happened and what you felt",
+    soloVersion: "Write down one thing from today that stirred something in you — name both the event and the feeling",
+    partnerVersion: "Tell {partner} about one moment today that stirred something in you — describe both what happened and what you felt",
     archetypeVariants: {
-      "vulnerable-heart": "Share with {partner} a moment today when you felt something deeply — let them see the real emotion",
+      "vulnerable-heart": "Share with {partner} a moment today when something moved you deeply — let them see the real you",
       "calm-anchor": "Tell {partner} about a moment today that moved you, even if the feeling was subtle"
     },
     personalizable: true,
@@ -128,12 +128,12 @@ const communicationTemplates: MicroActionTemplate[] = [
   },
   {
     id: "comm-7",
-    text: "Use 'I feel [emotion] when [specific situation]' to share something that's been on your mind",
+    text: "As you share what's on your mind, use 'I feel [emotion] when [specific situation]'",
     category: "communication",
     difficulty: 2,
     estimatedMinutes: 3,
     soloVersion: "Write down one thing on your mind using this structure: 'I feel [emotion] when [specific situation]'",
-    partnerVersion: "Share something that's been on your mind with {partner} using 'I feel [emotion] when [specific situation]'",
+    partnerVersion: "As you share what's on your mind with {partner}, try using 'I feel [emotion] when [specific situation]'", 
     personalizable: true,
     personalizationSlots: ["recent_emotion", "trigger_situation"],
     targetDimensions: ["emotionalExpression", "conflict"],
@@ -276,15 +276,15 @@ const conflictTemplates: MicroActionTemplate[] = [
   },
   {
     id: "conf-2",
-    text: "Practice saying 'I feel [emotion] when [situation]' instead of 'You always...'",
+    text: "As you notice 'You always...' showing up, try 'I feel [emotion] when [situation]' instead",
     category: "conflict",
     difficulty: 2,
     estimatedMinutes: 2,
-    soloVersion: "Notice when you think 'You always...' and rewrite it as 'I feel [emotion] when [situation]'",
-    partnerVersion: "Catch yourself before saying 'You always...' to {partner} and use 'I feel [emotion] when [situation]' instead",
+    soloVersion: "When 'You always...' shows up in your thoughts, rewrite it as 'I feel [emotion] when [situation]'",
+    partnerVersion: "As you notice 'You always...' wanting to come out with {partner}, try 'I feel [emotion] when [situation]' instead",
     archetypeVariants: {
-      "growth-seeker": "Transform 'You always...' into 'I feel [emotion] when [situation]' — own your experience",
-      "calm-anchor": "Replace blame with clarity — say 'I feel [emotion] when [situation]' instead of 'You always...'"
+      "growth-seeker": "As 'You always...' shows up, notice how you can transform it into 'I feel [emotion] when [situation]'",
+      "calm-anchor": "When blame arises, replace it with clarity — try 'I feel [emotion] when [situation]'"
     },
     personalizable: true,
     personalizationSlots: ["common_conflict_pattern"],
@@ -305,12 +305,12 @@ const conflictTemplates: MicroActionTemplate[] = [
   },
   {
     id: "conf-4",
-    text: "Notice your body's first signal of frustration — tight jaw, clenched hands, shallow breathing",
+    text: "Notice your body's first signal when frustration shows up — tight jaw, clenched hands, shallow breathing",
     category: "conflict",
     difficulty: 1,
     estimatedMinutes: 1,
-    soloVersion: "Pay attention to how frustration shows up in your body first — what's your earliest warning sign?",
-    partnerVersion: "Notice the first physical sign of frustration during a tense moment with {partner} — name it to yourself",
+    soloVersion: "As you notice frustration showing up, where does it live in your body first? What's your earliest warning sign?",
+    partnerVersion: "When frustration shows up with {partner}, notice where it lives in your body first — name it to yourself",
     personalizable: false,
     targetDimensions: ["conflict", "emotionalExpression"],
     dayRange: [1, null]
@@ -589,7 +589,6 @@ const connectionTemplates: MicroActionTemplate[] = [
     soloVersion: "Think of one thing you've never asked your partner — what are you curious about?",
     partnerVersion: "Ask {partner} one question you've never asked — go beyond surface, discover something new",
     archetypeVariants: {
-      "growth-seeker": "Ask {partner} a question you've been wondering about but never voiced — explore the unknown",
       "growth-seeker": "Discover something new about {partner} by asking a question that goes deeper than usual"
     },
     personalizable: false,
@@ -649,15 +648,15 @@ const awarenessTemplates: MicroActionTemplate[] = [
   },
   {
     id: "aware-2",
-    text: "Catch one moment where you defaulted to an old pattern — just notice it, no judgment",
+    text: "Catch one moment where an old pattern showed up — just notice it, no judgment",
     category: "awareness",
     difficulty: 2,
     estimatedMinutes: 2,
-    soloVersion: "Notice when you fall into a habitual pattern — withdrawal, people-pleasing, criticism — just observe",
-    partnerVersion: "Catch yourself defaulting to an old pattern with {partner} — name it to yourself without judgment",
+    soloVersion: "As you notice an old pattern showing up — withdrawal, people-pleasing, criticism — just observe it",
+    partnerVersion: "When an old pattern shows up with {partner} — name it to yourself without judgment",
     archetypeVariants: {
-      "growth-seeker": "Notice one moment where you fell back on autopilot — observe it with curiosity, not criticism",
-      "calm-anchor": "Catch yourself repeating a familiar pattern — just witness it gently, no need to fix it immediately"
+      "growth-seeker": "As you notice autopilot kicking in — observe it with curiosity, not criticism",
+      "calm-anchor": "When a familiar pattern shows up — just witness it gently, no need to fix it immediately"
     },
     personalizable: false,
     targetDimensions: ["attachment", "conflict", "relationalIdentity"],
@@ -665,12 +664,12 @@ const awarenessTemplates: MicroActionTemplate[] = [
   },
   {
     id: "aware-3",
-    text: "Pay attention to what you're feeling right before you check your phone around your partner",
+    text: "As you reach for your phone around your partner, pause — what feeling is showing up?",
     category: "awareness",
     difficulty: 2,
     estimatedMinutes: 1,
-    soloVersion: "Before reaching for your phone, pause — what are you feeling? Boredom, anxiety, avoidance?",
-    partnerVersion: "When you reach for your phone around {partner}, pause and notice what you're feeling first",
+    soloVersion: "Before reaching for your phone, pause — what's showing up? Boredom, anxiety, avoidance? Just notice",
+    partnerVersion: "As you reach for your phone around {partner}, pause — what feeling is showing up underneath?", 
     personalizable: false,
     targetDimensions: ["attachment", "intimacy", "emotionalExpression"],
     dayRange: [3, null]
@@ -845,15 +844,15 @@ const behaviorTemplates: MicroActionTemplate[] = [
   },
   {
     id: "behav-4",
-    text: "When you feel the urge to withdraw, stay present for 30 more seconds",
+    text: "When the urge to withdraw shows up, stay present for 30 more seconds",
     category: "behavior",
     difficulty: 3,
     estimatedMinutes: 1,
-    soloVersion: "Notice the impulse to shut down or leave — practice staying 30 seconds longer than feels comfortable",
-    partnerVersion: "When you want to withdraw from {partner}, stay present for 30 more seconds — breathe and remain",
+    soloVersion: "As you notice the impulse to shut down or leave — practice staying 30 seconds longer than feels comfortable",
+    partnerVersion: "When the urge to withdraw shows up with {partner}, stay present for 30 more seconds — breathe and remain",
     archetypeVariants: {
-      "vulnerable-heart": "When you want to retreat from {partner}, practice staying — even 30 seconds of presence counts",
-      "calm-anchor": "Notice the urge to distance yourself — what if you stayed just a bit longer instead?"
+      "vulnerable-heart": "As the impulse to retreat shows up with {partner}, practice staying — even 30 seconds of presence counts",
+      "calm-anchor": "When the urge to distance yourself shows up — what if you stayed just a bit longer instead?"
     },
     personalizable: false,
     targetDimensions: ["attachment", "conflict", "intimacy"],
@@ -861,15 +860,15 @@ const behaviorTemplates: MicroActionTemplate[] = [
   },
   {
     id: "behav-5",
-    text: "Choose vulnerability over deflection once today — share how you really feel",
+    text: "When deflection shows up, choose to share how you're really feeling",
     category: "behavior",
     difficulty: 3,
     estimatedMinutes: 2,
-    soloVersion: "Notice when you deflect or minimize — what would it be like to share the real feeling instead?",
-    partnerVersion: "When {partner} asks how you are, choose honesty over 'fine' — share what you're actually feeling",
+    soloVersion: "As you notice yourself deflecting or minimizing — what would it be like to share what's really there?",
+    partnerVersion: "When {partner} asks how you are, as you notice 'fine' showing up, share what you're actually feeling",
     archetypeVariants: {
-      "vulnerable-heart": "Let {partner} see how you really feel — resist the urge to hide or minimize",
-      "growth-seeker": "Choose courage over comfort — tell {partner} one true thing you've been holding back"
+      "vulnerable-heart": "Let {partner} see what's really there — as you notice the urge to hide, see what happens if you stay",
+      "growth-seeker": "Choose curiosity over comfort — tell {partner} one true thing you've been holding back"
     },
     personalizable: false,
     targetDimensions: ["emotionalExpression", "intimacy", "attachment"],
