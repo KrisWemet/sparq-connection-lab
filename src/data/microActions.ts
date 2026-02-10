@@ -38,8 +38,8 @@ const communicationTemplates: MicroActionTemplate[] = [
     soloVersion: "Write down one specific thing you appreciate about your partner and why it matters to you",
     partnerVersion: "Tell {partner} one specific thing you appreciate about them and why it matters to you",
     archetypeVariants: {
-      "words-of-affirmation": "Tell {partner} one specific quality you admire in them and describe how it makes your life better",
-      "steady-supporter": "Share with {partner} one thing they do that makes you feel safe and appreciated"
+      "compassionate-listener": "Tell {partner} one specific quality you admire in them and describe how it makes your life better",
+      "calm-anchor": "Share with {partner} one thing they do that makes you feel safe and appreciated"
     },
     personalizable: true,
     personalizationSlots: ["partner_name", "recent_positive_moment"],
@@ -72,8 +72,8 @@ const communicationTemplates: MicroActionTemplate[] = [
     soloVersion: "Think of one thing your partner cares about that you could ask a curious question about",
     partnerVersion: "Ask {partner} one genuinely curious question about something they care about — and give them your full attention",
     archetypeVariants: {
-      "curious-explorer": "Ask {partner} about something they're passionate about that you haven't explored together yet",
-      "steady-supporter": "Ask {partner} about something meaningful to them and listen without trying to fix or solve"
+      "growth-seeker": "Ask {partner} about something they're passionate about that you haven't explored together yet",
+      "calm-anchor": "Ask {partner} about something meaningful to them and listen without trying to fix or solve"
     },
     personalizable: true,
     personalizationSlots: ["partner_interest", "partner_passion"],
@@ -119,7 +119,7 @@ const communicationTemplates: MicroActionTemplate[] = [
     partnerVersion: "Tell {partner} one thing you need right now using the phrase 'I need...' — no explanations, no apologies",
     archetypeVariants: {
       "growth-seeker": "Name one thing you need from {partner} to feel more connected or understood",
-      "steady-supporter": "Practice asking for something you need without minimizing it or putting their needs first"
+      "calm-anchor": "Practice asking for something you need without minimizing it or putting their needs first"
     },
     personalizable: true,
     personalizationSlots: ["current_need"],
@@ -148,7 +148,7 @@ const communicationTemplates: MicroActionTemplate[] = [
     soloVersion: "Practice being fully present with someone for 5 minutes — no phone, no distractions, just listening",
     partnerVersion: "Give {partner} 5 minutes of your complete attention — put your phone in another room and just be present",
     archetypeVariants: {
-      "words-of-affirmation": "Give {partner} 5 minutes where you're fully there — let them feel they're the only thing that matters",
+      "compassionate-listener": "Give {partner} 5 minutes where you're fully there — let them feel they're the only thing that matters",
       "calm-anchor": "Create a pocket of stillness and offer {partner} 5 minutes of your grounded, unhurried presence"
     },
     personalizable: false,
@@ -177,7 +177,7 @@ const communicationTemplates: MicroActionTemplate[] = [
     soloVersion: "Think about what you need from your partner right now — practice asking for it clearly",
     partnerVersion: "Ask {partner} 'What do you need from me right now?' — and really listen to their answer",
     archetypeVariants: {
-      "steady-supporter": "Check in with {partner}: 'What do you need from me right now?' — resist the urge to anticipate",
+      "calm-anchor": "Check in with {partner}: 'What do you need from me right now?' — resist the urge to anticipate",
       "growth-seeker": "Ask {partner} what they need from you in this moment — be open to the answer even if it surprises you"
     },
     personalizable: false,
@@ -217,8 +217,8 @@ const communicationTemplates: MicroActionTemplate[] = [
     soloVersion: "Notice one thing your partner does regularly that you take for granted — write down why it matters",
     partnerVersion: "Thank {partner} for something they do regularly that you don't usually acknowledge",
     archetypeVariants: {
-      "words-of-affirmation": "Name something {partner} does consistently and tell them how it makes your life better",
-      "steady-supporter": "Appreciate {partner} out loud for one of the quiet, steady ways they show up for you"
+      "compassionate-listener": "Name something {partner} does consistently and tell them how it makes your life better",
+      "calm-anchor": "Appreciate {partner} out loud for one of the quiet, steady ways they show up for you"
     },
     personalizable: true,
     personalizationSlots: ["partner_routine_action"],
@@ -341,7 +341,7 @@ const conflictTemplates: MicroActionTemplate[] = [
     partnerVersion: "Let {partner} influence you on something today — change your mind, try their way, yield gracefully",
     archetypeVariants: {
       "growth-seeker": "Choose curiosity over being right — let {partner} shift your perspective on something",
-      "steady-supporter": "Notice where you hold firm out of habit — practice softening and accepting influence"
+      "calm-anchor": "Notice where you hold firm out of habit — practice softening and accepting influence"
     },
     personalizable: false,
     targetDimensions: ["conflict", "values", "relationalIdentity"],
@@ -428,8 +428,8 @@ const connectionTemplates: MicroActionTemplate[] = [
     soloVersion: "Think about what small gesture would make your partner smile in the middle of their day",
     partnerVersion: "Send {partner} an unexpected message today — simple as 'thinking of you' or 'can't wait to see you'",
     archetypeVariants: {
-      "words-of-affirmation": "Send {partner} a text naming one specific thing you love about them — right in the middle of their day",
-      "curious-explorer": "Send {partner} something that reminded you of them today — a photo, a memory, a moment"
+      "compassionate-listener": "Send {partner} a text naming one specific thing you love about them — right in the middle of their day",
+      "growth-seeker": "Send {partner} something that reminded you of them today — a photo, a memory, a moment"
     },
     personalizable: false,
     targetDimensions: ["loveLanguage", "attachment"],
@@ -456,7 +456,7 @@ const connectionTemplates: MicroActionTemplate[] = [
     soloVersion: "Think about how you greet your partner when you reunite — what would make it more intentional?",
     partnerVersion: "When you first see {partner} today, create a small ritual — eye contact, hug for 6 seconds, asking about their day",
     archetypeVariants: {
-      "steady-supporter": "Greet {partner} with full presence when you reunite — even 30 seconds of undivided attention",
+      "calm-anchor": "Greet {partner} with full presence when you reunite — even 30 seconds of undivided attention",
       "vulnerable-heart": "When you see {partner}, practice really seeing them — make eye contact, touch, connect before moving on"
     },
     personalizable: false,
@@ -501,8 +501,8 @@ const connectionTemplates: MicroActionTemplate[] = [
     soloVersion: "Notice one thing your partner usually does and do it for them today",
     partnerVersion: "Do one small thing for {partner} without being asked — make their coffee, handle a chore, lighten their load",
     archetypeVariants: {
-      "steady-supporter": "Notice what {partner} needs before they ask — take one thing off their plate today",
-      "words-of-affirmation": "Do something for {partner} and tell them why — 'I did this because I know you've been tired'"
+      "calm-anchor": "Notice what {partner} needs before they ask — take one thing off their plate today",
+      "compassionate-listener": "Do something for {partner} and tell them why — 'I did this because I know you've been tired'"
     },
     personalizable: true,
     personalizationSlots: ["partner_chore", "partner_preference"],
@@ -574,7 +574,7 @@ const connectionTemplates: MicroActionTemplate[] = [
     partnerVersion: "Touch {partner} in a way that's not routine — hold their hand during a walk, kiss their forehead, rest your head on their shoulder",
     archetypeVariants: {
       "vulnerable-heart": "Reach for {partner} in a way that feels a little new — let your body express connection",
-      "steady-supporter": "Show {partner} affection through touch — even a small gesture that says 'I'm here with you'"
+      "calm-anchor": "Show {partner} affection through touch — even a small gesture that says 'I'm here with you'"
     },
     personalizable: false,
     targetDimensions: ["loveLanguage", "intimacy"],
@@ -589,7 +589,7 @@ const connectionTemplates: MicroActionTemplate[] = [
     soloVersion: "Think of one thing you've never asked your partner — what are you curious about?",
     partnerVersion: "Ask {partner} one question you've never asked — go beyond surface, discover something new",
     archetypeVariants: {
-      "curious-explorer": "Ask {partner} a question you've been wondering about but never voiced — explore the unknown",
+      "growth-seeker": "Ask {partner} a question you've been wondering about but never voiced — explore the unknown",
       "growth-seeker": "Discover something new about {partner} by asking a question that goes deeper than usual"
     },
     personalizable: false,
@@ -621,8 +621,8 @@ const connectionTemplates: MicroActionTemplate[] = [
     soloVersion: "Before bed, think of one thing you're grateful for about your partner today",
     partnerVersion: "Before sleep, tell {partner} one thing you're grateful for about them from today",
     archetypeVariants: {
-      "words-of-affirmation": "End the day by telling {partner} one specific thing they did today that you're grateful for",
-      "steady-supporter": "Share with {partner} one quiet way they made your day better — let them know they're seen"
+      "compassionate-listener": "End the day by telling {partner} one specific thing they did today that you're grateful for",
+      "calm-anchor": "Share with {partner} one quiet way they made your day better — let them know they're seen"
     },
     personalizable: false,
     targetDimensions: ["loveLanguage", "values"],
@@ -765,7 +765,7 @@ const awarenessTemplates: MicroActionTemplate[] = [
     partnerVersion: "When {partner} bids for your attention, notice if you turn toward them, away, or against",
     archetypeVariants: {
       "growth-seeker": "Track how you respond to {partner}'s bids for connection — are you turning toward or dismissing?",
-      "steady-supporter": "Notice if you're fully turning toward {partner}'s bids or just half-present"
+      "calm-anchor": "Notice if you're fully turning toward {partner}'s bids or just half-present"
     },
     personalizable: false,
     targetDimensions: ["attachment", "loveLanguage", "conflict"],
@@ -897,7 +897,7 @@ const behaviorTemplates: MicroActionTemplate[] = [
     partnerVersion: "Be the first to reach for {partner} today — hold their hand, hug them, kiss them hello",
     archetypeVariants: {
       "vulnerable-heart": "Reach for {partner} first — let your body express what words sometimes can't",
-      "steady-supporter": "Initiate affection with {partner} — show them through touch that they matter"
+      "calm-anchor": "Initiate affection with {partner} — show them through touch that they matter"
     },
     personalizable: false,
     targetDimensions: ["loveLanguage", "intimacy"],
@@ -912,7 +912,7 @@ const behaviorTemplates: MicroActionTemplate[] = [
     soloVersion: "Notice where you carry things alone — practice asking for help with one small thing",
     partnerVersion: "Ask {partner} for help with something small — let them support you instead of handling it alone",
     archetypeVariants: {
-      "steady-supporter": "Practice letting {partner} carry something — ask for help instead of being the one who always supports",
+      "calm-anchor": "Practice letting {partner} carry something — ask for help instead of being the one who always supports",
       "vulnerable-heart": "Risk asking {partner} for help — let yourself be the one who needs something"
     },
     personalizable: false,

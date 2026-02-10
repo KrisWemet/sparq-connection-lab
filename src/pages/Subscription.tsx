@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -80,7 +80,7 @@ const plans = [
       quote: "Premium helped us discover parts of our relationship we never knew existed. We feel closer than ever.",
       author: "Taylor & Jordan",
       relationship: "Married 3 years",
-      statistic: "90% of Premium users report deeper emotional connection within 30 days"
+      statistic: "Couples who stay consistent with Premium see real change in how they connect"
     },
     persuasiveText: "Experience how naturally your connection deepens with Premium features"
   },
@@ -117,7 +117,7 @@ const plans = [
       quote: "Ultimate transformed our relationship. The guided visualizations and future pacing exercises helped us create a vision for our future that we're excited about every day.",
       author: "Sam & Riley",
       relationship: "Engaged after 1 year",
-      statistic: "Ultimate users are 3.5x more likely to report 'extremely satisfied' with their relationship"
+      statistic: "The most complete toolkit for couples who want to keep growing together"
     },
     persuasiveText: "Feel the transformation in your relationship as you explore Ultimate features together"
   }
@@ -216,7 +216,7 @@ const testimonials = [
 ];
 
 export default function Subscription() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [billingCycle, setBillingCycle] = useState("monthly");
   const [showTestimonial, setShowTestimonial] = useState<string | null>(null);
   const [highlightFeature, setHighlightFeature] = useState<{planId: string, featureIndex: number} | null>(null);
@@ -281,7 +281,7 @@ export default function Subscription() {
       <div className="flex items-center mb-8">
         <Button 
           variant="ghost" 
-          onClick={() => router.push(-1)}
+          onClick={() => navigate(-1)}
           className="mr-2"
         >
           <ChevronLeft className="h-4 w-4 mr-1" />
@@ -472,19 +472,19 @@ export default function Subscription() {
         </div>
       </div>
       
-      {/* Statistics section */}
+      {/* Why it works section */}
       <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-primary-50 p-4 rounded-lg text-center">
-          <h3 className="text-2xl font-bold text-primary-700 mb-1">87%</h3>
-          <p className="text-sm text-primary-600">of couples report improved communication within 2 weeks</p>
+          <h3 className="text-2xl font-bold text-primary-700 mb-1">5 min/day</h3>
+          <p className="text-sm text-primary-600">Small daily sessions build lasting change over time</p>
         </div>
         <div className="bg-primary-50 p-4 rounded-lg text-center">
-          <h3 className="text-2xl font-bold text-primary-700 mb-1">94%</h3>
-          <p className="text-sm text-primary-600">of Premium users would recommend Sparq to friends</p>
+          <h3 className="text-2xl font-bold text-primary-700 mb-1">14 days</h3>
+          <p className="text-sm text-primary-600">to discover your unique strengths as a partner</p>
         </div>
         <div className="bg-primary-50 p-4 rounded-lg text-center">
-          <h3 className="text-2xl font-bold text-primary-700 mb-1">3.5x</h3>
-          <p className="text-sm text-primary-600">higher relationship satisfaction for Ultimate users</p>
+          <h3 className="text-2xl font-bold text-primary-700 mb-1">Science-backed</h3>
+          <p className="text-sm text-primary-600">Built on proven relationship coaching methods</p>
         </div>
       </div>
       

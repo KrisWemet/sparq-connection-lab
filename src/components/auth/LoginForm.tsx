@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { useAuth } from '../../lib/auth-context';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/lib/auth-context';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Lock, Mail, ArrowRight, Loader } from 'lucide-react';
 
 interface LoginFormProps {
   onToggleMode?: () => void;
   isRegisterMode?: boolean;
+  redirectTo?: string;
 }
 
-export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormProps) {
+export function LoginForm({ onToggleMode, isRegisterMode = false, redirectTo = '/dashboard' }: LoginFormProps) {
   const { login, register, loading } = useAuth();
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -75,7 +76,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
         
         // Redirect to dashboard after a short delay to show success message
         setTimeout(() => {
-          router.push('/dashboard');
+          navigate(redirectTo);
         }, 1500);
       } else {
         setError(result.error || 'An error occurred. Please try again.');

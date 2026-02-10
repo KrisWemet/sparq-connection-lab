@@ -318,10 +318,10 @@ export const PSYCHOLOGY_TECHNIQUES: PsychologyTechnique[] = [
     appliesTo: ["insight", "reflect"],
   },
 
-  // ── Narrative Coaching Techniques ──
+  // ── Narrative Therapy Techniques ──
   {
     id: "narrative-reauthoring",
-    framework: "Narrative Coaching",
+    framework: "Narrative Therapy",
     name: "Story Re-authoring",
     description: "Helping users rewrite limiting relationship narratives with more empowering alternatives.",
     promptInstruction: "Invite the user to notice the story they tell about themselves in relationships. Then gently ask: 'Is there another version of this story? One where you're the hero, not the victim?' Use 'unique outcomes' — times the old story didn't hold true.",
@@ -330,7 +330,7 @@ export const PSYCHOLOGY_TECHNIQUES: PsychologyTechnique[] = [
   },
   {
     id: "narrative-externalization",
-    framework: "Narrative Coaching",
+    framework: "Narrative Therapy",
     name: "Externalization",
     description: "Separating the person from the problem to reduce shame and increase agency.",
     promptInstruction: "Use externalizing language: 'When anxiety shows up in your relationship...' (not 'When you're anxious'). The problem is the problem, not the person.",

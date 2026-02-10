@@ -29,7 +29,7 @@ export type Profile = {
 export type Activity = {
   id: string;
   user_id: string;
-  type: 'metaphor' | 'futurePacing' | 'hypnoticStory' | 'daily_question';
+  type: 'metaphor' | 'futurePacing' | 'coachingStory' | 'daily_question';
   content_id: string;
   completed_at: string;
   notes?: string;

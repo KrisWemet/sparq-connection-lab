@@ -1,12 +1,19 @@
 import React from "react";
-import { useRouter } from "next/router";
+import { useNavigate } from "react-router-dom";
 import { ArrowRight, Flame, Users, Sparkles, Eye } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { usePersonalityDiscovery } from "@/hooks/usePersonalityDiscovery";
 
 export default function Dashboard() {
   const { user, profile, loading, signOut } = useAuth();
-  const router = useRouter();
+  const navigate = useNavigate();
+  const {
+    discoveryDay,
+    discoveryPhase,
+    dimensionsRevealed,
+    totalDimensions,
+    mirrorReady,
+  } = usePersonalityDiscovery();
 
   if (loading) {
     return (
@@ -22,14 +29,6 @@ export default function Dashboard() {
   if (!user) {
     return null;
   }
-
-  const {
-    discoveryDay,
-    discoveryPhase,
-    dimensionsRevealed,
-    totalDimensions,
-    mirrorReady,
-  } = usePersonalityDiscovery();
 
   const streakCount = (profile as any)?.streak_count ?? 0;
   const connectionScore = Math.min(100, 50 + streakCount * 5);
@@ -84,7 +83,7 @@ export default function Dashboard() {
                 </div>
               </div>
               <button
-                onClick={() => router.push("/daily-questions")}
+                onClick={() => navigate("/daily-questions")}
                 className="px-8 py-4 bg-white text-indigo-600 rounded-xl font-semibold text-lg hover:bg-indigo-50 transition-colors shadow-lg flex items-center"
               >
                 Answer Now
@@ -130,7 +129,7 @@ export default function Dashboard() {
                 </span>
                 {mirrorReady && (
                   <button
-                    onClick={() => router.push("/daily-questions")}
+                    onClick={() => navigate("/daily-questions")}
                     className="flex items-center gap-1 text-sm text-purple-600 hover:text-purple-700 font-medium"
                   >
                     <Eye className="w-4 h-4" />
@@ -193,7 +192,7 @@ export default function Dashboard() {
               )}
             </div>
             <button
-              onClick={() => router.push("/partner-invite")}
+              onClick={() => navigate("/partner-invite")}
               className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
             >
               Invite Partner

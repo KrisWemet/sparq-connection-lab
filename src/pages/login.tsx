@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { useAuth } from '../lib/auth-context';
-import { LoginForm } from '../components/auth/LoginForm';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/lib/auth-context';
+import { LoginForm } from '@/components/auth/LoginForm';
 import { motion } from 'framer-motion';
-import Head from 'next/head';
 
 export default function LoginPage() {
   const [isRegisterMode, setIsRegisterMode] = useState(false);
   const { user, loading } = useAuth();
-  const router = useRouter();
-  
+  const navigate = useNavigate();
+
   // Redirect if already logged in
   useEffect(() => {
     if (user && !loading) {
-      router.push('/dashboard');
+      navigate('/dashboard');
     }
-  }, [user, loading, router]);
+  }, [user, loading, navigate]);
 
   const toggleMode = () => {
     setIsRegisterMode(!isRegisterMode);
@@ -63,14 +62,6 @@ export default function LoginPage() {
 
   return (
     <>
-      <Head>
-        <title>{isRegisterMode ? 'Join Sparq' : 'Welcome Back'} - Sparq Relationship Lab</title>
-        <meta 
-          name="description" 
-          content="Transform your relationship with powerful psychological techniques designed to deepen connection and understanding."
-        />
-      </Head>
-      
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex flex-col">
         <header className="bg-white shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -163,7 +154,7 @@ export default function LoginPage() {
                   <svg className="h-5 w-5 text-indigo-300 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                   </svg>
-                  <span>Builds lasting neural pathways for better connection</span>
+                  <span>Builds lasting habits for better connection</span>
                 </li>
               </ul>
             </motion.div>

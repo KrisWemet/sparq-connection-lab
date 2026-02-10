@@ -1,7 +1,7 @@
 
 import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { useAuth } from '../../lib/auth-context';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/lib/auth-context';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -9,15 +9,14 @@ interface ProtectedRouteProps {
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { user, loading } = useAuth();
-  const router = useRouter();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!loading && !user) {
-      // Redirect to login if not authenticated
-      console.log('Protected route: No user found, redirecting to login');
-      router.push('/login');
+      console.log('Protected route: No user found, redirecting to auth');
+      navigate('/auth');
     }
-  }, [user, loading, router]);
+  }, [user, loading, navigate]);
 
   // Show loading state with persuasive language
   if (loading) {
