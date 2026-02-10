@@ -132,10 +132,10 @@ serve(async (req) => {
       );
     }
 
-    // Fetch current profile for streak calculation
+    // Fetch current profile for streak calculation and partner info
     const { data: profile, error: profileError } = await supabaseClient
       .from('profiles')
-      .select('streak_count, last_daily_activity, relationship_points, discovery_day')
+      .select('streak_count, last_daily_activity, relationship_points, discovery_day, partner_id, subscription_tier, full_name, name')
       .eq('id', user.id)
       .single();
 
@@ -143,7 +143,16 @@ serve(async (req) => {
       console.error('Profile fetch error:', profileError);
     }
 
-    const currentProfile = profile || { streak_count: 0, last_daily_activity: null, relationship_points: 0, discovery_day: 1 };
+    const currentProfile = profile || { 
+      streak_count: 0, 
+      last_daily_activity: null, 
+      relationship_points: 0, 
+      discovery_day: 1,
+      partner_id: null,
+      subscription_tier: 'free',
+      full_name: null,
+      name: null,
+    };
 
     // Calculate streak
     const { streak, streakContinued, streakBroken } = calculateStreak(
@@ -235,6 +244,49 @@ serve(async (req) => {
     // Check for streak milestones
     const milestones: number[] = [3, 7, 14, 30, 60, 100];
     const achievedMilestone = streakContinued && milestones.includes(streak);
+
+    // Broadcast to partner if user has a partner and premium subscription
+    if (currentProfile.partner_id && currentProfile.subscription_tier !== 'free') {
+      try {
+        const userName = currentProfile.full_name || currentProfile.name || 'Your partner';
+        
+        const broadcastResponse = await fetch(
+          `${Deno.env.get('SUPABASE_URL')}/functions/v1/broadcast-event`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': authHeader,
+            },
+            body: JSON.stringify({
+              type: 'partner_session_complete',
+              recipientId: currentProfile.partner_id,
+              payload: {
+                session_id: sessionId,
+                partner_id: user.id,
+                partner_name: userName,
+                streak: streak,
+                streak_continued: streakContinued,
+                phase: sessionData.phase,
+                discovery_day: sessionData.discovery_day,
+                completed_at: insertedSession.completed_at,
+              },
+              options: {
+                persist: true,
+                priority: 'normal',
+              },
+            }),
+          }
+        );
+
+        if (!broadcastResponse.ok) {
+          console.error('Partner broadcast failed:', await broadcastResponse.text());
+        }
+      } catch (broadcastError) {
+        console.error('Error broadcasting to partner:', broadcastError);
+        // Don't fail the request - the session was saved successfully
+      }
+    }
 
     return new Response(
       JSON.stringify({

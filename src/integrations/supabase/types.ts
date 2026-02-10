@@ -356,14 +356,58 @@ export type Database = {
           },
         ]
       }
+      mirror_narratives: {
+        Row: {
+          id: string
+          user_id: string
+          narrative: string
+          dimension_summaries: Json
+          recommendations: Json
+          core_insight: string
+          generated_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          narrative: string
+          dimension_summaries?: Json
+          recommendations?: Json
+          core_insight?: string
+          generated_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          narrative?: string
+          dimension_summaries?: Json
+          recommendations?: Json
+          core_insight?: string
+          generated_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mirror_narratives_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
           created_at: string
+          discovery_day: number | null
           email: string
           id: string
           isonboarded: boolean | null
           last_daily_activity: string | null
+          mirror_narrative_delivered: boolean | null
+          mirror_narrative_delivered_at: string | null
           name: string
           partner_code: string | null
           partner_id: string | null
@@ -375,10 +419,13 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           created_at?: string
+          discovery_day?: number | null
           email: string
           id: string
           isonboarded?: boolean | null
           last_daily_activity?: string | null
+          mirror_narrative_delivered?: boolean | null
+          mirror_narrative_delivered_at?: string | null
           name: string
           partner_code?: string | null
           partner_id?: string | null
@@ -390,10 +437,13 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           created_at?: string
+          discovery_day?: number | null
           email?: string
           id?: string
           isonboarded?: boolean | null
           last_daily_activity?: string | null
+          mirror_narrative_delivered?: boolean | null
+          mirror_narrative_delivered_at?: string | null
           name?: string
           partner_code?: string | null
           partner_id?: string | null
@@ -526,6 +576,239 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      shared_answers: {
+        Row: {
+          id: string
+          sender_id: string
+          recipient_id: string
+          question_text: string
+          answer_text: string
+          session_id: string | null
+          category: string | null
+          discovery_day: number | null
+          is_read: boolean
+          read_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          sender_id: string
+          recipient_id: string
+          question_text: string
+          answer_text: string
+          session_id?: string | null
+          category?: string | null
+          discovery_day?: number | null
+          is_read?: boolean
+          read_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          sender_id?: string
+          recipient_id?: string
+          question_text?: string
+          answer_text?: string
+          session_id?: string | null
+          category?: string | null
+          discovery_day?: number | null
+          is_read?: boolean
+          read_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_answers_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shared_answers_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shared_answers_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "daily_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          id: string
+          user_id: string
+          type: string
+          title: string
+          message: string
+          sender_id: string | null
+          data: Json | null
+          is_read: boolean
+          read_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          type: string
+          title: string
+          message: string
+          sender_id?: string | null
+          data?: Json | null
+          is_read?: boolean
+          read_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          type?: string
+          title?: string
+          message?: string
+          sender_id?: string | null
+          data?: Json | null
+          is_read?: boolean
+          read_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      daily_sessions: {
+        Row: {
+          id: string
+          user_id: string
+          session_date: string
+          discovery_day: number
+          phase: string
+          learn_response: string
+          learn_question_id: string | null
+          learn_question_text: string | null
+          modality: string | null
+          micro_action: string
+          micro_action_accepted: boolean
+          implement_action_id: string | null
+          reflect_response: string | null
+          check_in_response: string | null
+          points_earned: number
+          streak_at_session: number
+          created_at: string
+          completed_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          session_date: string
+          discovery_day: number
+          phase: string
+          learn_response: string
+          learn_question_id?: string | null
+          learn_question_text?: string | null
+          modality?: string | null
+          micro_action: string
+          micro_action_accepted?: boolean
+          implement_action_id?: string | null
+          reflect_response?: string | null
+          check_in_response?: string | null
+          points_earned?: number
+          streak_at_session?: number
+          created_at?: string
+          completed_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          session_date?: string
+          discovery_day?: number
+          phase?: string
+          learn_response?: string
+          learn_question_id?: string | null
+          learn_question_text?: string | null
+          modality?: string | null
+          micro_action?: string
+          micro_action_accepted?: boolean
+          implement_action_id?: string | null
+          reflect_response?: string | null
+          check_in_response?: string | null
+          points_earned?: number
+          streak_at_session?: number
+          created_at?: string
+          completed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_streaks: {
+        Row: {
+          id: string
+          user_id: string
+          current_streak: number
+          longest_streak: number
+          last_session_date: string | null
+          total_sessions: number
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          current_streak?: number
+          longest_streak?: number
+          last_session_date?: string | null
+          total_sessions?: number
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          current_streak?: number
+          longest_streak?: number
+          last_session_date?: string | null
+          total_sessions?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_streaks_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

@@ -42,6 +42,14 @@ export function generateUniqueCode(length: number = 8): string {
 }
 
 /**
+ * Calculates time elapsed since a date (alias for timeAgo)
+ */
+export function formatDistanceToNow(date: Date, options?: { addSuffix?: boolean }): string {
+  const result = timeAgo(date);
+  return options?.addSuffix ? result : result.replace(' ago', '');
+}
+
+/**
  * Calculates time elapsed since a date
  */
 export function timeAgo(date: Date): string {
