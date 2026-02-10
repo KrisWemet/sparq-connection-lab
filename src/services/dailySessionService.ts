@@ -22,8 +22,8 @@ import {
   selectTechniqueForContext,
   getTechniquesForPhase,
   getPrimingMessage,
-  getTherapeuticPattern,
-  THERAPEUTIC_LANGUAGE_PATTERNS,
+  getCoachingPattern,
+  COACHING_LANGUAGE_PATTERNS,
   ANCHORING_LABELS,
   buildAttachmentPromptSection,
   getAttachmentLanguage,
@@ -203,9 +203,9 @@ export class DailySessionService {
 
 VOICE AND READING LEVEL:
 - Write at a 4th grade reading level. Short sentences. Simple words. No jargon.
-- Sound like a kind friend, not a therapist or textbook.
+- Sound like a kind friend and coach, not a textbook.
 - NEVER mention psychology terms, framework names, or technique names. The user doesn't want to know WHY it works — they want the transformation.
-- NEVER use words like: "attachment style", "CBT", "NVC", "cognitive reframing", "presupposition", "narrative therapy", "emotional regulation", "vulnerability", "intimacy profile", "therapeutic", "modality", "framework"
+- NEVER use words like: "attachment style", "CBT", "NVC", "cognitive reframing", "presupposition", "narrative therapy", "emotional regulation", "vulnerability", "intimacy profile", "therapeutic", "therapy", "therapist", "modality", "framework"
 - DO use words like: "notice", "try", "feels like", "what works for you", "that makes sense", "here's what's cool about that"
 - Keep everything warm and real. Like texting a friend who really gets you.
 

@@ -130,7 +130,7 @@ export class PersonalityProfileService {
 
   /**
    * Build a lightweight ProfileContext for AI prompt injection.
-   * This is what gets passed to question generation, AI therapist, etc.
+   * This is what gets passed to question generation, AI coach, etc.
    */
   async buildProfileContext(
     userName: string,

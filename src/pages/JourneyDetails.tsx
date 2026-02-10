@@ -118,7 +118,7 @@ const journeys = [
     psychology: [
       "Gottman's Four Horsemen",
       "Fair Fighting Techniques",
-      "Emotion-Focused Therapy Principles"
+      "Emotion-Focused Coaching Principles"
     ],
     benefits: [
       "Identify destructive conflict patterns",
@@ -212,7 +212,7 @@ const journeys = [
     sequence: 5,
     image: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=800&h=500",
     psychology: [
-      "Acceptance and Commitment Therapy",
+      "Acceptance and Commitment Coaching",
       "Positive Psychology",
       "Goal-Setting Theory"
     ],
@@ -356,7 +356,7 @@ const journeys = [
     image: "https://images.unsplash.com/photo-1488116908379-1208e281cc76?auto=format&fit=crop&w=800&h=500",
     psychology: [
       "Positive Psychology",
-      "Play Therapy Concepts",
+      "Play-Based Coaching Concepts",
       "Humor in Relationships Research"
     ],
     benefits: [

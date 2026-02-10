@@ -5,13 +5,16 @@
  * throughout Sparq Connection Lab. This config drives:
  *
  * 1. **Color psychology** — Phase-appropriate color schemes that support emotional states
- * 2. **Therapeutic language patterns** — Presuppositions, reframing, solution-focused language
+ * 2. **Coaching language patterns** — Presuppositions, reframing, solution-focused language
  * 3. **Framework-specific techniques** — CBT, NVC, EFT, Gottman, Attachment, Narrative Therapy
  * 4. **Session design psychology** — Peak-end rule, priming, anchoring, progressive disclosure
  *
- * Philosophy: These techniques are TRANSPARENT and THERAPEUTIC — designed to help
+ * Philosophy: These techniques are TRANSPARENT and COACHING-oriented — designed to help
  * users genuinely rewire patterns, NOT to manipulate behavior. The user is always
  * the agent of their own growth.
+ *
+ * IMPORTANT: This is a COACHING app, not a therapy app. All user-facing language
+ * must use "coaching" framing, never "therapy" or "therapeutic."
  */
 
 import type { DiscoveryPhase } from "@/types/personality";
@@ -99,17 +102,17 @@ export const ARCHETYPE_COLOR_ACCENTS: Record<IdentityArchetype, { glow: string; 
   "connection-builder": { glow: "rgba(168, 85, 247, 0.15)", badge: "#A855F7" },  // Purple — connection
 };
 
-// ─── Therapeutic Language Patterns ─────────────────────────────────────────
+// ─── Coaching Language Patterns ────────────────────────────────────────────
 
 /**
  * Evidence-based language patterns used in AI prompts to support genuine
  * cognitive and behavioral change. These are NOT manipulative embedded commands —
- * they are transparent therapeutic communication techniques used by therapists.
+ * they are transparent coaching communication techniques used by relationship coaches.
  *
- * Sources: Solution-Focused Brief Therapy (SFBT), Motivational Interviewing (MI),
- * Cognitive Behavioral Therapy (CBT), Nonviolent Communication (NVC)
+ * Sources: Solution-Focused Brief Coaching (SFBT), Motivational Interviewing (MI),
+ * Cognitive Behavioral Coaching (CBC), Nonviolent Communication (NVC)
  */
-export const THERAPEUTIC_LANGUAGE_PATTERNS = {
+export const COACHING_LANGUAGE_PATTERNS = {
   /**
    * Presuppositions — language that assumes positive change is already happening.
    * Research: Presuppositions in SFBT have been shown to increase client self-efficacy.
@@ -138,7 +141,7 @@ export const THERAPEUTIC_LANGUAGE_PATTERNS = {
 
   /**
    * Solution-focused language — orients users toward what's working.
-   * Research: Solution-Focused Brief Therapy. Shifting from "What's wrong?" to "What's working?"
+   * Research: Solution-Focused Brief Coaching. Shifting from "What's wrong?" to "What's working?"
    */
   solutionFocused: [
     "What would be different if this was just a little bit better?",
@@ -246,7 +249,7 @@ export const PSYCHOLOGY_TECHNIQUES: PsychologyTechnique[] = [
     appliesTo: ["implement", "reflect"],
   },
 
-  // ── EFT (Emotionally Focused Therapy) Techniques ──
+  // ── EFT (Emotionally Focused) Techniques ──
   {
     id: "eft-emotion-cycle",
     framework: "EFT",
@@ -315,10 +318,10 @@ export const PSYCHOLOGY_TECHNIQUES: PsychologyTechnique[] = [
     appliesTo: ["insight", "reflect"],
   },
 
-  // ── Narrative Therapy Techniques ──
+  // ── Narrative Coaching Techniques ──
   {
     id: "narrative-reauthoring",
-    framework: "Narrative Therapy",
+    framework: "Narrative Coaching",
     name: "Story Re-authoring",
     description: "Helping users rewrite limiting relationship narratives with more empowering alternatives.",
     promptInstruction: "Invite the user to notice the story they tell about themselves in relationships. Then gently ask: 'Is there another version of this story? One where you're the hero, not the victim?' Use 'unique outcomes' — times the old story didn't hold true.",
@@ -327,7 +330,7 @@ export const PSYCHOLOGY_TECHNIQUES: PsychologyTechnique[] = [
   },
   {
     id: "narrative-externalization",
-    framework: "Narrative Therapy",
+    framework: "Narrative Coaching",
     name: "Externalization",
     description: "Separating the person from the problem to reduce shame and increase agency.",
     promptInstruction: "Use externalizing language: 'When anxiety shows up in your relationship...' (not 'When you're anxious'). The problem is the problem, not the person.",
@@ -703,12 +706,12 @@ export function selectTechniqueForContext(
 }
 
 /**
- * Build a therapeutic language snippet for AI prompts.
+ * Build a coaching language snippet for AI prompts.
  * Combines a random pattern from the requested category.
  */
-export function getTherapeuticPattern(
-  category: keyof typeof THERAPEUTIC_LANGUAGE_PATTERNS
+export function getCoachingPattern(
+  category: keyof typeof COACHING_LANGUAGE_PATTERNS
 ): string {
-  const patterns = THERAPEUTIC_LANGUAGE_PATTERNS[category];
+  const patterns = COACHING_LANGUAGE_PATTERNS[category];
   return patterns[Math.floor(Math.random() * patterns.length)];
 }

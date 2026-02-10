@@ -71,7 +71,7 @@ const plans = [
       { name: "Relationship timeline", included: true },
       { name: "Basic compatibility assessments", included: true },
       { name: "Guided visualizations", included: true, new: true },
-      { name: "Hypnotic relationship stories", included: true, new: true },
+      { name: "Relationship coaching stories", included: true, new: true },
     ],
     popular: true,
     buttonText: "Upgrade Now",
@@ -98,12 +98,12 @@ const plans = [
       { name: "Custom date planning", included: true },
       { name: "Personalized relationship insights", included: true },
       { name: "All journeys included", included: true },
-      { name: "Couples therapy resources", included: true },
+      { name: "Couples coaching resources", included: true },
       { name: "Advanced compatibility assessments", included: true },
       { name: "Intimacy enhancement modules", included: true },
       { name: "Conflict resolution tools", included: true },
       { name: "Early access to new features", included: true },
-      { name: "AI Therapist access", included: true, new: true },
+      { name: "AI Coach access", included: true, new: true },
       { name: "Add additional partners ($9.99/mo each)", included: true, new: true },
       { name: "Dark mode", included: true },
       { name: "Advanced guided visualizations with audio", included: true, new: true },
@@ -457,7 +457,7 @@ export default function Subscription() {
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <p className="italic text-gray-700 mb-2">
-              "The guided visualizations in Ultimate helped us create a shared vision for our future. It's like couples therapy but more fun!"
+              "The guided visualizations in Ultimate helped us create a shared vision for our future. It's like couples coaching but more fun!"
             </p>
             <p className="text-sm font-medium">- Morgan & Jamie, Engaged</p>
             <p className="text-xs text-primary-600 mt-1">Ultimate users for 6 months</p>

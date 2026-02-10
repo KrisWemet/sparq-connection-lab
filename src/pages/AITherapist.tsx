@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-export default function AITherapist() {
+export default function AICoach() {
   const navigate = useNavigate();
   
   const handleSubscribe = () => {
@@ -59,7 +59,7 @@ export default function AITherapist() {
             <Brain className="w-8 h-8 text-purple-500" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            AI Relationship Therapist
+            AI Relationship Coach
           </h2>
           <p className="text-gray-700 max-w-md">
             Get personalized relationship advice and guidance powered by advanced AI
@@ -71,7 +71,7 @@ export default function AITherapist() {
           <CardHeader>
             <CardTitle>Ultimate Package Feature</CardTitle>
             <CardDescription>
-              The AI Therapist will be available exclusively in our Ultimate subscription package
+              The AI Coach will be available exclusively in our Ultimate subscription package
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -110,7 +110,7 @@ export default function AITherapist() {
               <div>
                 <h4 className="font-medium mb-1">Scheduled Sessions</h4>
                 <p className="text-sm text-gray-600">
-                  Book regular therapy sessions for you individually or together with your partner
+                  Book regular coaching sessions for you individually or together with your partner
                 </p>
               </div>
             </div>
@@ -132,10 +132,10 @@ export default function AITherapist() {
               <div>
                 <h4 className="font-medium mb-2">Coming Soon</h4>
                 <p className="text-sm text-gray-600 mb-4">
-                  Our AI Therapist feature is currently in development. Subscribe to our newsletter to be notified when it launches.
+                  Our AI Coach feature is currently in development. Subscribe to our newsletter to be notified when it launches.
                 </p>
                 <div className="flex flex-col items-center gap-3">
-                  <Button variant="outline" size="sm" onClick={() => toast.success("You'll be notified when AI Therapist launches!")}>
+                  <Button variant="outline" size="sm" onClick={() => toast.success("You'll be notified when AI Coach launches!")}>
                     <Bell className="w-4 h-4 mr-2" />
                     Notify me when it launches
                   </Button>

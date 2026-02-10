@@ -1,30 +1,32 @@
 /**
- * Therapeutic Narrative Content
+ * Coaching Narrative Content
  *
- * These stories use narrative therapy techniques to help users see their
+ * These stories use narrative coaching techniques to help users see their
  * relationship challenges through metaphor. Metaphors bypass defensive
  * thinking and allow users to access emotional truths they might resist
  * if stated directly.
  *
- * Psychology basis: Narrative Therapy (Michael White, David Epston) — stories
+ * Psychology basis: Narrative coaching (Michael White, David Epston) — stories
  * help users externalize problems and discover "unique outcomes" where the
- * problem's influence was less. Bibliotherapy research shows that therapeutic
- * stories can be as effective as direct psychoeducation for relationship skill building.
+ * problem's influence was less. Research shows that coaching stories can be
+ * as effective as direct psychoeducation for relationship skill building.
  */
-export interface TherapeuticStory {
+export interface CoachingStory {
   id: string;
   title: string;
   type: 'communication' | 'intimacy' | 'trust' | 'future' | 'conflict';
   theme: string;
-  /** The narrative therapy technique this story primarily uses */
+  /** The narrative coaching technique this story primarily uses */
   technique: 'externalization' | 'unique-outcome' | 'reauthoring' | 'witnessing' | 'scaffolding';
   story: string;
 }
 
-/** @deprecated Use TherapeuticStory instead */
-export type HypnoticStory = TherapeuticStory;
+/** @deprecated Use CoachingStory instead */
+export type HypnoticStory = CoachingStory;
+/** @deprecated Use CoachingStory instead */
+export type TherapeuticStory = CoachingStory;
 
-export const therapeuticStories: TherapeuticStory[] = [
+export const coachingStories: CoachingStory[] = [
   {
     id: "story-bridge",
     title: "The Two Travelers",
@@ -146,9 +148,9 @@ Ships' captains often commented that the light from their lighthouse seemed to s
 ];
 
 /**
- * Therapeutic Visualization Timeframes
+ * Coaching Visualization Timeframes
  *
- * These use solution-focused brief therapy (SFBT) "miracle question" and
+ * These use solution-focused brief coaching (SFBT) "miracle question" and
  * future-oriented visualization to help users envision positive outcomes.
  * Research shows that vivid future visualization activates the same neural
  * pathways as actual experience, making desired changes feel more achievable.
@@ -176,7 +178,7 @@ export interface VisualizationCategory {
 /** @deprecated Use VisualizationCategory instead */
 export type FuturePacingCategory = VisualizationCategory;
 
-export const therapeuticVisualizations: VisualizationCategory[] = [
+export const coachingVisualizations: VisualizationCategory[] = [
   {
     id: "future-communication",
     title: "Communication Transformation",
@@ -330,7 +332,11 @@ export const metaphorDescriptions: Record<string, MetaphorDescription> = {
   }
 };
 
-/** @deprecated Use therapeuticStories instead */
-export const hypnoticStories = therapeuticStories;
-/** @deprecated Use therapeuticVisualizations instead */
-export const futurePacingTimeframes = therapeuticVisualizations;
+/** @deprecated Use coachingStories instead */
+export const hypnoticStories = coachingStories;
+/** @deprecated Use coachingStories instead */
+export const therapeuticStories = coachingStories;
+/** @deprecated Use coachingVisualizations instead */
+export const futurePacingTimeframes = coachingVisualizations;
+/** @deprecated Use coachingVisualizations instead */
+export const therapeuticVisualizations = coachingVisualizations;

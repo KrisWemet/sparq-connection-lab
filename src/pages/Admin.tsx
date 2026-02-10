@@ -43,7 +43,7 @@ export default function Admin() {
       { name: "Daily Questions", usage: 84 },
       { name: "Path to Together", usage: 67 },
       { name: "Date Ideas", usage: 53 },
-      { name: "AI Therapist", usage: 41 },
+      { name: "AI Coach", usage: 41 },
       { name: "Goals", usage: 39 },
     ]
   };

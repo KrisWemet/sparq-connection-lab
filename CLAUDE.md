@@ -2,9 +2,11 @@
 
 ## Project Overview
 
-Sparq Connection Lab is a **solo-first relationship enhancement app** that helps users become better partners through daily 5-7 minute sessions. The core philosophy is **"Making me a better me for us"** — the app delivers immediate value from Day 1 while progressively discovering each user's personality profile over 14 days.
+Sparq Connection Lab is a **solo-first relationship coaching app** that helps users become better partners through daily 5-7 minute sessions. The core philosophy is **"Making me a better me for us"** — the app delivers immediate value from Day 1 while progressively discovering each user's personality profile over 14 days.
 
-The app uses a **Learn → Implement → Reflect** daily cycle powered by AI, with content drawn from Love Languages, Gottman Method, CBT, Attachment Theory, EFT, Narrative Therapy, and other psychology frameworks.
+The app uses a **Learn → Implement → Reflect** daily cycle powered by AI, with coaching content drawn from Love Languages, Gottman Method, CBT, Attachment Theory, EFT, Narrative Therapy, and other psychology frameworks.
+
+**IMPORTANT: This is a COACHING app, not a therapy app.** All user-facing language must use "coaching" framing. Never use "therapy," "therapist," or "therapeutic" in any user-facing text. Internal framework names (e.g., "Narrative Therapy" as a psychology discipline) are fine in code comments and AI system prompts, but must never appear in the UI.
 
 **Live domain**: sharedjourney.ai
 
@@ -197,7 +199,7 @@ Environment files: `.env` (local), `.env.production` (production). These are git
 Three tiers gate feature access (managed in `src/lib/subscription-provider.tsx`):
 - **Free**: 2 daily questions, limited journeys
 - **Premium**: 4 daily questions, 3 journeys
-- **Ultimate**: Unlimited access, AI therapist, advanced analytics
+- **Ultimate**: Unlimited access, AI coach, advanced analytics
 
 ## Testing
 
@@ -381,7 +383,7 @@ Every AI-powered feature should include the `ProfileContext` in its prompts. Get
 
 ## Psychology Framework
 
-The app embeds evidence-based psychology at every layer — not as manipulation, but as transparent therapeutic techniques that help users genuinely rewire patterns. The philosophy is: **the user is always the agent of their own growth.**
+The app embeds evidence-based psychology at every layer — not as manipulation, but as transparent coaching techniques that help users genuinely rewire patterns. The philosophy is: **the user is always the agent of their own growth.**
 
 Config: `src/config/psychologyFramework.ts`
 
@@ -399,7 +401,7 @@ Session backgrounds change based on the user's discovery phase. Each color schem
 
 Hook: `useSessionPsychology(phase, archetype)` returns `phaseColors`, `cssVars`, `archetypeAccent`.
 
-### Therapeutic Language Patterns
+### Coaching Language Patterns
 
 Used in AI prompts throughout session generation (not visible as UI, but shapes all generated content):
 
@@ -452,7 +454,7 @@ Helper: `buildAttachmentPromptSection(style)` generates AI prompt rules
 
 - **4th grade reading level**: All user-facing text uses simple words and short sentences. No jargon, ever.
 - **Psychology is invisible**: The user never sees framework names, technique names, or clinical labels. They get the transformation, not the textbook.
-- **Therapeutic, not manipulative**: Techniques help users genuinely change — not trick them
+- **Coaching, not manipulative**: Techniques help users genuinely change — not trick them
 - **No fake statistics**: Removed unsourced claims; replaced with honest growth messaging
 - **No embedded commands**: NLP `embedCommand` fields renamed to transparent `reflectionPrompt`
 - **Attachment-aware**: The same insight is worded differently for anxious vs. avoidant users

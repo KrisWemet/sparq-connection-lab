@@ -9,7 +9,7 @@ interface FuturePacingProps {
   description: string;
   timeframes: {
     label: string; // e.g., "1 Month", "6 Months", "1 Year"
-    vision: string; // The therapeutic visualization text
+    vision: string; // The coaching visualization text
     reflectionPrompt?: string; // Transparent reflection invitation
   }[];
   onComplete?: () => void;
