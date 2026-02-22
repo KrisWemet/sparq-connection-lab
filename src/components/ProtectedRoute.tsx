@@ -21,17 +21,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const location = useLocation();
   const [loadingTimeout, setLoadingTimeout] = useState(false);
   
-  // Log authentication state for debugging
-  useEffect(() => {
-    console.log("Protected route state:", { 
-      path: location.pathname,
-      user: !!user, 
-      loading, 
-      isAdmin, 
-      isOnboarded
-    });
-  }, [user, loading, isAdmin, isOnboarded, location.pathname]);
-
   // Set a timeout to prevent infinite loading
   useEffect(() => {
     let timeoutId: NodeJS.Timeout | null = null;
@@ -50,7 +39,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // If still loading but timeout not reached, show loading state
   if (loading && !loadingTimeout) {
-    console.log("Protected route: Still loading, waiting...");
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <div className="flex flex-col items-center gap-2">
@@ -64,32 +52,25 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // If loading timed out but we have a user, continue to render the page to prevent getting stuck
   if (loadingTimeout && user) {
-    console.log("Protected route: Loading timeout reached, but user exists. Continuing to render.");
     return <>{children}</>;
   }
 
   // If not authenticated, redirect to login page
   if (!user) {
-    console.log("Protected route: No user, redirecting to auth");
-    // Save the attempted URL for redirecting after login
     sessionStorage.setItem('redirectUrl', location.pathname);
     return <Navigate to="/auth" replace />;
   }
 
   // For admin-only routes, check admin status
   if (adminOnly && !isAdmin) {
-    console.log("Protected route: User not admin, redirecting to dashboard");
     return <Navigate to="/dashboard" replace />;
   }
 
-  // Temporarily disable onboarding redirect
-  // if (requiresOnboarding && !isOnboarded && location.pathname !== '/onboarding') {
-  //   console.log("Protected route: User not onboarded, redirecting to onboarding");
-  //   return <Navigate to="/onboarding" replace />;
-  // }
+  // Redirect non-onboarded users to onboarding (except the onboarding route itself)
+  if (!isOnboarded && location.pathname !== '/onboarding') {
+    return <Navigate to="/onboarding" replace />;
+  }
 
-  // If authenticated, render the protected content
-  console.log("Protected route: Rendering protected content");
   return <>{children}</>;
 }
 

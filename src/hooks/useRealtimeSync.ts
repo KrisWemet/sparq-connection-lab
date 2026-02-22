@@ -400,7 +400,7 @@ export function useRealtimeSync(): UseRealtimeSyncReturn {
     }
     
     // =========================================================================
-    // Channel 4: Database changes - partner_invitations (invite status)
+    // Channel 4: Database changes - partner_invites (invite status)
     // =========================================================================
     const invitesChannel = supabase.channel('db:invites')
       .on(

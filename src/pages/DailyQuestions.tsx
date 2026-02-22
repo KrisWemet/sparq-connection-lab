@@ -72,6 +72,9 @@ export default function DailyQuestions() {
     selectedOption?: MCOption;
   } | null>(null);
 
+  // Store actual streak after save
+  const [savedStreak, setSavedStreak] = useState<number | null>(null);
+
   // Derive from profile
   const discoveryDay = (profile as any)?.discovery_day || 1;
   const identityArchetype = (profile as any)?.identity_archetype || "growth-seeker";
@@ -117,6 +120,19 @@ export default function DailyQuestions() {
         // Profile not initialized yet — that's fine for Day 1
       }
 
+      // Load yesterday's action for the check-in prompt
+      let yesterdayAction: string | undefined;
+      if (discoveryDay > 1) {
+        try {
+          const lastSession = await getLastSession(user.id);
+          if (lastSession?.microAction) {
+            yesterdayAction = lastSession.microAction;
+          }
+        } catch {
+          // Non-critical
+        }
+      }
+
       const input: SessionGenerationInput = {
         userId: user.id,
         userName,
@@ -128,7 +144,7 @@ export default function DailyQuestions() {
         onboardingGoals: (profile as any)?.onboarding_goals || [],
         profileContextSummary,
         attachmentStyle,
-        yesterdayAction: undefined, // TODO: load from last session
+        yesterdayAction,
         previousQuestionIds: [],
         formatPreferences: formatPrefs,
       };
@@ -265,6 +281,8 @@ export default function DailyQuestions() {
 
     if (!result.success) {
       toast.error("Could not save your session. Your progress may not be recorded.");
+    } else {
+      setSavedStreak(result.newStreak);
     }
 
     setSessionState("complete");
@@ -275,8 +293,6 @@ export default function DailyQuestions() {
   };
 
   const handleFinish = () => {
-    // TODO: Increment discovery_day, update streak, set last_session_date
-    toast.success("Session complete!");
     navigate("/dashboard");
   };
 
@@ -445,7 +461,11 @@ export default function DailyQuestions() {
                   animate={{ opacity: 1, scale: 1 }}
                 >
                   <SessionComplete
-                    celebration={session.celebration}
+                    celebration={{
+                      ...session.celebration,
+                      showStreak: true,
+                      streakCount: savedStreak ?? session.celebration.streakCount,
+                    }}
                     onFinish={handleFinish}
                   />
                 </motion.div>

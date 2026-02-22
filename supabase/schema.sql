@@ -329,7 +329,9 @@ CREATE TABLE public.partner_invites (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   sender_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   receiver_email TEXT NOT NULL,
+  invite_code TEXT UNIQUE DEFAULT encode(gen_random_bytes(6), 'hex'),
   status public.invitation_status DEFAULT 'pending',
+  accepted_at TIMESTAMP WITH TIME ZONE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
   expires_at TIMESTAMP WITH TIME ZONE DEFAULT (now() + interval '7 days')

@@ -1,5 +1,5 @@
 import { loadStripe, Stripe } from '@stripe/stripe-js';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { SubscriptionTier } from '@/lib/subscription-provider';
 
 // Initialize Stripe with publishable key
@@ -115,82 +115,27 @@ export async function createCheckoutSession(
   userId: string,
   tier: SubscriptionTier
 ): Promise<void> {
-  try {
+  const successUrl = `${window.location.origin}/dashboard?checkout=success&tier=${tier}`;
+  const cancelUrl = `${window.location.origin}/subscription?checkout=canceled`;
+
+  // Call the Supabase Edge Function to create a Stripe checkout session
+  const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+    body: { priceId, tier, successUrl, cancelUrl },
+  });
+
+  if (error) throw new Error(error.message || 'Failed to create checkout session');
+  if (data?.error) throw new Error(data.error);
+
+  // Redirect to Stripe-hosted checkout page
+  if (data?.url) {
+    window.location.href = data.url;
+  } else if (data?.sessionId) {
     const stripe = await getStripe();
-    if (!stripe) {
-      throw new Error('Stripe failed to initialize');
-    }
-
-    // Get or create Stripe customer ID
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('stripe_customer_id, email, name')
-      .eq('id', userId)
-      .single();
-
-    if (profileError) {
-      throw new Error('Failed to fetch user profile');
-    }
-
-    // TODO: This should call a Supabase Edge Function to create the checkout session
-    // For now, we'll use client-side Stripe checkout (requires Stripe.js Payment Links or server endpoint)
-
-    // TEMPORARY CLIENT-SIDE IMPLEMENTATION:
-    // In production, replace this with a call to your Supabase Edge Function
-    // that creates the checkout session server-side with proper security
-
-    const successUrl = `${window.location.origin}/dashboard?checkout=success&tier=${tier}`;
-    const cancelUrl = `${window.location.origin}/pricing?checkout=canceled`;
-
-    // Note: This is a simplified approach. In production, you should:
-    // 1. Create a Supabase Edge Function that calls Stripe's API to create a checkout session
-    // 2. Pass the session ID back to the client
-    // 3. Redirect to Stripe using the session ID
-
-    // For now, log the intent and show a message
-    console.log('Checkout session would be created with:', {
-      priceId,
-      userId,
-      tier,
-      customerEmail: profile.email,
-      successUrl,
-      cancelUrl,
-    });
-
-    // TODO: Replace with actual Edge Function call:
-    /*
-    const { data: session, error } = await supabase.functions.invoke('create-checkout-session', {
-      body: {
-        priceId,
-        userId,
-        tier,
-        successUrl,
-        cancelUrl,
-      },
-    });
-
-    if (error) throw error;
-
-    const { error: stripeError } = await stripe.redirectToCheckout({
-      sessionId: session.sessionId,
-    });
-
+    if (!stripe) throw new Error('Stripe failed to initialize');
+    const { error: stripeError } = await stripe.redirectToCheckout({ sessionId: data.sessionId });
     if (stripeError) throw stripeError;
-    */
-
-    // Temporary: Show alert for development
-    alert(
-      `Checkout would be created for ${tier} tier.\n\n` +
-      `To complete integration:\n` +
-      `1. Install @stripe/stripe-js: npm install @stripe/stripe-js\n` +
-      `2. Add VITE_STRIPE_PUBLISHABLE_KEY to .env\n` +
-      `3. Create Supabase Edge Function: create-checkout-session\n` +
-      `4. Set up Stripe webhook handler`
-    );
-
-  } catch (error) {
-    console.error('Error creating checkout session:', error);
-    throw error;
+  } else {
+    throw new Error('No checkout URL returned');
   }
 }
 
@@ -200,36 +145,15 @@ export async function createCheckoutSession(
  * @returns Promise that resolves when redirect happens, or null on error
  */
 export async function createPortalSession(customerId: string): Promise<void> {
-  try {
-    const returnUrl = `${window.location.origin}/settings`;
+  const returnUrl = `${window.location.origin}/settings`;
 
-    // TODO: This should call a Supabase Edge Function to create the portal session
-    // For now, log the intent
-    console.log('Portal session would be created for customer:', customerId);
+  const { data, error } = await supabase.functions.invoke('create-portal-session', {
+    body: { customerId, returnUrl },
+  });
 
-    // TODO: Replace with actual Edge Function call:
-    /*
-    const { data: session, error } = await supabase.functions.invoke('create-portal-session', {
-      body: {
-        customerId,
-        returnUrl,
-      },
-    });
-
-    if (error) throw error;
-
-    window.location.href = session.url;
-    */
-
-    // Temporary: Show alert for development
-    alert(
-      `Billing portal would open for customer: ${customerId}\n\n` +
-      `To complete integration, create Supabase Edge Function: create-portal-session`
-    );
-
-  } catch (error) {
-    console.error('Error creating portal session:', error);
-    throw error;
+  if (error) throw new Error(error.message || 'Failed to open billing portal');
+  if (data?.url) {
+    window.location.href = data.url;
   }
 }
 

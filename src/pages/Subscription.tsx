@@ -19,6 +19,8 @@ import {
   Lock
 } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "@/lib/auth";
+import { createCheckoutSession, PRICING } from "@/services/stripeService";
 import { motion } from "framer-motion";
 
 // Pricing plans data
@@ -217,9 +219,11 @@ const testimonials = [
 
 export default function Subscription() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [billingCycle, setBillingCycle] = useState("monthly");
   const [showTestimonial, setShowTestimonial] = useState<string | null>(null);
   const [highlightFeature, setHighlightFeature] = useState<{planId: string, featureIndex: number} | null>(null);
+  const [checkingOut, setCheckingOut] = useState<string | null>(null);
   
   // Highlight a random premium feature every few seconds
   useEffect(() => {
@@ -249,13 +253,21 @@ export default function Subscription() {
     }
   }, [billingCycle]);
 
-  const handleSubscribe = (planId: string) => {
-    toast.success(
-      planId === "premium" 
-        ? "You've upgraded to Premium! Notice how your connection naturally deepens as you explore new features together."
-        : "You've upgraded to Ultimate! Feel the transformation in your relationship as you access all premium features.",
-      { duration: 5000 }
-    );
+  const handleSubscribe = async (planId: string) => {
+    if (!user) { navigate('/auth'); return; }
+    if (planId === 'free' || checkingOut) return;
+
+    const pricing = PRICING[planId as keyof typeof PRICING];
+    if (!pricing?.priceId) return;
+
+    setCheckingOut(planId);
+    try {
+      await createCheckoutSession(pricing.priceId, user.id, pricing.tier);
+    } catch {
+      toast.error("Couldn't start checkout. Please try again.");
+    } finally {
+      setCheckingOut(null);
+    }
   };
   
   // Calculate savings for yearly billing
@@ -425,17 +437,21 @@ export default function Subscription() {
                 </CardContent>
                 
                 <CardFooter>
-                  <Button 
+                  <Button
                     className={`w-full ${
-                      plan.popular 
-                        ? "bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700" 
+                      plan.popular
+                        ? "bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700"
                         : ""
                     }`}
-                    disabled={plan.disabled}
+                    disabled={plan.disabled || checkingOut === plan.id}
                     onClick={() => handleSubscribe(plan.id)}
                   >
-                    {plan.id === "premium" && <Zap className="h-4 w-4 mr-1" />}
-                    {plan.buttonText}
+                    {checkingOut === plan.id ? (
+                      <Lock className="h-4 w-4 mr-1 animate-pulse" />
+                    ) : plan.id === "premium" ? (
+                      <Zap className="h-4 w-4 mr-1" />
+                    ) : null}
+                    {checkingOut === plan.id ? "Redirecting..." : plan.buttonText}
                   </Button>
                 </CardFooter>
               </Card>

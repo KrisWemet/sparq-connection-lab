@@ -4,7 +4,6 @@ import { OnboardingContainer } from "@/components/onboarding/OnboardingContainer
 import { OnboardingStepOne } from "@/components/onboarding/OnboardingStepOne";
 import { OnboardingStepTwo } from "@/components/onboarding/OnboardingStepTwo";
 import { OnboardingStepThree } from "@/components/onboarding/OnboardingStepThree";
-import { OnboardingStepFour } from "@/components/onboarding/OnboardingStepFour";
 
 export default function Onboarding() {
   const {
@@ -16,31 +15,24 @@ export default function Onboarding() {
     setFullName,
     partnerName,
     setPartnerName,
-    partnerEmail,
-    setPartnerEmail,
-    anniversaryDate,
-    setAnniversaryDate,
-    relationshipStatus,
-    setRelationshipStatus,
-    relationshipDuration,
-    setRelationshipDuration,
-    relationshipStructure,
-    setRelationshipStructure,
-    sexualOrientation,
-    setSexualOrientation,
-    relationshipGoals,
-    setRelationshipGoals,
+    relationshipMode,
+    setRelationshipMode,
+    onboardingGoals,
+    setOnboardingGoals,
+    preferredSessionTime,
+    setPreferredSessionTime,
+    identityArchetype,
+    setIdentityArchetype,
     handleNext,
     handleBack,
     handleSkip,
-    handleComplete
+    handleComplete,
   } = useOnboarding();
-  
+
   if (!user) {
-    return null; // Don't render anything while redirecting
+    return null;
   }
-  
-  // Render the current step content
+
   const renderStepContent = () => {
     switch (step) {
       case 1:
@@ -50,39 +42,31 @@ export default function Onboarding() {
             setFullName={setFullName}
             partnerName={partnerName}
             setPartnerName={setPartnerName}
-            partnerEmail={partnerEmail}
-            setPartnerEmail={setPartnerEmail}
-            anniversaryDate={anniversaryDate}
-            setAnniversaryDate={setAnniversaryDate}
+            relationshipMode={relationshipMode}
+            setRelationshipMode={setRelationshipMode}
           />
         );
       case 2:
         return (
           <OnboardingStepTwo
-            relationshipStatus={relationshipStatus}
-            setRelationshipStatus={setRelationshipStatus}
-            relationshipDuration={relationshipDuration}
-            setRelationshipDuration={setRelationshipDuration}
+            onboardingGoals={onboardingGoals}
+            setOnboardingGoals={setOnboardingGoals}
+            preferredSessionTime={preferredSessionTime}
+            setPreferredSessionTime={setPreferredSessionTime}
           />
         );
       case 3:
         return (
           <OnboardingStepThree
-            sexualOrientation={sexualOrientation}
-            setSexualOrientation={setSexualOrientation}
-            relationshipStructure={relationshipStructure}
-            setRelationshipStructure={setRelationshipStructure}
-            relationshipGoals={relationshipGoals}
-            setRelationshipGoals={setRelationshipGoals}
+            identityArchetype={identityArchetype}
+            setIdentityArchetype={setIdentityArchetype}
           />
         );
-      case 4:
-        return <OnboardingStepFour />;
       default:
         return null;
     }
   };
-  
+
   return (
     <OnboardingContainer
       step={step}
