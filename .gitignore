@@ -25,3 +25,8 @@ dist-ssr
 .vercel
 tsconfig.tsbuildinfo
 supabase/.temp
+
+# Environment files
+.env
+.env.*
+!.env.example
