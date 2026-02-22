@@ -19,6 +19,11 @@ import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
+import {
+  saveCompletedSession,
+  getLastSession,
+  hasCompletedToday,
+} from "@/services/sessionPersistenceService";
 import type {
   DailySession,
   CheckInResponseId,
@@ -237,8 +242,31 @@ export default function DailyQuestions() {
     setSessionState("implement");
   };
 
-  const handleAcceptAction = (_actionId: string) => {
-    // TODO: Store accepted action for tomorrow's check-in
+  const handleAcceptAction = async (_actionId: string) => {
+    if (!session || !user?.id) {
+      setSessionState("complete");
+      return;
+    }
+
+    // Save the completed session to Supabase
+    const result = await saveCompletedSession({
+      userId: user.id,
+      discoveryDay,
+      phase,
+      learnQuestionText: session.learn.question.text,
+      learnQuestionId: session.learn.question.id,
+      modality: session.learn.modality,
+      learnResponse: lastAnswer?.value || lastAnswer?.selectedOption?.text || "",
+      microAction: session.implement.action.description,
+      microActionAccepted: !showAlternativeAction,
+      implementActionId: _actionId,
+      checkInResponse: undefined,
+    });
+
+    if (!result.success) {
+      toast.error("Could not save your session. Your progress may not be recorded.");
+    }
+
     setSessionState("complete");
   };
 

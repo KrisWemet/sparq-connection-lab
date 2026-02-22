@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/lib/auth-context';
-import MetaphorAnimation from '../components/MetaphorAnimation';
+import { MetaphorAnimation } from '../components/MetaphorAnimation';
 import { useState } from 'react';
 
 export default function Home() {

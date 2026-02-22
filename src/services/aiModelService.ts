@@ -1,19 +1,20 @@
 /**
- * AI Model Abstraction Layer
+ * AI Model Service - Kimi K2.5 via NVIDIA NIM API
  *
- * Routes AI tasks to the appropriate model based on task complexity
- * and user subscription tier. Supports multiple providers:
+ * Routes all AI tasks to Kimi K2.5 (moonshotai/kimi-k2.5) via NVIDIA NIM.
+ * Supports two modes based on subscription tier:
  *
- * - **Gemini Flash** (free tier): Fast, lightweight tasks
- * - **Claude Sonnet 4.5** (premium): Daily sessions, personalized content
- * - **Claude Opus 4.5** (premium reports): Personality reports, mirror narratives
+ * - **Free tier**: "instant" mode - fast responses without reasoning (temp 0.6, 2048 tokens)
+ * - **Premium tier**: "thinking" mode - deep reasoning and personalization (temp 1.0, 4096 tokens)
  *
  * All services should use this instead of direct API calls.
  */
 
+import { toast } from "sonner";
+
 // ─── Types ──────────────────────────────────────────────────────────────────
 
-export type AIProvider = "gemini" | "claude-sonnet" | "claude-opus" | "openai";
+export type AIProvider = "kimi-k2.5";
 
 export type AITaskType =
   | "daily-session"         // Learn/Implement/Reflect generation
@@ -50,99 +51,32 @@ export interface AIResponse {
   provider: AIProvider;
   model: string;
   tokensUsed?: number;
+  reasoning?: string; // Only populated in premium "thinking" mode
 }
 
-// ─── Provider Configurations ────────────────────────────────────────────────
+// ─── Configuration ──────────────────────────────────────────────────────────
 
-const PROVIDER_CONFIGS: Record<AIProvider, AIModelConfig> = {
-  gemini: {
-    provider: "gemini",
-    model: "gemini-2.0-flash",
-    maxTokens: 2000,
-    temperature: 0.7,
-    endpoint: "https://generativelanguage.googleapis.com/v1beta",
-  },
-  "claude-sonnet": {
-    provider: "claude-sonnet",
-    model: "claude-sonnet-4-5-20250929",
-    maxTokens: 2000,
-    temperature: 0.7,
-    endpoint: "https://api.anthropic.com/v1",
-  },
-  "claude-opus": {
-    provider: "claude-opus",
-    model: "claude-opus-4-6",
-    maxTokens: 4000,
-    temperature: 0.6,
-    endpoint: "https://api.anthropic.com/v1",
-  },
-  openai: {
-    provider: "openai",
-    model: "gpt-4o-mini",
-    maxTokens: 1500,
-    temperature: 0.7,
-    endpoint: "https://api.openai.com/v1",
-  },
-};
+const NVIDIA_NIM_ENDPOINT = "https://integrate.api.nvidia.com/v1/chat/completions";
+const MODEL_ID = "moonshotai/kimi-k2.5";
 
-// ─── Task → Provider Routing ────────────────────────────────────────────────
-
-/** Maps each task type to the best provider for each subscription tier */
-const TASK_ROUTING: Record<AITaskType, Record<SubscriptionTier, AIProvider>> = {
-  "daily-session": {
-    free: "gemini",
-    premium: "claude-sonnet",
-    ultimate: "claude-sonnet",
-  },
-  "personality-inference": {
-    free: "gemini",
-    premium: "claude-sonnet",
-    ultimate: "claude-sonnet",
-  },
-  "question-generation": {
-    free: "gemini",
-    premium: "claude-sonnet",
-    ultimate: "claude-sonnet",
-  },
-  "micro-action": {
-    free: "gemini",
-    premium: "claude-sonnet",
-    ultimate: "claude-sonnet",
-  },
-  "mirror-narrative": {
-    free: "gemini",
-    premium: "claude-opus",
-    ultimate: "claude-opus",
-  },
-  "weekly-insight": {
-    free: "gemini",
-    premium: "claude-sonnet",
-    ultimate: "claude-sonnet",
-  },
-  "date-ideas": {
-    free: "gemini",
-    premium: "claude-sonnet",
-    ultimate: "claude-sonnet",
-  },
-  coaching: {
-    free: "gemini",
-    premium: "claude-sonnet",
-    ultimate: "claude-sonnet",
-  },
-  "reflection-analysis": {
-    free: "gemini",
-    premium: "claude-sonnet",
-    ultimate: "claude-sonnet",
-  },
-};
+/** Rate limiting: NVIDIA free tier has 40 RPM limit */
+const MAX_REQUESTS_PER_MINUTE = 40;
+const RATE_LIMIT_WINDOW_MS = 60000; // 1 minute
 
 // ─── Service ────────────────────────────────────────────────────────────────
 
 export class AIModelService {
   private static instance: AIModelService;
   private subscriptionTier: SubscriptionTier = "free";
-  private lastRequestTime = 0;
-  private minRequestInterval = 500; // ms between requests
+
+  // Rate limiting queue
+  private requestQueue: Array<{
+    resolve: (value: AIResponse) => void;
+    reject: (error: Error) => void;
+    request: AIRequest;
+  }> = [];
+  private requestTimestamps: number[] = [];
+  private isProcessingQueue = false;
 
   private constructor() {}
 
@@ -158,240 +92,207 @@ export class AIModelService {
     this.subscriptionTier = tier;
   }
 
-  /** Get which provider will be used for a given task */
-  getProviderForTask(taskType: AITaskType): AIProvider {
-    return TASK_ROUTING[taskType][this.subscriptionTier];
+  /** Get which provider will be used for a given task (always Kimi K2.5) */
+  getProviderForTask(_taskType: AITaskType): AIProvider {
+    return "kimi-k2.5";
   }
 
   /**
-   * Send a request to the appropriate AI model based on task type
-   * and subscription tier. Handles routing, throttling, and fallbacks.
+   * Send a request to Kimi K2.5 via NVIDIA NIM API.
+   * Handles rate limiting, mode selection, and error recovery.
    */
   async complete(request: AIRequest): Promise<AIResponse> {
-    // Throttle requests
-    await this.throttle();
-
-    const provider = this.getProviderForTask(request.taskType);
-    const config = PROVIDER_CONFIGS[provider];
-
-    try {
-      return await this.callProvider(provider, config, request);
-    } catch (error) {
-      console.warn(`Primary provider ${provider} failed, trying fallback:`, error);
-      // Fallback chain: claude → openai → gemini
-      return this.callWithFallback(request, provider);
-    }
-  }
-
-  // ─── Provider-Specific Calls ────────────────────────────────────────────
-
-  private async callProvider(
-    provider: AIProvider,
-    config: AIModelConfig,
-    request: AIRequest
-  ): Promise<AIResponse> {
-    switch (provider) {
-      case "gemini":
-        return this.callGemini(config, request);
-      case "claude-sonnet":
-      case "claude-opus":
-        return this.callClaude(config, request);
-      case "openai":
-        return this.callOpenAI(config, request);
-      default:
-        throw new Error(`Unknown provider: ${provider}`);
-    }
-  }
-
-  private async callGemini(
-    config: AIModelConfig,
-    request: AIRequest
-  ): Promise<AIResponse> {
-    const apiKey = this.getApiKey("gemini");
-    if (!apiKey) throw new Error("Gemini API key not configured");
-
-    const response = await fetch(
-      `${config.endpoint}/models/${config.model}:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                { text: `${request.systemPrompt}\n\n${request.userPrompt}` },
-              ],
-            },
-          ],
-          generationConfig: {
-            temperature: request.temperature ?? config.temperature,
-            maxOutputTokens: request.maxTokens ?? config.maxTokens,
-            ...(request.jsonMode ? { responseMimeType: "application/json" } : {}),
-          },
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`Gemini API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const content = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-
-    return {
-      content,
-      provider: "gemini",
-      model: config.model,
-      tokensUsed: data.usageMetadata?.totalTokenCount,
-    };
-  }
-
-  private async callClaude(
-    config: AIModelConfig,
-    request: AIRequest
-  ): Promise<AIResponse> {
-    const apiKey = this.getApiKey("claude");
-    if (!apiKey) throw new Error("Claude API key not configured");
-
-    const response = await fetch(`${config.endpoint}/messages`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-        "anthropic-dangerous-direct-browser-access": "true",
-      },
-      body: JSON.stringify({
-        model: config.model,
-        max_tokens: request.maxTokens ?? config.maxTokens,
-        system: request.systemPrompt,
-        messages: [{ role: "user", content: request.userPrompt }],
-        ...(request.temperature !== undefined
-          ? { temperature: request.temperature }
-          : {}),
-      }),
+    return new Promise((resolve, reject) => {
+      this.requestQueue.push({ resolve, reject, request });
+      this.processQueue();
     });
-
-    if (!response.ok) {
-      throw new Error(`Claude API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const content =
-      data.content?.[0]?.type === "text" ? data.content[0].text : "";
-
-    return {
-      content,
-      provider: config.provider,
-      model: config.model,
-      tokensUsed:
-        (data.usage?.input_tokens || 0) + (data.usage?.output_tokens || 0),
-    };
   }
 
-  private async callOpenAI(
-    config: AIModelConfig,
-    request: AIRequest
-  ): Promise<AIResponse> {
-    const apiKey = this.getApiKey("openai");
-    if (!apiKey) throw new Error("OpenAI API key not configured");
+  // ─── Queue Processing ───────────────────────────────────────────────────
 
-    const response = await fetch(`${config.endpoint}/chat/completions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: config.model,
-        messages: [
-          { role: "system", content: request.systemPrompt },
-          { role: "user", content: request.userPrompt },
-        ],
-        temperature: request.temperature ?? config.temperature,
-        max_tokens: request.maxTokens ?? config.maxTokens,
-        ...(request.jsonMode
-          ? { response_format: { type: "json_object" } }
-          : {}),
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status}`);
+  private async processQueue(): Promise<void> {
+    if (this.isProcessingQueue || this.requestQueue.length === 0) {
+      return;
     }
 
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content || "";
+    this.isProcessingQueue = true;
 
-    return {
-      content,
-      provider: "openai",
-      model: config.model,
-      tokensUsed: data.usage?.total_tokens,
-    };
-  }
+    while (this.requestQueue.length > 0) {
+      // Check rate limit
+      const now = Date.now();
+      this.requestTimestamps = this.requestTimestamps.filter(
+        (ts) => now - ts < RATE_LIMIT_WINDOW_MS
+      );
 
-  // ─── Helpers ──────────────────────────────────────────────────────────────
-
-  private async callWithFallback(
-    request: AIRequest,
-    failedProvider: AIProvider
-  ): Promise<AIResponse> {
-    const fallbackOrder: AIProvider[] = [
-      "claude-sonnet",
-      "openai",
-      "gemini",
-    ];
-
-    for (const provider of fallbackOrder) {
-      if (provider === failedProvider) continue;
-
-      try {
-        const config = PROVIDER_CONFIGS[provider];
-        return await this.callProvider(provider, config, request);
-      } catch {
+      if (this.requestTimestamps.length >= MAX_REQUESTS_PER_MINUTE) {
+        // Wait until oldest request expires from the window
+        const oldestTimestamp = Math.min(...this.requestTimestamps);
+        const waitTime = RATE_LIMIT_WINDOW_MS - (now - oldestTimestamp);
+        await new Promise((resolve) => setTimeout(resolve, waitTime + 100));
         continue;
       }
+
+      // Process next request
+      const item = this.requestQueue.shift();
+      if (!item) break;
+
+      this.requestTimestamps.push(now);
+
+      try {
+        const response = await this.callKimi(item.request);
+        item.resolve(response);
+      } catch (error) {
+        console.error("Kimi K2.5 API call failed:", error);
+        item.reject(error as Error);
+      }
+
+      // Small delay between requests to avoid bursts
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
-    throw new Error("All AI providers failed");
+    this.isProcessingQueue = false;
   }
 
-  private getApiKey(provider: "gemini" | "claude" | "openai"): string | undefined {
-    const envKeys: Record<string, string> = {
-      gemini: import.meta.env.VITE_GEMINI_API_KEY || "",
-      claude: import.meta.env.VITE_ANTHROPIC_API_KEY || "",
-      openai: import.meta.env.VITE_OPENAI_API_KEY || "",
+  // ─── Kimi K2.5 API Call ─────────────────────────────────────────────────
+
+  private async callKimi(request: AIRequest): Promise<AIResponse> {
+    const apiKey = this.getApiKey();
+
+    if (!apiKey) {
+      const error = "NVIDIA API key not configured. Please add VITE_NVIDIA_API_KEY to your environment.";
+      toast.error(error);
+      throw new Error(error);
+    }
+
+    // Determine mode based on subscription tier
+    const isPremium = this.subscriptionTier === "premium" || this.subscriptionTier === "ultimate";
+    const config = this.getConfig(isPremium);
+
+    // Build messages array (OpenAI-compatible format)
+    const messages = [
+      { role: "system", content: request.systemPrompt },
+      { role: "user", content: request.userPrompt },
+    ];
+
+    // Build request body
+    const requestBody: Record<string, unknown> = {
+      model: MODEL_ID,
+      messages,
+      temperature: request.temperature ?? config.temperature,
+      max_tokens: request.maxTokens ?? config.maxTokens,
     };
 
-    const key = envKeys[provider];
-    if (key) return key;
+    // Add JSON mode if requested (Kimi supports response_format)
+    if (request.jsonMode) {
+      requestBody.response_format = { type: "json_object" };
+    }
+
+    // Premium mode: enable thinking/reasoning
+    if (isPremium) {
+      // Kimi K2.5 supports reasoning via special parameters
+      // Based on Kimi's API docs, reasoning is enabled by default with higher temp
+      requestBody.thinking = true; // Enable reasoning/thinking mode
+    }
+
+    try {
+      const response = await fetch(NVIDIA_NIM_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text().catch(() => "Unknown error");
+        const error = `Kimi K2.5 API error (${response.status}): ${errorText}`;
+
+        // Show user-friendly error toast
+        if (response.status === 401) {
+          toast.error("AI service authentication failed. Please check your API key.");
+        } else if (response.status === 429) {
+          toast.error("AI service rate limit reached. Please try again in a moment.");
+        } else if (response.status >= 500) {
+          toast.error("AI service temporarily unavailable. Please try again.");
+        } else {
+          toast.error("AI service error. Please try again.");
+        }
+
+        throw new Error(error);
+      }
+
+      const data = await response.json();
+
+      // Extract content from OpenAI-compatible response
+      const content = data.choices?.[0]?.message?.content || "";
+
+      if (!content) {
+        throw new Error("Empty response from Kimi K2.5");
+      }
+
+      // Extract reasoning if available (premium mode)
+      const reasoning = isPremium && data.choices?.[0]?.message?.reasoning
+        ? data.choices[0].message.reasoning
+        : undefined;
+
+      // Extract token usage
+      const tokensUsed = data.usage?.total_tokens;
+
+      return {
+        content,
+        provider: "kimi-k2.5",
+        model: MODEL_ID,
+        tokensUsed,
+        reasoning,
+      };
+    } catch (error) {
+      // If it's already our custom error, re-throw
+      if (error instanceof Error && error.message.includes("Kimi K2.5")) {
+        throw error;
+      }
+
+      // Network or unexpected errors
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      toast.error("Unable to connect to AI service. Please check your connection.");
+      throw new Error(`Kimi K2.5 request failed: ${errorMessage}`);
+    }
+  }
+
+  // ─── Helpers ────────────────────────────────────────────────────────────
+
+  /**
+   * Get configuration based on subscription tier.
+   * Free = instant mode, Premium/Ultimate = thinking mode.
+   */
+  private getConfig(isPremium: boolean): AIModelConfig {
+    return {
+      provider: "kimi-k2.5",
+      model: MODEL_ID,
+      endpoint: NVIDIA_NIM_ENDPOINT,
+      // Free tier: instant mode (faster, cheaper)
+      // Premium tier: thinking mode (deeper, more personalized)
+      maxTokens: isPremium ? 4096 : 2048,
+      temperature: isPremium ? 1.0 : 0.6,
+    };
+  }
+
+  /**
+   * Get NVIDIA API key from environment or localStorage fallback.
+   */
+  private getApiKey(): string | undefined {
+    // Try environment variable first
+    const envKey = import.meta.env.VITE_NVIDIA_API_KEY;
+    if (envKey) return envKey;
 
     // Fall back to localStorage-stored keys
     try {
       const stored = JSON.parse(
         localStorage.getItem("sparq-connect-api-keys") || "{}"
       );
-      const storageMap: Record<string, string> = {
-        gemini: "google",
-        claude: "anthropic",
-        openai: "openai",
-      };
-      return stored[storageMap[provider]] || undefined;
+      return stored.nvidia || undefined;
     } catch {
       return undefined;
     }
-  }
-
-  private async throttle(): Promise<void> {
-    const now = Date.now();
-    const elapsed = now - this.lastRequestTime;
-    if (elapsed < this.minRequestInterval) {
-      await new Promise((resolve) =>
-        setTimeout(resolve, this.minRequestInterval - elapsed)
-      );
-    }
-    this.lastRequestTime = Date.now();
   }
 }

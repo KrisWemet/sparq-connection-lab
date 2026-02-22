@@ -75,6 +75,54 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_journey_content: {
+        Row: {
+          id: string
+          user_id: string
+          journey_id: string
+          day_number: number
+          content_type: string
+          content: Json
+          is_personalized: boolean | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          journey_id: string
+          day_number: number
+          content_type: string
+          content: Json
+          is_personalized?: boolean | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          journey_id?: string
+          day_number?: number
+          content_type?: string
+          content?: Json
+          is_personalized?: boolean | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_journey_content_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_journey_content_journey_id_fkey"
+            columns: ["journey_id"]
+            isOneToOne: false
+            referencedRelation: "journeys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       conversation_memories: {
         Row: {
           content: string
@@ -135,6 +183,77 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "daily_activities_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      daily_sessions: {
+        Row: {
+          id: string
+          user_id: string
+          session_date: string
+          discovery_day: number
+          phase: string
+          learn_response: string
+          learn_question_id: string | null
+          learn_question_text: string | null
+          modality: string | null
+          micro_action: string
+          micro_action_accepted: boolean
+          implement_action_id: string | null
+          reflect_response: string | null
+          check_in_response: string | null
+          points_earned: number
+          streak_at_session: number
+          created_at: string
+          completed_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          session_date: string
+          discovery_day: number
+          phase: string
+          learn_response: string
+          learn_question_id?: string | null
+          learn_question_text?: string | null
+          modality?: string | null
+          micro_action: string
+          micro_action_accepted?: boolean
+          implement_action_id?: string | null
+          reflect_response?: string | null
+          check_in_response?: string | null
+          points_earned?: number
+          streak_at_session?: number
+          created_at?: string
+          completed_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          session_date?: string
+          discovery_day?: number
+          phase?: string
+          learn_response?: string
+          learn_question_id?: string | null
+          learn_question_text?: string | null
+          modality?: string | null
+          micro_action?: string
+          micro_action_accepted?: boolean
+          implement_action_id?: string | null
+          reflect_response?: string | null
+          check_in_response?: string | null
+          points_earned?: number
+          streak_at_session?: number
+          created_at?: string
+          completed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_sessions_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -238,6 +357,11 @@ export type Database = {
           modality: string | null
           title: string
           type: Database["public"]["Enums"]["journey_type"]
+          premium_only: boolean | null
+          image_url: string | null
+          icon: string | null
+          color: string | null
+          phases: Json | null
         }
         Insert: {
           created_at?: string | null
@@ -248,6 +372,11 @@ export type Database = {
           modality?: string | null
           title: string
           type: Database["public"]["Enums"]["journey_type"]
+          premium_only?: boolean | null
+          image_url?: string | null
+          icon?: string | null
+          color?: string | null
+          phases?: Json | null
         }
         Update: {
           created_at?: string | null
@@ -258,6 +387,11 @@ export type Database = {
           modality?: string | null
           title?: string
           type?: Database["public"]["Enums"]["journey_type"]
+          premium_only?: boolean | null
+          image_url?: string | null
+          icon?: string | null
+          color?: string | null
+          phases?: Json | null
         }
         Relationships: []
       }
@@ -321,41 +455,6 @@ export type Database = {
         }
         Relationships: []
       }
-      partner_invites: {
-        Row: {
-          created_at: string
-          id: string
-          receiver_email: string
-          sender_id: string
-          status: Database["public"]["Enums"]["invitation_status"]
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          receiver_email: string
-          sender_id: string
-          status?: Database["public"]["Enums"]["invitation_status"]
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          receiver_email?: string
-          sender_id?: string
-          status?: Database["public"]["Enums"]["invitation_status"]
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "partner_invites_sender_id_fkey"
-            columns: ["sender_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       mirror_narratives: {
         Row: {
           id: string
@@ -397,6 +496,211 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          id: string
+          user_id: string
+          type: string
+          title: string
+          message: string
+          sender_id: string | null
+          data: Json | null
+          is_read: boolean
+          read_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          type: string
+          title: string
+          message: string
+          sender_id?: string | null
+          data?: Json | null
+          is_read?: boolean
+          read_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          type?: string
+          title?: string
+          message?: string
+          sender_id?: string | null
+          data?: Json | null
+          is_read?: boolean
+          read_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_invites: {
+        Row: {
+          created_at: string
+          id: string
+          receiver_email: string
+          sender_id: string
+          status: Database["public"]["Enums"]["invitation_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          receiver_email: string
+          sender_id: string
+          status?: Database["public"]["Enums"]["invitation_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          receiver_email?: string
+          sender_id?: string
+          status?: Database["public"]["Enums"]["invitation_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_invites_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      personality_profiles: {
+        Row: {
+          id: string
+          user_id: string
+          attachment_style: Json
+          love_language: Json
+          conflict_style: Json
+          emotional_expression: Json
+          core_values: Json
+          intimacy_profile: Json
+          relational_identity: Json
+          overall_confidence: number | null
+          total_signals: number | null
+          sensitive_topics: string[] | null
+          strengths: string[] | null
+          growth_areas: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          attachment_style?: Json
+          love_language?: Json
+          conflict_style?: Json
+          emotional_expression?: Json
+          core_values?: Json
+          intimacy_profile?: Json
+          relational_identity?: Json
+          overall_confidence?: number | null
+          total_signals?: number | null
+          sensitive_topics?: string[] | null
+          strengths?: string[] | null
+          growth_areas?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          attachment_style?: Json
+          love_language?: Json
+          conflict_style?: Json
+          emotional_expression?: Json
+          core_values?: Json
+          intimacy_profile?: Json
+          relational_identity?: Json
+          overall_confidence?: number | null
+          total_signals?: number | null
+          sensitive_topics?: string[] | null
+          strengths?: string[] | null
+          growth_areas?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "personality_profiles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      personality_signals: {
+        Row: {
+          id: string
+          user_id: string
+          dimension: string
+          signal_key: string
+          confidence: number | null
+          evidence: string | null
+          source_session_id: string | null
+          discovery_day: number | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          dimension: string
+          signal_key: string
+          confidence?: number | null
+          evidence?: string | null
+          source_session_id?: string | null
+          discovery_day?: number | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          dimension?: string
+          signal_key?: string
+          confidence?: number | null
+          evidence?: string | null
+          source_session_id?: string | null
+          discovery_day?: number | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "personality_signals_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "personality_signals_source_session_id_fkey"
+            columns: ["source_session_id"]
+            isOneToOne: false
+            referencedRelation: "daily_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -404,16 +708,25 @@ export type Database = {
           discovery_day: number | null
           email: string
           id: string
+          identity_archetype: string | null
           isonboarded: boolean | null
           last_daily_activity: string | null
           mirror_narrative_delivered: boolean | null
           mirror_narrative_delivered_at: string | null
           name: string
+          onboarding_goals: string[] | null
           partner_code: string | null
           partner_id: string | null
+          preferred_session_time: string | null
           relationship_level: string | null
+          relationship_mode: string | null
           relationship_points: number | null
           streak_count: number | null
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          subscription_expires_at: string | null
+          subscription_tier: Database["public"]["Enums"]["subscription_tier"] | null
+          trial_ends_at: string | null
           updated_at: string
         }
         Insert: {
@@ -422,16 +735,25 @@ export type Database = {
           discovery_day?: number | null
           email: string
           id: string
+          identity_archetype?: string | null
           isonboarded?: boolean | null
           last_daily_activity?: string | null
           mirror_narrative_delivered?: boolean | null
           mirror_narrative_delivered_at?: string | null
           name: string
+          onboarding_goals?: string[] | null
           partner_code?: string | null
           partner_id?: string | null
+          preferred_session_time?: string | null
           relationship_level?: string | null
+          relationship_mode?: string | null
           relationship_points?: number | null
           streak_count?: number | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_expires_at?: string | null
+          subscription_tier?: Database["public"]["Enums"]["subscription_tier"] | null
+          trial_ends_at?: string | null
           updated_at?: string
         }
         Update: {
@@ -440,16 +762,25 @@ export type Database = {
           discovery_day?: number | null
           email?: string
           id?: string
+          identity_archetype?: string | null
           isonboarded?: boolean | null
           last_daily_activity?: string | null
           mirror_narrative_delivered?: boolean | null
           mirror_narrative_delivered_at?: string | null
           name?: string
+          onboarding_goals?: string[] | null
           partner_code?: string | null
           partner_id?: string | null
+          preferred_session_time?: string | null
           relationship_level?: string | null
+          relationship_mode?: string | null
           relationship_points?: number | null
           streak_count?: number | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_expires_at?: string | null
+          subscription_tier?: Database["public"]["Enums"]["subscription_tier"] | null
+          trial_ends_at?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -486,94 +817,6 @@ export type Database = {
           score?: number
           taken_at?: string
           user_id?: string
-        }
-        Relationships: []
-      }
-      user_badges: {
-        Row: {
-          achieved: boolean | null
-          achieved_at: string | null
-          badge_level: number | null
-          badge_type: string
-          id: string
-          user_id: string | null
-        }
-        Insert: {
-          achieved?: boolean | null
-          achieved_at?: string | null
-          badge_level?: number | null
-          badge_type: string
-          id?: string
-          user_id?: string | null
-        }
-        Update: {
-          achieved?: boolean | null
-          achieved_at?: string | null
-          badge_level?: number | null
-          badge_type?: string
-          id?: string
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_badges_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_journeys: {
-        Row: {
-          completed_at: string | null
-          id: string
-          journey_id: string | null
-          start_date: string | null
-          user_id: string | null
-        }
-        Insert: {
-          completed_at?: string | null
-          id?: string
-          journey_id?: string | null
-          start_date?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          completed_at?: string | null
-          id?: string
-          journey_id?: string | null
-          start_date?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_journeys_journey_id_fkey"
-            columns: ["journey_id"]
-            isOneToOne: false
-            referencedRelation: "journeys"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_roles: {
-        Row: {
-          created_at: string | null
-          id: string
-          role: Database["public"]["Enums"]["user_role"]
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          role?: Database["public"]["Enums"]["user_role"]
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          role?: Database["public"]["Enums"]["user_role"]
-          user_id?: string | null
         }
         Relationships: []
       }
@@ -644,133 +887,155 @@ export type Database = {
           },
         ]
       }
-      notifications: {
+      subscriptions: {
         Row: {
           id: string
           user_id: string
-          type: string
-          title: string
-          message: string
-          sender_id: string | null
-          data: Json | null
-          is_read: boolean
-          read_at: string | null
+          stripe_customer_id: string
+          stripe_subscription_id: string | null
+          stripe_price_id: string | null
+          tier: Database["public"]["Enums"]["subscription_tier"] | null
+          status: string | null
+          current_period_start: string | null
+          current_period_end: string | null
+          cancel_at_period_end: boolean | null
+          canceled_at: string | null
           created_at: string
           updated_at: string
         }
         Insert: {
           id?: string
           user_id: string
-          type: string
-          title: string
-          message: string
-          sender_id?: string | null
-          data?: Json | null
-          is_read?: boolean
-          read_at?: string | null
+          stripe_customer_id: string
+          stripe_subscription_id?: string | null
+          stripe_price_id?: string | null
+          tier?: Database["public"]["Enums"]["subscription_tier"] | null
+          status?: string | null
+          current_period_start?: string | null
+          current_period_end?: string | null
+          cancel_at_period_end?: boolean | null
+          canceled_at?: string | null
           created_at?: string
           updated_at?: string
         }
         Update: {
           id?: string
           user_id?: string
-          type?: string
-          title?: string
-          message?: string
-          sender_id?: string | null
-          data?: Json | null
-          is_read?: boolean
-          read_at?: string | null
+          stripe_customer_id?: string
+          stripe_subscription_id?: string | null
+          stripe_price_id?: string | null
+          tier?: Database["public"]["Enums"]["subscription_tier"] | null
+          status?: string | null
+          current_period_start?: string | null
+          current_period_end?: string | null
+          cancel_at_period_end?: boolean | null
+          canceled_at?: string | null
           created_at?: string
           updated_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "notifications_user_id_fkey"
+            foreignKeyName: "subscriptions_user_id_fkey"
             columns: ["user_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+        ]
+      }
+      user_badges: {
+        Row: {
+          achieved: boolean | null
+          achieved_at: string | null
+          badge_level: number | null
+          badge_type: string
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          achieved?: boolean | null
+          achieved_at?: string | null
+          badge_level?: number | null
+          badge_type: string
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          achieved?: boolean | null
+          achieved_at?: string | null
+          badge_level?: number | null
+          badge_type?: string
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: [
           {
-            foreignKeyName: "notifications_sender_id_fkey"
-            columns: ["sender_id"]
+            foreignKeyName: "user_badges_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
       }
-      daily_sessions: {
+      user_journeys: {
         Row: {
-          id: string
-          user_id: string
-          session_date: string
-          discovery_day: number
-          phase: string
-          learn_response: string
-          learn_question_id: string | null
-          learn_question_text: string | null
-          modality: string | null
-          micro_action: string
-          micro_action_accepted: boolean
-          implement_action_id: string | null
-          reflect_response: string | null
-          check_in_response: string | null
-          points_earned: number
-          streak_at_session: number
-          created_at: string
           completed_at: string | null
+          id: string
+          journey_id: string | null
+          start_date: string | null
+          user_id: string | null
+          progress: number | null
+          is_active: boolean | null
         }
         Insert: {
-          id?: string
-          user_id: string
-          session_date: string
-          discovery_day: number
-          phase: string
-          learn_response: string
-          learn_question_id?: string | null
-          learn_question_text?: string | null
-          modality?: string | null
-          micro_action: string
-          micro_action_accepted?: boolean
-          implement_action_id?: string | null
-          reflect_response?: string | null
-          check_in_response?: string | null
-          points_earned?: number
-          streak_at_session?: number
-          created_at?: string
           completed_at?: string | null
+          id?: string
+          journey_id?: string | null
+          start_date?: string | null
+          user_id?: string | null
+          progress?: number | null
+          is_active?: boolean | null
         }
         Update: {
-          id?: string
-          user_id?: string
-          session_date?: string
-          discovery_day?: number
-          phase?: string
-          learn_response?: string
-          learn_question_id?: string | null
-          learn_question_text?: string | null
-          modality?: string | null
-          micro_action?: string
-          micro_action_accepted?: boolean
-          implement_action_id?: string | null
-          reflect_response?: string | null
-          check_in_response?: string | null
-          points_earned?: number
-          streak_at_session?: number
-          created_at?: string
           completed_at?: string | null
+          id?: string
+          journey_id?: string | null
+          start_date?: string | null
+          user_id?: string | null
+          progress?: number | null
+          is_active?: boolean | null
         }
         Relationships: [
           {
-            foreignKeyName: "daily_sessions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "user_journeys_journey_id_fkey"
+            columns: ["journey_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "journeys"
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["user_role"]
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          user_id?: string | null
+        }
+        Relationships: []
       }
       user_streaks: {
         Row: {
@@ -1001,6 +1266,7 @@ export type Database = {
     Enums: {
       invitation_status: "pending" | "accepted" | "rejected"
       journey_type: "communication" | "intimacy" | "personal_growth"
+      subscription_tier: "free" | "premium" | "ultimate"
       user_role: "user" | "admin"
     }
     CompositeTypes: {

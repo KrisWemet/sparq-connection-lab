@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/lib/auth-context';
 import { motion } from 'framer-motion';
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import { Bell, CheckCircle, Edit2, User, Camera, Heart, X, ChevronRight } from 'lucide-react';
 import { logActivity } from '@/lib/supabase';
 
