@@ -1,4 +1,4 @@
-import { apiConfig } from "@/lib/api-config";
+import { AIModelService } from "@/services/aiModelService";
 import type {
   PersonalityProfile,
   MirrorNarrative,
@@ -37,46 +37,25 @@ export class MirrorNarrativeService {
     userName: string,
     partnerName?: string
   ): Promise<MirrorNarrative> {
-    const { openai } = apiConfig.apiKeys;
-
-    if (!openai) {
-      return this.buildFallbackNarrative(profile, userName, partnerName);
-    }
-
     const systemPrompt = this.buildSystemPrompt();
     const userPrompt = this.buildNarrativePrompt(profile, userName, partnerName);
 
     try {
-      const response = await fetch(`${apiConfig.endpoints.openai}/chat/completions`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${openai}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userPrompt },
-          ],
-          temperature: 0.7,
-          max_tokens: 2000,
-          response_format: { type: "json_object" },
-        }),
+      const aiService = AIModelService.getInstance();
+      const response = await aiService.complete({
+        taskType: "mirror-narrative",
+        systemPrompt,
+        userPrompt,
+        temperature: 0.7,
+        maxTokens: 2000,
+        jsonMode: true,
       });
 
-      if (!response.ok) {
-        throw new Error(`Narrative generation failed: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const content = data.choices[0]?.message?.content;
-
-      if (!content) {
+      if (!response.content) {
         throw new Error("Empty response from narrative generation");
       }
 
-      return this.parseNarrativeResponse(content, profile);
+      return this.parseNarrativeResponse(response.content, profile);
     } catch (error) {
       console.error("Mirror narrative generation failed:", error);
       return this.buildFallbackNarrative(profile, userName, partnerName);

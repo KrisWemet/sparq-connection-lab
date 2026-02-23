@@ -19,6 +19,23 @@ interface SaveSessionInput {
   microActionAccepted: boolean;
   implementActionId?: string;
   checkInResponse?: string;
+  moodRating?: number;
+}
+
+interface SaveMirrorInput {
+  userId: string;
+  narrative: string;
+  coreInsight: string;
+  dimensionSummaries: Array<{
+    dimension: string;
+    title: string;
+    description: string;
+    strengthFrame: string;
+  }>;
+  recommendations: Array<{
+    journeyId: string;
+    reason: string;
+  }>;
 }
 
 /** Save a completed daily session and update all related state */
@@ -169,5 +186,43 @@ export async function getStreakInfo(
     };
   } catch {
     return { current: 0, longest: 0, total: 0 };
+  }
+}
+
+/** Save the Day 14 mirror narrative to the database */
+export async function saveMirrorNarrative(
+  input: SaveMirrorInput
+): Promise<{ success: boolean }> {
+  const { userId, narrative, coreInsight, dimensionSummaries, recommendations } = input;
+
+  try {
+    const { error } = await supabase.from("mirror_narratives").insert({
+      user_id: userId,
+      narrative_text: narrative,
+      core_insight: coreInsight,
+      dimension_summaries: dimensionSummaries,
+      recommendations,
+      generated_at: new Date().toISOString(),
+    });
+
+    if (error) {
+      // Unique constraint: narrative already exists for this user
+      if (error.code === "23505") {
+        console.warn("Mirror narrative already saved for this user");
+        return { success: true };
+      }
+      throw error;
+    }
+
+    // Mark profile as mirror-delivered
+    await supabase
+      .from("profiles")
+      .update({ mirror_delivered: true } as any)
+      .eq("id", userId);
+
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to save mirror narrative:", error);
+    return { success: false };
   }
 }

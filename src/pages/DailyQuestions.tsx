@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { DailySessionService } from "@/services/dailySessionService";
 import { PersonalityInferenceService } from "@/services/personalityInferenceService";
 import { PersonalityProfileService } from "@/services/personalityProfileService";
+import { MirrorNarrativeService } from "@/services/mirrorNarrativeService";
 import { PHASE_FORMAT_PREFERENCES } from "@/types/session";
 import { useSessionPsychology } from "@/hooks/useSessionPsychology";
 import { SessionGreeting } from "@/components/session/SessionGreeting";
@@ -16,11 +17,13 @@ import { ImplementStep as ImplementStepComponent } from "@/components/session/Im
 import { SessionComplete } from "@/components/session/SessionComplete";
 import { BottomNav } from "@/components/bottom-nav";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import {
   saveCompletedSession,
+  saveMirrorNarrative,
   getLastSession,
   hasCompletedToday,
 } from "@/services/sessionPersistenceService";
@@ -30,7 +33,7 @@ import type {
   MCOption,
   SessionGenerationInput,
 } from "@/types/session";
-import type { DiscoveryPhase } from "@/types/personality";
+import type { DiscoveryPhase, MirrorNarrative } from "@/types/personality";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -41,7 +44,19 @@ type SessionState =
   | "learn"
   | "micro-insight"
   | "implement"
+  | "mood-rating"
+  | "mirror"
   | "complete";
+
+// ─── Mood Rating ────────────────────────────────────────────────────────────
+
+const MOOD_OPTIONS = [
+  { emoji: "😔", label: "Struggling", value: 1 },
+  { emoji: "😐", label: "Okay", value: 2 },
+  { emoji: "🙂", label: "Good", value: 3 },
+  { emoji: "😊", label: "Great", value: 4 },
+  { emoji: "🤩", label: "Amazing", value: 5 },
+] as const;
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -74,6 +89,13 @@ export default function DailyQuestions() {
 
   // Store actual streak after save
   const [savedStreak, setSavedStreak] = useState<number | null>(null);
+
+  // Mood rating (shown after implement, before completion)
+  const [moodRating, setMoodRating] = useState<number | null>(null);
+
+  // Mirror narrative (Day 13-14)
+  const [mirrorNarrative, setMirrorNarrative] = useState<MirrorNarrative | null>(null);
+  const [isGeneratingMirror, setIsGeneratingMirror] = useState(false);
 
   // Derive from profile
   const discoveryDay = (profile as any)?.discovery_day || 1;
@@ -273,10 +295,11 @@ export default function DailyQuestions() {
       learnQuestionId: session.learn.question.id,
       modality: session.learn.modality,
       learnResponse: lastAnswer?.value || lastAnswer?.selectedOption?.text || "",
-      microAction: session.implement.action.description,
+      microAction: session.implement.microAction.personalizedText,
       microActionAccepted: !showAlternativeAction,
       implementActionId: _actionId,
       checkInResponse: undefined,
+      moodRating: undefined, // Will be updated after mood step
     });
 
     if (!result.success) {
@@ -285,6 +308,53 @@ export default function DailyQuestions() {
       setSavedStreak(result.newStreak);
     }
 
+    // Transition to mood rating
+    setSessionState("mood-rating");
+  };
+
+  const handleMoodSelect = async (value: number) => {
+    setMoodRating(value);
+
+    // On Day 13-14 with enough data, trigger mirror narrative
+    if (discoveryDay >= 13 && user?.id) {
+      setIsGeneratingMirror(true);
+      try {
+        const profileService = PersonalityProfileService.getInstance();
+        await profileService.initialize(user.id);
+        const personalityProfile = await profileService.getProfile();
+
+        if (personalityProfile) {
+          const mirrorService = MirrorNarrativeService.getInstance();
+          const narrative = await mirrorService.generateNarrative(
+            personalityProfile,
+            userName,
+            partnerName
+          );
+          setMirrorNarrative(narrative);
+
+          // Save mirror to database
+          await saveMirrorNarrative({
+            userId: user.id,
+            narrative: narrative.narrative,
+            coreInsight: narrative.coreInsight,
+            dimensionSummaries: narrative.dimensionSummaries,
+            recommendations: narrative.recommendations,
+          });
+
+          setIsGeneratingMirror(false);
+          setSessionState("mirror");
+          return;
+        }
+      } catch (err) {
+        console.error("Mirror narrative generation failed:", err);
+      }
+      setIsGeneratingMirror(false);
+    }
+
+    setSessionState("complete");
+  };
+
+  const handleMirrorContinue = () => {
     setSessionState("complete");
   };
 
@@ -450,6 +520,157 @@ export default function DailyQuestions() {
                     onSwap={handleSwapAction}
                     showAlternative={showAlternativeAction}
                   />
+                </motion.div>
+              )}
+
+              {/* Mood Rating */}
+              {sessionState === "mood-rating" && (
+                <motion.div
+                  key="mood-rating"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <div className="min-h-[40vh] flex items-center justify-center">
+                    <Card className="bg-white/90 dark:bg-card/90 backdrop-blur max-w-sm w-full">
+                      <CardContent className="pt-6 space-y-6 text-center">
+                        <p
+                          className="text-lg font-medium"
+                          style={{ color: "var(--session-primary, hsl(var(--foreground)))" }}
+                        >
+                          How are you feeling right now?
+                        </p>
+                        <div className="flex justify-center gap-3">
+                          {MOOD_OPTIONS.map((mood) => (
+                            <button
+                              key={mood.value}
+                              onClick={() => handleMoodSelect(mood.value)}
+                              disabled={isGeneratingMirror}
+                              className="flex flex-col items-center gap-1 p-2 rounded-lg transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-50"
+                            >
+                              <span className="text-3xl">{mood.emoji}</span>
+                              <span className="text-xs text-muted-foreground">{mood.label}</span>
+                            </button>
+                          ))}
+                        </div>
+                        {isGeneratingMirror && (
+                          <motion.p
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="text-sm text-muted-foreground"
+                          >
+                            Preparing something special for you...
+                          </motion.p>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Mirror Narrative (Day 13-14) */}
+              {sessionState === "mirror" && mirrorNarrative && (
+                <motion.div
+                  key="mirror"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.8 }}
+                >
+                  <div className="space-y-6 pb-8">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                      className="text-center"
+                    >
+                      <h2
+                        className="text-2xl font-semibold"
+                        style={{ color: "var(--session-primary, hsl(var(--foreground)))" }}
+                      >
+                        We see you.
+                      </h2>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        A reflection of who you are
+                      </p>
+                    </motion.div>
+
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.8 }}
+                    >
+                      <Card className="bg-white/90 dark:bg-card/90 backdrop-blur">
+                        <CardContent className="pt-6 space-y-4">
+                          {mirrorNarrative.narrative.split("\n\n").map((para, i) => (
+                            <motion.p
+                              key={i}
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 1.0 + i * 0.4 }}
+                              className="text-sm leading-relaxed text-foreground"
+                            >
+                              {para}
+                            </motion.p>
+                          ))}
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+
+                    {mirrorNarrative.coreInsight && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 2.5 }}
+                        className="text-center px-6"
+                      >
+                        <p
+                          className="text-sm italic font-medium"
+                          style={{ color: "var(--session-accent, hsl(var(--primary)))" }}
+                        >
+                          "{mirrorNarrative.coreInsight}"
+                        </p>
+                      </motion.div>
+                    )}
+
+                    {mirrorNarrative.dimensionSummaries.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 3.0 }}
+                        className="space-y-3"
+                      >
+                        {mirrorNarrative.dimensionSummaries.map((dim, i) => (
+                          <Card key={dim.dimension} className="bg-white/70 dark:bg-card/70">
+                            <CardContent className="pt-4 pb-4">
+                              <h4 className="text-sm font-semibold">{dim.title}</h4>
+                              <p className="text-xs text-muted-foreground mt-1">{dim.description}</p>
+                              <p
+                                className="text-xs mt-1 italic"
+                                style={{ color: "var(--session-primary, hsl(var(--primary)))" }}
+                              >
+                                {dim.strengthFrame}
+                              </p>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </motion.div>
+                    )}
+
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 3.5 }}
+                      className="pt-4"
+                    >
+                      <Button
+                        onClick={handleMirrorContinue}
+                        className="w-full"
+                        style={{ background: "var(--session-primary, hsl(var(--primary)))" }}
+                      >
+                        Continue
+                      </Button>
+                    </motion.div>
+                  </div>
                 </motion.div>
               )}
 
