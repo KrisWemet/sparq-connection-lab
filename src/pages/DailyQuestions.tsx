@@ -18,7 +18,7 @@ import { SessionComplete } from "@/components/session/SessionComplete";
 import { BottomNav } from "@/components/bottom-nav";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Sparkles } from "lucide-react";
+import { SparqOtter } from "@/components/SparqOtter";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import {
@@ -405,25 +405,15 @@ export default function DailyQuestions() {
           <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
             {error ? (
               <>
-                <p className="text-muted-foreground text-center">{error}</p>
-                <Button onClick={generateSession}>Let's try again</Button>
+                <SparqOtter mood="idle" size="lg" message="Let's try that again." />
+                <Button onClick={generateSession} className="mt-4">Let's try again</Button>
               </>
             ) : (
-              <>
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "linear",
-                  }}
-                >
-                  <Sparkles className="w-8 h-8 text-primary" />
-                </motion.div>
-                <p className="text-muted-foreground">
-                  As we prepare your session...
-                </p>
-              </>
+              <SparqOtter
+                mood="thinking"
+                size="xl"
+                message="Preparing your session..."
+              />
             )}
           </div>
         )}
@@ -554,13 +544,16 @@ export default function DailyQuestions() {
                           ))}
                         </div>
                         {isGeneratingMirror && (
-                          <motion.p
+                          <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            className="text-sm text-muted-foreground"
                           >
-                            Preparing something special for you...
-                          </motion.p>
+                            <SparqOtter
+                              mood="guiding"
+                              size="md"
+                              message="Preparing something special..."
+                            />
+                          </motion.div>
                         )}
                       </CardContent>
                     </Card>
@@ -583,6 +576,7 @@ export default function DailyQuestions() {
                       transition={{ delay: 0.3 }}
                       className="text-center"
                     >
+                      <SparqOtter mood="guiding" size="lg" className="mb-3" />
                       <h2
                         className="text-2xl font-semibold"
                         style={{ color: "var(--session-primary, hsl(var(--foreground)))" }}

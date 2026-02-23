@@ -17,6 +17,7 @@
 import { motion } from "framer-motion";
 import type { CelebrationMessage } from "@/types/session";
 import { Button } from "@/components/ui/button";
+import { SparqOtter } from "@/components/SparqOtter";
 
 interface SessionCompleteProps {
   celebration: CelebrationMessage;
@@ -28,22 +29,13 @@ export function SessionComplete({ celebration, onFinish, onSetReminder }: Sessio
   return (
     <div className="min-h-[60vh] flex items-center justify-center">
       <motion.div className="text-center space-y-6 px-4 max-w-sm">
-        {/* Checkmark — spring animation feels like an achievement */}
+        {/* Otter celebrates the completion */}
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", duration: 0.5, bounce: 0.4 }}
-          className="w-16 h-16 rounded-full flex items-center justify-center mx-auto"
-          style={{
-            background: "var(--session-surface, hsl(var(--primary) / 0.1))",
-          }}
         >
-          <span
-            className="text-2xl font-bold"
-            style={{ color: "var(--session-primary, hsl(var(--primary)))" }}
-          >
-            ✓
-          </span>
+          <SparqOtter mood="celebrate" size="lg" />
         </motion.div>
 
         {/* Main celebration text */}

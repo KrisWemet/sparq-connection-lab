@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowRight, Flame, Users, Sparkles, Eye } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { usePersonalityDiscovery } from "@/hooks/usePersonalityDiscovery";
+import { SparqOtter } from "@/components/SparqOtter";
 
 export default function Dashboard() {
   const { user, profile, loading, signOut } = useAuth();
@@ -18,10 +19,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-blue-100">
-        <div className="flex flex-col items-center gap-2">
-          <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-indigo-600"></div>
-          <p className="text-sm text-gray-500">Loading your dashboard…</p>
-        </div>
+        <SparqOtter mood="thinking" size="lg" message="Loading your dashboard..." />
       </div>
     );
   }
@@ -70,8 +68,8 @@ export default function Dashboard() {
         <section className="mb-8">
           <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-white shadow-xl">
             <div className="flex flex-col md:flex-row items-center justify-between">
-              <div className="mb-6 md:mb-0 md:mr-8">
-                <h2 className="text-3xl font-bold mb-2">Today’s Question</h2>
+              <div className="mb-6 md:mb-0 md:mr-8 flex-1">
+                <h2 className="text-3xl font-bold mb-2">Today's Question</h2>
                 <p className="text-indigo-100 text-lg mb-4">
                   Build your relationship, one conversation at a time.
                 </p>
@@ -82,13 +80,16 @@ export default function Dashboard() {
                   </span>
                 </div>
               </div>
-              <button
-                onClick={() => navigate("/daily-questions")}
-                className="px-8 py-4 bg-white text-indigo-600 rounded-xl font-semibold text-lg hover:bg-indigo-50 transition-colors shadow-lg flex items-center"
-              >
-                Answer Now
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </button>
+              <div className="flex items-center gap-4">
+                <SparqOtter mood="waving" size="sm" />
+                <button
+                  onClick={() => navigate("/daily-questions")}
+                  className="px-8 py-4 bg-white text-indigo-600 rounded-xl font-semibold text-lg hover:bg-indigo-50 transition-colors shadow-lg flex items-center"
+                >
+                  Answer Now
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </button>
+              </div>
             </div>
           </div>
         </section>

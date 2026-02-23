@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '@/lib/auth-context';
 import { MetaphorAnimation } from '../components/MetaphorAnimation';
 import { useState } from 'react';
+import { SparqOtter } from '@/components/SparqOtter';
 
 export default function Home() {
   const { user } = useAuth();
@@ -55,6 +56,7 @@ export default function Home() {
         {/* Hero Section */}
         <section className="py-20 px-4">
           <div className="max-w-4xl mx-auto text-center">
+            <SparqOtter mood="guiding" size="xl" className="mb-6" />
             <h1 className="text-5xl font-extrabold text-gray-900 mb-6">
               Transform Your Relationship
               <span className="text-indigo-600"> Starting Today</span>
