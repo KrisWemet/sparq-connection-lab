@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/lib/auth-context';
+import { useAuth } from '@/lib/auth';
 import { motion } from 'framer-motion';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import { Bell, CheckCircle, Edit2, User, Camera, Heart, X, ChevronRight } from 'lucide-react';
 import { logActivity } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 
 const ProfilePage = () => {
-  const { user, profile, updateProfile, loading } = useAuth();
+  const { user, profile, loading, handleRefreshProfile } = useAuth();
+
+  const updateProfile = async (data: Record<string, any>) => {
+    if (!user) return false;
+    const { error } = await supabase.from('profiles').update(data).eq('id', user.id);
+    if (error) { console.error('Error updating profile:', error); return false; }
+    await handleRefreshProfile();
+    return true;
+  };
   const navigate = useNavigate();
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({

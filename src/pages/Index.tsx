@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '@/lib/auth-context';
+import { useAuth } from '@/lib/auth';
 import { MetaphorAnimation } from '../components/MetaphorAnimation';
 import { useState } from 'react';
 import { SparqOtter } from '@/components/SparqOtter';
@@ -41,7 +41,7 @@ export default function Home() {
                     Login
                   </span>
                 </Link>
-                <Link to="/login">
+                <Link to="/signup">
                   <span className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors cursor-pointer">
                     Sign Up
                   </span>

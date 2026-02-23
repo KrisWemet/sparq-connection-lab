@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/lib/auth-context';
+import { useAuth } from '@/lib/auth';
 import { LoginForm } from '@/components/auth/LoginForm';
 import { motion } from 'framer-motion';
 
