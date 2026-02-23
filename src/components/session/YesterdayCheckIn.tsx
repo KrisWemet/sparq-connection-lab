@@ -57,7 +57,7 @@ export function YesterdayCheckIn({ checkIn, onResponse }: YesterdayCheckInProps)
                 transition={{ duration: 0.3 }}
                 className="grid grid-cols-2 gap-3"
               >
-                {checkIn.responseOptions.map((option) => (
+                {checkIn.options.map((option) => (
                   <Button
                     key={option.id}
                     variant="outline"
