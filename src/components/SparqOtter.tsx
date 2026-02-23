@@ -77,7 +77,7 @@ export function SparqOtter({
   className,
   message,
 }: SparqOtterProps) {
-  const [imgSrc, setImgSrc] = useState("/images/sparq-otter.png");
+  const [imgSrc, setImgSrc] = useState("/images/sparq-mascot.png");
 
   return (
     <div className={cn("flex flex-col items-center gap-2", className)}>
