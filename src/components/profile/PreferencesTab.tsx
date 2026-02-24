@@ -36,7 +36,7 @@ export function PreferencesTab({ profile, setProfile }: PreferencesTabProps) {
           updated_at: new Date().toISOString(),
           sexual_orientation: profile.sexual_orientation,
           relationship_structure: profile.relationship_structure,
-          isOnboarded: true
+          isonboarded: true
         });
 
       if (error) throw error;
