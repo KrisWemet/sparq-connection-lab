@@ -1,18 +1,38 @@
-// Hypnotic stories that embed persuasive messages
-export interface HypnoticStory {
+/**
+ * Coaching Narrative Content
+ *
+ * These stories use narrative coaching techniques to help users see their
+ * relationship challenges through metaphor. Metaphors bypass defensive
+ * thinking and allow users to access emotional truths they might resist
+ * if stated directly.
+ *
+ * Psychology basis: Narrative coaching (Michael White, David Epston) — stories
+ * help users externalize problems and discover "unique outcomes" where the
+ * problem's influence was less. Research shows that coaching stories can be
+ * as effective as direct psychoeducation for relationship skill building.
+ */
+export interface CoachingStory {
   id: string;
   title: string;
   type: 'communication' | 'intimacy' | 'trust' | 'future' | 'conflict';
   theme: string;
+  /** The narrative coaching technique this story primarily uses */
+  technique: 'externalization' | 'unique-outcome' | 'reauthoring' | 'witnessing' | 'scaffolding';
   story: string;
 }
 
-export const hypnoticStories: HypnoticStory[] = [
+/** @deprecated Use CoachingStory instead */
+export type HypnoticStory = CoachingStory;
+/** @deprecated Use CoachingStory instead */
+export type TherapeuticStory = CoachingStory;
+
+export const coachingStories: CoachingStory[] = [
   {
     id: "story-bridge",
     title: "The Two Travelers",
     type: "communication",
     theme: "understanding",
+    technique: "scaffolding",
     story: `Once, two travelers found themselves on opposite sides of a wide canyon. They both wanted to continue their journey, but the canyon seemed impossible to cross.
 
 The first traveler called out, "Hello! Is anyone there?"
@@ -38,6 +58,7 @@ What they discovered was that the bridge they built was much more than just a wa
     title: "The Secret Garden",
     type: "intimacy",
     theme: "nurturing connection",
+    technique: "unique-outcome",
     story: `There once was a couple who discovered a walled garden at the edge of their property. The gate was old and rarely opened, and inside, the garden had been neglected for years.
 
 Curious, they decided to restore it together. At first, they worked separately—he cleared the overgrown paths while she pruned the wild roses. But they soon realized that the garden flourished most when they *worked side by side, sharing the experience*.
@@ -59,6 +80,7 @@ They noticed something magical: the more attention they gave the garden, the mor
     title: "The Crystal Vessel",
     type: "trust",
     theme: "reliability and repair",
+    technique: "reauthoring",
     story: `In a small village by the sea lived two artisans who crafted beautiful vessels together. They were known throughout the land for their extraordinary creations, but their most prized piece was a crystal vessel they had made in the early days of their partnership.
 
 This vessel was not just beautiful but useful—it carried water from the well to their workshop every day. They *trusted it completely* to hold what was precious to them.
@@ -82,6 +104,7 @@ As the years passed, their vessel bore many gold lines, each telling the story o
     title: "The Cartographers",
     type: "future",
     theme: "creating together",
+    technique: "reauthoring",
     story: `There once were two cartographers who fell in love. Each had spent years creating beautiful maps of distant lands, but when they met, they decided to embark on a journey together to uncharted territories.
 
 Before setting out, they spread a blank parchment between them. "This will be the map of our journey," they agreed. "We'll create it together as we go."
@@ -103,6 +126,7 @@ When other travelers asked the secret to creating such a magnificent map, they a
     title: "The Lighthouse Keepers",
     type: "conflict",
     theme: "weathering storms",
+    technique: "externalization",
     story: `On a rocky island stood a lighthouse tended by two keepers. They had a vital responsibility: to keep the light burning through all conditions to guide ships safely through dangerous waters.
 
 Most days were peaceful. They would maintain the equipment, polish the lenses, and enjoy the beautiful ocean views together. But the island was known for its sudden, violent storms that would seem to appear from nowhere.
@@ -123,21 +147,38 @@ Ships' captains often commented that the light from their lighthouse seemed to s
   }
 ];
 
-// Future pacing timeframes for relationship visualization
-export interface FuturePacingTimeframe {
+/**
+ * Coaching Visualization Timeframes
+ *
+ * These use solution-focused brief coaching (SFBT) "miracle question" and
+ * future-oriented visualization to help users envision positive outcomes.
+ * Research shows that vivid future visualization activates the same neural
+ * pathways as actual experience, making desired changes feel more achievable.
+ *
+ * The reflectionPrompt invites the user to connect the visualization to
+ * their present experience — bridging the gap between "someday" and "today."
+ */
+export interface VisualizationTimeframe {
   label: string;
   vision: string;
-  embedCommand: string;
+  /** Transparent reflection prompt — not a hidden command */
+  reflectionPrompt: string;
 }
 
-export interface FuturePacingCategory {
+/** @deprecated Use VisualizationTimeframe instead */
+export type FuturePacingTimeframe = VisualizationTimeframe;
+
+export interface VisualizationCategory {
   id: string;
   title: string;
   type: 'communication' | 'intimacy' | 'trust' | 'future' | 'conflict';
-  timeframes: FuturePacingTimeframe[];
+  timeframes: VisualizationTimeframe[];
 }
 
-export const futurePacingTimeframes: FuturePacingCategory[] = [
+/** @deprecated Use VisualizationCategory instead */
+export type FuturePacingCategory = VisualizationCategory;
+
+export const coachingVisualizations: VisualizationCategory[] = [
   {
     id: "future-communication",
     title: "Communication Transformation",
@@ -146,17 +187,17 @@ export const futurePacingTimeframes: FuturePacingCategory[] = [
       {
         label: "1 Month",
         vision: "Imagine one month from now, after practicing the communication techniques you're learning. You're sitting together one evening, and *notice how your conversations flow more easily*. You find yourselves naturally taking turns speaking and listening, without interruption. When a sensitive topic comes up, you *feel a new sense of safety* in expressing your true thoughts.",
-        embedCommand: "As you picture this future, take a moment to feel the satisfaction of being truly understood."
+        reflectionPrompt: "As you picture this future, take a moment to feel the satisfaction of being truly understood."
       },
       {
         label: "6 Months",
         vision: "Six months from now, see yourselves navigating a challenging situation together. Where once this might have led to frustration, you now *communicate with clarity and compassion*. You *notice how you've developed a unique language* between you—certain phrases and gestures that carry special meaning. Misunderstandings still happen, but they're resolved quickly and bring you closer.",
-        embedCommand: "Recognize how these future communication skills create a foundation of trust that strengthens your entire relationship."
+        reflectionPrompt: "Recognize how these future communication skills create a foundation of trust that strengthens your entire relationship."
       },
       {
         label: "1 Year",
         vision: "One year from today, visualize friends commenting on how well you communicate as a couple. You've *become each other's safe haven* where honest expression is not just accepted but celebrated. Even in disagreements, you *maintain a deep connection* because you've mastered the art of listening to understand, not just to respond. Your communication has transformed not just your relationship but how you connect with everyone in your lives.",
-        embedCommand: "Feel the profound satisfaction that comes when you're truly known and accepted by your partner."
+        reflectionPrompt: "Feel the profound satisfaction that comes when you're truly known and accepted by your partner."
       }
     ]
   },
@@ -168,17 +209,17 @@ export const futurePacingTimeframes: FuturePacingCategory[] = [
       {
         label: "1 Month",
         vision: "One month from now, imagine noticing subtle changes in your intimacy. As you lie next to each other, you *experience a deeper awareness* of your partner's presence. The small moments—a touch while passing in the hallway, meeting eyes across a room—*carry more meaning*. You find yourselves creating more opportunities to be physically close, even in non-sexual ways.",
-        embedCommand: "Allow yourself to feel the warmth and security of this growing physical and emotional connection."
+        reflectionPrompt: "Allow yourself to feel the warmth and security of this growing physical and emotional connection."
       },
       {
         label: "6 Months",
         vision: "Six months into your journey, see yourselves having discovered new dimensions of intimacy. Conversations flow deeper into the night, exploring dreams and vulnerabilities you once kept hidden. Physical intimacy has become more playful and varied. You *notice how being vulnerable together* has created a unique space where you both feel completely safe to express desires and boundaries.",
-        embedCommand: "Appreciate how this future intimacy brings you fulfillment beyond what you previously thought possible."
+        reflectionPrompt: "Appreciate how this future intimacy brings you fulfillment beyond what you previously thought possible."
       },
       {
         label: "1 Year",
         vision: "A year from now, envision the profound intimacy you've developed. Where once there were walls, now there are windows. You've *created a relationship where both physical and emotional needs* are expressed openly and met with enthusiasm. Your connection has become a source of energy rather than depleting it. Even during busy periods, you *prioritize meaningful connection* because you've experienced how it enhances every aspect of your lives.",
-        embedCommand: "Feel the deep satisfaction of having a relationship where you're truly seen, desired, and cherished."
+        reflectionPrompt: "Feel the deep satisfaction of having a relationship where you're truly seen, desired, and cherished."
       }
     ]
   },
@@ -190,17 +231,17 @@ export const futurePacingTimeframes: FuturePacingCategory[] = [
       {
         label: "1 Month",
         vision: "One month from now, visualize how small acts of reliability have begun to build stronger trust. When your partner says they'll do something, you *feel a quiet confidence* that it will happen. When you share something vulnerable, you *notice how safely it's held*. These small moments are creating a foundation of security between you.",
-        embedCommand: "Experience the growing sense of peace that comes from knowing you can depend on each other."
+        reflectionPrompt: "Experience the growing sense of peace that comes from knowing you can depend on each other."
       },
       {
         label: "6 Months",
         vision: "Six months into your journey, see how your trust has weathered some challenges and grown stronger because of them. Perhaps there was a misunderstanding or a mistake, but you *worked through it together with honesty and care*. You now *recognize these moments as opportunities* to deepen your trust rather than threats to it. Your relationship feels like solid ground beneath your feet.",
-        embedCommand: "Feel the freedom that comes when trust allows you to be your authentic self without fear."
+        reflectionPrompt: "Feel the freedom that comes when trust allows you to be your authentic self without fear."
       },
       {
         label: "1 Year",
         vision: "A year from today, imagine the unshakable trust you've built together. You've created a relationship where promises are kept, vulnerabilities are honored, and integrity guides your actions. You *know in your bones that you're safe* with each other. This profound trust has *expanded into every area of your lives*, allowing you to take risks, grow, and pursue dreams with the security of knowing you have each other's unwavering support.",
-        embedCommand: "Experience the deep peace of having a relationship that serves as a secure base for both of you."
+        reflectionPrompt: "Experience the deep peace of having a relationship that serves as a secure base for both of you."
       }
     ]
   },
@@ -212,17 +253,17 @@ export const futurePacingTimeframes: FuturePacingCategory[] = [
       {
         label: "1 Month",
         vision: "One month from now, imagine sitting together, excitedly discussing your shared goals. You've identified dreams that light up both of your eyes—perhaps a trip you want to take, a home project, or a lifestyle change. You *feel the energy between you shift* as you align your vision. Even the act of planning together has brought you closer.",
-        embedCommand: "Notice how much more connected you feel when working toward common goals."
+        reflectionPrompt: "Notice how much more connected you feel when working toward common goals."
       },
       {
         label: "6 Months",
         vision: "Six months into your future, see yourselves making tangible progress on your shared goals. You've established rhythms and routines that *support your vision becoming reality*. When obstacles arise, you *tackle them as a unified team*. You celebrate small wins together, each success strengthening your bond and confidence in what you can accomplish together.",
-        embedCommand: "Feel the satisfaction of building something meaningful together that neither could create alone."
+        reflectionPrompt: "Feel the satisfaction of building something meaningful together that neither could create alone."
       },
       {
         label: "1 Year",
         vision: "A year from today, visualize looking back at what you've created together. Some goals have been achieved, others have evolved, and new dreams have emerged. What stands out most isn't just what you've accomplished but how the journey has transformed your relationship. You've *discovered each other's strengths in new ways* and developed a dynamic where you each shine while supporting the other. Your shared accomplishments have become touchstones in the story of your relationship.",
-        embedCommand: "Experience the pride and connection that comes from building your unique life together."
+        reflectionPrompt: "Experience the pride and connection that comes from building your unique life together."
       }
     ]
   },
@@ -234,17 +275,17 @@ export const futurePacingTimeframes: FuturePacingCategory[] = [
       {
         label: "1 Month",
         vision: "One month from now, imagine noticing a shift in how you handle disagreements. When tension arises, you both *pause and take a breath* instead of reacting immediately. You *remind yourselves that you're on the same team*. Even in moments of frustration, there's a new undercurrent of respect that changes the entire tone of the interaction.",
-        embedCommand: "Feel how much safer disagreements become when approached with mutual respect."
+        reflectionPrompt: "Feel how much safer disagreements become when approached with mutual respect."
       },
       {
         label: "6 Months",
         vision: "Six months into practicing healthier conflict patterns, see how arguments that once might have lasted days now resolve in hours or even minutes. You've developed a shared language for talking through differences. You *catch yourselves when old patterns emerge* and redirect to more constructive approaches. Most surprisingly, you've discovered that some conflicts have led to unexpected intimacy when resolved with care.",
-        embedCommand: "Notice how resolving conflicts together actually strengthens your bond rather than threatening it."
+        reflectionPrompt: "Notice how resolving conflicts together actually strengthens your bond rather than threatening it."
       },
       {
         label: "1 Year",
         vision: "A year from today, visualize how fundamentally your conflict pattern has transformed. Disagreements still occur—as they do in any relationship—but they no longer carry fear or threat. You've *built such a strong foundation of respect and security* that differences can be explored with curiosity rather than defensiveness. You've mastered the art of repairing quickly after missteps. Friends often comment on how you navigate challenges together with such grace and unity.",
-        embedCommand: "Feel the deep security of knowing that no conflict can threaten the core of your connection."
+        reflectionPrompt: "Feel the deep security of knowing that no conflict can threaten the core of your connection."
       }
     ]
   }
@@ -289,4 +330,13 @@ export const metaphorDescriptions: Record<string, MetaphorDescription> = {
     metaphorType: "flame",
     premium: "Discover how small, consistent actions keep your connection vibrant and warm."
   }
-}; 
+};
+
+/** @deprecated Use coachingStories instead */
+export const hypnoticStories = coachingStories;
+/** @deprecated Use coachingStories instead */
+export const therapeuticStories = coachingStories;
+/** @deprecated Use coachingVisualizations instead */
+export const futurePacingTimeframes = coachingVisualizations;
+/** @deprecated Use coachingVisualizations instead */
+export const therapeuticVisualizations = coachingVisualizations;

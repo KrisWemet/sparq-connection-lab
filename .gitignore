@@ -23,3 +23,10 @@ dist-ssr
 *.sln
 *.sw?
 .vercel
+tsconfig.tsbuildinfo
+supabase/.temp
+
+# Environment files
+.env
+.env.*
+!.env.example

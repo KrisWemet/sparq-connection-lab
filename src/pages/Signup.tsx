@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -48,7 +48,7 @@ const signupSchema = z.object({
 type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function Signup() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { signUp, user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -76,7 +76,7 @@ export default function Signup() {
         values.fullName || ""
       );
       toast.success("Account created successfully!");
-      router.push("/onboarding");
+      navigate("/onboarding");
     } catch (err) {
       console.error("Signup error:", err);
       const errorMessage = err instanceof Error ? err.message : "Failed to sign up. Please try again.";
@@ -204,7 +204,7 @@ export default function Signup() {
             </Form>
           </CardContent>
           <CardFooter className="flex justify-center">
-            <Button variant="link" onClick={() => router.push("/auth")}>
+            <Button variant="link" onClick={() => navigate("/auth")}>
               Already have an account? Sign In
             </Button>
           </CardFooter>

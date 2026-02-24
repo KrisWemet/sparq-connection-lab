@@ -119,15 +119,15 @@ export function PersuasiveJourneyPrompt({
     return benefits[journeyType as keyof typeof benefits];
   };
   
-  // Social proof based on journey type
+  // Honest growth messaging based on journey type
   const getSocialProof = () => {
     const proofs = {
-      communication: "92% of couples report significant improvement in communication after completing this journey",
-      intimacy: "Couples report feeling 78% more connected after finishing this journey",
-      trust: "85% of couples say this journey helped them rebuild trust after challenges",
-      future: "Couples who complete this journey are 3x more likely to achieve shared goals",
-      attachment: "This journey has helped 89% of couples develop more secure attachment patterns",
-      conflict: "Couples report 73% fewer destructive arguments after completing this journey"
+      communication: "Couples who practice these skills daily notice real changes in how they talk and listen to each other",
+      intimacy: "Small, consistent steps toward closeness build the kind of connection that lasts",
+      trust: "Rebuilding trust takes time — this journey gives you a clear path forward, one day at a time",
+      future: "When you and your partner share a vision, everyday choices start to feel more meaningful",
+      attachment: "Understanding how you connect helps you show up more fully for the people you love",
+      conflict: "Learning to disagree well is one of the most powerful skills a couple can build together"
     };
     
     // Default to communication if journey type not found

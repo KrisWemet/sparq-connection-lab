@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { UserProfile } from '@/services/supabaseService';
-import { supabase } from '@/lib/supabase';
 import { signIn, signUp, signOut, refreshProfile } from '../auth-operations';
 import { cachedAuthState } from '../auth-state';
 import { useAuthLoading } from './use-auth-loading';
@@ -28,7 +27,7 @@ export function useAuthOperations() {
         setProfile(profile as UserProfile);
         cachedAuthState.profile = profile as UserProfile;
         
-        const profileIsOnboarded = !!profile.isOnboarded;
+        const profileIsOnboarded = !!(profile as any).isonboarded;
         setIsOnboarded(profileIsOnboarded);
         cachedAuthState.isOnboarded = profileIsOnboarded;
         

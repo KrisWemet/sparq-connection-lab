@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -19,6 +19,8 @@ import {
   Lock
 } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "@/lib/auth";
+import { createCheckoutSession, PRICING } from "@/services/stripeService";
 import { motion } from "framer-motion";
 
 // Pricing plans data
@@ -71,7 +73,7 @@ const plans = [
       { name: "Relationship timeline", included: true },
       { name: "Basic compatibility assessments", included: true },
       { name: "Guided visualizations", included: true, new: true },
-      { name: "Hypnotic relationship stories", included: true, new: true },
+      { name: "Relationship coaching stories", included: true, new: true },
     ],
     popular: true,
     buttonText: "Upgrade Now",
@@ -80,7 +82,7 @@ const plans = [
       quote: "Premium helped us discover parts of our relationship we never knew existed. We feel closer than ever.",
       author: "Taylor & Jordan",
       relationship: "Married 3 years",
-      statistic: "90% of Premium users report deeper emotional connection within 30 days"
+      statistic: "Couples who stay consistent with Premium see real change in how they connect"
     },
     persuasiveText: "Experience how naturally your connection deepens with Premium features"
   },
@@ -98,12 +100,12 @@ const plans = [
       { name: "Custom date planning", included: true },
       { name: "Personalized relationship insights", included: true },
       { name: "All journeys included", included: true },
-      { name: "Couples therapy resources", included: true },
+      { name: "Couples coaching resources", included: true },
       { name: "Advanced compatibility assessments", included: true },
       { name: "Intimacy enhancement modules", included: true },
       { name: "Conflict resolution tools", included: true },
       { name: "Early access to new features", included: true },
-      { name: "AI Therapist access", included: true, new: true },
+      { name: "AI Coach access", included: true, new: true },
       { name: "Add additional partners ($9.99/mo each)", included: true, new: true },
       { name: "Dark mode", included: true },
       { name: "Advanced guided visualizations with audio", included: true, new: true },
@@ -117,7 +119,7 @@ const plans = [
       quote: "Ultimate transformed our relationship. The guided visualizations and future pacing exercises helped us create a vision for our future that we're excited about every day.",
       author: "Sam & Riley",
       relationship: "Engaged after 1 year",
-      statistic: "Ultimate users are 3.5x more likely to report 'extremely satisfied' with their relationship"
+      statistic: "The most complete toolkit for couples who want to keep growing together"
     },
     persuasiveText: "Feel the transformation in your relationship as you explore Ultimate features together"
   }
@@ -216,10 +218,12 @@ const testimonials = [
 ];
 
 export default function Subscription() {
-  const router = useRouter();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [billingCycle, setBillingCycle] = useState("monthly");
   const [showTestimonial, setShowTestimonial] = useState<string | null>(null);
   const [highlightFeature, setHighlightFeature] = useState<{planId: string, featureIndex: number} | null>(null);
+  const [checkingOut, setCheckingOut] = useState<string | null>(null);
   
   // Highlight a random premium feature every few seconds
   useEffect(() => {
@@ -249,13 +253,21 @@ export default function Subscription() {
     }
   }, [billingCycle]);
 
-  const handleSubscribe = (planId: string) => {
-    toast.success(
-      planId === "premium" 
-        ? "You've upgraded to Premium! Notice how your connection naturally deepens as you explore new features together."
-        : "You've upgraded to Ultimate! Feel the transformation in your relationship as you access all premium features.",
-      { duration: 5000 }
-    );
+  const handleSubscribe = async (planId: string) => {
+    if (!user) { navigate('/auth'); return; }
+    if (planId === 'free' || checkingOut) return;
+
+    const pricing = PRICING[planId as keyof typeof PRICING];
+    if (!pricing?.priceId) return;
+
+    setCheckingOut(planId);
+    try {
+      await createCheckoutSession(pricing.priceId, user.id, pricing.tier);
+    } catch {
+      toast.error("Couldn't start checkout. Please try again.");
+    } finally {
+      setCheckingOut(null);
+    }
   };
   
   // Calculate savings for yearly billing
@@ -281,7 +293,7 @@ export default function Subscription() {
       <div className="flex items-center mb-8">
         <Button 
           variant="ghost" 
-          onClick={() => router.push(-1)}
+          onClick={() => navigate(-1)}
           className="mr-2"
         >
           <ChevronLeft className="h-4 w-4 mr-1" />
@@ -425,17 +437,21 @@ export default function Subscription() {
                 </CardContent>
                 
                 <CardFooter>
-                  <Button 
+                  <Button
                     className={`w-full ${
-                      plan.popular 
-                        ? "bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700" 
+                      plan.popular
+                        ? "bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700"
                         : ""
                     }`}
-                    disabled={plan.disabled}
+                    disabled={plan.disabled || checkingOut === plan.id}
                     onClick={() => handleSubscribe(plan.id)}
                   >
-                    {plan.id === "premium" && <Zap className="h-4 w-4 mr-1" />}
-                    {plan.buttonText}
+                    {checkingOut === plan.id ? (
+                      <Lock className="h-4 w-4 mr-1 animate-pulse" />
+                    ) : plan.id === "premium" ? (
+                      <Zap className="h-4 w-4 mr-1" />
+                    ) : null}
+                    {checkingOut === plan.id ? "Redirecting..." : plan.buttonText}
                   </Button>
                 </CardFooter>
               </Card>
@@ -457,7 +473,7 @@ export default function Subscription() {
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <p className="italic text-gray-700 mb-2">
-              "The guided visualizations in Ultimate helped us create a shared vision for our future. It's like couples therapy but more fun!"
+              "The guided visualizations in Ultimate helped us create a shared vision for our future. It's like couples coaching but more fun!"
             </p>
             <p className="text-sm font-medium">- Morgan & Jamie, Engaged</p>
             <p className="text-xs text-primary-600 mt-1">Ultimate users for 6 months</p>
@@ -472,19 +488,19 @@ export default function Subscription() {
         </div>
       </div>
       
-      {/* Statistics section */}
+      {/* Why it works section */}
       <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-primary-50 p-4 rounded-lg text-center">
-          <h3 className="text-2xl font-bold text-primary-700 mb-1">87%</h3>
-          <p className="text-sm text-primary-600">of couples report improved communication within 2 weeks</p>
+          <h3 className="text-2xl font-bold text-primary-700 mb-1">5 min/day</h3>
+          <p className="text-sm text-primary-600">Small daily sessions build lasting change over time</p>
         </div>
         <div className="bg-primary-50 p-4 rounded-lg text-center">
-          <h3 className="text-2xl font-bold text-primary-700 mb-1">94%</h3>
-          <p className="text-sm text-primary-600">of Premium users would recommend Sparq to friends</p>
+          <h3 className="text-2xl font-bold text-primary-700 mb-1">14 days</h3>
+          <p className="text-sm text-primary-600">to discover your unique strengths as a partner</p>
         </div>
         <div className="bg-primary-50 p-4 rounded-lg text-center">
-          <h3 className="text-2xl font-bold text-primary-700 mb-1">3.5x</h3>
-          <p className="text-sm text-primary-600">higher relationship satisfaction for Ultimate users</p>
+          <h3 className="text-2xl font-bold text-primary-700 mb-1">Science-backed</h3>
+          <p className="text-sm text-primary-600">Built on proven relationship coaching methods</p>
         </div>
       </div>
       

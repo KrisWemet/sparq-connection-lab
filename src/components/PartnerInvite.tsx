@@ -21,7 +21,7 @@ export function PartnerInvite() {
     setIsLoading(true);
     try {
       const invitation = await partnerService.sendInvitation(partnerEmail);
-      const inviteUrl = `${window.location.origin}/join/${invitation.invitation_code}`;
+      const inviteUrl = `${window.location.origin}/join/${invitation.invite_code}`;
       setInviteLink(inviteUrl);
       toast.success("Invitation sent successfully!");
       setPartnerEmail('');

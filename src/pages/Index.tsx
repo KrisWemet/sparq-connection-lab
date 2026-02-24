@@ -1,8 +1,9 @@
 import React from 'react';
-import Link from 'next/link';
-import { useAuth } from '../lib/auth-context';
-import MetaphorAnimation from '../components/MetaphorAnimation';
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/lib/auth';
+import { MetaphorAnimation } from '../components/MetaphorAnimation';
 import { useState } from 'react';
+import { SparqOtter } from '@/components/SparqOtter';
 
 export default function Home() {
   const { user } = useAuth();
@@ -28,19 +29,19 @@ export default function Home() {
           <h1 className="text-2xl font-bold text-indigo-700">Sparq</h1>
           <div>
             {user ? (
-              <Link href="/dashboard">
+              <Link to="/dashboard">
                 <span className="px-4 py-2 border border-indigo-600 text-indigo-600 rounded-md hover:bg-indigo-50 transition-colors cursor-pointer">
                   Go to Dashboard
                 </span>
               </Link>
             ) : (
               <div className="space-x-4">
-                <Link href="/login">
+                <Link to="/login">
                   <span className="px-4 py-2 border border-indigo-600 text-indigo-600 rounded-md hover:bg-indigo-50 transition-colors cursor-pointer">
                     Login
                   </span>
                 </Link>
-                <Link href="/login">
+                <Link to="/signup">
                   <span className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors cursor-pointer">
                     Sign Up
                   </span>
@@ -55,6 +56,7 @@ export default function Home() {
         {/* Hero Section */}
         <section className="py-20 px-4">
           <div className="max-w-4xl mx-auto text-center">
+            <SparqOtter mood="guiding" size="xl" className="mb-6" />
             <h1 className="text-5xl font-extrabold text-gray-900 mb-6">
               Transform Your Relationship
               <span className="text-indigo-600"> Starting Today</span>
@@ -63,7 +65,7 @@ export default function Home() {
               Experience deeper connection, improved communication, and a more fulfilling relationship through powerful psychological techniques that <span className="italic">actually work</span>.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link href="/login">
+              <Link to="/login">
                 <span className="px-8 py-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors font-medium text-lg cursor-pointer">
                   Start Your Journey
                 </span>
@@ -203,7 +205,7 @@ export default function Home() {
             <p className="text-xl mb-10 opacity-90">
               Join thousands of couples who have discovered a deeper, more fulfilling relationship through Sparq.
             </p>
-            <Link href="/login">
+            <Link to="/login">
               <span className="px-8 py-4 bg-white text-indigo-600 rounded-md hover:bg-indigo-50 transition-colors font-medium text-lg inline-block cursor-pointer">
                 Start Your Free Journey
               </span>
@@ -220,16 +222,16 @@ export default function Home() {
               <p className="text-sm opacity-75">Transforming relationships through science and connection.</p>
             </div>
             <div className="flex space-x-6">
-              <Link href="/about">
+              <Link to="/about">
                 <span className="hover:text-white transition-colors cursor-pointer">About</span>
               </Link>
-              <Link href="/privacy">
+              <Link to="/privacy">
                 <span className="hover:text-white transition-colors cursor-pointer">Privacy</span>
               </Link>
-              <Link href="/terms">
+              <Link to="/terms">
                 <span className="hover:text-white transition-colors cursor-pointer">Terms</span>
               </Link>
-              <Link href="/contact">
+              <Link to="/contact">
                 <span className="hover:text-white transition-colors cursor-pointer">Contact</span>
               </Link>
             </div>

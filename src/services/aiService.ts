@@ -1,5 +1,6 @@
 import { apiConfig } from "@/lib/api-config";
 import { toast } from "sonner";
+import type { ProfileContext } from "@/types/personality";
 
 interface DateIdea {
   id: number;
@@ -21,6 +22,8 @@ interface AIServiceOptions {
   indoor?: boolean;
   outdoor?: boolean;
   maxResults?: number;
+  /** Pass the personality profile context for personalized suggestions */
+  profileContext?: ProfileContext;
 }
 
 export class AIService {
@@ -58,30 +61,40 @@ export class AIService {
     this.lastRequestTime = Date.now();
 
     try {
-      const { location = "local area", preferences = [], budget, indoor, outdoor, maxResults = 5 } = options;
-      
+      const { location = "local area", preferences = [], budget, indoor, outdoor, maxResults = 5, profileContext } = options;
+
       // Build the prompt
       let prompt = `Generate ${maxResults} unique date ideas`;
-      
+
       if (location) {
         prompt += ` for couples in ${location}`;
       }
-      
+
       if (preferences.length > 0) {
         prompt += ` who enjoy ${preferences.join(", ")}`;
       }
-      
+
       if (budget) {
         prompt += ` with a ${budget.toLowerCase()} budget`;
       }
-      
+
       if (indoor && !outdoor) {
         prompt += ` for indoor activities`;
       } else if (outdoor && !indoor) {
         prompt += ` for outdoor activities`;
       }
-      
-      prompt += `. For each idea, provide a title, detailed description, category, estimated duration, cost level (Free, Low, Medium, High), and a rating out of 5. If applicable, include a specific location name and address. Format the response as a JSON array.`;
+
+      // Personalize with profile context when available
+      if (profileContext && profileContext.knownTraits !== "No personality data gathered yet.") {
+        prompt += `\n\nPersonalization context for ${profileContext.userName}${profileContext.partnerName ? ` and ${profileContext.partnerName}` : ""}:`;
+        prompt += `\n- What we know about them: ${profileContext.knownTraits}`;
+        if (profileContext.sensitivities.length > 0) {
+          prompt += `\n- Be mindful of: ${profileContext.sensitivities.join(", ")}`;
+        }
+        prompt += `\n\nTailor the date ideas to match their personality and relationship dynamic.`;
+      }
+
+      prompt += `\n\nFor each idea, provide a title, detailed description, category, estimated duration, cost level (Free, Low, Medium, High), and a rating out of 5. If applicable, include a specific location name and address. Format the response as a JSON array.`;
 
       const response = await fetch(`${apiConfig.endpoints.openai}/chat/completions`, {
         method: 'POST',

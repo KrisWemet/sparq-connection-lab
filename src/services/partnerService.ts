@@ -1,16 +1,27 @@
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { analyticsService } from './analyticsService';
 
 export interface PartnerInvitation {
   id: string;
   created_at: string;
-  inviter_id: string;
-  partner_email: string;
+  sender_id: string;
+  receiver_email: string;
   status: 'pending' | 'accepted' | 'rejected' | 'expired';
-  invitation_code: string;
+  invite_code: string;
   accepted_at: string | null;
   expires_at: string;
+}
+
+export interface PartnerProfile {
+  id: string;
+  full_name: string;
+  email: string;
+  avatar_url: string | null;
+  streak_count: number | null;
+  last_active: string | null;
+  discovery_day: number | null;
+  identity_archetype: string | null;
+  partner_id: string | null;
 }
 
 export const partnerService = {
@@ -18,211 +29,163 @@ export const partnerService = {
    * Send a partner invitation
    */
   async sendInvitation(partnerEmail: string) {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        throw new Error('User not authenticated');
-      }
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('User not authenticated');
 
-      // Check if an invitation already exists for this email
-      const { data: existingInvite } = await supabase
-        .from('partner_invitations')
-        .select('*')
-        .eq('partner_email', partnerEmail)
-        .eq('status', 'pending')
-        .single();
+    // Check if a pending invitation already exists for this email
+    const { data: existingInvite } = await supabase
+      .from('partner_invites')
+      .select('id')
+      .eq('sender_id', user.id)
+      .eq('receiver_email', partnerEmail)
+      .eq('status', 'pending')
+      .maybeSingle();
 
-      if (existingInvite) {
-        throw new Error('An invitation has already been sent to this email');
-      }
-
-      // Create new invitation
-      const invitationCode = generateUniqueCode();
-      const { data: invitation, error } = await supabase
-        .from('partner_invitations')
-        .insert([
-          {
-            inviter_id: user.id,
-            partner_email: partnerEmail,
-            status: 'pending',
-            invitation_code: invitationCode,
-          }
-        ])
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      // Send invitation email
-      const inviteUrl = `${window.location.origin}/join/${invitationCode}`;
-      await supabase.functions.invoke('send-partner-invite', {
-        body: { partnerEmail, inviteLink: inviteUrl }
-      });
-
-      // Track analytics
-      await analyticsService.trackPartnerInvitation('sent', {
-        partner_email: partnerEmail,
-        invitation_id: invitation.id
-      });
-
-      return invitation;
-    } catch (error: any) {
-      console.error('Error sending invitation:', error);
-      throw error;
+    if (existingInvite) {
+      throw new Error('An invitation has already been sent to this email');
     }
+
+    const { data: invitation, error } = await supabase
+      .from('partner_invites')
+      .insert({
+        sender_id: user.id,
+        receiver_email: partnerEmail,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    // Fire-and-forget: send email via Edge Function
+    const inviteUrl = `${window.location.origin}/partner-invite/${invitation.invite_code}`;
+    supabase.functions.invoke('send-partner-invite', {
+      body: { partnerEmail, inviteLink: inviteUrl, inviteCode: invitation.invite_code }
+    }).catch(console.error);
+
+    return invitation;
   },
 
   /**
-   * Accept a partner invitation
+   * Accept a partner invitation by invite code
    */
-  async acceptInvitation(invitationCode: string) {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        throw new Error('User not authenticated');
-      }
+  async acceptInvitation(inviteCode: string) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('User not authenticated');
 
-      // Get invitation details
-      const { data: invitation, error: inviteError } = await supabase
-        .from('partner_invitations')
-        .select('*')
-        .eq('invitation_code', invitationCode)
-        .single();
+    const { data: invitation, error: inviteError } = await supabase
+      .from('partner_invites')
+      .select('*')
+      .eq('invite_code', inviteCode)
+      .maybeSingle();
 
-      if (inviteError || !invitation) {
-        throw new Error('Invitation not found');
-      }
+    if (inviteError || !invitation) throw new Error('Invitation not found');
+    if (new Date(invitation.expires_at) < new Date()) throw new Error('This invitation has expired');
+    if (invitation.status === 'accepted') throw new Error('This invitation has already been accepted');
 
-      // Check if invitation has expired
-      if (new Date(invitation.expires_at) < new Date()) {
-        throw new Error('This invitation has expired');
-      }
+    // Mark accepted
+    await supabase
+      .from('partner_invites')
+      .update({ status: 'accepted', accepted_at: new Date().toISOString() })
+      .eq('id', invitation.id);
 
-      // Check if invitation has already been accepted
-      if (invitation.status === 'accepted') {
-        throw new Error('This invitation has already been accepted');
-      }
+    // Link both profiles
+    await Promise.all([
+      supabase.from('profiles').update({ partner_id: invitation.sender_id }).eq('id', user.id),
+      supabase.from('profiles').update({ partner_id: user.id }).eq('id', invitation.sender_id),
+    ]);
 
-      // Update invitation status
-      const { error: updateError } = await supabase
-        .from('partner_invitations')
-        .update({
-          status: 'accepted',
-          accepted_at: new Date().toISOString()
-        })
-        .eq('id', invitation.id);
-
-      if (updateError) throw updateError;
-
-      // Update both users' profiles
-      const updates = [
-        supabase
-          .from('profiles')
-          .update({ partner_id: invitation.inviter_id })
-          .eq('id', user.id),
-        supabase
-          .from('profiles')
-          .update({ partner_id: user.id })
-          .eq('id', invitation.inviter_id)
-      ];
-
-      await Promise.all(updates);
-
-      // Track analytics
-      await analyticsService.trackPartnerInvitation('accepted', {
-        invitation_id: invitation.id,
-        inviter_id: invitation.inviter_id,
-        accepter_id: user.id
-      });
-
-      return invitation;
-    } catch (error: any) {
-      console.error('Error accepting invitation:', error);
-      throw error;
-    }
+    return invitation;
   },
 
   /**
-   * Get all partner invitations for the current user
+   * Decline a partner invitation
    */
-  async getInvitations() {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        throw new Error('User not authenticated');
-      }
+  async declineInvitation(inviteCode: string) {
+    const { data: invitation, error } = await supabase
+      .from('partner_invites')
+      .select('id')
+      .eq('invite_code', inviteCode)
+      .maybeSingle();
 
-      const { data, error } = await supabase
-        .from('partner_invitations')
-        .select('*')
-        .or(`inviter_id.eq.${user.id},partner_email.eq.${user.email}`)
-        .order('created_at', { ascending: false });
+    if (error || !invitation) throw new Error('Invitation not found');
 
-      if (error) throw error;
-
-      return data;
-    } catch (error: any) {
-      console.error('Error getting invitations:', error);
-      throw error;
-    }
+    await supabase
+      .from('partner_invites')
+      .update({ status: 'rejected' })
+      .eq('id', invitation.id);
   },
 
   /**
-   * Check if the current user has a partner
+   * Get all invitations sent by or received by the current user
    */
-  async hasPartner() {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return false;
+  async getInvitations(): Promise<PartnerInvitation[]> {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return [];
 
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('partner_id')
-        .eq('id', user.id)
-        .single();
+    const { data, error } = await supabase
+      .from('partner_invites')
+      .select('*')
+      .or(`sender_id.eq.${user.id},receiver_email.eq.${user.email}`)
+      .order('created_at', { ascending: false });
 
-      return !!profile?.partner_id;
-    } catch (error) {
-      console.error('Error checking partner status:', error);
-      return false;
-    }
+    if (error) throw error;
+    return (data || []) as PartnerInvitation[];
   },
 
-  /**
-   * Get the current user's partner profile
-   */
-  async getPartnerProfile() {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        throw new Error('User not authenticated');
-      }
+  /** Check if current user has a connected partner */
+  async hasPartner(): Promise<boolean> {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return false;
 
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('partner_id')
-        .eq('id', user.id)
-        .single();
+    const { data } = await supabase
+      .from('profiles')
+      .select('partner_id')
+      .eq('id', user.id)
+      .maybeSingle();
 
-      if (!profile?.partner_id) {
-        return null;
-      }
+    return !!data?.partner_id;
+  },
 
-      const { data: partnerProfile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', profile.partner_id)
-        .single();
+  /** Get the partner's public profile */
+  async getPartnerProfile(): Promise<PartnerProfile | null> {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return null;
 
-      return partnerProfile;
-    } catch (error) {
-      console.error('Error getting partner profile:', error);
-      return null;
-    }
-  }
+    const { data: me } = await supabase
+      .from('profiles')
+      .select('partner_id')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (!me?.partner_id) return null;
+
+    const { data: partnerProfile } = await supabase
+      .from('profiles')
+      .select('id, full_name, email, avatar_url, streak_count, last_active, discovery_day, identity_archetype, partner_id')
+      .eq('id', me.partner_id)
+      .maybeSingle();
+
+    return partnerProfile as PartnerProfile | null;
+  },
+
+  /** Remove partner connection from both profiles */
+  async removePartner() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('User not authenticated');
+
+    const { data: me } = await supabase
+      .from('profiles')
+      .select('partner_id')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (!me?.partner_id) throw new Error('No partner connected');
+
+    await Promise.all([
+      supabase.from('profiles').update({ partner_id: null }).eq('id', user.id),
+      supabase.from('profiles').update({ partner_id: null }).eq('id', me.partner_id),
+    ]);
+
+    toast.success('Partner connection removed');
+  },
 };
-
-// Helper function to generate a unique code
-function generateUniqueCode() {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-} 

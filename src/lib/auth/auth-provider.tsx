@@ -1,6 +1,5 @@
 
 import React, { createContext, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
 import { AuthContext } from './auth-context';
 import { useAuthOperations } from './hooks/use-auth-operations';
 import { useInitialSession } from './hooks/use-initial-session';

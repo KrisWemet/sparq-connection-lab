@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { useAuth } from '../../lib/auth-context';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/lib/auth';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Lock, Mail, ArrowRight, Loader } from 'lucide-react';
 
 interface LoginFormProps {
   onToggleMode?: () => void;
   isRegisterMode?: boolean;
+  redirectTo?: string;
 }
 
-export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormProps) {
-  const { login, register, loading } = useAuth();
-  const router = useRouter();
+export function LoginForm({ onToggleMode, isRegisterMode = false, redirectTo = '/dashboard' }: LoginFormProps) {
+  const { signIn, signUp, loading } = useAuth();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -57,28 +58,14 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
 
       if (isRegisterMode) {
         // Register new user
-        result = await register(
-          formData.email, 
-          formData.password, 
-          { 
-            name: formData.name, 
-            partner_name: formData.partnerName 
-          }
-        );
+        await signUp(formData.email, formData.password, formData.name);
+        setSuccessMessage('Account created successfully!');
+        setTimeout(() => navigate(redirectTo), 1500);
       } else {
         // Login existing user
-        result = await login(formData.email, formData.password);
-      }
-
-      if (result.success) {
-        setSuccessMessage(isRegisterMode ? 'Account created successfully!' : 'Login successful!');
-        
-        // Redirect to dashboard after a short delay to show success message
-        setTimeout(() => {
-          router.push('/dashboard');
-        }, 1500);
-      } else {
-        setError(result.error || 'An error occurred. Please try again.');
+        await signIn(formData.email, formData.password);
+        setSuccessMessage('Login successful!');
+        setTimeout(() => navigate(redirectTo), 1500);
       }
     } catch (err) {
       setError('An unexpected error occurred. Please try again later.');

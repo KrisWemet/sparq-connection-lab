@@ -16,41 +16,41 @@ export function StreakIndicator({ streak, onShare }: StreakIndicatorProps) {
   
   // Determine icon, message and colors based on streak length
   const getStreakInfo = (days: number) => {
-    if (days >= 30) return { 
-      icon: Trophy, 
-      message: "Amazing commitment! 🎉", 
-      color: "text-amber-500", 
+    if (days >= 30) return {
+      icon: Trophy,
+      message: "Amazing commitment!",
+      color: "text-amber-500",
       bg: "bg-amber-100",
-      embedCommand: "Feel the deep connection you've built together",
-      benefit: "Couples who maintain 30+ day streaks report 78% higher relationship satisfaction"
+      encouragement: "A month of showing up. That's real dedication.",
+      benefit: "Consistency like this builds lasting change. Your future self will thank you."
     };
-    if (days >= 14) return { 
-      icon: Medal, 
-      message: "Impressive streak! 🌟", 
-      color: "text-indigo-500", 
+    if (days >= 14) return {
+      icon: Medal,
+      message: "Two weeks strong!",
+      color: "text-indigo-500",
       bg: "bg-indigo-100",
-      embedCommand: "Notice how much closer you feel each day",
-      benefit: "Two-week streaks lead to 42% more meaningful conversations"
+      encouragement: "You're building a real practice here.",
+      benefit: "Two weeks of daily practice is when new habits start to feel natural."
     };
-    if (days >= 7) return { 
-      icon: Star, 
-      message: "Fantastic week! ✨", 
-      color: "text-blue-500", 
+    if (days >= 7) return {
+      icon: Star,
+      message: "One week down!",
+      color: "text-blue-500",
       bg: "bg-blue-100",
-      embedCommand: "Enjoy the growing connection you're creating",
-      benefit: "Weekly streaks build lasting relationship habits"
+      encouragement: "A full week of intentional growth.",
+      benefit: "Research shows it takes about a week for new relationship skills to start clicking."
     };
-    return { 
-      icon: Flame, 
-      message: "Keep it going! 🔥", 
-      color: "text-orange-500", 
+    return {
+      icon: Flame,
+      message: "Keep it going!",
+      color: "text-orange-500",
       bg: "bg-orange-100",
-      embedCommand: "Feel your bond strengthening with each interaction",
-      benefit: "Every day you connect creates positive relationship momentum"
+      encouragement: "Every day you show up matters.",
+      benefit: "Small daily investments in yourself create meaningful change over time."
     };
   };
 
-  const { icon: Icon, message, color, bg, embedCommand, benefit } = getStreakInfo(streak);
+  const { icon: Icon, message, color, bg, encouragement, benefit } = getStreakInfo(streak);
 
   // If no streak, don't display anything
   if (streak === 0) return null;
@@ -100,19 +100,19 @@ export function StreakIndicator({ streak, onShare }: StreakIndicatorProps) {
               </p>
               <p className="text-xs text-gray-500">{message}</p>
               
-              {/* Embedded command - subtle persuasive text */}
-              <motion.p 
+              {/* Encouragement message */}
+              <motion.p
                 className={`text-xs ${color} font-medium mt-1`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1 }}
               >
-                {embedCommand}
+                {encouragement}
               </motion.p>
-              
-              {/* Social proof benefit - only shown for premium users */}
+
+              {/* Growth insight — shown for premium users */}
               {isPremium && (
-                <motion.p 
+                <motion.p
                   className="text-[10px] text-gray-600 mt-1 italic"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.8 }}

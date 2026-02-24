@@ -41,7 +41,7 @@ export interface UserPreference {
 export interface AIInteraction {
   userId: string;
   partnerId: string | null;
-  interactionType: 'question' | 'advice' | 'therapy' | 'exercise';
+  interactionType: 'question' | 'advice' | 'coaching' | 'exercise';
   content: string;
   aiResponse: string;
   timestamp: string;
@@ -157,7 +157,7 @@ export const logQuestionResponse = async (
 // Log AI interaction
 export const logAIInteraction = async (
   userId: string,
-  interactionType: 'question' | 'advice' | 'therapy' | 'exercise',
+  interactionType: 'question' | 'advice' | 'coaching' | 'exercise',
   content: string,
   aiResponse: string,
   duration: number,

@@ -1,15 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
-
-// Environment variables should be set in .env.local
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables');
-}
-
-// Create a single supabase client for the entire app
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Re-export the canonical Supabase client (uses VITE_ env vars correctly)
+export { supabase } from '@/integrations/supabase/client';
 
 // Define types for our database tables
 export type Profile = {
@@ -29,7 +19,7 @@ export type Profile = {
 export type Activity = {
   id: string;
   user_id: string;
-  type: 'metaphor' | 'futurePacing' | 'hypnoticStory' | 'daily_question';
+  type: 'metaphor' | 'futurePacing' | 'coachingStory' | 'daily_question';
   content_id: string;
   completed_at: string;
   notes?: string;

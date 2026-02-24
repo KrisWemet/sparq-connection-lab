@@ -1,5 +1,5 @@
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { authService } from '@/services/supabaseService';
 
 export async function signIn(email: string, password: string) {
@@ -12,11 +12,6 @@ export async function signIn(email: string, password: string) {
     }
     
     console.log("Sign in successful, got user:", !!data.user);
-    
-    // For development, also set localStorage values
-    const isAdminUser = email.includes('admin@');
-    localStorage.setItem('userRole', isAdminUser ? 'admin' : 'user');
-    
     return data;
   } catch (error: any) {
     console.error('Error signing in:', error.message);
@@ -39,10 +34,6 @@ export async function signUp(
       gender: gender as any,
       relationshipType: relationshipType as any
     });
-    
-    // For development, also set localStorage values
-    const isAdminUser = email.includes('admin@');
-    localStorage.setItem('userRole', isAdminUser ? 'admin' : 'user');
   } catch (error: any) {
     console.error('Error signing up:', error.message);
     throw error;

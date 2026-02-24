@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { useAuth } from '../lib/auth-context';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/lib/auth';
 import { motion } from 'framer-motion';
-import { ProtectedRoute } from '../components/auth/ProtectedRoute';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import { Bell, CheckCircle, Edit2, User, Camera, Heart, X, ChevronRight } from 'lucide-react';
-import { logActivity } from '../lib/supabase';
+import { logActivity } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 
 const ProfilePage = () => {
-  const { user, profile, updateProfile, loading } = useAuth();
-  const router = useRouter();
+  const { user, profile, loading, handleRefreshProfile } = useAuth();
+
+  const updateProfile = async (data: Record<string, any>) => {
+    if (!user) return false;
+    const { error } = await supabase.from('profiles').update(data).eq('id', user.id);
+    if (error) { console.error('Error updating profile:', error); return false; }
+    await handleRefreshProfile();
+    return true;
+  };
+  const navigate = useNavigate();
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -157,7 +166,7 @@ const ProfilePage = () => {
             <h1 className="text-2xl font-bold text-indigo-700">Sparq</h1>
             <div className="flex items-center space-x-4">
               <button
-                onClick={() => router.push('/dashboard')}
+                onClick={() => navigate('/dashboard')}
                 className="px-4 py-2 border border-indigo-600 text-indigo-600 rounded-md hover:bg-indigo-50 transition-colors"
               >
                 Dashboard

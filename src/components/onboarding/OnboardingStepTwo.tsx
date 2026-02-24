@@ -1,85 +1,107 @@
-
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Check, Compass } from "lucide-react";
 import { Label } from "@/components/ui/label";
-import { Users } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toast } from "sonner";
 
 interface OnboardingStepTwoProps {
-  relationshipStatus: string;
-  setRelationshipStatus: (value: string) => void;
-  relationshipDuration: string;
-  setRelationshipDuration: (value: string) => void;
+  onboardingGoals: string[];
+  setOnboardingGoals: (goals: string[]) => void;
+  preferredSessionTime: string;
+  setPreferredSessionTime: (time: string) => void;
 }
 
+const GOAL_OPTIONS = [
+  { id: "conflict", label: "We argue about the same things" },
+  { id: "closeness", label: "I want to feel closer to my partner" },
+  { id: "communication", label: "I want to be a better communicator" },
+  { id: "maintain", label: "Our relationship is great \u2014 keep it that way" },
+  { id: "rough-patch", label: "I'm going through a rough patch" },
+  { id: "self-understanding", label: "I want to understand myself better as a partner" },
+];
+
+const TIME_OPTIONS = [
+  "7:00 AM",
+  "8:00 AM",
+  "9:00 AM",
+  "10:00 AM",
+  "12:00 PM",
+  "6:00 PM",
+  "8:00 PM",
+  "9:00 PM",
+];
+
 export function OnboardingStepTwo({
-  relationshipStatus,
-  setRelationshipStatus,
-  relationshipDuration,
-  setRelationshipDuration
+  onboardingGoals,
+  setOnboardingGoals,
+  preferredSessionTime,
+  setPreferredSessionTime,
 }: OnboardingStepTwoProps) {
+  const handleGoalToggle = (goalId: string) => {
+    if (onboardingGoals.includes(goalId)) {
+      setOnboardingGoals(onboardingGoals.filter((g) => g !== goalId));
+    } else if (onboardingGoals.length >= 3) {
+      toast("Pick up to 3", { description: "Deselect one to choose a different one." });
+    } else {
+      setOnboardingGoals([...onboardingGoals, goalId]);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="text-center p-4">
         <div className="inline-flex items-center justify-center p-4 bg-primary/10 rounded-full mb-4">
-          <Users className="h-10 w-10 text-primary" />
+          <Compass className="h-10 w-10 text-primary" />
         </div>
-        <h2 className="text-2xl font-bold mb-2">Your Relationship</h2>
+        <h2 className="text-2xl font-bold mb-2">What's on your mind?</h2>
         <p className="text-muted-foreground">
-          Tell us a bit about your current relationship status.
+          Select what resonates most (pick up to 3)
         </p>
       </div>
-      
-      <div className="space-y-4">
-        <div>
-          <Label htmlFor="relationship-status">Current Status</Label>
-          <RadioGroup
-            value={relationshipStatus}
-            onValueChange={setRelationshipStatus}
-            className="mt-2 grid grid-cols-1 gap-2"
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="dating" id="status-dating" />
-              <Label htmlFor="status-dating">Dating</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="engaged" id="status-engaged" />
-              <Label htmlFor="status-engaged">Engaged</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="married" id="status-married" />
-              <Label htmlFor="status-married">Married</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="complicated" id="status-complicated" />
-              <Label htmlFor="status-complicated">It's Complicated</Label>
-            </div>
-          </RadioGroup>
-        </div>
-        
-        <div className="mt-4">
-          <Label htmlFor="relationship-duration">How Long Together</Label>
-          <RadioGroup
-            value={relationshipDuration}
-            onValueChange={setRelationshipDuration}
-            className="mt-2 grid grid-cols-1 gap-2"
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="< 1 year" id="duration-1" />
-              <Label htmlFor="duration-1">Less than 1 year</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="1-3 years" id="duration-2" />
-              <Label htmlFor="duration-2">1-3 years</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="3-7 years" id="duration-3" />
-              <Label htmlFor="duration-3">3-7 years</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="7+ years" id="duration-4" />
-              <Label htmlFor="duration-4">7+ years</Label>
-            </div>
-          </RadioGroup>
-        </div>
+
+      <div className="space-y-3">
+        {GOAL_OPTIONS.map((goal) => {
+          const selected = onboardingGoals.includes(goal.id);
+          return (
+            <button
+              key={goal.id}
+              type="button"
+              onClick={() => handleGoalToggle(goal.id)}
+              className={`w-full text-left p-3 border rounded-lg flex items-center justify-between transition-colors ${
+                selected
+                  ? "bg-primary/10 border-primary"
+                  : "hover:bg-muted/50"
+              }`}
+            >
+              <span className="text-sm">{goal.label}</span>
+              {selected && <Check className="h-5 w-5 text-primary flex-shrink-0" />}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="pt-2">
+        <Label>When would you like your daily session?</Label>
+        <Select
+          value={preferredSessionTime}
+          onValueChange={setPreferredSessionTime}
+        >
+          <SelectTrigger className="mt-1.5">
+            <SelectValue placeholder="Choose a time" />
+          </SelectTrigger>
+          <SelectContent>
+            {TIME_OPTIONS.map((time) => (
+              <SelectItem key={time} value={time}>
+                {time}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );

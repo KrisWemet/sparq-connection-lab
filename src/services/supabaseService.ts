@@ -307,7 +307,7 @@ export const partnerService = {
       const inviteCode = generateUniqueCode(8);
       
       const { error } = await supabase
-        .from('partner_invitations')
+        .from('partner_invites')
         .insert({
           sender_id: user.id,
           recipient_email: recipientEmail,
@@ -336,7 +336,7 @@ export const partnerService = {
       
       // Get the invitation
       const { data: invitation, error: inviteError } = await supabase
-        .from('partner_invitations')
+        .from('partner_invites')
         .select('*')
         .eq('invite_code', inviteCode)
         .eq('status', 'pending')
@@ -347,7 +347,7 @@ export const partnerService = {
       
       // Update invitation status
       const { error: updateError } = await supabase
-        .from('partner_invitations')
+        .from('partner_invites')
         .update({ status: 'accepted' })
         .eq('id', invitation.id);
         
@@ -407,7 +407,7 @@ export const partnerService = {
       if (!user) return [];
       
       const { data, error } = await supabase
-        .from('partner_invitations')
+        .from('partner_invites')
         .select('*')
         .eq('sender_id', user.id)
         .eq('status', 'pending')
