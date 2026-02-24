@@ -1,15 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowRight, Flame, Users, Sparkles, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
 import { usePersonalityDiscovery } from "@/hooks/usePersonalityDiscovery";
 import { SparqOtter } from "@/components/SparqOtter";
+import { usePeter } from "@/contexts/PeterContext";
 
 export default function Dashboard() {
   const { user, profile, loading, signOut, handleRefreshProfile } = useAuth();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { wave, celebrate } = usePeter();
+  const welcomeFiredRef = useRef(false);
 
   // Handle Stripe checkout success redirect (?checkout=success&tier=premium)
   useEffect(() => {
@@ -27,6 +30,7 @@ export default function Dashboard() {
       setSearchParams({}, { replace: true });
     }
   }, [searchParams]);
+
   const {
     discoveryDay,
     discoveryPhase,
@@ -34,6 +38,27 @@ export default function Dashboard() {
     totalDimensions,
     mirrorReady,
   } = usePersonalityDiscovery();
+
+  // ── Peter welcome greeting ────────────────────────────────────────────────
+  useEffect(() => {
+    if (loading || !user || welcomeFiredRef.current) return;
+    welcomeFiredRef.current = true;
+
+    const streak = (profile as any)?.streak_count ?? 0;
+    const name =
+      profile?.fullName || (profile as any)?.name || user.email?.split("@")[0] || "there";
+
+    const timer = setTimeout(() => {
+      if (streak >= 3) {
+        wave(`Welcome back, ${name}! 🔥 ${streak}-day streak!`);
+        setTimeout(() => celebrate(`${streak} days strong — you're on fire! 🎉`), 5000);
+      } else {
+        wave(`Hey ${name}! 👋 Ready for today's session?`);
+      }
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, [loading, user, profile, wave, celebrate]);
 
   if (loading) {
     return (

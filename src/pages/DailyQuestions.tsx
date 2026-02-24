@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { usePeter } from "@/contexts/PeterContext";
 import { DailySessionService } from "@/services/dailySessionService";
 import { PersonalityInferenceService } from "@/services/personalityInferenceService";
 import { PersonalityProfileService } from "@/services/personalityProfileService";
@@ -107,6 +108,22 @@ export default function DailyQuestions() {
   // Phase-aware psychology (color schemes, priming)
   const phase = getPhaseForDay(discoveryDay);
   const { phaseColors, cssVars } = useSessionPsychology(phase, identityArchetype);
+
+  // ── Peter reactions ───────────────────────────────────────────────
+  const { celebrate: peterCelebrate } = usePeter();
+
+  useEffect(() => {
+    if (sessionState === "complete") {
+      const streak = savedStreak ?? ((profile as any)?.streak_count ?? 0);
+      if (streak >= 7) {
+        peterCelebrate(`${streak} days in a row! You're unstoppable! 🔥🎉`);
+      } else if (streak >= 3) {
+        peterCelebrate(`${streak}-day streak! Look at you go! 🎉`);
+      } else {
+        peterCelebrate("Session complete! Amazing work today! 🦦✨");
+      }
+    }
+  }, [sessionState]);
 
   // ─── Generate Session ─────────────────────────────────────────────
 

@@ -5,6 +5,8 @@ import { AuthProvider } from "@/lib/auth";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { SubscriptionProvider } from "@/lib/subscription-provider";
+import { PeterProvider } from "@/contexts/PeterContext";
+import { Peter } from "@/components/Peter";
 
 // Public pages
 import Auth from "@/pages/Auth";
@@ -36,7 +38,9 @@ function App() {
         <SubscriptionProvider>
           <ThemeProvider defaultTheme="light" storageKey="sparq-connect-theme">
             <Router>
+              <PeterProvider>
               <Toaster position="top-center" richColors closeButton />
+              <Peter />
               <Routes>
                 {/* Public routes */}
                 <Route path="/auth" element={<Auth />} />
@@ -185,6 +189,7 @@ function App() {
                 {/* 404 */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              </PeterProvider>
             </Router>
           </ThemeProvider>
         </SubscriptionProvider>
