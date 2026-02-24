@@ -334,6 +334,32 @@ import { Button } from "../../components/ui/button";
 
 ---
 
+## Large Files to Be Aware Of
+
+These files are unusually large and may be slow to edit or navigate:
+
+| File | Size | Notes |
+|---|---|---|
+| `src/components/MetaphorAnimation.tsx` | ~24,000 lines | Animated metaphor visualizations (bridge, flower, river) |
+| `src/services/supabaseService.ts` | ~29,000 lines | All DB operations — candidate for splitting by domain |
+| `src/data/relationshipContent.ts` | ~27,000 lines | Pre-written relationship guidance content |
+| `src/data/persuasiveContent.ts` | ~22,000 lines | Psychological messaging and persuasive copy |
+
+When working in these files, use targeted searches rather than reading the full file.
+
+---
+
+## Public Assets
+
+`public/` contains:
+- `og-image.jpg` — Open Graph image for social sharing
+- `favicon.ico` — App favicon
+- `Path to Together/` — Markdown educational content modules:
+  - `communication.md`, `conflict-resolution.md`, `emotional-intelligence.md`
+  - `love-languages.md`, `intimacy.md`
+
+---
+
 ## Known Technical Debt
 
 These issues exist in the codebase and should be kept in mind:
@@ -364,6 +390,14 @@ These issues exist in the codebase and should be kept in mind:
 
 7. **`@tanstack/react-query` is in `_app.tsx` but not in `package.json`**
    - Check if this dependency is actually installed
+
+8. **`.env` contains hardcoded Supabase credentials**
+   - The `.env` file in the repo root has actual `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` values
+   - Never commit additional secrets to `.env`; use `.env.local` (gitignored) for local dev
+
+9. **`run_dev.py` targets port 8085**
+   - The Python dev launcher script opens `http://localhost:8085`, but Next.js dev server defaults to port 3000
+   - Use `npm run dev` directly for development
 
 ---
 
