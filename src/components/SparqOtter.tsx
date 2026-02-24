@@ -43,28 +43,35 @@ const SIZE_MAP: Record<OtterSize, string> = {
 
 const ANIMATION_VARIANTS: Record<OtterMood, object> = {
   idle: {
-    y: [0, -4, 0],
-    transition: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+    y: [0, -8, 0],
+    rotate: [0, -2, 0, 2, 0],
+    scale: [1, 1.03, 1, 1.03, 1],
+    transition: { duration: 4, repeat: Infinity, ease: "easeInOut" },
   },
   waving: {
-    rotate: [0, -5, 5, -5, 0],
-    transition: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
+    rotate: [0, -12, 14, -12, 14, 0],
+    y: [0, -4, 0, -4, 0, 0],
+    scale: [1, 1.05, 1.05, 1.05, 1.05, 1],
+    transition: { duration: 1.2, repeat: Infinity, ease: "easeInOut" },
   },
   thinking: {
-    scale: [1, 1.03, 1],
-    opacity: [1, 0.85, 1],
-    transition: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+    scale: [1, 1.06, 1],
+    rotate: [0, -3, 0, 3, 0],
+    opacity: [1, 0.8, 1],
+    transition: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
   },
   celebrate: {
-    y: [0, -12, 0],
-    scale: [1, 1.05, 1],
-    transition: { duration: 0.6, repeat: 2, ease: "easeOut" },
+    y: [0, -20, 0, -14, 0, -8, 0],
+    scale: [1, 1.15, 0.95, 1.12, 0.98, 1.06, 1],
+    rotate: [0, -8, 8, -6, 6, -3, 0],
+    transition: { duration: 1.2, repeat: 2, ease: "easeOut" },
   },
   guiding: {
-    y: [0, -3, 0],
+    y: [0, -6, 0],
+    scale: [1, 1.04, 1],
     filter: [
       "drop-shadow(0 0 8px rgba(255,200,50,0.3))",
-      "drop-shadow(0 0 16px rgba(255,200,50,0.6))",
+      "drop-shadow(0 0 20px rgba(255,200,50,0.7))",
       "drop-shadow(0 0 8px rgba(255,200,50,0.3))",
     ],
     transition: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },

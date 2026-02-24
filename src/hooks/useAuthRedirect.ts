@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,34 +8,23 @@ export function useAuthRedirect(redirectPath = "/dashboard") {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  
-  // Debug auth state on each render
-  console.log("Auth redirect hook - Auth state:", { 
-    user, 
-    authLoading, 
-    isLoading 
-  });
-  
-  // Check Supabase session directly - highly optimized
+  const hasCheckedRef = useRef(false);
+
   useEffect(() => {
-    // Immediately redirect if user is available - don't wait for any checks
     if (user) {
-      console.log("User authenticated, redirecting immediately", user);
       navigate(redirectPath, { replace: true });
       return;
     }
-    
-    // Only proceed with session check if we're not already loading
-    if (isLoading || authLoading) return;
-    
+
+    // Only run the direct session check once, after auth finishes loading
+    if (authLoading || hasCheckedRef.current) return;
+    hasCheckedRef.current = true;
+
     const checkSession = async () => {
       try {
         setIsLoading(true);
         const { data } = await supabase.auth.getSession();
-        console.log("Direct session check result:", !!data.session);
-        
         if (data.session?.user) {
-          console.log("Session exists, redirecting");
           navigate(redirectPath, { replace: true });
         }
       } catch (err) {
@@ -44,10 +33,9 @@ export function useAuthRedirect(redirectPath = "/dashboard") {
         setIsLoading(false);
       }
     };
-    
-    // Run immediately for faster response
+
     checkSession();
-  }, [navigate, redirectPath, user, isLoading, authLoading]);
+  }, [navigate, redirectPath, user, authLoading]);
 
   return { isAuthLoading: authLoading || isLoading };
 }
