@@ -108,6 +108,24 @@ export default function Dashboard() {
           </div>
         </section>
 
+        {/* New Features Quick Links */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <button onClick={() => router.push('/DailyGrowth')} className="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500 hover:shadow-lg transition-shadow text-left">
+            <h3 className="text-lg font-bold text-gray-800 mb-2">Daily Growth</h3>
+            <p className="text-sm text-gray-600">Track your mood and journal your journey.</p>
+          </button>
+          
+          <button onClick={() => router.push('/OnboardingFlow')} className="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500 hover:shadow-lg transition-shadow text-left">
+            <h3 className="text-lg font-bold text-gray-800 mb-2">Onboarding</h3>
+            <p className="text-sm text-gray-600">Update your profile and relationship status.</p>
+          </button>
+          
+          <button onClick={() => router.push('/MirrorReport')} className="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500 hover:shadow-lg transition-shadow text-left">
+            <h3 className="text-lg font-bold text-gray-800 mb-2">Mirror Report</h3>
+            <p className="text-sm text-gray-600">View your psychological insights.</p>
+          </button>
+        </section>
+
         {/* Optional Partner Invite */}
         <section className="bg-white p-6 rounded-lg shadow-md">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
