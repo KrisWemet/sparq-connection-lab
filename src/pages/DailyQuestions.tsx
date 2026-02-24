@@ -72,7 +72,7 @@ function getPhaseForDay(day: number): DiscoveryPhase {
 
 export default function DailyQuestions() {
   const navigate = useNavigate();
-  const { user, profile } = useAuth();
+  const { user, profile, handleRefreshProfile } = useAuth();
 
   // Session state machine
   const [sessionState, setSessionState] = useState<SessionState>("loading");
@@ -193,7 +193,7 @@ export default function DailyQuestions() {
     if (user?.id && profile) {
       generateSession();
     }
-  }, [user?.id, profile?.full_name]);
+  }, [user?.id, (profile as any)?.discovery_day]);
 
   // ─── Handlers ─────────────────────────────────────────────────────
 
@@ -306,6 +306,8 @@ export default function DailyQuestions() {
       toast.error("Could not save your session. Your progress may not be recorded.");
     } else {
       setSavedStreak(result.newStreak);
+      // Refresh profile so auth context has the updated discovery_day for next session
+      handleRefreshProfile().catch(() => {});
     }
 
     // Transition to mood rating
@@ -347,6 +349,9 @@ export default function DailyQuestions() {
         }
       } catch (err) {
         console.error("Mirror narrative generation failed:", err);
+        toast("Your reflection will be ready soon", {
+          description: "We'll have your 14-day mirror ready for your next session.",
+        });
       }
       setIsGeneratingMirror(false);
     }

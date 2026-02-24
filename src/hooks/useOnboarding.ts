@@ -75,7 +75,7 @@ export function useOnboarding() {
             identity_archetype: identityArchetype,
             discovery_day: 1,
             trial_start_date: new Date().toISOString(),
-            isOnboarded: true,
+            isonboarded: true,
             updated_at: new Date().toISOString(),
           })
           .eq("id", user.id);

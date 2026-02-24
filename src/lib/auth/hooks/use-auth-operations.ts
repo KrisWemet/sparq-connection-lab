@@ -27,7 +27,7 @@ export function useAuthOperations() {
         setProfile(profile as UserProfile);
         cachedAuthState.profile = profile as UserProfile;
         
-        const profileIsOnboarded = !!profile.isOnboarded;
+        const profileIsOnboarded = !!(profile as any).isonboarded;
         setIsOnboarded(profileIsOnboarded);
         cachedAuthState.isOnboarded = profileIsOnboarded;
         

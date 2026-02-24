@@ -44,7 +44,7 @@ export function useAuthSubscription({
                 setProfile(profile as UserProfile);
                 cachedAuthState.profile = profile as UserProfile;
 
-                const isOnboardedStatus = !!profile.isOnboarded;
+                const isOnboardedStatus = !!(profile as any).isonboarded;
                 setIsOnboarded(isOnboardedStatus);
                 cachedAuthState.isOnboarded = isOnboardedStatus;
               }

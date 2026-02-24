@@ -1,13 +1,32 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowRight, Flame, Users, Sparkles, Eye } from "lucide-react";
+import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
 import { usePersonalityDiscovery } from "@/hooks/usePersonalityDiscovery";
 import { SparqOtter } from "@/components/SparqOtter";
 
 export default function Dashboard() {
-  const { user, profile, loading, signOut } = useAuth();
+  const { user, profile, loading, signOut, handleRefreshProfile } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Handle Stripe checkout success redirect (?checkout=success&tier=premium)
+  useEffect(() => {
+    const checkoutStatus = searchParams.get("checkout");
+    const tier = searchParams.get("tier");
+    if (checkoutStatus === "success" && tier) {
+      const tierLabel = tier.charAt(0).toUpperCase() + tier.slice(1);
+      toast.success(`Welcome to ${tierLabel}!`, {
+        description: "Your subscription is active. Enjoy all the new features.",
+        duration: 6000,
+      });
+      // Refresh profile so subscription provider re-reads the new tier from Supabase
+      handleRefreshProfile();
+      // Remove query params from URL without navigation
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams]);
   const {
     discoveryDay,
     discoveryPhase,

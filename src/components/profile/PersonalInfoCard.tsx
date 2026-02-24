@@ -42,7 +42,7 @@ export function PersonalInfoCard({ profile, setProfile }: PersonalInfoCardProps)
           sexual_orientation: profile.sexual_orientation,
           relationship_structure: profile.relationship_structure,
           avatar_url: profile.avatar_url,
-          isOnboarded: true,
+          isonboarded: true,
           updated_at: new Date().toISOString()
         });
 
