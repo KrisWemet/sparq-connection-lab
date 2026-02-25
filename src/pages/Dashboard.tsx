@@ -109,7 +109,7 @@ export default function Dashboard() {
         </section>
 
         {/* New Features Quick Links */}
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
           <button onClick={() => router.push('/DailyGrowth')} className="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500 hover:shadow-lg transition-shadow text-left">
             <h3 className="text-lg font-bold text-gray-800 mb-2">Daily Growth</h3>
             <p className="text-sm text-gray-600">Track your mood and journal your journey.</p>
@@ -128,6 +128,11 @@ export default function Dashboard() {
           <button onClick={() => router.push('/Translator')} className="bg-white p-6 rounded-lg shadow-md border-t-4 border-emerald-500 hover:shadow-lg transition-shadow text-left">
             <h3 className="text-lg font-bold text-gray-800 mb-2">Translator</h3>
             <p className="text-sm text-gray-600">Get a gentler rephrase with Peter the Otter.</p>
+          </button>
+
+          <button onClick={() => router.push('/SkillTree')} className="bg-white p-6 rounded-lg shadow-md border-t-4 border-amber-500 hover:shadow-lg transition-shadow text-left">
+            <h3 className="text-lg font-bold text-gray-800 mb-2">Skill Tree</h3>
+            <p className="text-sm text-gray-600">Unlock new levels across key relationship skills.</p>
           </button>
         </section>
 
