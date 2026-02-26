@@ -92,11 +92,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else {
         setUser(authUser);
         // If no profile exists but user is authenticated, create a basic profile
-        const newProfile: Partial<SupabaseProfile> & { user_id: string } = {
-          user_id: authUser.id,
+        const newProfile: Partial<SupabaseProfile> & { id: string } = {
+          id: authUser.id,
           name: authUser.email?.split('@')[0] || 'User',
-          streak_count: 0,
-          last_activity_date: new Date().toISOString(),
+          email: authUser.email || '',
           created_at: new Date().toISOString(),
         };
         
@@ -178,20 +177,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // Create user profile if sign-up successful
       if (data.user) {
-        const newProfile: Partial<SupabaseProfile> & { user_id: string } = {
-          user_id: data.user.id,
+        const newProfile: Partial<SupabaseProfile> & { id: string } = {
+          id: data.user.id,
           name: userData.name,
           partner_name: userData.partner_name,
-          streak_count: 0,
-          last_activity_date: new Date().toISOString(),
+          email: data.user.email || '',
           created_at: new Date().toISOString(),
-          notification_preferences: {
-            dailyReminders: true,
-            weeklyRecap: true,
-            achievementAlerts: true,
-            partnerUpdates: false
-          },
-          preferred_activities: ['communication', 'quality-time']
         };
 
         const profileSuccess = await updateProfile(newProfile);
@@ -273,7 +264,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const updateData = {
         ...profileData,
-        user_id: user.id,
+        id: user.id,
         updated_at: new Date().toISOString()
       };
       
