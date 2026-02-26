@@ -27,26 +27,26 @@ const plans = [
     id: "free",
     name: "Free",
     price: 0,
-    description: "Basic features to get started",
+    description: "Start your relationship growth journey",
     features: [
-      { name: "Daily relationship quiz (1 per day)", included: true },
-      { name: "Basic conversation starters", included: true },
-      { name: "Limited goal tracking (3 goals)", included: true },
-      { name: "Basic messaging", included: true },
-      { name: "5 date ideas per month", included: true },
-      { name: "Basic relationship dashboard", included: true },
-      { name: "Unlimited journeys access", included: false },
-      { name: "Advanced relationship analytics", included: false },
-      { name: "Unlimited goals & milestones", included: false },
-      { name: "Premium conversation topics", included: false },
-      { name: "Relationship timeline", included: false },
-      { name: "Compatibility assessments", included: false },
+      { name: "14-day journey with Peter 🦦", included: true },
+      { name: "Daily morning story + action", included: true },
+      { name: "Evening reflection check-ins", included: true },
+      { name: "Silent relationship profiling", included: true },
+      { name: "Skill Tree: Basic levels (all 3 tracks)", included: true },
+      { name: "Partner linking (optional)", included: true },
+      { name: "Daily connection questions", included: true },
+      { name: "Skill Tree: Advanced levels", included: false },
+      { name: "Skill Tree: Expert levels", included: false },
+      { name: "The Translator (unlimited)", included: false },
+      { name: "Peter AI Coach sessions", included: false },
+      { name: "Couples shared journey", included: false },
     ],
     popular: false,
     buttonText: "Current Plan",
     disabled: true,
     testimonial: {
-      quote: "We started with the free plan and saw immediate improvements in our communication.",
+      quote: "Peter made it feel like I had a friend walking me through it. The 14 days went by so fast and I genuinely noticed a shift.",
       author: "Jamie & Alex",
       relationship: "Dating 2 years"
     }
@@ -56,70 +56,57 @@ const plans = [
     name: "Premium",
     price: 4.99,
     yearlyPrice: 49.99,
-    description: "Everything you need for a thriving relationship",
+    description: "Go deeper with Advanced Skill Tree access",
     features: [
-      { name: "Daily relationship quiz (3 per day)", included: true },
-      { name: "Premium conversation starters", included: true },
-      { name: "Unlimited goal tracking", included: true },
-      { name: "Advanced messaging features", included: true },
-      { name: "Unlimited date ideas", included: true },
-      { name: "Advanced relationship dashboard", included: true },
-      { name: "3 free journeys included", included: true },
-      { name: "Advanced relationship analytics", included: true },
-      { name: "Unlimited goals & milestones", included: true },
-      { name: "Premium conversation topics", included: true },
-      { name: "Relationship timeline", included: true },
-      { name: "Basic compatibility assessments", included: true },
-      { name: "Guided visualizations", included: true, new: true },
-      { name: "Hypnotic relationship stories", included: true, new: true },
+      { name: "Everything in Free", included: true },
+      { name: "Skill Tree: Advanced levels (all 3 tracks)", included: true },
+      { name: "The Translator (unlimited rephrases)", included: true },
+      { name: "Personalized insights report", included: true },
+      { name: "Extended Peter coaching sessions", included: true },
+      { name: "Daily questions (unlimited)", included: true },
+      { name: "Relationship pattern dashboard", included: true },
+      { name: "Skill Tree: Expert levels", included: false },
+      { name: "Peter AI Coach (deep sessions)", included: false },
+      { name: "Couples shared journey", included: false },
     ],
     popular: true,
     buttonText: "Upgrade Now",
     disabled: false,
     testimonial: {
-      quote: "Premium helped us discover parts of our relationship we never knew existed. We feel closer than ever.",
+      quote: "The Advanced Skill Tree exercises are on a different level. We've been doing them together and it's like couples therapy but way more fun.",
       author: "Taylor & Jordan",
       relationship: "Married 3 years",
-      statistic: "90% of Premium users report deeper emotional connection within 30 days"
+      statistic: "90% of Premium users report a meaningful improvement in communication within 30 days"
     },
-    persuasiveText: "Experience how naturally your connection deepens with Premium features"
+    persuasiveText: "Unlock the levels where the real breakthroughs happen"
   },
   {
     id: "ultimate",
     name: "Ultimate",
     price: 19.99,
     yearlyPrice: 199.99,
-    description: "Complete relationship package for two partners with option to add more",
+    description: "Your personal relationship coach — always available, always remembers you",
     features: [
-      { name: "Unlimited daily quizzes for 2 users", included: true },
-      { name: "All conversation starters", included: true },
-      { name: "Advanced goal tracking & insights", included: true },
-      { name: "Priority support", included: true },
-      { name: "Custom date planning", included: true },
-      { name: "Personalized relationship insights", included: true },
-      { name: "All journeys included", included: true },
-      { name: "Couples therapy resources", included: true },
-      { name: "Advanced compatibility assessments", included: true },
-      { name: "Intimacy enhancement modules", included: true },
-      { name: "Conflict resolution tools", included: true },
-      { name: "Early access to new features", included: true },
-      { name: "AI Therapist access", included: true, new: true },
-      { name: "Add additional partners ($9.99/mo each)", included: true, new: true },
-      { name: "Dark mode", included: true },
-      { name: "Advanced guided visualizations with audio", included: true, new: true },
-      { name: "Future pacing exercises", included: true, new: true },
-      { name: "Relationship metaphor animations", included: true, new: true },
+      { name: "Everything in Premium", included: true },
+      { name: "Skill Tree: Expert levels (all 3 tracks)", included: true },
+      { name: "Peter remembers your full history", included: true, new: true },
+      { name: "Talk to Peter anytime (open chat)", included: true, new: true },
+      { name: "Weekly relationship snapshot from Peter", included: true, new: true },
+      { name: "Conflict First Aid — guided chat when things get hard", included: true },
+      { name: "Partner compatibility view (when both linked)", included: true },
+      { name: "Repeat the 14-day journey, personalized to your profile", included: true },
+      { name: "Milestone celebrations from Peter", included: true },
     ],
     popular: false,
     buttonText: "Get Ultimate",
     disabled: false,
     testimonial: {
-      quote: "Ultimate transformed our relationship. The guided visualizations and future pacing exercises helped us create a vision for our future that we're excited about every day.",
+      quote: "Peter remembered something I shared on Day 3 and brought it up six weeks later. That's when I realized this wasn't just an app — it genuinely felt like having a coach who actually knew us.",
       author: "Sam & Riley",
-      relationship: "Engaged after 1 year",
-      statistic: "Ultimate users are 3.5x more likely to report 'extremely satisfied' with their relationship"
+      relationship: "Together 18 months",
+      statistic: "Ultimate users are 3x more likely to complete the full Skill Tree and report lasting shifts in how they handle conflict"
     },
-    persuasiveText: "Feel the transformation in your relationship as you explore Ultimate features together"
+    persuasiveText: "Peter knows your story — and shows up every week to help you write the next chapter"
   }
 ];
 
@@ -281,7 +268,7 @@ export default function Subscription() {
       <div className="flex items-center mb-8">
         <Button 
           variant="ghost" 
-          onClick={() => router.push(-1)}
+          onClick={() => router.back()}
           className="mr-2"
         >
           <ChevronLeft className="h-4 w-4 mr-1" />
@@ -457,10 +444,10 @@ export default function Subscription() {
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <p className="italic text-gray-700 mb-2">
-              "The guided visualizations in Ultimate helped us create a shared vision for our future. It's like couples therapy but more fun!"
+              "We had a rough week and used Conflict First Aid at 11pm. Peter walked us through it in 15 minutes and we went to bed on the same page. That alone is worth it."
             </p>
             <p className="text-sm font-medium">- Morgan & Jamie, Engaged</p>
-            <p className="text-xs text-primary-600 mt-1">Ultimate users for 6 months</p>
+            <p className="text-xs text-primary-600 mt-1">Ultimate users for 4 months</p>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <p className="italic text-gray-700 mb-2">
@@ -483,8 +470,8 @@ export default function Subscription() {
           <p className="text-sm text-primary-600">of Premium users would recommend Sparq to friends</p>
         </div>
         <div className="bg-primary-50 p-4 rounded-lg text-center">
-          <h3 className="text-2xl font-bold text-primary-700 mb-1">3.5x</h3>
-          <p className="text-sm text-primary-600">higher relationship satisfaction for Ultimate users</p>
+          <h3 className="text-2xl font-bold text-primary-700 mb-1">3x</h3>
+          <p className="text-sm text-primary-600">more Skill Tree completions for users who talk to Peter weekly</p>
         </div>
       </div>
       
@@ -499,9 +486,9 @@ export default function Subscription() {
             </p>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm">
-            <h3 className="font-medium">How do the guided visualizations work?</h3>
+            <h3 className="font-medium">What does "Peter remembers your history" actually mean?</h3>
             <p className="text-sm text-gray-600 mt-1">
-              Our guided visualizations use proven techniques to help you and your partner imagine and create your ideal relationship future together. They're available in Premium and Ultimate tiers.
+              In Ultimate, Peter has access to everything you've shared during your 14-day journey and Skill Tree sessions — your reflections, patterns, and breakthroughs. When you chat with Peter, he builds on what he already knows about you instead of starting from scratch every time. It's what makes it feel like a real coaching relationship.
             </p>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm">

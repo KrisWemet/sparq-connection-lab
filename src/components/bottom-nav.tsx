@@ -1,5 +1,6 @@
-import { Home, MessageCircle, Target, Calendar, Settings, User2 } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Home, MessageCircle, Target, Calendar, User2 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 const navItems = [
   { icon: Home, label: "Home", path: "/dashboard" },
@@ -10,16 +11,16 @@ const navItems = [
 ];
 
 export function BottomNav() {
-  const location = useLocation();
+  const router = useRouter();
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 py-3 px-6 flex justify-between items-center z-50">
       {navItems.map((item) => (
         <Link
           key={item.label}
-          to={item.path}
+          href={item.path}
           className={`flex flex-col items-center space-y-1 ${
-            location.pathname === item.path
+            router.pathname === item.path
               ? "text-primary"
               : "text-gray-500 hover:text-primary transition-colors"
           }`}

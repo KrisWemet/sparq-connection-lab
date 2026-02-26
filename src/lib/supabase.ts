@@ -14,16 +14,18 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 // Define types for our database tables
 export type Profile = {
   id: string;
-  user_id: string;
-  name: string;
+  user_id?: string;
+  name?: string;       // primary DB column
+  full_name?: string;  // alias — some code uses this
+  email?: string;
   avatar_url?: string;
   partner_name?: string;
-  relationship_status?: 'dating' | 'engaged' | 'married' | 'other';
-  relationship_duration?: number; // in months
-  goals?: string[];
-  streak_count: number;
+  streak_count?: number;
   last_activity_date?: string;
+  last_active?: string;
+  isOnboarded?: boolean;
   created_at: string;
+  updated_at?: string;
 };
 
 export type Activity = {
@@ -65,7 +67,7 @@ export async function getProfile(userId: string): Promise<Profile | null> {
   const { data, error } = await supabase
     .from('profiles')
     .select('*')
-    .eq('user_id', userId)
+    .eq('id', userId)
     .single();
 
   if (error) {
@@ -76,10 +78,10 @@ export async function getProfile(userId: string): Promise<Profile | null> {
   return data;
 }
 
-export async function updateProfile(profile: Partial<Profile> & { user_id: string }): Promise<boolean> {
+export async function updateProfile(profile: Partial<Profile> & { id: string }): Promise<boolean> {
   const { error } = await supabase
     .from('profiles')
-    .upsert(profile, { onConflict: 'user_id' });
+    .upsert(profile, { onConflict: 'id' });
 
   if (error) {
     console.error('Error updating profile:', error);

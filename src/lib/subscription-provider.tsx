@@ -87,12 +87,11 @@ const SubscriptionContext = createContext<SubscriptionContextType | undefined>(u
 
 export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
   const [subscription, setSubscriptionState] = useState<SubscriptionPlan>(() => {
-    // Try to load from localStorage
+    if (typeof window === 'undefined') return defaultSubscription;
     const savedSubscription = localStorage.getItem("subscription");
     if (savedSubscription) {
       try {
         const parsed = JSON.parse(savedSubscription);
-        // Convert expiration string back to Date if it exists
         if (parsed.expiresAt) {
           parsed.expiresAt = new Date(parsed.expiresAt);
         }
@@ -105,18 +104,21 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const [remainingDailyQuestions, setRemainingDailyQuestions] = useState<number>(() => {
+    if (typeof window === 'undefined') return defaultSubscription.features.dailyQuestions;
     const saved = localStorage.getItem("remainingDailyQuestions");
-    return saved ? parseInt(saved, 10) : subscription.features.dailyQuestions;
+    return saved ? parseInt(saved, 10) : defaultSubscription.features.dailyQuestions;
   });
 
   const [remainingMorningQuestions, setRemainingMorningQuestions] = useState<number>(() => {
+    if (typeof window === 'undefined') return 1;
     const saved = localStorage.getItem("remainingMorningQuestions");
-    return saved ? parseInt(saved, 10) : Math.ceil(subscription.features.dailyQuestions / 2);
+    return saved ? parseInt(saved, 10) : Math.ceil(defaultSubscription.features.dailyQuestions / 2);
   });
 
   const [remainingEveningQuestions, setRemainingEveningQuestions] = useState<number>(() => {
+    if (typeof window === 'undefined') return 1;
     const saved = localStorage.getItem("remainingEveningQuestions");
-    return saved ? parseInt(saved, 10) : Math.floor(subscription.features.dailyQuestions / 2);
+    return saved ? parseInt(saved, 10) : Math.floor(defaultSubscription.features.dailyQuestions / 2);
   });
 
   // Check if a day has passed since the last reset
