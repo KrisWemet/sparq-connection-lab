@@ -9,6 +9,8 @@ interface PeterChatProps {
   isLoading?: boolean;
   placeholder?: string;
   inputDisabled?: boolean;
+  /** Quick-reply chips shown above the input. Tapping one sends it as a message. */
+  quickReplies?: string[];
 }
 
 function PeterAvatar() {
@@ -45,6 +47,7 @@ export function PeterChat({
   isLoading = false,
   placeholder = 'Say something to Peter…',
   inputDisabled = false,
+  quickReplies = [],
 }: PeterChatProps) {
   const [inputText, setInputText] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -105,6 +108,29 @@ export function PeterChat({
 
         <div ref={bottomRef} />
       </div>
+
+      {/* Quick-reply chips */}
+      {!inputDisabled && quickReplies.length > 0 && !isLoading && (
+        <div className="px-4 py-2 bg-gray-50/80 border-t border-gray-100 flex flex-wrap gap-2">
+          {quickReplies.map((reply) => (
+            <motion.button
+              key={reply}
+              type="button"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => {
+                if (!isLoading && !inputDisabled) {
+                  onUserMessage(reply);
+                }
+              }}
+              className="px-3 py-1.5 text-sm font-medium rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-teal-50 hover:border-teal-300 hover:text-teal-700 transition-colors shadow-sm"
+            >
+              {reply}
+            </motion.button>
+          ))}
+        </div>
+      )}
 
       {/* Input */}
       {!inputDisabled && (

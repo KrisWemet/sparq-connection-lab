@@ -42,6 +42,10 @@ export default function DailyGrowth() {
   const [eveningTurns, setEveningTurns] = useState(0);
   const [canCompleteDay, setCanCompleteDay] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [quickReplies, setQuickReplies] = useState<string[]>([
+    'It went well', 'It was hard', "I didn't try it",
+  ]);
+  const [memoryContext, setMemoryContext] = useState('');
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -68,6 +72,27 @@ export default function DailyGrowth() {
       };
       setCurrentDay(day);
       setInsights(userInsights);
+
+      // Load Peter's memories for this user (for context in evening chat)
+      try {
+        const memRes = await fetch(`/api/peter/memories?userId=${user.id}&limit=8`);
+        if (memRes.ok) {
+          const memData = await memRes.json();
+          if (memData.memories?.length > 0) {
+            const lines = memData.memories.map(
+              (m: { memory_text: string; source_day?: number }) => {
+                const dayNote = m.source_day ? ` (Day ${m.source_day})` : '';
+                return `- ${m.memory_text}${dayNote}`;
+              }
+            );
+            setMemoryContext(
+              `\n\nThings you remember about this person:\n${lines.join('\n')}\nUse these naturally — don't list them, just weave them into conversation when relevant.`
+            );
+          }
+        }
+      } catch {
+        // Non-critical — proceed without memories
+      }
 
       // Load today's daily entry
       const { data: entry } = await supabase
@@ -148,9 +173,10 @@ export default function DailyGrowth() {
     setEveningMessages(updated);
     setEveningTurns(newTurn);
     setIsEveningLoading(true);
+    setQuickReplies([]); // Clear chips once user sends a message
 
     try {
-      const systemOverride = `You are Peter, a warm otter companion. The user is doing their evening check-in for Day ${currentDay} of their relationship journey. Today's action was: "${morningAction}". Reflect back what you heard warmly. Celebrate their effort, not the outcome. 3-4 sentences, no clinical terms. If this is their second message or beyond, add a warm wrap-up and tell them you'll have something fresh for them tomorrow.`;
+      const systemOverride = `You are Peter, a warm otter companion. The user is doing their evening check-in for Day ${currentDay} of their relationship journey. Today's action was: "${morningAction}". Reflect back what you heard warmly. Celebrate their effort, not the outcome. 3-4 sentences, no clinical terms. If this is their second message or beyond, add a warm wrap-up and tell them you'll have something fresh for them tomorrow.${memoryContext}`;
 
       const res = await fetch('/api/peter/chat', {
         method: 'POST',
@@ -162,6 +188,13 @@ export default function DailyGrowth() {
 
       const peterMsg: PeterMessage = { role: 'assistant', content: data.message };
       setEveningMessages([...updated, peterMsg]);
+
+      // Show contextual follow-up chips
+      if (newTurn === 1) {
+        setQuickReplies(['Tell me more', 'That makes sense', 'I have a question']);
+      } else if (newTurn >= 2) {
+        setQuickReplies(['Thanks, Peter', "I'll try that"]);
+      }
 
       if (newTurn >= 2) setCanCompleteDay(true);
     } catch {
@@ -195,6 +228,18 @@ export default function DailyGrowth() {
         const d = await analyzeRes.json();
         updatedInsights = d.insights || {};
       }
+
+      // Extract memories from this conversation (fire-and-forget)
+      fetch('/api/peter/memories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          messages: eveningMessages,
+          sourceType: 'daily_growth',
+          day: currentDay,
+        }),
+      }).catch(() => {}); // Non-critical
 
       const nextDay = currentDay + 1;
       const isGraduation = currentDay >= 14;
@@ -370,6 +415,7 @@ export default function DailyGrowth() {
                   onUserMessage={handleEveningMessage}
                   isLoading={isEveningLoading}
                   placeholder="How did it go today?"
+                  quickReplies={quickReplies}
                 />
               </div>
 

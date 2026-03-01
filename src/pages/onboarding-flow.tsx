@@ -31,6 +31,16 @@ function getSystemOverride(turnNumber: number): string | undefined {
   return undefined;
 }
 
+// Quick-reply suggestions per turn
+function getQuickReplies(turn: number): string[] {
+  if (turn === 0) return []; // First message: user types their name
+  if (turn === 1) return ['We want to grow closer', 'We argue too much', "Things feel distant"];
+  if (turn === 2) return ['Something sweet happened', 'It was a tough week', 'A bit of both'];
+  if (turn === 3) return ['I talk it out', 'I need space first', 'It depends'];
+  if (turn === 4) return ['Words', 'Quality time', 'Little things they do'];
+  return [];
+}
+
 export default function OnboardingFlow() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
@@ -38,6 +48,7 @@ export default function OnboardingFlow() {
   const [isLoading, setIsLoading] = useState(false);
   const [turnCount, setTurnCount] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
+  const [quickReplies, setQuickReplies] = useState<string[]>([]);
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -55,6 +66,7 @@ export default function OnboardingFlow() {
     setMessages(updatedMessages);
     setTurnCount(newTurn);
     setIsLoading(true);
+    setQuickReplies([]); // Clear chips when user sends
 
     try {
       const systemOverride = getSystemOverride(newTurn);
@@ -70,6 +82,9 @@ export default function OnboardingFlow() {
       const assistantMessage: PeterMessage = { role: 'assistant', content: data.message };
       const finalMessages = [...updatedMessages, assistantMessage];
       setMessages(finalMessages);
+
+      // Show contextual quick-reply chips for the next turn
+      setQuickReplies(getQuickReplies(newTurn));
 
       if (newTurn >= COMPLETE_AFTER_TURNS) {
         await completeOnboarding(finalMessages);
@@ -102,6 +117,17 @@ export default function OnboardingFlow() {
         const analyzeData = await analyzeResponse.json();
         insights = analyzeData.insights || {};
       }
+
+      // Extract memories from onboarding conversation (fire-and-forget)
+      fetch('/api/peter/memories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          messages: conversationMessages,
+          sourceType: 'onboarding',
+        }),
+      }).catch(() => {}); // Non-critical
 
       // Store insights in user_insights table
       await supabase.from('user_insights').upsert(
@@ -166,6 +192,7 @@ export default function OnboardingFlow() {
           isLoading={isLoading}
           placeholder="Type your reply to Peter..."
           inputDisabled={isComplete}
+          quickReplies={quickReplies}
         />
       </div>
 
