@@ -1,354 +1,315 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { motion } from "framer-motion";
-import { ArrowRight, Flame, Users, Sparkles, MessageSquare, TreePine, ScanFace, Pencil } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import { motion } from "framer-motion";
 
-// Peter rotates tips daily — stable throughout the day, new one each morning
+// New canonical Peter components
+import PeterAvatar from "@/components/PeterAvatar";
+import PeterSpeechBubble from "@/components/PeterSpeechBubble";
+
+// Data-fetching sub-components (unchanged)
+import { TodaysFocusCard } from "@/components/dashboard/TodaysFocusCard";
+import { WeeklyMirrorCard } from "@/components/dashboard/WeeklyMirrorCard";
+import { LivingArtifact } from "@/components/dashboard/LivingArtifact";
+import { BottomNav } from "@/components/bottom-nav";
+
+import { Users, ArrowRight, Flame } from "lucide-react";
+
+// ─── Peter tips (rotate daily) ────────────────────────────────────────────────
 const PETER_TIPS = [
   "The little moments are the relationship. A genuine smile, asking how their day went — these aren't small things.",
   "You can't fix what you don't understand. Before you respond, try saying back what you heard.",
-  "Conflict is completely normal. What matters is whether you both feel heard when it's over.",
-  "Appreciation is a skill. Name one specific thing your partner did this week that you're grateful for.",
   "Connection doesn't need big moments. Five minutes of full attention beats an hour of distracted presence.",
-  "When you feel defensive, it usually means you care. That's actually a good sign.",
-  "Repair attempts don't have to be perfect. Even a small touch or joke during tension can reset everything.",
+  "Assume positive intent today. It shifts the entire dynamic of a conversation.",
 ];
 
 function getDailyTip() {
   const dayOfYear = Math.floor(
-    (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86_400_000
+    (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000
   );
   return PETER_TIPS[dayOfYear % PETER_TIPS.length];
 }
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 16 },
-  show: { opacity: 1, y: 0 },
-};
+function getGreeting(): string {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 18) return "Good afternoon";
+  return "Good evening";
+}
 
-export default function Dashboard() {
-  const { user, profile, loading, logout: signOut } = useAuth();
-  const router = useRouter();
+function getFormattedDate(): string {
+  return new Date().toLocaleDateString("en-US", {
+    weekday: "long", month: "long", day: "numeric",
+  });
+}
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-blue-100">
-        <div className="flex flex-col items-center gap-3">
-          <div className="text-4xl animate-bounce">🦦</div>
-          <p className="text-sm text-gray-500">Loading your dashboard…</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) return null;
-
-  const streakCount = (profile as any)?.streak_count ?? 0;
-  const connectionScore = Math.min(100, 50 + streakCount * 5);
-  const displayName =
-    profile?.fullName || (profile as any)?.name || user.email?.split("@")[0] || "there";
-  const partnerName = profile?.partnerName || (profile as any)?.partner_name;
-
+// ─── Journey Hero Card ────────────────────────────────────────────────────────
+function JourneyHeroCard({
+  currentDay,
+  totalDays,
+  streakCount,
+  onClick,
+}: {
+  currentDay: number;
+  totalDays: number;
+  streakCount: number;
+  onClick: () => void;
+}) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-slate-100">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-10">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-indigo-700 tracking-tight">Sparq</h1>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-500 hidden sm:block">
-              Welcome back, <span className="font-semibold text-gray-700">{displayName}</span>
-            </span>
-            <button
-              onClick={() => signOut()}
-              className="text-sm px-3 py-1.5 border border-gray-200 text-gray-500 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              Sign Out
-            </button>
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: 0.05 }}
+      style={{
+        background: "#FFF8F3",
+        borderRadius: 20,
+        border: "1px solid rgba(192,97,74,0.15)",
+        boxShadow: "0 4px 20px rgba(192,97,74,0.10)",
+        padding: 20,
+      }}
+    >
+      {/* Label */}
+      <p style={{ fontSize: 11, letterSpacing: "0.1em", color: "#C0614A", fontWeight: 600, marginBottom: 6, textTransform: "uppercase" }}>
+        Your Growth Journey
+      </p>
+
+      {/* Day + streak */}
+      <div className="flex items-center justify-between mb-4">
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: "#3D2C28" }}>
+          Day {currentDay} of {totalDays}
+        </h2>
+        {streakCount > 0 && (
+          <div className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full"
+            style={{ background: "rgba(232,168,87,0.15)", color: "#7A5A2A" }}>
+            <Flame size={13} style={{ color: "#E8A857" }} />
+            {streakCount} day streak
           </div>
-        </div>
-      </header>
+        )}
+      </div>
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      {/* Progress dots — 14 dots in a wrapped row */}
+      <div className="flex flex-wrap gap-2 mb-4" style={{ alignItems: "center" }}>
+        {Array.from({ length: totalDays }).map((_, i) => {
+          const day = i + 1;
+          const isCompleted = day < currentDay;
+          const isCurrent = day === currentDay;
+          return (
+            <div
+              key={i}
+              style={{
+                width: isCurrent ? 14 : 10,
+                height: isCurrent ? 14 : 10,
+                borderRadius: "50%",
+                flexShrink: 0,
+                background: isCompleted ? "#C0614A" : isCurrent ? "#E8A857" : "transparent",
+                border: isCompleted ? "none" : isCurrent ? "none" : "2px solid #8FAF8A",
+                boxShadow: isCurrent ? "0 0 8px rgba(232,168,87,0.6)" : "none",
+                transition: "all 0.3s ease",
+              }}
+            />
+          );
+        })}
+      </div>
 
-        {/* ── Peter's Tip ──────────────────────────────────────────── */}
-        <motion.section
-          variants={fadeUp}
-          initial="hidden"
-          animate="show"
-          transition={{ duration: 0.35 }}
-        >
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-400 to-blue-500 flex items-center justify-center text-2xl flex-shrink-0 shadow-sm">
-              🦦
-            </div>
-            <div>
-              <p className="text-[11px] font-bold text-teal-600 uppercase tracking-widest mb-1">
-                Peter's tip for today
-              </p>
-              <p className="text-sm text-gray-700 leading-relaxed">{getDailyTip()}</p>
-            </div>
-          </div>
-        </motion.section>
+      {/* Subtext */}
+      <p style={{ fontSize: 14, color: "#5C4A44", fontStyle: "italic", marginBottom: 16 }}>
+        Keep going — you&apos;re building something real.
+      </p>
 
-        {/* ── Hero: Daily Loop ─────────────────────────────────────── */}
-        <motion.section
-          variants={fadeUp}
-          initial="hidden"
-          animate="show"
-          transition={{ duration: 0.35, delay: 0.05 }}
-        >
-          <button
-            onClick={() => router.push("/daily-growth")}
-            className="w-full text-left bg-gradient-to-br from-teal-500 via-teal-600 to-blue-600 text-white rounded-2xl p-7 shadow-lg hover:shadow-xl hover:opacity-95 transition-all relative overflow-hidden group"
-          >
-            {/* Big faded otter behind content */}
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[8rem] leading-none opacity-10 select-none group-hover:opacity-15 transition-opacity">
-              🦦
-            </div>
-
-            <p className="text-[11px] font-bold uppercase tracking-widest text-teal-200 mb-2">
-              Your core daily practice
-            </p>
-            <h2 className="text-2xl font-bold mb-1">Daily Loop with Peter</h2>
-            <p className="text-teal-100 text-sm mb-5 max-w-md">
-              Morning story + one small action + evening reflection. This is where the real growth happens.
-            </p>
-            <span className="inline-flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-colors">
-              Start today's session
-              <ArrowRight size={14} />
-            </span>
-          </button>
-        </motion.section>
-
-        {/* ── Secondary Features Grid ──────────────────────────────── */}
-        <motion.section
-          variants={fadeUp}
-          initial="hidden"
-          animate="show"
-          transition={{ duration: 0.35, delay: 0.1 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4"
-        >
-          {/* Skill Tree */}
-          <FeatureCard
-            onClick={() => router.push("/skill-tree")}
-            accent="border-amber-400"
-            bg="from-amber-50 to-orange-50"
-            icon={<TreePine className="h-5 w-5 text-amber-500" />}
-            bgEmoji="🌳"
-            title="Skill Tree"
-            description="Level up your relationship skills."
-            badge="9 levels"
-            badgeColor="bg-amber-100 text-amber-700"
-          />
-
-          {/* Translator */}
-          <FeatureCard
-            onClick={() => router.push("/translator")}
-            accent="border-emerald-400"
-            bg="from-emerald-50 to-teal-50"
-            icon={<MessageSquare className="h-5 w-5 text-emerald-500" />}
-            bgEmoji="💬"
-            title="Translator"
-            description="Rephrase anything, kinder."
-          />
-
-          {/* Mirror Report */}
-          <FeatureCard
-            onClick={() => router.push("/mirrorreport")}
-            accent="border-blue-400"
-            bg="from-blue-50 to-indigo-50"
-            icon={<ScanFace className="h-5 w-5 text-blue-500" />}
-            bgEmoji="✨"
-            title="Mirror Report"
-            description="Your relationship insights."
-          />
-
-          {/* Onboarding */}
-          <FeatureCard
-            onClick={() => router.push("/onboarding-flow")}
-            accent="border-purple-400"
-            bg="from-purple-50 to-violet-50"
-            icon={<Pencil className="h-5 w-5 text-purple-500" />}
-            bgEmoji="📝"
-            title="Profile"
-            description="Update your info with Peter."
-          />
-        </motion.section>
-
-        {/* ── Metrics Row ──────────────────────────────────────────── */}
-        <motion.section
-          variants={fadeUp}
-          initial="hidden"
-          animate="show"
-          transition={{ duration: 0.35, delay: 0.15 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-4"
-        >
-          {/* Connection Score */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-            <div className="flex items-center justify-between mb-1">
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
-                Connection Score
-              </h3>
-              <Sparkles className="h-4 w-4 text-indigo-400" />
-            </div>
-            <div className="text-4xl font-bold text-indigo-700 mb-3">
-              {connectionScore}
-              <span className="text-lg font-normal text-gray-400 ml-1">/100</span>
-            </div>
-            {/* Glowing progress bar */}
-            <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-400 transition-all duration-1000"
-                style={{
-                  width: `${connectionScore}%`,
-                  boxShadow: connectionScore > 50 ? "0 0 10px rgba(139,92,246,0.45)" : "none",
-                }}
-              />
-            </div>
-            <p className="text-xs text-gray-400 mt-2">Grows with your daily streak</p>
-          </div>
-
-          {/* Day Streak */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-            <div className="flex items-center justify-between mb-1">
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
-                Day Streak
-              </h3>
-              <Flame className="h-4 w-4 text-orange-400" />
-            </div>
-            <div className="flex items-end gap-2 mb-3">
-              <div className="text-4xl font-bold text-indigo-700">{streakCount}</div>
-              <div className="text-sm text-gray-500 mb-1">
-                {streakCount === 1 ? "day" : "days"}
-              </div>
-            </div>
-            {/* Mini streak visualizer — last 7 days dots */}
-            <div className="flex gap-1.5 mb-2">
-              {Array.from({ length: 7 }).map((_, i) => (
-                <div
-                  key={i}
-                  className={`h-2 flex-1 rounded-full ${
-                    i < Math.min(streakCount, 7)
-                      ? "bg-gradient-to-r from-orange-400 to-red-400"
-                      : "bg-gray-100"
-                  }`}
-                />
-              ))}
-            </div>
-            <p className="text-xs text-gray-400">Answer today's question to keep it going</p>
-          </div>
-        </motion.section>
-
-        {/* ── Today's Question CTA ─────────────────────────────────── */}
-        <motion.section
-          variants={fadeUp}
-          initial="hidden"
-          animate="show"
-          transition={{ duration: 0.35, delay: 0.2 }}
-        >
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-6 text-white shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div>
-              <p className="text-indigo-200 text-xs font-bold uppercase tracking-widest mb-1">
-                Daily ritual
-              </p>
-              <h2 className="text-xl font-bold mb-1">Today's Question</h2>
-              <div className="flex items-center gap-2 text-sm text-indigo-200">
-                <Flame className="w-4 h-4 text-orange-300" />
-                <span>{streakCount} day streak</span>
-              </div>
-            </div>
-            <button
-              onClick={() => router.push("/daily-questions")}
-              className="flex items-center gap-2 bg-white text-indigo-600 font-semibold px-6 py-3 rounded-xl hover:bg-indigo-50 transition-colors shadow-sm flex-shrink-0"
-            >
-              Answer Now
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        </motion.section>
-
-        {/* ── Partner Invite ───────────────────────────────────────── */}
-        <motion.section
-          variants={fadeUp}
-          initial="hidden"
-          animate="show"
-          transition={{ duration: 0.35, delay: 0.25 }}
-        >
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center flex-shrink-0">
-                <Users className="h-5 w-5 text-indigo-600" />
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-gray-800">
-                  Invite your partner{" "}
-                  <span className="text-xs font-normal text-gray-400">(optional)</span>
-                </h3>
-                <p className="text-xs text-gray-500 mt-0.5">
-                  {partnerName
-                    ? `Connected with ${partnerName} 💙`
-                    : "Even better together — invite anytime you're ready."}
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={() => router.push("/partner-invite")}
-              className="text-sm font-semibold px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors flex-shrink-0"
-            >
-              {partnerName ? "View Partner" : "Invite Partner"}
-            </button>
-          </div>
-        </motion.section>
-
-      </main>
-    </div>
+      {/* CTA */}
+      <button
+        onClick={onClick}
+        style={{
+          width: "100%",
+          background: "#C0614A",
+          color: "white",
+          borderRadius: 12,
+          padding: "14px 0",
+          fontSize: 16,
+          fontWeight: 600,
+          border: "none",
+          cursor: "pointer",
+          letterSpacing: "0.02em",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 8,
+        }}
+        onMouseDown={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = "scale(0.98)"; }}
+        onMouseUp={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)"; }}
+        onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)"; }}
+        onTouchStart={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = "scale(0.98)"; }}
+        onTouchEnd={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)"; }}
+      >
+        Continue Today&apos;s Journey
+        <ArrowRight size={18} />
+      </button>
+    </motion.div>
   );
 }
 
-// ── Reusable secondary feature card ─────────────────────────────────────────
-interface FeatureCardProps {
-  onClick: () => void;
-  accent: string;
-  bg: string;
-  icon: React.ReactNode;
-  bgEmoji: string;
-  title: string;
-  description: string;
-  badge?: string;
-  badgeColor?: string;
-}
+// ─── Main Dashboard ───────────────────────────────────────────────────────────
+export default function Dashboard() {
+  const { user, profile, loading } = useAuth();
+  const router = useRouter();
 
-function FeatureCard({
-  onClick,
-  accent,
-  bg,
-  icon,
-  bgEmoji,
-  title,
-  description,
-  badge,
-  badgeColor,
-}: FeatureCardProps) {
+  const [streakCount] = useState(3);
+  const [currentDay] = useState(3);
+  const [connectionScore] = useState(72);
+
+  useEffect(() => {
+    if (!loading && !user) router.push("/login");
+  }, [user, loading, router]);
+
+  if (loading || !user) {
+    return <div className="min-h-screen" style={{ background: "#FAF6F1" }} />;
+  }
+
+  const firstName = (profile as any)?.name?.split(" ")[0]
+    || user.email?.split("@")[0]
+    || "there";
+  const partnerName = (profile as any)?.partner_name;
+
   return (
-    <button
-      onClick={onClick}
-      className={`text-left bg-gradient-to-br ${bg} rounded-2xl border-2 ${accent} p-4 hover:shadow-md transition-all relative overflow-hidden group`}
-    >
-      {/* Big faded emoji background */}
-      <div className="absolute right-1 bottom-0 text-5xl leading-none opacity-10 select-none group-hover:opacity-20 transition-opacity">
-        {bgEmoji}
+    <div className="min-h-screen pb-28 relative" style={{ background: "#FAF6F1" }}>
+
+      {/* ── SECTION 1: HEADER (greeting only, no Peter) ── */}
+      <header
+        style={{
+          background: "linear-gradient(135deg, #C0614A 0%, #D4795F 100%)",
+          padding: "28px 20px 36px",
+          position: "relative",
+          zIndex: 10,
+        }}
+      >
+        <div style={{ maxWidth: 880, margin: "0 auto" }}>
+          <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 13, marginBottom: 6 }}>
+            {getFormattedDate()}
+          </p>
+          <h1 style={{ color: "white", fontSize: 26, fontWeight: 700, lineHeight: 1.25, margin: 0 }}>
+            {getGreeting()},<br />{firstName}.
+          </h1>
+        </div>
+      </header>
+
+      {/* ── BODY ── */}
+      <div className="dashboard-main-wrapper">
+
+        {/* ── MAIN CONTENT ── */}
+        <main className="dashboard-main space-y-4">
+
+          {/* SECTION 2: JOURNEY HERO CARD */}
+          <JourneyHeroCard
+            currentDay={currentDay}
+            totalDays={14}
+            streakCount={streakCount}
+            onClick={() => router.push("/daily-growth")}
+          />
+
+          {/* SECTION 3: PETER'S MESSAGE */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.15 }}
+          >
+            <PeterSpeechBubble
+              message={getDailyTip()}
+              userName={firstName}
+              onTap={() => router.push("/ai-therapist")}
+            />
+          </motion.div>
+
+          {/* SECTION 4: TODAY'S FOCUS */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.25 }}
+          >
+            <TodaysFocusCard actionText="Notice one small bid for connection from your partner and lean into it." />
+          </motion.div>
+
+          {/* SECTION 5: SECONDARY CARDS */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.35 }}
+            className="space-y-4"
+          >
+            <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", color: "#9E8A86", textTransform: "uppercase", paddingLeft: 4 }}>
+              Relationship Context
+            </p>
+            <WeeklyMirrorCard />
+            <LivingArtifact score={connectionScore} />
+          </motion.div>
+
+          {/* SECTION 6: PARTNER CONNECT */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.45 }}
+          >
+            <div
+              className="flex items-center justify-between gap-4 mt-2"
+              style={{
+                background: "rgba(255,255,255,0.6)",
+                backdropFilter: "blur(12px)",
+                border: "1px solid rgba(192,97,74,0.08)",
+                borderRadius: 24,
+                padding: "16px 20px",
+              }}
+            >
+              <div className="flex items-center gap-4">
+                <div
+                  className="flex items-center justify-center flex-shrink-0"
+                  style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(192,97,74,0.1)" }}
+                >
+                  <Users size={18} style={{ color: "#C0614A" }} />
+                </div>
+                <div>
+                  <p style={{ fontSize: 14, fontWeight: 600, color: "#3D2C28", margin: 0 }}>
+                    {partnerName ? `Growing with ${partnerName}` : "Invite your partner"}
+                  </p>
+                  <p style={{ fontSize: 12, color: "#9E8A86", margin: 0 }}>
+                    {partnerName ? "Progress is shared." : "Experience this together."}
+                  </p>
+                </div>
+              </div>
+              {!partnerName && (
+                <button
+                  onClick={() => router.push("/join-partner")}
+                  style={{
+                    fontSize: 12, fontWeight: 600,
+                    padding: "8px 16px",
+                    background: "rgba(192,97,74,0.1)",
+                    color: "#C0614A",
+                    borderRadius: 999,
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  Invite
+                </button>
+              )}
+            </div>
+          </motion.div>
+
+        </main>
+
+        {/* ── DESKTOP PETER (fixed, right side, 1024px+) ── */}
+        <div className="peter-fixed">
+          <PeterAvatar size="xl" mood="welcome" priority />
+          <p>Your relationship guide</p>
+        </div>
+
       </div>
 
-      <div className="mb-3">{icon}</div>
-      <p className="text-sm font-bold text-gray-800 mb-0.5">{title}</p>
-      <p className="text-xs text-gray-500 leading-snug">{description}</p>
-      {badge && (
-        <span className={`inline-block mt-2 text-[10px] font-bold px-2 py-0.5 rounded-full ${badgeColor}`}>
-          {badge}
-        </span>
-      )}
-    </button>
+      {/* ── MOBILE / TABLET PETER (normal flow, below cards) ── */}
+      <div className="peter-mobile">
+        <PeterAvatar size="lg" mood="welcome" />
+        <p>Your relationship guide</p>
+      </div>
+
+      <BottomNav />
+    </div>
   );
 }

@@ -9,7 +9,7 @@ export default function LoginPage() {
   const [isRegisterMode, setIsRegisterMode] = useState(false);
   const { user, loading } = useAuth();
   const router = useRouter();
-  
+
   // Redirect if already logged in
   useEffect(() => {
     if (user && !loading) {
@@ -46,9 +46,9 @@ export default function LoginPage() {
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { 
+    visible: {
       opacity: 1,
-      transition: { 
+      transition: {
         duration: 0.5,
         when: "beforeChildren",
         staggerChildren: 0.1
@@ -65,114 +65,109 @@ export default function LoginPage() {
     <>
       <Head>
         <title>{isRegisterMode ? 'Join Sparq' : 'Welcome Back'} - Sparq Relationship Lab</title>
-        <meta 
-          name="description" 
+        <meta
+          name="description"
           content="Transform your relationship with powerful psychological techniques designed to deepen connection and understanding."
         />
       </Head>
-      
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex flex-col">
-        <header className="bg-white shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <h1 className="text-2xl font-bold text-indigo-700">Sparq</h1>
+
+      <div className="min-h-screen bg-brand-linen flex flex-col font-sans selection:bg-brand-primary/30">
+        <header className="bg-transparent absolute top-0 inset-x-0 z-50">
+          <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4">
+            <h1 className="text-xl font-bold tracking-tight text-black flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-brand-primary" />
+              Sparq
+            </h1>
           </div>
         </header>
-        
-        <main className="flex-grow flex flex-col lg:flex-row">
+
+        <main className="flex-grow flex flex-col lg:flex-row relative">
           {/* Left Side - Authentication Form */}
-          <motion.div 
-            className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12"
+          <motion.div
+            className="w-full lg:w-1/2 flex-grow flex items-center justify-center p-6 lg:p-12"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
           >
             <div className="w-full max-w-md">
-              <LoginForm 
+              <LoginForm
                 onToggleMode={toggleMode}
                 isRegisterMode={isRegisterMode}
               />
             </div>
           </motion.div>
-          
+
           {/* Right Side - Persuasive Content and Testimonials */}
-          <motion.div 
-            className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-600 to-purple-700 text-white p-12 flex-col justify-center"
+          <motion.div
+            className="hidden lg:flex lg:w-1/2 bg-white border-l border-zinc-200 p-12 lg:p-24 flex-col justify-center relative"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
           >
-            <motion.div variants={itemVariants}>
-              <h2 className="text-3xl font-bold mb-6">
-                {isRegisterMode 
-                  ? "Transform Your Relationship" 
-                  : "Welcome Back to Your Journey"
+            <motion.div variants={itemVariants} className="relative z-10">
+              <h2 className="text-4xl lg:text-5xl font-bold mb-4 tracking-tight text-black">
+                {isRegisterMode
+                  ? "A Structured Approach"
+                  : "Welcome Back"
                 }
               </h2>
-              
-              <p className="text-xl mb-8 text-indigo-100 leading-relaxed">
+
+              <p className="text-lg mb-12 text-zinc-500 leading-relaxed max-w-lg">
                 {isRegisterMode
-                  ? "Join thousands of couples who have discovered the power of psychological techniques to deepen their connection and understanding."
-                  : "Continue your relationship journey. Each session builds upon your previous insights, creating a more profound connection with your partner."
+                  ? "Join the forward-thinking individuals building profound relationships through structured communication."
+                  : "Return to your active sessions and continue the work."
                 }
               </p>
             </motion.div>
-            
-            <motion.div 
-              className="space-y-6"
+
+            <motion.div
+              className="space-y-6 relative z-10"
               variants={itemVariants}
             >
-              <h3 className="text-xl font-semibold mb-4">What Others Are Saying</h3>
-              
+              <h3 className="text-sm font-semibold text-zinc-400 mb-6">Observations</h3>
+
               <div className="grid gap-4">
                 {testimonials.map((testimonial) => (
                   <motion.div
                     key={testimonial.id}
-                    className="bg-white/10 backdrop-blur-sm p-4 rounded-lg shadow-sm"
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ type: "spring", stiffness: 300 }}
+                    className="bg-brand-linen border border-zinc-100 p-6 rounded-3xl"
                   >
-                    <p className="italic mb-2 text-sm">"{testimonial.quote}"</p>
-                    <p className="text-xs font-medium flex justify-between">
+                    <p className="italic mb-6 text-zinc-600 text-sm leading-relaxed">&quot;{testimonial.quote}&quot;</p>
+                    <p className="text-sm font-semibold tracking-tight flex justify-between items-center text-black">
                       <span>{testimonial.name}</span>
-                      <span className="text-indigo-200">{testimonial.relationship}</span>
+                      <span className="text-zinc-500 text-xs font-normal">{testimonial.relationship}</span>
                     </p>
                   </motion.div>
                 ))}
               </div>
             </motion.div>
-            
-            <motion.div 
-              className="mt-12 border-t border-indigo-500 pt-6"
+
+            <motion.div
+              className="mt-16 border-t border-zinc-200 pt-8 relative z-10"
               variants={itemVariants}
             >
-              <h3 className="text-lg font-semibold mb-3">Why Sparq Works</h3>
-              <ul className="space-y-2">
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 text-indigo-300 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Grounded in proven psychological techniques</span>
+              <h3 className="text-sm font-semibold text-zinc-400 mb-5">Methodology</h3>
+              <ul className="space-y-4 text-sm text-zinc-600">
+                <li className="flex items-center">
+                  <div className="w-1.5 h-1.5 rounded-full bg-brand-primary mr-4" />
+                  <span>Clinical psychology frameworks</span>
                 </li>
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 text-indigo-300 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Personalized to your relationship dynamics</span>
+                <li className="flex items-center">
+                  <div className="w-1.5 h-1.5 rounded-full bg-brand-primary mr-4" />
+                  <span>Objective pattern recognition</span>
                 </li>
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 text-indigo-300 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Builds lasting neural pathways for better connection</span>
+                <li className="flex items-center">
+                  <div className="w-1.5 h-1.5 rounded-full bg-brand-primary mr-4" />
+                  <span>Sustainable behavioral shifts</span>
                 </li>
               </ul>
             </motion.div>
           </motion.div>
         </main>
-        
-        <footer className="bg-white py-4 text-center text-gray-500 text-sm">
+
+        <footer className="bg-transparent py-8 text-center text-zinc-400 text-xs">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <p>© {new Date().getFullYear()} Sparq Relationship Lab. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Sparq</p>
           </div>
         </footer>
       </div>
