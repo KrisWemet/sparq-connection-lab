@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Heart, ArrowRight, Lock } from "lucide-react";
 import { useSubscription } from "@/lib/subscription-provider";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/router';
 
 interface PersuasiveJourneyPromptProps {
   journeyId: string;
@@ -24,11 +24,11 @@ export function PersuasiveJourneyPrompt({
   onContinue
 }: PersuasiveJourneyPromptProps) {
   const { subscription } = useSubscription();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
   const [motivationalIndex, setMotivationalIndex] = useState(0);
   
-  const isPremium = subscription?.tier === "premium" || subscription?.tier === "ultimate";
+  const isPremium = subscription?.tier === "premium";
   const hasAccess = !isPremiumJourney || isPremium;
   
   // Motivational messages with embedded commands
@@ -243,7 +243,7 @@ export function PersuasiveJourneyPrompt({
               </div>
               
               <div className="space-y-2">
-                <p className="font-medium">With this journey, you'll:</p>
+                <p className="font-medium">With this journey, you&apos;ll:</p>
                 <ul className="space-y-1">
                   {getJourneyBenefits().map((benefit, index) => (
                     <motion.li 
@@ -261,7 +261,7 @@ export function PersuasiveJourneyPrompt({
               </div>
               
               <p className="text-sm text-center italic text-gray-600">
-                "This journey transformed how we understand each other. We're closer than ever." - Jamie & Alex
+                &quot;This journey transformed how we understand each other. We&apos;re closer than ever.&quot; - Jamie &amp; Alex
               </p>
             </div>
             
@@ -275,7 +275,7 @@ export function PersuasiveJourneyPrompt({
               </Button>
               <Button
                 className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600"
-                onClick={() => navigate("/subscription")}
+                onClick={() => router.push("/subscription")}
               >
                 Upgrade to Premium
               </Button>

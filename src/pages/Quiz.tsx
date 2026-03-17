@@ -8,7 +8,7 @@ import { CompletionView } from "@/components/quiz/CompletionView";
 import { RelationshipHealthQuiz } from "@/components/quiz/RelationshipHealthQuiz";
 import { toast } from "sonner";
 import { BottomNav } from "@/components/bottom-nav";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/router';
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { NoQuestionView } from "@/components/quiz/NoQuestionView";
@@ -16,7 +16,7 @@ import { HealthScoreView } from "@/components/quiz/HealthScoreView";
 import { ConfettiAnimation } from "@/components/dashboard/ConfettiAnimation";
 
 export default function Quiz() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { user } = useAuth();
   const [selectedAnswers, setSelectedAnswers] = useState<{[key: number]: string}>({});
   const [isCompleted, setIsCompleted] = useState(false);
@@ -59,6 +59,7 @@ export default function Quiz() {
     } else {
       setLoadingScore(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
   
   const fetchRelationshipScore = async () => {
@@ -129,7 +130,7 @@ export default function Quiz() {
     // Give time for the confetti animation to be seen
     setTimeout(() => {
       // Navigate to dashboard after quiz completion
-      navigate("/dashboard");
+      router.push("/dashboard");
     }, 2000);
   };
   
@@ -145,7 +146,7 @@ export default function Quiz() {
             onComplete={handleHealthQuizComplete}
             onCancel={() => {
               setShowHealthQuiz(false);
-              navigate("/dashboard");
+              router.push("/dashboard");
             }}
           />
         </main>
@@ -197,3 +198,5 @@ export default function Quiz() {
     </div>
   );
 }
+
+export const getServerSideProps = async () => ({ props: {} });

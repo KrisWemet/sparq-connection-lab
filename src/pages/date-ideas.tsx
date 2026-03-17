@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import Image from "next/image";
+import { useRouter } from 'next/router';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,7 +11,6 @@ import { ChevronLeft, Heart, Calendar, Star, Clock, Filter, Search, ThumbsUp, Th
 import { toast } from "sonner";
 import { AIService } from "@/services/aiService";
 import { AnimatedContainer, AnimatedList } from "@/components/ui/animated-container";
-import { apiConfig } from "@/lib/api-config";
 
 // Sample date ideas data
 const dateIdeas = [
@@ -126,7 +126,7 @@ const intimateIdeas = [
 ];
 
 export default function DateIdeas() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [savedIdeas, setSavedIdeas] = useState<number[]>([2, 5, 102, 105]);
   const [location, setLocation] = useState<string>("local area");
@@ -137,47 +137,20 @@ export default function DateIdeas() {
   const [budget, setBudget] = useState<'Free' | 'Low' | 'Medium' | 'High' | undefined>(undefined);
   
   useEffect(() => {
-    // Try to get user's location when component mounts
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          try {
-            const response = await fetch(
-              `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=${apiConfig.apiKeys.google}`
-            );
-            
-            if (response.ok) {
-              const data = await response.json();
-              if (data.results && data.results.length > 0) {
-                // Get city and state from address components
-                const addressComponents = data.results[0].address_components;
-                const city = addressComponents.find((component: any) => 
-                  component.types.includes("locality")
-                )?.long_name;
-                
-                const state = addressComponents.find((component: any) => 
-                  component.types.includes("administrative_area_level_1")
-                )?.short_name;
-                
-                if (city && state) {
-                  setLocation(`${city}, ${state}`);
-                }
-              }
-            }
-          } catch (error) {
-            console.error("Error getting location:", error);
-          }
-        },
-        (error) => {
-          console.error("Error getting geolocation:", error);
-        }
-      );
+    // Simple location detection using the browser's timezone as a hint
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const city = tz.split('/').pop()?.replace(/_/g, ' ');
+      if (city) setLocation(city);
+    } catch {
+      // keep default "local area"
     }
   }, []);
   
   useEffect(() => {
     // Load AI date ideas when component mounts
     generateDateIdeas();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
   
   const generateDateIdeas = async () => {
@@ -253,7 +226,7 @@ export default function DateIdeas() {
       <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b dark:border-gray-700">
         <div className="container max-w-lg mx-auto px-4 py-3 flex items-center">
           <button 
-            onClick={() => navigate(-1)} 
+            onClick={() => router.back()} 
             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
           >
             <ChevronLeft className="w-6 h-6 dark:text-gray-300" />
@@ -325,10 +298,11 @@ export default function DateIdeas() {
                     {filteredDateIdeas.map((idea) => (
                       <Card key={idea.id} className="overflow-hidden mb-6 dark:bg-gray-800 dark:border-gray-700">
                         <div className="relative h-48">
-                          <img 
-                            src={idea.image} 
-                            alt={idea.title} 
-                            className="w-full h-full object-cover"
+                          <Image
+                            src={idea.image}
+                            alt={idea.title}
+                            fill
+                            className="object-cover"
                           />
                           <div className="absolute top-3 right-3 flex gap-2">
                             <Badge className="bg-white/80 text-primary hover:bg-white/90 dark:bg-gray-800/80 dark:text-primary">
@@ -486,10 +460,11 @@ export default function DateIdeas() {
                       <Card key={idea.id} className="overflow-hidden mb-6 dark:bg-gray-800 dark:border-gray-700">
                         {idea.image && (
                           <div className="relative h-48">
-                            <img 
-                              src={idea.image} 
-                              alt={idea.title} 
-                              className="w-full h-full object-cover"
+                            <Image
+                              src={idea.image}
+                              alt={idea.title}
+                              fill
+                              className="object-cover"
                             />
                             <div className="absolute top-3 right-3 flex gap-2">
                               <Badge className="bg-white/80 text-primary hover:bg-white/90 dark:bg-gray-800/80 dark:text-primary">

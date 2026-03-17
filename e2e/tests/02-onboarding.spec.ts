@@ -29,12 +29,16 @@ test.describe('Onboarding Flow', () => {
       'My partner shows care by making me coffee in the morning',
     ];
 
-    for (const text of responses) {
+    for (let i = 0; i < responses.length; i++) {
+      const text = responses[i];
       // Type and send message
       await page.locator('textarea').fill(text);
       await page.locator('form button[type="submit"]').click();
-      // Wait for Peter to respond (loading indicator disappears)
-      await expect(page.locator('textarea')).toBeEnabled({ timeout: 8_000 });
+      
+      // Only wait for textarea to re-enable if it's not the final message
+      if (i < responses.length - 1) {
+        await expect(page.locator('textarea')).toBeEnabled({ timeout: 8_000 });
+      }
     }
 
     // After 5th turn, completion message appears

@@ -7,7 +7,20 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'], // Apple heavily relies on strict, clean sans-serifs completely
+      },
       colors: {
+        appleBlue: '#007AFF', // System blue replacement
+        brand: {
+          primary: "#C0614A",   // Warm terracotta/rust
+          hover: "#A3513D",
+          light: "#FDF8F6",
+          linen: "#FAF6F1",
+          sand: "#E8A857",
+          taupe: "#3D2C28",
+          growth: "#8FAF8A",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

@@ -7,8 +7,15 @@ import { useSubscription } from '@/lib/subscription-provider';
 import { supabase } from '@/lib/supabase';
 import { PeterChat } from '@/components/PeterChat';
 import { PeterMessage } from '@/lib/peterService';
+import { buildAuthedHeaders } from '@/lib/api-auth';
 
-type TrackKey = 'communication' | 'conflict' | 'intimacy';
+type TrackKey =
+  | 'communication'
+  | 'conflict_repair'
+  | 'emotional_intimacy'
+  | 'trust_security'
+  | 'shared_vision_rituals'
+  | 'root_cause_unearthing';
 type LevelKey = 'basic' | 'advanced' | 'expert';
 
 interface SkillProgress {
@@ -37,23 +44,44 @@ const TRACK_META: Record<TrackKey, {
   communication: {
     label: 'Communication',
     description: 'Build clarity, empathy, and daily connection rituals.',
-    gradient: 'from-indigo-500 to-blue-500',
-    badge: 'bg-indigo-100 text-indigo-700',
+    gradient: 'from-brand-primary to-blue-500',
+    badge: 'bg-brand-primary/10 text-brand-primary',
     accent: 'border-indigo-400',
   },
-  conflict: {
-    label: 'Conflict Resolution',
+  conflict_repair: {
+    label: 'Conflict Repair',
     description: 'Turn tension into teamwork with structured repair skills.',
     gradient: 'from-amber-500 to-orange-500',
     badge: 'bg-amber-100 text-amber-700',
     accent: 'border-amber-400',
   },
-  intimacy: {
-    label: 'Intimacy',
+  emotional_intimacy: {
+    label: 'Emotional Intimacy',
     description: 'Strengthen closeness with intentional affection and presence.',
     gradient: 'from-purple-500 to-pink-500',
     badge: 'bg-purple-100 text-purple-700',
     accent: 'border-purple-400',
+  },
+  trust_security: {
+    label: 'Trust & Security',
+    description: 'Build emotional safety through consistency, honesty, and repair.',
+    gradient: 'from-teal-500 to-emerald-500',
+    badge: 'bg-teal-100 text-teal-700',
+    accent: 'border-teal-400',
+  },
+  shared_vision_rituals: {
+    label: 'Shared Vision & Rituals',
+    description: 'Align values and create routines that keep connection strong.',
+    gradient: 'from-sky-500 to-cyan-500',
+    badge: 'bg-sky-100 text-sky-700',
+    accent: 'border-sky-400',
+  },
+  root_cause_unearthing: {
+    label: 'Root Cause Unearthing',
+    description: 'Map core wounds and childhood patterns driving your triggers.',
+    gradient: 'from-rose-500 to-red-500',
+    badge: 'bg-rose-100 text-rose-700',
+    accent: 'border-rose-400',
   },
 };
 
@@ -63,8 +91,11 @@ const LEVEL_META: Record<LevelKey, { label: string; description: Record<TrackKey
     premium: false,
     description: {
       communication: 'Active listening, daily check-ins, and gratitude prompts.',
-      conflict: 'Name the issue, cool-down routines, and reset signals.',
-      intimacy: 'Affection rituals, appreciation moments, and playful sparks.',
+      conflict_repair: 'Name the issue, cool-down routines, and reset signals.',
+      emotional_intimacy: 'Affection rituals, appreciation moments, and playful sparks.',
+      trust_security: 'Reliability habits, transparent language, and safer expectations.',
+      shared_vision_rituals: 'Weekly rituals, shared priorities, and values check-ins.',
+      root_cause_unearthing: 'Identify surface triggers and your somatic (bodily) nervous system responses.',
     },
   },
   advanced: {
@@ -72,8 +103,11 @@ const LEVEL_META: Record<LevelKey, { label: string; description: Record<TrackKey
     premium: true,
     description: {
       communication: 'Repair scripts, difficult conversations, and de-escalation.',
-      conflict: 'Negotiation frameworks and repair rituals after conflict.',
-      intimacy: 'Vulnerability prompts and deeper connection exercises.',
+      conflict_repair: 'Negotiation frameworks and repair rituals after conflict.',
+      emotional_intimacy: 'Vulnerability prompts and deeper connection exercises.',
+      trust_security: 'Boundary alignment, reassurance scripts, and trust rebuilding.',
+      shared_vision_rituals: 'Joint planning routines and meaningful recurring traditions.',
+      root_cause_unearthing: 'Trace current relationship triggers back to family-of-origin patterns.',
     },
   },
   expert: {
@@ -81,20 +115,33 @@ const LEVEL_META: Record<LevelKey, { label: string; description: Record<TrackKey
     premium: true,
     description: {
       communication: 'Deep attunement, emotional mirroring, and shared meaning.',
-      conflict: 'Reframe patterns, prevent triggers, and build trust fast.',
-      intimacy: 'Shared visions, sacred routines, and intimacy mastery.',
+      conflict_repair: 'Reframe patterns, prevent triggers, and build trust fast.',
+      emotional_intimacy: 'Deep emotional bonding and long-term intimacy mastery.',
+      trust_security: 'Sustained security through repair leadership and consistency.',
+      shared_vision_rituals: 'Purpose-driven partnership rituals and legacy planning.',
+      root_cause_unearthing: 'Core Wound Mapping and restructuring deeply held identity narratives.',
     },
   },
 };
 
-const TRACKS: TrackKey[] = ['communication', 'conflict', 'intimacy'];
+const TRACKS: TrackKey[] = [
+  'communication',
+  'conflict_repair',
+  'emotional_intimacy',
+  'trust_security',
+  'shared_vision_rituals',
+  'root_cause_unearthing',
+];
 const LEVELS: LevelKey[] = ['basic', 'advanced', 'expert'];
 
 function getSkillSystemPrompt(track: TrackKey, level: LevelKey, action?: string): string {
   const trackLabels: Record<TrackKey, string> = {
     communication: 'communication and connection',
-    conflict: 'conflict resolution and repair',
-    intimacy: 'emotional and physical intimacy',
+    conflict_repair: 'conflict repair and reconnection',
+    emotional_intimacy: 'emotional intimacy and closeness',
+    trust_security: 'trust and emotional safety',
+    shared_vision_rituals: 'shared values and relationship rituals',
+    root_cause_unearthing: 'core wound mapping and uncovering deep behavioral roots',
   };
   const levelContext: Record<LevelKey, string> = {
     basic: 'foundational, approachable concepts',
@@ -119,7 +166,7 @@ Keep it under 150 words. No clinical terms. Warm and encouraging.`;
 }
 
 function parseMorningContent(raw: string): { story: string; action: string } {
-  const match = raw.match(/Today['']s Action[:\s]+(.+?)$/ms);
+  const match = raw.match(/Today['\u2019]s Action[:\s]+([\s\S]+?)$/m);
   if (match) {
     return {
       story: raw.substring(0, raw.indexOf(match[0])).trim(),
@@ -132,10 +179,25 @@ function parseMorningContent(raw: string): { story: string; action: string } {
 function emptyProgress(): ProgressMap {
   return {
     communication: { basic: null, advanced: null, expert: null },
-    conflict: { basic: null, advanced: null, expert: null },
-    intimacy: { basic: null, advanced: null, expert: null },
+    conflict_repair: { basic: null, advanced: null, expert: null },
+    emotional_intimacy: { basic: null, advanced: null, expert: null },
+    trust_security: { basic: null, advanced: null, expert: null },
+    shared_vision_rituals: { basic: null, advanced: null, expert: null },
+    root_cause_unearthing: { basic: null, advanced: null, expert: null },
   };
 }
+
+function normalizeTrackKey(track: string): TrackKey | null {
+  if (track === 'communication') return 'communication';
+  if (track === 'conflict' || track === 'conflict_repair') return 'conflict_repair';
+  if (track === 'intimacy' || track === 'emotional_intimacy') return 'emotional_intimacy';
+  if (track === 'trust_security') return 'trust_security';
+  if (track === 'shared_vision_rituals') return 'shared_vision_rituals';
+  if (track === 'root_cause_unearthing') return 'root_cause_unearthing';
+  return null;
+}
+
+type TrackProgressMap = Record<TrackKey, { total_xp: number; current_level: string }>;
 
 export default function SkillTree() {
   const router = useRouter();
@@ -145,11 +207,19 @@ export default function SkillTree() {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [currentDay, setCurrentDay] = useState(0);
   const [progress, setProgress] = useState<ProgressMap>(emptyProgress());
+  const [trackProgress, setTrackProgress] = useState<TrackProgressMap>({
+    communication: { total_xp: 0, current_level: 'basic' },
+    conflict_repair: { total_xp: 0, current_level: 'basic' },
+    emotional_intimacy: { total_xp: 0, current_level: 'basic' },
+    trust_security: { total_xp: 0, current_level: 'basic' },
+    shared_vision_rituals: { total_xp: 0, current_level: 'basic' },
+    root_cause_unearthing: { total_xp: 0, current_level: 'basic' },
+  });
   const [loading, setLoading] = useState(true);
   const [activeNode, setActiveNode] = useState<ActiveNode | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
-  const isPremium = subscription?.tier === 'premium' || subscription?.tier === 'ultimate';
+  const isPremium = subscription?.tier === 'premium';
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -175,22 +245,54 @@ export default function SkillTree() {
 
       const map = emptyProgress();
       for (const row of progressRows ?? []) {
-        const t = row.track as TrackKey;
+        const t = normalizeTrackKey(row.track as string);
         const l = row.level as LevelKey;
-        if (map[t] && map[t][l] !== undefined) {
+        if (t && map[t] && map[t][l] !== undefined) {
           map[t][l] = { completed_at: row.completed_at };
         }
       }
       setProgress(map);
+
+      // Fetch track XP/Level
+      const { data: trackRows } = await supabase
+        .from('user_skill_tracks')
+        .select('track_key, total_xp, current_level')
+        .eq('user_id', user.id);
+
+      if (trackRows) {
+        const tMap = { ...trackProgress };
+        for (const row of trackRows) {
+          const t = normalizeTrackKey(row.track_key);
+          if (t) {
+            tMap[t] = { total_xp: row.total_xp, current_level: row.current_level };
+          }
+        }
+        setTrackProgress(tMap);
+      }
+
       setLoading(false);
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, authLoading, router]);
 
   const isLevelDone = (track: TrackKey, level: LevelKey) =>
     !!progress[track][level]?.completed_at;
 
+  const getXPThreshold = (level: LevelKey): number => {
+    if (level === 'basic') return 0;
+    if (level === 'advanced') return 100;
+    if (level === 'expert') return 300;
+    return 0;
+  };
+
   const isLevelAvailable = (track: TrackKey, level: LevelKey): boolean => {
     if (!isUnlocked) return false;
+    const currentXp = trackProgress[track].total_xp;
+    const threshold = getXPThreshold(level);
+    
+    // Level must meet XP threshold
+    if (currentXp < threshold) return false;
+    
     if (level === 'basic') return true;
     if (level === 'advanced') return isLevelDone(track, 'basic');
     if (level === 'expert') return isLevelDone(track, 'advanced');
@@ -221,9 +323,10 @@ export default function SkillTree() {
 
     try {
       const systemPrompt = getSkillSystemPrompt(track, level);
+      const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
       const res = await fetch('/api/peter/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           messages: [{ role: 'user', content: 'Generate the skill exercise.' }],
           systemOverride: systemPrompt,
@@ -258,9 +361,10 @@ export default function SkillTree() {
 
     try {
       const systemOverride = getSkillSystemPrompt(activeNode.track, activeNode.level, activeNode.action);
+      const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
       const res = await fetch('/api/peter/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ messages: updated, systemOverride }),
       });
       if (!res.ok) throw new Error('Chat failed');
@@ -318,10 +422,9 @@ export default function SkillTree() {
   // ─── Loading ───────────────────────────────────────────────────
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-slate-50 to-blue-100 flex items-center justify-center">
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center font-sans">
         <div className="text-center">
-          <div className="text-5xl animate-bounce mb-4">🦦</div>
-          <p className="text-sm text-gray-500">Loading your Skill Tree...</p>
+          <p className="text-sm text-zinc-500 tracking-wide font-medium">Loading Skill Tree...</p>
         </div>
       </div>
     );
@@ -331,27 +434,29 @@ export default function SkillTree() {
   if (!isUnlocked) {
     const daysLeft = Math.max(0, 15 - currentDay);
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-slate-50 to-blue-100 flex flex-col items-center justify-center px-6 text-center">
-        <div className="text-6xl mb-6">🌱</div>
-        <h1 className="text-2xl font-bold text-gray-800 mb-3">Skill Tree Locked</h1>
-        <p className="text-gray-500 text-sm max-w-xs mb-6 leading-relaxed">
-          Complete the 14-day journey with Peter to unlock your personalized Skill Tree.
+      <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center px-6 text-center font-sans">
+        <div className="relative w-24 h-24 flex items-center justify-center mb-6">
+          <div className="text-5xl relative z-10 drop-shadow-md">🌱</div>
+        </div>
+        <h1 className="text-3xl font-serif text-zinc-100 mb-4 tracking-wide">Skill Tree Locked</h1>
+        <p className="text-zinc-400 text-sm max-w-xs mb-10 leading-relaxed">
+          Complete the 14-day journey with Peter to unlock your personalized curriculum.
           {daysLeft > 0
             ? ` You have ${daysLeft} day${daysLeft !== 1 ? 's' : ''} to go!`
-            : ' You're almost there!'}
+            : " You're almost there!"}
         </p>
-        <div className="w-full max-w-xs bg-white rounded-full h-3 mb-6 overflow-hidden shadow-inner">
+        <div className="w-full max-w-xs bg-[#111111] border border-zinc-800 rounded-full h-3 mb-4 overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-teal-400 to-blue-500 transition-all"
+            className="h-full bg-zinc-400 transition-all duration-1000"
             style={{ width: `${Math.min(100, ((currentDay - 1) / 14) * 100)}%` }}
           />
         </div>
-        <p className="text-xs text-gray-400 mb-8">Day {Math.max(1, currentDay)} of 14</p>
+        <p className="text-xs font-bold tracking-widest uppercase text-zinc-600 mb-10">Day {Math.max(1, currentDay)} of 14</p>
         <button
           onClick={() => router.push('/daily-growth')}
-          className="bg-gradient-to-br from-teal-500 to-blue-500 text-white font-semibold px-8 py-3 rounded-xl shadow-sm hover:opacity-90 transition-opacity"
+          className="bg-white text-black font-medium px-8 py-3.5 rounded-xl hover:bg-zinc-200 transition-colors tracking-wide text-sm"
         >
-          Continue with Peter
+          Return to Peter
         </button>
       </div>
     );
@@ -359,27 +464,27 @@ export default function SkillTree() {
 
   // ─── Skill Tree ────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-slate-50 to-blue-100">
-      <header className="bg-white/80 backdrop-blur border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center gap-4">
+    <div className="min-h-screen bg-[#050505] font-sans">
+      <header className="bg-[#050505] border-b border-zinc-900 sticky top-0 z-10 transition-colors duration-300">
+        <div className="max-w-4xl mx-auto px-4 py-5 flex items-center gap-4">
           <button
             onClick={() => router.push('/dashboard')}
-            className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-indigo-600 transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-zinc-200 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
-            Dashboard
+            Back
           </button>
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-indigo-500" />
-              <h1 className="text-lg font-bold text-gray-900">Skill Tree</h1>
+              <Sparkles className="h-4 w-4 text-emerald-400" />
+              <h1 className="text-lg font-serif text-zinc-100 tracking-wide">Skill Tree</h1>
             </div>
-            <p className="text-xs text-gray-500">Complete exercises to unlock new levels</p>
+            <p className="text-xs text-zinc-500 mt-0.5">Complete exercises to unlock new levels</p>
           </div>
           {!isPremium && (
             <button
               onClick={() => router.push('/subscription')}
-              className="text-xs font-semibold px-3 py-1.5 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-full hover:opacity-90 transition-opacity"
+              className="text-xs font-semibold px-4 py-2 bg-white text-black rounded-full hover:bg-zinc-200 transition-colors"
             >
               Go Premium
             </button>
@@ -393,78 +498,95 @@ export default function SkillTree() {
             const meta = TRACK_META[track];
             const completedCount = LEVELS.filter(l => isLevelDone(track, l)).length;
             const pct = Math.round((completedCount / 3) * 100);
+            const currentXp = trackProgress[track].total_xp;
 
             return (
-              <div key={track} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+              <div key={track} className="bg-[#111111] rounded-2xl border border-zinc-800 overflow-hidden">
                 {/* Track header */}
-                <div className={`bg-gradient-to-br ${meta.gradient} px-5 py-4`}>
-                  <span className="text-white text-sm font-bold">{meta.label}</span>
-                  <p className="text-white/80 text-xs mt-0.5">{meta.description}</p>
-                  <div className="mt-3 flex items-center gap-2">
-                    <div className="flex-1 bg-white/30 rounded-full h-1.5 overflow-hidden">
+                <div className={`bg-zinc-900 border-b border-zinc-800 px-6 py-5 relative overflow-hidden`}>
+                  <div className="absolute inset-0 bg-black/20 mix-blend-overlay" />
+                  <div className="flex justify-between items-start relative z-10">
+                    <div>
+                      <span className="text-zinc-200 text-[15px] font-bold tracking-wide">{meta.label}</span>
+                      <p className="text-zinc-500 text-[13px] mt-1 font-medium leading-relaxed">{meta.description}</p>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-emerald-400 text-xs font-bold tracking-widest uppercase">{currentXp} XP</span>
+                    </div>
+                  </div>
+                  <div className="relative z-10 mt-4 flex items-center gap-3">
+                    <div className="flex-1 bg-zinc-800 rounded-full h-1.5 overflow-hidden">
                       <div
-                        className="h-full bg-white transition-all duration-500"
+                        className="h-full bg-zinc-400 transition-all duration-1000 ease-out"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
-                    <span className="text-white/90 text-xs font-semibold">{pct}%</span>
+                    <span className="text-zinc-500 text-xs font-bold tracking-wider">{pct}%</span>
                   </div>
                 </div>
 
                 {/* Level nodes */}
-                <div className="p-4 space-y-3">
+                <div className="p-5 space-y-3">
                   {LEVELS.map((level, idx) => {
                     const done = isLevelDone(track, level);
+                    const threshold = getXPThreshold(level);
+                    const hasXp = currentXp >= threshold;
                     const available = isLevelAvailable(track, level);
                     const premLocked = isLevelPremiumLocked(level);
-                    const prereqLocked = !available && !done;
                     const levelMeta = LEVEL_META[level];
+                    
+                    const xpLocked = !hasXp && !done;
+                    const prereqLocked = !available && !done && !xpLocked;
 
                     let statusIcon = <Lock className="h-4 w-4" />;
-                    let rowClass = 'bg-gray-50 border-gray-200 opacity-60 cursor-not-allowed';
-                    let statusBadge = 'bg-gray-100 text-gray-500';
-                    let statusText = 'Locked';
+                    let rowClass = 'bg-[#050505]/40 border-zinc-900 opacity-50 cursor-not-allowed';
+                    let statusBadge = 'bg-[#050505] text-zinc-600 border border-zinc-900';
+                    let statusText = 'LOCKED';
 
                     if (done) {
                       statusIcon = <CheckCircle2 className="h-4 w-4" />;
-                      rowClass = 'bg-emerald-50 border-emerald-200 cursor-pointer hover:bg-emerald-100';
-                      statusBadge = 'bg-emerald-100 text-emerald-700';
-                      statusText = 'Complete';
+                      rowClass = 'bg-[#141414] border-zinc-800 cursor-pointer hover:bg-zinc-800/80';
+                      statusBadge = 'bg-zinc-800 text-zinc-400 border border-zinc-700';
+                      statusText = 'DONE';
+                    } else if (xpLocked) {
+                      statusText = `${threshold} XP`;
+                      statusBadge = 'bg-zinc-900/50 text-zinc-600 border border-zinc-800';
                     } else if (premLocked) {
-                      rowClass = 'bg-gray-50 border-gray-200 cursor-pointer hover:bg-gray-100 opacity-70';
-                      statusBadge = 'bg-purple-100 text-purple-700';
-                      statusText = 'Premium';
+                      rowClass = 'bg-[#141414] border-zinc-800/50 cursor-pointer hover:bg-zinc-800/80 opacity-80';
+                      statusBadge = 'bg-zinc-900 text-zinc-500 border border-zinc-800';
+                      statusText = 'PREMIUM';
                     } else if (available) {
-                      rowClass = `bg-white border-2 ${meta.accent} cursor-pointer hover:shadow-sm transition-shadow`;
-                      statusBadge = 'bg-blue-100 text-blue-700';
-                      statusText = 'Start';
+                      rowClass = `bg-white border-white cursor-pointer hover:bg-zinc-200 transition-all`;
+                      statusBadge = 'bg-zinc-200 text-black border border-zinc-300';
+                      statusText = 'START';
                       statusIcon = <ChevronRight className="h-4 w-4" />;
+                    } else if (prereqLocked) {
+                      statusText = 'PREREQ';
                     }
 
                     return (
                       <button
                         key={level}
-                        className={`w-full flex items-start gap-3 p-3 rounded-xl border text-left transition-all ${rowClass}`}
+                        className={`w-full flex items-start gap-4 p-4 rounded-2xl border text-left transition-all duration-300 ${rowClass}`}
                         onClick={() => handleNodeClick(track, level)}
                         disabled={prereqLocked}
                       >
-                        <div className={`h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                          done ? 'bg-emerald-500 text-white' :
-                          available && !premLocked ? 'bg-gradient-to-br from-indigo-400 to-blue-500 text-white' :
-                          'bg-gray-200 text-gray-500'
-                        }`}>
+                        <div className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 ${done ? 'bg-zinc-800 text-zinc-300' :
+                          available && !premLocked ? 'bg-black text-white' :
+                            'bg-[#050505] border border-zinc-900 text-zinc-600'
+                          }`}>
                           {statusIcon}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between gap-1">
-                            <span className="text-sm font-semibold text-gray-800">
+                            <span className={`text-sm font-bold tracking-wide ${available && !premLocked && !done ? 'text-black' : 'text-zinc-200'}`}>
                               Level {idx + 1}: {levelMeta.label}
                             </span>
-                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${statusBadge}`}>
+                            <span className={`text-[9px] uppercase tracking-widest font-bold px-2.5 py-1 rounded-full ${statusBadge}`}>
                               {statusText}
                             </span>
                           </div>
-                          <p className="text-xs text-gray-500 mt-0.5 leading-snug">
+                          <p className={`text-xs mt-1.5 leading-relaxed ${available && !premLocked && !done ? 'text-zinc-600' : 'text-zinc-400'}`}>
                             {levelMeta.description[track]}
                           </p>
                         </div>
@@ -479,18 +601,18 @@ export default function SkillTree() {
 
         {/* Premium upsell */}
         {!isPremium && (
-          <div className="mt-8 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-2xl p-6 text-white flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <p className="font-bold text-lg">Unlock Advanced + Expert levels</p>
-              <p className="text-indigo-200 text-sm mt-1">
-                Go deeper with personalized coaching, repair rituals, and intimacy mastery.
+          <div className="mt-8 bg-[#111111] border border-zinc-800 rounded-2xl p-8 text-zinc-100 flex flex-col md:flex-row md:items-center md:justify-between gap-6 relative overflow-hidden">
+            <div className="relative z-10">
+              <p className="font-serif text-xl tracking-wide">Unlock Advanced + Expert mastery</p>
+              <p className="text-zinc-400 text-sm mt-1.5 leading-relaxed">
+                Go deeper with personalized coaching, repair rituals, and profound emotional attunement.
               </p>
             </div>
             <button
               onClick={() => router.push('/subscription')}
-              className="bg-white text-indigo-700 font-semibold px-6 py-2.5 rounded-xl hover:opacity-90 transition-opacity flex-shrink-0"
+              className="relative z-10 bg-white text-black font-semibold px-8 py-3.5 rounded-xl hover:bg-zinc-200 transition-colors flex-shrink-0"
             >
-              Upgrade Now
+              Start Trial
             </button>
           </div>
         )}
@@ -505,7 +627,7 @@ export default function SkillTree() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/40 z-20"
+              className="fixed inset-0 bg-[#050505]/70 backdrop-blur-sm z-[60]"
               onClick={() => setActiveNode(null)}
             />
 
@@ -515,26 +637,26 @@ export default function SkillTree() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-              className="fixed inset-x-0 bottom-0 z-30 bg-white rounded-t-3xl shadow-2xl flex flex-col"
+              className="fixed inset-x-0 bottom-0 z-[70] bg-[#111111] border-t border-zinc-800 rounded-t-[2.5rem] flex flex-col"
               style={{ maxHeight: '85vh' }}
             >
               {/* Panel header */}
-              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+              <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-800">
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                  <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
                     {TRACK_META[activeNode.track].label} — {LEVEL_META[activeNode.level].label}
                   </p>
                   {activeNode.action && (
-                    <p className="text-xs text-amber-700 mt-0.5">
-                      <span className="font-semibold">Action:</span> {activeNode.action}
+                    <p className="text-xs text-zinc-400 mt-1 leading-relaxed max-w-sm">
+                      <span className="font-semibold text-zinc-500 uppercase tracking-wider text-[9px] mr-1">Tactic:</span> {activeNode.action}
                     </p>
                   )}
                 </div>
                 <button
                   onClick={() => setActiveNode(null)}
-                  className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors"
+                  className="h-10 w-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-zinc-800 transition-colors"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-5 w-5" />
                 </button>
               </div>
 
@@ -542,18 +664,14 @@ export default function SkillTree() {
               <div className="flex-1 overflow-hidden">
                 {activeNode.isComplete ? (
                   <div className="h-full flex flex-col items-center justify-center text-center px-6">
-                    <motion.div
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{ duration: 0.5 }}
-                      className="text-5xl mb-4"
-                    >
-                      🎉
-                    </motion.div>
-                    <p className="font-bold text-gray-800 text-lg">Level complete!</p>
-                    <p className="text-gray-500 text-sm mt-1">
-                      {LEVEL_META[activeNode.level].level !== 'expert'
-                        ? 'Next level is now unlocked.'
-                        : 'You've mastered this track!'}
+                    <div className="relative w-24 h-24 flex items-center justify-center mb-6 mx-auto rounded-full bg-zinc-900 border border-zinc-800">
+                      <CheckCircle2 className="h-8 w-8 text-zinc-400" />
+                    </div>
+                    <p className="font-serif text-2xl text-zinc-100 tracking-wide mb-2">Protocol learned.</p>
+                    <p className="text-zinc-500 text-sm">
+                      {activeNode.level !== 'expert'
+                        ? 'The next skill phase is now unsealed.'
+                        : "You've completely mastered this protocol."}
                     </p>
                   </div>
                 ) : (
@@ -570,17 +688,18 @@ export default function SkillTree() {
               {/* Complete button */}
               {activeNode.canComplete && !activeNode.isComplete && (
                 <motion.div
-                  initial={{ opacity: 0, y: 8 }}
+                  initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="px-4 py-3 border-t border-gray-100"
+                  transition={{ type: 'spring', bounce: 0, duration: 0.6 }}
+                  className="px-6 py-5 border-t border-zinc-800 bg-[#111111]"
                 >
                   <button
                     onClick={handleCompleteNode}
                     disabled={isSaving}
-                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-br from-emerald-500 to-teal-500 text-white font-semibold py-3 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-60"
+                    className="w-full flex items-center justify-center gap-2 bg-white text-black font-medium tracking-wide py-4 text-sm rounded-xl hover:bg-zinc-200 transition-colors disabled:opacity-50"
                   >
                     <CheckCircle2 className="h-4 w-4" />
-                    {isSaving ? 'Saving...' : `Complete ${LEVEL_META[activeNode.level].label} Level`}
+                    {isSaving ? 'Saving...' : `Complete ${LEVEL_META[activeNode.level].label} Protocol`}
                   </button>
                 </motion.div>
               )}

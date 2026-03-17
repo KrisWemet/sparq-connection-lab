@@ -11,8 +11,7 @@ interface StreakIndicatorProps {
 
 export function StreakIndicator({ streak, onShare }: StreakIndicatorProps) {
   const { subscription } = useSubscription();
-  const isPremium = subscription?.tier === "premium" || subscription?.tier === "ultimate";
-  const isUltimate = subscription?.tier === "ultimate";
+  const isPremium = subscription?.tier === "premium";
   
   // Determine icon, message and colors based on streak length
   const getStreakInfo = (days: number) => {
@@ -27,8 +26,8 @@ export function StreakIndicator({ streak, onShare }: StreakIndicatorProps) {
     if (days >= 14) return { 
       icon: Medal, 
       message: "Impressive streak! 🌟", 
-      color: "text-indigo-500", 
-      bg: "bg-indigo-100",
+      color: "text-brand-primary/80", 
+      bg: "bg-brand-primary/10",
       embedCommand: "Notice how much closer you feel each day",
       benefit: "Two-week streaks lead to 42% more meaningful conversations"
     };
@@ -59,9 +58,8 @@ export function StreakIndicator({ streak, onShare }: StreakIndicatorProps) {
   // Show for non-premium users with streaks of 3+ days
   const showPremiumPrompt = !isPremium && streak >= 3;
   
-  // Determine if we should show the ultimate upgrade prompt
-  // Show for premium (but not ultimate) users with streaks of 10+ days
-  const showUltimatePrompt = isPremium && !isUltimate && streak >= 10;
+  // Show a higher-touch upgrade prompt for engaged premium users.
+  const showUltimatePrompt = isPremium && streak >= 10;
 
   return (
     <motion.div
@@ -153,7 +151,7 @@ export function StreakIndicator({ streak, onShare }: StreakIndicatorProps) {
               <Button
                 variant="default"
                 size="sm"
-                className="w-full h-7 text-xs bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
+                className="w-full h-7 text-xs bg-gradient-to-r from-blue-500 to-brand-primary hover:from-blue-600 hover:to-brand-primary"
                 onClick={() => window.location.href = '/subscription'}
               >
                 Enhance Your Connection

@@ -46,7 +46,7 @@ export function SocialProofNotification({
     urgency: "text-amber-500",
     achievement: "text-green-500",
     scarcity: "text-purple-500",
-    upgrade: "text-indigo-500"
+    upgrade: "text-brand-primary/80"
   };
   
   // Split message to find and animate emojis
@@ -121,7 +121,7 @@ export function SocialProofNotification({
               <motion.div
                 className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
                   tier === "premium" 
-                    ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white" 
+                    ? "bg-gradient-to-r from-blue-500 to-brand-primary text-white" 
                     : "bg-gradient-to-r from-amber-500 to-purple-500 text-white"
                 }`}
                 whileHover={{ scale: 1.05 }}

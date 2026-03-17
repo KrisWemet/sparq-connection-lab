@@ -1,12 +1,12 @@
 
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { useAuth } from '@/lib/auth';
 import { onboardingService } from '@/services/onboardingService';
 
 export function useOnboardingRedirect(skipCheck = true) { // Default changed to true
   const { user, loading } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [isChecking, setIsChecking] = useState(!skipCheck);
   
   useEffect(() => {
@@ -45,7 +45,7 @@ export function useOnboardingRedirect(skipCheck = true) { // Default changed to 
     checkOnboarding();
     
     return () => clearTimeout(timeoutId);
-  }, [user, loading, navigate, skipCheck, isChecking]);
+  }, [user, loading, router, skipCheck, isChecking]);
   
   return { isChecking };
 }

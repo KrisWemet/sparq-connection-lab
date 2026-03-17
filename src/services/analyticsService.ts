@@ -1,45 +1,44 @@
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 
 export interface AnalyticsEvent {
-  event_type: string;
+  event_name: string;
   user_id: string;
-  properties: Record<string, any>;
-  timestamp: string;
+  event_props: Record<string, any>;
+  created_at: string;
 }
 
 export const analyticsService = {
   /**
    * Track a user action
    */
-  async trackEvent(eventType: string, properties: Record<string, any> = {}) {
+  async trackEvent(eventName: string, properties: Record<string, any> = {}) {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const event: AnalyticsEvent = {
-        event_type: eventType,
+      const event = {
+        event_name: eventName,
         user_id: user.id,
-        properties,
-        timestamp: new Date().toISOString()
+        event_props: properties,
+        created_at: new Date().toISOString()
       };
 
       // Log to console in development
-      console.log('Analytics event:', event);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Analytics event:', event);
+      }
       
-      // In a production environment, we would store this in the database
       try {
-        // Store event in analytics_events table if it exists
         const { error } = await supabase
           .from('analytics_events')
           .insert([event]);
 
-        if (error && error.code !== '42P01') { // Ignore "relation does not exist" errors
+        if (error && error.code !== '42P01') {
           console.error('Error storing analytics event:', error);
         }
       } catch (error) {
         // Silently fail if table doesn't exist yet
-        console.log('Analytics table not configured yet, skipping storage');
       }
     } catch (error) {
       console.error('Error tracking event:', error);

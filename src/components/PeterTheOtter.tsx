@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export type MascotStatus = 'idle' | 'thinking' | 'speaking';
@@ -53,10 +54,23 @@ export function PeterTheOtter({ status = 'idle', message }: PeterTheOtterProps) 
         animate="animate"
         className="relative w-24 h-24 pointer-events-auto cursor-pointer drop-shadow-2xl hover:drop-shadow-3xl transition-shadow"
       >
-        <img
+        <Image
           src="/sparq-mascot.png"
           alt="Peter the Otter"
+          width={96}
+          height={96}
           className="w-full h-full object-contain"
+          onError={(e) => {
+            const target = e.currentTarget;
+            target.style.display = 'none';
+            const parent = target.parentElement;
+            if (parent && !parent.querySelector('.otter-fallback')) {
+              const fallback = document.createElement('div');
+              fallback.className = 'otter-fallback w-full h-full flex items-center justify-center text-5xl';
+              fallback.textContent = '🦦';
+              parent.appendChild(fallback);
+            }
+          }}
         />
         {/* Status indicator badges */}
         {status === 'thinking' && (

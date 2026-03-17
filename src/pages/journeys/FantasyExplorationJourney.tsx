@@ -57,7 +57,7 @@ export default function FantasyExplorationJourney() {
       id: "desire-mapping",
       title: "Desire Discovery",
       description: "Mapping your desires and turn-ons",
-      icon: <Compass className="w-5 h-5 text-indigo-500" />,
+      icon: <Compass className="w-5 h-5 text-brand-primary/80" />,
       color: "indigo",
       example: "Creating a personal map of what excites you, understanding your triggers for arousal, and identifying which fantasies you might want to explore further."
     },

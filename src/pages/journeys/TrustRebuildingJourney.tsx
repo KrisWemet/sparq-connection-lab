@@ -73,7 +73,7 @@ export default function TrustRebuildingJourney() {
       id: "renewal",
       title: "Relationship Renewal",
       description: "Creating a stronger relationship with deeper understanding",
-      icon: <Handshake className="w-5 h-5 text-indigo-500" />,
+      icon: <Handshake className="w-5 h-5 text-brand-primary/80" />,
       color: "indigo",
       example: "Using the healing process as an opportunity to build a more intentional relationship with stronger communication, clearer boundaries, and deeper intimacy than before."
     }

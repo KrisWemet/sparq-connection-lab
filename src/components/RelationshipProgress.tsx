@@ -32,9 +32,9 @@ export function RelationshipProgress({ level, pointsEarned, pointsNeeded }: Rela
       icon: Award
     },
     Diamond: {
-      gradient: "from-blue-300 to-indigo-500",
+      gradient: "from-blue-300 to-brand-primary",
       bgColor: "bg-blue-50",
-      textColor: "text-blue-600",
+      textColor: "text-brand-hover",
       icon: Sparkles
     }
   };

@@ -2,33 +2,33 @@
 import { motion } from "framer-motion";
 import { Activity, ChevronRight, Star, Award } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/router';
 
 interface RelationshipJourneysCardProps {
   hasSpecialEvent: boolean;
 }
 
 export function RelationshipJourneysCard({ hasSpecialEvent }: RelationshipJourneysCardProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
   
   return (
     <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
       <Card 
         className="cursor-pointer overflow-hidden hover:shadow-md transition-all duration-300 bg-gradient-to-br from-white to-blue-50 relative" 
-        onClick={() => navigate("/journeys")}
+        onClick={() => router.push("/journeys")}
       >
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="bg-blue-100 p-2 rounded-full">
-                <Activity className="h-5 w-5 text-blue-600" />
+                <Activity className="h-5 w-5 text-brand-hover" />
               </div>
               <div>
                 <h3 className="font-medium flex items-center">
                   Relationship Journeys
                   {hasSpecialEvent && (
                     <motion.span 
-                      className="ml-2 inline-block text-xs bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full"
+                      className="ml-2 inline-block text-xs bg-blue-100 text-brand-hover px-1.5 py-0.5 rounded-full"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 1 }}
@@ -51,7 +51,7 @@ export function RelationshipJourneysCard({ hasSpecialEvent }: RelationshipJourne
               whileTap={{ scale: 0.9 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              <ChevronRight className="h-5 w-5 text-blue-600" />
+              <ChevronRight className="h-5 w-5 text-brand-hover" />
             </motion.div>
           </div>
           

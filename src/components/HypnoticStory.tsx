@@ -28,7 +28,7 @@ export function HypnoticStory({
   const themeStyles = {
     trust: {
       gradient: "from-blue-50 to-indigo-50",
-      accent: "text-blue-600",
+      accent: "text-brand-hover",
       icon: <Shield className="h-5 w-5" />,
       border: "border-blue-200"
     },
@@ -155,7 +155,7 @@ export function HypnoticStory({
               <Button 
                 variant="default" 
                 onClick={startReading}
-                className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600"
+                className="bg-gradient-to-r from-brand-primary to-purple-500 hover:from-brand-primary hover:to-purple-600"
               >
                 Begin Reading
               </Button>
@@ -164,7 +164,7 @@ export function HypnoticStory({
             <>
               <div className="relative h-1 bg-gray-100 rounded-full overflow-hidden">
                 <motion.div 
-                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-500 to-purple-500"
+                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-brand-primary to-purple-500"
                   initial={{ width: "0%" }}
                   animate={{ width: `${(currentParagraph / (paragraphs.length - 1)) * 100}%` }}
                   transition={{ duration: 0.3 }}

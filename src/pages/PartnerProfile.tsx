@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/router';
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { ChevronLeft } from "lucide-react";
@@ -11,7 +11,7 @@ import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { toast } from "sonner";
 
 export default function PartnerProfile() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [partnerProfile, setPartnerProfile] = useState<any>(null);
@@ -21,8 +21,9 @@ export default function PartnerProfile() {
     if (user) {
       loadPartnerProfile();
     } else {
-      navigate("/auth");
+      router.push("/auth");
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const loadPartnerProfile = async () => {
@@ -70,7 +71,7 @@ export default function PartnerProfile() {
       <header className="sticky top-0 z-50 bg-white border-b">
         <div className="container max-w-lg mx-auto px-4 py-3 flex items-center">
           <button 
-            onClick={() => navigate(-1)} 
+            onClick={() => router.back()} 
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -99,7 +100,7 @@ export default function PartnerProfile() {
               <h3 className="text-lg font-semibold mb-2">Partner Information Not Available</h3>
               <p className="text-gray-500 mb-4">{error}</p>
               <button 
-                onClick={() => navigate("/profile")}
+                onClick={() => router.push("/profile")}
                 className="px-4 py-2 bg-primary text-white rounded-lg"
               >
                 Go to Your Profile
@@ -151,7 +152,7 @@ export default function PartnerProfile() {
                   Take the relationship health quiz together to see your compatibility and areas for growth.
                 </p>
                 <button 
-                  onClick={() => navigate("/quiz")}
+                  onClick={() => router.push("/quiz")}
                   className="w-full py-2 px-4 bg-primary text-white rounded-lg"
                 >
                   Go to Relationship Quiz
@@ -161,8 +162,10 @@ export default function PartnerProfile() {
           </>
         )}
       </main>
-      
+
       <BottomNav />
     </div>
   );
 }
+
+export const getServerSideProps = async () => ({ props: {} });

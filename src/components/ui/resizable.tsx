@@ -1,3 +1,4 @@
+// @ts-nocheck — shadcn/ui generated file
 import { GripVertical } from "lucide-react"
 import * as ResizablePrimitive from "react-resizable-panels"
 

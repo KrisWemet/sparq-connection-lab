@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Brain, ChevronRight, Heart } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/router';
 
 interface RelationshipScoreProps {
   score?: number | null;
@@ -36,7 +36,7 @@ function RelationshipScore({ score, label, color }: RelationshipScoreProps) {
 }
 
 export function RelationshipInsightCard() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [scores, setScores] = useState({
     communication: null as number | null,
     intimacy: null as number | null,
@@ -46,7 +46,7 @@ export function RelationshipInsightCard() {
   });
 
   const handleClick = () => {
-    navigate("/quiz");
+    router.push("/quiz");
   };
 
   return (

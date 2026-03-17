@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { JourneyContentView } from '@/components/journey/JourneyContentView';
 import { ReactNode } from 'react';
 
@@ -45,8 +45,9 @@ export default function JourneyTemplate({
   completionCriteria
 }: JourneyTemplateProps) {
   // For the route parameter version
-  const { journeyId: routeJourneyId } = useParams<{ journeyId: string }>();
-  
+  const router = useRouter();
+  const routeJourneyId = router.query.journeyId as string | undefined;
+
   // Use the prop value if provided, otherwise fall back to the route parameter
   const effectiveJourneyId = journeyId || routeJourneyId;
   

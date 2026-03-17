@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { toast } from 'sonner';
 import { Journey, UserJourneyProgress, JourneyActivity } from '../types/journey';
 import { 
@@ -28,7 +28,7 @@ export function useJourney(journeyId: string): UseJourneyReturn {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-  const navigate = useNavigate();
+  const router = useRouter();
   const { user } = useAuth();
 
   useEffect(() => {
@@ -150,7 +150,7 @@ export function useJourney(journeyId: string): UseJourneyReturn {
       setProgress(updatedProgress);
       
       // Navigate to next day
-      navigate(`/journey/${journeyId}/start?day=${updatedProgress.currentDay}`);
+      router.push(`/journey/${journeyId}/start?day=${updatedProgress.currentDay}`);
       toast.success('Moving to next day!');
     } catch (err) {
       console.error('Error moving to next day:', err);

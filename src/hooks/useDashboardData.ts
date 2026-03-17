@@ -78,6 +78,7 @@ export function useDashboardData() {
     }, 1500); // Reduced from 3000ms to 1500ms
     
     return () => clearTimeout(timeout);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchUserData]);
   
   // Confetti effect

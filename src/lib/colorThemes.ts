@@ -68,5 +68,5 @@ export const animatedGradients = {
   celebration: "animate-gradient-xy bg-gradient-to-r from-yellow-300 via-pink-500 to-purple-500",
   achievement: "animate-gradient-xy bg-gradient-to-r from-green-300 via-blue-400 to-purple-400",
   progress: "animate-gradient-x bg-gradient-to-r from-blue-300 to-purple-400",
-  special: "animate-gradient-xy bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-400",
+  special: "animate-gradient-xy bg-gradient-to-r from-pink-300 via-purple-300 to-brand-primary/80",
 }

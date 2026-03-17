@@ -8,9 +8,9 @@ export function OnboardingStepFour() {
         <div className="inline-flex items-center justify-center p-4 bg-primary/10 rounded-full mb-4">
           <Brain className="h-10 w-10 text-primary" />
         </div>
-        <h2 className="text-2xl font-bold mb-2">You're All Set!</h2>
+        <h2 className="text-2xl font-bold mb-2">You&apos;re All Set!</h2>
         <p className="text-muted-foreground">
-          Thanks for sharing your information. We've personalized your experience based on your answers.
+          Thanks for sharing your information. We&apos;ve personalized your experience based on your answers.
         </p>
       </div>
       

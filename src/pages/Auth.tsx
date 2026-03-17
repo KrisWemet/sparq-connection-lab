@@ -15,11 +15,13 @@ export default function Auth() {
       description="Enter your credentials to access your account"
       footer={
         <Button variant="link" onClick={() => router.push("/signup")}>
-          Don't have an account? Sign up
+          Don&apos;t have an account? Sign up
         </Button>
       }
     >
-      <LoginForm redirectTo="/dashboard" />
+      <LoginForm />
     </AuthLayout>
   );
 }
+
+export const getServerSideProps = async () => ({ props: {} });

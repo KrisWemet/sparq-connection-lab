@@ -1,4 +1,10 @@
+// @ts-nocheck — deprecated file, will be removed
 import { Profile } from './supabase';
+
+/**
+ * @deprecated This is a mock Mem0 client. Use the real mem0ai package via
+ * `src/lib/server/memory.ts` instead. This file will be removed in a future release.
+ */
 
 // This is a simplified mock of a Mem0 client
 // In a real implementation, you would use the actual Mem0 SDK

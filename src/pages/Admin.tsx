@@ -1,22 +1,38 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { useRouter } from 'next/router';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChevronLeft, Users, Database, Settings, Activity, Search } from "lucide-react";
+import { ChevronLeft, Users, Database, Settings, Activity, Search, FlaskConical } from "lucide-react";
 import { isAdmin } from "@/lib/auth-utils";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { supabase } from "@/lib/supabase";
+
+interface BetaTester {
+  id: string;
+  email: string;
+  name: string | null;
+  isonboarded: boolean;
+  onboarding_day: number | null;
+  traits_count: number;
+  session_count: number;
+  last_active: string | null;
+  consent_given_at: string | null;
+  created_at: string;
+}
 
 export default function Admin() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("users");
+  const [betaTesters, setBetaTesters] = useState<BetaTester[]>([]);
+  const [betaLoading, setBetaLoading] = useState(false);
   const [modifiedSettings, setModifiedSettings] = useState({
     enablePremiumFeatures: true,
     enableUserRegistration: true,
@@ -48,6 +64,25 @@ export default function Admin() {
     ]
   };
 
+  const fetchBetaTesters = useCallback(async () => {
+    setBetaLoading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) return;
+      const res = await fetch('/api/admin/beta-testers', {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      if (res.ok) {
+        const json = await res.json();
+        setBetaTesters(json.testers || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch beta testers:', err);
+    } finally {
+      setBetaLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     const checkAdminAccess = async () => {
       try {
@@ -56,22 +91,23 @@ export default function Admin() {
         
         if (!adminStatus) {
           toast.error("You don't have permission to access the admin area");
-          navigate("/dashboard");
+          router.push("/dashboard");
           return;
         }
         
         setAuthorized(true);
+        fetchBetaTesters();
       } catch (error) {
         console.error("Error checking admin status:", error);
         toast.error("Authentication error");
-        navigate("/dashboard");
+        router.push("/dashboard");
       } finally {
         setLoading(false);
       }
     };
     
     checkAdminAccess();
-  }, [navigate]);
+  }, [router, fetchBetaTesters]);
   
   const handleSaveSettings = () => {
     // This would save settings to the database in a real implementation
@@ -100,7 +136,7 @@ export default function Admin() {
       <header className="sticky top-0 z-50 bg-white border-b">
         <div className="container max-w-6xl mx-auto px-4 py-3 flex items-center">
           <button 
-            onClick={() => navigate("/dashboard")} 
+            onClick={() => router.push("/dashboard")} 
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -118,7 +154,11 @@ export default function Admin() {
 
       <main className="container max-w-6xl mx-auto px-4 py-6">
         <Tabs defaultValue="users" className="mb-8" onValueChange={setActiveTab}>
-          <TabsList className="mb-6 grid grid-cols-3">
+          <TabsList className="mb-6 grid grid-cols-4">
+            <TabsTrigger value="beta">
+              <FlaskConical className="w-4 h-4 mr-2" />
+              Beta Testers
+            </TabsTrigger>
             <TabsTrigger value="users">
               <Users className="w-4 h-4 mr-2" />
               Users
@@ -133,6 +173,63 @@ export default function Admin() {
             </TabsTrigger>
           </TabsList>
           
+          <TabsContent value="beta" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Beta Testers</CardTitle>
+                <CardDescription>
+                  Monitor therapist testers progressing through the 14-day loop
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {betaLoading ? (
+                  <p className="text-center py-6 text-gray-500">Loading...</p>
+                ) : betaTesters.length === 0 ? (
+                  <p className="text-center py-6 text-gray-500">No users yet</p>
+                ) : (
+                  <div className="rounded-md border overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b bg-gray-50">
+                          <th className="text-left p-3 font-medium">Email</th>
+                          <th className="text-left p-3 font-medium">Name</th>
+                          <th className="text-center p-3 font-medium">Day</th>
+                          <th className="text-center p-3 font-medium">Traits</th>
+                          <th className="text-center p-3 font-medium">Sessions</th>
+                          <th className="text-left p-3 font-medium">Last Active</th>
+                          <th className="text-left p-3 font-medium">Consent</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {betaTesters.map((t) => (
+                          <tr key={t.id} className="border-b last:border-b-0 hover:bg-gray-50">
+                            <td className="p-3 font-mono text-xs">{t.email}</td>
+                            <td className="p-3">{t.name || '—'}</td>
+                            <td className="p-3 text-center">
+                              <Badge variant={t.onboarding_day && t.onboarding_day >= 14 ? 'default' : 'outline'}>
+                                {t.onboarding_day ?? '—'}
+                              </Badge>
+                            </td>
+                            <td className="p-3 text-center">{t.traits_count}</td>
+                            <td className="p-3 text-center">{t.session_count}</td>
+                            <td className="p-3 text-xs text-gray-500">{t.last_active || '—'}</td>
+                            <td className="p-3 text-xs">
+                              {t.consent_given_at ? (
+                                <span className="text-green-600">Yes</span>
+                              ) : (
+                                <span className="text-gray-400">No</span>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           <TabsContent value="users" className="space-y-6">
             <Card>
               <CardHeader>

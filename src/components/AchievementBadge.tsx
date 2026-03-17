@@ -55,8 +55,8 @@ export function AchievementBadge({ type, achieved = true, level = 1 }: Achieveme
       icon: Zap,
       label: "Growth Mindset",
       description: "Tackled a challenging relationship topic together! Growth happens outside your comfort zone! ⚡",
-      color: "bg-indigo-100 text-indigo-700 border-indigo-200",
-      achievedColor: "bg-gradient-to-r from-indigo-400 to-indigo-500 text-white border-indigo-600",
+      color: "bg-brand-primary/10 text-brand-primary border-brand-primary/20",
+      achievedColor: "bg-gradient-to-r from-brand-primary/80 to-brand-primary text-white border-indigo-600",
     },
     empathy: {
       icon: Smile,

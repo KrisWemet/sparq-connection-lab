@@ -73,7 +73,7 @@ export default function PowerDynamicsJourney() {
       id: "balance-flexibility",
       title: "Dynamic Balance",
       description: "Creating flexible, balanced power dynamics",
-      icon: <Handshake className="w-5 h-5 text-indigo-500" />,
+      icon: <Handshake className="w-5 h-5 text-brand-primary/80" />,
       color: "indigo",
       example: "Developing the ability to move fluidly between different power dynamics, ensuring both partners have opportunities to experience different roles and expressions of power."
     }

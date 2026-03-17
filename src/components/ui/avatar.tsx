@@ -1,4 +1,5 @@
 import * as React from "react"
+import Image from "next/image"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
@@ -36,11 +37,14 @@ Avatar.displayName = "Avatar"
 export interface AvatarImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {}
 
 export const AvatarImage = React.forwardRef<HTMLImageElement, AvatarImageProps>(
-  ({ className, ...props }, ref) => (
-    <img
-      ref={ref}
+  ({ className, src, alt, ...props }, ref) => (
+    <Image
+      ref={ref as React.Ref<HTMLImageElement>}
+      src={src || ""}
+      alt={alt ?? ""}
+      width={40}
+      height={40}
       className={cn("aspect-square h-full w-full object-cover", className)}
-      {...props}
     />
   )
 )

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useRouter } from 'next/router';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -540,8 +540,8 @@ const journeys = [
 ];
 
 export default function JourneyDetails() {
-  const navigate = useNavigate();
-  const { journeyId } = useParams();
+  const router = useRouter();
+  const { journeyId  } = router.query;
   const [journey, setJourney] = useState<JourneyContent | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -554,7 +554,7 @@ export default function JourneyDetails() {
       if (journeyId) {
         const lastDay = localStorage.getItem(`${journeyId}_last_day`);
         if (lastDay) {
-          setActiveJourney(journeyId);
+          setActiveJourney(journeyId as string);
           setActiveJourneyDay(lastDay);
         }
       }
@@ -572,7 +572,7 @@ export default function JourneyDetails() {
       }
 
       try {
-        const content = await loadJourneyContent(journeyId);
+        const content = await loadJourneyContent(journeyId as string);
         if (!content) {
           setError('Journey not found');
           setLoading(false);
@@ -598,7 +598,7 @@ export default function JourneyDetails() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-4">
         <p className="text-red-500 mb-4">{error || 'Journey not found'}</p>
-        <Button onClick={() => navigate('/path-to-together')}>
+        <Button onClick={() => router.push('/path-to-together')}>
           Return to Journeys
         </Button>
       </div>
@@ -610,7 +610,7 @@ export default function JourneyDetails() {
       <Button
         variant="ghost"
         className="mb-4"
-        onClick={() => navigate('/path-to-together')}
+        onClick={() => router.push('/path-to-together')}
       >
         <ChevronLeft className="mr-2 h-4 w-4" />
         Back to Journeys
@@ -623,12 +623,12 @@ export default function JourneyDetails() {
               <div>
                 <h3 className="font-medium text-gray-900 dark:text-gray-100 text-sm">Continue your journey</h3>
                 <p className="text-gray-600 dark:text-gray-300 text-xs">
-                  You're on day {parseInt(activeJourneyDay) + 1} of this journey
+                  You&apos;re on day {parseInt(activeJourneyDay) + 1} of this journey
                 </p>
               </div>
               <Button 
                 size="sm" 
-                onClick={() => navigate(`/journey/${journeyId}/start?day=${activeJourneyDay}`)}
+                onClick={() => router.push(`/journey/${journeyId}/start?day=${activeJourneyDay}`)}
               >
                 Continue
               </Button>
@@ -655,10 +655,10 @@ export default function JourneyDetails() {
             onClick={() => {
               // If there's an active journey, continue from where they left off
               if (activeJourney && activeJourneyDay) {
-                navigate(`/journey/${journeyId}/start?day=${activeJourneyDay}`);
+                router.push(`/journey/${journeyId}/start?day=${activeJourneyDay}`);
               } else {
                 // Otherwise start from day 1
-                navigate(`/journey/${journeyId}/start?day=1`);
+                router.push(`/journey/${journeyId}/start?day=1`);
               }
             }}
           >

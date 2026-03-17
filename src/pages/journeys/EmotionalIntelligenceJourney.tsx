@@ -18,7 +18,7 @@ export default function EmotionalIntelligenceJourney() {
       id: "self-awareness",
       title: "Self-Awareness",
       description: "Recognizing your own emotions and understanding how they affect your thoughts and behavior",
-      icon: <Eye className="w-5 h-5 text-indigo-500" />,
+      icon: <Eye className="w-5 h-5 text-brand-primary/80" />,
       color: "indigo",
       example: "Noticing that you feel tense and irritable when your partner is late, and recognizing that this might be connected to deeper feelings of not being valued or prioritized."
     },

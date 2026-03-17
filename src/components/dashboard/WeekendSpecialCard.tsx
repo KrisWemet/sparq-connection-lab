@@ -2,10 +2,10 @@
 import { motion } from "framer-motion";
 import { Sparkles, Zap, ChevronRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/router';
 
 export function WeekendSpecialCard() {
-  const navigate = useNavigate();
+  const router = useRouter();
   
   return (
     <motion.div
@@ -22,7 +22,7 @@ export function WeekendSpecialCard() {
     >
       <Card 
         className="cursor-pointer overflow-hidden hover:shadow-md transition-all duration-300 border-amber-200 bg-gradient-to-br from-amber-50 to-white relative" 
-        onClick={() => navigate("/date-ideas")}
+        onClick={() => router.push("/date-ideas")}
       >
         <CardContent className="p-4">
           <div className="flex items-center justify-between">

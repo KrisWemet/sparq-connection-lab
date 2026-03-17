@@ -42,7 +42,7 @@ export function FuturePacing({
         return (
           <motion.span 
             key={index}
-            className="font-medium text-indigo-600"
+            className="font-medium text-brand-primary"
             initial={{ opacity: 0.8 }}
             animate={{ 
               opacity: [0.8, 1, 0.8],
@@ -67,16 +67,16 @@ export function FuturePacing({
       <div className="p-5">
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-indigo-500" />
+            <Sparkles className="h-5 w-5 text-brand-primary/80" />
             <h3 className="text-lg font-medium text-indigo-900">{title}</h3>
           </div>
           
-          <p className="text-sm text-indigo-700">{description}</p>
+          <p className="text-sm text-brand-primary">{description}</p>
           
           {activeTimeframe === null ? (
             <div className="space-y-3 py-2">
-              <p className="text-xs text-center text-indigo-600 italic">
-                Select a timeframe to visualize your relationship's future
+              <p className="text-xs text-center text-brand-primary italic">
+                Select a timeframe to visualize your relationship&apos;s future
               </p>
               
               <div className="grid grid-cols-3 gap-2">
@@ -84,10 +84,10 @@ export function FuturePacing({
                   <Button
                     key={index}
                     variant="outline"
-                    className="flex flex-col items-center justify-center h-16 border-indigo-200 hover:border-indigo-400 hover:bg-indigo-50"
+                    className="flex flex-col items-center justify-center h-16 border-brand-primary/20 hover:border-indigo-400 hover:bg-brand-linen"
                     onClick={() => handleTimeframeSelect(index)}
                   >
-                    <Calendar className="h-4 w-4 mb-1 text-indigo-500" />
+                    <Calendar className="h-4 w-4 mb-1 text-brand-primary/80" />
                     <span className="text-xs font-medium">{timeframe.label}</span>
                   </Button>
                 ))}
@@ -105,8 +105,8 @@ export function FuturePacing({
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-1.5">
-                    <Clock className="h-4 w-4 text-indigo-500" />
-                    <span className="text-sm font-medium text-indigo-800">
+                    <Clock className="h-4 w-4 text-brand-primary/80" />
+                    <span className="text-sm font-medium text-brand-hover">
                       {timeframes[activeTimeframe].label} from now
                     </span>
                   </div>
@@ -128,7 +128,7 @@ export function FuturePacing({
                   
                   {timeframes[activeTimeframe].embedCommand && (
                     <motion.p
-                      className="text-sm font-medium text-indigo-600 mt-3 italic"
+                      className="text-sm font-medium text-brand-primary mt-3 italic"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 1.5 }}
@@ -155,7 +155,7 @@ export function FuturePacing({
                   <Button
                     variant="default"
                     size="sm"
-                    className="text-xs bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600"
+                    className="text-xs bg-gradient-to-r from-brand-primary to-purple-500 hover:from-brand-primary hover:to-purple-600"
                     onClick={handleComplete}
                   >
                     {isCompleted ? "Visualization Complete" : "Complete Visualization"}
@@ -170,7 +170,7 @@ export function FuturePacing({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="text-center text-sm text-indigo-600 pt-2"
+              className="text-center text-sm text-brand-primary pt-2"
             >
               <p>
                 As you continue your journey together, notice how these visions naturally begin to manifest in your relationship.

@@ -2,16 +2,16 @@
 import { motion } from "framer-motion";
 import { Calendar, ChevronRight, Smile } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/router';
 
 export function DateIdeasCard() {
-  const navigate = useNavigate();
+  const router = useRouter();
   
   return (
     <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
       <Card 
         className="cursor-pointer overflow-hidden hover:shadow-md transition-all duration-300 bg-gradient-to-br from-white to-green-50 relative" 
-        onClick={() => navigate("/date-ideas")}
+        onClick={() => router.push("/date-ideas")}
       >
         <CardContent className="p-4">
           <div className="flex items-center justify-between">

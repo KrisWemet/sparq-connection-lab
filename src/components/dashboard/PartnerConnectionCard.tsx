@@ -2,11 +2,11 @@
 import { motion } from "framer-motion";
 import { Heart, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/router';
 import { useAuth } from "@/lib/auth";
 
 export function PartnerConnectionCard() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { profile } = useAuth();
   const partnerEmojis = ["💕", "💘", "💞", "💓", "💗", "💖", "❤️", "🧡", "💛", "💚", "💙", "💜"];
   const getPartnerEmoji = () => partnerEmojis[Math.floor(Math.random() * partnerEmojis.length)];
@@ -29,7 +29,7 @@ export function PartnerConnectionCard() {
           whileTap={{ scale: 0.95 }}
         >
           <Button 
-            onClick={() => navigate("/partner-invite")}
+            onClick={() => router.push("/partner-invite")}
             className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white shadow-sm"
           >
             <Gift className="mr-2 h-4 w-4" />
@@ -68,7 +68,7 @@ export function PartnerConnectionCard() {
           <h3 className="font-medium text-gray-800">
             Connected with {profile.partnerName} {partnerEmoji}
           </h3>
-          <p className="text-sm text-gray-500">Check out your partner's profile</p>
+          <p className="text-sm text-gray-500">Check out your partner&apos;s profile</p>
         </div>
       </div>
       <motion.div
@@ -76,8 +76,8 @@ export function PartnerConnectionCard() {
         whileTap={{ scale: 0.95 }}
       >
         <Button 
-          onClick={() => navigate("/partner-profile")}
-          className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white shadow-sm"
+          onClick={() => router.push("/partner-profile")}
+          className="w-full bg-gradient-to-r from-purple-500 to-brand-primary hover:from-purple-600 hover:to-brand-primary text-white shadow-sm"
         >
           View Partner
         </Button>
@@ -93,7 +93,7 @@ export function PartnerConnectionCard() {
         transition={{ duration: 8, repeat: Infinity }}
       />
       <motion.div 
-        className="absolute right-10 -top-6 h-16 w-16 rounded-full bg-indigo-100 opacity-30 z-0"
+        className="absolute right-10 -top-6 h-16 w-16 rounded-full bg-brand-primary/10 opacity-30 z-0"
         animate={{ 
           scale: [1, 1.2, 1],
           rotate: [0, -10, 0],

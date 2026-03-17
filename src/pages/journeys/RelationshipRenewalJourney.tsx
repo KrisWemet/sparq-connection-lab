@@ -73,7 +73,7 @@ export default function RelationshipRenewalJourney() {
       id: "adaptation",
       title: "Adaptive Partnership",
       description: "Evolving your relationship through life transitions",
-      icon: <Map className="w-5 h-5 text-indigo-500" />,
+      icon: <Map className="w-5 h-5 text-brand-primary/80" />,
       color: "indigo",
       example: "Intentionally redesigning aspects of your relationship as you move through major life changes, ensuring your partnership evolves to meet new circumstances and needs."
     }

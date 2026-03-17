@@ -50,7 +50,7 @@ export function OnboardingStepTwo({
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="complicated" id="status-complicated" />
-              <Label htmlFor="status-complicated">It's Complicated</Label>
+              <Label htmlFor="status-complicated">It&apos;s Complicated</Label>
             </div>
           </RadioGroup>
         </div>

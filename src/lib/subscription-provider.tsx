@@ -1,7 +1,8 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { toast } from "sonner";
 
-export type SubscriptionTier = "free" | "premium" | "ultimate";
+export type SubscriptionTier = "free" | "premium";
+type LegacySubscriptionTier = SubscriptionTier | "ultimate";
 
 export type SubscriptionPlan = {
   tier: SubscriptionTier;
@@ -67,23 +68,29 @@ const premiumSubscription: SubscriptionPlan = {
   },
 };
 
-const ultimateSubscription: SubscriptionPlan = {
-  tier: "ultimate",
-  name: "Ultimate",
-  expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-  features: {
-    dailyQuestions: Infinity,
-    journeysIncluded: Infinity,
-    unlimitedDateIdeas: true,
-    darkMode: true,
-    aiTherapist: true,
-    premiumCategories: true,
-    relationshipTimeline: true,
-    advancedAnalytics: true,
-  },
-};
-
 const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);
+
+function normalizeStoredSubscription(raw: unknown): SubscriptionPlan {
+  if (!raw || typeof raw !== "object") {
+    return defaultSubscription;
+  }
+
+  const parsed = raw as Omit<Partial<SubscriptionPlan>, "tier"> & {
+    tier?: LegacySubscriptionTier;
+    expiresAt?: string | Date | null;
+  };
+  if (parsed.tier === "premium" || parsed.tier === "ultimate") {
+    return {
+      ...premiumSubscription,
+      expiresAt: parsed.expiresAt ? new Date(parsed.expiresAt) : premiumSubscription.expiresAt,
+    };
+  }
+
+  return {
+    ...defaultSubscription,
+    expiresAt: null,
+  };
+}
 
 export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
   const [subscription, setSubscriptionState] = useState<SubscriptionPlan>(() => {
@@ -91,11 +98,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     const savedSubscription = localStorage.getItem("subscription");
     if (savedSubscription) {
       try {
-        const parsed = JSON.parse(savedSubscription);
-        if (parsed.expiresAt) {
-          parsed.expiresAt = new Date(parsed.expiresAt);
-        }
-        return parsed;
+        return normalizeStoredSubscription(JSON.parse(savedSubscription));
       } catch (e) {
         console.error("Failed to parse subscription from localStorage:", e);
       }
@@ -150,6 +153,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem("lastPeriodReset", "evening");
       localStorage.setItem("remainingEveningQuestions", Math.floor(subscription.features.dailyQuestions / 2).toString());
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subscription.features.dailyQuestions]);
 
   // Save to localStorage when these values change
@@ -183,8 +187,8 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const upgradeToUltimate = () => {
-    setSubscription(ultimateSubscription);
-    toast.success("Upgraded to Ultimate plan! Enjoy all premium features.");
+    setSubscription(premiumSubscription);
+    toast.success("Upgraded to Premium plan.");
   };
 
   const upgradeToPremium = () => {

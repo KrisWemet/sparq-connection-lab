@@ -70,7 +70,7 @@ const questionCategories = [
     name: "Communication & Conflict",
     description: "Improve how you communicate and resolve disagreements",
     icon: <MessageCircle className="w-5 h-5" />,
-    color: "bg-indigo-100 text-indigo-800",
+    color: "bg-brand-primary/10 text-brand-hover",
     theory: "Gottman's research on communication patterns and conflict resolution",
     benefits: "Couples with strong communication skills are 70% more likely to report high relationship satisfaction",
     goal: "Develop healthier communication patterns and conflict resolution strategies",
@@ -465,6 +465,7 @@ export default function DailyQuestions() {
         setIsLoading(false);
       }, 1000);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory, completedQuestions, viewingCategoryDetails, remainingMorningQuestions, remainingEveningQuestions, subscription.tier, currentPeriod]);
   
   const handleSubmitAnswer = () => {
@@ -500,7 +501,7 @@ export default function DailyQuestions() {
         setShowCompletionAnimation(false);
         
         // Show upgrade prompt with 30% chance if user is not premium and has answered at least 3 questions
-        if (!subscription.isPremium && completedQuestions.length >= 3 && Math.random() < 0.3) {
+        if (subscription.tier === 'free' && completedQuestions.length >= 3 && Math.random() < 0.3) {
           setShowUpgradePrompt(true);
         } else {
           handleNextQuestion();
@@ -642,7 +643,7 @@ export default function DailyQuestions() {
       <header className="sticky top-0 z-50 bg-background border-b">
         <div className="container max-w-4xl mx-auto px-4 py-3 flex items-center">
           <button 
-            onClick={() => router.push(-1)} 
+            onClick={() => router.back()} 
             className="p-2 hover:bg-muted rounded-lg transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -667,7 +668,7 @@ export default function DailyQuestions() {
                 {currentPeriod === "morning" || currentPeriod === "afternoon" ? (
                   <Sun className="w-6 h-6 text-amber-500" />
                 ) : (
-                  <Moon className="w-6 h-6 text-indigo-400" />
+                  <Moon className="w-6 h-6 text-brand-primary/60" />
                 )}
                 <h2 className="text-2xl font-bold">
                   {getGreeting()}! Ready for connection?
@@ -679,7 +680,7 @@ export default function DailyQuestions() {
               <div className="flex items-center gap-2">
                 <Zap className="w-5 h-5 text-amber-500" />
                 <p className="text-sm text-muted-foreground italic">
-                  "The quality of your relationship depends on the quality of your questions." — Esther Perel
+                  &quot;The quality of your relationship depends on the quality of your questions.&quot; — Esther Perel
                 </p>
               </div>
             </div>
@@ -691,7 +692,7 @@ export default function DailyQuestions() {
                 <div className="bg-muted p-4 rounded-lg mb-6">
                   <div className="flex items-center gap-2 mb-2">
                     <Clock className="w-5 h-5 text-primary" />
-                    <h3 className="font-medium">Today's Questions</h3>
+                    <h3 className="font-medium">Today&apos;s Questions</h3>
                   </div>
                   <div className="grid grid-cols-2 gap-4 mb-3">
                     <div className="p-3 bg-background rounded-lg border">
@@ -708,7 +709,7 @@ export default function DailyQuestions() {
                     </div>
                     <div className="p-3 bg-background rounded-lg border">
                       <div className="flex items-center gap-2 mb-2">
-                        <Moon className="w-4 h-4 text-indigo-400" />
+                        <Moon className="w-4 h-4 text-brand-primary/60" />
                         <span className="text-sm font-medium">Evening</span>
                       </div>
                       <div className="flex items-center justify-between">
@@ -853,7 +854,7 @@ export default function DailyQuestions() {
                         </div>
                         <div className="flex items-center justify-between text-sm">
                           <div className="flex items-center gap-1">
-                            <Moon className="w-4 h-4 text-indigo-400" />
+                            <Moon className="w-4 h-4 text-brand-primary/60" />
                             <span>Evening:</span>
                           </div>
                           <Badge variant={remainingEveningQuestions > 0 ? "secondary" : "outline"}>
@@ -997,15 +998,15 @@ export default function DailyQuestions() {
                     >
                       <SocialProofNotification 
                         message={
-                          subscription.isPremium
+                          subscription.tier !== 'free'
                             ? "93% of couples report feeling closer after answering questions together for 2 weeks 💕"
                             : "Premium users are 3x more likely to have meaningful conversations daily 💬"
                         }
-                        icon={subscription.isPremium ? "heart" : "trending"}
-                        type={subscription.isPremium ? "achievement" : "social"}
-                        statistic={subscription.isPremium ? "You're part of this success story!" : undefined}
-                        tier={subscription.isPremium ? undefined : "premium"}
-                        onClick={subscription.isPremium ? undefined : () => router.push("/subscription")}
+                        icon={subscription.tier !== 'free' ? "heart" : "trending"}
+                        type={subscription.tier !== 'free' ? "achievement" : "social"}
+                        statistic={subscription.tier !== 'free' ? "You're part of this success story!" : undefined}
+                        tier={subscription.tier !== 'free' ? undefined : "premium"}
+                        onClick={subscription.tier !== 'free' ? undefined : () => router.push("/subscription")}
                       />
                     </motion.div>
                   )}
@@ -1081,7 +1082,7 @@ export default function DailyQuestions() {
               >
                 <h3 className="text-xl font-bold mb-2">Deepen Your Connection</h3>
                 <p className="mb-4">
-                  You're building a beautiful connection. Imagine how much deeper your relationship could grow with Premium features:
+                  You&apos;re building a beautiful connection. Imagine how much deeper your relationship could grow with Premium features:
                 </p>
                 <ul className="space-y-2 mb-6">
                   <li className="flex items-start">
@@ -1116,7 +1117,7 @@ export default function DailyQuestions() {
                   </Button>
                 </div>
                 <p className="text-xs text-center mt-4 text-gray-500">
-                  "Premium transformed how we communicate. We're closer than ever." - Jamie & Alex
+                  &quot;Premium transformed how we communicate. We&apos;re closer than ever.&quot; - Jamie &amp; Alex
                 </p>
               </motion.div>
             </motion.div>

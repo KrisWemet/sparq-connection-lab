@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
@@ -9,8 +9,8 @@ import { partnerService } from '@/services/partnerService';
 import { supabase } from '@/integrations/supabase/client';
 
 export default function JoinPartner() {
-  const { inviteCode } = useParams();
   const router = useRouter();
+  const { inviteCode  } = router.query;
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [invitation, setInvitation] = useState<any>(null);
@@ -61,7 +61,7 @@ export default function JoinPartner() {
 
     setLoading(true);
     try {
-      await partnerService.acceptInvitation(inviteCode);
+      await partnerService.acceptInvitation(inviteCode as string);
       toast.success("Invitation accepted successfully!");
       router.push('/dashboard');
     } catch (err: any) {
@@ -112,10 +112,10 @@ export default function JoinPartner() {
             <HeartHandshake className="w-8 h-8 text-primary" />
           </div>
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
-            Join Your Partner's Journey
+            Join Your Partner&apos;s Journey
           </h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
-            You've been invited to join a relationship journey. Together, you'll explore activities
+            You&apos;ve been invited to join a relationship journey. Together, you&apos;ll explore activities
             designed to strengthen your connection.
           </p>
           

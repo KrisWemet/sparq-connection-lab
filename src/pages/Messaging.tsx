@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/router';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -128,7 +128,7 @@ const scheduledMessages = [
 ];
 
 export default function Messaging() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [messages, setMessages] = useState(initialMessages);
   const [newMessage, setNewMessage] = useState("");
   const [partnerName, setPartnerName] = useState("Alex");
@@ -153,6 +153,7 @@ export default function Messaging() {
       }, 3000);
       return () => clearTimeout(timer);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
   
   const handleSendMessage = () => {
@@ -223,7 +224,7 @@ export default function Messaging() {
       <header className="sticky top-0 z-50 bg-white border-b">
         <div className="container max-w-lg mx-auto px-4 py-3 flex items-center">
           <button 
-            onClick={() => navigate(-1)} 
+            onClick={() => router.back()} 
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />

@@ -1,6 +1,6 @@
 
 import { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/router';
 import { supabase } from "@/integrations/supabase/client";
 import { ValuesQuestion } from "@/components/journeys/ValuesQuestion";
 import { BottomNav } from "@/components/bottom-nav";
@@ -9,7 +9,7 @@ import { useAuth } from "@/lib/auth";
 import { LoadingIndicator } from "@/components/ui/loading-indicator";
 
 export default function DailyActivity() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { user } = useAuth();
   const [currentQuestion, setCurrentQuestion] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -50,6 +50,7 @@ export default function DailyActivity() {
     }, 1500); // Reduced from 2000ms to 1500ms
     
     return () => clearTimeout(timeout);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchQuestion]);
 
   const handleAnswer = async (answer: string) => {
@@ -61,7 +62,7 @@ export default function DailyActivity() {
       
       // Optimistically update UI immediately
       toast.success("Response saved!");
-      navigate("/reflect");
+      router.push("/reflect");
       
       // Save the journey response in background
       const journeyPromise = supabase
@@ -125,3 +126,5 @@ export default function DailyActivity() {
     </div>
   );
 }
+
+export const getServerSideProps = async () => ({ props: {} });

@@ -32,6 +32,7 @@ export function AccountTab({ profile, setProfile }: AccountTabProps) {
       fetchUserBadges();
       fetchPartnerProfile();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const fetchUserStats = async () => {

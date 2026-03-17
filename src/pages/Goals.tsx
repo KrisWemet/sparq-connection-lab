@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/router';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -143,7 +143,7 @@ const goalTemplates = [
 import { MessageCircle } from "lucide-react";
 
 export default function Goals() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState("current");
   const [goals, setGoals] = useState(sampleGoals);
   const [showNewGoalForm, setShowNewGoalForm] = useState(false);
@@ -208,7 +208,7 @@ export default function Goals() {
       toast.error("This is a premium template. Please upgrade to access it.", {
         action: {
           label: "Upgrade",
-          onClick: () => navigate("/subscription")
+          onClick: () => router.push("/subscription")
         }
       });
       return;
@@ -229,7 +229,7 @@ export default function Goals() {
       <header className="sticky top-0 z-50 bg-white border-b">
         <div className="container max-w-6xl mx-auto px-4 py-3 flex items-center">
           <button 
-            onClick={() => navigate(-1)} 
+            onClick={() => router.back()} 
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -521,7 +521,7 @@ export default function Goals() {
           <div className="text-center mt-8">
             <Button 
               variant="outline" 
-              onClick={() => navigate("/subscription")}
+              onClick={() => router.push("/subscription")}
               className="gap-2"
             >
               <Star className="w-4 h-4" />

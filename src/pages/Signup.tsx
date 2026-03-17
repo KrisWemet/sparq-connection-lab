@@ -213,3 +213,5 @@ export default function Signup() {
     </div>
   );
 }
+
+export const getServerSideProps = async () => ({ props: {} });

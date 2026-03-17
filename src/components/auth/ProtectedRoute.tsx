@@ -24,7 +24,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-50 to-blue-100">
         <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <h2 className="text-xl font-semibold text-indigo-700 mb-2">Just a moment...</h2>
+        <h2 className="text-xl font-semibold text-brand-primary mb-2">Just a moment...</h2>
         <p className="text-gray-600 max-w-md text-center">
           Preparing your relationship journey
         </p>

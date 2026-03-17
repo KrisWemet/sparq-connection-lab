@@ -19,19 +19,28 @@ export default {
     },
     extend: {
       colors: {
+        brand: {
+          primary: "#C0614A",   // Warm terracotta/rust
+          hover: "#A3513D",
+          light: "#FDF8F6",
+          linen: "#FAF6F1",     // Warm cream/linen (replaces pure white)
+          sand: "#E8A857",      // Gentle amber for highlights/streaks
+          taupe: "#3D2C28",     // Deep warm brown for grounding text
+          growth: "#8FAF8A",    // Soft sage green for progress
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#9B51E0",
+          DEFAULT: "#C86A58",
           foreground: "#FFFFFF",
-          100: "#F3E8FF",
-          200: "#E9D5FF",
+          100: "#FDF8F6",
+          200: "#F4EFEB",
         },
         secondary: {
-          DEFAULT: "#FFE4E4",
+          DEFAULT: "#F4EFEB",
           foreground: "#1F1235",
         },
         destructive: {
@@ -84,6 +93,9 @@ export default {
         "slide-left": "slide-left 0.3s ease-out",
         "slide-right": "slide-right 0.3s ease-out",
         "fade-in": "fade-in 0.3s ease-out",
+      },
+      fontFamily: {
+        serif: ['var(--font-serif)', 'ui-serif', 'Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'],
       },
     },
   },

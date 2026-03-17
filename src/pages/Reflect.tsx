@@ -1,13 +1,13 @@
 
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/router';
 import { ChevronLeft, BookOpen, AlignCenter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BottomNav } from "@/components/bottom-nav";
 
 export default function Reflect() {
   const [notes, setNotes] = useState("");
-  const navigate = useNavigate();
+  const router = useRouter();
 
   useEffect(() => {
     const savedNotes = localStorage.getItem("dailyActivityNotes");
@@ -21,7 +21,7 @@ export default function Reflect() {
       <header className="sticky top-0 z-50 bg-white border-b">
         <div className="container max-w-lg mx-auto px-4 py-3 flex items-center">
           <button 
-            onClick={() => navigate(-1)}
+            onClick={() => router.back()}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -51,14 +51,14 @@ export default function Reflect() {
             <h2 className="text-lg font-semibold text-gray-900">Align</h2>
           </div>
           <p className="text-gray-600 mb-6">
-            Now that you've reflected on today's journey, take a moment to align your thoughts with your partner.
+            Now that you&apos;ve reflected on today&apos;s journey, take a moment to align your thoughts with your partner.
             Share your insights and discuss how you can incorporate these values into your relationship.
           </p>
           <Button 
             className="w-full"
-            onClick={() => navigate("/quiz")}
+            onClick={() => router.push("/quiz")}
           >
-            Complete Today's Journey
+            Complete Today&apos;s Journey
           </Button>
         </section>
       </main>

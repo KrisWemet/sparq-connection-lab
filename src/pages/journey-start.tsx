@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useRouter } from 'next/router';
 import { motion } from "framer-motion";
 import { PersuasiveJourneyPrompt } from "../components/journey/PersuasiveJourneyPrompt";
 import { MetaphorAnimation } from "../components/MetaphorAnimation";
@@ -51,8 +51,8 @@ const journeys = [
 ];
 
 export default function JourneyStart() {
-  const { journeyId } = useParams<{ journeyId: string }>();
-  const navigate = useNavigate();
+  const router = useRouter();
+  const { journeyId } = router.query as { journeyId: string };
   const [activeTab, setActiveTab] = useState("overview");
   const [showMetaphor, setShowMetaphor] = useState(false);
   const [showFuturePacing, setShowFuturePacing] = useState(false);
@@ -88,7 +88,7 @@ export default function JourneyStart() {
   // Handle continuation of the journey
   const handleContinueJourney = () => {
     // In a real app, this would navigate to the first incomplete activity
-    navigate(`/activities/${journey.activities.find(a => !a.completed)?.id || journey.activities[0].id}`);
+    router.push(`/activities/${journey.activities.find(a => !a.completed)?.id || journey.activities[0].id}`);
   };
   
   // Handle showing the metaphor animation
@@ -116,7 +116,9 @@ export default function JourneyStart() {
       {/* Metaphor animation overlay */}
       {showMetaphor && (
         <MetaphorAnimation
-          metaphorKey={metaphor.metaphorType}
+          title={metaphor.title}
+          description={metaphor.description}
+          metaphorType={metaphor.metaphorType}
           onComplete={handleMetaphorComplete}
         />
       )}
@@ -174,7 +176,7 @@ export default function JourneyStart() {
                 <h3 className="font-medium mb-2">Your Progress</h3>
                 <div className="w-full bg-gray-300 rounded-full h-2.5">
                   <div 
-                    className="bg-indigo-600 h-2.5 rounded-full transition-all duration-1000"
+                    className="bg-brand-primary h-2.5 rounded-full transition-all duration-1000"
                     style={{ width: `${completionPercentage}%` }}
                   ></div>
                 </div>
@@ -185,7 +187,7 @@ export default function JourneyStart() {
               
               <Button 
                 onClick={handleContinueJourney}
-                className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
+                className="w-full bg-gradient-to-r from-brand-primary to-purple-600 hover:from-brand-primary hover:to-purple-700"
               >
                 Continue Your Journey
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -201,12 +203,12 @@ export default function JourneyStart() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div 
-                  className="bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors"
+                  className="bg-brand-linen p-4 rounded-lg cursor-pointer hover:bg-brand-primary/10 transition-colors"
                   onClick={handleShowMetaphor}
                 >
-                  <h3 className="font-medium text-indigo-700 mb-2">{metaphor.title}</h3>
+                  <h3 className="font-medium text-brand-primary mb-2">{metaphor.title}</h3>
                   <p className="text-sm text-gray-600">{metaphor.description}</p>
-                  <p className="text-xs text-indigo-600 mt-2 font-medium">Click to experience the visualization</p>
+                  <p className="text-xs text-brand-primary mt-2 font-medium">Click to experience the visualization</p>
                 </div>
                 
                 <div 

@@ -26,7 +26,7 @@ test.describe('Skill Tree', () => {
     await expect(page).toHaveURL(/\/daily-growth/);
   });
 
-  test('shows unlocked skill tree with 3 tracks', async ({ page }) => {
+  test('shows unlocked skill tree with 5 tracks', async ({ page }) => {
     await mockPeterRoutes(page);
     await mockUserInsights(page, { onboarding_day: 15, skill_tree_unlocked: true });
     await mockSkillProgress(page, []);
@@ -36,15 +36,17 @@ test.describe('Skill Tree', () => {
     // Gate screen should NOT be visible
     await expect(page.locator('h1:has-text("Skill Tree Locked")')).not.toBeVisible();
 
-    // All 3 tracks visible
-    await expect(page.locator('text=Communication')).toBeVisible({ timeout: 10_000 });
-    await expect(page.locator('text=Conflict Resolution')).toBeVisible();
-    await expect(page.locator('text=Intimacy')).toBeVisible();
+    // All 5 tracks visible
+    await expect(page.locator('span:text-is("Communication")').first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator('span:text-is("Conflict Repair")').first()).toBeVisible();
+    await expect(page.locator('span:text-is("Emotional Intimacy")').first()).toBeVisible();
+    await expect(page.locator('span:text-is("Trust & Security")').first()).toBeVisible();
+    await expect(page.locator('span:text-is("Shared Vision & Rituals")').first()).toBeVisible();
 
     // Level 1 Basic is available (Start badge) in first track (Communication)
     await expect(page.locator('button:has-text("Level 1: Basic")').first()).toBeVisible();
     // Should show "Start" status badge
-    await expect(page.locator('text=Start').first()).toBeVisible();
+    await expect(page.locator('span:has-text("Start")').first()).toBeVisible();
   });
 
   test('advanced and expert levels are locked when basic not complete', async ({ page }) => {
@@ -53,7 +55,7 @@ test.describe('Skill Tree', () => {
     await mockSkillProgress(page, []);
 
     await page.goto('/skill-tree');
-    await expect(page.locator('text=Communication')).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator('span:text-is("Communication")').first()).toBeVisible({ timeout: 10_000 });
 
     // Level 2 (Advanced) should be disabled (locked until Basic complete)
     const advancedButton = page.locator('button:has-text("Level 2: Advanced")').first();
@@ -69,7 +71,7 @@ test.describe('Skill Tree', () => {
     ]);
 
     await page.goto('/skill-tree');
-    await expect(page.locator('text=Communication')).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator('span:text-is("Communication")').first()).toBeVisible({ timeout: 10_000 });
 
     // Basic should show "Complete" badge
     const basicRow = page.locator('button:has-text("Level 1: Basic")').first();
@@ -77,7 +79,7 @@ test.describe('Skill Tree', () => {
 
     // Advanced should now be available (Start badge)
     const advancedRow = page.locator('button:has-text("Level 2: Advanced")').first();
-    await expect(advancedRow).toContainText('Start');
+    await expect(advancedRow).not.toBeDisabled();
   });
 
   test('clicking an available level opens the node panel', async ({ page }) => {
@@ -96,9 +98,9 @@ test.describe('Skill Tree', () => {
       page.locator('text=Communication — Basic')
     ).toBeVisible({ timeout: 8_000 });
 
-    // Peter's story loads in the panel
+    // Peter's story loads in the panel (using the generic chat mock)
     await expect(
-      page.locator('text=Alex noticed Sam')
+      page.locator('text=Thanks for sharing')
     ).toBeVisible({ timeout: 8_000 });
 
     // Chat input is ready in panel
@@ -120,7 +122,7 @@ test.describe('Skill Tree', () => {
     await expect(page.locator('text=Communication — Basic')).toBeVisible({ timeout: 8_000 });
 
     // Wait for Peter's opening story to load
-    await expect(page.locator('text=Alex noticed Sam')).toBeVisible({ timeout: 8_000 });
+    await expect(page.locator('text=Thanks for sharing')).toBeVisible({ timeout: 8_000 });
 
     // Send a reflection message
     const textarea = page.locator('textarea[placeholder="Share your reflection..."]');

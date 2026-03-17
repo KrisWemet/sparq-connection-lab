@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from 'next/router';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -88,7 +90,7 @@ const loveLanguages = [
 ];
 
 export default function LoveLanguagesJourney() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [currentDay, setCurrentDay] = useState(1);
   const [progress, setProgress] = useState<JourneyProgress[]>([]);
   const [loading, setLoading] = useState(true);
@@ -109,12 +111,14 @@ export default function LoveLanguagesJourney() {
   useEffect(() => {
     loadProgress();
     loadContent();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (journeyContent) {
       extractDayContent(currentDay);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentDay, journeyContent]);
 
   const loadContent = async () => {
@@ -233,7 +237,7 @@ export default function LoveLanguagesJourney() {
 
   const handleCelebrationClose = () => {
     setCelebrationOpen(false);
-    navigate('/');
+    router.push('/');
   };
 
   const handlePrevious = () => {
@@ -349,7 +353,7 @@ export default function LoveLanguagesJourney() {
       const couplesContent = couplesMatch ? couplesMatch[0].trim() : '';
       
       // Function to extract key points from text content
-      const extractKeyPoints = (content) => {
+      const extractKeyPoints = (content: string) => {
         const points = content.split('\n\n').filter(p => p.trim().length > 0);
         return points.length > 0 ? points : [content];
       };
@@ -515,12 +519,12 @@ export default function LoveLanguagesJourney() {
                     <p>You might have this as your primary language if:</p>
                     <ul>
                       <li>Compliments and praise stay with you for days</li>
-                      <li>Hearing "I love you" never gets old</li>
+                      <li>Hearing &quot;I love you&quot; never gets old</li>
                       <li>Harsh words hurt deeply and are hard to forget</li>
                       <li>You save cards, notes, or texts with kind words</li>
                     </ul>
                     <p className="italic mt-2 text-gray-600 dark:text-gray-400">
-                      "Does your heart light up when your partner notices your efforts and tells you how much they appreciate you?"
+                      &quot;Does your heart light up when your partner notices your efforts and tells you how much they appreciate you?&quot;
                     </p>
                   </div>
                 </AccordionContent>
@@ -543,7 +547,7 @@ export default function LoveLanguagesJourney() {
                       <li>Broken promises feel particularly hurtful</li>
                     </ul>
                     <p className="italic mt-2 text-gray-600 dark:text-gray-400">
-                      "Do you feel a surge of appreciation when your partner makes dinner after your long day?"
+                      &quot;Do you feel a surge of appreciation when your partner makes dinner after your long day?&quot;
                     </p>
                   </div>
                 </AccordionContent>
@@ -561,12 +565,12 @@ export default function LoveLanguagesJourney() {
                     <p>You might have this as your primary language if:</p>
                     <ul>
                       <li>You treasure physical symbols of love</li>
-                      <li>You remember gifts you've received in detail</li>
+                      <li>You remember gifts you&apos;ve received in detail</li>
                       <li>You put significant thought into selecting gifts for others</li>
                       <li>Forgotten special occasions feel particularly hurtful</li>
                     </ul>
                     <p className="italic mt-2 text-gray-600 dark:text-gray-400">
-                      "Does your heart melt when your partner brings you a small gift 'just because'?"
+                      &quot;Does your heart melt when your partner brings you a small gift &apos;just because&apos;?&quot;
                     </p>
                   </div>
                 </AccordionContent>
@@ -589,7 +593,7 @@ export default function LoveLanguagesJourney() {
                       <li>You prefer conversation without distractions</li>
                     </ul>
                     <p className="italic mt-2 text-gray-600 dark:text-gray-400">
-                      "Do you feel most connected when you and your partner are fully present with each other?"
+                      &quot;Do you feel most connected when you and your partner are fully present with each other?&quot;
                     </p>
                   </div>
                 </AccordionContent>
@@ -612,7 +616,7 @@ export default function LoveLanguagesJourney() {
                       <li>You find comfort in holding hands or sitting close</li>
                     </ul>
                     <p className="italic mt-2 text-gray-600 dark:text-gray-400">
-                      "Does a hug communicate more than words ever could?"
+                      &quot;Does a hug communicate more than words ever could?&quot;
                     </p>
                   </div>
                 </AccordionContent>
@@ -655,7 +659,7 @@ export default function LoveLanguagesJourney() {
         return (
           <Card className="bg-white dark:bg-gray-800 shadow-md border-0 overflow-hidden">
             <div className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 border-l-4 border-blue-400">
-              <h3 className="text-xl font-semibold text-blue-600 dark:text-blue-400">Today's Activity</h3>
+              <h3 className="text-xl font-semibold text-brand-hover dark:text-blue-400">Today&apos;s Activity</h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Put your learning into practice
               </p>
@@ -667,7 +671,7 @@ export default function LoveLanguagesJourney() {
               
               {sentences.length > 0 && (
                 <div className="bg-blue-50 dark:bg-blue-900/10 rounded-lg p-4 mt-4">
-                  <h4 className="font-medium text-blue-600 dark:text-blue-400 mb-2">Complete these sentences together:</h4>
+                  <h4 className="font-medium text-brand-hover dark:text-blue-400 mb-2">Complete these sentences together:</h4>
                   <ul className="space-y-2">
                     {sentences.map((sentence, i) => (
                       <li key={i} className="flex items-start gap-2">
@@ -684,12 +688,12 @@ export default function LoveLanguagesJourney() {
               <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg mt-4">
                 <div className="flex items-start">
                   <div className="bg-blue-100 dark:bg-blue-800 p-2 rounded-full mr-3 shrink-0">
-                    <Heart className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                    <Heart className="w-5 h-5 text-brand-hover dark:text-blue-400" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-blue-600 dark:text-blue-400">Pro Tip</h4>
+                    <h4 className="font-medium text-brand-hover dark:text-blue-400">Pro Tip</h4>
                     <p className="text-sm text-gray-700 dark:text-gray-300">
-                      Set a calendar reminder to practice what you've learned today. Consistency is key to creating lasting change in your relationship.
+                      Set a calendar reminder to practice what you&apos;ve learned today. Consistency is key to creating lasting change in your relationship.
                     </p>
                   </div>
                 </div>
@@ -703,10 +707,11 @@ export default function LoveLanguagesJourney() {
         <div className="space-y-8">
           {/* Featured Image with Title Overlay */}
           <div className="relative rounded-xl overflow-hidden">
-            <img 
-              src={getLoveLanguageImage()} 
-              alt={`Love Languages Day ${currentDay}`} 
-              className="w-full h-56 object-cover"
+            <Image
+              src={getLoveLanguageImage()}
+              alt={`Love Languages Day ${currentDay}`}
+              fill
+              className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
               <div className="p-6 w-full">
@@ -897,7 +902,7 @@ export default function LoveLanguagesJourney() {
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="w-4 h-4 text-pink-500 mt-1 shrink-0" />
-                        <span>Hearing "I love you" never gets old</span>
+                        <span>Hearing &quot;I love you&quot; never gets old</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="w-4 h-4 text-pink-500 mt-1 shrink-0" />
@@ -917,7 +922,7 @@ export default function LoveLanguagesJourney() {
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="w-4 h-4 text-amber-500 mt-1 shrink-0" />
-                        <span>"Actions speak louder than words" resonates with you</span>
+                        <span>&quot;Actions speak louder than words&quot; resonates with you</span>
                       </li>
                     </>
                   )}
@@ -929,7 +934,7 @@ export default function LoveLanguagesJourney() {
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="w-4 h-4 text-emerald-500 mt-1 shrink-0" />
-                        <span>You remember gifts you've received in detail</span>
+                        <span>You remember gifts you&apos;ve received in detail</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="w-4 h-4 text-emerald-500 mt-1 shrink-0" />
@@ -994,7 +999,7 @@ export default function LoveLanguagesJourney() {
                 <div className="space-y-2">
                   <h2 className="text-2xl font-bold text-primary">Day {currentDay} Complete!</h2>
                   <p className="text-gray-600 dark:text-gray-400">
-                    Great job! You've completed today's lesson on love languages. 
+                    Great job! You&apos;ve completed today&apos;s lesson on love languages.
                     Your insights have been saved and will help strengthen your relationship.
                   </p>
                 </div>
@@ -1010,11 +1015,11 @@ export default function LoveLanguagesJourney() {
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="w-4 h-4 text-primary mt-1 shrink-0" />
-                      <span>You've learned about the foundations of the 5 love languages</span>
+                      <span>You&apos;ve learned about the foundations of the 5 love languages</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="w-4 h-4 text-primary mt-1 shrink-0" />
-                      <span>You've reflected on how love languages apply to your relationship</span>
+                      <span>You&apos;ve reflected on how love languages apply to your relationship</span>
                     </li>
                   </ul>
                 </div>
@@ -1042,7 +1047,7 @@ export default function LoveLanguagesJourney() {
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Learn About the Love Languages</h3>
               <p className="text-gray-600 dark:text-gray-300">
-                Today, you'll learn about the five different ways people express and receive love.
+                Today, you&apos;ll learn about the five different ways people express and receive love.
                 Pay attention to which ones resonate with you the most.
               </p>
               
@@ -1098,7 +1103,7 @@ export default function LoveLanguagesJourney() {
               </div>
 
               <div className="space-y-4">
-                <Label>Reflect on today's observations</Label>
+                <Label>Reflect on today&apos;s observations</Label>
                 <Textarea
                   placeholder="Share your thoughts about the love languages you noticed today..."
                   value={responses.reflection || ''}
@@ -1115,7 +1120,7 @@ export default function LoveLanguagesJourney() {
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Reflect on Past Moments of Feeling Loved</h3>
               <p className="text-gray-600 dark:text-gray-300">
-                Today, we'll explore your memories of feeling deeply loved and identify which love languages were present in those moments.
+                Today, we&apos;ll explore your memories of feeling deeply loved and identify which love languages were present in those moments.
               </p>
 
               <div className="space-y-6">
@@ -1168,7 +1173,7 @@ export default function LoveLanguagesJourney() {
                 </div>
 
                 <div className="space-y-4">
-                  <Label>Today's Observations</Label>
+                  <Label>Today&apos;s Observations</Label>
                   <Textarea
                     placeholder="Reflect on any moments today that reminded you of these memories or made you feel loved in similar ways..."
                     value={responses.reflection || ''}
@@ -1214,7 +1219,7 @@ export default function LoveLanguagesJourney() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate('/journeys')}
+            onClick={() => router.push('/journeys')}
             className="flex items-center text-gray-600 dark:text-gray-400"
           >
             <ChevronLeft className="w-4 h-4 mr-1" />
@@ -1241,22 +1246,22 @@ export default function LoveLanguagesJourney() {
       
       {/* Footer Navigation */}
       <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-gray-200 dark:border-gray-800 p-3 flex justify-around items-center">
-        <a href="/" className="flex flex-col items-center text-gray-600 dark:text-gray-400 text-xs">
+        <Link href="/" className="flex flex-col items-center text-gray-600 dark:text-gray-400 text-xs">
           <Home className="w-6 h-6 mb-1" />
           Home
-        </a>
-        <a href="/messages" className="flex flex-col items-center text-gray-600 dark:text-gray-400 text-xs">
+        </Link>
+        <Link href="/messages" className="flex flex-col items-center text-gray-600 dark:text-gray-400 text-xs">
           <MessageSquare className="w-6 h-6 mb-1" />
           Messages
-        </a>
-        <a href="/goals" className="flex flex-col items-center text-gray-600 dark:text-gray-400 text-xs">
+        </Link>
+        <Link href="/goals" className="flex flex-col items-center text-gray-600 dark:text-gray-400 text-xs">
           <Target className="w-6 h-6 mb-1" />
           Goals
-        </a>
-        <a href="/profile" className="flex flex-col items-center text-gray-600 dark:text-gray-400 text-xs">
+        </Link>
+        <Link href="/profile" className="flex flex-col items-center text-gray-600 dark:text-gray-400 text-xs">
           <User className="w-6 h-6 mb-1" />
           Profile
-        </a>
+        </Link>
       </div>
       
       {/* Add padding at the bottom to account for fixed footer */}

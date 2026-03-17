@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { motion, AnimatePresence } from "framer-motion";
 import { useSubscription } from "@/lib/subscription-provider";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
@@ -14,16 +15,69 @@ import {
   Trash2,
   Settings,
   HelpCircle,
+  Lock,
 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function SettingsPage() {
   const router = useRouter();
   const { subscription } = useSubscription();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
   const [notifications, setNotifications] = useState(true);
+  const [reminderTime, setReminderTime] = useState("09:00");
   const [emailUpdates, setEmailUpdates] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadPreferences() {
+      if (!user) return;
+      try {
+        const { buildAuthedHeaders } = await import('@/lib/api-auth');
+        const headers = await buildAuthedHeaders();
+        const res = await fetch('/api/profile/preferences', { headers });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.notifications_enabled !== undefined) setNotifications(data.notifications_enabled);
+          if (data.reminder_time !== undefined && data.reminder_time !== null) {
+            // Slice 'HH:MM:SS' back to 'HH:MM'
+            setReminderTime(data.reminder_time.slice(0, 5));
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load pref:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadPreferences();
+  }, [user]);
+
+  const updatePreference = async (key: string, value: any) => {
+    try {
+      const { buildAuthedHeaders } = await import('@/lib/api-auth');
+      const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
+      await fetch('/api/profile/preferences', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ [key]: value })
+      });
+      toast.success("Preferences updated");
+    } catch (err) {
+      toast.error("Failed to update preference");
+    }
+  };
+
+  const handleNotificationsChange = (checked: boolean) => {
+    setNotifications(checked);
+    updatePreference('notifications_enabled', checked);
+  };
+
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setReminderTime(val);
+    updatePreference('reminder_time', val);
+  };
 
   const handleLogout = async () => {
     try {
@@ -61,7 +115,7 @@ export default function SettingsPage() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Settings className="w-5 h-5 text-indigo-600" />
+              <Settings className="w-5 h-5 text-brand-primary" />
               <CardTitle>Account Settings</CardTitle>
             </div>
             <CardDescription>Manage your account preferences</CardDescription>
@@ -69,17 +123,44 @@ export default function SettingsPage() {
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label htmlFor="notifications">Push Notifications</Label>
+                <Label htmlFor="notifications">Daily Reminders</Label>
                 <p className="text-sm text-gray-500">
-                  Receive notifications about activity and updates
+                  Receive notifications to complete your Daily Loop
                 </p>
               </div>
               <Switch
                 id="notifications"
                 checked={notifications}
-                onCheckedChange={setNotifications}
+                disabled={isLoading}
+                onCheckedChange={handleNotificationsChange}
               />
             </div>
+
+            <AnimatePresence>
+              {notifications && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="flex items-center justify-between pl-4 border-l-2 border-indigo-100 mt-2"
+                >
+                  <div className="space-y-0.5">
+                    <Label htmlFor="reminder-time">Reminder Time</Label>
+                    <p className="text-sm text-gray-500">
+                      When should Peter nudge you?
+                    </p>
+                  </div>
+                  <input
+                    type="time"
+                    id="reminder-time"
+                    value={reminderTime}
+                    disabled={isLoading}
+                    onChange={handleTimeChange}
+                    className="border border-gray-200 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <Separator />
 
@@ -103,7 +184,7 @@ export default function SettingsPage() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Shield className="w-5 h-5 text-indigo-600" />
+              <Shield className="w-5 h-5 text-brand-primary" />
               <CardTitle>Privacy & Security</CardTitle>
             </div>
             <CardDescription>Manage your data and privacy preferences</CardDescription>
@@ -125,6 +206,15 @@ export default function SettingsPage() {
             >
               <HelpCircle className="w-4 h-4 mr-2" />
               Terms of Service
+            </Button>
+
+            <Button
+              variant="outline"
+              className="w-full justify-start"
+              onClick={() => router.push("/trust-center")}
+            >
+              <Lock className="w-4 h-4 mr-2" />
+              Trust Center
             </Button>
           </CardContent>
         </Card>

@@ -1,3 +1,4 @@
+// @ts-nocheck — shadcn/ui generated file, react-day-picker type incompatibility
 import * as React from "react";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";

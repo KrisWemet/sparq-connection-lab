@@ -73,7 +73,7 @@ export default function AttachmentHealingJourney() {
       id: "earned-security",
       title: "Earned Security",
       description: "Building new, secure attachment patterns through consistent experiences",
-      icon: <UserPlus className="w-5 h-5 text-indigo-500" />,
+      icon: <UserPlus className="w-5 h-5 text-brand-primary/80" />,
       color: "indigo",
       example: "Gradually developing more secure attachment through intentional practices and consistent emotional availability, recognizing that even deeply ingrained patterns can change over time."
     }

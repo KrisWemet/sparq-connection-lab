@@ -95,7 +95,7 @@ export function OnboardingStepOne({
         </div>
         <h2 className="text-2xl font-bold mb-2">Welcome to Sparq Connect!</h2>
         <p className="text-muted-foreground">
-          Let's set up your profile to make the most of your relationship journey.
+          Let&apos;s set up your profile to make the most of your relationship journey.
         </p>
       </div>
       
@@ -114,7 +114,7 @@ export function OnboardingStepOne({
         </div>
         
         <div>
-          <Label htmlFor="partner-name">Your Partner's Name (Optional)</Label>
+          <Label htmlFor="partner-name">Your Partner&apos;s Name (Optional)</Label>
           <div className="mt-1.5">
             <Input
               id="partner-name"
@@ -127,7 +127,7 @@ export function OnboardingStepOne({
         </div>
         
         <div>
-          <Label htmlFor="partner-email">Partner's Email Address (Optional)</Label>
+          <Label htmlFor="partner-email">Partner&apos;s Email Address (Optional)</Label>
           <div className="mt-1.5">
             <Input
               id="partner-email"
@@ -138,7 +138,7 @@ export function OnboardingStepOne({
             />
           </div>
           <p className="text-sm text-muted-foreground mt-1.5">
-            We'll send them an invitation to join you on your relationship journey.
+            We&apos;ll send them an invitation to join you on your relationship journey.
           </p>
         </div>
         
@@ -214,7 +214,7 @@ export function OnboardingStepOne({
             </div>
           )}
           <p className="text-sm text-muted-foreground mt-1.5">
-            We'll help you celebrate important milestones.
+            We&apos;ll help you celebrate important milestones.
           </p>
         </div>
       </div>

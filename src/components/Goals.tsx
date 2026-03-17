@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { 
   Plus, 
   ArrowRight, 
@@ -59,7 +59,7 @@ interface NewGoalForm {
 }
 
 export default function Goals() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [goals, setGoals] = useState<Goal[]>([]);
   const [open, setOpen] = useState(false);
@@ -195,7 +195,7 @@ export default function Goals() {
       case 'relationship':
         return <Heart className="h-4 w-4 text-rose-500" />;
       case 'personal':
-        return <UserRound className="h-4 w-4 text-indigo-500" />;
+        return <UserRound className="h-4 w-4 text-brand-primary/80" />;
       case 'shared':
         return <Target className="h-4 w-4 text-violet-500" />;
       default:

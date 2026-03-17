@@ -54,7 +54,7 @@ export function PartnerInvite() {
 
         <div className="space-y-2">
           <label htmlFor="partner-email" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Partner's Email
+            Partner&apos;s Email
           </label>
           <div className="flex gap-2">
             <Input

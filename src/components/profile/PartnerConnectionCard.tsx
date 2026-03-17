@@ -4,7 +4,7 @@ import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Camera } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/router';
 import { ProfileFormData } from "@/types/profile";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -17,11 +17,11 @@ interface PartnerConnectionCardProps {
 
 export function PartnerConnectionCard({ profile, partnerAvatarUrl }: PartnerConnectionCardProps) {
   const [uploadingPartnerAvatar, setUploadingPartnerAvatar] = useState(false);
-  const navigate = useNavigate();
+  const router = useRouter();
   const { user } = useAuth();
 
   const handleViewPartner = () => {
-    navigate("/partner-profile");
+    router.push("/partner-profile");
   };
 
   const handlePartnerAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {

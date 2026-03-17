@@ -87,7 +87,7 @@ export function PersonalInfoCard({ profile, setProfile }: PersonalInfoCardProps)
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="partner_name">Partner's Name</Label>
+          <Label htmlFor="partner_name">Partner&apos;s Name</Label>
           <Input 
             id="partner_name" 
             value={profile.partner_name || ''} 

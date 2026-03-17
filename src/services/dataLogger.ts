@@ -314,7 +314,7 @@ export const getAIUsageStats = async (
 };
 
 // Export a default object with all functions
-export default {
+const dataLogger = {
   logUserActivity,
   logQuestionResponse,
   logAIInteraction,
@@ -322,4 +322,6 @@ export default {
   updateUserPreferences,
   getAIUsageStats,
   resetSessionId
-}; 
+};
+
+export default dataLogger;

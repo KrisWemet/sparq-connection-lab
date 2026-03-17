@@ -2,10 +2,10 @@
 import { motion } from "framer-motion";
 import { MessageSquare, ChevronRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/router';
 
 export function DailyConnectCard() {
-  const navigate = useNavigate();
+  const router = useRouter();
   
   return (
     <motion.div 
@@ -14,7 +14,7 @@ export function DailyConnectCard() {
     >
       <Card 
         className="cursor-pointer overflow-hidden hover:shadow-md transition-all duration-300 border-primary/20 bg-gradient-to-br from-white to-primary-100 relative" 
-        onClick={() => navigate("/quiz")}
+        onClick={() => router.push("/quiz")}
       >
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
@@ -34,7 +34,7 @@ export function DailyConnectCard() {
                   </motion.span>
                 </h3>
                 <p className="text-sm text-gray-500">
-                  Answer today's fun question to strengthen your bond!
+                  Answer today&apos;s fun question to strengthen your bond!
                 </p>
               </div>
             </div>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/router';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,10 +20,10 @@ import {
 import { toast } from "sonner";
 
 export default function AITherapist() {
-  const navigate = useNavigate();
+  const router = useRouter();
   
   const handleSubscribe = () => {
-    navigate("/subscription");
+    router.push("/subscription");
     toast.info("Redirecting to subscription plans");
   };
 
@@ -32,7 +32,7 @@ export default function AITherapist() {
       <header className="sticky top-0 z-50 bg-white border-b">
         <div className="container max-w-lg mx-auto px-4 py-3 flex items-center">
           <button 
-            onClick={() => navigate(-1)} 
+            onClick={() => router.back()} 
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -152,7 +152,7 @@ export default function AITherapist() {
         <div className="bg-white p-6 rounded-lg border shadow-sm">
           <h3 className="text-lg font-semibold mb-3 text-center">How Sparq Connect Helps Couples</h3>
           <p className="text-gray-700 mb-4">
-            Sparq Connect is designed to be your relationship's best ally, helping you and your partner build deeper intimacy through:
+            Sparq Connect is designed to be your relationship&apos;s best ally, helping you and your partner build deeper intimacy through:
           </p>
           <ul className="space-y-3">
             <li className="flex items-start gap-2">

@@ -73,7 +73,7 @@ export default function CommunicationJourney() {
       id: "vulnerability",
       title: "Vulnerable Communication",
       description: "Sharing your deeper feelings, fears, and hopes with openness and trust",
-      icon: <User className="w-5 h-5 text-indigo-500" />,
+      icon: <User className="w-5 h-5 text-brand-primary/80" />,
       color: "indigo",
       example: "Instead of just discussing practical aspects of a decision, sharing 'I'm feeling anxious about this move because my last major life change triggered a period of depression.'"
     }

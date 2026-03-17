@@ -2,19 +2,19 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/router';
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
 export function LogoutCard() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { signOut } = useAuth();
 
   const handleLogout = async () => {
     try {
       await signOut();
       toast.success("Logged out successfully!");
-      navigate("/auth");
+      router.push("/auth");
     } catch (error) {
       console.error("Error logging out:", error);
       toast.error("Failed to log out. Please try again.");

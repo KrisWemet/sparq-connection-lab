@@ -17,7 +17,7 @@ test.describe('Daily Growth Loop', () => {
     await expect(page.locator('text=Day 1 of 14')).toBeVisible({ timeout: 10_000 });
 
     // Morning badge visible
-    await expect(page.locator('text=Morning')).toBeVisible();
+    await expect(page.locator('span:has-text("Morning")').first()).toBeVisible();
 
     // Peter's morning story should load (mocked instantly)
     await expect(page.locator('text=Alex noticed Sam')).toBeVisible({ timeout: 10_000 });
@@ -42,7 +42,7 @@ test.describe('Daily Growth Loop', () => {
     await page.locator('button:has-text("Got it — I\'ll try this today")').click();
 
     // Phase transitions to evening
-    await expect(page.locator('text=Evening')).toBeVisible({ timeout: 5_000 });
+    await expect(page.locator('span:has-text("Evening")').first()).toBeVisible({ timeout: 5_000 });
     await expect(
       page.locator('text=Hey, welcome back!')
     ).toBeVisible({ timeout: 5_000 });

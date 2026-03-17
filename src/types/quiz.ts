@@ -29,6 +29,7 @@ export interface Journey {
   difficulty?: number;
   modality?: string;
   estimated_duration?: string;
+  premium_only?: boolean;
 }
 
 export interface JourneyQuestion {

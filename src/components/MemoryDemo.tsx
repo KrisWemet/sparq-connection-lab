@@ -23,6 +23,7 @@ export function MemoryDemo() {
     if (memory) {
       loadKeys();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [memory]);
   
   // Load keys from memory

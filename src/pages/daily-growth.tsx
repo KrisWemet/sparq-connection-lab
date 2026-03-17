@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sun, Moon, ChevronRight, CheckCircle } from 'lucide-react';
@@ -6,20 +7,14 @@ import { useAuth } from '@/lib/auth-context';
 import { supabase } from '@/lib/supabase';
 import { PeterChat } from '@/components/PeterChat';
 import { PeterMessage, UserInsights } from '@/lib/peterService';
+import { buildAuthedHeaders } from '@/lib/api-auth';
+import { parseMorningContent } from '@/lib/morning-parser';
+import { Day14Graduation } from '@/components/onboarding/Day14Graduation';
+import { analyticsService } from '@/services/analyticsService';
+import { DailyTimeline } from '@/components/journey/DailyTimeline';
+import { fireElegantConfetti } from '@/lib/ElegantConfetti';
 
 type Phase = 'loading' | 'morning' | 'evening' | 'complete';
-
-// Parse Peter's morning response into story + action
-function parseMorningContent(raw: string): { story: string; action: string } {
-  const match = raw.match(/Today['']s Action[:\s]+(.+?)$/ms);
-  if (match) {
-    return {
-      story: raw.substring(0, raw.indexOf(match[0])).trim(),
-      action: match[1].trim(),
-    };
-  }
-  return { story: raw, action: 'Do one small kind thing for your partner today.' };
-}
 
 const EVENING_OPENER: PeterMessage = {
   role: 'assistant',
@@ -42,6 +37,28 @@ export default function DailyGrowth() {
   const [eveningTurns, setEveningTurns] = useState(0);
   const [canCompleteDay, setCanCompleteDay] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+
+  // New states for the Put the Phone Down Quest
+  const [actionVerified, setActionVerified] = useState(false);
+  const [isHolding, setIsHolding] = useState(false);
+
+  useEffect(() => {
+    if (actionVerified && user) {
+      analyticsService.trackEvent('daily_action_verified', {
+        day: currentDay,
+        session_id: sessionId
+      });
+    }
+  }, [actionVerified, user, currentDay, sessionId]);
+
+  const localDateString = () => {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  };
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -51,6 +68,40 @@ export default function DailyGrowth() {
     if (!user) return;
 
     (async () => {
+      // Preferred path: deterministic daily session API
+      try {
+        const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
+        const startRes = await fetch('/api/daily/session/start', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            local_date: localDateString(),
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+          }),
+        });
+
+        if (startRes.ok) {
+          const payload = await startRes.json();
+          const session = payload.session;
+          if (session) {
+            setSessionId(session.id);
+            setCurrentDay(session.day_index ?? 1);
+            setMorningStory(session.morning_story || '');
+            setMorningAction(session.morning_action || '');
+            if (session.status === 'completed') {
+              setPhase('complete');
+            } else if (session.status === 'morning_viewed' || session.status === 'evening_active') {
+              setPhase('evening');
+            } else {
+              setPhase('morning');
+            }
+            return;
+          }
+        }
+      } catch {
+        // Fallback to legacy local-data flow.
+      }
+
       // Load user insights (day counter + profile)
       const { data: insightsRow } = await supabase
         .from('user_insights')
@@ -100,10 +151,16 @@ export default function DailyGrowth() {
       // Generate fresh morning story
       setIsGenerating(true);
       try {
+        const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
         const res = await fetch('/api/peter/morning', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ day, insights: userInsights }),
+          headers,
+          body: JSON.stringify({
+            day,
+            insights: userInsights,
+            local_date: localDateString(),
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+          }),
         });
         if (!res.ok) throw new Error('Generation failed');
         const data = await res.json();
@@ -126,6 +183,29 @@ export default function DailyGrowth() {
 
   const handleMorningRead = async () => {
     if (!user) return;
+    
+    analyticsService.trackEvent('daily_morning_read', {
+      day: currentDay,
+      session_id: sessionId
+    });
+
+    if (sessionId) {
+      try {
+        const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
+        const res = await fetch('/api/daily/session/morning-viewed', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ session_id: sessionId }),
+        });
+        if (res.ok) {
+          setPhase('evening');
+          return;
+        }
+      } catch {
+        // Fallback to legacy write path below.
+      }
+    }
+
     await supabase.from('daily_entries').upsert(
       {
         user_id: user.id,
@@ -142,6 +222,21 @@ export default function DailyGrowth() {
   const handleEveningMessage = async (text: string) => {
     if (isEveningLoading) return;
 
+    // Quality check on the first turn
+    if (eveningTurns === 0) {
+      const wordCount = text.trim().split(/\s+/).length;
+      const isLowEffort = /^(idk|i don'?t know|nothing|good|fine|bad)\.?$/i.test(text.trim());
+
+      if (wordCount < 5 || isLowEffort) {
+        setEveningMessages(prev => [
+          ...prev,
+          { role: 'user', content: text },
+          { role: 'assistant', content: "I'd love to hear a little more about that! Even just one extra sentence helps me understand how your day really went. 🦦" },
+        ]);
+        return;
+      }
+    }
+
     const newTurn = eveningTurns + 1;
     const userMsg: PeterMessage = { role: 'user', content: text };
     const updated = [...eveningMessages, userMsg];
@@ -150,12 +245,15 @@ export default function DailyGrowth() {
     setIsEveningLoading(true);
 
     try {
-      const systemOverride = `You are Peter, a warm otter companion. The user is doing their evening check-in for Day ${currentDay} of their relationship journey. Today's action was: "${morningAction}". Reflect back what you heard warmly. Celebrate their effort, not the outcome. 3-4 sentences, no clinical terms. If this is their second message or beyond, add a warm wrap-up and tell them you'll have something fresh for them tomorrow.`;
+      const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
 
       const res = await fetch('/api/peter/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: updated, systemOverride }),
+        headers,
+        body: JSON.stringify({
+          messages: updated,
+          eveningContext: { day: currentDay, morningAction, turnNumber: newTurn },
+        }),
       });
       if (!res.ok) throw new Error('Chat failed');
       const data = await res.json();
@@ -184,6 +282,33 @@ export default function DailyGrowth() {
     const lastPeterMsg = peterMsgs[peterMsgs.length - 1]?.content || '';
 
     try {
+      if (sessionId) {
+        const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
+        const completeRes = await fetch('/api/daily/session/complete', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            session_id: sessionId,
+            evening_reflection: lastUserMsg,
+            evening_peter_response: lastPeterMsg,
+            completion_local_date: localDateString(),
+          }),
+        });
+
+        if (completeRes.ok) {
+          const payload = await completeRes.json();
+          setCurrentDay(payload.next_day_index || currentDay + 1);
+          setPhase('complete');
+          fireElegantConfetti();
+
+          analyticsService.trackEvent('daily_session_completed', {            day: currentDay,
+            session_id: sessionId,
+            is_graduation: currentDay >= 14
+          });
+          return;
+        }
+      }
+
       // Silent profile analysis
       const analyzeRes = await fetch('/api/peter/analyze', {
         method: 'POST',
@@ -227,6 +352,12 @@ export default function DailyGrowth() {
 
       setCurrentDay(nextDay);
       setPhase('complete');
+      
+      analyticsService.trackEvent('daily_session_completed', {
+        day: currentDay,
+        session_id: sessionId,
+        is_graduation: isGraduation
+      });
     } catch (err) {
       console.error('Complete day error:', err);
     } finally {
@@ -237,44 +368,39 @@ export default function DailyGrowth() {
   // Loading screen
   if (authLoading || phase === 'loading') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-teal-50 flex items-center justify-center">
+      <div className="min-h-screen bg-brand-linen flex items-center justify-center">
         <div className="text-center">
-          <div className="text-5xl animate-bounce mb-4">🦦</div>
-          <p className="text-gray-500 text-sm">Getting your day ready...</p>
+          <p className="text-zinc-500 text-sm font-medium">Loading Session...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-teal-50 flex flex-col">
+    <div className="min-h-screen bg-brand-linen flex flex-col font-sans">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 bg-white/80 backdrop-blur-sm border-b border-gray-100">
+      <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-zinc-200">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-400 to-blue-500 flex items-center justify-center text-sm">
-            🦦
+          <div className="relative w-10 h-10 flex items-center justify-center rounded-2xl bg-brand-linen">
+            <span className="text-sm font-bold text-brand-primary">D</span>
           </div>
           <div>
-            <p className="text-sm font-semibold text-gray-800">Day {currentDay} of 14</p>
-            <p className="text-xs text-gray-500">
+            <p className="text-sm font-semibold text-black">Day {currentDay} of 14</p>
+            <p className="text-xs text-zinc-500 mt-0.5">
               {phase === 'morning' ? 'Morning Story' : phase === 'evening' ? 'Evening Check-in' : 'Complete!'}
             </p>
           </div>
         </div>
 
-        <div className={`flex items-center gap-1.5 text-xs px-3 py-1 rounded-full font-medium ${
-          phase === 'morning'
-            ? 'bg-amber-100 text-amber-700'
-            : phase === 'evening'
-            ? 'bg-indigo-100 text-indigo-700'
-            : 'bg-teal-100 text-teal-700'
-        }`}>
+        <div className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-medium bg-brand-linen text-zinc-600">
           {phase === 'morning' ? <Sun size={12} /> : phase === 'evening' ? <Moon size={12} /> : <CheckCircle size={12} />}
           <span className="ml-1">
             {phase === 'morning' ? 'Morning' : phase === 'evening' ? 'Evening' : 'Done'}
           </span>
         </div>
       </div>
+
+      <DailyTimeline phase={phase} actionVerified={actionVerified} />
 
       {/* Main content */}
       <div className="flex-1 overflow-hidden">
@@ -284,27 +410,27 @@ export default function DailyGrowth() {
           {phase === 'morning' && (
             <motion.div
               key="morning"
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.3 }}
-              className="h-full overflow-y-auto px-4 py-6"
+              initial={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+              animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+              transition={{ type: 'spring', bounce: 0, duration: 0.6 }}
+              className="h-full overflow-y-auto px-4 py-8"
             >
-              <div className="max-w-lg mx-auto space-y-5">
+              <div className="max-w-lg mx-auto space-y-6">
                 {/* Peter's story bubble */}
                 <div className="flex items-end gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-teal-500 flex items-center justify-center text-xl flex-shrink-0 shadow-md">
-                    🦦
+                  <div className="flex-shrink-0">
+                    <Image src="/images/peter-default.png" alt="Peter" width={44} height={44} style={{ width: 44, height: 44, objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.12))' }} />
                   </div>
-                  <div className="bg-white rounded-2xl rounded-bl-sm px-4 py-4 shadow-sm border border-gray-100 text-sm leading-relaxed text-gray-800 flex-1">
+                  <div className="bg-white rounded-3xl rounded-bl-xl px-6 py-6 border border-zinc-100 shadow-sm text-[15px] leading-relaxed text-zinc-700 font-sans flex-1">
                     {isGenerating ? (
-                      <div className="flex gap-1 items-center h-5">
+                      <div className="flex gap-1.5 items-center h-5">
                         {[0, 1, 2].map(i => (
                           <motion.div
                             key={i}
-                            className="w-2 h-2 bg-teal-400 rounded-full"
-                            animate={{ y: [0, -6, 0] }}
-                            transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
+                            className="w-1.5 h-1.5 bg-zinc-300 rounded-full"
+                            animate={{ opacity: [0.3, 1, 0.3] }}
+                            transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.2 }}
                           />
                         ))}
                       </div>
@@ -319,28 +445,31 @@ export default function DailyGrowth() {
                   <motion.div
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.25 }}
-                    className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5"
+                    transition={{ type: 'spring', bounce: 0, duration: 0.6, delay: 0.2 }}
+                    className="bg-white border border-zinc-100 shadow-sm rounded-3xl p-6"
                   >
-                    <p className="text-xs font-bold text-amber-600 uppercase tracking-wide mb-2">
-                      Today's Action
+                    <p className="text-[11px] font-bold text-brand-primary uppercase tracking-wider mb-2">
+                      Today&apos;s Action
                     </p>
-                    <p className="text-gray-800 text-sm leading-relaxed">{morningAction}</p>
+                    <p className="text-black text-base leading-relaxed">{morningAction}</p>
                   </motion.div>
                 )}
 
                 {/* CTA button */}
                 {!isGenerating && (
-                  <motion.button
+                  <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                    onClick={handleMorningRead}
-                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-br from-teal-500 to-blue-500 text-white font-semibold py-3.5 rounded-xl shadow-sm hover:opacity-90 transition-opacity"
+                    transition={{ duration: 0.8, delay: 0.4 }}
                   >
-                    Got it — I'll try this today
-                    <ChevronRight size={16} />
-                  </motion.button>
+                    <button
+                      onClick={handleMorningRead}
+                      className="w-full flex items-center justify-center gap-2 bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors text-base shadow-sm"
+                    >
+                      Got it — I&apos;ll try this today
+                      <ChevronRight size={18} />
+                    </button>
+                  </motion.div>
                 )}
               </div>
             </motion.div>
@@ -350,81 +479,132 @@ export default function DailyGrowth() {
           {phase === 'evening' && (
             <motion.div
               key="evening"
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.3 }}
+              initial={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+              animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+              transition={{ type: 'spring', bounce: 0, duration: 0.6 }}
               className="h-full flex flex-col"
             >
-              {/* Today's action reminder */}
-              <div className="mx-4 mt-3 mb-1 bg-amber-50 border border-amber-100 rounded-xl px-4 py-2.5 flex items-start gap-2">
-                <Sun size={14} className="text-amber-500 mt-0.5 flex-shrink-0" />
-                <p className="text-xs text-amber-800 leading-relaxed">
-                  <span className="font-semibold">Today's action:</span> {morningAction}
-                </p>
-              </div>
+              {!actionVerified ? (
+                <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
+                  <div className="w-16 h-16 rounded-full bg-white border border-zinc-200 shadow-sm flex items-center justify-center mb-6">
+                    <Sun size={28} className="text-brand-primary" />
+                  </div>
+                  <h3 className="text-3xl font-bold text-black mb-3 tracking-tight">Did you do the action?</h3>
+                  <p className="text-zinc-600 mb-10 max-w-sm text-base">
+                    &quot;{morningAction}&quot;
+                  </p>
 
-              <div className="flex-1 overflow-hidden">
-                <PeterChat
-                  messages={eveningMessages}
-                  onUserMessage={handleEveningMessage}
-                  isLoading={isEveningLoading}
-                  placeholder="How did it go today?"
-                />
-              </div>
+                  <div className="bg-white p-8 rounded-[2rem] border border-zinc-100 shadow-sm max-w-sm w-full mb-8">
+                    <p className="text-lg font-semibold text-black mb-2">Put the Phone Down.</p>
+                    <p className="text-sm text-zinc-500 mb-8 leading-relaxed">
+                      Sparq isn&apos;t about screen time. It&apos;s about real life. If you haven&apos;t done it yet, close the app and go do it.
+                    </p>
+                    <button
+                      onPointerDown={() => {
+                        setIsHolding(true);
+                      }}
+                      onPointerUp={() => setIsHolding(false)}
+                      onPointerLeave={() => setIsHolding(false)}
+                      className="relative w-full overflow-hidden bg-brand-linen border border-zinc-200 text-black font-semibold py-4 rounded-2xl select-none"
+                      style={{ touchAction: 'none' }}
+                    >
+                      <div
+                        className="absolute inset-0 bg-brand-primary origin-left transition-transform duration-3000 ease-linear"
+                        style={{ transform: `scaleX(${isHolding ? 1 : 0})` }}
+                        onTransitionEnd={(e) => {
+                          if (isHolding && e.propertyName === 'transform') {
+                            setActionVerified(true);
+                          }
+                        }}
+                      />
+                      <span className={`relative z-10 transition-colors duration-500 text-sm tracking-wide ${isHolding ? 'text-white' : 'text-zinc-600'}`}>
+                        Hold to verify I did it
+                      </span>
+                    </button>
+                    {/* Dev override only */}
+                    {process.env.NODE_ENV === 'development' && (
+                      <button
+                        onClick={() => setActionVerified(true)}
+                        className="mt-6 text-[10px] text-zinc-400 hover:text-zinc-600 block w-full text-center uppercase font-semibold"
+                      >
+                        Skip Hold (Dev)
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {/* Today's action reminder */}
+                  <div className="mx-4 mt-3 mb-1 bg-white border border-zinc-100 shadow-sm rounded-2xl px-5 py-3 flex items-start gap-3">
+                    <Sun size={16} className="text-brand-primary mt-0.5 flex-shrink-0" />
+                    <p className="text-sm text-zinc-600 leading-relaxed">
+                      <span className="font-semibold text-black mr-1">Today&apos;s action:</span> {morningAction}
+                    </p>
+                  </div>
 
-              {canCompleteDay && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-white border-t border-gray-100 px-4 py-3"
-                >
-                  <button
-                    onClick={handleCompleteDay}
-                    disabled={isSaving}
-                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-semibold py-3 rounded-xl shadow-sm hover:opacity-90 transition-opacity disabled:opacity-60"
-                  >
-                    <CheckCircle size={16} />
-                    {isSaving ? 'Saving...' : `Complete Day ${currentDay}`}
-                  </button>
-                </motion.div>
+                  <div className="flex-1 overflow-hidden">
+                    <PeterChat
+                      messages={eveningMessages}
+                      onUserMessage={handleEveningMessage}
+                      isLoading={isEveningLoading}
+                      placeholder="How did it go today?"
+                    />
+                  </div>
+
+                  {canCompleteDay && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ type: 'spring', bounce: 0, duration: 0.6 }}
+                      className="bg-white border-t border-zinc-200 px-4 py-4"
+                    >
+                      <button
+                        onClick={handleCompleteDay}
+                        disabled={isSaving}
+                        className="w-full flex items-center justify-center gap-2 bg-brand-primary text-white text-base font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors disabled:opacity-50 shadow-sm"
+                      >
+                        <CheckCircle size={18} />
+                        {isSaving ? 'Synthesizing...' : `Complete Day ${currentDay}`}
+                      </button>
+                    </motion.div>
+                  )}
+                </>
               )}
             </motion.div>
           )}
 
           {/* ── COMPLETE PHASE ── */}
           {phase === 'complete' && (
-            <motion.div
-              key="complete"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4 }}
-              className="h-full flex flex-col items-center justify-center px-6 text-center"
-            >
+            currentDay - 1 >= 14 ? (
+              <Day14Graduation />
+            ) : (
               <motion.div
-                animate={{ y: [0, -12, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                className="text-6xl mb-6"
+                key="complete"
+                initial={{ opacity: 0, scale: 0.95, filter: 'blur(4px)' }}
+                animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                transition={{ type: 'spring', bounce: 0, duration: 0.8 }}
+                className="h-full flex flex-col items-center justify-center px-6 text-center"
               >
-                🦦
+                <div className="relative w-24 h-24 flex items-center justify-center mb-8 mx-auto rounded-full bg-white shadow-sm border border-zinc-100">
+                  <CheckCircle size={40} className="text-brand-primary" />
+                </div>
+
+                <h2 className="text-3xl font-bold text-black mb-3 tracking-tight">
+                  Day {currentDay - 1} complete.
+                </h2>
+                <p className="text-zinc-500 text-lg mb-10 max-w-xs leading-relaxed">
+                  You&apos;re showing up. That&apos;s everything. Rest well and return tomorrow for Day {currentDay}.
+                </p>
+
+                <button
+                  onClick={() => router.push('/go-connect')}
+                  className="bg-brand-primary text-white font-semibold px-8 py-4 rounded-2xl hover:bg-brand-hover shadow-sm transition-colors text-base"
+                >
+                  Begin Real World Mission
+                </button>
               </motion.div>
-
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                {currentDay - 1 >= 14 ? "You did it! All 14 days! 🎉" : `Day ${currentDay - 1} complete! 🎉`}
-              </h2>
-              <p className="text-gray-500 text-sm mb-8 max-w-xs leading-relaxed">
-                {currentDay - 1 >= 14
-                  ? "You've built something real. Your Skill Tree is now unlocked — let's keep going."
-                  : `You're showing up. That's everything. Come back tomorrow for Day ${currentDay}.`}
-              </p>
-
-              <button
-                onClick={() => router.push(currentDay - 1 >= 14 ? '/skill-tree' : '/dashboard')}
-                className="bg-gradient-to-br from-teal-500 to-blue-500 text-white font-semibold px-8 py-3 rounded-xl shadow-sm hover:opacity-90 transition-opacity"
-              >
-                {currentDay - 1 >= 14 ? 'Unlock Skill Tree' : 'Back to Dashboard'}
-              </button>
-            </motion.div>
+            )
           )}
 
         </AnimatePresence>

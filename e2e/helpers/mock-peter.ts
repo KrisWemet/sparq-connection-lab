@@ -10,7 +10,7 @@ const PETER_ANALYZE_INSIGHTS = {
 };
 
 export async function mockPeterRoutes(page: Page) {
-  await page.route('/api/peter/chat', async (route) => {
+  await page.route('**/api/peter/chat', async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -18,7 +18,7 @@ export async function mockPeterRoutes(page: Page) {
     });
   });
 
-  await page.route('/api/peter/morning', async (route) => {
+  await page.route('**/api/peter/morning', async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -26,7 +26,7 @@ export async function mockPeterRoutes(page: Page) {
     });
   });
 
-  await page.route('/api/peter/analyze', async (route) => {
+  await page.route('**/api/peter/analyze', async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',

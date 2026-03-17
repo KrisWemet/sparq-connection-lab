@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useRouter } from 'next/router';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -33,7 +33,7 @@ const relationshipTypes = {
         id: "communication",
         title: "Communication Strategies",
         description: "Effective communication techniques specific to monogamous partnerships",
-        icon: <MessageCircle className="w-5 h-5 text-indigo-500" />
+        icon: <MessageCircle className="w-5 h-5 text-brand-primary/80" />
       },
       {
         id: "boundaries",
@@ -78,7 +78,7 @@ const relationshipTypes = {
   lgbtq: {
     title: "LGBTQ+ Relationships",
     description: "Specialized resources for LGBTQ+ couples and relationships",
-    icon: <Heart className="w-8 h-8 text-indigo-500" />,
+    icon: <Heart className="w-8 h-8 text-brand-primary/80" />,
     color: "from-indigo-100 to-indigo-50",
     resources: [
       {
@@ -111,7 +111,7 @@ const relationshipTypes = {
         id: "communication",
         title: "Digital Connection",
         description: "Making the most of technology to stay emotionally connected",
-        icon: <MessageCircle className="w-5 h-5 text-indigo-500" />
+        icon: <MessageCircle className="w-5 h-5 text-brand-primary/80" />
       },
       {
         id: "visits",
@@ -130,8 +130,8 @@ const relationshipTypes = {
 };
 
 export default function RelationshipType() {
-  const navigate = useNavigate();
-  const { type } = useParams<{ type: string }>();
+  const router = useRouter();
+  const { type } = router.query as { type: string };
   const [activeTab, setActiveTab] = useState("resources");
   
   // Get the relationship type data based on the URL parameter
@@ -140,9 +140,9 @@ export default function RelationshipType() {
   // If type doesn't exist, redirect to dashboard
   useEffect(() => {
     if (!typeData) {
-      navigate("/dashboard");
+      router.push("/dashboard");
     }
-  }, [typeData, navigate]);
+  }, [typeData, router]);
   
   if (!typeData) {
     return null; // Will redirect in useEffect
@@ -153,7 +153,7 @@ export default function RelationshipType() {
       <header className="sticky top-0 z-50 bg-white border-b">
         <div className="container max-w-lg mx-auto px-4 py-3 flex items-center">
           <button 
-            onClick={() => navigate(-1)} 
+            onClick={() => router.back()} 
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -216,7 +216,7 @@ export default function RelationshipType() {
                       Answer questions specifically designed for {typeData.title.toLowerCase()} to strengthen your connection.
                     </p>
                     <Button 
-                      onClick={() => navigate("/daily-questions")}
+                      onClick={() => router.push("/daily-questions")}
                       className="w-full sm:w-auto"
                     >
                       Start Daily Questions
@@ -244,7 +244,7 @@ export default function RelationshipType() {
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h4 className="font-medium mb-2">Communication</h4>
                     <p className="text-sm text-gray-700 mb-2">
-                      "What communication practices have been most effective in your {type} relationship?"
+                      &quot;What communication practices have been most effective in your {type} relationship?&quot;
                     </p>
                     <Badge className="bg-blue-100 text-blue-800">Level 1</Badge>
                   </div>
@@ -252,7 +252,7 @@ export default function RelationshipType() {
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h4 className="font-medium mb-2">Boundaries</h4>
                     <p className="text-sm text-gray-700 mb-2">
-                      "How do you balance personal boundaries with relationship needs in your {type} dynamic?"
+                      &quot;How do you balance personal boundaries with relationship needs in your {type} dynamic?&quot;
                     </p>
                     <Badge className="bg-yellow-100 text-yellow-800">Level 2</Badge>
                   </div>
@@ -260,7 +260,7 @@ export default function RelationshipType() {
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h4 className="font-medium mb-2">Growth</h4>
                     <p className="text-sm text-gray-700 mb-2">
-                      "What aspects of your {type} relationship have contributed most to your personal growth?"
+                      &quot;What aspects of your {type} relationship have contributed most to your personal growth?&quot;
                     </p>
                     <Badge className="bg-red-100 text-red-800">Level 3</Badge>
                   </div>
@@ -269,7 +269,7 @@ export default function RelationshipType() {
               <CardFooter>
                 <Button 
                   className="w-full"
-                  onClick={() => navigate("/daily-questions")}
+                  onClick={() => router.push("/daily-questions")}
                 >
                   Explore All Questions
                   <ArrowRight className="w-4 h-4 ml-1" />

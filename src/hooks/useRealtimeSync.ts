@@ -3,19 +3,12 @@ import { supabase } from '@/lib/supabase';
 import { UserJourneyProgress } from '@/types/journey';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
-import { RealtimeChannel } from '@supabase/supabase-js';
+import { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 
 interface UseRealtimeSyncReturn {
   partnerProgress: UserJourneyProgress | null;
   partnerIsOnline: boolean;
   lastSyncTime: string | null;
-}
-
-// Define the payload shape without extending RealtimePostgresChangesPayload
-interface ProgressPayload {
-  eventType: 'INSERT' | 'UPDATE' | 'DELETE';
-  new: UserJourneyProgress;
-  old?: UserJourneyProgress;
 }
 
 export function useRealtimeSync(
@@ -48,25 +41,26 @@ export function useRealtimeSync(
     const progressChannel = supabase
       .channel('journey_progress')
       .on(
-        // Use the correct channel event type for database changes
-        'postgres_changes' as any, // Type cast to any to bypass type checking
+        'postgres_changes',
         {
           event: '*',
           schema: 'public',
           table: 'user_journey_progress',
-          filter: `user_id=eq.${partnerId} AND journey_id=eq.${journeyId}`,
+          filter: `user_id=eq.${partnerId}&journey_id=eq.${journeyId}`,
         },
-        (payload: ProgressPayload) => {
+        (payload: RealtimePostgresChangesPayload<{ [key: string]: any }>) => {
           if (payload.eventType === 'UPDATE' || payload.eventType === 'INSERT') {
-            setPartnerProgress(payload.new);
+            const newProgress = payload.new as UserJourneyProgress;
+            const oldProgress = payload.old as UserJourneyProgress | undefined;
+            setPartnerProgress(newProgress);
             setLastSyncTime(new Date().toISOString());
 
             // Show notification for partner's progress
-            if (payload.old && payload.new.currentDay > payload.old.currentDay) {
+            if (oldProgress && newProgress.currentDay > oldProgress.currentDay) {
               toast.info('Your partner has moved to the next day!');
             } else if (
-              payload.old &&
-              payload.new.completedActivities.length > payload.old.completedActivities.length
+              oldProgress &&
+              newProgress.completedActivities.length > oldProgress.completedActivities.length
             ) {
               toast.info('Your partner has completed an activity!');
             }
@@ -79,15 +73,14 @@ export function useRealtimeSync(
     const responsesChannel = supabase
       .channel('activity_responses')
       .on(
-        // Use the correct channel event type for database changes
-        'postgres_changes' as any, // Type cast to any to bypass type checking
+        'postgres_changes',
         {
           event: 'INSERT',
           schema: 'public',
           table: 'activity_responses',
-          filter: `user_id=eq.${partnerId} AND journey_id=eq.${journeyId}`,
+          filter: `user_id=eq.${partnerId}&journey_id=eq.${journeyId}`,
         },
-        (payload) => {
+        (payload: RealtimePostgresChangesPayload<{ [key: string]: any }>) => {
           if (payload.eventType === 'INSERT') {
             toast.info('Your partner has submitted a response!');
             setLastSyncTime(new Date().toISOString());

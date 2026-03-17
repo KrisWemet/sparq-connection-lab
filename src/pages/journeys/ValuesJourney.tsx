@@ -65,7 +65,7 @@ export default function ValuesJourney() {
       id: "goals",
       title: "Aligned Goals",
       description: "Setting targets that move you toward your shared vision",
-      icon: <Calendar className="w-5 h-5 text-indigo-500" />,
+      icon: <Calendar className="w-5 h-5 text-brand-primary/80" />,
       color: "indigo",
       example: "Converting your vision into specific, achievable goals with timelines, such as saving for a home, starting a family by a certain year, or creating a lifestyle that allows for more travel or community involvement."
     },

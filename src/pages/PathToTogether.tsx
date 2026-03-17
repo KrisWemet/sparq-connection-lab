@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BookOpen, Heart, MessageCircle, Shield } from 'lucide-react';
@@ -108,7 +108,7 @@ export default function PathToTogether() {
               </div>
             </CardContent>
             <CardFooter>
-              <Link to={`/journeys/${journey.id}`} className="w-full">
+              <Link href={`/journeys/${journey.id}`} className="w-full">
                 <Button variant="default" className="w-full">
                   Start Journey
                 </Button>

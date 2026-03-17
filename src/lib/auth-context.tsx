@@ -183,7 +183,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           partner_name: userData.partner_name,
           email: data.user.email || '',
           created_at: new Date().toISOString(),
-        };
+          consent_given_at: new Date().toISOString(),
+        } as any;
 
         const profileSuccess = await updateProfile(newProfile);
         

@@ -14,7 +14,6 @@ export interface UserInsights {
   onboarding_day: number;
 }
 
-// Peter's core system prompt — used in all API routes
 export const PETER_SYSTEM_PROMPT = `You are Peter, a friendly otter who helps people build stronger relationships. You are warm, encouraging, and talk like a good friend — not a therapist or doctor.
 
 Your personality:
@@ -28,6 +27,10 @@ Your personality:
 - You are curious about the person's life and ask one focused follow-up question at a time
 - You remember what the user has shared and refer back to it naturally
 - Sign off messages with warmth, sometimes with a little otter-themed humor 🦦
+
+Your core transformational goals (The Mirroring Effect):
+1. Blindspot Detection: If the user uses absolute phrases like "always", "never", "every time", or "impossible", gently hold up a mirror. Example: "I notice you said they *always* do this. That sounds exhausting. Is there *any* time recently they didn't?"
+2. Reframing the Narrative: When a user shares a frustrating story, gently prompt them to rewrite it from the most generous possible interpretation of their partner's actions. Example: "That sounds incredibly frustrating. If we gave them the absolute benefit of the doubt, what else might have been going on for them in that moment?"
 
 Your role is to help users grow as individuals within their relationship. You focus on what THEY can do, think, and feel — not on fixing their partner.`;
 
@@ -93,7 +96,86 @@ Write Peter's response (3-5 sentences max):
 3. One gentle insight or encouragement (optional — only if it adds value)
 4. A warm send-off
 
-No clinical terms. Keep it conversational and warm.`;
+CRITICAL REINFORCEMENT: Remember, you are a warm otter friend, not a therapist. NEVER use clinical terms (e.g., attachment style, avoidant, trauma). Keep it conversational and warm.`;
+}
+
+// Trait descriptions mapped to natural language (Peter never uses clinical terms)
+const TRAIT_DESCRIPTIONS: Record<string, Record<string, string>> = {
+  attachment_style: {
+    anxious: 'you sometimes worry about whether your partner is really there for you',
+    avoidant: 'you sometimes need space to process your feelings before opening up',
+    disorganized: 'you can feel pulled between wanting closeness and needing distance',
+    secure: 'you generally feel comfortable being open and close with your partner',
+  },
+  love_language: {
+    words: 'hearing that you\'re appreciated means a lot to you',
+    acts: 'when someone does something thoughtful for you, it really lands',
+    gifts: 'thoughtful gestures and surprises make you feel cared for',
+    time: 'having undivided attention together is really important to you',
+    touch: 'physical closeness and affection help you feel connected',
+  },
+  conflict_style: {
+    avoidant: 'you tend to step back when things get heated',
+    volatile: 'you tend to express your feelings intensely in the moment',
+    validating: 'you like to make sure both sides feel heard before moving forward',
+  },
+};
+
+export interface ProfileTrait {
+  trait_key: string;
+  inferred_value: string;
+  confidence: number;
+  effective_weight: number;
+}
+
+export interface MemoryResult {
+  memory: string;
+  score?: number;
+}
+
+/**
+ * Builds a personalized system prompt for Peter, incorporating user traits and memories.
+ */
+export function buildPersonalizedPrompt(
+  traits: ProfileTrait[],
+  memories: MemoryResult[],
+  basePrompt: string = PETER_SYSTEM_PROMPT,
+): string {
+  const traitLines: string[] = [];
+
+  for (const trait of traits) {
+    if (trait.confidence < 0.4 || trait.effective_weight < 0.3) continue;
+    const descriptions = TRAIT_DESCRIPTIONS[trait.trait_key];
+    if (!descriptions) continue;
+    const desc = descriptions[trait.inferred_value];
+    if (!desc) continue;
+    traitLines.push(`- From what you've learned: ${desc}`);
+  }
+
+  const memoryLines = memories
+    .filter(m => m.memory && m.memory.length > 0)
+    .slice(0, 5)
+    .map(m => `- ${m.memory}`);
+
+  if (traitLines.length === 0 && memoryLines.length === 0) {
+    return basePrompt;
+  }
+
+  let personalization = '\n\nPersonalization context (use naturally, NEVER state these directly):';
+
+  if (traitLines.length > 0) {
+    personalization += '\n\nWhat you know about this person:';
+    personalization += '\n' + traitLines.join('\n');
+  }
+
+  if (memoryLines.length > 0) {
+    personalization += '\n\nRecent things they\'ve shared:';
+    personalization += '\n' + memoryLines.join('\n');
+  }
+
+  personalization += '\n\nIMPORTANT: Reference these insights naturally in conversation. Never say "I noticed you have X trait" — instead weave your understanding into your responses.';
+
+  return basePrompt + personalization;
 }
 
 // Prompt for silent profile analysis (run after evening reflections)
@@ -104,17 +186,19 @@ export function getProfileAnalysisPrompt(conversationHistory: PeterMessage[]): s
 
   return `Based on this conversation between a user and Peter the Otter, infer signals about the user's relationship patterns.
 
+CRITICAL INSTRUCTION: You must have a VERY HIGH confidence threshold (80%+) before assigning a psychological trait. If there is any ambiguity, or if the data only reflects a single isolated incident rather than a consistent pattern, you MUST return null. Do not guess.
+
 Conversation:
 ${transcript}
 
-Return a JSON object with your best estimates. Use null if there's not enough signal yet.
+Return a JSON object with your estimates.
 
 {
   "attachment_style": "anxious" | "avoidant" | "disorganized" | "secure" | null,
   "love_language": "words" | "acts" | "gifts" | "time" | "touch" | null,
   "conflict_style": "avoidant" | "volatile" | "validating" | null,
   "emotional_state": "struggling" | "neutral" | "thriving",
-  "reasoning": "1-2 sentences explaining your main signal"
+  "reasoning": "1-2 sentences explaining your main signal (or why you chose null)"
 }
 
 Only return valid JSON. No explanation outside the JSON.`;

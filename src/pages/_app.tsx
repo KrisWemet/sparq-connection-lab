@@ -1,10 +1,18 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import type { AppProps } from 'next/app';
+import { Inter, Lora } from 'next/font/google';
+import { useRouter } from 'next/router';
 import { AuthProvider } from '../lib/auth-context';
 import { SubscriptionProvider } from '../lib/subscription-provider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BottomNav } from '../components/bottom-nav';
+import { PageTransition } from '../components/PageTransition';
+import { PeterLoading } from '../components/PeterLoading';
+import { TimeOutOverlay } from '../components/TimeOutOverlay';
 import '../styles/globals.css';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const lora = Lora({ subsets: ['latin'], variable: '--font-serif' });
 
 // Create a client
 const queryClient = new QueryClient({
@@ -17,11 +25,49 @@ const queryClient = new QueryClient({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    const handleStart = () => {
+      setIsLoading(true);
+    };
+    
+    const handleComplete = () => {
+      // Ensure the user has at least 1.5 seconds to read Peter's tip
+      timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 1500);
+    };
+
+    router.events.on('routeChangeStart', handleStart);
+    router.events.on('routeChangeComplete', handleComplete);
+    router.events.on('routeChangeError', handleComplete);
+
+    return () => {
+      router.events.off('routeChangeStart', handleStart);
+      router.events.off('routeChangeComplete', handleComplete);
+      router.events.off('routeChangeError', handleComplete);
+      clearTimeout(timer);
+    };
+  }, [router]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <SubscriptionProvider>
-          <Component {...pageProps} />
+          <div className={`${inter.variable} ${lora.variable} font-sans min-h-screen bg-brand-linen text-brand-taupe selection:bg-brand-primary/30 texture-bg`}>
+            <PeterLoading isLoading={isLoading} />
+            <TimeOutOverlay />
+            <div className="pb-20"> {/* Add padding for BottomNav */}
+              <PageTransition>
+                <Component {...pageProps} />
+              </PageTransition>
+            </div>
+            <BottomNav />
+          </div>
         </SubscriptionProvider>
       </AuthProvider>
     </QueryClientProvider>

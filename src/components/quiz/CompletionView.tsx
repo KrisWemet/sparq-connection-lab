@@ -14,7 +14,7 @@ export function CompletionView({ onViewResults }: CompletionViewProps) {
         Thanks for sharing!
       </h2>
       <p className="text-gray-600">
-        We'll notify you when your partner responds.
+        We&apos;ll notify you when your partner responds.
       </p>
       <Button className="w-full" onClick={onViewResults}>
         See Results

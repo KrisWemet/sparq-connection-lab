@@ -58,8 +58,8 @@ export function MetaphorAnimation({
       border: "border-rose-200"
     },
     bridge: {
-      primary: "from-blue-500 to-indigo-500",
-      secondary: "text-blue-600",
+      primary: "from-blue-500 to-brand-primary",
+      secondary: "text-brand-hover",
       background: "bg-gradient-to-br from-blue-50 to-indigo-50",
       border: "border-blue-200"
     },

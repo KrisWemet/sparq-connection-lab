@@ -1,30 +1,34 @@
 import { test, expect } from '@playwright/test';
 
-// Auth tests use real Supabase — no mocking.
-// storageState from auth.setup.ts is active, so we start logged in.
-
 test.describe('Authentication', () => {
   test('dashboard is accessible when logged in', async ({ page }) => {
     await page.goto('/dashboard');
     await expect(page).toHaveURL(/\/dashboard/);
-    // Should see the Sparq header and the "Answer Now" button
+    // Should see the Sparq header and the "Today's Question" section
     await expect(page.locator('h1:has-text("Sparq")')).toBeVisible();
-    await expect(page.locator('button:has-text("Answer Now")')).toBeVisible();
+    await expect(page.locator('h3:has-text("Today\'s Question")')).toBeVisible();
   });
 
   test('/ redirects logged-in user to dashboard', async ({ page }) => {
     await page.goto('/');
-    // Index page either redirects or shows a "Go to Dashboard" link
-    const url = page.url();
-    const body = await page.locator('body').innerText();
-    const isOnDashboard = url.includes('/dashboard');
-    const hasDashboardLink = body.includes('Dashboard') || body.includes('Go to Dashboard');
-    expect(isOnDashboard || hasDashboardLink).toBeTruthy();
+    // Wait for the auth context to resolve and show the Dashboard link
+    await expect(page.locator('text=Go to Dashboard')).toBeVisible({ timeout: 5000 });
   });
 
-  test('logout redirects to /login', async ({ page }) => {
+  test('logout works from profile page', async ({ page }) => {
+    // Navigate from dashboard to profile via UI to ensure state is fully initialized
     await page.goto('/dashboard');
-    await page.locator('button:has-text("Sign Out")').click();
+    await expect(page.locator('h1:has-text("Sparq")')).toBeVisible({ timeout: 10_000 });
+    
+    // Click Profile in the bottom nav
+    await page.locator('nav').locator('text=Profile').click();
+    await expect(page).toHaveURL(/\/profile/, { timeout: 10_000 });
+    
+    // Find and click the Privacy tab
+    await page.locator('button', { hasText: /Privacy/ }).first().click();
+    
+    // Click Sign Out
+    await page.locator('button', { hasText: 'Sign Out' }).click();
     await page.waitForURL(/\/login/, { timeout: 10_000 });
     await expect(page).toHaveURL(/\/login/);
   });

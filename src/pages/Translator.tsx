@@ -82,16 +82,16 @@ export default function Translator() {
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={() => router.push("/dashboard")}
-            className="text-sm text-indigo-600 hover:text-indigo-700 font-semibold"
+            className="text-sm text-brand-primary hover:text-brand-primary font-semibold"
           >
             ← Back to Dashboard
           </button>
-          <span className="text-xs uppercase tracking-wide text-indigo-500 font-semibold">
+          <span className="text-xs uppercase tracking-wide text-brand-primary/80 font-semibold">
             Translator
           </span>
         </div>
 
-        <h1 className="text-2xl font-bold text-indigo-700 mb-2">
+        <h1 className="text-2xl font-bold text-brand-primary mb-2">
           Peter’s Message Translator
         </h1>
         <p className="text-sm text-gray-600 mb-6">
@@ -106,7 +106,7 @@ export default function Translator() {
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder="Type what you want to say..."
-            className="w-full border border-gray-300 rounded-lg p-4 h-36 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+            className="w-full border border-gray-300 rounded-lg p-4 h-36 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none"
           />
         </div>
 
@@ -121,7 +121,7 @@ export default function Translator() {
                 onClick={() => setPartnerContext(profile.value)}
                 className={`rounded-xl border px-4 py-2 text-sm font-semibold transition-colors ${
                   partnerContext === profile.value
-                    ? "bg-indigo-600 text-white border-indigo-600"
+                    ? "bg-brand-primary text-white border-indigo-600"
                     : "bg-white text-gray-700 border-gray-300 hover:border-indigo-400"
                 }`}
               >
@@ -143,10 +143,10 @@ export default function Translator() {
               Peter’s suggested rephrase
             </h2>
             {suggestion && (
-              <span className="text-xs text-indigo-500 font-medium">Ready</span>
+              <span className="text-xs text-brand-primary/80 font-medium">Ready</span>
             )}
           </div>
-          <div className="min-h-[96px] rounded-xl border border-indigo-100 bg-indigo-50 p-4 text-gray-700 leading-relaxed">
+          <div className="min-h-[96px] rounded-xl border border-indigo-100 bg-brand-linen p-4 text-gray-700 leading-relaxed">
             {suggestion ||
               "Draft your message and tap ‘Ask Peter’ to see a gentler version."}
           </div>
@@ -158,7 +158,7 @@ export default function Translator() {
         <button
           onClick={handleTranslate}
           disabled={isLoading}
-          className="w-full bg-indigo-600 text-white font-semibold py-3 rounded-xl hover:bg-indigo-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+          className="w-full bg-brand-primary text-white font-semibold py-3 rounded-xl hover:bg-brand-hover transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
           {isLoading ? "Peter is thinking..." : "Ask Peter to Rephrase"}
         </button>

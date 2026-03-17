@@ -1,32 +1,151 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { peterChat } from '@/lib/openrouter';
-import { PETER_SYSTEM_PROMPT, getMorningStoryPrompt, UserInsights } from '@/lib/peterService';
+import { PETER_SYSTEM_PROMPT, getMorningStoryPrompt, UserInsights, buildPersonalizedPrompt, type ProfileTrait, type MemoryResult } from '@/lib/peterService';
+import { parseMorningContent } from '@/lib/morning-parser';
+import { getAuthedContext } from '@/lib/server/supabase-auth';
+import { parseLocalDate } from '@/lib/server/date-utils';
+import { getRecentMemories } from '@/lib/server/memory';
+
+// Per-user cache keyed by userId:day
+const storyCache = new Map<string, { text: string; timestamp: number }>();
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+type MorningBody = {
+  day: number;
+  insights?: Partial<UserInsights>;
+  local_date?: string;
+};
+
+function composeMorningText(story: string, action?: string | null): string {
+  if (!action) return story;
+  return `${story}\n\nToday's Action: ${action}`;
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { day, insights } = req.body as { day: number; insights: Partial<UserInsights> };
+  const { day, insights, local_date } = (req.body || {}) as MorningBody;
 
   if (!day || day < 1 || day > 14) {
     return res.status(400).json({ error: 'day must be between 1 and 14' });
   }
 
   try {
+    const authed = await getAuthedContext(req);
+    const localDate = parseLocalDate(local_date);
+    const cacheKey = authed ? `${authed.userId}:${day}` : `anon:${day}`;
+
+    // Deterministic/idempotent guard: if we already have today's content, reuse it.
+    if (authed) {
+      const { data: existingSession } = await authed.supabase
+        .from('daily_sessions')
+        .select('morning_story, morning_action')
+        .eq('user_id', authed.userId)
+        .eq('session_local_date', localDate)
+        .maybeSingle();
+
+      if (existingSession?.morning_story) {
+        return res.status(200).json({
+          story: composeMorningText(existingSession.morning_story, existingSession.morning_action),
+          cached: true,
+          reused: true,
+        });
+      }
+
+      const { data: existingEntry } = await authed.supabase
+        .from('daily_entries')
+        .select('morning_story, morning_action')
+        .eq('user_id', authed.userId)
+        .eq('day', day)
+        .maybeSingle();
+
+      if (existingEntry?.morning_story) {
+        return res.status(200).json({
+          story: composeMorningText(existingEntry.morning_story, existingEntry.morning_action),
+          cached: true,
+          reused: true,
+        });
+      }
+    }
+
+    const now = Date.now();
+    const cached = storyCache.get(cacheKey);
+    if (cached && (now - cached.timestamp < CACHE_TTL_MS)) {
+      return res.status(200).json({ story: cached.text, cached: true });
+    }
+
+    // Build personalized system prompt if authenticated
+    let systemPrompt = PETER_SYSTEM_PROMPT;
+
+    if (authed) {
+      try {
+        // Fetch user traits
+        const { data: traitsData } = await authed.supabase
+          .from('profile_traits')
+          .select('trait_key, inferred_value, confidence, effective_weight')
+          .eq('user_id', authed.userId)
+          .gte('effective_weight', 0.3);
+
+        const traits: ProfileTrait[] = traitsData || [];
+
+        // Get recent memories
+        let memories: MemoryResult[] = [];
+        try {
+          const memResult = await getRecentMemories(authed.userId, 5);
+          memories = (memResult?.results || []).map((r: any) => ({
+            memory: r.memory || r.content || '',
+            score: r.score,
+          }));
+        } catch {
+          // Memory fetch failure is non-blocking
+        }
+
+        systemPrompt = buildPersonalizedPrompt(traits, memories, PETER_SYSTEM_PROMPT);
+      } catch {
+        // Personalization failure is non-blocking
+      }
+    }
+
     const prompt = getMorningStoryPrompt(day, insights ?? {});
 
     const story = await peterChat({
       messages: [
-        { role: 'system', content: PETER_SYSTEM_PROMPT },
+        { role: 'system', content: systemPrompt },
         { role: 'user', content: prompt },
       ],
       maxTokens: 400,
     });
 
-    return res.status(200).json({ story });
+    const parsed = parseMorningContent(story);
+    const normalizedStory = composeMorningText(parsed.story, parsed.action);
+    storyCache.set(cacheKey, { text: normalizedStory, timestamp: now });
+
+    if (authed) {
+      await authed.supabase.from('daily_entries').upsert(
+        {
+          user_id: authed.userId,
+          day,
+          morning_story: parsed.story,
+          morning_action: parsed.action,
+        },
+        { onConflict: 'user_id,day' }
+      );
+    }
+
+    return res.status(200).json({ story: normalizedStory, cached: false });
   } catch (error) {
     console.error('Peter morning error:', error);
-    return res.status(500).json({ error: 'Peter is still waking up — try again in a moment 🦦' });
+    try {
+      const fallbacks = require('@/data/fallbackStories.json');
+      const fallbackForDay = fallbacks.find((f: any) => f.day === day);
+      if (fallbackForDay) {
+        const text = composeMorningText(fallbackForDay.story, fallbackForDay.action);
+        return res.status(200).json({ story: text, cached: true, is_fallback: true });
+      }
+    } catch (e) { /* ignore fallback load error */ }
+
+    return res.status(500).json({ error: 'Peter is still waking up — try again in a moment' });
   }
 }

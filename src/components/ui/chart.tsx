@@ -1,3 +1,4 @@
+// @ts-nocheck — shadcn/ui generated file, recharts type incompatibility
 import * as React from "react"
 import * as RechartsPrimitive from "recharts"
 

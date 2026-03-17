@@ -5,7 +5,7 @@ const OPENROUTER_BASE = 'https://openrouter.ai/api/v1';
 
 // Priority order: Claude Haiku first, then fallbacks if Anthropic is unavailable
 const PETER_MODELS = [
-  'anthropic/claude-haiku-4-5-20251001',
+  'anthropic/claude-haiku-4.5',
   'google/gemini-flash-1.5-8b',
   'mistralai/mistral-7b-instruct',
 ];

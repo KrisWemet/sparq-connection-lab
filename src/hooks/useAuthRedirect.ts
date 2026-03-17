@@ -1,11 +1,11 @@
 
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/router';
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 
 export function useAuthRedirect(redirectPath = "/dashboard") {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { user, loading: authLoading } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   
@@ -21,7 +21,7 @@ export function useAuthRedirect(redirectPath = "/dashboard") {
     // Immediately redirect if user is available - don't wait for any checks
     if (user) {
       console.log("User authenticated, redirecting immediately", user);
-      navigate(redirectPath, { replace: true });
+      router.replace(redirectPath);
       return;
     }
     
@@ -36,7 +36,7 @@ export function useAuthRedirect(redirectPath = "/dashboard") {
         
         if (data.session?.user) {
           console.log("Session exists, redirecting");
-          navigate(redirectPath, { replace: true });
+          router.replace(redirectPath);
         }
       } catch (err) {
         console.error("Error checking session:", err);
@@ -47,7 +47,7 @@ export function useAuthRedirect(redirectPath = "/dashboard") {
     
     // Run immediately for faster response
     checkSession();
-  }, [navigate, redirectPath, user, isLoading, authLoading]);
+  }, [router, redirectPath, user, isLoading, authLoading]);
 
   return { isAuthLoading: authLoading || isLoading };
 }

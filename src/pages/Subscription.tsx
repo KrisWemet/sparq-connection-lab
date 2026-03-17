@@ -385,7 +385,7 @@ export default function Subscription() {
                         )}
                         <span className={feature.included ? "text-gray-700" : "text-gray-400"}>
                           {feature.name}
-                          {feature.new && (
+                          {'new' in feature && feature.new && (
                             <Badge className="ml-2 bg-amber-100 text-amber-800 border-amber-200">
                               New
                             </Badge>
@@ -402,7 +402,7 @@ export default function Subscription() {
                       onClick={() => setShowTestimonial(plan.id)}
                     >
                       <div className="flex items-center text-sm">
-                        <span className="text-gray-600 italic line-clamp-1">"{plan.testimonial.quote.substring(0, 60)}..."</span>
+                        <span className="text-gray-600 italic line-clamp-1">&quot;{plan.testimonial.quote.substring(0, 60)}...&quot;</span>
                         <Button variant="ghost" size="sm" className="ml-auto h-6 text-xs">
                           Read
                         </Button>
@@ -437,21 +437,21 @@ export default function Subscription() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <p className="italic text-gray-700 mb-2">
-              "Premium helped us have conversations we'd been avoiding for years. Now we talk about everything!"
+              &quot;Premium helped us have conversations we&apos;d been avoiding for years. Now we talk about everything!&quot;
             </p>
             <p className="text-sm font-medium">- Chris & Pat, Together 7 years</p>
             <p className="text-xs text-primary-600 mt-1">Upgraded to Premium 3 months ago</p>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <p className="italic text-gray-700 mb-2">
-              "We had a rough week and used Conflict First Aid at 11pm. Peter walked us through it in 15 minutes and we went to bed on the same page. That alone is worth it."
+              &quot;We had a rough week and used Conflict First Aid at 11pm. Peter walked us through it in 15 minutes and we went to bed on the same page. That alone is worth it.&quot;
             </p>
             <p className="text-sm font-medium">- Morgan & Jamie, Engaged</p>
             <p className="text-xs text-primary-600 mt-1">Ultimate users for 4 months</p>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <p className="italic text-gray-700 mb-2">
-              "We started with Free, then quickly upgraded to Premium. The difference was night and day. Worth every penny!"
+              &quot;We started with Free, then quickly upgraded to Premium. The difference was night and day. Worth every penny!&quot;
             </p>
             <p className="text-sm font-medium">- Alex & Jordan, Dating 1 year</p>
             <p className="text-xs text-primary-600 mt-1">Upgraded from Free to Premium</p>
@@ -482,19 +482,19 @@ export default function Subscription() {
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <h3 className="font-medium">Can I switch between plans?</h3>
             <p className="text-sm text-gray-600 mt-1">
-              Yes! You can upgrade at any time. When you upgrade, you'll immediately gain access to all the features of your new plan.
+              Yes! You can upgrade at any time. When you upgrade, you&apos;ll immediately gain access to all the features of your new plan.
             </p>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm">
-            <h3 className="font-medium">What does "Peter remembers your history" actually mean?</h3>
+            <h3 className="font-medium">What does &quot;Peter remembers your history&quot; actually mean?</h3>
             <p className="text-sm text-gray-600 mt-1">
-              In Ultimate, Peter has access to everything you've shared during your 14-day journey and Skill Tree sessions — your reflections, patterns, and breakthroughs. When you chat with Peter, he builds on what he already knows about you instead of starting from scratch every time. It's what makes it feel like a real coaching relationship.
+              In Ultimate, Peter has access to everything you&apos;ve shared during your 14-day journey and Skill Tree sessions — your reflections, patterns, and breakthroughs. When you chat with Peter, he builds on what he already knows about you instead of starting from scratch every time. It&apos;s what makes it feel like a real coaching relationship.
             </p>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <h3 className="font-medium">Is there a money-back guarantee?</h3>
             <p className="text-sm text-gray-600 mt-1">
-              Absolutely! We offer a 30-day satisfaction guarantee. If you're not completely satisfied, contact us for a full refund.
+              Absolutely! We offer a 30-day satisfaction guarantee. If you&apos;re not completely satisfied, contact us for a full refund.
             </p>
           </div>
         </div>
@@ -518,7 +518,7 @@ export default function Subscription() {
               <>
                 <div className="mb-4">
                   <p className="text-lg italic text-gray-700 mb-3">
-                    "{plans.find(p => p.id === showTestimonial)?.testimonial.quote}"
+                    &quot;{plans.find(p => p.id === showTestimonial)?.testimonial.quote}&quot;
                   </p>
                   <div className="flex items-center">
                     <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold">

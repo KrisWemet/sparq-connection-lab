@@ -30,14 +30,12 @@ export function PreferencesTab({ profile, setProfile }: PreferencesTabProps) {
       
       const { error } = await supabase
         .from('profiles')
-        .upsert({
-          id: user.data.user.id,
-          user_id: user.data.user.id,
+        .update({
           updated_at: new Date().toISOString(),
-          sexual_orientation: profile.sexual_orientation,
-          relationship_structure: profile.relationship_structure,
-          isOnboarded: true
-        });
+          relationship_type: profile.relationship_structure as any,
+          is_onboarded: true,
+        })
+        .eq('id', user.data.user.id);
 
       if (error) throw error;
       
@@ -118,7 +116,7 @@ export function PreferencesTab({ profile, setProfile }: PreferencesTabProps) {
                 <RadioGroupItem value="open" id="open-structure" className="mt-1" />
                 <div>
                   <Label htmlFor="open-structure" className="font-medium flex items-center">
-                    <Heart className="w-4 h-4 mr-2 text-indigo-500" />
+                    <Heart className="w-4 h-4 mr-2 text-brand-primary/80" />
                     Open Relationship
                   </Label>
                   <p className="text-sm text-gray-500">Primary partnership with agreed-upon outside connections</p>

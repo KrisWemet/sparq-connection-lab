@@ -4,6 +4,9 @@ import { config } from 'dotenv';
 // Load .env.local so TEST_USER_EMAIL and TEST_USER_PASSWORD are available
 config({ path: '.env.local' });
 
+const PORT = process.env.PLAYWRIGHT_PORT || '3000';
+const BASE_URL = process.env.PLAYWRIGHT_BASE_URL || `http://localhost:${PORT}`;
+
 export default defineConfig({
   testDir: './e2e',
   timeout: 30_000,
@@ -13,7 +16,7 @@ export default defineConfig({
   reporter: [['list'], ['html', { open: 'never', outputFolder: 'playwright-report' }]],
 
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: BASE_URL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
@@ -36,8 +39,8 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:3000',
+    command: `PORT=${PORT} npm run dev`,
+    url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,
   },

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Question } from "@/types/quiz";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/router';
 
 interface QuestionViewProps {
   currentQuestion: Question;
@@ -22,12 +22,12 @@ export function QuestionView({
   onCustomAnswerChange,
   onNudgePartner
 }: QuestionViewProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const isMultipleChoice = currentQuestion.options && currentQuestion.options.length > 0;
 
   const handleAnswer = (answer: string) => {
     onAnswerSubmit(answer);
-    navigate('/daily-activity');
+    router.push('/daily-activity');
   };
 
   return (
