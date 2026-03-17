@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Background -->
+  <rect width="64" height="64" rx="14" fill="#C0614A"/>
+
+  <!-- Woman (left) -->
+  <!-- Head -->
+  <circle cx="22" cy="17" r="6" fill="#FAF6F1"/>
+  <!-- Hair (longer) -->
+  <path d="M16 14 Q16 8 22 8 Q28 8 28 14" fill="#3D2C28"/>
+  <rect x="16" y="13" width="2" height="8" rx="1" fill="#3D2C28"/>
+  <rect x="28" y="13" width="2" height="8" rx="1" fill="#3D2C28"/>
+  <!-- Body (dress shape) -->
+  <path d="M15 28 Q15 24 22 24 Q29 24 29 28 L31 44 Q22 46 13 44 Z" fill="#FAF6F1"/>
+  <!-- Arms -->
+  <line x1="15" y1="30" x2="10" y2="38" stroke="#FAF6F1" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Man (right) -->
+  <!-- Head -->
+  <circle cx="42" cy="17" r="6" fill="#FAF6F1"/>
+  <!-- Body (straight) -->
+  <path d="M35 28 Q35 24 42 24 Q49 24 49 28 L49 44 Q42 46 35 44 Z" fill="#FAF6F1"/>
+  <!-- Legs -->
+  <line x1="39" y1="44" x2="38" y2="56" stroke="#FAF6F1" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="45" y1="44" x2="46" y2="56" stroke="#FAF6F1" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Arms (one reaching toward woman) -->
+  <line x1="35" y1="30" x2="29" y2="36" stroke="#FAF6F1" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="49" y1="30" x2="54" y2="38" stroke="#FAF6F1" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Woman legs -->
+  <line x1="20" y1="44" x2="19" y2="56" stroke="#FAF6F1" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="24" y1="44" x2="25" y2="56" stroke="#FAF6F1" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Joined hands in middle -->
+  <circle cx="32" cy="37" r="2.5" fill="#E8A857"/>
+</svg>
