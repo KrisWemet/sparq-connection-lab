@@ -51,11 +51,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
 
       // Set up auth state change listener
+      let signOutTimer: ReturnType<typeof setTimeout> | null = null;
+
       const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
         console.log('Auth state change:', event);
 
         // Skip INITIAL_SESSION — already handled by getSession() above
         if (event === 'INITIAL_SESSION') return;
+
+        // Cancel any pending sign-out if a new session arrives
+        if (signOutTimer) {
+          clearTimeout(signOutTimer);
+          signOutTimer = null;
+        }
 
         setSession(newSession);
 
@@ -64,8 +72,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             await fetchUserData(newSession.user);
           }
         } else if (event === 'SIGNED_OUT') {
-          setUser(null);
-          setProfile(null);
+          // Debounce: Supabase fires SIGNED_OUT → SIGNED_IN during token
+          // refresh. Wait briefly to see if SIGNED_IN follows before clearing state.
+          signOutTimer = setTimeout(() => {
+            setUser(null);
+            setProfile(null);
+            signOutTimer = null;
+          }, 500);
         }
       });
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "@/lib/auth-context";
 import { motion } from "framer-motion";
@@ -153,9 +153,9 @@ export default function Dashboard() {
   const { user, profile, loading, logout } = useAuth();
   const router = useRouter();
 
-  const [streakCount] = useState(3);
-  const [currentDay] = useState(3);
-  const [connectionScore] = useState(72);
+  const streakCount = (profile as any)?.streak_count || 0;
+  const currentDay = (profile as any)?.discovery_day || 1;
+  const connectionScore = (profile as any)?.relationship_points || 0;
 
   useEffect(() => {
     if (!loading && !user) router.push("/login");
