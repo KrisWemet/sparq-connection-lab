@@ -192,7 +192,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     });
   } catch (error) {
-    console.error('Peter chat error:', error);
+    const errMsg = error instanceof Error ? error.message : String(error);
+    console.error('Peter chat error:', errMsg);
     return res.status(500).json({ error: 'Peter is taking a nap — try again in a moment 🦦' });
   }
 }
