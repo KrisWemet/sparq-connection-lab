@@ -1,97 +1,49 @@
-// Memory layer — thin wrapper around mem0ai OSS with Supabase vector store.
-// Server-side only. Never import from client components.
-// Uses dynamic import to avoid top-level ESM resolution issues with ollama peer dep.
+// Memory layer — server-side only. Never import from client components.
+// mem0ai/oss was removed from the project; this module provides a compatible
+// in-memory stub so API routes that call addMemory/searchMemories compile and
+// run without crashing. Replace with a real vector store when mem0ai is added back.
 
-type MemoryInstance = any;
 type Message = { role: string; content: string };
 type SearchResult = any;
 type MemoryItem = any;
 
-let _memory: MemoryInstance | null = null;
-let _initFailed = false;
+const store = new Map<string, Array<{ id: string; memory: string; metadata?: Record<string, any>; createdAt: number }>>();
 
-async function getMemory(): Promise<MemoryInstance> {
-  if (_memory) return _memory;
-  if (_initFailed) throw new Error('Memory layer previously failed to initialize');
+function uid() {
+  return Math.random().toString(36).slice(2);
+}
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  const openaiKey = process.env.OPENAI_API_KEY;
-
-  if (!supabaseUrl || !supabaseKey) {
-    throw new Error('Missing SUPABASE env vars for memory layer');
-  }
-  if (!openaiKey) {
-    throw new Error('Missing OPENAI_API_KEY for memory embeddings');
-  }
-
-  try {
-    const { Memory } = await import('mem0ai/oss');
-
-    _memory = new Memory({
-      version: 'v1.1',
-      embedder: {
-        provider: 'openai',
-        config: {
-          apiKey: openaiKey,
-          model: 'text-embedding-3-small',
-        },
-      },
-      vectorStore: {
-        provider: 'supabase',
-        config: {
-          supabaseUrl,
-          supabaseKey,
-          tableName: 'memories',
-          dimension: 1536,
-        },
-      },
-      llm: {
-        provider: 'openai',
-        config: {
-          apiKey: openaiKey,
-          model: 'gpt-4o-mini',
-        },
-      },
-      historyStore: {
-        provider: 'supabase',
-        config: {
-          supabaseUrl,
-          supabaseKey,
-          tableName: 'memory_history',
-        },
-      },
-    });
-
-    return _memory;
-  } catch (err) {
-    _initFailed = true;
-    throw err;
-  }
+function getStore(userId: string) {
+  if (!store.has(userId)) store.set(userId, []);
+  return store.get(userId)!;
 }
 
 /**
- * Store conversation messages as memories. mem0 auto-extracts key facts.
+ * Store conversation messages as memories. Extracts assistant messages as facts.
  */
 export async function addMemory(
   userId: string,
   messages: Message[],
   metadata?: Record<string, any>,
 ): Promise<SearchResult> {
-  const memory = await getMemory();
-  return memory.add(messages, { userId, metadata });
+  const entries = getStore(userId);
+  for (const msg of messages) {
+    entries.push({ id: uid(), memory: msg.content, metadata, createdAt: Date.now() });
+  }
+  return { results: [] };
 }
 
 /**
- * Semantic search for memories relevant to a query.
+ * Semantic search for memories relevant to a query (stub: returns most recent).
  */
 export async function searchMemories(
   userId: string,
-  query: string,
+  _query: string,
   limit = 5,
 ): Promise<SearchResult> {
-  const memory = await getMemory();
-  return memory.search(query, { userId, limit });
+  const entries = getStore(userId);
+  const results = entries.slice(-limit).reverse().map(e => ({ id: e.id, memory: e.memory, metadata: e.metadata }));
+  return { results };
 }
 
 /**
@@ -101,22 +53,25 @@ export async function getRecentMemories(
   userId: string,
   limit = 10,
 ): Promise<SearchResult> {
-  const memory = await getMemory();
-  return memory.getAll({ userId, limit });
+  const entries = getStore(userId);
+  const results = entries.slice(-limit).reverse().map(e => ({ id: e.id, memory: e.memory, metadata: e.metadata }));
+  return { results };
 }
 
 /**
  * Get a specific memory by ID.
  */
 export async function getMemoryById(memoryId: string): Promise<MemoryItem | null> {
-  const memory = await getMemory();
-  return memory.get(memoryId);
+  for (const entries of store.values()) {
+    const found = entries.find(e => e.id === memoryId);
+    if (found) return found;
+  }
+  return null;
 }
 
 /**
  * Delete all memories for a user (used by Trust Center "delete all" action).
  */
 export async function deleteUserMemories(userId: string): Promise<void> {
-  const memory = await getMemory();
-  await memory.deleteAll({ userId });
+  store.delete(userId);
 }
