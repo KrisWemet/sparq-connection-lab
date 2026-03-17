@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useAuth } from '../lib/auth-context';
 import { MetaphorAnimation } from '../components/MetaphorAnimation';
 import { useState } from 'react';
 
 export default function Home() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  const router = useRouter();
   const [showMetaphor, setShowMetaphor] = useState(false);
+
+  // Redirect logged-in users straight to dashboard
+  useEffect(() => {
+    if (!loading && user) router.replace('/dashboard');
+  }, [user, loading, router]);
   const [currentMetaphor, setCurrentMetaphor] = useState<'bridge' | 'flower' | 'river'>('bridge');
 
   const handleShowMetaphor = (type: 'bridge' | 'flower' | 'river') => {
@@ -31,27 +38,17 @@ export default function Home() {
             <span className="w-2 h-2 rounded-full bg-brand-primary" />
             Sparq
           </h1>
-          <div>
-            {user ? (
-              <Link href="/dashboard">
-                <span className="px-5 py-2 bg-brand-primary text-white rounded-full hover:bg-brand-hover text-sm font-semibold transition-colors cursor-pointer shadow-sm">
-                  Dashboard
-                </span>
-              </Link>
-            ) : (
-              <div className="flex items-center gap-4">
-                <Link href="/login">
-                  <span className="text-sm font-medium text-zinc-600 hover:text-black transition-colors cursor-pointer px-2">
-                    Sign In
-                  </span>
-                </Link>
-                <Link href="/login">
-                  <span className="px-5 py-2.5 bg-brand-primary text-white font-semibold rounded-full hover:bg-brand-hover transition-colors cursor-pointer text-sm shadow-sm">
-                    Get Started
-                  </span>
-                </Link>
-              </div>
-            )}
+          <div className="flex items-center gap-4">
+            <Link href="/login">
+              <span className="text-sm font-medium text-zinc-600 hover:text-black transition-colors cursor-pointer px-2">
+                Sign In
+              </span>
+            </Link>
+            <Link href="/signup">
+              <span className="px-5 py-2.5 bg-brand-primary text-white font-semibold rounded-full hover:bg-brand-hover transition-colors cursor-pointer text-sm shadow-sm">
+                Get Started
+              </span>
+            </Link>
           </div>
         </div>
       </header>
