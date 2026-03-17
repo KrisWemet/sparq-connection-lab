@@ -53,11 +53,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Set up auth state change listener
       const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
         console.log('Auth state change:', event);
+
+        // Skip INITIAL_SESSION — already handled by getSession() above
+        if (event === 'INITIAL_SESSION') return;
+
         setSession(newSession);
 
-        if (newSession?.user) {
-          await fetchUserData(newSession.user);
-        } else {
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+          if (newSession?.user) {
+            await fetchUserData(newSession.user);
+          }
+        } else if (event === 'SIGNED_OUT') {
           setUser(null);
           setProfile(null);
         }
@@ -86,30 +92,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           ...authUser,
           profile: userProfile
         };
-        
+
         setUser(enhancedUser);
         setProfile(userProfile);
       } else {
+        // Profile may not exist yet (trigger may still be running).
+        // Set user without profile — it will be picked up on next auth event.
         setUser(authUser);
-        // If no profile exists but user is authenticated, create a basic profile
-        const newProfile: Partial<SupabaseProfile> & { id: string } = {
-          id: authUser.id,
-          name: authUser.email?.split('@')[0] || 'User',
-          email: authUser.email || '',
-          created_at: new Date().toISOString(),
-        };
-        
-        const profileSuccess = await updateProfile(newProfile);
-        if (profileSuccess) {
-          const createdProfile = await getProfile(authUser.id);
-          if (createdProfile) {
-            setProfile(createdProfile);
-            setUser({
-              ...authUser,
-              profile: createdProfile
-            });
-          }
-        }
       }
     } catch (err) {
       console.error('Error fetching user data:', err);
@@ -304,7 +293,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const today = new Date();
-      const lastActivity = profile.last_activity_date ? new Date(profile.last_activity_date) : null;
+      const lastActivity = (profile as any).last_daily_activity ? new Date((profile as any).last_daily_activity) : null;
       
       // Initialize or update streak count
       let newStreakCount = profile.streak_count || 0;
@@ -331,8 +320,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Update profile with new streak and last activity date
       await updateProfileImpl({
         streak_count: newStreakCount,
-        last_activity_date: today.toISOString()
-      });
+        last_daily_activity: today.toISOString()
+      } as any);
       
     } catch (err) {
       console.error('Error updating streak:', err);

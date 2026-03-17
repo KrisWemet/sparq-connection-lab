@@ -13,7 +13,7 @@ import { WeeklyMirrorCard } from "@/components/dashboard/WeeklyMirrorCard";
 import { LivingArtifact } from "@/components/dashboard/LivingArtifact";
 import { BottomNav } from "@/components/bottom-nav";
 
-import { Users, ArrowRight, Flame } from "lucide-react";
+import { Users, ArrowRight, Flame, LogOut } from "lucide-react";
 
 // ─── Peter tips (rotate daily) ────────────────────────────────────────────────
 const PETER_TIPS = [
@@ -150,7 +150,7 @@ function JourneyHeroCard({
 
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 export default function Dashboard() {
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, logout } = useAuth();
   const router = useRouter();
 
   const [streakCount] = useState(3);
@@ -182,13 +182,36 @@ export default function Dashboard() {
           zIndex: 10,
         }}
       >
-        <div style={{ maxWidth: 880, margin: "0 auto" }}>
-          <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 13, marginBottom: 6 }}>
-            {getFormattedDate()}
-          </p>
-          <h1 style={{ color: "white", fontSize: 26, fontWeight: 700, lineHeight: 1.25, margin: 0 }}>
-            {getGreeting()},<br />{firstName}.
-          </h1>
+        <div style={{ maxWidth: 880, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+          <div>
+            <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 13, marginBottom: 6 }}>
+              {getFormattedDate()}
+            </p>
+            <h1 style={{ color: "white", fontSize: 26, fontWeight: 700, lineHeight: 1.25, margin: 0 }}>
+              {getGreeting()},<br />{firstName}.
+            </h1>
+          </div>
+          <button
+            onClick={() => logout().then(() => router.push("/login"))}
+            title="Sign out"
+            style={{
+              background: "rgba(255,255,255,0.15)",
+              border: "1px solid rgba(255,255,255,0.25)",
+              borderRadius: 10,
+              padding: "8px 12px",
+              color: "white",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              fontSize: 13,
+              fontWeight: 500,
+              marginTop: 4,
+            }}
+          >
+            <LogOut size={16} />
+            Sign Out
+          </button>
         </div>
       </header>
 
