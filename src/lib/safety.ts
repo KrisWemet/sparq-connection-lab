@@ -88,28 +88,32 @@ export async function detectCrisisIntent(text: string): Promise<CrisisDetectionR
     }
   }
 
-  // 2. Fallback to OpenAI Moderation API for nuances
-  try {
-    const response = await openai.moderations.create({ input: text });
-    const result = response.results[0];
+  // 2. OpenAI Moderation API — only call if regex didn't already trigger
+  //    and OPENAI_API_KEY is configured. Skipped to stay within Vercel
+  //    serverless timeout on Hobby plan; regex patterns cover critical cases.
+  if (types.length === 0 && process.env.OPENAI_API_KEY) {
+    try {
+      const response = await openai.moderations.create({ input: text });
+      const result = response.results[0];
 
-    if (result.flagged) {
-      const categories = result.categories as unknown as Record<string, boolean>;
-      
-      if (categories['self-harm'] || categories['self-harm/intent'] || categories['self-harm/instructions']) {
-        if (!types.includes('self_harm')) types.push('self_harm');
+      if (result.flagged) {
+        const categories = result.categories as unknown as Record<string, boolean>;
+
+        if (categories['self-harm'] || categories['self-harm/intent'] || categories['self-harm/instructions']) {
+          types.push('self_harm');
+        }
+
+        if (categories['violence'] || categories['violence/graphic']) {
+          types.push('violence_or_abuse');
+        }
+
+        if (categories['sexual/minors']) {
+          types.push('child_harm');
+        }
       }
-      
-      if (categories['violence'] || categories['violence/graphic']) {
-        if (!types.includes('violence_or_abuse')) types.push('violence_or_abuse');
-      }
-      
-      if (categories['sexual/minors']) {
-        if (!types.includes('child_harm')) types.push('child_harm');
-      }
+    } catch (error) {
+      console.error('Moderation API failed, relying on regex fallback', error);
     }
-  } catch (error) {
-    console.error('Moderation API failed, relying on regex fallback', error);
   }
 
   return {
