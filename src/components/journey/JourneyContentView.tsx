@@ -10,6 +10,7 @@ import { getJourneyContent, saveJourneyProgress, JourneyContent, JourneyDay } fr
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import { PeterLoading } from '@/components/PeterLoading';
 
 export function JourneyContentView({ journeyId }: { journeyId: string }) {
   const router = useRouter();
@@ -117,7 +118,7 @@ export function JourneyContentView({ journeyId }: { journeyId: string }) {
   };
 
   if (loading) {
-    return <div className="flex justify-center py-8">Loading journey content...</div>;
+    return <PeterLoading isLoading />;
   }
 
   if (!journeyContent) {

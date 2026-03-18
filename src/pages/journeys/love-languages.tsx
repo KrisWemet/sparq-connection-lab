@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { PeterLoading } from '@/components/PeterLoading';
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -1235,10 +1236,7 @@ export default function LoveLanguagesJourney() {
         <Progress value={(currentDay / 14) * 100} className="h-2" />
 
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-12 space-y-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-            <p className="text-gray-600 dark:text-gray-400">Loading your journey...</p>
-          </div>
+          <PeterLoading isLoading />
         ) : (
           renderDailyContent()
         )}

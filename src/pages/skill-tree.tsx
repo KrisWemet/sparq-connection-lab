@@ -8,6 +8,7 @@ import { supabase } from '@/lib/supabase';
 import { PeterChat } from '@/components/PeterChat';
 import { PeterMessage } from '@/lib/peterService';
 import { buildAuthedHeaders } from '@/lib/api-auth';
+import { PeterLoading } from '@/components/PeterLoading';
 
 type TrackKey =
   | 'communication'
@@ -421,13 +422,7 @@ export default function SkillTree() {
 
   // ─── Loading ───────────────────────────────────────────────────
   if (authLoading || loading) {
-    return (
-      <div className="min-h-screen bg-[#050505] flex items-center justify-center font-sans">
-        <div className="text-center">
-          <p className="text-sm text-zinc-500 tracking-wide font-medium">Loading Skill Tree...</p>
-        </div>
-      </div>
-    );
+    return <PeterLoading isLoading />;
   }
 
   // ─── Locked gate ───────────────────────────────────────────────

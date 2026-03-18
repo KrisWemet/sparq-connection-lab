@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "@/lib/auth-context";
 import { motion } from "framer-motion";
+import { PeterLoading } from "@/components/PeterLoading";
 
 // New canonical Peter components
 import PeterAvatar from "@/components/PeterAvatar";
@@ -161,7 +162,7 @@ export default function Dashboard() {
   }, [user, loading, router]);
 
   if (loading || !user) {
-    return <div className="min-h-screen" style={{ background: "#FAF6F1" }} />;
+    return <PeterLoading isLoading />;
   }
 
   const firstName = (profile as any)?.name?.split(" ")[0]

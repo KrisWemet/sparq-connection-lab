@@ -6,6 +6,7 @@ import { ValuesQuestion } from "@/components/journeys/ValuesQuestion";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
 import { LoadingIndicator } from "@/components/ui/loading-indicator";
+import { PeterLoading } from '@/components/PeterLoading';
 
 export default function DailyActivity() {
   const router = useRouter();
@@ -101,14 +102,7 @@ export default function DailyActivity() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <LoadingIndicator 
-          size="md"
-          label="Loading your daily question..." 
-        />
-      </div>
-    );
+    return <PeterLoading isLoading />;
   }
 
   return (

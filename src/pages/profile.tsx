@@ -7,6 +7,7 @@ import ProtectedRoute from '../components/ProtectedRoute';
 import { Bell, CheckCircle, Edit2, User, Camera, Heart, X, ChevronRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { TraitCard } from '@/components/profile/TraitCard';
+import { PeterLoading } from '@/components/PeterLoading';
 
 // Use a standard function declaration for Next.js pages
 export default function ProfilePage() {
@@ -153,15 +154,7 @@ export default function ProfilePage() {
 
   // Loading state
   if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-50 to-blue-100">
-        <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <h2 className="text-xl font-semibold text-brand-primary mb-2">Preparing Your Profile</h2>
-        <p className="text-gray-600 max-w-md text-center">
-          Just a moment while we personalize your space...
-        </p>
-      </div>
-    );
+    return <PeterLoading isLoading />;
   }
 
   return (

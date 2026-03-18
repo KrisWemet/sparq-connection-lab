@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BookOpen, Heart, MessageCircle, Shield } from 'lucide-react';
+import { PeterLoading } from '@/components/PeterLoading';
 
 interface Journey {
   id: string;
@@ -71,7 +72,7 @@ export default function PathToTogether() {
   };
 
   if (loading) {
-    return <div className="container py-12">Loading journeys...</div>;
+    return <PeterLoading isLoading />;
   }
 
   return (

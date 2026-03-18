@@ -1,8 +1,7 @@
 
 import React from "react";
-import { BottomNav } from "@/components/bottom-nav";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
-import { LoadingIndicator } from "@/components/ui/loading-indicator";
+import { PeterLoading } from "@/components/PeterLoading";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -11,11 +10,7 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children, isLoading }: DashboardLayoutProps) {
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <LoadingIndicator size="md" label="Loading your relationship dashboard..." />
-      </div>
-    );
+    return <PeterLoading isLoading />;
   }
 
   return (
@@ -24,7 +19,6 @@ export function DashboardLayout({ children, isLoading }: DashboardLayoutProps) {
       <main className="container max-w-lg mx-auto px-4 py-6 space-y-5">
         {children}
       </main>
-      <BottomNav />
     </div>
   );
 }

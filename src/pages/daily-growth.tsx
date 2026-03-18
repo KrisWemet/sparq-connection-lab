@@ -13,6 +13,7 @@ import { Day14Graduation } from '@/components/onboarding/Day14Graduation';
 import { analyticsService } from '@/services/analyticsService';
 import { DailyTimeline } from '@/components/journey/DailyTimeline';
 import { fireElegantConfetti } from '@/lib/ElegantConfetti';
+import { PeterLoading } from '@/components/PeterLoading';
 
 type Phase = 'loading' | 'morning' | 'evening' | 'complete';
 
@@ -365,15 +366,9 @@ export default function DailyGrowth() {
     }
   };
 
-  // Loading screen
+  // Loading screen — show Peter's tip overlay (consistent with route transitions)
   if (authLoading || phase === 'loading') {
-    return (
-      <div className="min-h-screen bg-brand-linen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-zinc-500 text-sm font-medium">Loading Session...</p>
-        </div>
-      </div>
-    );
+    return <PeterLoading isLoading />;
   }
 
   return (

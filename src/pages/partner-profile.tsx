@@ -7,6 +7,7 @@ import { ChevronLeft } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LoadingIndicator } from "@/components/ui/loading-indicator";
+import { PeterLoading } from '@/components/PeterLoading';
 import { toast } from "sonner";
 
 export default function PartnerProfile() {
@@ -83,9 +84,7 @@ export default function PartnerProfile() {
 
       <main className="container max-w-lg mx-auto px-4 pt-6 animate-slide-up">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-16">
-            <LoadingIndicator size="lg" label="Loading partner profile..." />
-          </div>
+          <PeterLoading isLoading />
         ) : error ? (
           <Card className="mb-6">
             <CardContent className="pt-6 flex flex-col items-center text-center">
