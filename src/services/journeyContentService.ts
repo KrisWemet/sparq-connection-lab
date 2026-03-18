@@ -1,6 +1,5 @@
 
 import { supabase } from "@/integrations/supabase/client";
-import { marked } from "marked";
 
 export interface JourneyContent {
   title: string;
@@ -27,13 +26,14 @@ export interface JourneyDay {
 export async function getJourneyContent(journeyId: string): Promise<JourneyContent | null> {
   try {
     // Fetch markdown content from the public directory
-    const response = await fetch(`/Path to Together/${journeyId}.md`);
-    
+    // encodeURIComponent handles the space in "Path to Together"
+    const response = await fetch(`/Path%20to%20Together/${encodeURIComponent(journeyId)}.md`);
+
     if (!response.ok) {
       console.error(`Failed to load journey content for ${journeyId}`);
       return null;
     }
-    
+
     const markdownContent = await response.text();
     return parseJourneyContent(markdownContent, journeyId);
   } catch (error) {
@@ -47,7 +47,7 @@ function parseJourneyContent(markdown: string, journeyId: string): JourneyConten
   // Extract frontmatter (metadata)
   const metadataRegex = /^---\n([\s\S]*?)\n---/;
   const metadataMatch = markdown.match(metadataRegex);
-  
+
   const metadata: Record<string, string> = {};
   if (metadataMatch && metadataMatch[1]) {
     const metadataLines = metadataMatch[1].split('\n');
@@ -58,42 +58,30 @@ function parseJourneyContent(markdown: string, journeyId: string): JourneyConten
       }
     }
   }
-  
+
   // Remove frontmatter from content
   const contentWithoutFrontmatter = markdown.replace(metadataRegex, '').trim();
-  
-  // Parse days from content
+
+  // Parse days from content — split on ## Day headers to avoid regex infinite loop
   const days: JourneyDay[] = [];
-  const dayRegex = /## Day (\d+): (.*?)(?=\n)/g;
-  let dayMatch;
-  
-  while ((dayMatch = dayRegex.exec(contentWithoutFrontmatter)) !== null) {
-    const dayNumber = parseInt(dayMatch[1]);
-    const dayTitle = dayMatch[2];
-    
-    // Find the start of this day's content
-    const dayStartIndex = dayMatch.index;
-    
-    // Find the start of the next day's content or end of file
-    const nextDayMatch = dayRegex.exec(contentWithoutFrontmatter);
-    const dayEndIndex = nextDayMatch ? nextDayMatch.index : contentWithoutFrontmatter.length;
-    
-    // Reset the lastIndex to process the next day
-    if (nextDayMatch) {
-      dayRegex.lastIndex = dayMatch.index;
-    }
-    
-    // Extract this day's content
-    const dayContent = contentWithoutFrontmatter.substring(dayStartIndex, dayEndIndex).trim();
-    
+  const daySections = contentWithoutFrontmatter.split(/(?=^## Day \d+:)/m);
+
+  for (const section of daySections) {
+    const headerMatch = section.match(/^## Day (\d+): (.*)/);
+    if (!headerMatch) continue;
+
+    const dayNumber = parseInt(headerMatch[1]);
+    const dayTitle = headerMatch[2].trim();
+    const dayContent = section.trim();
+
     // Extract reflection questions if they exist
     const reflectionQuestionsMatch = dayContent.match(/### Reflection Questions\n\n([\s\S]*?)(?=\n##|$)/);
     const reflectionQuestions: string[] = [];
-    
+
     if (reflectionQuestionsMatch && reflectionQuestionsMatch[1]) {
       const questionsText = reflectionQuestionsMatch[1];
       const questionMatches = questionsText.match(/\d+\.\s*(.*?)(?=\n\d+\.|\n##|$)/g);
-      
+
       if (questionMatches) {
         questionMatches.forEach(q => {
           const question = q.replace(/^\d+\.\s*/, '').trim();
@@ -101,11 +89,11 @@ function parseJourneyContent(markdown: string, journeyId: string): JourneyConten
         });
       }
     }
-    
+
     // Extract activity if it exists
     const activityMatch = dayContent.match(/### Today's Activity\n\n([\s\S]*?)(?=\n### Reflection Questions|$)/);
     let activity = undefined;
-    
+
     if (activityMatch && activityMatch[1]) {
       activity = {
         title: "Today's Activity",
@@ -113,7 +101,7 @@ function parseJourneyContent(markdown: string, journeyId: string): JourneyConten
         reflectionQuestions
       };
     }
-    
+
     days.push({
       number: dayNumber,
       title: dayTitle,
@@ -121,7 +109,7 @@ function parseJourneyContent(markdown: string, journeyId: string): JourneyConten
       activity
     });
   }
-  
+
   return {
     title: metadata.title || '',
     duration: metadata.duration || '',
@@ -135,9 +123,9 @@ function parseJourneyContent(markdown: string, journeyId: string): JourneyConten
 
 // Function to save user progress for a journey
 export async function saveJourneyProgress(
-  journeyId: string, 
-  day: number, 
-  completed: boolean = true, 
+  journeyId: string,
+  day: number,
+  completed: boolean = true,
   responses: Record<string, any> = {}
 ): Promise<boolean> {
   try {
@@ -149,7 +137,7 @@ export async function saveJourneyProgress(
         completed,
         responses
       });
-      
+
     if (error) throw error;
     return true;
   } catch (error) {
@@ -166,7 +154,7 @@ export async function getJourneyProgress(journeyId: string): Promise<any[]> {
       .select('*')
       .eq('journey_id', journeyId)
       .order('day', { ascending: true });
-      
+
     if (error) throw error;
     return data || [];
   } catch (error) {

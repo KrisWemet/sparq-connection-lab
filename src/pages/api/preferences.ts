@@ -20,12 +20,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .from('user_preferences')
       .select('*')
       .eq('user_id', ctx.userId)
-      .single();
+      .maybeSingle();
 
     if (error) {
       return res.status(500).json({ error: 'Failed to load preferences' });
     }
-    return res.status(200).json({ preferences: data });
+    // Return defaults if no preferences row exists yet
+    return res.status(200).json({
+      preferences: data || {
+        user_id: ctx.userId,
+        insights_visible: true,
+        personalization_enabled: true,
+        ai_memory_mode: 'rolling_90_days',
+        relationship_mode: 'solo',
+        reminder_time: '09:00',
+        notifications_enabled: true,
+        timezone: null,
+      },
+    });
   }
 
   if (req.method === 'PATCH') {
