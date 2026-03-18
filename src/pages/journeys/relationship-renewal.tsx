@@ -1,4 +1,4 @@
-import JourneyTemplate from "./JourneyTemplate";
+import JourneyTemplate from "./journey-template";
 import {
   RefreshCw,
   Sparkles,

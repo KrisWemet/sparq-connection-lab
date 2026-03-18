@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import { journeys } from "@/data/journeys";
-import { BottomNav } from "@/components/bottom-nav";
 import { Crown, Search, Lock } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -148,7 +147,6 @@ export default function Journeys() {
         )}
       </main>
 
-      <BottomNav />
     </div>
   );
 }

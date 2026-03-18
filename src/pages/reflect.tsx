@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import { ChevronLeft, BookOpen, AlignCenter } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BottomNav } from "@/components/bottom-nav";
 
 export default function Reflect() {
   const [notes, setNotes] = useState("");
@@ -62,7 +61,6 @@ export default function Reflect() {
           </Button>
         </section>
       </main>
-      <BottomNav />
     </div>
   );
 }

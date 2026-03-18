@@ -11,7 +11,6 @@ import PeterSpeechBubble from "@/components/PeterSpeechBubble";
 import { TodaysFocusCard } from "@/components/dashboard/TodaysFocusCard";
 import { WeeklyMirrorCard } from "@/components/dashboard/WeeklyMirrorCard";
 import { LivingArtifact } from "@/components/dashboard/LivingArtifact";
-import { BottomNav } from "@/components/bottom-nav";
 
 import { Users, ArrowRight, Flame, LogOut } from "lucide-react";
 
@@ -332,7 +331,6 @@ export default function Dashboard() {
         <p>Your relationship guide</p>
       </div>
 
-      <BottomNav />
     </div>
   );
 }

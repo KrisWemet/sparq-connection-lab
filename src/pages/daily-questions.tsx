@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BottomNav } from "@/components/bottom-nav";
 import { AnimatedContainer } from "@/components/ui/animated-container";
 import { 
   ChevronLeft, 
@@ -1124,7 +1123,6 @@ export default function DailyQuestions() {
           )}
         </AnimatedContainer>
       </main>
-      <BottomNav />
     </div>
   );
 } 

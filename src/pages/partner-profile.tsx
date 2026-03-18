@@ -6,7 +6,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { ChevronLeft } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { BottomNav } from "@/components/bottom-nav";
 import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { toast } from "sonner";
 
@@ -163,7 +162,6 @@ export default function PartnerProfile() {
         )}
       </main>
 
-      <BottomNav />
     </div>
   );
 }

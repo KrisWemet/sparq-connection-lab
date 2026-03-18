@@ -7,7 +7,6 @@ import { QuestionView } from "@/components/quiz/QuestionView";
 import { CompletionView } from "@/components/quiz/CompletionView";
 import { RelationshipHealthQuiz } from "@/components/quiz/RelationshipHealthQuiz";
 import { toast } from "sonner";
-import { BottomNav } from "@/components/bottom-nav";
 import { useRouter } from 'next/router';
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -151,7 +150,6 @@ export default function Quiz() {
           />
         </main>
         <ConfettiAnimation show={showConfetti} />
-        <BottomNav />
       </div>
     );
   }
@@ -171,7 +169,6 @@ export default function Quiz() {
             onStartHealthQuiz={handleStartHealthQuiz}
           />
         </main>
-        <BottomNav />
       </div>
     );
   }
@@ -194,7 +191,6 @@ export default function Quiz() {
           />
         )}
       </main>
-      <BottomNav />
     </div>
   );
 }

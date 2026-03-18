@@ -3,7 +3,6 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from 'next/router';
 import { supabase } from "@/integrations/supabase/client";
 import { ValuesQuestion } from "@/components/journeys/ValuesQuestion";
-import { BottomNav } from "@/components/bottom-nav";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
 import { LoadingIndicator } from "@/components/ui/loading-indicator";
@@ -122,7 +121,6 @@ export default function DailyActivity() {
           />
         )}
       </main>
-      <BottomNav />
     </div>
   );
 }

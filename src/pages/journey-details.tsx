@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BottomNav } from "@/components/bottom-nav";
 import { ChevronLeft, Heart, MessageCircle, Shield, Flame, Target, Lightbulb, HeartHandshake, ArrowRight, Sparkles, Brain, Zap, PartyPopper, Check } from "lucide-react";
 import { toast } from "sonner";
 import { loadJourneyContent, type JourneyContent } from "@/services/journeyService";
@@ -667,7 +666,6 @@ export default function JourneyDetails() {
         </div>
       </Card>
 
-      <BottomNav />
     </div>
   );
 } 

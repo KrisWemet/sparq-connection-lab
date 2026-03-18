@@ -7,7 +7,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BottomNav } from "@/components/bottom-nav";
 import { 
   ChevronLeft, 
   Plus, 
@@ -531,7 +530,6 @@ export default function Goals() {
         )}
       </main>
       
-      <BottomNav />
     </div>
   );
 } 

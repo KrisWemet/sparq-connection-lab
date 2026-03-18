@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BottomNav } from "@/components/bottom-nav";
 import { 
   ChevronLeft, 
   Sparkles, 
@@ -175,7 +174,6 @@ export default function AITherapist() {
         </div>
       </main>
       
-      <BottomNav />
     </div>
   );
 } 

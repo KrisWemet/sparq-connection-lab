@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { BottomNav } from "@/components/bottom-nav";
 import { 
   ChevronLeft, 
   Check, 
@@ -563,7 +562,6 @@ export default function Subscription() {
         </motion.div>
       )}
       
-      <BottomNav />
     </div>
   );
 } 

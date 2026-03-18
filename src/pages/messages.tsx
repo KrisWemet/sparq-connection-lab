@@ -5,7 +5,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { BottomNav } from "@/components/bottom-nav";
 import { 
   ChevronLeft, 
   Send, 
@@ -415,7 +414,6 @@ export default function Messaging() {
         </TabsContent>
       </Tabs>
       
-      <BottomNav />
     </div>
   );
 } 

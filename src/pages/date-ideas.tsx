@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { BottomNav } from "@/components/bottom-nav";
 import { ChevronLeft, Heart, Calendar, Star, Clock, Filter, Search, ThumbsUp, ThumbsDown, Share2, Bookmark, MapPin, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { AIService } from "@/services/aiService";
@@ -525,7 +524,6 @@ export default function DateIdeas() {
         </Tabs>
       </main>
       
-      <BottomNav />
     </div>
   );
 } 
