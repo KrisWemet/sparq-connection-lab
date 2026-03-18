@@ -9,6 +9,7 @@ import { PeterChat } from '@/components/PeterChat';
 import { PeterMessage, UserInsights } from '@/lib/peterService';
 import { buildAuthedHeaders } from '@/lib/api-auth';
 import { parseMorningContent } from '@/lib/morning-parser';
+import { stripMarkdown as stripMd } from '@/lib/strip-markdown';
 import { Day14Graduation } from '@/components/onboarding/Day14Graduation';
 import { analyticsService } from '@/services/analyticsService';
 import { DailyTimeline } from '@/components/journey/DailyTimeline';
@@ -87,8 +88,8 @@ export default function DailyGrowth() {
           if (session) {
             setSessionId(session.id);
             setCurrentDay(session.day_index ?? 1);
-            setMorningStory(session.morning_story || '');
-            setMorningAction(session.morning_action || '');
+            setMorningStory(stripMd(session.morning_story || ''));
+            setMorningAction(stripMd(session.morning_action || ''));
             if (session.status === 'completed') {
               setPhase('complete');
             } else if (session.status === 'morning_viewed' || session.status === 'evening_active') {
@@ -135,8 +136,8 @@ export default function DailyGrowth() {
       }
 
       if (entry?.morning_viewed_at) {
-        setMorningStory(entry.morning_story || '');
-        setMorningAction(entry.morning_action || '');
+        setMorningStory(stripMd(entry.morning_story || ''));
+        setMorningAction(stripMd(entry.morning_action || ''));
         setPhase('evening');
         return;
       }
@@ -144,8 +145,8 @@ export default function DailyGrowth() {
       // Need morning story — use cached or generate
       setPhase('morning');
       if (entry?.morning_story) {
-        setMorningStory(entry.morning_story);
-        setMorningAction(entry.morning_action || '');
+        setMorningStory(stripMd(entry.morning_story));
+        setMorningAction(stripMd(entry.morning_action || ''));
         return;
       }
 
@@ -180,7 +181,8 @@ export default function DailyGrowth() {
         setIsGenerating(false);
       }
     })();
-  }, [user, authLoading, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, authLoading]);
 
   const handleMorningRead = async () => {
     if (!user) return;

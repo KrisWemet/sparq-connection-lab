@@ -1,6 +1,7 @@
 import { peterChat } from '@/lib/openrouter';
 import { PETER_SYSTEM_PROMPT, getProfileAnalysisPrompt, PeterMessage } from '@/lib/peterService';
 import { addMemory } from '@/lib/server/memory';
+import { assessReflectionQuality, getConfidenceBoost } from '@/lib/server/reflection-quality';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 interface TraitAnalysis {
@@ -54,6 +55,10 @@ export async function analyzeProfileTraits(
 
     const analysis: TraitAnalysis = JSON.parse(jsonMatch[0]);
 
+    // Phase 3: Quality-weighted confidence adjustment
+    const quality = assessReflectionQuality(eveningReflection);
+    const boost = getConfidenceBoost(quality);
+
     // Upsert each non-null trait into profile_traits
     for (const key of TRAIT_KEYS) {
       const value = analysis[key];
@@ -76,9 +81,9 @@ export async function analyzeProfileTraits(
 
       if (existing) {
         const sameValue = existing.inferred_value === value;
-        // If the same value keeps appearing, confidence grows; otherwise it drops
+        // Confidence grows by quality-weighted boost if consistent; drops if contradicted
         const newConfidence = sameValue
-          ? Math.min(1.0, (existing.confidence || 0.3) + 0.1)
+          ? Math.min(1.0, (existing.confidence || 0.3) + boost)
           : Math.max(0.1, (existing.confidence || 0.3) - 0.15);
 
         await supabase

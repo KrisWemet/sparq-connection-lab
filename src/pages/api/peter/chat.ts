@@ -6,6 +6,8 @@ import { getAuthedContext } from '@/lib/server/supabase-auth';
 import { resolveEntitlements } from '@/lib/server/entitlements';
 import { trackEvent } from '@/lib/server/analytics';
 import { searchMemories } from '@/lib/server/memory';
+import { assessReflectionQuality } from '@/lib/server/reflection-quality';
+import { stripMarkdown } from '@/lib/strip-markdown';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -108,23 +110,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
-    // Append evening context
+    // Append evening context with reflection quality nudging (Phase 3)
     if (eveningContext) {
       const { day, morningAction, turnNumber } = eveningContext;
       const wrapUp = turnNumber >= 2
         ? " This is their follow-up message — add a warm wrap-up and let them know you'll have something fresh for them tomorrow."
         : '';
       systemPrompt += `\n\nEVENING CHECK-IN CONTEXT (Day ${day}):\nToday's action was: "${morningAction}"\nReflect back what you heard warmly. Celebrate effort, not outcome. 3-4 sentences, no clinical terms.${wrapUp}`;
+
+      // Phase 3: Assess reflection quality and nudge Peter's response style
+      const quality = assessReflectionQuality(latestUserMessage);
+      if (quality.depth === 'shallow' && turnNumber < 3) {
+        systemPrompt += `\n\nThe user's response was brief. Warmly reflect what they shared, then gently invite more detail with a specific follow-up question. Don't pressure — just be curious. Example: "I hear you — can you tell me about one specific moment from today?"`;
+      } else if (quality.depth === 'deep') {
+        systemPrompt += `\n\nThe user shared something meaningful. Acknowledge the depth and specificity. Celebrate their openness. Don't push for more — honor what they gave you.`;
+      }
     }
 
     // Core LLM call
-    const message = await peterChat({
+    const rawMessage = await peterChat({
       messages: [
         { role: 'system', content: systemPrompt },
         ...messages.map(m => ({ role: m.role, content: m.content })),
       ],
       maxTokens: 512,
     });
+    const message = stripMarkdown(rawMessage);
 
     // Return response immediately — do usage tracking in the background
     // (Vercel will keep the function alive briefly for fire-and-forget promises)

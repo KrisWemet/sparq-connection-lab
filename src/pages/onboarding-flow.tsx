@@ -45,7 +45,8 @@ export default function OnboardingFlow() {
     if (!authLoading && !user) {
       router.push('/login');
     }
-  }, [user, authLoading, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, authLoading]);
 
   const handleUserMessage = async (text: string) => {
     if (isLoading || isComplete) return;

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "@/lib/auth-context";
 import { motion } from "framer-motion";
@@ -13,7 +13,13 @@ import { TodaysFocusCard } from "@/components/dashboard/TodaysFocusCard";
 import { WeeklyMirrorCard } from "@/components/dashboard/WeeklyMirrorCard";
 import { LivingArtifact } from "@/components/dashboard/LivingArtifact";
 
-import { Users, ArrowRight, Flame, LogOut } from "lucide-react";
+// Phase 5: Partner experience components
+import { PartnerSynthesisCard } from "@/components/dashboard/PartnerSynthesisCard";
+import { HeartbeatButton } from "@/components/dashboard/HeartbeatButton";
+import { useRealtimeSync } from "@/hooks/useRealtimeSync";
+import { supabase } from "@/lib/supabase";
+
+import { Users, ArrowRight, Flame, Circle } from "lucide-react";
 
 // ─── Peter tips (rotate daily) ────────────────────────────────────────────────
 const PETER_TIPS = [
@@ -150,16 +156,37 @@ function JourneyHeroCard({
 
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 export default function Dashboard() {
-  const { user, profile, loading, logout } = useAuth();
+  const { user, profile, loading } = useAuth();
   const router = useRouter();
 
   const streakCount = (profile as any)?.streak_count || 0;
   const currentDay = (profile as any)?.discovery_day || 1;
   const connectionScore = (profile as any)?.relationship_points || 0;
+  const partnerId = (profile as any)?.partner_id || null;
+
+  // Phase 5: Partner realtime presence
+  const { partnerIsOnline } = useRealtimeSync(partnerId);
+  const [partnerDay, setPartnerDay] = useState<number | null>(null);
 
   useEffect(() => {
     if (!loading && !user) router.push("/login");
-  }, [user, loading, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, loading]);
+
+  // Phase 5: Fetch partner's current day
+  useEffect(() => {
+    if (!partnerId) return;
+    (async () => {
+      try {
+        const { data } = await supabase
+          .from('user_insights')
+          .select('onboarding_day')
+          .eq('user_id', partnerId)
+          .maybeSingle();
+        if (data) setPartnerDay(data.onboarding_day);
+      } catch {}
+    })();
+  }, [partnerId]);
 
   if (loading || !user) {
     return <PeterLoading isLoading />;
@@ -182,36 +209,13 @@ export default function Dashboard() {
           zIndex: 10,
         }}
       >
-        <div style={{ maxWidth: 880, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-          <div>
-            <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 13, marginBottom: 6 }}>
-              {getFormattedDate()}
-            </p>
-            <h1 style={{ color: "white", fontSize: 26, fontWeight: 700, lineHeight: 1.25, margin: 0 }}>
-              {getGreeting()},<br />{firstName}.
-            </h1>
-          </div>
-          <button
-            onClick={() => logout().then(() => router.push("/login"))}
-            title="Sign out"
-            style={{
-              background: "rgba(255,255,255,0.15)",
-              border: "1px solid rgba(255,255,255,0.25)",
-              borderRadius: 10,
-              padding: "8px 12px",
-              color: "white",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              fontSize: 13,
-              fontWeight: 500,
-              marginTop: 4,
-            }}
-          >
-            <LogOut size={16} />
-            Sign Out
-          </button>
+        <div style={{ maxWidth: 880, margin: "0 auto" }}>
+          <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 13, marginBottom: 6 }}>
+            {getFormattedDate()}
+          </p>
+          <h1 style={{ color: "white", fontSize: 26, fontWeight: 700, lineHeight: 1.25, margin: 0 }}>
+            {getGreeting()},<br />{firstName}.
+          </h1>
         </div>
       </header>
 
@@ -270,6 +274,7 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.45 }}
+            className="space-y-4"
           >
             <div
               className="flex items-center justify-between gap-4 mt-2"
@@ -283,17 +288,30 @@ export default function Dashboard() {
             >
               <div className="flex items-center gap-4">
                 <div
-                  className="flex items-center justify-center flex-shrink-0"
+                  className="flex items-center justify-center flex-shrink-0 relative"
                   style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(192,97,74,0.1)" }}
                 >
                   <Users size={18} style={{ color: "#C0614A" }} />
+                  {partnerId && partnerIsOnline && (
+                    <Circle
+                      size={10}
+                      fill="#4ade80"
+                      stroke="#FAF6F1"
+                      strokeWidth={2}
+                      className="absolute -top-0.5 -right-0.5"
+                    />
+                  )}
                 </div>
                 <div>
                   <p style={{ fontSize: 14, fontWeight: 600, color: "#3D2C28", margin: 0 }}>
                     {partnerName ? `Growing with ${partnerName}` : "Invite your partner"}
                   </p>
                   <p style={{ fontSize: 12, color: "#9E8A86", margin: 0 }}>
-                    {partnerName ? "Progress is shared." : "Experience this together."}
+                    {partnerId && partnerIsOnline
+                      ? "Online now"
+                      : partnerId && partnerDay
+                        ? partnerDay > 14 ? "Graduated" : `Day ${partnerDay} of 14`
+                        : partnerName ? "Progress is shared." : "Experience this together."}
                   </p>
                 </div>
               </div>
@@ -314,6 +332,10 @@ export default function Dashboard() {
                 </button>
               )}
             </div>
+
+            {/* Phase 5: Partner synthesis card + heartbeat button */}
+            {partnerId && <PartnerSynthesisCard />}
+            {partnerId && <HeartbeatButton />}
           </motion.div>
 
         </main>

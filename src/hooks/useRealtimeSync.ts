@@ -1,21 +1,18 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import { UserJourneyProgress } from '@/types/journey';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
-import { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 
 interface UseRealtimeSyncReturn {
-  partnerProgress: UserJourneyProgress | null;
   partnerIsOnline: boolean;
   lastSyncTime: string | null;
 }
 
-export function useRealtimeSync(
-  journeyId: string,
-  partnerId?: string
-): UseRealtimeSyncReturn {
-  const [partnerProgress, setPartnerProgress] = useState<UserJourneyProgress | null>(null);
+/**
+ * Realtime sync hook for dashboard partner presence + daily session notifications.
+ */
+export function useRealtimeSync(partnerId?: string | null): UseRealtimeSyncReturn {
   const [partnerIsOnline, setPartnerIsOnline] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
   const { user } = useAuth();
@@ -23,9 +20,10 @@ export function useRealtimeSync(
   useEffect(() => {
     if (!user || !partnerId) return;
 
-    // Subscribe to partner's presence
-    const presenceChannel = supabase.channel(`presence:${partnerId}`) as RealtimeChannel;
+    const channels: RealtimeChannel[] = [];
 
+    // Presence channel — track if partner is online
+    const presenceChannel = supabase.channel(`presence:${partnerId}`);
     presenceChannel
       .on('presence', { event: 'sync' }, () => {
         const state = presenceChannel.presenceState();
@@ -36,92 +34,33 @@ export function useRealtimeSync(
           await presenceChannel.track({ user_id: user.id });
         }
       });
+    channels.push(presenceChannel);
 
-    // Subscribe to partner's progress updates
-    const progressChannel = supabase
-      .channel('journey_progress')
+    // Listen for partner completing daily sessions
+    const sessionChannel = supabase
+      .channel(`partner_sessions:${partnerId}`)
       .on(
         'postgres_changes',
         {
-          event: '*',
+          event: 'UPDATE',
           schema: 'public',
-          table: 'user_journey_progress',
-          filter: `user_id=eq.${partnerId}&journey_id=eq.${journeyId}`,
+          table: 'daily_sessions',
+          filter: `user_id=eq.${partnerId}`,
         },
-        (payload: RealtimePostgresChangesPayload<{ [key: string]: any }>) => {
-          if (payload.eventType === 'UPDATE' || payload.eventType === 'INSERT') {
-            const newProgress = payload.new as UserJourneyProgress;
-            const oldProgress = payload.old as UserJourneyProgress | undefined;
-            setPartnerProgress(newProgress);
-            setLastSyncTime(new Date().toISOString());
-
-            // Show notification for partner's progress
-            if (oldProgress && newProgress.currentDay > oldProgress.currentDay) {
-              toast.info('Your partner has moved to the next day!');
-            } else if (
-              oldProgress &&
-              newProgress.completedActivities.length > oldProgress.completedActivities.length
-            ) {
-              toast.info('Your partner has completed an activity!');
-            }
-          }
-        }
-      )
-      .subscribe();
-
-    // Subscribe to partner's activity responses
-    const responsesChannel = supabase
-      .channel('activity_responses')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'activity_responses',
-          filter: `user_id=eq.${partnerId}&journey_id=eq.${journeyId}`,
-        },
-        (payload: RealtimePostgresChangesPayload<{ [key: string]: any }>) => {
-          if (payload.eventType === 'INSERT') {
-            toast.info('Your partner has submitted a response!');
+        (payload) => {
+          if (payload.new && (payload.new as any).status === 'completed') {
+            toast.info('Your partner just finished their daily reflection!');
             setLastSyncTime(new Date().toISOString());
           }
         }
       )
       .subscribe();
+    channels.push(sessionChannel);
 
-    // Initial fetch of partner's progress
-    async function fetchPartnerProgress() {
-      try {
-        const { data, error } = await supabase
-          .from('user_journey_progress')
-          .select('*')
-          .eq('user_id', partnerId)
-          .eq('journey_id', journeyId)
-          .single();
-
-        if (error) throw error;
-        if (data) {
-          setPartnerProgress(data as UserJourneyProgress);
-          setLastSyncTime(new Date().toISOString());
-        }
-      } catch (err) {
-        console.error('Error fetching partner progress:', err);
-      }
-    }
-
-    fetchPartnerProgress();
-
-    // Cleanup subscriptions
     return () => {
-      presenceChannel.unsubscribe();
-      progressChannel.unsubscribe();
-      responsesChannel.unsubscribe();
+      channels.forEach(ch => ch.unsubscribe());
     };
-  }, [journeyId, partnerId, user]);
+  }, [partnerId, user]);
 
-  return {
-    partnerProgress,
-    partnerIsOnline,
-    lastSyncTime
-  };
+  return { partnerIsOnline, lastSyncTime };
 }

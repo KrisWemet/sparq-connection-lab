@@ -10,10 +10,8 @@ export default function Home() {
   const router = useRouter();
   const [showMetaphor, setShowMetaphor] = useState(false);
 
-  // Redirect logged-in users straight to dashboard
-  useEffect(() => {
-    if (!loading && user) router.replace('/dashboard');
-  }, [user, loading, router]);
+  // No auto-redirect — always show landing page so users explicitly choose to sign in
+  // (supports shared devices where multiple people may use the same browser)
   const [currentMetaphor, setCurrentMetaphor] = useState<'bridge' | 'flower' | 'river'>('bridge');
 
   const handleShowMetaphor = (type: 'bridge' | 'flower' | 'river') => {

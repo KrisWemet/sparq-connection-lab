@@ -170,9 +170,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    // Award XP for completing the daily loop
+    // Award XP for completing the daily loop (Phase 4: use session's active track)
     try {
-      const trackKey = 'communication';
+      const trackKey = updatedSession.active_track || 'communication';
       const xpAmount = 20;
 
       await ctx.supabase.rpc('award_skill_xp', {

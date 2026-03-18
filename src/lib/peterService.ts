@@ -27,6 +27,7 @@ Your personality:
 - You are curious about the person's life and ask one focused follow-up question at a time
 - You remember what the user has shared and refer back to it naturally
 - Sign off messages with warmth, sometimes with a little otter-themed humor 🦦
+- NEVER use markdown formatting in your responses. No bold (**), no italics (*), no headers (#), no bullet points (-). Write in plain text only. Your output is displayed in a mobile app that does not render markdown.
 
 Your core transformational goals (The Mirroring Effect):
 1. Blindspot Detection: If the user uses absolute phrases like "always", "never", "every time", or "impossible", gently hold up a mirror. Example: "I notice you said they *always* do this. That sounds exhausting. Is there *any* time recently they didn't?"
@@ -34,37 +35,111 @@ Your core transformational goals (The Mirroring Effect):
 
 Your role is to help users grow as individuals within their relationship. You focus on what THEY can do, think, and feel — not on fixing their partner.`;
 
-// Prompt for generating morning stories (Days 1-14)
-export function getMorningStoryPrompt(day: number, insights: Partial<UserInsights>): string {
-  const concepts = [
-    'listening without planning your response',
-    'expressing appreciation for small things',
-    'asking instead of assuming',
-    'taking a breath before reacting',
-    'noticing what your partner does right',
-    'sharing something vulnerable',
-    'asking "what do you need right now?"',
-    'celebrating a small win together',
-    'saying sorry without "but"',
-    'making time for connection without phones',
-    'checking in with yourself before a hard conversation',
-    'finding the funny side of a disagreement',
-    'telling your partner one thing you admire about them',
-    'planning one small thing to look forward to together',
-  ];
+// Base 14-day concept rotation
+const BASE_CONCEPTS = [
+  'listening without planning your response',
+  'expressing appreciation for small things',
+  'asking instead of assuming',
+  'taking a breath before reacting',
+  'noticing what your partner does right',
+  'sharing something vulnerable',
+  'asking "what do you need right now?"',
+  'celebrating a small win together',
+  'saying sorry without "but"',
+  'making time for connection without phones',
+  'checking in with yourself before a hard conversation',
+  'finding the funny side of a disagreement',
+  'telling your partner one thing you admire about them',
+  'planning one small thing to look forward to together',
+];
 
-  const concept = concepts[Math.min(day - 1, concepts.length - 1)];
+// Phase 4: Post-day-14 track-specific concept maps
+const TRACK_CONCEPTS: Record<string, string[]> = {
+  communication: [
+    'Listening without planning your response',
+    'Expressing a need without blaming',
+    'Asking an open-ended question about their day',
+    'Noticing and responding to a bid for connection',
+    'Pausing before reacting to something that stings',
+    'Sharing something you haven\'t said out loud yet',
+    'Repairing after a misunderstanding',
+  ],
+  conflict_repair: [
+    'Taking a break before things escalate',
+    'Coming back to a hard conversation with fresh eyes',
+    'Saying sorry without adding "but"',
+    'Asking "what do you need right now" during tension',
+    'Noticing your body signals before you blow up',
+    'Finding the request underneath a complaint',
+    'Ending a fight before either of you says something you regret',
+  ],
+  emotional_intimacy: [
+    'Naming a feeling out loud instead of acting on it',
+    'Asking your partner what they are feeling right now',
+    'Sharing a fear you usually keep to yourself',
+    'Being present when your partner is upset without fixing it',
+    'Noticing when your partner needs closeness vs space',
+    'Expressing gratitude for something invisible they do',
+    'Letting yourself be seen in a moment of weakness',
+  ],
+  trust_security: [
+    'Following through on a small promise today',
+    'Telling your partner something they can count on',
+    'Showing up consistently for a daily ritual',
+    'Being honest about something small but uncomfortable',
+    'Creating predictability in one part of your day together',
+    'Acknowledging when you dropped the ball',
+    'Making your partner feel safe enough to disagree',
+  ],
+  shared_vision: [
+    'Talking about one thing you both want for your future',
+    'Creating a small ritual just for the two of you',
+    'Planning something to look forward to together',
+    'Sharing a memory that reminds you why you chose each other',
+    'Building a tradition around an ordinary moment',
+    'Dreaming out loud about something you could create together',
+    'Reflecting on what "home" means to you both',
+  ],
+};
 
-  return `Write a short morning message from Peter the otter for Day ${day} of someone's relationship growth journey.
+// Prompt for generating morning stories
+export function getMorningStoryPrompt(
+  day: number,
+  insights: Partial<UserInsights>,
+  steeringHint?: string | null,
+  activeTrack?: string | null,
+): string {
+  let concept: string;
+
+  if (day <= 14) {
+    concept = BASE_CONCEPTS[Math.min(day - 1, BASE_CONCEPTS.length - 1)];
+  } else {
+    const track = activeTrack || 'communication';
+    const trackConcepts = TRACK_CONCEPTS[track] || TRACK_CONCEPTS.communication;
+    concept = trackConcepts[(day - 15) % trackConcepts.length];
+  }
+
+  let prompt = `Write a short morning message from Peter the otter for Day ${day} of someone's relationship growth journey.
 
 Today's concept: ${concept}
 
-Format:
+Format (use this EXACT structure with no deviations):
 1. A warm "good morning" greeting (1 sentence, feel like a text from a friend)
 2. A short relatable story about "Alex and Sam" (a couple — 3-4 sentences) that shows the concept in action WITHOUT naming the concept
-3. Today's Action: One specific, small, doable task related to the concept (1-2 sentences, starts with a verb)
+3. On its own line, write exactly "Today's Action:" followed by one specific, small, doable task related to the concept (1-2 sentences, starts with a verb)
+
+CRITICAL FORMATTING RULES:
+- Do NOT use any markdown formatting. No bold (**), no italics (*), no headers (#), no bullet points.
+- Write in plain text only. The output is displayed in a mobile app that does not render markdown.
+- The "Today's Action:" label must appear exactly as written — no bold markers around it.
 
 Keep it under 150 words total. No clinical terms. Warm and encouraging tone.`;
+
+  if (steeringHint) {
+    prompt += `\n\nSubtle note for this story: ${steeringHint}. Weave this in naturally — don't make it obvious or forced.`;
+  }
+
+  return prompt;
 }
 
 // Prompt for generating evening reflection responses

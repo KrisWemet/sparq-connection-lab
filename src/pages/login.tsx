@@ -15,7 +15,8 @@ export default function LoginPage() {
     if (user && !loading) {
       router.push('/dashboard');
     }
-  }, [user, loading, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, loading]);
 
   const toggleMode = () => {
     setIsRegisterMode(!isRegisterMode);

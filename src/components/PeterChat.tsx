@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Mic, Square, Loader2 } from 'lucide-react';
 import { PeterMessage } from '@/lib/peterService';
+import { stripMarkdown } from '@/lib/strip-markdown';
 
 interface PeterChatProps {
   messages: PeterMessage[];
@@ -166,7 +167,7 @@ export function PeterChat({
                   : { backgroundColor: '#C86A58', color: '#FFFFFF' }
                 }
               >
-                {msg.content}
+                {msg.role === 'assistant' ? stripMarkdown(msg.content) : msg.content}
               </motion.div>
             </motion.div>
           ))}

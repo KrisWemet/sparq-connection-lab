@@ -76,7 +76,8 @@ export default function TrustCenterPage() {
       }
       setIsLoading(false);
     })();
-  }, [user, authLoading, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, authLoading]);
 
   const save = async () => {
     if (!user) return;

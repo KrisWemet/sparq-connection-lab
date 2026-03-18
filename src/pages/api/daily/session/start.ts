@@ -6,6 +6,7 @@ import { getAuthedContext } from '@/lib/server/supabase-auth';
 import { resolveEntitlements } from '@/lib/server/entitlements';
 import { getWeekBounds, parseLocalDate } from '@/lib/server/date-utils';
 import { trackEvent } from '@/lib/server/analytics';
+import { computeTraitGaps, getSteeringHint, getSteeredTrait } from '@/lib/server/trait-gaps';
 
 const dailySessionColumnCache: Record<string, boolean | undefined> = {};
 
@@ -136,12 +137,51 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     onboarding_day: dayIndex,
   };
 
+  // Phase 2: Compute trait gaps + steering hint
+  let steeringHint: string | null = null;
+  let steeredTrait: string | null = null;
+  try {
+    const gaps = await computeTraitGaps(ctx.supabase, ctx.userId);
+    steeringHint = getSteeringHint(gaps);
+    steeredTrait = getSteeredTrait(gaps);
+  } catch (gapErr) {
+    console.error('Trait gap computation error (non-blocking):', gapErr);
+  }
+
+  // Phase 4: Determine active track for post-day-14 content
+  let activeTrack: string | null = null;
+  if (dayIndex > 14) {
+    try {
+      const { data: gradReport } = await ctx.supabase
+        .from('graduation_reports')
+        .select('recommended_track')
+        .eq('user_id', ctx.userId)
+        .maybeSingle();
+
+      activeTrack = gradReport?.recommended_track ?? null;
+
+      if (!activeTrack) {
+        const { data: topTrack } = await ctx.supabase
+          .from('user_skill_tracks')
+          .select('track_key')
+          .eq('user_id', ctx.userId)
+          .order('total_xp', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        activeTrack = topTrack?.track_key ?? 'communication';
+      }
+    } catch {
+      activeTrack = 'communication';
+    }
+  }
+
   let storyRaw = "";
   try {
     storyRaw = await peterChat({
       messages: [
         { role: 'system', content: PETER_SYSTEM_PROMPT },
-        { role: 'user', content: getMorningStoryPrompt(dayIndex, insights) },
+        { role: 'user', content: getMorningStoryPrompt(dayIndex, insights, steeringHint, activeTrack) },
       ],
       maxTokens: 450,
     });
@@ -171,6 +211,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     micro_action: action,
     learn_response: story,
     idempotency_key: body.idempotency_key || null,
+    active_track: activeTrack || 'communication',
+    ...(steeredTrait ? { steered_trait: steeredTrait } : {}),
   };
 
   if (await dailySessionHasColumn(ctx, 'session_date')) {

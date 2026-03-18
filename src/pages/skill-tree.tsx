@@ -9,6 +9,7 @@ import { PeterChat } from '@/components/PeterChat';
 import { PeterMessage } from '@/lib/peterService';
 import { buildAuthedHeaders } from '@/lib/api-auth';
 import { PeterLoading } from '@/components/PeterLoading';
+import { stripMarkdown } from '@/lib/strip-markdown';
 
 type TrackKey =
   | 'communication'
@@ -274,7 +275,7 @@ export default function SkillTree() {
       setLoading(false);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, authLoading, router]);
+  }, [user, authLoading]);
 
   const isLevelDone = (track: TrackKey, level: LevelKey) =>
     !!progress[track][level]?.completed_at;
@@ -643,7 +644,7 @@ export default function SkillTree() {
                   </p>
                   {activeNode.action && (
                     <p className="text-xs text-zinc-400 mt-1 leading-relaxed max-w-sm">
-                      <span className="font-semibold text-zinc-500 uppercase tracking-wider text-[9px] mr-1">Tactic:</span> {activeNode.action}
+                      <span className="font-semibold text-zinc-500 uppercase tracking-wider text-[9px] mr-1">Tactic:</span> {stripMarkdown(activeNode.action)}
                     </p>
                   )}
                 </div>

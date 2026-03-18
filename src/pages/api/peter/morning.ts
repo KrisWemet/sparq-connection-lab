@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { peterChat } from '@/lib/openrouter';
 import { PETER_SYSTEM_PROMPT, getMorningStoryPrompt, UserInsights, buildPersonalizedPrompt, type ProfileTrait, type MemoryResult } from '@/lib/peterService';
 import { parseMorningContent } from '@/lib/morning-parser';
+import { stripMarkdown } from '@/lib/strip-markdown';
 import { getAuthedContext } from '@/lib/server/supabase-auth';
 import { parseLocalDate } from '@/lib/server/date-utils';
 import { getRecentMemories } from '@/lib/server/memory';
@@ -17,8 +18,10 @@ type MorningBody = {
 };
 
 function composeMorningText(story: string, action?: string | null): string {
-  if (!action) return story;
-  return `${story}\n\nToday's Action: ${action}`;
+  const cleanStory = stripMarkdown(story);
+  const cleanAction = action ? stripMarkdown(action) : null;
+  if (!cleanAction || cleanAction.length < 3) return cleanStory;
+  return `${cleanStory}\n\nToday's Action: ${cleanAction}`;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
