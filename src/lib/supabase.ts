@@ -9,7 +9,15 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 // Create a single supabase client for the entire app
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Use a simple in-process lock instead of Navigator LockManager to avoid
+// timeouts caused by browser extensions interfering with the Lock API.
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    lock: async (name: string, _acquireTimeout: number, fn: () => Promise<any>) => {
+      return await fn();
+    },
+  },
+});
 
 // Define types for our database tables
 export type Profile = {
