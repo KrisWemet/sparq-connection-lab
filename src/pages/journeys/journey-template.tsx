@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { JourneyContentView } from '@/components/journey/JourneyContentView';
 import { ReactNode } from 'react';
 
-type ConceptItem = {
+export type ConceptItem = {
   id: string;
   title: string;
   description: string;
@@ -32,32 +32,33 @@ interface JourneyTemplateProps {
   completionCriteria?: CompletionCriteria;
 }
 
-// The JourneyTemplate now accepts props through the component interface
 export default function JourneyTemplate({
   journeyId,
   title,
   totalDays,
   conceptItems,
   backPath,
-  headerImage,
-  cardImage,
-  conceptSelectionPrompt,
-  completionCriteria
+  completionCriteria,
 }: JourneyTemplateProps) {
-  // For the route parameter version
   const router = useRouter();
   const routeJourneyId = router.query.journeyId as string | undefined;
-
-  // Use the prop value if provided, otherwise fall back to the route parameter
   const effectiveJourneyId = journeyId || routeJourneyId;
-  
+
   if (!effectiveJourneyId) {
-    return <div>Journey ID is required</div>;
+    return (
+      <div className="min-h-screen bg-brand-linen flex items-center justify-center">
+        <p className="text-zinc-500 font-serif italic">Journey ID is required</p>
+      </div>
+    );
   }
-  
+
   return (
-    <div className="container mx-auto py-8">
-      <JourneyContentView journeyId={effectiveJourneyId} />
-    </div>
+    <JourneyContentView
+      journeyId={effectiveJourneyId}
+      title={title}
+      totalDays={totalDays}
+      conceptItems={conceptItems}
+      completionCriteria={completionCriteria}
+    />
   );
 }

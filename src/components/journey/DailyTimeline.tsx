@@ -18,34 +18,39 @@ export function DailyTimeline({ phase, actionVerified = false }: DailyTimelinePr
 
   const getStatus = (stepId: string) => {
     if (phase === 'complete') return 'completed';
-    
+
     if (stepId === 'morning') {
       return phase === 'morning' ? 'active' : 'completed';
     }
-    
+
     if (stepId === 'action') {
       if (phase === 'morning') return 'pending';
       return actionVerified ? 'completed' : 'active';
     }
-    
+
     if (stepId === 'evening') {
       if (phase === 'evening' && actionVerified) return 'active';
       return 'pending';
     }
-    
+
     return 'pending';
   };
 
   return (
-    <div className="w-full bg-white border-b border-zinc-100 px-6 py-4">
+    <div className="w-full border-b px-6 py-4"
+      style={{
+        background: "rgba(250,246,241,0.92)",
+        borderColor: "rgba(192,97,74,0.1)",
+      }}
+    >
       <div className="max-w-md mx-auto flex items-center justify-between relative">
         {/* Connecting Line */}
-        <div className="absolute top-5 left-8 right-8 h-[2px] bg-zinc-100 -z-0" />
-        <motion.div 
+        <div className="absolute top-5 left-8 right-8 h-[2px] bg-brand-primary/10 -z-0" />
+        <motion.div
           className="absolute top-5 left-8 h-[2px] bg-brand-primary -z-0 origin-left"
           initial={{ scaleX: 0 }}
-          animate={{ 
-            scaleX: phase === 'complete' ? 1 : 
+          animate={{
+            scaleX: phase === 'complete' ? 1 :
                     (phase === 'evening' && actionVerified) ? 1 :
                     (phase === 'evening') ? 0.5 :
                     0.1
@@ -54,21 +59,21 @@ export function DailyTimeline({ phase, actionVerified = false }: DailyTimelinePr
           style={{ width: 'calc(100% - 4rem)' }}
         />
 
-        {steps.map((step, idx) => {
+        {steps.map((step) => {
           const status = getStatus(step.id);
           const Icon = step.icon;
-          
+
           return (
             <div key={step.id} className="flex flex-col items-center relative z-10">
               <motion.div
                 initial={false}
                 animate={{
-                  backgroundColor: status === 'completed' ? '#007AFF' : status === 'active' ? '#FFFFFF' : '#F2F2F7',
-                  borderColor: status === 'active' ? '#007AFF' : 'transparent',
-                  color: status === 'completed' ? '#FFFFFF' : status === 'active' ? '#007AFF' : '#A1A1AA',
+                  backgroundColor: status === 'completed' ? '#C0614A' : status === 'active' ? '#FFFFFF' : '#FAF6F1',
+                  borderColor: status === 'active' ? '#C0614A' : 'transparent',
+                  color: status === 'completed' ? '#FFFFFF' : status === 'active' ? '#C0614A' : '#9E8A86',
                   scale: status === 'active' ? 1.1 : 1,
                 }}
-                className={`w-10 h-10 rounded-full border-2 flex items-center justify-center shadow-sm transition-colors duration-300`}
+                className="w-10 h-10 rounded-full border-2 flex items-center justify-center shadow-sm transition-colors duration-300"
               >
                 {status === 'completed' ? (
                   <CheckCircle size={20} />

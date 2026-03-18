@@ -7,20 +7,20 @@ import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 
 const CARD_COLORS = [
-  "bg-rose-50",
-  "bg-violet-50",
-  "bg-emerald-50",
-  "bg-amber-50",
-  "bg-sky-50",
-  "bg-pink-50",
-  "bg-teal-50",
-  "bg-indigo-50",
-  "bg-orange-50",
-  "bg-lime-50",
-  "bg-cyan-50",
-  "bg-fuchsia-50",
-  "bg-red-50",
-  "bg-purple-50",
+  "bg-brand-primary/5",
+  "bg-brand-sand/10",
+  "bg-brand-growth/10",
+  "bg-brand-primary/8",
+  "bg-brand-sand/8",
+  "bg-brand-growth/8",
+  "bg-brand-primary/6",
+  "bg-brand-sand/12",
+  "bg-brand-growth/12",
+  "bg-brand-primary/10",
+  "bg-brand-sand/6",
+  "bg-brand-growth/6",
+  "bg-brand-primary/12",
+  "bg-brand-sand/5",
 ];
 
 const CATEGORIES = ["All", "Foundation", "Growth", "Intimacy", "Advanced"];
@@ -40,20 +40,25 @@ export default function Journeys() {
   });
 
   return (
-    <div className="min-h-screen bg-white pb-28">
+    <div className="min-h-screen bg-brand-linen pb-28">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-100 px-4 py-4">
+      <header className="sticky top-0 z-50 backdrop-blur-xl border-b px-4 py-4"
+        style={{
+          background: "rgba(250,246,241,0.92)",
+          borderColor: "rgba(192,97,74,0.1)",
+        }}
+      >
         <div className="max-w-lg mx-auto">
-          <h1 className="text-2xl font-bold text-gray-900 mb-3">Journeys</h1>
+          <h1 className="text-2xl font-bold text-brand-taupe mb-3">Journeys</h1>
           {/* Search */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
             <input
               type="text"
               placeholder="Search journeys..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-gray-100 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+              className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white/80 border border-brand-primary/10 text-sm text-brand-taupe placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
             />
           </div>
         </div>
@@ -69,7 +74,7 @@ export default function Journeys() {
               className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
                 activeCategory === cat
                   ? "bg-brand-primary text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  : "bg-white/80 text-zinc-600 border border-brand-primary/10 hover:bg-white"
               }`}
             >
               {cat}
@@ -91,7 +96,7 @@ export default function Journeys() {
                 transition={{ duration: 0.3, delay: idx * 0.04 }}
               >
                 <Link href={`/journeys/${journey.id}`}>
-                  <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                  <div className="rounded-3xl overflow-hidden border border-brand-primary/10 bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer">
                     {/* Card image */}
                     <div className={`relative ${bgColor} h-32`}>
                       {journey.image && (
@@ -104,7 +109,7 @@ export default function Journeys() {
                         />
                       )}
                       <div className="absolute top-2 left-2">
-                        <span className="text-xs font-semibold bg-white/90 backdrop-blur-sm text-gray-700 px-2 py-0.5 rounded-full">
+                        <span className="text-xs font-semibold bg-white/90 backdrop-blur-sm text-brand-taupe px-2.5 py-0.5 rounded-full">
                           Journey
                         </span>
                       </div>
@@ -121,14 +126,14 @@ export default function Journeys() {
                     </div>
 
                     {/* Card text */}
-                    <div className="bg-white p-3">
-                      <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">
+                    <div className="p-3">
+                      <p className="text-xs font-semibold text-brand-primary uppercase tracking-widest mb-1">
                         {journey.category}
                       </p>
-                      <h3 className="font-bold text-gray-900 text-sm leading-tight line-clamp-2">
+                      <h3 className="font-bold text-brand-taupe text-sm leading-tight line-clamp-2">
                         {journey.title}
                       </h3>
-                      <p className="text-xs text-gray-500 mt-2">
+                      <p className="text-xs text-zinc-500 mt-2">
                         {journey.duration} · {journey.phases?.length ?? 4} phases
                       </p>
                     </div>
@@ -140,13 +145,12 @@ export default function Journeys() {
         </div>
 
         {filtered.length === 0 && (
-          <div className="text-center py-16 text-gray-400">
-            <p className="text-lg font-medium">No journeys found</p>
-            <p className="text-sm mt-1">Try a different search or category</p>
+          <div className="text-center py-16">
+            <p className="text-lg font-serif text-brand-taupe">No journeys found</p>
+            <p className="text-sm mt-1 text-zinc-500">Try a different search or category</p>
           </div>
         )}
       </main>
-
     </div>
   );
 }

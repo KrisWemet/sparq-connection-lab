@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
-import { Mail, UserPlus, Users } from 'lucide-react';
+import { Mail, UserPlus, Users, Circle } from 'lucide-react';
 import { supabase } from '@/services/supabase';
 import { createJourneyInvitation } from '@/services/supabase';
 import { useAuth } from '@/hooks/useAuth';
@@ -24,7 +23,6 @@ export function PartnerSync({ journeyId, partnerId, onPartnerJoined }: PartnerSy
   useEffect(() => {
     if (!partnerId) return;
 
-    // Subscribe to partner's presence
     const presenceChannel = supabase.channel(`presence:${partnerId}`);
 
     presenceChannel
@@ -43,7 +41,6 @@ export function PartnerSync({ journeyId, partnerId, onPartnerJoined }: PartnerSy
     };
   }, [partnerId, user?.id]);
 
-  // Subscribe to invitation responses
   useEffect(() => {
     if (!user) return;
 
@@ -92,50 +89,61 @@ export function PartnerSync({ journeyId, partnerId, onPartnerJoined }: PartnerSy
 
   if (partnerId) {
     return (
-      <Card className="p-4">
-        <div className="flex items-center space-x-4">
-          <Avatar>
-            <Users className="h-5 w-5" />
-          </Avatar>
+      <div className="rounded-3xl border border-brand-primary/10 bg-white p-4 shadow-sm">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-full bg-brand-primary/10 flex items-center justify-center relative">
+            <Users className="h-5 w-5 text-brand-primary" />
+            {partnerStatus === 'online' && (
+              <Circle
+                size={10}
+                fill="#4ade80"
+                stroke="#FFFFFF"
+                strokeWidth={2}
+                className="absolute -top-0.5 -right-0.5"
+              />
+            )}
+          </div>
           <div className="flex-1">
-            <h4 className="font-semibold text-gray-900 dark:text-white">
+            <h4 className="font-semibold text-brand-taupe text-sm">
               Partner Connected
             </h4>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Status: {partnerStatus === 'online' ? (
-                <span className="text-green-500">Online</span>
+            <p className="text-xs text-zinc-500">
+              {partnerStatus === 'online' ? (
+                <span className="text-brand-growth font-medium">Online now</span>
               ) : (
-                <span className="text-gray-400">Offline</span>
+                <span>Offline</span>
               )}
             </p>
           </div>
         </div>
-      </Card>
+      </div>
     );
   }
 
   return (
-    <Card className="p-4">
+    <div className="rounded-3xl border border-brand-primary/10 bg-white p-5 shadow-sm">
       <div className="flex flex-col space-y-4">
-        <div className="flex items-center space-x-4">
-          <UserPlus className="h-6 w-6 text-gray-400" />
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-full bg-brand-primary/10 flex items-center justify-center">
+            <UserPlus className="h-5 w-5 text-brand-primary" />
+          </div>
           <div className="flex-1">
-            <h4 className="font-semibold text-gray-900 dark:text-white">
+            <h4 className="font-semibold text-brand-taupe text-sm">
               Invite Your Partner
             </h4>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Share this journey with your partner to sync your progress
+            <p className="text-xs text-zinc-500">
+              Share this journey to sync your progress
             </p>
           </div>
         </div>
 
-        <div className="flex space-x-2">
+        <div className="flex gap-2">
           <div className="relative flex-1">
-            <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
             <Input
               type="email"
-              placeholder="Enter your partner's email"
-              className="pl-9"
+              placeholder="Partner's email"
+              className="pl-9 rounded-xl border-brand-primary/10 focus:ring-brand-primary/30"
               value={partnerEmail}
               onChange={(e) => setPartnerEmail(e.target.value)}
             />
@@ -143,11 +151,12 @@ export function PartnerSync({ journeyId, partnerId, onPartnerJoined }: PartnerSy
           <Button
             onClick={invitePartner}
             disabled={isInviting || !partnerEmail.trim()}
+            className="rounded-xl bg-brand-primary hover:bg-brand-hover text-white"
           >
-            {isInviting ? 'Sending...' : 'Send Invite'}
+            {isInviting ? 'Sending...' : 'Invite'}
           </Button>
         </div>
       </div>
-    </Card>
+    </div>
   );
-} 
+}
