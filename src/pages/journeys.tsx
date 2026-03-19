@@ -5,6 +5,9 @@ import { Crown, Search, Lock } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
+import { getJourneyVelocityStatus } from "@/services/journeyContentService";
+import { toast } from "sonner";
+import { useEffect } from "react";
 
 const CARD_COLORS = [
   "bg-brand-primary/5",
@@ -29,6 +32,25 @@ export default function Journeys() {
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
+  const [activeJourneyId, setActiveJourneyId] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadVelocityStatus() {
+      const status = await getJourneyVelocityStatus();
+      setActiveJourneyId(status.activeJourneyId);
+    }
+    loadVelocityStatus();
+  }, []);
+
+  const handleJourneyClick = (e: React.MouseEvent, journeyId: string) => {
+    if (activeJourneyId && activeJourneyId !== journeyId) {
+      e.preventDefault();
+      toast("One Journey at a Time", {
+        description: "You already have an active journey. Please finish it before starting a new one to avoid feeling overwhelmed.",
+        icon: "✨",
+      });
+    }
+  };
 
   const filtered = journeys.filter((j) => {
     const matchesSearch =
@@ -106,7 +128,7 @@ export default function Journeys() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: idx * 0.04 }}
               >
-                <Link href={`/journeys/${journey.id}`}>
+                <Link href={`/journeys/${journey.id}`} onClick={(e) => handleJourneyClick(e, journey.id)}>
                   <div className="group rounded-[1.5rem] overflow-hidden border border-brand-primary/10 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 cursor-pointer relative z-10">
                     {/* Card image */}
                     <div className={`relative ${bgColor} h-36 overflow-hidden`}>

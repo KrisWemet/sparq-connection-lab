@@ -10,19 +10,20 @@ import {
   Heart,
   ArrowDown,
   CornerDownRight,
-  CloudRain
+  CloudRain,
+  Wind
 } from "lucide-react";
 
 export default function ConflictResolutionJourney() {
   // Define all the core concepts for conflict resolution
   const conflictConcepts = [
     {
-      id: "active-listening",
-      title: "Active Listening",
-      description: "Fully concentrating, understanding, and responding thoughtfully to your partner",
-      icon: <Ear className="w-5 h-5 text-blue-500" />,
+      id: "de-escalation",
+      title: "De-escalating Tension",
+      description: "Recognizing when a conversation is becoming heated and deliberately lowering the emotional temperature",
+      icon: <Wind className="w-5 h-5 text-blue-500" />,
       color: "blue",
-      example: "When your partner expresses frustration about their day, put away distractions, make eye contact, and ask follow-up questions that show you're truly engaged with what they're saying."
+      example: "When you notice both your voices getting louder, taking a deep breath and consciously lowering your volume and softening your tone before responding."
     },
     {
       id: "i-statements",

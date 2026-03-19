@@ -6,6 +6,7 @@ const SIZES = {
   md: 90,
   lg: 140,
   xl: 220,
+  xxl: 330,
 } as const;
 
 export type PeterMood = 'welcome' | 'celebrate' | 'calm' | 'thinking';

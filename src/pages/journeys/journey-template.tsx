@@ -1,7 +1,6 @@
-
-import React from 'react';
-import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 import { JourneyContentView } from '@/components/journey/JourneyContentView';
+import { JourneyTierView, JourneyTier, TierId } from '@/components/journey/JourneyTierView';
 import { ReactNode } from 'react';
 
 export type ConceptItem = {
@@ -23,42 +22,72 @@ type CompletionCriteria = {
 interface JourneyTemplateProps {
   journeyId: string;
   title: string;
-  totalDays: number;
-  conceptItems: ConceptItem[];
-  backPath: string;
+  description?: string;
+  tiers?: JourneyTier[];
+  // Legacy support for journeys not yet converted to tiers
+  totalDays?: number;
+  conceptItems?: ConceptItem[];
+  completionCriteria?: CompletionCriteria;
   headerImage?: string;
   cardImage?: string;
   conceptSelectionPrompt?: string;
-  completionCriteria?: CompletionCriteria;
+  backPath?: string;
 }
 
 export default function JourneyTemplate({
   journeyId,
   title,
+  description,
+  tiers,
   totalDays,
   conceptItems,
-  backPath,
   completionCriteria,
 }: JourneyTemplateProps) {
-  const router = useRouter();
-  const routeJourneyId = router.query.journeyId as string | undefined;
-  const effectiveJourneyId = journeyId || routeJourneyId;
+  const [activeTier, setActiveTier] = useState<TierId | null>(null);
 
-  if (!effectiveJourneyId) {
+  // Legacy mode: no tiers defined, use old single-tier behavior
+  if ((!tiers || tiers.length === 0) && conceptItems) {
     return (
-      <div className="min-h-screen bg-brand-linen flex items-center justify-center">
-        <p className="text-zinc-500 font-serif italic">Journey ID is required</p>
-      </div>
+      <JourneyContentView
+        journeyId={journeyId}
+        title={title}
+        totalDays={totalDays || 14}
+        conceptItems={conceptItems}
+        completionCriteria={completionCriteria}
+      />
     );
   }
 
+  // Tier selected — show content
+  if (activeTier && tiers) {
+    const tier = tiers.find(t => t.id === activeTier);
+    if (!tier) return null;
+
+    return (
+      <JourneyContentView
+        journeyId={journeyId}
+        tierId={activeTier}
+        title={title}
+        tierName={
+          activeTier === 'roots' ? 'Roots' :
+          activeTier === 'growth' ? 'Growth' : 'Bloom'
+        }
+        totalDays={tier.totalDays}
+        conceptItems={tier.concepts}
+        completionCriteria={tier.completionCriteria}
+        onBackToTiers={() => setActiveTier(null)}
+      />
+    );
+  }
+
+  // Show tier selection
   return (
-    <JourneyContentView
-      journeyId={effectiveJourneyId}
+    <JourneyTierView
+      journeyId={journeyId}
       title={title}
-      totalDays={totalDays}
-      conceptItems={conceptItems}
-      completionCriteria={completionCriteria}
+      description={description || ''}
+      tiers={tiers || []}
+      onSelectTier={setActiveTier}
     />
   );
 }

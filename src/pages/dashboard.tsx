@@ -19,7 +19,7 @@ import { HeartbeatButton } from "@/components/dashboard/HeartbeatButton";
 import { useRealtimeSync } from "@/hooks/useRealtimeSync";
 import { supabase } from "@/lib/supabase";
 
-import { Users, ArrowRight, Flame, Circle } from "lucide-react";
+import { Users, ArrowRight, Flame, Circle, Heart, Sparkles, Plus } from "lucide-react";
 
 // ─── Peter tips (rotate daily) ────────────────────────────────────────────────
 const PETER_TIPS = [
@@ -53,12 +53,10 @@ function getFormattedDate(): string {
 function JourneyHeroCard({
   currentDay,
   totalDays,
-  streakCount,
   onClick,
 }: {
   currentDay: number;
   totalDays: number;
-  streakCount: number;
   onClick: () => void;
 }) {
   return (
@@ -84,13 +82,6 @@ function JourneyHeroCard({
         <h2 style={{ fontSize: 22, fontWeight: 700, color: "#3D2C28" }}>
           Day {currentDay} of {totalDays}
         </h2>
-        {streakCount > 0 && (
-          <div className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full"
-            style={{ background: "rgba(232,168,87,0.15)", color: "#7A5A2A" }}>
-            <Flame size={13} style={{ color: "#E8A857" }} />
-            {streakCount} day streak
-          </div>
-        )}
       </div>
 
       {/* Progress dots — 14 dots in a wrapped row */}
@@ -160,12 +151,12 @@ export default function Dashboard() {
   const router = useRouter();
 
   const streakCount = (profile as any)?.streak_count || 0;
-  const currentDay = (profile as any)?.discovery_day || 1;
   const connectionScore = (profile as any)?.relationship_points || 0;
   const partnerId = (profile as any)?.partner_id || null;
 
   // Phase 5: Partner realtime presence
   const { partnerIsOnline } = useRealtimeSync(partnerId);
+  const [currentDay, setCurrentDay] = useState(1);
   const [partnerDay, setPartnerDay] = useState<number | null>(null);
 
   useEffect(() => {
@@ -173,19 +164,43 @@ export default function Dashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, loading]);
 
-  // Phase 5: Fetch partner's current day
+  useEffect(() => {
+    const userId = user?.id;
+    if (!userId) return;
+
+    async function loadCurrentDay() {
+      try {
+        const { data } = await supabase
+          .from('user_insights')
+          .select('onboarding_day')
+          .eq('user_id', userId)
+          .maybeSingle();
+
+        if (data?.onboarding_day) {
+          setCurrentDay(Math.max(1, data.onboarding_day));
+        }
+      } catch {}
+    }
+
+    loadCurrentDay();
+  }, [user?.id]);
+
   useEffect(() => {
     if (!partnerId) return;
-    (async () => {
+
+    async function loadPartnerDay() {
       try {
         const { data } = await supabase
           .from('user_insights')
           .select('onboarding_day')
           .eq('user_id', partnerId)
           .maybeSingle();
+
         if (data) setPartnerDay(data.onboarding_day);
       } catch {}
-    })();
+    }
+
+    loadPartnerDay();
   }, [partnerId]);
 
   if (loading || !user) {
@@ -200,23 +215,112 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen pb-28 relative" style={{ background: "#FAF6F1" }}>
 
-      {/* ── SECTION 1: HEADER (greeting only, no Peter) ── */}
-      <header
-        style={{
-          background: "linear-gradient(135deg, #C0614A 0%, #D4795F 100%)",
-          padding: "28px 20px 36px",
-          position: "relative",
-          zIndex: 10,
-        }}
-      >
-        <div style={{ maxWidth: 880, margin: "0 auto" }}>
-          <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 13, marginBottom: 6 }}>
-            {getFormattedDate()}
-          </p>
-          <h1 style={{ color: "white", fontSize: 26, fontWeight: 700, lineHeight: 1.25, margin: 0 }}>
-            {getGreeting()},<br />{firstName}.
-          </h1>
-        </div>
+      {/* ── AMBIENT BACKGROUND GLOW ── */}
+      <div className="absolute top-0 inset-x-0 h-96 overflow-hidden pointer-events-none z-0">
+        <motion.div 
+          animate={{ opacity: [0.4, 0.6, 0.4], scale: [1, 1.05, 1] }} 
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-24 -right-12 w-96 h-96 bg-brand-primary/10 rounded-full blur-[80px]" 
+        />
+        <motion.div 
+          animate={{ opacity: [0.3, 0.5, 0.3], scale: [1, 1.1, 1] }} 
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          className="absolute -top-12 -left-12 w-80 h-80 bg-brand-sand/30 rounded-full blur-[60px]" 
+        />
+      </div>
+
+      {/* ── SECTION 1: HEADER (Hero Placecard) ── */}
+      <header className="relative z-10 pt-16 pb-12 px-5 max-w-4xl mx-auto">
+        <motion.div 
+           initial={{ opacity: 0, y: 15 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+           className="flex justify-between items-start"
+        >
+          <div>
+            <p className="text-xs font-bold tracking-[0.15em] text-brand-primary/80 uppercase mb-3">
+              {getFormattedDate()}
+            </p>
+            <h1 className="text-4xl md:text-5xl font-serif text-zinc-900 leading-[1.1] mb-6 tracking-tight">
+              {getGreeting()},<br />
+              <span className="italic text-brand-primary">{firstName}.</span>
+            </h1>
+
+            <div className="flex flex-wrap items-center gap-3">
+              {streakCount > 0 && (
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/60 backdrop-blur-md border border-white shadow-[0_2px_10px_rgba(0,0,0,0.03)]">
+                   <Flame size={14} className="text-amber-500" />
+                   <span className="text-xs font-bold text-zinc-800">{streakCount} Day Streak</span>
+                </div>
+              )}
+              {/* Connection Points */}
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/60 backdrop-blur-md border border-white shadow-[0_2px_10px_rgba(0,0,0,0.03)] tracking-wide">
+                 <Sparkles size={13} className="text-indigo-400" />
+                 <span className="text-xs font-bold text-zinc-800">{connectionScore} <span className="text-zinc-500 font-medium">Points</span></span>
+              </div>
+
+              {/* Partner Link Status */}
+              {partnerId ? (
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/60 backdrop-blur-md border border-white shadow-[0_2px_10px_rgba(0,0,0,0.03)]">
+                  <Heart size={14} className="text-rose-400 fill-rose-100" />
+                  <span className="text-xs font-semibold text-zinc-800">Linked with {partnerName}</span>
+                </div>
+              ) : (
+                <button 
+                  onClick={() => router.push("/join-partner")}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/60 backdrop-blur-md border border-white shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:bg-white transition cursor-pointer"
+                >
+                  <Users size={14} className="text-brand-primary" />
+                  <span className="text-xs font-semibold text-zinc-800">Invite {partnerName || 'Partner'}</span>
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center -space-x-3 mt-2 pr-1">
+            {/* User Avatar */}
+            <div 
+              className="w-16 h-16 rounded-full flex items-center justify-center relative z-10 shadow-xl overflow-hidden ring-4 ring-[#FAF6F1] bg-white"
+            >
+              {(profile as any)?.avatar_url ? (
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={(profile as any).avatar_url} alt={firstName} className="w-full h-full object-cover" />
+                </>
+              ) : (
+                <span className="text-brand-primary text-xl font-bold">{firstName[0]?.toUpperCase()}</span>
+              )}
+            </div>
+            {/* Partner Avatar / Invite Button */}
+            {partnerId ? (
+              <div className="w-16 h-16 rounded-full flex items-center justify-center relative z-0 shadow-[0_0_15px_rgba(0,0,0,0.05)] overflow-hidden ring-4 ring-[#FAF6F1] bg-white/80 backdrop-blur-sm transition-transform hover:scale-105">
+                {(profile as any)?.partner_avatar_url ? (
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={(profile as any).partner_avatar_url} alt={partnerName} className="w-full h-full object-cover grayscale-[20%]" />
+                  </>
+                ) : (
+                  <span className="text-brand-primary/80 text-xl font-bold">{partnerName ? partnerName[0]?.toUpperCase() : "?"}</span>
+                )}
+              </div>
+            ) : (
+              <div 
+                onClick={() => router.push("/join-partner")}
+                className="w-16 h-16 rounded-full flex items-center justify-center relative z-0 overflow-hidden ring-4 ring-[#FAF6F1] bg-[#FAF6F1] border-2 border-dashed border-brand-primary/30 cursor-pointer hover:bg-white hover:border-brand-primary/50 transition-all group"
+                title={`Invite ${partnerName || 'Partner'}`}
+              >
+                {partnerName ? (
+                  <div className="flex flex-col items-center justify-center">
+                    <span className="text-brand-primary/40 text-lg font-bold group-hover:text-brand-primary/60 transition-colors uppercase">{partnerName[0]}</span>
+                  </div>
+                ) : (
+                  <Plus size={22} className="text-brand-primary/40 group-hover:text-brand-primary/60 transition-colors" />
+                )}
+                <div className="absolute inset-0 bg-white/0 group-hover:bg-white/20 transition-colors" />
+              </div>
+            )}
+          </div>
+        </motion.div>
       </header>
 
       {/* ── BODY ── */}
@@ -229,7 +333,6 @@ export default function Dashboard() {
           <JourneyHeroCard
             currentDay={currentDay}
             totalDays={14}
-            streakCount={streakCount}
             onClick={() => router.push("/daily-growth")}
           />
 
@@ -342,7 +445,7 @@ export default function Dashboard() {
 
         {/* ── DESKTOP PETER (fixed, right side, 1024px+) ── */}
         <div className="peter-fixed">
-          <PeterAvatar size="xl" mood="welcome" priority />
+          <PeterAvatar size="xxl" mood="welcome" priority />
           <p>Your relationship guide</p>
         </div>
 
@@ -350,7 +453,7 @@ export default function Dashboard() {
 
       {/* ── MOBILE / TABLET PETER (normal flow, below cards) ── */}
       <div className="peter-mobile">
-        <PeterAvatar size="lg" mood="welcome" />
+        <PeterAvatar size="xl" mood="welcome" />
         <p>Your relationship guide</p>
       </div>
 
