@@ -177,16 +177,54 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   let storyRaw = "";
-  try {
-    storyRaw = await peterChat({
-      messages: [
-        { role: 'system', content: PETER_SYSTEM_PROMPT },
-        { role: 'user', content: getMorningStoryPrompt(dayIndex, insights, steeringHint, activeTrack) },
-      ],
-      maxTokens: 450,
-    });
-  } catch (error) {
-    console.error('Peter session start LLM error:', error);
+  let isValid = false;
+  let attempts = 0;
+  let lastFailureReason = "";
+
+  while (!isValid && attempts < 2) {
+    attempts++;
+    try {
+      let currentPrompt = getMorningStoryPrompt(dayIndex, insights, steeringHint, activeTrack);
+      if (lastFailureReason) {
+        currentPrompt += `\n\nCRITICAL FIX REQUIRED: Your previous attempt failed validation because: "${lastFailureReason}". Ensure you fix this logical error in your rewrite.`;
+      }
+
+      storyRaw = await peterChat({
+        messages: [
+          { role: 'system', content: PETER_SYSTEM_PROMPT },
+          { role: 'user', content: currentPrompt },
+        ],
+        maxTokens: 450,
+      });
+
+      // QA Agent Validation
+      const { getMorningStoryValidationPrompt } = require('@/lib/peterService');
+      const valPrompt = getMorningStoryValidationPrompt(storyRaw);
+      const valResponse = await peterChat({
+        messages: [{ role: 'user', content: valPrompt }],
+        maxTokens: 150,
+      });
+      
+      const cleanVal = valResponse.replace(/```json/g, '').replace(/```/g, '').trim();
+      const valObj = JSON.parse(cleanVal);
+
+      if (valObj.valid) {
+        isValid = true;
+      } else {
+        lastFailureReason = valObj.reason || "Logical contradiction detected.";
+        console.warn(`[QA Agent] Rejected story attempt ${attempts}:`, lastFailureReason);
+      }
+    } catch (error) {
+      console.error(`Peter session start LLM error on attempt ${attempts}:`, error);
+      break; // Fallback immediately on network/parsing errors
+    }
+  }
+
+  // Fallback if all attempts failed or errored
+  if (!isValid) {
+    if (attempts >= 2) {
+      console.warn(`[QA Agent] Exhausted retries. Falling back to hardcoded story.`);
+    }
     try {
       const fallbacks = require('@/data/fallbackStories.json');
       const fallbackForDay = fallbacks.find((f: any) => f.day === dayIndex) || fallbacks[0];

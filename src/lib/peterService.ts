@@ -125,7 +125,7 @@ Today's concept: ${concept}
 
 Format (use this EXACT structure with no deviations):
 1. A warm "good morning" greeting (1 sentence, feel like a text from a friend)
-2. A short relatable story about "Alex and Sam" (a couple — 3-4 sentences) that shows the concept in action WITHOUT naming the concept
+2. A short relatable story about "Alex and Sam" (a couple — 3-4 sentences) that shows the concept in action WITHOUT naming the concept. CRITICAL: Ensure the logic of who does what for whom makes perfect sense and the characters' motivations align clearly.
 3. On its own line, write exactly "Today's Action:" followed by one specific, small, doable task related to the concept (1-2 sentences, starts with a verb)
 
 CRITICAL FORMATTING RULES:
@@ -277,4 +277,24 @@ Return a JSON object with your estimates.
 }
 
 Only return valid JSON. No explanation outside the JSON.`;
+}
+
+// Prompt for the Editorial QA Agent to validate story logic
+export function getMorningStoryValidationPrompt(storyText: string): string {
+  return `You are an expert editorial QA agent for a relationship app.
+Your job is to read a short story about a couple (Alex and Sam) and verify that it makes strict logical sense.
+Specifically check for contradictory actions, mixed-up roles, or confusing motivations (e.g., Alex making coffee the way Alex likes it, but Sam thanking Alex even though Sam doesn't drink coffee).
+
+Critique this story:
+"""
+${storyText}
+"""
+
+Return a JSON object with exactly two keys:
+{
+  "valid": <boolean>,
+  "reason": "<If false, a crisp 1-sentence explanation of the logical error. If true, write 'LGTM'>"
+}
+
+Output ONLY valid JSON. No markdown formatting, no text outside the JSON object.`;
 }
