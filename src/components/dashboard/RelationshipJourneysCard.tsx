@@ -14,54 +14,58 @@ export function RelationshipJourneysCard({ hasSpecialEvent }: RelationshipJourne
   return (
     <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
       <Card 
-        className="cursor-pointer overflow-hidden hover:shadow-md transition-all duration-300 bg-gradient-to-br from-white to-blue-50 relative" 
+        className="cursor-pointer overflow-hidden border border-brand-primary/10 bg-white/70 backdrop-blur-md shadow-sm hover:shadow-md transition-all duration-300 relative group" 
         onClick={() => router.push("/journeys")}
       >
-        <CardContent className="p-4">
+        {/* Subtle mesh/blob effect behind */}
+        <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 bg-brand-primary/5 rounded-full blur-2xl transition-transform duration-700 group-hover:scale-150" />
+        <div className="absolute bottom-0 left-0 -ml-8 -mb-8 w-32 h-32 bg-brand-sand/10 rounded-full blur-2xl transition-transform duration-700 group-hover:scale-150" />
+
+        <CardContent className="p-5 relative z-10">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="bg-blue-100 p-2 rounded-full">
-                <Activity className="h-5 w-5 text-brand-hover" />
+            <div className="flex items-center gap-3">
+              <div className="bg-brand-primary/10 p-2.5 rounded-2xl shadow-sm border border-brand-primary/5">
+                <Activity className="h-5 w-5 text-brand-primary" />
               </div>
               <div>
-                <h3 className="font-medium flex items-center">
+                <h3 className="font-semibold text-brand-taupe flex items-center">
                   Relationship Journeys
                   {hasSpecialEvent && (
                     <motion.span 
-                      className="ml-2 inline-block text-xs bg-blue-100 text-brand-hover px-1.5 py-0.5 rounded-full"
+                      className="ml-2 inline-flex text-xs bg-brand-primary text-white px-2 py-0.5 rounded-full font-medium shadow-sm"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 1 }}
                     >
-                      <span className="flex items-center">
-                        <Star className="h-3 w-3 mr-0.5" />
-                        New journey!
+                      <span className="flex items-center gap-1">
+                        <Star className="h-3 w-3 fill-white" />
+                        New
                       </span>
                     </motion.span>
                   )}
                 </h3>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-zinc-500 mt-0.5">
                   Start a guided adventure to strengthen your connection!
                 </p>
               </div>
             </div>
             <motion.div 
-              className="h-8 w-8 bg-blue-50 rounded-full flex items-center justify-center"
-              whileHover={{ scale: 1.1, backgroundColor: "rgb(59, 130, 246)" }}
-              whileTap={{ scale: 0.9 }}
+              className="h-9 w-9 bg-brand-primary/5 border border-brand-primary/10 rounded-full flex items-center justify-center shadow-sm"
+              whileHover={{ scale: 1.05, backgroundColor: "rgba(192, 97, 74, 0.1)" }}
+              whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              <ChevronRight className="h-5 w-5 text-brand-hover" />
+              <ChevronRight className="h-5 w-5 text-brand-primary translate-x-0.5" />
             </motion.div>
           </div>
           
           {/* Decorative elements */}
           <motion.div 
-            className="absolute -right-6 -bottom-2 opacity-10"
-            animate={{ rotate: [0, 10, 0] }}
-            transition={{ duration: 8, repeat: Infinity }}
+            className="absolute -right-6 -bottom-4 opacity-[0.03]"
+            animate={{ rotate: [0, 5, 0] }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
           >
-            <Award className="h-16 w-16 text-blue-700" />
+            <Award className="h-24 w-24 text-brand-primary" />
           </motion.div>
         </CardContent>
       </Card>

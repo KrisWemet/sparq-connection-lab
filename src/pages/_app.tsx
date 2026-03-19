@@ -29,17 +29,12 @@ export default function App({ Component, pageProps }: AppProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-
     const handleStart = () => {
       setIsLoading(true);
     };
-    
+
     const handleComplete = () => {
-      // Ensure the user has at least 1.5 seconds to read Peter's tip
-      timer = setTimeout(() => {
-        setIsLoading(false);
-      }, 1500);
+      setIsLoading(false);
     };
 
     router.events.on('routeChangeStart', handleStart);
@@ -50,9 +45,8 @@ export default function App({ Component, pageProps }: AppProps) {
       router.events.off('routeChangeStart', handleStart);
       router.events.off('routeChangeComplete', handleComplete);
       router.events.off('routeChangeError', handleComplete);
-      clearTimeout(timer);
     };
-  }, [router]);
+  }, [router.events]);
 
   return (
     <QueryClientProvider client={queryClient}>

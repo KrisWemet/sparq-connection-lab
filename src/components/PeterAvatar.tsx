@@ -27,12 +27,11 @@ export default function PeterAvatar({
   const px = SIZES[size];
 
   return (
-    <Image
+    <img
       src="/images/peter-default.png"
       alt="Peter the Otter"
       width={px}
       height={px}
-      priority={priority}
       className={className}
       style={{
         width: px,

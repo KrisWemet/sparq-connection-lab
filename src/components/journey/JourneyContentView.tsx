@@ -251,18 +251,26 @@ export function JourneyContentView({
   if (completed) {
     return (
       <div className="min-h-screen bg-brand-linen flex flex-col items-center justify-center px-6 text-center relative overflow-hidden">
-        <div className="absolute top-16 left-8 w-24 h-24 bg-brand-primary/5 rounded-full blur-2xl" />
-        <div className="absolute top-32 right-6 w-20 h-20 bg-brand-sand/10 rounded-full blur-2xl" />
-        <div className="absolute bottom-32 left-6 w-28 h-28 bg-brand-growth/10 rounded-full blur-2xl" />
-        <div className="absolute bottom-20 right-10 w-20 h-20 bg-brand-primary/5 rounded-full blur-2xl" />
+        {/* Cinematic Background Orbs */}
+        <motion.div 
+          animate={{ scale: [1, 1.1, 1], rotate: [0, 90, 0] }} 
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute top-0 right-0 w-[40vw] h-[40vw] max-w-lg max-h-lg bg-brand-primary/10 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/3 mix-blend-multiply" 
+        />
+        <motion.div 
+          animate={{ scale: [1, 1.2, 1], rotate: [0, -90, 0] }} 
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          className="absolute bottom-0 left-0 w-[50vw] h-[50vw] max-w-xl max-h-xl bg-brand-growth/10 rounded-full blur-[120px] pointer-events-none translate-y-1/3 -translate-x-1/4 mix-blend-multiply" 
+        />
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-brand-sand/15 rounded-full blur-[80px] pointer-events-none -translate-x-1/2 -translate-y-1/2 mix-blend-multiply" />
 
         <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
+          initial={{ scale: 0, shadow: "0px 0px 0px rgba(192,97,74,0)" }}
+          animate={{ scale: 1, shadow: "0px 20px 40px rgba(192,97,74,0.3)" }}
           transition={{ type: "spring", stiffness: 200, damping: 15 }}
-          className="w-20 h-20 rounded-full bg-brand-growth flex items-center justify-center mb-6 shadow-lg"
+          className="w-24 h-24 rounded-full bg-gradient-to-br from-brand-primary to-[#d87b64] flex items-center justify-center mb-8 shadow-2xl relative z-10"
         >
-          <CheckCircle className="w-10 h-10 text-white" />
+          <CheckCircle className="w-12 h-12 text-white" />
         </motion.div>
 
         <motion.div
@@ -310,8 +318,12 @@ export function JourneyContentView({
   }
 
   return (
-    <div className="min-h-screen bg-brand-linen pb-28">
-      <div className="max-w-lg mx-auto py-6 px-4">
+    <div className="min-h-screen bg-brand-linen pb-32 relative overflow-hidden">
+      {/* Ambient backgrounds */}
+      <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[500px] bg-brand-primary/5 blur-[120px] rounded-full pointer-events-none mix-blend-multiply" />
+      <div className="absolute top-[40%] right-[-10%] w-[50%] h-[600px] bg-brand-sand/10 blur-[120px] rounded-full pointer-events-none mix-blend-multiply" />
+
+      <div className="max-w-lg mx-auto py-6 px-4 relative z-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -319,14 +331,14 @@ export function JourneyContentView({
           transition={{ duration: 0.4 }}
           className="mb-6"
         >
-          <h1 className="text-2xl font-serif font-bold text-brand-taupe mb-2">{title || journeyId}</h1>
+          <h1 className="text-3xl font-serif font-bold text-brand-taupe mb-4 tracking-tight drop-shadow-sm">{title || journeyId}</h1>
 
-          <div className="rounded-2xl bg-white/80 border border-brand-primary/10 p-4 space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="font-medium text-brand-taupe">Day {currentDay} of {totalDays}</span>
-              <span className="text-zinc-500">{Math.round(progress)}%</span>
+          <div className="rounded-[1.5rem] bg-white/70 backdrop-blur-md border border-white p-5 shadow-sm">
+            <div className="flex justify-between text-sm mb-3">
+              <span className="font-semibold text-brand-taupe">Day {currentDay} of {totalDays}</span>
+              <span className="text-brand-primary font-medium">{Math.round(progress)}%</span>
             </div>
-            <Progress value={progress} className="h-2" />
+            <Progress value={progress} className="h-1.5 bg-brand-primary/10" />
           </div>
         </motion.div>
 
@@ -354,11 +366,13 @@ export function JourneyContentView({
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.1 }}
-              className="rounded-3xl bg-white border border-brand-primary/10 p-5 shadow-sm"
+              className="rounded-[2rem] bg-white/80 backdrop-blur-md border border-white/60 p-6 shadow-xl shadow-brand-taupe/5"
             >
-              <div className="flex items-center gap-2 mb-3">
-                <Lightbulb className="w-4 h-4 text-brand-sand" />
-                <p className="text-xs font-semibold text-brand-sand uppercase tracking-widest">Today&apos;s Learning</p>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 rounded-full bg-brand-sand/10 flex items-center justify-center">
+                  <Lightbulb className="w-4 h-4 text-brand-sand" />
+                </div>
+                <p className="text-xs font-bold text-brand-sand uppercase tracking-[0.2em]">Today&apos;s Learning</p>
               </div>
               <div className="text-sm text-zinc-700 leading-relaxed space-y-3">
                 {currentDayContent.learning.split('\n\n').map((p, i) => (
@@ -378,9 +392,10 @@ export function JourneyContentView({
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.15 }}
-              className="rounded-2xl bg-brand-linen border border-brand-primary/8 p-4"
+              className="rounded-2xl bg-brand-sand/10 border border-brand-sand/20 p-5 relative overflow-hidden"
             >
-              <p className="text-sm text-zinc-600 font-serif italic leading-relaxed">
+              <div className="absolute top-0 left-0 w-2 h-full bg-brand-sand opacity-50" />
+              <p className="text-sm text-zinc-700 font-serif italic leading-relaxed pl-2 tracking-wide">
                 {currentDayContent.whyItMatters}
               </p>
             </motion.div>
@@ -390,16 +405,18 @@ export function JourneyContentView({
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.2 }}
-              className="rounded-3xl bg-white border border-brand-primary/10 overflow-hidden shadow-sm"
+              className="rounded-[2rem] bg-white border border-white/60 overflow-hidden shadow-2xl shadow-brand-primary/5"
             >
-              <div className="px-5 pt-5 pb-2">
-                <div className="flex items-center gap-2 mb-1">
-                  <Pencil className="w-4 h-4 text-brand-primary" />
-                  <p className="text-xs font-semibold text-brand-primary uppercase tracking-widest">Activity</p>
+              <div className="px-6 pt-6 pb-2">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 rounded-full bg-brand-primary/10 flex items-center justify-center">
+                    <Pencil className="w-4 h-4 text-brand-primary" />
+                  </div>
+                  <p className="text-xs font-bold text-brand-primary uppercase tracking-[0.2em]">Activity</p>
                 </div>
-                <h3 className="text-base font-bold text-brand-taupe">{currentDayContent.activity.title}</h3>
+                <h3 className="text-lg font-bold text-brand-taupe">{currentDayContent.activity.title}</h3>
               </div>
-              <div className="px-5 pb-5 space-y-4">
+              <div className="px-6 pb-6 space-y-5">
                 <div className="text-sm text-zinc-700 leading-relaxed space-y-3">
                   {currentDayContent.activity.instructions.split('\n\n').map((p, i) => (
                     <p key={i}>
@@ -425,7 +442,7 @@ export function JourneyContentView({
                           placeholder="Your thoughts..."
                           value={responses[`question_${index}`] || ''}
                           onChange={(e) => handleResponseChange(index, e.target.value)}
-                          className="min-h-[100px] rounded-xl border-brand-primary/10 focus:ring-brand-primary/30 bg-brand-linen/50"
+                          className="min-h-[120px] rounded-[1.25rem] border-zinc-200 focus:ring-2 focus:ring-brand-primary/30 bg-zinc-50/50 shadow-inner resize-none p-4 text-brand-taupe placeholder:text-zinc-400 transition-all font-medium"
                         />
                       </div>
                     ))}
@@ -448,22 +465,22 @@ export function JourneyContentView({
         )}
 
         {/* Navigation */}
-        <div className="flex gap-3 mt-6">
+        <div className="flex gap-3 mt-8">
           <Button
             variant="outline"
             onClick={handlePreviousDay}
             disabled={currentDay === 1}
-            className="flex-1 rounded-xl border-brand-primary/15 text-brand-taupe hover:bg-brand-primary/5"
+            className="flex-1 rounded-2xl border-brand-primary/15 text-brand-taupe hover:bg-brand-primary/5 h-14 font-semibold text-base"
           >
-            <ChevronLeft className="mr-1 h-4 w-4" /> Previous
+            <ChevronLeft className="mr-1 h-5 w-5" /> Previous
           </Button>
           <Button
             onClick={handleNextDay}
-            className="flex-1 rounded-xl bg-brand-primary hover:bg-brand-hover text-white"
+            className="flex-1 rounded-2xl bg-brand-primary hover:bg-brand-hover text-white h-14 font-semibold text-base shadow-lg shadow-brand-primary/20 transition-all hover:shadow-xl hover:-translate-y-0.5"
           >
             {currentDay >= totalDays
-              ? <>Complete <CheckCircle className="ml-1 h-4 w-4" /></>
-              : <>Next Day <ChevronRight className="ml-1 h-4 w-4" /></>
+              ? <>Complete <CheckCircle className="ml-1 h-5 w-5" /></>
+              : <>Next Day <ChevronRight className="ml-1 h-5 w-5" /></>
             }
           </Button>
         </div>

@@ -40,16 +40,20 @@ export default function Journeys() {
   });
 
   return (
-    <div className="min-h-screen bg-brand-linen pb-28">
+    <div className="min-h-screen bg-brand-linen pb-28 relative overflow-hidden">
+      {/* Ambient backgrounds */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-primary/5 blur-[120px] rounded-full pointer-events-none -translate-y-1/2 mix-blend-multiply" />
+      <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-brand-sand/10 blur-[100px] rounded-full pointer-events-none translate-x-1/3 mix-blend-multiply" />
+
       {/* Header */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl border-b px-4 py-4"
+      <header className="sticky top-0 z-50 backdrop-blur-2xl border-b px-4 py-4 shadow-[0_4px_30px_rgba(0,0,0,0.02)] transition-all"
         style={{
-          background: "rgba(250,246,241,0.92)",
-          borderColor: "rgba(192,97,74,0.1)",
+          background: "rgba(250,246,241,0.85)",
+          borderColor: "rgba(192,97,74,0.08)",
         }}
       >
         <div className="max-w-lg mx-auto">
-          <h1 className="text-2xl font-bold text-brand-taupe mb-3">Journeys</h1>
+          <h1 className="text-3xl font-serif font-bold text-brand-taupe mb-4 tracking-tight">Journeys</h1>
           {/* Search */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
@@ -58,7 +62,7 @@ export default function Journeys() {
               placeholder="Search journeys..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white/80 border border-brand-primary/10 text-sm text-brand-taupe placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+              className="w-full pl-10 pr-4 py-3 rounded-2xl bg-white/70 backdrop-blur-md border border-brand-primary/10 text-sm text-brand-taupe placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 shadow-inner transition-all"
             />
           </div>
         </div>
@@ -66,18 +70,25 @@ export default function Journeys() {
 
       <main className="max-w-lg mx-auto px-4 pt-4">
         {/* Category pills */}
-        <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide -mx-4 px-4">
+        <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 relative z-10 pt-2">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors relative ${
                 activeCategory === cat
-                  ? "bg-brand-primary text-white"
-                  : "bg-white/80 text-zinc-600 border border-brand-primary/10 hover:bg-white"
+                  ? "text-white"
+                  : "bg-white/60 backdrop-blur-sm text-zinc-600 border border-brand-primary/10 hover:bg-white"
               }`}
             >
-              {cat}
+              {activeCategory === cat && (
+                <motion.div
+                  layoutId="activeJourneyCategory"
+                  className="absolute inset-0 bg-brand-primary rounded-full shadow-md"
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                />
+              )}
+              <span className="relative z-10">{cat}</span>
             </button>
           ))}
         </div>
@@ -96,16 +107,16 @@ export default function Journeys() {
                 transition={{ duration: 0.3, delay: idx * 0.04 }}
               >
                 <Link href={`/journeys/${journey.id}`}>
-                  <div className="rounded-3xl overflow-hidden border border-brand-primary/10 bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                  <div className="group rounded-[1.5rem] overflow-hidden border border-brand-primary/10 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 cursor-pointer relative z-10">
                     {/* Card image */}
-                    <div className={`relative ${bgColor} h-32`}>
+                    <div className={`relative ${bgColor} h-36 overflow-hidden`}>
                       {journey.image && (
                         <Image
                           src={journey.image}
                           alt={journey.title}
                           fill
                           unoptimized
-                          className="object-cover opacity-80"
+                          className="object-cover opacity-80 group-hover:scale-110 group-hover:opacity-100 transition-all duration-[800ms] ease-out"
                         />
                       )}
                       <div className="absolute top-2 left-2">
@@ -126,15 +137,17 @@ export default function Journeys() {
                     </div>
 
                     {/* Card text */}
-                    <div className="p-3">
-                      <p className="text-xs font-semibold text-brand-primary uppercase tracking-widest mb-1">
+                    <div className="p-4 bg-white relative z-20">
+                      <p className="text-[10px] font-bold text-brand-primary uppercase tracking-[0.2em] mb-1.5">
                         {journey.category}
                       </p>
-                      <h3 className="font-bold text-brand-taupe text-sm leading-tight line-clamp-2">
+                      <h3 className="font-bold text-brand-taupe text-base leading-tight line-clamp-2 mix-blend-hard-light">
                         {journey.title}
                       </h3>
-                      <p className="text-xs text-zinc-500 mt-2">
-                        {journey.duration} · {journey.phases?.length ?? 4} phases
+                      <p className="text-xs text-zinc-500 mt-2.5 font-medium flex items-center gap-1.5 opacity-80">
+                        <span>{journey.duration}</span>
+                        <span className="w-1 h-1 rounded-full bg-zinc-300" />
+                        <span>{journey.phases?.length ?? 4} phases</span>
                       </p>
                     </div>
                   </div>

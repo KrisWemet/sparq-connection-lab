@@ -32,7 +32,7 @@ export const journeys: Journey[] = [
     duration: "2 weeks",
     category: "Foundation",
     sequence: 1,
-    image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/love-languages.png",
     psychology: [
       "Love Languages Framework (Chapman)",
       "Attachment Theory",
@@ -61,7 +61,7 @@ export const journeys: Journey[] = [
     duration: "2 weeks",
     category: "Foundation",
     sequence: 2,
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/communication.png",
     psychology: [
       "Gottman Method",
       "Nonviolent Communication (Rosenberg)",
@@ -90,7 +90,7 @@ export const journeys: Journey[] = [
     duration: "2 weeks",
     category: "Foundation",
     sequence: 3,
-    image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/conflict-resolution.png",
     psychology: [
       "Gottman Method (Repair Attempts)",
       "Emotionally Focused Therapy",
@@ -119,7 +119,7 @@ export const journeys: Journey[] = [
     duration: "2 weeks",
     category: "Growth",
     sequence: 4,
-    image: "https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/intimacy.png",
     psychology: [
       "Attachment Theory (Bowlby/Johnson)",
       "Emotionally Focused Therapy",
@@ -147,7 +147,7 @@ export const journeys: Journey[] = [
     duration: "2 weeks",
     category: "Growth",
     sequence: 5,
-    image: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/emotional-intelligence.png",
     psychology: [
       "Emotional Intelligence (Goleman)",
       "Internal Family Systems",
@@ -175,7 +175,7 @@ export const journeys: Journey[] = [
     duration: "3 weeks",
     category: "Growth",
     sequence: 6,
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/values.png",
     psychology: [
       "Acceptance and Commitment Therapy (ACT)",
       "Positive Psychology (PERMA)",
@@ -202,7 +202,7 @@ export const journeys: Journey[] = [
     duration: "6 weeks",
     category: "Advanced",
     sequence: 7,
-    image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/attachment-healing.png",
     psychology: [
       "Attachment Theory (Bowlby/Ainsworth)",
       "Emotionally Focused Therapy",
@@ -230,7 +230,7 @@ export const journeys: Journey[] = [
     duration: "6 weeks",
     category: "Advanced",
     sequence: 8,
-    image: "https://images.unsplash.com/photo-1474552226712-ac0f0961a954?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/trust-rebuilding.png",
     psychology: [
       "Gottman Trust Revival Method",
       "Emotionally Focused Therapy",
@@ -258,7 +258,7 @@ export const journeys: Journey[] = [
     duration: "5 weeks",
     category: "Growth",
     sequence: 9,
-    image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/relationship-renewal.png",
     psychology: [
       "Positive Psychology (Fredrickson)",
       "Gottman Sound Relationship House",
@@ -286,7 +286,7 @@ export const journeys: Journey[] = [
     duration: "4 weeks",
     category: "Intimacy",
     sequence: 10,
-    image: "https://images.unsplash.com/photo-1516585427167-9f4af9627e6c?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/sexual-intimacy.png",
     psychology: [
       "Sensate Focus (Masters & Johnson)",
       "Desire Discrepancy Research (Perel)",
@@ -314,7 +314,7 @@ export const journeys: Journey[] = [
     duration: "4 weeks",
     category: "Intimacy",
     sequence: 11,
-    image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/mindful-sexuality.png",
     psychology: [
       "Mindfulness-Based Stress Reduction (Kabat-Zinn)",
       "Sensate Focus Therapy",
@@ -342,7 +342,7 @@ export const journeys: Journey[] = [
     duration: "3 weeks",
     category: "Intimacy",
     sequence: 12,
-    image: "https://images.unsplash.com/photo-1517230878791-4d28214057c2?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/fantasy-exploration.png",
     psychology: [
       "Erotic Intelligence (Perel)",
       "Attachment-Based Sex Therapy",
@@ -369,7 +369,7 @@ export const journeys: Journey[] = [
     duration: "4 weeks",
     category: "Intimacy",
     sequence: 13,
-    image: "https://images.unsplash.com/photo-1516585427167-9f4af9627e6c?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/power-dynamics.png",
     psychology: [
       "Relational Power Theory",
       "Consent-Centered Communication",
