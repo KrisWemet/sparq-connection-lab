@@ -15,7 +15,7 @@ export function TodaysFocusCard({ actionText }: TodaysFocusCardProps) {
       onClick={() => router.push("/daily-growth")}
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
-      className="w-full text-left bg-brand-primary rounded-[24px] shadow-[0_8px_30px_rgb(192,97,74,0.15)] p-5 md:p-6 relative overflow-hidden group"
+      className="w-full text-left bg-brand-primary rounded-[32px] shadow-[0_12px_40px_rgb(192,97,74,0.18)] p-6 md:p-8 relative overflow-hidden group"
     >
       {/* Background organic shape */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none transform translate-x-1/2 -translate-y-1/4" />

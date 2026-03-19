@@ -20,7 +20,7 @@ type Phase = 'loading' | 'morning' | 'evening' | 'complete';
 
 const EVENING_OPENER: PeterMessage = {
   role: 'assistant',
-  content: "Hey, welcome back! 🌙 How did today's action go? Even if it was a tiny thing — I want to hear all about it.",
+  content: "Hey, welcome back. 🌙 How did today's small step go? Tell me what happened. Tiny reps matter.",
 };
 
 export default function DailyGrowth() {
@@ -175,8 +175,8 @@ export default function DailyGrowth() {
           { onConflict: 'user_id,day' }
         );
       } catch {
-        setMorningStory("Good morning! 🌅 Today's story is loading — come back in a moment.");
-        setMorningAction('Try giving your partner one genuine compliment today.');
+        setMorningStory("Good morning. 🌅 Your story is still loading. Come back in a moment.");
+        setMorningAction('Tell your partner one true good thing you see in them today.');
       } finally {
         setIsGenerating(false);
       }
@@ -384,7 +384,7 @@ export default function DailyGrowth() {
           <div>
             <p className="text-sm font-semibold text-black">Day {currentDay} of 14</p>
             <p className="text-xs text-zinc-500 mt-0.5">
-              {phase === 'morning' ? 'Morning Story' : phase === 'evening' ? 'Evening Check-in' : 'Complete!'}
+              {phase === 'morning' ? 'Morning Practice' : phase === 'evening' ? 'Night Check-in' : 'Complete!'}
             </p>
           </div>
         </div>
@@ -463,7 +463,7 @@ export default function DailyGrowth() {
                       onClick={handleMorningRead}
                       className="w-full flex items-center justify-center gap-2 bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors text-base shadow-sm"
                     >
-                      Got it — I&apos;ll try this today
+                      I&apos;ll practice this today
                       <ChevronRight size={18} />
                     </button>
                   </motion.div>
@@ -487,7 +487,7 @@ export default function DailyGrowth() {
                   <div className="w-16 h-16 rounded-full bg-white border border-zinc-200 shadow-sm flex items-center justify-center mb-6">
                     <Sun size={28} className="text-brand-primary" />
                   </div>
-                  <h3 className="text-3xl font-bold text-black mb-3 tracking-tight">Did you do the action?</h3>
+                  <h3 className="text-3xl font-bold text-black mb-3 tracking-tight">Did you do the step?</h3>
                   <p className="text-zinc-600 mb-10 max-w-sm text-base">
                     &quot;{morningAction}&quot;
                   </p>
@@ -495,7 +495,7 @@ export default function DailyGrowth() {
                   <div className="bg-white p-8 rounded-[2rem] border border-zinc-100 shadow-sm max-w-sm w-full mb-8">
                     <p className="text-lg font-semibold text-black mb-2">Put the Phone Down.</p>
                     <p className="text-sm text-zinc-500 mb-8 leading-relaxed">
-                      Sparq isn&apos;t about screen time. It&apos;s about real life. If you haven&apos;t done it yet, close the app and go do it.
+                      Sparq works when you practice in real life. If you have not done it yet, close the app and go do it now.
                     </p>
                     <button
                       onPointerDown={() => {

@@ -182,7 +182,7 @@ export function PeterChat({
             {isTranscribing ? (
               <div className="flex items-end gap-3 flex-row-reverse">
                 <div className="bg-[#E9E9EB] text-zinc-600 rounded-[20px] rounded-br-[4px] px-4 py-2.5 text-[15px] flex items-center gap-2">
-                  <Loader2 size={16} className="animate-spin text-zinc-400" /> Processing audio...
+                  <Loader2 size={16} className="animate-spin text-zinc-400" /> Turning your voice into words...
                 </div>
               </div>
             ) : (

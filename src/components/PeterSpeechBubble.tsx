@@ -30,29 +30,16 @@ export default function PeterSpeechBubble({
       {/* Speech bubble */}
       <div
         style={{
-          background: '#FFF3ED',
-          borderLeft: '3px solid #C0614A',
-          borderRadius: 16,
-          padding: '16px 20px',
-          boxShadow: '0 2px 8px rgba(192, 97, 74, 0.08)',
+          background: 'rgba(255, 243, 237, 0.7)',
+          backdropFilter: 'blur(12px)',
+          border: '1px solid rgba(192, 97, 74, 0.10)',
+          borderRadius: 28,
+          padding: '24px 28px',
+          boxShadow: '0 8px 30px rgba(192, 97, 74, 0.04)',
           flex: 1,
           position: 'relative',
         }}
       >
-        {/* Tail pointing left toward Peter */}
-        <div
-          style={{
-            position: 'absolute',
-            left: -10,
-            top: '50%',
-            transform: 'translateY(-50%)',
-            width: 0,
-            height: 0,
-            borderTop: '8px solid transparent',
-            borderBottom: '8px solid transparent',
-            borderRight: '10px solid #FFF3ED',
-          }}
-        />
 
         <p
           style={{
@@ -81,7 +68,7 @@ export default function PeterSpeechBubble({
               letterSpacing: '0.02em',
             }}
           >
-            Tap to chat with Peter →
+            Tap here to talk to me →
           </p>
         )}
       </div>

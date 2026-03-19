@@ -49,10 +49,10 @@ export function WeeklyMirrorCard() {
         <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-2xl pointer-events-none" style={{ background: 'rgba(200,106,88,0.06)' }} />
         <div className="flex items-center gap-3 mb-3 relative z-10">
           <Image src="/images/peter-default.png" alt="Peter" width={32} height={32} style={{ width: 32, height: 32, objectFit: 'contain', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }} />
-          <p className="text-lg font-serif text-zinc-800 tracking-tight">Weekly Mirror</p>
+          <p className="text-lg font-serif text-zinc-800 tracking-tight">Your Weekly Mirror</p>
         </div>
         <p className="text-sm leading-relaxed relative z-10 italic" style={{ color: '#8C827A' }}>
-          &quot;Peter&apos;s still learning your patterns. Check back after Day 7 — you&apos;re doing great so far.&quot;
+          &quot;As you keep trying, I am learning how you love. Come back after 7 days to see how much you have grown.&quot;
         </p>
       </div>
     );

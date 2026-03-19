@@ -20,8 +20,8 @@ export function LivingArtifact({ score }: LivingArtifactProps) {
       }}
     >
       <div className="absolute top-4 left-4 z-10">
-        <h3 className="text-sm font-semibold text-black">Living Canvas</h3>
-        <p className="text-xs mt-0.5" style={{ color: '#8C827A' }}>Your connection artifact</p>
+        <h3 className="text-sm font-semibold text-black">Your Living Art</h3>
+        <p className="text-xs mt-0.5" style={{ color: '#8C827A' }}>It grows as you grow</p>
       </div>
 
       <div className="h-32 w-full flex items-center justify-center relative mt-6">
@@ -55,7 +55,7 @@ export function LivingArtifact({ score }: LivingArtifactProps) {
 
       <div className="mt-2 text-center z-10">
         <span className="text-2xl font-bold font-serif" style={{ color: '#C86A58' }}>{score}</span>
-        <span className="text-xs ml-1 uppercase tracking-widest font-semibold" style={{ color: '#8C827A' }}>Resonance</span>
+        <span className="text-xs ml-1 uppercase tracking-widest font-semibold" style={{ color: '#8C827A' }}>Closeness</span>
       </div>
     </div>
   );

@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const TIPS = [
-  "True connection starts with curiosity. Ask one open-ended question today.",
-  "Conflict is just a request for a deeper understanding.",
-  "Your relationship is a garden. It needs consistent, gentle watering.",
-  "Assume positive intent. Often, we're all just trying our best.",
-  "The most powerful words are often 'I hear you.'",
-  "Take a breath. A single pause can change the direction of an entire conversation.",
-  "Vulnerability isn't weakness; it's the bridge to genuine intimacy."
+  "Small kind moves change the story in your head.",
+  "Pause. Breathe. Then pick the next kind move.",
+  "What you repeat starts to feel like you.",
+  "One calm sentence can change a hard moment.",
+  "Real trust grows one small proof at a time.",
+  "When you slow down, you can choose better words.",
+  "Notice it. Name it. Choose the next right step."
 ];
 
 interface PeterLoadingProps {
@@ -62,7 +62,7 @@ export function PeterLoading({ isLoading }: PeterLoadingProps) {
             {/* Tip Card */}
             <div className="bg-white/80 shadow-sm border border-brand-primary/10 rounded-3xl p-6 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-primary/40 to-brand-primary/10" />
-              <p className="text-sm font-semibold text-brand-primary mb-2 tracking-wider uppercase">Peter&apos;s Insight</p>
+              <p className="text-sm font-semibold text-brand-primary mb-2 tracking-wider uppercase">Peter&apos;s Reminder</p>
               <p className="text-brand-taupe leading-relaxed text-lg italic font-serif">
                 &quot;{TIPS[tipIndex]}&quot;
               </p>

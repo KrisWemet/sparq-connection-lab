@@ -3,31 +3,31 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/lib/auth-context';
 import { supabase } from '@/lib/supabase';
 import { PeterChat } from '@/components/PeterChat';
-import { PeterMessage } from '@/lib/peterService';
+import { PeterMessage, buildPeterInstruction } from '@/lib/peterService';
 import { buildAuthedHeaders } from '@/lib/api-auth';
 
 const COMPLETE_AFTER_TURNS = 5; // Complete after user's 5th message
 
 const INITIAL_MESSAGE: PeterMessage = {
   role: 'assistant',
-  content: "Hey there! I'm Peter 🦦 — your friendly otter guide here at Sparq.\n\nHere's how this works: every day for 14 days, I'll share a short story about a couple going through something real — plus one small action you can try with your partner that day. In the evening I'll check back in to hear how it went.\n\nIt's not therapy. It's more like having a friend who knows a thing or two about relationships, walking with you day by day. By Day 15, you'll unlock your own personal Skill Tree — deeper exercises built around what I've learned about you.\n\nBut first things first — what's your name?",
+  content: "Hey there! I'm Peter 🦦\n\nFor 14 days, I'll help you practice one small way to love better. Small reps change how you talk, act, and feel. In the morning, I give you one short story and one tiny action. At night, we look at what happened and lock in the lesson.\n\nThis is simple. Little by little, your new way starts to feel natural.\n\nFirst, what's your name?",
 };
 
 function getSystemOverride(turnNumber: number): string | undefined {
   if (turnNumber === 1) {
-    return `You are Peter, a warm otter companion for relationship growth. The user just told you their name. Warmly acknowledge their name, then ask what brought them to Sparq today — what's going on in their relationship that made them want to try something new? Keep it conversational and warm, 2-3 sentences max. No clinical language.`;
+    return buildPeterInstruction(`The user just told you their name. Warmly say their name back. Then ask what brought them to Sparq today and what feels hard right now. Keep it warm, simple, and 2-3 short sentences max. No clinical language.`);
   }
   if (turnNumber === 2) {
-    return `You are Peter, a warm otter companion. The user just shared what brought them here. Reflect back what you heard with empathy, normalize whatever they shared, then ask: "Can you tell me about a moment recently with your partner — could be something sweet, or something that felt a little off?" Keep it warm and curious, 2-3 sentences.`;
+    return buildPeterInstruction(`The user just shared what brought them here. Reflect back what you heard with empathy. Normalize it. Add one short line that helps them feel change is possible. Then ask: "Can you tell me about a moment lately with your partner, maybe something sweet or something a little off?" Keep it warm and curious in 2-3 short sentences.`);
   }
   if (turnNumber === 3) {
-    return `You are Peter, a warm otter companion. The user just shared a specific moment. Acknowledge it thoughtfully. Then ask: "When things feel off between you two, what do you usually do — do you tend to talk it out right away, give it some space, or something else?" 2-3 sentences.`;
+    return buildPeterInstruction(`The user just shared a specific moment. Acknowledge it with care. Briefly mirror the pattern you notice in simple words. Then ask: "When things feel off between you two, what do you usually do? Do you talk right away, get quiet, need space, or something else?" Use 2-3 short sentences.`);
   }
   if (turnNumber === 4) {
-    return `You are Peter, a warm otter companion. Reflect on what they shared about how they handle tension. Normalize it completely. Then ask: "And what about the good stuff — how does your partner usually show you they care? Or how do you like to show them?" Keep it light and warm, 2-3 sentences.`;
+    return buildPeterInstruction(`Reflect on what they shared about how they handle hard moments. Normalize it fully. Add one very short line that points toward the person they are becoming. Then ask: "What about the good stuff? How does your partner show they care? And how do you like to show love too?" Keep it light, warm, and 2-3 short sentences.`);
   }
   if (turnNumber >= 5) {
-    return `You are Peter, a warm otter companion. You've now learned a lot about this person. Warmly reflect back what you've learned about them and their relationship in one sentence. Tell them you're excited to be their guide for the next 14 days. Explain that each morning you'll share a short story about a couple facing something real — and a small action they can try that day. Each evening you'll check back in. Say "I'll have your first story waiting for you in the morning!" Warm, exciting, 3-4 sentences total.`;
+    return buildPeterInstruction(`You've now learned a lot about this person. Reflect back what you've learned in one simple sentence. Tell them the next 14 days will help them build a calmer, clearer, kinder way to love. Explain that each morning you'll share one short story and one tiny action, and each evening you'll help them lock in what they learned. Say exactly: "I'll have your first story waiting for you in the morning!" Warm, exciting, and 3-4 short sentences total.`);
   }
   return undefined;
 }
@@ -188,7 +188,7 @@ export default function OnboardingFlow() {
           </div>
           <div>
             <p className="text-sm font-semibold text-gray-800">Peter</p>
-            <p className="text-xs text-teal-600">Your relationship guide</p>
+            <p className="text-xs text-teal-600">Your practice coach</p>
           </div>
         </div>
         {/* Progress dots */}
@@ -210,7 +210,7 @@ export default function OnboardingFlow() {
           messages={messages}
           onUserMessage={handleUserMessage}
           isLoading={isLoading}
-          placeholder="Type your reply to Peter..."
+          placeholder="Tell Peter what's real for you..."
           inputDisabled={isComplete}
         />
       </div>

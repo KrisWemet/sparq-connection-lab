@@ -1,6 +1,34 @@
 
 import { supabase } from "@/integrations/supabase/client";
 
+const JOURNEY_PROGRESS_STORAGE_KEY = "sparq_journey_progress";
+
+type StoredJourneyProgress = {
+  journey_id: string;
+  day: number;
+  completed: boolean;
+  responses: Record<string, any>;
+  created_at: string;
+};
+
+function readStoredJourneyProgress(): Record<string, StoredJourneyProgress[]> {
+  if (typeof window === "undefined") return {};
+
+  try {
+    const raw = window.localStorage.getItem(JOURNEY_PROGRESS_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeStoredJourneyProgress(progress: Record<string, StoredJourneyProgress[]>) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(JOURNEY_PROGRESS_STORAGE_KEY, JSON.stringify(progress));
+}
+
 export interface JourneyContent {
   title: string;
   duration: string;
@@ -129,16 +157,29 @@ export async function saveJourneyProgress(
   responses: Record<string, any> = {}
 ): Promise<boolean> {
   try {
-    const { data, error } = await supabase
-      .from('journey_progress')
-      .insert({
-        journey_id: journeyId,
-        day,
-        completed,
-        responses
-      });
+    const progress = readStoredJourneyProgress();
+    const entries = progress[journeyId] || [];
+    const createdAt = new Date().toISOString();
 
-    if (error) throw error;
+    const nextEntries = entries.some((entry) => entry.day === day)
+      ? entries.map((entry) =>
+          entry.day === day
+            ? { ...entry, completed, responses, created_at: createdAt }
+            : entry
+        )
+      : [
+          ...entries,
+          {
+            journey_id: journeyId,
+            day,
+            completed,
+            responses,
+            created_at: createdAt,
+          },
+        ];
+
+    progress[journeyId] = nextEntries.sort((a, b) => a.day - b.day);
+    writeStoredJourneyProgress(progress);
     return true;
   } catch (error) {
     console.error('Error saving journey progress:', error);
@@ -149,14 +190,8 @@ export async function saveJourneyProgress(
 // Function to get user progress for a journey
 export async function getJourneyProgress(journeyId: string): Promise<any[]> {
   try {
-    const { data, error } = await supabase
-      .from('journey_progress')
-      .select('*')
-      .eq('journey_id', journeyId)
-      .order('day', { ascending: true });
-
-    if (error) throw error;
-    return data || [];
+    const progress = readStoredJourneyProgress();
+    return progress[journeyId] || [];
   } catch (error) {
     console.error('Error getting journey progress:', error);
     return [];
@@ -166,39 +201,31 @@ export async function getJourneyProgress(journeyId: string): Promise<any[]> {
 // Function to check journey velocity limits (1 active journey, 1 day per day)
 export async function getJourneyVelocityStatus(journeyId?: string) {
   try {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return { canStartNewJourney: false, canDoNextDay: false, activeJourneyId: null };
+    const progress = readStoredJourneyProgress();
+    const journeyIds = Object.keys(progress);
 
-    // 1. Check if they have an active journey
-    const { data: activeJourneys, error: activeError } = await supabase
-      .from('user_journeys')
-      .select('journey_id')
-      .eq('user_id', user.id)
-      .eq('is_active', true);
-      
-    if (activeError) throw activeError;
-      
-    const activeJourneyId = activeJourneys && activeJourneys.length > 0 ? activeJourneys[0].journey_id : null;
-    
-    // If they provided a journeyId they are trying to start/view, and they have a DIFFERENT active journey
+    const activeJourneyId =
+      journeyIds.find((id) => {
+        const entries = progress[id] || [];
+        const highestCompletedDay = entries.reduce(
+          (max, entry) => (entry.completed ? Math.max(max, entry.day) : max),
+          0
+        );
+        return highestCompletedDay > 0 && highestCompletedDay < 14;
+      }) || null;
+
     const cannotStartDifferentJourney = activeJourneyId && activeJourneyId !== journeyId;
 
     let canDoNextDay = true;
-    
-    // 2. Check if they completed a day today (if viewing a specific journey)
-    if (journeyId) {
-      const { data: recentProgress, error: progressError } = await supabase
-        .from('journey_progress')
-        .select('created_at')
-        .eq('journey_id', journeyId)
-        .order('created_at', { ascending: false })
-        .limit(1);
 
-      if (!progressError && recentProgress && recentProgress.length > 0) {
-        const lastCompletedAt = new Date(recentProgress[0].created_at);
+    if (journeyId) {
+      const recentProgress = (progress[journeyId] || []).filter((entry) => entry.completed);
+      const latestEntry = recentProgress[recentProgress.length - 1];
+
+      if (latestEntry?.created_at) {
+        const lastCompletedAt = new Date(latestEntry.created_at);
         const today = new Date();
-        
-        // If the last completion was today, block the next day
+
         if (
           lastCompletedAt.getDate() === today.getDate() &&
           lastCompletedAt.getMonth() === today.getMonth() &&
@@ -216,7 +243,6 @@ export async function getJourneyVelocityStatus(journeyId?: string) {
     };
   } catch (error) {
     console.error('Error checking velocity status:', error);
-    // Fail open so we don't block users if the DB query fails temporarily
     return { canStartNewJourney: true, canDoNextDay: true, activeJourneyId: null };
   }
 }
