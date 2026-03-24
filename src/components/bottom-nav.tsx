@@ -14,7 +14,7 @@ export function BottomNav() {
   const router = useRouter();
 
   // Hide on auth pages or landing page
-  if (['/', '/auth', '/login', '/signup', '/onboarding-flow'].includes(router.pathname)) {
+  if (['/', '/auth', '/login', '/signup', '/onboarding-flow', '/onboarding'].includes(router.pathname)) {
     return null;
   }
 

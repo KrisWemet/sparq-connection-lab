@@ -89,7 +89,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
         setSuccessMessage(isRegisterMode ? 'Account created! Setting up your experience...' : 'Login successful!');
 
         setTimeout(() => {
-          router.push(isRegisterMode ? '/onboarding-flow' : '/dashboard');
+          router.push(isRegisterMode ? '/onboarding' : '/dashboard');
         }, 1500);
       } else {
         const errMsg = result.error || '';
