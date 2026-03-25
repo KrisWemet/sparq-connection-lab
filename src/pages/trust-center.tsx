@@ -3,8 +3,9 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/lib/auth-context';
 import { supabase } from '@/lib/supabase';
 import { buildAuthedHeaders } from '@/lib/api-auth';
+import { deriveMemoryWindow } from '@/lib/server/privacy';
 
-type MemoryMode = 'rolling_90_days' | 'indefinite';
+type MemoryMode = 'off' | 'rolling_90_days' | 'indefinite';
 type RelationshipMode = 'solo' | 'partnered';
 
 type UserPreferences = {
@@ -13,6 +14,11 @@ type UserPreferences = {
   personalization_enabled: boolean;
   ai_memory_mode: MemoryMode;
   relationship_mode: RelationshipMode;
+};
+
+type ConsentState = {
+  has_consented: boolean;
+  consent_given_at: string | null;
 };
 
 const DEFAULT_PREFS: Omit<UserPreferences, 'user_id'> = {
@@ -30,6 +36,7 @@ export default function TrustCenterPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [consent, setConsent] = useState<ConsentState>({ has_consented: false, consent_given_at: null });
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -45,12 +52,19 @@ export default function TrustCenterPage() {
         if (response.ok) {
           const payload = await response.json();
           const data = payload.preferences;
+          const consentData = payload.consent;
           if (data) {
             setPrefs({
               insights_visible: data.insights_visible ?? true,
               personalization_enabled: data.personalization_enabled ?? true,
               ai_memory_mode: data.ai_memory_mode ?? 'rolling_90_days',
               relationship_mode: data.relationship_mode ?? 'solo',
+            });
+          }
+          if (consentData) {
+            setConsent({
+              has_consented: consentData.has_consented ?? false,
+              consent_given_at: consentData.consent_given_at ?? null,
             });
           }
           setIsLoading(false);
@@ -74,6 +88,15 @@ export default function TrustCenterPage() {
           relationship_mode: data.relationship_mode ?? 'solo',
         });
       }
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('consent_given_at')
+        .eq('id', user.id)
+        .maybeSingle();
+      setConsent({
+        has_consented: Boolean(profileData?.consent_given_at),
+        consent_given_at: profileData?.consent_given_at ?? null,
+      });
       setIsLoading(false);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -93,6 +116,15 @@ export default function TrustCenterPage() {
         body: JSON.stringify(prefs),
       });
       savedViaApi = response.ok;
+      if (response.ok) {
+        const payload = await response.json();
+        if (payload?.consent) {
+          setConsent({
+            has_consented: payload.consent.has_consented ?? false,
+            consent_given_at: payload.consent.consent_given_at ?? null,
+          });
+        }
+      }
     } catch {
       savedViaApi = false;
     }
@@ -104,6 +136,7 @@ export default function TrustCenterPage() {
           {
             user_id: user.id,
             ...prefs,
+            memory_window: deriveMemoryWindow({ ai_memory_mode: prefs.ai_memory_mode }),
             updated_at: new Date().toISOString(),
           },
           { onConflict: 'user_id' }
@@ -146,9 +179,26 @@ export default function TrustCenterPage() {
 
       <main className="mx-auto max-w-3xl px-4 py-6 space-y-4">
         <section className="rounded-2xl border border-slate-200 bg-white p-5">
+          <h2 className="text-sm font-semibold text-slate-800">Consent Status</h2>
+          <p className="mt-1 text-xs text-slate-500">
+            Personalization only runs after you agree to AI-guided coaching and data use for your private Sparq experience.
+          </p>
+          <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+            <p className="text-sm font-medium text-slate-700">
+              {consent.has_consented ? 'Consent captured' : 'Consent required'}
+            </p>
+            <p className="mt-1 text-xs text-slate-500">
+              {consent.consent_given_at
+                ? `Recorded on ${new Date(consent.consent_given_at).toLocaleString()}`
+                : 'Without consent, Peter stays generic and no new personalization is stored.'}
+            </p>
+          </div>
+        </section>
+
+        <section className="rounded-2xl border border-slate-200 bg-white p-5">
           <h2 className="text-sm font-semibold text-slate-800">Personalization Controls</h2>
           <p className="text-xs text-slate-500 mt-1">
-            Journals are private by default. You can hide insight labels and adjust AI memory behavior.
+            Journals stay private by default. These controls change the backend behavior Peter uses for personalization.
           </p>
 
           <div className="mt-4 space-y-3">
@@ -169,7 +219,13 @@ export default function TrustCenterPage() {
 
         <section className="rounded-2xl border border-slate-200 bg-white p-5">
           <h2 className="text-sm font-semibold text-slate-800">AI Memory Window</h2>
-          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+          <div className="mt-3 grid gap-2 sm:grid-cols-3">
+            <MemoryOption
+              active={prefs.ai_memory_mode === 'off'}
+              title="Memory off"
+              detail="Peter will not save new memory context for future chats."
+              onClick={() => setPrefs(p => ({ ...p, ai_memory_mode: 'off' }))}
+            />
             <MemoryOption
               active={prefs.ai_memory_mode === 'rolling_90_days'}
               title="90-day rolling window"
@@ -210,6 +266,7 @@ export default function TrustCenterPage() {
             <li>Journals stay private unless you explicitly share an item.</li>
             <li>Sparq is not therapy and does not provide diagnosis.</li>
             <li>In crisis moments, coaching pauses and safety resources are prioritized.</li>
+            <li>If you turn personalization off, Peter stops using stored traits and memories for new replies.</li>
           </ul>
         </section>
 

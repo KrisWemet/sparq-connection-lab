@@ -6,8 +6,20 @@ import { ChevronLeft, ChevronRight, CheckCircle, Star, Lightbulb, Pencil } from 
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
-import { saveJourneyProgress, getJourneyVelocityStatus } from '@/services/journeyContentService';
+import { saveJourneyProgress, getJourneyVelocityStatus, cancelJourneyProgress } from '@/services/journeyContentService';
 import { TierId } from './JourneyTierView';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { buildAuthedHeaders } from '@/lib/api-auth';
 
 type ConceptItem = {
   id: string;
@@ -275,6 +287,7 @@ export function JourneyContentView({
   const [completed, setCompleted] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [canDoNextDay, setCanDoNextDay] = useState(true);
+  const [isCancellingJourney, setIsCancellingJourney] = useState(false);
 
   React.useEffect(() => {
     async function checkVelocity() {
@@ -300,11 +313,26 @@ export function JourneyContentView({
   };
 
   const validateCompletion = (): boolean => {
+    const reflectionQuestions = currentDayContent?.activity.reflectionQuestions || [];
+    const missingResponses = reflectionQuestions.filter((_, index) => {
+      const response = responses[`question_${index}`];
+      return !response || response.trim().length === 0;
+    });
+
+    if (reflectionQuestions.length > 0 && missingResponses.length > 0) {
+      setValidationError(
+        missingResponses.length === 1
+          ? 'Answer the last reflection question before moving to the next day.'
+          : `Answer all reflection questions before moving on. ${missingResponses.length} are still blank.`
+      );
+      return false;
+    }
+
     if (!completionCriteria) return true;
     if (completionCriteria.requireReflection) {
       const hasAnyResponse = Object.values(responses).some(r => r.trim().length > 0);
       if (!hasAnyResponse) {
-        setValidationError('Take a moment to answer at least one reflection question before continuing.');
+        setValidationError('Take a moment to answer the reflection questions before continuing.');
         return false;
       }
     }
@@ -349,6 +377,33 @@ export function JourneyContentView({
       ...prev,
       [`question_${questionIndex}`]: value,
     }));
+  };
+
+  const handleCancelJourney = async () => {
+    if (isCancellingJourney) return;
+    setIsCancellingJourney(true);
+
+    try {
+      const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
+      const response = await fetch('/api/journeys/cancel', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ journey_id: journeyId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to cancel journey');
+      }
+
+      await cancelJourneyProgress(journeyId);
+      toast.success('Journey ended. You can choose a different one now.');
+      router.push('/journeys');
+    } catch (error) {
+      console.error('Cancel journey error:', error);
+      toast.error('Could not leave this journey right now.');
+    } finally {
+      setIsCancellingJourney(false);
+    }
   };
 
   // No concepts
@@ -482,7 +537,34 @@ export function JourneyContentView({
           transition={{ duration: 0.4 }}
           className="mb-6"
         >
-          <h1 className="text-3xl font-serif font-bold text-brand-taupe mb-4 tracking-tight drop-shadow-sm">{displayTitle}</h1>
+          <div className="flex items-start justify-between gap-4 mb-4">
+            <h1 className="text-3xl font-serif font-bold text-brand-taupe tracking-tight drop-shadow-sm">{displayTitle}</h1>
+
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <button className="text-sm font-medium text-zinc-500 hover:text-brand-primary transition-colors whitespace-nowrap">
+                  Leave Journey
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Leave this journey early?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    You can leave if this journey is not the right fit. Still, most people get more value by finishing, because each day builds on the last one.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <p className="text-sm text-zinc-600 leading-relaxed">
+                  If this journey is not a fit, leaving will free you to choose another one. Your 14-day onboarding will stay exactly as it is.
+                </p>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Keep Going</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleCancelJourney} disabled={isCancellingJourney}>
+                    {isCancellingJourney ? 'Leaving...' : 'Leave Journey'}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
 
           <div className="rounded-[1.5rem] bg-white/70 backdrop-blur-md border border-white p-5 shadow-sm">
             <div className="flex justify-between text-sm mb-3">

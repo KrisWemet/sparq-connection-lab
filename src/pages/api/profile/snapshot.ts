@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { confidenceLabel } from '@/lib/product';
 import { getAuthedContext } from '@/lib/server/supabase-auth';
+import { loadPrivacyState } from '@/lib/server/privacy';
 
 const TRAIT_LABELS: Record<string, string> = {
   attachment_style: 'Connection Pattern',
@@ -42,33 +43,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const ctx = await getAuthedContext(req);
   if (!ctx) return res.status(401).json({ error: 'Unauthorized' });
 
-  const [insightsResult, preferencesResult, traitsResult] = await Promise.all([
+  const [insightsResult, privacy, traitsResult] = await Promise.all([
     ctx.supabase
       .from('user_insights')
       .select('attachment_style, conflict_style, love_language, emotional_state, onboarding_day, skill_tree_unlocked')
       .eq('user_id', ctx.userId)
       .maybeSingle(),
-    ctx.supabase
-      .from('user_preferences')
-      .select('insights_visible, personalization_enabled, relationship_mode')
-      .eq('user_id', ctx.userId)
-      .maybeSingle(),
+    loadPrivacyState(ctx.supabase, ctx.userId),
     ctx.supabase
       .from('profile_traits')
-      .select('trait_key, trait_value, confidence_score, user_feedback')
+      .select('trait_key, inferred_value, confidence, user_feedback, effective_weight')
       .eq('user_id', ctx.userId),
   ]);
 
+  const showInsights = privacy.preferences.insights_visible;
+
   const structuredTraits =
-    traitsResult.data && traitsResult.data.length > 0
+    showInsights && traitsResult.data && traitsResult.data.length > 0
       ? traitsResult.data.map(t => ({
           key: t.trait_key,
           label: TRAIT_LABELS[t.trait_key] || t.trait_key,
-          value: formatTraitValue(t.trait_key, t.trait_value),
-          confidence_label: confidenceLabel(t.confidence_score),
+          value: formatTraitValue(t.trait_key, t.inferred_value),
+          confidence_label: confidenceLabel(t.confidence),
           user_feedback: t.user_feedback || 'unsure',
         }))
-      : [
+      : showInsights
+      ? [
           {
             key: 'attachment_style',
             label: TRAIT_LABELS.attachment_style,
@@ -90,7 +90,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             confidence_label: insightsResult.data?.love_language ? 'Possible' : 'Not enough info yet',
             user_feedback: 'unsure',
           },
-        ];
+        ]
+      : [];
 
   return res.status(200).json({
     traits: structuredTraits,
@@ -99,10 +100,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       skill_tree_unlocked: insightsResult.data?.skill_tree_unlocked ?? false,
     },
     preferences: {
-      insights_visible: preferencesResult.data?.insights_visible ?? true,
-      personalization_enabled: preferencesResult.data?.personalization_enabled ?? true,
-      relationship_mode: preferencesResult.data?.relationship_mode ?? 'solo',
+      insights_visible: privacy.preferences.insights_visible,
+      personalization_enabled: privacy.preferences.personalization_enabled,
+      relationship_mode: privacy.preferences.relationship_mode,
     },
+    consent: privacy.consent,
   });
 }
-

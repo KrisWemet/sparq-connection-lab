@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
 
 export type SubscriptionTier = "free" | "premium";
 type LegacySubscriptionTier = SubscriptionTier | "ultimate";
@@ -92,6 +93,12 @@ function normalizeStoredSubscription(raw: unknown): SubscriptionPlan {
   };
 }
 
+function getPlanForTier(tier: SubscriptionTier): SubscriptionPlan {
+  return tier === "premium"
+    ? premiumSubscription
+    : defaultSubscription;
+}
+
 export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
   const [subscription, setSubscriptionState] = useState<SubscriptionPlan>(() => {
     if (typeof window === 'undefined') return defaultSubscription;
@@ -123,6 +130,38 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     const saved = localStorage.getItem("remainingEveningQuestions");
     return saved ? parseInt(saved, 10) : Math.floor(defaultSubscription.features.dailyQuestions / 2);
   });
+
+  useEffect(() => {
+    let isMounted = true;
+
+    (async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.access_token) return;
+
+        const res = await fetch('/api/me/entitlements', {
+          headers: { Authorization: `Bearer ${session.access_token}` },
+        });
+        if (!res.ok) return;
+
+        const data = await res.json();
+        const nextTier: SubscriptionTier = data?.tier === "premium" ? "premium" : "free";
+        if (!isMounted || nextTier === subscription.tier) return;
+
+        const nextPlan = getPlanForTier(nextTier);
+        setSubscriptionState(nextPlan);
+        setRemainingDailyQuestions(nextPlan.features.dailyQuestions);
+        setRemainingMorningQuestions(Math.ceil(nextPlan.features.dailyQuestions / 2));
+        setRemainingEveningQuestions(Math.floor(nextPlan.features.dailyQuestions / 2));
+      } catch (error) {
+        console.error("Failed to sync subscription from entitlements:", error);
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [subscription.tier]);
 
   // Check if a day has passed since the last reset
   useEffect(() => {

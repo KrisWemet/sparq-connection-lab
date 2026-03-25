@@ -28,7 +28,7 @@ export const journeys: Journey[] = [
   {
     id: "love-languages",
     title: "5 Love Languages",
-    description: "Discover the primary ways you and your partner express and receive love",
+    description: "Notice how easy it is to see the quiet ways your partner loves you",
     duration: "2 weeks",
     category: "Foundation",
     sequence: 1,
@@ -39,25 +39,25 @@ export const journeys: Journey[] = [
       "Emotional Intelligence"
     ],
     benefits: [
-      "Identify your primary love language",
-      "Recognize your partner's love language",
-      "Learn to express love effectively",
-      "Reduce misunderstandings about affection"
+      "Notice what makes you feel most loved",
+      "See exactly how your partner asks for love",
+      "Share your heart in ways they can easily hear",
+      "Feel closer simply by deeply understanding each other"
     ],
     icon: Heart,
     free: true,
     phases: [
-      { name: "Discover", days: "Days 1-5", description: "Learn your love language", icon: "🔍" },
-      { name: "Explore", days: "Days 6-10", description: "Deepen your understanding", icon: "🌱" },
-      { name: "Reflect", days: "Days 11-13", description: "Observe love languages in action", icon: "💭" },
-      { name: "Align", days: "Day 14", description: "Build your love languages plan", icon: "🎯" }
+      { name: "Discover", days: "Days 1-5", description: "Find out how your heart speaks", icon: "🔍" },
+      { name: "Explore", days: "Days 6-10", description: "Look closer at how you both love", icon: "🌱" },
+      { name: "Reflect", days: "Days 11-13", description: "Notice love happening right now", icon: "💭" },
+      { name: "Align", days: "Day 14", description: "Choose to grow together every day", icon: "🎯" }
     ],
-    overview: "This 14-day journey helps you discover and understand the five love languages, enabling you to express love in ways that truly resonate with your partner."
+    overview: "Over the next 14 days, you will begin to notice all the quiet ways your partner says 'I love you.' As you practice speaking their language, watch how easily your connection grows."
   },
   {
     id: "communication",
-    title: "Effective Communication",
-    description: "Master the art of truly understanding each other through validated techniques",
+    title: "Clear Connection",
+    description: "Learn how to truly hear each other, so every word brings you closer",
     duration: "2 weeks",
     category: "Foundation",
     sequence: 2,
@@ -68,25 +68,25 @@ export const journeys: Journey[] = [
       "Active Listening Techniques"
     ],
     benefits: [
-      "Reduce misunderstandings and conflicts",
-      "Express needs clearly and compassionately",
-      "Develop deeper understanding",
-      "Create meaningful dialogue"
+      "Feel truly heard when it matters most",
+      "Share your feelings safely and easily",
+      "Understand each other without fighting",
+      "Talk in ways that bring you together"
     ],
     icon: MessageCircle,
     free: true,
     phases: [
-      { name: "Listen", days: "Days 1-4", description: "Learn to truly hear your partner", icon: "👂" },
-      { name: "Express", days: "Days 5-8", description: "Share your needs clearly", icon: "🗣️" },
-      { name: "Repair", days: "Days 9-11", description: "Fix miscommunications with care", icon: "🔧" },
-      { name: "Connect", days: "Days 12-14", description: "Build lasting dialogue habits", icon: "🤝" }
+      { name: "Listen", days: "Days 1-4", description: "Notice what they are really saying", icon: "👂" },
+      { name: "Express", days: "Days 5-8", description: "Ask for what you need with an open heart", icon: "🗣️" },
+      { name: "Repair", days: "Days 9-11", description: "Gently fix small bumps in the road", icon: "🔧" },
+      { name: "Connect", days: "Days 12-14", description: "Keep your connection strong every day", icon: "🤝" }
     ],
-    overview: "This 14-day journey helps you and your partner develop communication skills rooted in empathy, clarity, and connection."
+    overview: "As you walk through these 14 days, you will learn to listen with your whole heart. Notice how every honest, gentle conversation you have automatically builds a deeper, safer love."
   },
   {
     id: "conflict-resolution",
-    title: "Constructive Conflict Resolution",
-    description: "Turn disagreements into opportunities for deeper understanding and connection",
+    title: "Growing Through Hard Moments",
+    description: "Learn how to use small disagreements to build a stronger, deeper trust",
     duration: "2 weeks",
     category: "Foundation",
     sequence: 3,
@@ -97,25 +97,25 @@ export const journeys: Journey[] = [
       "Nonviolent Communication"
     ],
     benefits: [
-      "Navigate disagreements without damaging your bond",
-      "Recognize and interrupt negative conflict cycles",
-      "Make effective repair attempts",
-      "Turn tension into deeper understanding"
+      "Stay close even when you disagree",
+      "Stop hard moments before they grow",
+      "Easily fix hurt feelings and move forward",
+      "Use hard moments to understand each other better"
     ],
     icon: Shield,
     free: true,
     phases: [
-      { name: "Awareness", days: "Days 1-4", description: "Understand your conflict patterns", icon: "🔍" },
-      { name: "Skills", days: "Days 5-8", description: "Learn repair and de-escalation", icon: "🛠️" },
-      { name: "Practice", days: "Days 9-11", description: "Apply techniques in real moments", icon: "💪" },
-      { name: "Integrate", days: "Days 12-14", description: "Build a conflict toolkit together", icon: "🎯" }
+      { name: "Awareness", days: "Days 1-4", description: "Notice the dances you do when you argue", icon: "🔍" },
+      { name: "Skills", days: "Days 5-8", description: "Find gentle ways to calm the storm", icon: "🛠️" },
+      { name: "Practice", days: "Days 9-11", description: "Try a softer way when it matters", icon: "💪" },
+      { name: "Integrate", days: "Days 12-14", description: "Choose to always stay on the same team", icon: "🎯" }
     ],
-    overview: "This 14-day journey teaches you to approach conflict as a pathway to deeper connection, using research-backed techniques for de-escalation, repair, and mutual understanding."
+    overview: "Over the next 14 days, you will learn a beautiful truth: hard moments don't have to hurt your love. As you try these simple steps, notice how disagreements actually bring you closer."
   },
   {
     id: "intimacy",
-    title: "Building Deep Intimacy",
-    description: "Deepen your emotional, physical, and intellectual connection with your partner",
+    title: "Deepening Our Closeness",
+    description: "Feel safer, closer, and more deeply connected in every way",
     duration: "2 weeks",
     category: "Growth",
     sequence: 4,
@@ -126,24 +126,24 @@ export const journeys: Journey[] = [
       "Vulnerability Research (Brown)"
     ],
     benefits: [
-      "Create deeper emotional safety",
-      "Strengthen physical and emotional closeness",
-      "Build a richer vocabulary of connection",
-      "Develop vulnerability as a shared strength"
+      "Feel incredibly safe opening your heart",
+      "Grow closer physically and emotionally",
+      "Find beautiful new ways to connect",
+      "Share your true self and feel loved for it"
     ],
     icon: Flame,
     phases: [
-      { name: "Open", days: "Days 1-4", description: "Create space for emotional intimacy", icon: "💫" },
-      { name: "Deepen", days: "Days 5-8", description: "Explore multiple layers of closeness", icon: "🌊" },
-      { name: "Vulnerability", days: "Days 9-11", description: "Practice courageous sharing", icon: "🦋" },
-      { name: "Sustain", days: "Days 12-14", description: "Build rituals of connection", icon: "🔥" }
+      { name: "Open", days: "Days 1-4", description: "Make a quiet space for just the two of you", icon: "💫" },
+      { name: "Deepen", days: "Days 5-8", description: "Find new ways to feel close", icon: "🌊" },
+      { name: "Vulnerability", days: "Days 9-11", description: "Bravely share what is in your heart", icon: "🦋" },
+      { name: "Sustain", days: "Days 12-14", description: "Make closeness a part of your daily life", icon: "🔥" }
     ],
-    overview: "This 14-day journey guides you through the many dimensions of intimacy — emotional, physical, intellectual, and spiritual — to build a deeply connected partnership."
+    overview: "This 14-day path helps you slowly open your heart. As you share these moments, you will find it surprisingly easy to feel deeply safe and connected."
   },
   {
     id: "emotional-intelligence",
-    title: "Emotional Intelligence",
-    description: "Develop the emotional awareness and skills that transform relationships",
+    title: "Understanding Our Hearts",
+    description: "Learn to read your own heart and your partner's, making every day easier",
     duration: "2 weeks",
     category: "Growth",
     sequence: 5,
@@ -154,19 +154,19 @@ export const journeys: Journey[] = [
       "Mindfulness-Based Approaches"
     ],
     benefits: [
-      "Recognize and name your emotions accurately",
-      "Regulate emotional responses in heated moments",
-      "Attune to your partner's emotional experience",
-      "Validate emotions without fixing or dismissing"
+      "Easily name the feelings inside you",
+      "Stay calm and grounded naturally when things get hot",
+      "Quickly see exactly how your partner is feeling",
+      "Hold their feelings gently without needing to fix them"
     ],
     icon: Brain,
     phases: [
-      { name: "Awareness", days: "Days 1-4", description: "Tune into your emotional landscape", icon: "🧭" },
-      { name: "Regulation", days: "Days 5-8", description: "Build emotional management skills", icon: "⚖️" },
-      { name: "Empathy", days: "Days 9-11", description: "Deepen understanding of your partner", icon: "💗" },
-      { name: "Mastery", days: "Days 12-14", description: "Apply EQ in everyday moments", icon: "✨" }
+      { name: "Awareness", days: "Days 1-4", description: "Notice the feelings moving inside you", icon: "🧭" },
+      { name: "Regulation", days: "Days 5-8", description: "Learn to stay grounded and calm", icon: "⚖️" },
+      { name: "Empathy", days: "Days 9-11", description: "See their heart with gentle eyes", icon: "💗" },
+      { name: "Mastery", days: "Days 12-14", description: "Use your heart to guide your days", icon: "✨" }
     ],
-    overview: "This 14-day journey builds your emotional intelligence — the single greatest predictor of relationship satisfaction — through daily awareness practices and partner exercises."
+    overview: "For the next 14 days, you will simply notice your feelings. As you understand your own heart better, notice how you automatically feel more connected to theirs."
   },
   {
     id: "values",

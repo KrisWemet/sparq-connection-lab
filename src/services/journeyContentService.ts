@@ -2,6 +2,8 @@
 import { supabase } from "@/integrations/supabase/client";
 
 const JOURNEY_PROGRESS_STORAGE_KEY = "sparq_journey_progress";
+const TIER_PROGRESS_STORAGE_KEY = "sparq_tier_progress";
+const TIER_SUFFIXES = ["_roots", "_growth", "_bloom"] as const;
 
 type StoredJourneyProgress = {
   journey_id: string;
@@ -27,6 +29,29 @@ function readStoredJourneyProgress(): Record<string, StoredJourneyProgress[]> {
 function writeStoredJourneyProgress(progress: Record<string, StoredJourneyProgress[]>) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(JOURNEY_PROGRESS_STORAGE_KEY, JSON.stringify(progress));
+}
+
+function readStoredTierProgress(): Record<string, any> {
+  if (typeof window === "undefined") return {};
+
+  try {
+    const raw = window.localStorage.getItem(TIER_PROGRESS_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeStoredTierProgress(progress: Record<string, any>) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(TIER_PROGRESS_STORAGE_KEY, JSON.stringify(progress));
+}
+
+function normalizeJourneyStorageKey(storageKey: string): string {
+  const suffix = TIER_SUFFIXES.find((tierSuffix) => storageKey.endsWith(tierSuffix));
+  return suffix ? storageKey.slice(0, -suffix.length) : storageKey;
 }
 
 export interface JourneyContent {
@@ -198,28 +223,74 @@ export async function getJourneyProgress(journeyId: string): Promise<any[]> {
   }
 }
 
+export async function cancelJourneyProgress(journeyId: string): Promise<boolean> {
+  try {
+    const progress = readStoredJourneyProgress();
+    Object.keys(progress).forEach((key) => {
+      if (normalizeJourneyStorageKey(key) === journeyId) {
+        delete progress[key];
+      }
+    });
+    writeStoredJourneyProgress(progress);
+
+    const tierProgress = readStoredTierProgress();
+    if (tierProgress[journeyId]) {
+      delete tierProgress[journeyId];
+      writeStoredTierProgress(tierProgress);
+    }
+
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem(`${journeyId}_last_day`);
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error cancelling journey progress:", error);
+    return false;
+  }
+}
+
 // Function to check journey velocity limits (1 active journey, 1 day per day)
 export async function getJourneyVelocityStatus(journeyId?: string) {
   try {
     const progress = readStoredJourneyProgress();
-    const journeyIds = Object.keys(progress);
+    const entriesByJourney = Object.entries(progress).map(([storageKey, entries]) => {
+      const completedEntries = (entries || []).filter((entry) => entry.completed);
+      const highestCompletedDay = completedEntries.reduce(
+        (max, entry) => Math.max(max, entry.day),
+        0
+      );
+      const latestCompletedAt = completedEntries[completedEntries.length - 1]?.created_at || null;
+
+      return {
+        storageKey,
+        journeyId: normalizeJourneyStorageKey(storageKey),
+        highestCompletedDay,
+        latestCompletedAt,
+      };
+    });
 
     const activeJourneyId =
-      journeyIds.find((id) => {
-        const entries = progress[id] || [];
-        const highestCompletedDay = entries.reduce(
-          (max, entry) => (entry.completed ? Math.max(max, entry.day) : max),
-          0
-        );
-        return highestCompletedDay > 0 && highestCompletedDay < 14;
-      }) || null;
+      entriesByJourney
+        .filter((entry) => entry.highestCompletedDay > 0 && entry.highestCompletedDay < 14)
+        .sort((a, b) => {
+          const aTime = a.latestCompletedAt ? new Date(a.latestCompletedAt).getTime() : 0;
+          const bTime = b.latestCompletedAt ? new Date(b.latestCompletedAt).getTime() : 0;
+          return bTime - aTime;
+        })[0]?.journeyId || null;
 
-    const cannotStartDifferentJourney = activeJourneyId && activeJourneyId !== journeyId;
+    const normalizedRequestedJourneyId = journeyId ? normalizeJourneyStorageKey(journeyId) : null;
+    const cannotStartDifferentJourney =
+      activeJourneyId && normalizedRequestedJourneyId && activeJourneyId !== normalizedRequestedJourneyId;
 
     let canDoNextDay = true;
 
     if (journeyId) {
-      const recentProgress = (progress[journeyId] || []).filter((entry) => entry.completed);
+      const recentProgress = Object.entries(progress)
+        .filter(([storageKey]) => normalizeJourneyStorageKey(storageKey) === normalizedRequestedJourneyId)
+        .flatMap(([, entries]) => entries || [])
+        .filter((entry) => entry.completed)
+        .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
       const latestEntry = recentProgress[recentProgress.length - 1];
 
       if (latestEntry?.created_at) {

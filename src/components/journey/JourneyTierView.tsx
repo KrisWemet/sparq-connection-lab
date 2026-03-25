@@ -31,6 +31,11 @@ interface JourneyTierViewProps {
   journeyId: string;
   title: string;
   description: string;
+  duration?: string;
+  category?: string;
+  overview?: string;
+  benefits?: string[];
+  psychology?: string[];
   tiers: JourneyTier[];
   onSelectTier: (tier: TierId) => void;
 }
@@ -86,8 +91,34 @@ function isTierUnlocked(journeyId: string, tierId: TierId): boolean {
   return getTierProgress(journeyId, prerequisite).completed;
 }
 
-export function JourneyTierView({ journeyId, title, description, tiers, onSelectTier }: JourneyTierViewProps) {
+function buildBestFitCopy(title: string, category?: string): string {
+  const lowerTitle = title.toLowerCase();
+  if (lowerTitle.includes('communication')) return 'Best if talks turn into misses, tension, or shutdowns.';
+  if (lowerTitle.includes('conflict')) return 'Best if hard moments get hot fast or never really get resolved.';
+  if (lowerTitle.includes('love language')) return 'Best if you both care, but love is not landing the way you hoped.';
+  if (lowerTitle.includes('intimacy') || lowerTitle.includes('sexual')) return 'Best if you want more closeness, safety, and honest connection.';
+  if (lowerTitle.includes('trust')) return 'Best if trust feels shaky and you need a clear rebuild path.';
+  if (lowerTitle.includes('attachment')) return 'Best if old patterns keep showing up and you want to understand why.';
+  if (lowerTitle.includes('values')) return 'Best if you want to get on the same page about what matters most.';
+  return category === 'Foundation'
+    ? 'Best if you want a steady skill-building path for your relationship.'
+    : 'Best if you want guided practice around this part of your relationship.';
+}
+
+export function JourneyTierView({
+  journeyId,
+  title,
+  description,
+  duration,
+  category,
+  overview,
+  benefits,
+  psychology,
+  tiers,
+  onSelectTier,
+}: JourneyTierViewProps) {
   const router = useRouter();
+  const bestFitCopy = buildBestFitCopy(title, category);
 
   return (
     <div className="min-h-screen bg-brand-linen pb-28 relative overflow-hidden">
@@ -116,6 +147,35 @@ export function JourneyTierView({ journeyId, title, description, tiers, onSelect
         >
           <h1 className="text-3xl font-serif font-bold text-brand-taupe tracking-tight mb-2">{title}</h1>
           <p className="text-zinc-500 leading-relaxed">{description}</p>
+          <div className="mt-4 rounded-[1.5rem] bg-white/80 border border-brand-primary/10 p-5 shadow-sm">
+            <p className="text-xs font-bold text-brand-primary uppercase tracking-[0.2em] mb-2">Before You Start</p>
+            <p className="text-sm text-brand-taupe leading-relaxed mb-3">
+              {overview || description}
+            </p>
+            <p className="text-sm text-zinc-600 leading-relaxed mb-3">
+              {bestFitCopy}
+            </p>
+            <div className="flex flex-wrap gap-2 text-xs text-zinc-500 mb-3">
+              {category && <span className="rounded-full bg-brand-linen px-3 py-1">{category}</span>}
+              {duration && <span className="rounded-full bg-brand-linen px-3 py-1">{duration}</span>}
+              <span className="rounded-full bg-brand-linen px-3 py-1">{tiers.length} stages</span>
+            </div>
+            {benefits && benefits.length > 0 && (
+              <div className="space-y-1.5">
+                <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">What You Will Practice</p>
+                {benefits.slice(0, 3).map((benefit) => (
+                  <p key={benefit} className="text-sm text-zinc-600 leading-relaxed">
+                    {benefit}
+                  </p>
+                ))}
+              </div>
+            )}
+            {psychology && psychology.length > 0 && (
+              <p className="text-xs text-zinc-400 mt-3">
+                Built from: {psychology.slice(0, 3).join(' • ')}
+              </p>
+            )}
+          </div>
         </motion.div>
 
         {/* Tier progression */}

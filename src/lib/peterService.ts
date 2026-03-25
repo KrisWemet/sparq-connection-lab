@@ -14,6 +14,14 @@ export interface UserInsights {
   onboarding_day: number;
 }
 
+export interface PeterPersonalizationOptions {
+  userName?: string | null;
+  partnerName?: string | null;
+  relationshipMode?: 'solo' | 'partnered' | null;
+  emotionalState?: UserInsights['emotional_state'] | null;
+  surface?: 'chat' | 'morning' | 'evening';
+}
+
 const PETER_SHARED_RULES = `You are Peter, a friendly otter who helps people build stronger relationships. You are warm, encouraging, and talk like a good friend, not a therapist or doctor.
 
 Your personality:
@@ -140,6 +148,41 @@ export function getMorningStoryPrompt(
     concept = trackConcepts[(day - 15) % trackConcepts.length];
   }
 
+  const personalizationHints: string[] = [];
+  if (insights.attachment_style === 'anxious') {
+    personalizationHints.push('Make the story feel steady and reassuring. Show calm follow-through.');
+  } else if (insights.attachment_style === 'avoidant') {
+    personalizationHints.push('Make the action low-pressure. Give the person room to stay open without forcing a big talk.');
+  } else if (insights.attachment_style === 'disorganized') {
+    personalizationHints.push('Keep the message extra grounding. Show a simple kind move that lowers stress fast.');
+  }
+
+  if (insights.love_language === 'words') {
+    personalizationHints.push('Let the tiny action use spoken appreciation or clear praise.');
+  } else if (insights.love_language === 'acts') {
+    personalizationHints.push('Let the tiny action center on one helpful thing done with care.');
+  } else if (insights.love_language === 'time') {
+    personalizationHints.push('Let the tiny action create one short pocket of focused time together.');
+  } else if (insights.love_language === 'touch') {
+    personalizationHints.push('If it fits naturally, let the action include gentle physical closeness.');
+  } else if (insights.love_language === 'gifts') {
+    personalizationHints.push('If it fits naturally, let the action include one small thoughtful gesture.');
+  }
+
+  if (insights.conflict_style === 'avoidant') {
+    personalizationHints.push('Show courage in a small honest moment, not a giant confrontation.');
+  } else if (insights.conflict_style === 'volatile') {
+    personalizationHints.push('Model calm pacing and a soft start.');
+  } else if (insights.conflict_style === 'validating') {
+    personalizationHints.push('Reinforce the strength of slowing down and making room for both people.');
+  }
+
+  if (insights.emotional_state === 'struggling') {
+    personalizationHints.push('Keep the tone especially gentle. Make today feel doable even if the user is tired.');
+  } else if (insights.emotional_state === 'thriving') {
+    personalizationHints.push('Match a brighter, confident tone while still keeping the action simple.');
+  }
+
   let prompt = `Write a short morning message from Peter the otter for Day ${day} of someone's relationship growth journey.
 
 Today's concept: ${concept}
@@ -158,6 +201,10 @@ CRITICAL FORMATTING RULES:
 Keep it under 150 words total. No clinical terms. Warm and encouraging tone.
 Use 4th-grade reading level.
 The user should leave feeling: "I can do this. This is becoming like me."`;
+
+  if (personalizationHints.length > 0) {
+    prompt += `\n\nPersonal fit for this user:\n- ${personalizationHints.join('\n- ')}`;
+  }
 
   if (steeringHint) {
     prompt += `\n\nSubtle note for this story: ${steeringHint}. Weave this in naturally — don't make it obvious or forced.`;
@@ -242,8 +289,32 @@ export function buildPersonalizedPrompt(
   traits: ProfileTrait[],
   memories: MemoryResult[],
   basePrompt: string = PETER_SYSTEM_PROMPT,
+  options: PeterPersonalizationOptions = {},
 ): string {
+  const identityLines: string[] = [];
   const traitLines: string[] = [];
+
+  const cleanUserName = options.userName?.trim() || null;
+  const cleanPartnerName = options.partnerName?.trim() || null;
+  if (cleanUserName) {
+    identityLines.push(`- The user's first name is ${cleanUserName}. Use it sometimes, not every reply.`);
+  }
+  if (cleanPartnerName) {
+    identityLines.push(`- Their partner is named ${cleanPartnerName}. Use the name only when it feels natural and kind.`);
+  }
+  if (options.relationshipMode === 'solo') {
+    identityLines.push('- Keep the focus on the user’s own next move. Do not assume their partner uses Sparq too.');
+  }
+  if (options.emotionalState === 'struggling') {
+    identityLines.push('- The user seems tender right now. Lead with calm comfort and one very small next step.');
+  } else if (options.emotionalState === 'thriving') {
+    identityLines.push('- The user has some momentum right now. Celebrate it without turning loud or cheesy.');
+  }
+  if (options.surface === 'morning') {
+    identityLines.push('- This is a morning touchpoint. Sound fresh, hopeful, and ready for one tiny action.');
+  } else if (options.surface === 'evening') {
+    identityLines.push('- This is an evening reflection. Help the user lock in what they practiced today.');
+  }
 
   for (const trait of traits) {
     if (trait.confidence < 0.4 || trait.effective_weight < 0.3) continue;
@@ -259,11 +330,16 @@ export function buildPersonalizedPrompt(
     .slice(0, 5)
     .map(m => `- ${m.memory}`);
 
-  if (traitLines.length === 0 && memoryLines.length === 0) {
+  if (identityLines.length === 0 && traitLines.length === 0 && memoryLines.length === 0) {
     return basePrompt;
   }
 
   let personalization = '\n\nPersonalization context (use naturally, NEVER state these directly):';
+
+  if (identityLines.length > 0) {
+    personalization += '\n\nWho this is:';
+    personalization += '\n' + identityLines.join('\n');
+  }
 
   if (traitLines.length > 0) {
     personalization += '\n\nWhat you know about this person:';

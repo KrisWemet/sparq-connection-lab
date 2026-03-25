@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { JourneyContentView } from '@/components/journey/JourneyContentView';
 import { JourneyTierView, JourneyTier, TierId } from '@/components/journey/JourneyTierView';
 import { ReactNode } from 'react';
+import { journeys } from '@/data/journeys';
 
 export type ConceptItem = {
   id: string;
@@ -44,6 +45,7 @@ export default function JourneyTemplate({
   completionCriteria,
 }: JourneyTemplateProps) {
   const [activeTier, setActiveTier] = useState<TierId | null>(null);
+  const journeyMeta = journeys.find((entry) => entry.id === journeyId);
 
   // Legacy mode: no tiers defined, use old single-tier behavior
   if ((!tiers || tiers.length === 0) && conceptItems) {
@@ -82,12 +84,17 @@ export default function JourneyTemplate({
 
   // Show tier selection
   return (
-    <JourneyTierView
-      journeyId={journeyId}
-      title={title}
-      description={description || ''}
-      tiers={tiers || []}
-      onSelectTier={setActiveTier}
-    />
-  );
-}
+      <JourneyTierView
+        journeyId={journeyId}
+        title={title}
+        description={description || ''}
+        duration={journeyMeta?.duration}
+        category={journeyMeta?.category}
+        overview={journeyMeta?.overview}
+        benefits={journeyMeta?.benefits}
+        psychology={journeyMeta?.psychology}
+        tiers={tiers || []}
+        onSelectTier={setActiveTier}
+      />
+    );
+  }

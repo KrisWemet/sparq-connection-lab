@@ -69,7 +69,7 @@ export function DailyTimeline({ phase, actionVerified = false }: DailyTimelinePr
                 initial={false}
                 animate={{
                   backgroundColor: status === 'completed' ? '#C0614A' : status === 'active' ? '#FFFFFF' : '#FAF6F1',
-                  borderColor: status === 'active' ? '#C0614A' : 'transparent',
+                  borderColor: status === 'active' ? '#C0614A' : 'rgba(192,97,74,0)',
                   color: status === 'completed' ? '#FFFFFF' : status === 'active' ? '#C0614A' : '#9E8A86',
                   scale: status === 'active' ? 1.1 : 1,
                 }}

@@ -97,6 +97,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .eq('user_id', ctx.userId)
     .maybeSingle();
 
+  if (insightsRow?.skill_tree_unlocked || insightsRow?.onboarding_completed_at) {
+    return res.status(200).json({
+      graduated: true,
+      skill_tree_unlocked: true,
+      next_day_index: Math.max(15, insightsRow?.onboarding_day ?? 15),
+      reused: true,
+    });
+  }
+
   const { data: latestCompletedRows, error: latestCompletedError } = await ctx.supabase
     .from('daily_sessions')
     .select('day_index')
@@ -111,7 +120,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Use completed-session history when available; gracefully fall back on older schemas.
   if (!latestCompletedError) {
     const latestCompletedDay = latestCompletedRows?.[0]?.day_index ?? 0;
-    const derivedDayIndex = Math.min(14, Math.max(1, latestCompletedDay + 1));
+    if (latestCompletedDay >= 14) {
+      return res.status(200).json({
+        graduated: true,
+        skill_tree_unlocked: true,
+        next_day_index: 15,
+        reused: true,
+      });
+    }
+
+    const derivedDayIndex = Math.max(1, latestCompletedDay + 1);
     dayIndex = derivedDayIndex;
   }
 
@@ -258,6 +276,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   if (await dailySessionHasColumn(ctx, 'local_date')) {
     insertPayload.local_date = localDate;
+  }
+  if (!(await dailySessionHasColumn(ctx, 'active_track'))) {
+    delete insertPayload.active_track;
+  }
+  if (!(await dailySessionHasColumn(ctx, 'steered_trait'))) {
+    delete insertPayload.steered_trait;
+  }
+  if (!(await dailySessionHasColumn(ctx, 'micro_action'))) {
+    delete insertPayload.micro_action;
+  }
+  if (!(await dailySessionHasColumn(ctx, 'learn_response'))) {
+    delete insertPayload.learn_response;
+  }
+  if (!(await dailySessionHasColumn(ctx, 'discovery_day'))) {
+    delete insertPayload.discovery_day;
+  }
+  if (!(await dailySessionHasColumn(ctx, 'idempotency_key'))) {
+    delete insertPayload.idempotency_key;
   }
 
   const { data: inserted, error: insertError } = await ctx.supabase

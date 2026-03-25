@@ -6,6 +6,7 @@ import { getAuthedContext } from '@/lib/server/supabase-auth';
 import { resolveEntitlements } from '@/lib/server/entitlements';
 import { trackEvent } from '@/lib/server/analytics';
 import { searchMemories } from '@/lib/server/memory';
+import { loadPrivacyState } from '@/lib/server/privacy';
 import { assessReflectionQuality } from '@/lib/server/reflection-quality';
 import { stripMarkdown } from '@/lib/strip-markdown';
 
@@ -89,22 +90,44 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (authed && !systemOverride) {
       try {
-        const [traitsResult, memResult] = await Promise.all([
-          authed.supabase
-            .from('profile_traits')
-            .select('trait_key, inferred_value, confidence, effective_weight')
-            .eq('user_id', authed.userId)
-            .gte('effective_weight', 0.3),
-          searchMemories(authed.userId, latestUserMessage, 5).catch(() => ({ results: [] })),
-        ]);
+        const privacy = await loadPrivacyState(authed.supabase, authed.userId);
 
-        const traits: ProfileTrait[] = traitsResult.data || [];
-        const memories: MemoryResult[] = (memResult?.results || []).map((r: any) => ({
-          memory: r.memory || r.content || '',
-          score: r.score,
-        }));
+        if (privacy.can_personalize) {
+          const [traitsResult, memResult, profileResult, insightsResult] = await Promise.all([
+            authed.supabase
+              .from('profile_traits')
+              .select('trait_key, inferred_value, confidence, effective_weight')
+              .eq('user_id', authed.userId)
+              .gte('effective_weight', 0.3),
+            privacy.can_store_memories
+              ? searchMemories(authed.userId, latestUserMessage, 5).catch(() => ({ results: [] }))
+              : Promise.resolve({ results: [] }),
+            authed.supabase
+              .from('profiles')
+              .select('name, partner_name')
+              .eq('id', authed.userId)
+              .maybeSingle(),
+            authed.supabase
+              .from('user_insights')
+              .select('emotional_state')
+              .eq('user_id', authed.userId)
+              .maybeSingle(),
+          ]);
 
-        systemPrompt = buildPersonalizedPrompt(traits, memories, PETER_SYSTEM_PROMPT);
+          const traits: ProfileTrait[] = traitsResult.data || [];
+          const memories: MemoryResult[] = (memResult?.results || []).map((r: any) => ({
+            memory: r.memory || r.content || '',
+            score: r.score,
+          }));
+
+          systemPrompt = buildPersonalizedPrompt(traits, memories, PETER_SYSTEM_PROMPT, {
+            userName: profileResult.data?.name,
+            partnerName: profileResult.data?.partner_name,
+            relationshipMode: privacy.preferences.relationship_mode,
+            emotionalState: insightsResult.data?.emotional_state ?? null,
+            surface: eveningContext ? 'evening' : 'chat',
+          });
+        }
       } catch (personalizeError) {
         console.error('Personalization error (falling back to base prompt):', personalizeError);
       }
@@ -113,17 +136,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Append evening context with reflection quality nudging (Phase 3)
     if (eveningContext) {
       const { day, morningAction, turnNumber } = eveningContext;
-      const wrapUp = turnNumber >= 2
-        ? " This is their follow-up message — add a warm wrap-up and let them know you'll have something fresh for them tomorrow."
-        : '';
-      systemPrompt += `\n\nEVENING CHECK-IN CONTEXT (Day ${day}):\nToday's action was: "${morningAction}"\nReflect back what you heard warmly. Celebrate effort, not outcome. 3-4 sentences, no clinical terms.${wrapUp}`;
 
-      // Phase 3: Assess reflection quality and nudge Peter's response style
-      const quality = assessReflectionQuality(latestUserMessage);
-      if (quality.depth === 'shallow' && turnNumber < 3) {
-        systemPrompt += `\n\nThe user's response was brief. Warmly reflect what they shared, then gently invite more detail with a specific follow-up question. Don't pressure — just be curious. Example: "I hear you — can you tell me about one specific moment from today?"`;
-      } else if (quality.depth === 'deep') {
-        systemPrompt += `\n\nThe user shared something meaningful. Acknowledge the depth and specificity. Celebrate their openness. Don't push for more — honor what they gave you.`;
+      if (turnNumber >= 3) {
+        // Natural close — Peter wraps up warmly, no more questions
+        systemPrompt += `\n\nEVENING CHECK-IN CONTEXT (Day ${day}):\nToday's action was: "${morningAction}"\nThis is the closing message. Give a warm, brief summary of what you heard tonight (2-3 sentences). End with an encouraging closing line like "Rest well — I'll have something new for you tomorrow." Do NOT ask any follow-up questions. Do NOT invite more sharing. This is a natural, satisfying ending to the conversation.`;
+      } else {
+        const wrapUp = turnNumber >= 2
+          ? " This is likely their last message — keep your response warm and brief. Do not ask another question unless their message clearly invites more conversation."
+          : '';
+        systemPrompt += `\n\nEVENING CHECK-IN CONTEXT (Day ${day}):\nToday's action was: "${morningAction}"\nReflect back what you heard warmly. Celebrate effort, not outcome. 3-4 sentences, no clinical terms.${wrapUp}`;
+
+        // Assess reflection quality and nudge Peter's response style
+        const quality = assessReflectionQuality(latestUserMessage);
+        if (quality.depth === 'shallow' && turnNumber < 2) {
+          systemPrompt += `\n\nThe user's response was brief. Warmly reflect what they shared, then gently invite more detail with a specific follow-up question. Don't pressure — just be curious. Example: "I hear you — can you tell me about one specific moment from today?"`;
+        } else if (quality.depth === 'deep') {
+          systemPrompt += `\n\nThe user shared something meaningful. Acknowledge the depth and specificity. Celebrate their openness. Don't push for more — honor what they gave you.`;
+        }
       }
     }
 

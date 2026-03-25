@@ -1,19 +1,171 @@
 # CLAUDE.md — Sparq Connection Lab
 
-This file provides comprehensive context for AI assistants working on this codebase.
+This file provides comprehensive context for AI assistants working on this codebase. Read the product context section first — every time, without skipping.
 
 ---
 
-## Project Overview
+# SPARQ PRODUCT CONTEXT
+## Read this before touching anything. Load the relevant skill before writing any code.
 
-**Sparq Connection Lab** is a relationship enhancement web application that uses evidence-based psychological techniques to help couples deepen their connection. Core features include:
+---
 
-- Daily relationship questions with progressive intimacy levels
-- Guided multi-day relationship growth journeys
-- Partner linking/invitation system
-- Gamified engagement (streaks, badges, achievements)
-- AI-powered date idea generation (OpenAI)
-- Subscription tiers gating premium content
+## Skill Loading — Do This First
+
+Before working in any of these domains, read the corresponding skill file:
+
+| Domain | Skill to load |
+|---|---|
+| Psychology content, questions, exercises, personalization | `.claude/skills/sparq-psychology` |
+| Language, copy, NLP patterns, voice | `.claude/skills/sparq-psychology/references/nlp-language-framework` |
+| Peter (SVG, animations, copy, poses, voice) | `.claude/skills/sparq-peter` |
+| Database schema, Supabase patterns | `.claude/skills/sparq-db` |
+| UI components, design tokens, layout | `.claude/skills/sparq-ui` |
+| Architecture decisions, API patterns | `.claude/skills/sparq-architecture` |
+| Frontend design quality | `.claude/skills/frontend-design` |
+
+If you're not sure which skill applies — load `sparq-psychology` and `sparq-architecture` as defaults. If you are writing any user-facing copy — also load the NLP language framework.
+
+---
+
+## What Sparq Is
+
+**Sparq Connection** is a relationship growth app for committed couples. Core belief: stronger individuals create stronger relationships.
+
+It is a **relationship gym** — not therapy, not a wellness platform, not a gamified couples game. Users come here to build a consistent practice that compounds into real change over time.
+
+The transformation arc: **autopilot → intentional → deeply connected.**
+
+Sparq integrates 12 evidence-based modalities (Gottman, EFT, ACT, CBT, Positive Psychology, Attachment Theory, IFS, Mindfulness, NVC, Somatic, Narrative Therapy, Influence Psychology). This is the core competitive advantage. See `sparq-psychology` skill for the full framework.
+
+---
+
+## Who It's For
+
+**Primary user:** Committed couples (married or long-term) who want to grow — not in crisis, self-aware, willing to put in effort. They are not looking for a therapist. They are looking for a consistent practice.
+
+**Secondary user:** Couples who feel distance or stagnation and want a low-barrier path back toward each other — without the weight of "we need therapy."
+
+**Not for:** Couples in active crisis, casual daters, passive entertainment seekers.
+
+---
+
+## What It Must Feel Like
+
+Sparq must feel:
+- **Warm** — like it was made by someone who cares about your relationship
+- **Intelligent** — grounded, not fluffy
+- **Emotionally safe** — never judgmental, never clinical
+- **Intimate** — like a well-designed journal, not a dashboard
+- **Occasionally playful** — especially through Peter, never forced
+
+It must never feel like: a corporate HR tool, a generic self-help app, a gamified points machine, a cold SaaS dashboard, a therapy intake form.
+
+**The voice of Sparq** is a wise old doctor who makes you feel like the only person in the room — full of knowledge, never rushed, warm with humor, genuinely concerned about this specific user. Not a therapist. Not a coach. Someone with deep wisdom delivered with complete warmth and zero ego.
+
+**The test**: Would this UI or copy feel at home in a warm conversation or a Moleskine notebook? If it feels more at home in a B2B dashboard — it's wrong.
+
+---
+
+## Peter
+
+Peter is the emotional anchor of the app. He is an otter — warm, playful, expressive, never clinical. He is not a chatbot. He is a companion who reflects the emotional tone of the user's current state.
+
+**Never reduce Peter to a static icon or a loading spinner. He makes Sparq feel different from every other app.**
+
+Full character spec, SVG anatomy, poses, voice rules, and copy library: see `sparq-peter` skill.
+
+---
+
+## The Daily Loop
+
+The Daily Loop is the spine of the product — not a feature. Every session completes in 5 minutes.
+
+**Before the loop begins — emotional check-in:**
+Peter always checks in before any content. "Is there anything you'd like to share before we begin? I'm here to listen." If the user shares something difficult, Peter responds as an interactive journal — empathizing, asking gentle self-reflection questions, and suggesting somatic work before modified daily content begins. Emotional state comes first. Content is always second.
+
+**Session structure:**
+1. **Yesterday's Reflection** (30 sec)
+2. **Today's Learn** (2 min) — story or psycho-educational content from the day's modality
+3. **Today's Implement** (2 min) — micro-action to practice in real life
+4. **Set Intention** (30 sec)
+
+Each partner answers independently, then answers are revealed. The loop closes with acknowledgment (streak, completion state).
+
+It should feel like a ritual, not a checklist.
+
+Full Daily Loop structure, modality sequencing, and session architecture: see `sparq-psychology` skill. Language and tone for all session copy: see NLP language framework.
+
+---
+
+## Design Principles
+
+1. **Felt experience over feature count.** One screen that feels right beats five screens that feel generic.
+2. **Small and consistent beats big and overwhelming.** The Daily Loop is 5 minutes, not 50.
+3. **Both partners matter equally.** Never design a flow that makes one partner feel evaluated.
+4. **Progressive depth.** Questions and journeys move from surface → meaningful → deep. Never skip the gradient.
+5. **Emotional safety is a design constraint.** If a feature could make someone feel judged, exposed, or compared negatively to their partner — rethink it.
+6. **Pull, don't push.** Every prompt should help the user discover something they want to move toward — not instruct them to comply.
+7. **Never rob the user of their own growth.** Sparq guides. The user arrives at their own truth.
+
+---
+
+## Beta Scope — What's In
+
+- User auth (email/password via Supabase)
+- Couple linking / partner invite system
+- Daily question flow (both partners, reveal mechanic)
+- Streak tracking
+- Journeys (existing 14 — no new ones for beta)
+- Peter (present, mood-driven, emotionally expressive)
+- Basic profile
+- Identity statement — stored in memory, displayed in hero placecard on dashboard
+
+---
+
+## Beta Scope — What's Explicitly Out
+
+Do not build, suggest, or stub these without explicit authorization from Chris:
+
+- Crisis intervention features
+- Therapist matching or referral flows
+- Video or voice features
+- Social sharing of relationship content
+- Leaderboards or competitive mechanics between couples
+- AI features that store/surface relationship data without an explicit consent flow
+- Push notifications
+- Payment/subscription enforcement (design it, don't enforce it)
+- New journeys (14 exist — no additions for beta)
+- Shared couple goals feature (post-beta, after individual onboarding is solid)
+
+---
+
+## Architectural Non-Negotiables
+
+Do not relitigate these:
+
+- **Next.js Pages Router** — not App Router. Do not suggest migration.
+- **Supabase** — auth, DB, edge functions. No alternative backend.
+- **shadcn/ui + Tailwind** — component and styling system. No new UI libraries.
+- **Framer Motion** — all animations. Do not use CSS-only animation for Peter.
+- **No automated tests** — accepted for now. Do not add test infrastructure unless asked.
+- **Mem0 is mocked** — do not attempt to wire real Mem0 unless explicitly asked.
+- **OpenRouter → Claude Haiku 4.5** — Peter's AI backend. Do not change the model.
+
+---
+
+## How to Work Here
+
+1. **Load the relevant skill first.** Don't skip this.
+2. **Restate before building.** Before writing code: what are you building, what files will you touch, what will you not touch.
+3. **One slice at a time.** Do not expand scope mid-implementation.
+4. **When filling a design gap,** consult the relevant skill — not generic SaaS patterns.
+5. **Flag ambiguity before working around it.** Ask. Don't invent.
+6. **Preserve existing architecture** unless Chris explicitly authorizes changes.
+7. **Small changes, explained.** Say why, not just what.
+
+---
+
+*Product context ends here. Technical documentation follows.*
 
 ---
 
@@ -29,7 +181,7 @@ This file provides comprehensive context for AI assistants working on this codeb
 | State | React Context (Auth, Subscription) + TanStack React Query |
 | Icons | Lucide React |
 | Toasts | Sonner |
-| AI | OpenAI API (date ideas), Mem0 (relationship memory — currently mocked) |
+| AI | OpenRouter → Claude Haiku 4.5 (Peter), OpenAI API (date ideas), Mem0 (relationship memory — currently mocked) |
 | Deployment | Vercel |
 
 ---
@@ -141,6 +293,15 @@ sparq-connection-lab/
 │   │
 │   ├── content/journeys/       # Markdown content for journey narratives
 │   └── styles/globals.css      # Global CSS / Tailwind base
+│
+├── .claude/
+│   └── skills/                 # Skill files — load before working in each domain
+│       ├── sparq-psychology/   # Psychology frameworks, content rules, personalization
+│       ├── sparq-peter/        # Peter character, SVG, animations, voice
+│       ├── sparq-db/           # Database schema and Supabase patterns
+│       ├── sparq-ui/           # UI components and design tokens
+│       ├── sparq-architecture/ # Architecture decisions and API patterns
+│       └── frontend-design/    # Frontend design quality standards
 │
 ├── supabase/
 │   ├── schema.sql              # Full database schema (source of truth)
@@ -453,15 +614,24 @@ toast("Title", { description: "Details", action: { label: "Go", onClick: () => {
 
 ## Psychological Content Design
 
-The app intentionally uses behavioral psychology techniques in its content:
+Sparq uses a layered language system to create genuine change — not just insights. When writing any user-facing content:
 
-- **Embedded commands**: Questions append subliminal action phrases ("notice how you feel as you consider this")
-- **Future pacing**: Follow-up questions include visualization of future relationship states
-- **Progressive disclosure**: Questions progress through 3 intimacy levels (1 = surface, 3 = deep)
-- **Social proof**: Random notifications show usage statistics to motivate engagement
-- **Streak mechanics**: Daily activity tracking with consecutive day bonuses
+- **Load the NLP language framework** (`.claude/skills/sparq-psychology/references/nlp-language-framework`) before writing any copy, questions, or Peter dialogue
+- Questions must pull the user forward, not push — surface emotional truth, not intellectual compliance
+- Maximum 2 options per question (3 absolute maximum) — never more
+- Always presuppose forward movement — never ask "do you want to"
+- Fourth grade reading level — always
+- Never use clinical language — see the forbidden language table in `sparq-psychology` skill
 
-When adding new question content, follow these conventions from `src/pages/DailyQuestions.tsx`.
+Core language techniques used throughout the app:
+- **Presupposition** — assume forward movement inside the question structure
+- **Outcome framing** — point toward what's possible, not what's wrong
+- **RAS recalibration** — help users aim their attention filter more accurately
+- **Pull language** — surface emotional truth the user moves toward, not instructions they comply with
+- **Identity reinforcement** — "you're becoming someone who..." not "you should..."
+- **Shadow reframing** — honoring protective patterns and releasing them when no longer needed
+
+Full framework: `.claude/skills/sparq-psychology/references/nlp-language-framework`
 
 ---
 

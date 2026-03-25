@@ -6,6 +6,7 @@ import { stripMarkdown } from '@/lib/strip-markdown';
 import { getAuthedContext } from '@/lib/server/supabase-auth';
 import { parseLocalDate } from '@/lib/server/date-utils';
 import { getRecentMemories } from '@/lib/server/memory';
+import { loadPrivacyState } from '@/lib/server/privacy';
 
 // Per-user cache keyed by userId:day
 const storyCache = new Map<string, { text: string; timestamp: number }>();
@@ -31,8 +32,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const { day, insights, local_date } = (req.body || {}) as MorningBody;
 
-  if (!day || day < 1 || day > 14) {
-    return res.status(400).json({ error: 'day must be between 1 and 14' });
+  if (!day || day < 1 || day > 365) {
+    return res.status(400).json({ error: 'day must be between 1 and 365' });
   }
 
   try {
@@ -84,28 +85,44 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (authed) {
       try {
-        // Fetch user traits
-        const { data: traitsData } = await authed.supabase
-          .from('profile_traits')
-          .select('trait_key, inferred_value, confidence, effective_weight')
-          .eq('user_id', authed.userId)
-          .gte('effective_weight', 0.3);
+        const privacy = await loadPrivacyState(authed.supabase, authed.userId);
 
-        const traits: ProfileTrait[] = traitsData || [];
+        if (privacy.can_personalize) {
+          const [traitsResult, profileResult, insightsResult, memResult] = await Promise.all([
+            authed.supabase
+              .from('profile_traits')
+              .select('trait_key, inferred_value, confidence, effective_weight')
+              .eq('user_id', authed.userId)
+              .gte('effective_weight', 0.3),
+            authed.supabase
+              .from('profiles')
+              .select('name, partner_name')
+              .eq('id', authed.userId)
+              .maybeSingle(),
+            authed.supabase
+              .from('user_insights')
+              .select('emotional_state')
+              .eq('user_id', authed.userId)
+              .maybeSingle(),
+            privacy.can_store_memories
+              ? getRecentMemories(authed.userId, 5).catch(() => ({ results: [] }))
+              : Promise.resolve({ results: [] }),
+          ]);
 
-        // Get recent memories
-        let memories: MemoryResult[] = [];
-        try {
-          const memResult = await getRecentMemories(authed.userId, 5);
-          memories = (memResult?.results || []).map((r: any) => ({
+          const traits: ProfileTrait[] = traitsResult.data || [];
+          const memories: MemoryResult[] = (memResult?.results || []).map((r: any) => ({
             memory: r.memory || r.content || '',
             score: r.score,
           }));
-        } catch {
-          // Memory fetch failure is non-blocking
-        }
 
-        systemPrompt = buildPersonalizedPrompt(traits, memories, PETER_SYSTEM_PROMPT);
+          systemPrompt = buildPersonalizedPrompt(traits, memories, PETER_SYSTEM_PROMPT, {
+            userName: profileResult.data?.name,
+            partnerName: profileResult.data?.partner_name,
+            relationshipMode: privacy.preferences.relationship_mode,
+            emotionalState: insightsResult.data?.emotional_state ?? insights?.emotional_state ?? null,
+            surface: 'morning',
+          });
+        }
       } catch {
         // Personalization failure is non-blocking
       }

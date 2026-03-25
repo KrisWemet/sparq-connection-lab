@@ -1,6 +1,7 @@
 import { peterChat } from '@/lib/openrouter';
-import { PETER_SYSTEM_PROMPT, getProfileAnalysisPrompt, PeterMessage } from '@/lib/peterService';
+import { getProfileAnalysisPrompt, PeterMessage } from '@/lib/peterService';
 import { addMemory } from '@/lib/server/memory';
+import { loadPrivacyState } from '@/lib/server/privacy';
 import { assessReflectionQuality, getConfidenceBoost } from '@/lib/server/reflection-quality';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
@@ -31,6 +32,11 @@ export async function analyzeProfileTraits(
   eveningPeterResponse: string,
 ): Promise<void> {
   try {
+    const privacy = await loadPrivacyState(supabase, userId);
+    if (!privacy.can_analyze_profile) {
+      return;
+    }
+
     const messages: PeterMessage[] = [
       { role: 'user', content: eveningReflection },
       { role: 'assistant', content: eveningPeterResponse },
@@ -106,16 +112,9 @@ export async function analyzeProfileTraits(
       }
     }
 
-    // Check memory_window preference before storing memories
-    const { data: prefs } = await supabase
-      .from('user_preferences')
-      .select('memory_window')
-      .eq('user_id', userId)
-      .maybeSingle();
+    const memoryWindow = privacy.preferences.memory_window;
 
-    const memoryWindow = prefs?.memory_window || 'indefinite';
-
-    if (memoryWindow !== 'none') {
+    if (privacy.can_store_memories) {
       try {
         const metadata: Record<string, any> = { source: 'evening_reflection' };
         if (memoryWindow === '90_days') {

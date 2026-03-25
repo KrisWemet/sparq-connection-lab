@@ -46,7 +46,7 @@ export default function Journeys() {
     if (activeJourneyId && activeJourneyId !== journeyId) {
       e.preventDefault();
       toast("One Journey at a Time", {
-        description: "You already have an active journey. Please finish it before starting a new one to avoid feeling overwhelmed.",
+        description: "You already have an active journey. Finish it if it still fits. If it does not fit, open it and leave it early, then start a different one.",
         icon: "✨",
       });
     }

@@ -21,12 +21,39 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+function isStaleSessionError(error: unknown): boolean {
+  if (!(error instanceof AuthError)) return false;
+  return /refresh token/i.test(error.message) || /invalid session/i.test(error.message);
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [profile, setProfile] = useState<SupabaseProfile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  const clearLocalAuthState = () => {
+    setUser(null);
+    setProfile(null);
+    setSession(null);
+  };
+
+  const recoverFromStaleSession = async (source: string, authError?: unknown) => {
+    if (authError) {
+      console.warn(`Clearing stale Supabase session from ${source}:`, authError);
+    }
+
+    try {
+      await supabase.auth.signOut({ scope: 'local' });
+    } catch (signOutError) {
+      console.warn(`Local Supabase sign-out failed during ${source}:`, signOutError);
+    } finally {
+      clearLocalAuthState();
+      setError(null);
+      setLoading(false);
+    }
+  };
 
   // Initial session and user fetch
   useEffect(() => {
@@ -37,8 +64,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { data: { session: initialSession }, error: sessionError } = await supabase.auth.getSession();
 
       if (sessionError) {
+        if (isStaleSessionError(sessionError)) {
+          await recoverFromStaleSession('initial_session', sessionError);
+          return;
+        }
+
         console.error('Error getting session:', sessionError);
         setError(sessionError.message);
+        clearLocalAuthState();
         setLoading(false);
         return;
       }
@@ -79,6 +112,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setProfile(null);
             signOutTimer = null;
           }, 500);
+        } else if (!newSession && event === 'USER_UPDATED') {
+          clearLocalAuthState();
         }
       });
 
@@ -185,7 +220,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           partner_name: userData.partner_name,
           email: data.user.email || '',
           created_at: new Date().toISOString(),
-          consent_given_at: new Date().toISOString(),
         } as any;
 
         const profileSuccess = await updateProfile(newProfile);
@@ -235,9 +269,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.error('Logout error:', error);
       }
       
-      setUser(null);
-      setProfile(null);
-      setSession(null);
+      clearLocalAuthState();
     } catch (err) {
       console.error('Logout error:', err);
     } finally {

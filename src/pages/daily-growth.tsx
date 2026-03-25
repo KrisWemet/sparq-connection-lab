@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sun, Moon, ChevronRight, CheckCircle } from 'lucide-react';
+import { Sun, Moon, ChevronLeft, CheckCircle, Settings, Flame } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { supabase } from '@/lib/supabase';
 import { PeterChat } from '@/components/PeterChat';
@@ -15,10 +14,24 @@ import { analyticsService } from '@/services/analyticsService';
 import { DailyTimeline } from '@/components/journey/DailyTimeline';
 import { fireElegantConfetti } from '@/lib/ElegantConfetti';
 import { PeterLoading } from '@/components/PeterLoading';
+import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
+import { DayProgressArc } from '@/components/daily/DayProgressArc';
+import { TodaysExerciseCard } from '@/components/daily/TodaysExerciseCard';
+import { PreviousReflectionCard } from '@/components/daily/PreviousReflectionCard';
+import { EveningCheckin } from '@/components/daily/EveningCheckin';
+import { JourneyCompletion } from '@/components/daily/JourneyCompletion';
 
-type Phase = 'loading' | 'morning' | 'evening' | 'complete';
+type Phase = 'loading' | 'morning' | 'evening' | 'evening-checkin' | 'journey-complete' | 'complete';
 
-const EVENING_OPENER: PeterMessage = {
+// Fallback modality label when no journey is active.
+function getModalityLabel(day: number): string {
+  if (day <= 3) return 'POSITIVE PSYCHOLOGY';
+  if (day <= 7) return 'GOTTMAN METHOD';
+  if (day <= 10) return 'ATTACHMENT THEORY';
+  return 'EFT';
+}
+
+const DEFAULT_EVENING_OPENER: PeterMessage = {
   role: 'assistant',
   content: "Hey, welcome back. 🌙 How did today's small step go? Tell me what happened. Tiny reps matter.",
 };
@@ -34,16 +47,28 @@ export default function DailyGrowth() {
   const [morningAction, setMorningAction] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const [eveningMessages, setEveningMessages] = useState<PeterMessage[]>([EVENING_OPENER]);
+  const [eveningMessages, setEveningMessages] = useState<PeterMessage[]>([DEFAULT_EVENING_OPENER]);
   const [isEveningLoading, setIsEveningLoading] = useState(false);
   const [eveningTurns, setEveningTurns] = useState(0);
   const [canCompleteDay, setCanCompleteDay] = useState(false);
+  const [reflectionClosed, setReflectionClosed] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
+
+  // Journey-specific state
+  const [journeyId, setJourneyId] = useState<string | null>(null);
+  const [journeyTitle, setJourneyTitle] = useState<string | null>(null);
+  const [journeyDuration, setJourneyDuration] = useState<number | null>(null);
+  const [journeyModalityLabel, setJourneyModalityLabel] = useState<string | null>(null);
+  const [eveningReflectionPrompt, setEveningReflectionPrompt] = useState<string | null>(null);
 
   // New states for the Put the Phone Down Quest
   const [actionVerified, setActionVerified] = useState(false);
   const [isHolding, setIsHolding] = useState(false);
+
+  // Home screen state — shown before the user enters the morning session
+  const [showHome, setShowHome] = useState(true);
+  const [prevReflection, setPrevReflection] = useState<string | null>(null);
 
   useEffect(() => {
     if (actionVerified && user) {
@@ -53,6 +78,20 @@ export default function DailyGrowth() {
       });
     }
   }, [actionVerified, user, currentDay, sessionId]);
+
+  // Fetch previous day's evening reflection for the home screen snippet
+  useEffect(() => {
+    if (!user || currentDay < 2) return;
+    supabase
+      .from('daily_entries')
+      .select('evening_reflection')
+      .eq('user_id', user.id)
+      .eq('day', currentDay - 1)
+      .single()
+      .then(({ data }) => {
+        if (data?.evening_reflection) setPrevReflection(data.evening_reflection);
+      });
+  }, [user, currentDay]);
 
   const localDateString = () => {
     const now = new Date();
@@ -84,16 +123,44 @@ export default function DailyGrowth() {
 
         if (startRes.ok) {
           const payload = await startRes.json();
+          if (payload.graduated) {
+            setCurrentDay(payload.next_day_index ?? 15);
+            setPhase('complete');
+            return;
+          }
+
           const session = payload.session;
           if (session) {
             setSessionId(session.id);
             setCurrentDay(session.day_index ?? 1);
             setMorningStory(stripMd(session.morning_story || ''));
             setMorningAction(stripMd(session.morning_action || ''));
+
+            // Populate journey metadata from response
+            if (payload.journey) {
+              setJourneyId(payload.journey.id);
+              setJourneyTitle(payload.journey.title);
+              setJourneyDuration(payload.journey.duration);
+              setJourneyModalityLabel(payload.journey.modalityLabel);
+            }
+            // Also check session-level journey fields (for reused sessions)
+            if (session.journey_id) {
+              setJourneyId(session.journey_id);
+              if (session.journey_title) setJourneyTitle(session.journey_title);
+            }
+            if (session.evening_reflection_prompt) {
+              setEveningReflectionPrompt(session.evening_reflection_prompt);
+            }
+
             if (session.status === 'completed') {
               setPhase('complete');
             } else if (session.status === 'morning_viewed' || session.status === 'evening_active') {
-              setPhase('evening');
+              // If user came from dashboard evening CTA, use lightweight check-in
+              if (router.query.mode === 'evening-checkin') {
+                setPhase('evening-checkin');
+              } else {
+                setPhase('evening');
+              }
             } else {
               setPhase('morning');
             }
@@ -112,6 +179,12 @@ export default function DailyGrowth() {
         .single();
 
       const day = insightsRow?.onboarding_day ?? 1;
+      if (insightsRow?.skill_tree_unlocked || insightsRow?.onboarding_completed_at || day > 14) {
+        setCurrentDay(Math.max(15, day));
+        setPhase('complete');
+        return;
+      }
+
       const userInsights: Partial<UserInsights> = {
         attachment_style: insightsRow?.attachment_style,
         love_language: insightsRow?.love_language,
@@ -186,7 +259,7 @@ export default function DailyGrowth() {
 
   const handleMorningRead = async () => {
     if (!user) return;
-    
+
     analyticsService.trackEvent('daily_morning_read', {
       day: currentDay,
       session_id: sessionId
@@ -201,6 +274,13 @@ export default function DailyGrowth() {
           body: JSON.stringify({ session_id: sessionId }),
         });
         if (res.ok) {
+          // Set journey-specific evening opener if available
+          if (eveningReflectionPrompt) {
+            setEveningMessages([{
+              role: 'assistant',
+              content: `Hey, welcome back. 🌙 ${eveningReflectionPrompt}`,
+            }]);
+          }
           setPhase('evening');
           return;
         }
@@ -255,7 +335,13 @@ export default function DailyGrowth() {
         headers,
         body: JSON.stringify({
           messages: updated,
-          eveningContext: { day: currentDay, morningAction, turnNumber: newTurn },
+          eveningContext: {
+            day: currentDay,
+            morningAction,
+            turnNumber: newTurn,
+            ...(eveningReflectionPrompt ? { reflectionPrompt: eveningReflectionPrompt } : {}),
+            ...(journeyTitle ? { journeyTitle } : {}),
+          },
         }),
       });
       if (!res.ok) throw new Error('Chat failed');
@@ -265,6 +351,7 @@ export default function DailyGrowth() {
       setEveningMessages([...updated, peterMsg]);
 
       if (newTurn >= 2) setCanCompleteDay(true);
+      if (newTurn >= 3) setReflectionClosed(true);
     } catch {
       setEveningMessages(prev => [
         ...prev,
@@ -301,12 +388,20 @@ export default function DailyGrowth() {
         if (completeRes.ok) {
           const payload = await completeRes.json();
           setCurrentDay(payload.next_day_index || currentDay + 1);
-          setPhase('complete');
           fireElegantConfetti();
 
-          analyticsService.trackEvent('daily_session_completed', {            day: currentDay,
+          // If a journey just completed, show the journey completion screen
+          if (payload.journey_completed && payload.completed_journey_id) {
+            setPhase('journey-complete');
+          } else {
+            setPhase('complete');
+          }
+
+          analyticsService.trackEvent('daily_session_completed', {
+            day: currentDay,
             session_id: sessionId,
-            is_graduation: currentDay >= 14
+            is_graduation: currentDay >= 14,
+            journey_completed: payload.journey_completed || false,
           });
           return;
         }
@@ -355,7 +450,7 @@ export default function DailyGrowth() {
 
       setCurrentDay(nextDay);
       setPhase('complete');
-      
+
       analyticsService.trackEvent('daily_session_completed', {
         day: currentDay,
         session_id: sessionId,
@@ -373,31 +468,101 @@ export default function DailyGrowth() {
     return <PeterLoading isLoading />;
   }
 
+  // ─── Home screen ───────────────────────────────────────────────────────────
+  // Shown once per session, before the user enters the morning exercise flow.
+  // Only applies to the morning phase — evening/complete go straight through.
+
+  // The home screen exercise question — morningAction when loaded, warm
+  // fallback while it's still generating in the background.
+  const homeQuestion =
+    morningAction ||
+    'What is one small moment from today where you felt truly seen by your partner?';
+
+  const DEFAULT_REFLECTION =
+    'I noticed I jumped to fix things instead of just listening. Next time I want to try staying with them first.';
+
+  if (showHome && phase === 'morning') {
+    return (
+      <div className="min-h-screen bg-brand-linen pb-28 font-sans">
+        {/* ── Top bar: SPARQ wordmark + settings ── */}
+        <div className="flex items-center justify-between px-5 pt-6 pb-2">
+          <span className="text-lg font-bold tracking-tight text-[#2C1A14]">SPARQ</span>
+          <button
+            onClick={() => router.push('/settings')}
+            aria-label="Settings"
+            className="p-1.5 rounded-xl text-brand-primary hover:bg-brand-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+          >
+            <Settings size={20} />
+          </button>
+        </div>
+
+        {/* ── Main content ── */}
+        <div className="max-w-lg mx-auto px-4 pt-6 space-y-5">
+          {/* Day progress arc — centered */}
+          <motion.div
+            className="flex justify-center pt-2 pb-1"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <DayProgressArc currentDay={currentDay} totalDays={journeyDuration ?? 14} />
+          </motion.div>
+
+          {/* Today's exercise card */}
+          <TodaysExerciseCard
+            modality={journeyModalityLabel ?? getModalityLabel(currentDay)}
+            durationMin={5}
+            question={homeQuestion}
+            sessionLabel={journeyTitle ? `${journeyTitle} — Day ${currentDay}` : 'Morning practice'}
+            onBegin={() => setShowHome(false)}
+          />
+
+          {/* Previous reflection — shown from day 2 onward */}
+          {(prevReflection || currentDay > 1) && (
+            <PreviousReflectionCard
+              quote={prevReflection || DEFAULT_REFLECTION}
+              onViewJournal={() => router.push('/profile')}
+            />
+          )}
+
+          {/* ── Peter — directly on linen, no container ── */}
+          <motion.div
+            className="flex flex-col items-center gap-3 pt-4 pb-2"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
+          >
+            <PeterAvatar mood="afternoon" size={64} />
+            <p className="font-serif italic text-brand-taupe text-[15px] text-center leading-relaxed max-w-xs">
+              Small things often. Connection isn&apos;t built in a day, but in the daily loops of shared vulnerability.
+            </p>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-brand-linen flex flex-col font-sans">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-zinc-200">
-        <div className="flex items-center gap-3">
-          <div className="relative w-10 h-10 flex items-center justify-center rounded-2xl bg-brand-linen">
-            <span className="text-sm font-bold text-brand-primary">D</span>
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-black">Day {currentDay} of 14</p>
-            <p className="text-xs text-zinc-500 mt-0.5">
-              {phase === 'morning' ? 'Morning Practice' : phase === 'evening' ? 'Night Check-in' : 'Complete!'}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-medium bg-brand-linen text-zinc-600">
-          {phase === 'morning' ? <Sun size={12} /> : phase === 'evening' ? <Moon size={12} /> : <CheckCircle size={12} />}
-          <span className="ml-1">
-            {phase === 'morning' ? 'Morning' : phase === 'evening' ? 'Evening' : 'Done'}
+      <div className="flex items-center justify-between px-5 pt-5 pb-3">
+        <div className="flex items-center gap-2">
+          {phase === 'morning' && (
+            <button
+              onClick={() => setShowHome(true)}
+              aria-label="Back"
+              className="p-1.5 rounded-xl text-brand-primary hover:bg-brand-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+            >
+              <ChevronLeft size={20} />
+            </button>
+          )}
+          <span className="text-xs font-semibold tracking-widest uppercase text-brand-primary">
+            Day {currentDay} &middot; {phase === 'morning' ? 'Morning' : (phase === 'evening' || phase === 'evening-checkin') ? 'Evening' : phase === 'journey-complete' ? 'Complete' : 'Complete'}
           </span>
         </div>
       </div>
 
-      <DailyTimeline phase={phase} actionVerified={actionVerified} />
+      <DailyTimeline phase={phase === 'evening-checkin' ? 'evening' : phase === 'journey-complete' ? 'complete' : phase} actionVerified={actionVerified} />
 
       {/* Main content */}
       <div className="flex-1 overflow-hidden">
@@ -411,44 +576,52 @@ export default function DailyGrowth() {
               animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
               exit={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
               transition={{ type: 'spring', bounce: 0, duration: 0.6 }}
-              className="h-full overflow-y-auto px-4 py-8"
+              className="h-full overflow-y-auto pb-24"
             >
-              <div className="max-w-lg mx-auto space-y-6">
-                {/* Peter's story bubble */}
-                <div className="flex items-end gap-3">
-                  <div className="flex-shrink-0">
-                    <Image src="/images/peter-default.png" alt="Peter" width={44} height={44} style={{ width: 44, height: 44, objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.12))' }} />
-                  </div>
-                  <div className="bg-white rounded-3xl rounded-bl-xl px-6 py-6 border border-zinc-100 shadow-sm text-[15px] leading-relaxed text-zinc-700 font-sans flex-1">
+              <div className="max-w-lg mx-auto px-4 py-6 space-y-5">
+
+                {/* ── Peter directly on linen, no container ── */}
+                <div className="flex flex-col items-center gap-4">
+                  <PeterAvatar mood="morning" size={56} />
+
+                  {/* Speech card */}
+                  <div className="w-full bg-[#EDE4D8] rounded-3xl p-5 border border-brand-primary/10 shadow-sm">
                     {isGenerating ? (
-                      <div className="flex gap-1.5 items-center h-5">
+                      <div className="flex gap-2 items-center h-6">
                         {[0, 1, 2].map(i => (
                           <motion.div
                             key={i}
-                            className="w-1.5 h-1.5 bg-zinc-300 rounded-full"
+                            className="w-2 h-2 rounded-full bg-brand-primary/40"
                             animate={{ opacity: [0.3, 1, 0.3] }}
                             transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.2 }}
                           />
                         ))}
                       </div>
                     ) : (
-                      <p style={{ whiteSpace: 'pre-wrap' }}>{morningStory}</p>
+                      <p
+                        className="font-serif italic leading-relaxed text-[#2C1A14] text-[15px]"
+                        style={{ whiteSpace: 'pre-wrap' }}
+                      >
+                        {morningStory}
+                      </p>
                     )}
                   </div>
                 </div>
 
-                {/* Today's Action */}
+                {/* Today's Practice card */}
                 {!isGenerating && morningAction && (
                   <motion.div
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ type: 'spring', bounce: 0, duration: 0.6, delay: 0.2 }}
-                    className="bg-white border border-zinc-100 shadow-sm rounded-3xl p-6"
+                    transition={{ type: 'spring', bounce: 0, duration: 0.6, delay: 0.15 }}
+                    className="bg-[#EDE4D8] rounded-3xl p-5 border border-brand-primary/10 shadow-sm"
                   >
-                    <p className="text-[11px] font-bold text-brand-primary uppercase tracking-wider mb-2">
-                      Today&apos;s Action
+                    <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
+                      Today&apos;s Practice
                     </p>
-                    <p className="text-black text-base leading-relaxed">{morningAction}</p>
+                    <p className="text-[#2C1A14] font-medium leading-relaxed text-[15px]">
+                      {morningAction}
+                    </p>
                   </motion.div>
                 )}
 
@@ -457,14 +630,13 @@ export default function DailyGrowth() {
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ duration: 0.8, delay: 0.4 }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
                   >
                     <button
                       onClick={handleMorningRead}
-                      className="w-full flex items-center justify-center gap-2 bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors text-base shadow-sm"
+                      className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors text-base"
                     >
                       I&apos;ll practice this today
-                      <ChevronRight size={18} />
                     </button>
                   </motion.div>
                 )}
@@ -483,60 +655,71 @@ export default function DailyGrowth() {
               className="h-full flex flex-col"
             >
               {!actionVerified ? (
-                <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
-                  <div className="w-16 h-16 rounded-full bg-white border border-zinc-200 shadow-sm flex items-center justify-center mb-6">
-                    <Sun size={28} className="text-brand-primary" />
-                  </div>
-                  <h3 className="text-3xl font-bold text-black mb-3 tracking-tight">Did you do the step?</h3>
-                  <p className="text-zinc-600 mb-10 max-w-sm text-base">
-                    &quot;{morningAction}&quot;
-                  </p>
+                /* ── Action verification state ── */
+                <div className="flex-1 overflow-y-auto">
+                  <div className="max-w-lg mx-auto px-4 py-6 space-y-5">
 
-                  <div className="bg-white p-8 rounded-[2rem] border border-zinc-100 shadow-sm max-w-sm w-full mb-8">
-                    <p className="text-lg font-semibold text-black mb-2">Put the Phone Down.</p>
-                    <p className="text-sm text-zinc-500 mb-8 leading-relaxed">
-                      Sparq works when you practice in real life. If you have not done it yet, close the app and go do it now.
-                    </p>
-                    <button
-                      onPointerDown={() => {
-                        setIsHolding(true);
-                      }}
-                      onPointerUp={() => setIsHolding(false)}
-                      onPointerLeave={() => setIsHolding(false)}
-                      className="relative w-full overflow-hidden bg-brand-linen border border-zinc-200 text-black font-semibold py-4 rounded-2xl select-none"
-                      style={{ touchAction: 'none' }}
-                    >
-                      <div
-                        className="absolute inset-0 bg-brand-primary origin-left transition-transform duration-3000 ease-linear"
-                        style={{ transform: `scaleX(${isHolding ? 1 : 0})` }}
-                        onTransitionEnd={(e) => {
-                          if (isHolding && e.propertyName === 'transform') {
-                            setActionVerified(true);
-                          }
-                        }}
-                      />
-                      <span className={`relative z-10 transition-colors duration-500 text-sm tracking-wide ${isHolding ? 'text-white' : 'text-zinc-600'}`}>
-                        Hold to verify I did it
-                      </span>
-                    </button>
-                    {/* Dev override only */}
-                    {process.env.NODE_ENV === 'development' && (
+                    {/* Morning action reminder */}
+                    <div className="bg-[#EDE4D8] rounded-2xl p-4 flex items-start gap-3 border border-brand-primary/10">
+                      <Sun size={16} className="text-brand-primary mt-0.5 flex-shrink-0" />
+                      <p className="text-sm text-[#6B4C3B] leading-relaxed">{morningAction}</p>
+                    </div>
+
+                    {/* Peter + question */}
+                    <div className="flex flex-col items-center gap-4 pt-2">
+                      <PeterAvatar mood="evening" size={56} />
+                      <p className="font-serif italic text-[#6B4C3B] text-[15px] text-center leading-relaxed">
+                        Did you practice today? Even a small attempt counts.
+                      </p>
+                      <p className="font-serif italic text-[#2C1A14] text-lg text-center leading-relaxed max-w-xs">
+                        &ldquo;{morningAction}&rdquo;
+                      </p>
+                    </div>
+
+                    {/* Hold-to-verify button */}
+                    <div className="pt-2">
                       <button
-                        onClick={() => setActionVerified(true)}
-                        className="mt-6 text-[10px] text-zinc-400 hover:text-zinc-600 block w-full text-center uppercase font-semibold"
+                        onPointerDown={() => setIsHolding(true)}
+                        onPointerUp={() => setIsHolding(false)}
+                        onPointerLeave={() => setIsHolding(false)}
+                        className="relative w-full overflow-hidden bg-[#EDE4D8] border border-brand-primary/20 rounded-2xl py-4 select-none"
+                        style={{ touchAction: 'none' }}
                       >
-                        Skip Hold (Dev)
+                        <div
+                          className="absolute inset-0 bg-brand-primary origin-left transition-transform duration-[3000ms] ease-linear"
+                          style={{ transform: `scaleX(${isHolding ? 1 : 0})` }}
+                          onTransitionEnd={(e) => {
+                            if (isHolding && e.propertyName === 'transform') {
+                              setActionVerified(true);
+                            }
+                          }}
+                        />
+                        <span className={`relative z-10 transition-colors duration-500 text-sm font-semibold tracking-wide ${isHolding ? 'text-white' : 'text-[#6B4C3B]'}`}>
+                          Hold to verify I did it
+                        </span>
                       </button>
-                    )}
+
+                      {/* Dev override only */}
+                      {process.env.NODE_ENV === 'development' && (
+                        <button
+                          onClick={() => setActionVerified(true)}
+                          className="mt-4 text-[10px] text-[#6B4C3B]/40 hover:text-[#6B4C3B]/70 block w-full text-center uppercase font-semibold"
+                        >
+                          Skip Hold (Dev)
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               ) : (
+                /* ── Chat state (actionVerified) ── */
                 <>
-                  {/* Today's action reminder */}
-                  <div className="mx-4 mt-3 mb-1 bg-white border border-zinc-100 shadow-sm rounded-2xl px-5 py-3 flex items-start gap-3">
-                    <Sun size={16} className="text-brand-primary mt-0.5 flex-shrink-0" />
-                    <p className="text-sm text-zinc-600 leading-relaxed">
-                      <span className="font-semibold text-black mr-1">Today&apos;s action:</span> {morningAction}
+                  {/* Morning action reminder — slim card at top */}
+                  <div className="mx-4 mt-3 mb-1 bg-[#EDE4D8] border border-brand-primary/10 rounded-2xl px-4 py-3 flex items-start gap-3">
+                    <Sun size={15} className="text-brand-primary mt-0.5 flex-shrink-0" />
+                    <p className="text-sm text-[#6B4C3B] leading-relaxed">
+                      <span className="font-semibold text-[#2C1A14] mr-1">Today&apos;s action:</span>
+                      {morningAction}
                     </p>
                   </div>
 
@@ -546,28 +729,85 @@ export default function DailyGrowth() {
                       onUserMessage={handleEveningMessage}
                       isLoading={isEveningLoading}
                       placeholder="How did it go today?"
+                      inputDisabled={reflectionClosed}
                     />
                   </div>
 
-                  {canCompleteDay && (
+                  {reflectionClosed ? (
+                    <motion.div
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ type: 'spring', bounce: 0.15, duration: 0.7 }}
+                      className="px-4 pt-4 pb-6 border-t border-brand-primary/10 bg-brand-linen"
+                    >
+                      <p className="text-center text-sm text-[#6B4C3B] mb-3 font-serif italic">
+                        Your reflection is complete.
+                      </p>
+                      <button
+                        onClick={handleCompleteDay}
+                        disabled={isSaving}
+                        className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors disabled:opacity-50 text-base"
+                      >
+                        {isSaving ? 'Synthesizing...' : `Complete Day ${currentDay}`}
+                      </button>
+                    </motion.div>
+                  ) : canCompleteDay ? (
                     <motion.div
                       initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ type: 'spring', bounce: 0, duration: 0.6 }}
-                      className="bg-white border-t border-zinc-200 px-4 py-4"
+                      className="px-4 py-4 border-t border-brand-primary/10 bg-brand-linen"
                     >
                       <button
                         onClick={handleCompleteDay}
                         disabled={isSaving}
-                        className="w-full flex items-center justify-center gap-2 bg-brand-primary text-white text-base font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors disabled:opacity-50 shadow-sm"
+                        className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors disabled:opacity-50 text-base"
                       >
-                        <CheckCircle size={18} />
                         {isSaving ? 'Synthesizing...' : `Complete Day ${currentDay}`}
                       </button>
                     </motion.div>
-                  )}
+                  ) : null}
                 </>
               )}
+            </motion.div>
+          )}
+
+          {/* ── EVENING CHECK-IN PHASE (lightweight) ── */}
+          {phase === 'evening-checkin' && sessionId && (
+            <motion.div
+              key="evening-checkin"
+              initial={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+              animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+              transition={{ type: 'spring', bounce: 0, duration: 0.6 }}
+              className="h-full overflow-y-auto"
+            >
+              <EveningCheckin
+                sessionId={sessionId}
+                morningAction={morningAction}
+                journeyTitle={journeyTitle}
+                onComplete={() => {
+                  fireElegantConfetti();
+                  router.push('/dashboard');
+                }}
+              />
+            </motion.div>
+          )}
+
+          {/* ── JOURNEY COMPLETE PHASE ── */}
+          {phase === 'journey-complete' && journeyId && (
+            <motion.div
+              key="journey-complete"
+              initial={{ opacity: 0, scale: 0.95, filter: 'blur(4px)' }}
+              animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+              transition={{ type: 'spring', bounce: 0, duration: 0.8 }}
+              className="h-full overflow-y-auto"
+            >
+              <JourneyCompletion
+                journeyId={journeyId}
+                journeyTitle={journeyTitle || undefined}
+              />
             </motion.div>
           )}
 
@@ -581,25 +821,38 @@ export default function DailyGrowth() {
                 initial={{ opacity: 0, scale: 0.95, filter: 'blur(4px)' }}
                 animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
                 transition={{ type: 'spring', bounce: 0, duration: 0.8 }}
-                className="h-full flex flex-col items-center justify-center px-6 text-center"
+                className="h-full overflow-y-auto"
               >
-                <div className="relative w-24 h-24 flex items-center justify-center mb-8 mx-auto rounded-full bg-white shadow-sm border border-zinc-100">
-                  <CheckCircle size={40} className="text-brand-primary" />
+                <div className="max-w-lg mx-auto px-4 py-12 flex flex-col items-center">
+
+                  {/* Peter — no container, directly on linen */}
+                  <PeterAvatar mood="celebrating" size={80} />
+
+                  {/* Headline */}
+                  <h2 className="font-serif italic text-[#2C1A14] text-2xl text-center mt-6">
+                    Day {currentDay - 1} complete.
+                  </h2>
+
+                  {/* Secondary text */}
+                  <p className="text-[#6B4C3B] text-center mt-2 leading-relaxed">
+                    You showed up. That&apos;s everything.
+                  </p>
+
+                  {/* Streak badge card */}
+                  <div className="bg-[#EDE4D8] rounded-3xl p-5 border border-brand-primary/10 shadow-sm mt-6 max-w-xs w-full text-center">
+                    <Flame size={28} className="text-brand-sand mx-auto mb-2" />
+                    <p className="text-brand-sand font-bold text-2xl">{currentDay - 1} days</p>
+                    <p className="text-[#6B4C3B] text-sm mt-1">Consistent growth.</p>
+                  </div>
+
+                  {/* Return button */}
+                  <button
+                    onClick={() => router.push('/dashboard')}
+                    className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors text-base mt-6"
+                  >
+                    Return to Dashboard
+                  </button>
                 </div>
-
-                <h2 className="text-3xl font-bold text-black mb-3 tracking-tight">
-                  Day {currentDay - 1} complete.
-                </h2>
-                <p className="text-zinc-500 text-lg mb-10 max-w-xs leading-relaxed">
-                  You&apos;re showing up. That&apos;s everything. Rest well and return tomorrow for Day {currentDay}.
-                </p>
-
-                <button
-                  onClick={() => router.push('/go-connect')}
-                  className="bg-brand-primary text-white font-semibold px-8 py-4 rounded-2xl hover:bg-brand-hover shadow-sm transition-colors text-base"
-                >
-                  Begin Real World Mission
-                </button>
               </motion.div>
             )
           )}
