@@ -2,8 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 interface TodaysExerciseCardProps {
-  /** e.g. "GOTTMAN METHOD" */
-  modality: string;
   durationMin: number;
   /** The serif italic question the user will explore */
   question: string;
@@ -13,7 +11,6 @@ interface TodaysExerciseCardProps {
 }
 
 export function TodaysExerciseCard({
-  modality,
   durationMin,
   question,
   sessionLabel = 'Morning practice',
@@ -32,9 +29,9 @@ export function TodaysExerciseCard({
         style={{ background: 'rgba(192, 97, 74, 0.06)' }}
       />
 
-      {/* Modality label — small caps, the only metadata above the question */}
+      {/* Duration — only user-relevant metadata shown */}
       <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-4">
-        {modality} · {durationMin} min
+        {durationMin} min
       </p>
 
       {/* The question — serif italic, this is the emotional heart of the card */}

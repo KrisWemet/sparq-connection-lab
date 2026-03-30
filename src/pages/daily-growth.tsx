@@ -510,7 +510,6 @@ export default function DailyGrowth() {
 
           {/* Today's exercise card */}
           <TodaysExerciseCard
-            modality={journeyModalityLabel ?? getModalityLabel(currentDay)}
             durationMin={5}
             question={homeQuestion}
             sessionLabel={journeyTitle ? `${journeyTitle} — Day ${currentDay}` : 'Morning practice'}
