@@ -472,11 +472,10 @@ export default function DailyGrowth() {
   // Shown once per session, before the user enters the morning exercise flow.
   // Only applies to the morning phase — evening/complete go straight through.
 
-  // The home screen exercise question — morningAction when loaded, warm
-  // fallback while it's still generating in the background.
-  const homeQuestion =
-    morningAction ||
-    'What is one small moment from today where you felt truly seen by your partner?';
+  // Home screen teaser — does NOT reveal the exercise before the story.
+  const homeQuestion = journeyTitle
+    ? `Your Day ${currentDay} practice is ready.`
+    : 'Your morning practice is ready.';
 
   const DEFAULT_REFLECTION =
     'I noticed I jumped to fix things instead of just listening. Next time I want to try staying with them first.';
@@ -669,9 +668,6 @@ export default function DailyGrowth() {
                       <PeterAvatar mood="evening" size={56} />
                       <p className="font-serif italic text-[#6B4C3B] text-[15px] text-center leading-relaxed">
                         Did you practice today? Even a small attempt counts.
-                      </p>
-                      <p className="font-serif italic text-[#2C1A14] text-lg text-center leading-relaxed max-w-xs">
-                        &ldquo;{morningAction}&rdquo;
                       </p>
                     </div>
 
