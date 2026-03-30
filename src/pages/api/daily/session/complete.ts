@@ -291,39 +291,6 @@ Output ONLY the synthesis text. No JSON, no formatting.`;
       });
     }
 
-    // Award XP for completing the daily loop (Phase 4: use session's active track)
-    try {
-      const trackKey = updatedSession.active_track || 'communication';
-      const xpAmount = 20;
-
-      await ctx.supabase.rpc('award_skill_xp', {
-        p_user_id: ctx.userId,
-        p_track: trackKey,
-        p_xp: xpAmount
-      });
-      
-      // Fallback if RPC is not defined yet
-      const { data: trackData, error: trackError } = await ctx.supabase
-        .from('user_skill_tracks')
-        .select('total_xp')
-        .eq('user_id', ctx.userId)
-        .eq('track_key', trackKey)
-        .maybeSingle();
-
-      if (!trackError) {
-        const currentXp = trackData?.total_xp ?? 0;
-        await ctx.supabase
-          .from('user_skill_tracks')
-          .upsert({
-            user_id: ctx.userId,
-            track_key: trackKey,
-            total_xp: currentXp + xpAmount,
-            last_activity_at: new Date().toISOString()
-          }, { onConflict: 'user_id,track_key' });
-      }
-    } catch (xpErr) {
-      console.error('XP award error:', xpErr);
-    }
   }
 
   // Fire-and-forget: silently analyze profile traits from the reflection

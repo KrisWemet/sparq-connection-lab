@@ -175,10 +175,10 @@ export function Day14Graduation() {
                 ) : null}
 
                 <button
-                    onClick={() => router.push('/skill-tree')}
-                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-teal-500 to-blue-600 text-white font-semibold py-4 rounded-xl shadow-md hover:shadow-lg transition-all"
+                    onClick={() => router.push('/journeys')}
+                    className="w-full flex items-center justify-center gap-2 bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors"
                 >
-                    Enter the Skill Tree
+                    Explore Journeys
                     <ArrowRight size={18} />
                 </button>
             </motion.div>

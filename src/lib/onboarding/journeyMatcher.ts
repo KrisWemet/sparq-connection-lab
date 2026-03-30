@@ -12,54 +12,54 @@ export interface JourneyRecommendation {
   alternatives: JourneyMatch[];
 }
 
-// Pre-written recommendation reasons keyed by [attachmentStyle][journeyId]
-const REASONS: Record<string, Record<string, string>> = {
-  anxious: {
-    'attachment-healing': "it works with the part of you that learned to watch instead of rest.",
-    'trust-rebuilding':   "building trust from the inside out is exactly what you need right now.",
-    'communication':      "learning to say what's true before the worry takes over will change everything.",
-    'emotional-intelligence': "understanding your own emotional patterns is the first step to steadying them.",
-    'relationship-renewal':   "sometimes the freshest thing you can do is see what's already there.",
-    'values':                 "knowing what you're actually moving toward makes every step feel more solid.",
-  },
-  avoidant: {
-    'emotional-intelligence': "understanding your inner world is the first bridge to letting someone else in.",
-    'values':                 "knowing what you actually want makes it easier to move toward it.",
-    'communication':          "learning to speak before you step back is quiet, powerful work.",
-    'attachment-healing':     "the wall you built was smart once — this work helps you choose when to open the door.",
-    'relationship-renewal':   "reconnecting doesn't have to mean overwhelming — it can start with one small thing.",
-  },
-  disorganized: {
-    'attachment-healing': "we're going to work with the part of you that wants closeness and safety at the same time.",
-    'values':             "getting clear on what you actually believe creates ground under your feet.",
-    'mindful-sexuality':  "this journey starts with your relationship to your own body — the safest place to begin.",
-    'emotional-intelligence': "naming what you feel is how you stop being ruled by it.",
-  },
-  secure: {
-    'relationship-renewal':   "you're not here because something is broken — you're here because you want more of what's good.",
-    'love-languages':         "you already have the foundation; this helps you speak each other's language more fluently.",
-    'intimacy':               "deeper intimacy doesn't require a crisis — just intention and a little practice.",
-    'communication':          "even secure couples have communication edges worth sharpening.",
-  },
+// Pre-written recommendation reasons keyed by journeyId
+const REASONS: Record<string, string> = {
+  'safe-in-love':
+    "it works with the part of you that learned to watch instead of rest — so you can finally feel safe enough to stop watching.",
+  'building-trust':
+    "building trust from the inside out is exactly what you need right now.",
+  'calm-before-closeness':
+    "finding your ground before you let someone in — that's quiet, powerful work.",
+  'opening-heart':
+    "this journey helps you open the door on your own terms — no pressure, just practice.",
+  'healing-old-wounds':
+    "we're going to work gently with the things that stayed with you — at your pace, always.",
+  'mixed-feelings':
+    "making sense of the push and pull inside you is the first step toward steadier ground.",
+  'deepening-good':
+    "you're not here because something is broken — you're here because you want more of what's good.",
+  'shared-language':
+    "learning to say the real thing — before the distance creeps in — changes everything.",
+  'staying-grounded':
+    "when life gets heavy, the most powerful thing you can do is stay rooted in what matters.",
 };
 
 const DEFAULT_REASON = "this journey will give you real tools you can use right away.";
 
-function getReason(attachmentStyle: string, journeyId: string): string {
-  return REASONS[attachmentStyle]?.[journeyId] ?? DEFAULT_REASON;
+function getReason(journeyId: string): string {
+  return REASONS[journeyId] ?? DEFAULT_REASON;
 }
 
 // Peter's note on the Journey Detail screen — keyed by journeyId
 const PETER_NOTES: Record<string, string> = {
-  'attachment-healing':     "This is where your real work starts. Come back tomorrow and I'll have something ready for you. 🦦",
-  'emotional-intelligence': "Understanding yourself from the inside is the whole game. I'll be right there with you. 🦦",
-  'trust-rebuilding':       "Trust gets built one small moment at a time. Tomorrow we start with one. 🦦",
-  'communication':          "Saying the true thing — that's the practice. You're ready for it. 🦦",
-  'relationship-renewal':   "There's more here than you think. Let's find it together. 🦦",
-  'love-languages':         "Speaking their language changes everything. Day 1 starts tomorrow. 🦦",
-  'intimacy':               "Depth is built slowly and on purpose. You're in the right place. 🦦",
-  'values':                 "Knowing what you're moving toward makes every step lighter. Let's go. 🦦",
-  'mindful-sexuality':      "This starts with you — the safest and best place to begin. 🦦",
+  'safe-in-love':
+    "This is where your real work starts. We're going to build safety from the inside — one day at a time. Come back tomorrow. 🦦",
+  'building-trust':
+    "Trust gets built one small moment at a time. Tomorrow we start with one. 🦦",
+  'calm-before-closeness':
+    "Finding your center first — that takes real courage. I'll be right here with you. 🦦",
+  'opening-heart':
+    "Opening up doesn't have to mean losing yourself. We'll go slow. Day 1 starts tomorrow. 🦦",
+  'healing-old-wounds':
+    "This is gentle work — and it matters more than you know. I'll be with you every step. 🦦",
+  'mixed-feelings':
+    "The push and pull makes sense. We're going to name it and work with it. See you tomorrow. 🦦",
+  'deepening-good':
+    "There's more here than you think. Let's find it together. 🦦",
+  'shared-language':
+    "Saying the true thing — that's the practice. You're ready for it. 🦦",
+  'staying-grounded':
+    "When everything feels like a lot, we go back to basics. One breath, one day. Tomorrow we begin. 🦦",
 };
 
 const DEFAULT_PETER_NOTE = "This is where your real work starts. Come back tomorrow and I'll have something ready for you. 🦦";
@@ -68,41 +68,79 @@ function getPeterNote(journeyId: string): string {
   return PETER_NOTES[journeyId] ?? DEFAULT_PETER_NOTE;
 }
 
-// Journey routing table
-const ROUTING: Record<string, { primary: string; alternatives: string[] }> = {
-  anxious:      { primary: 'attachment-healing',     alternatives: ['trust-rebuilding', 'communication'] },
-  avoidant:     { primary: 'emotional-intelligence', alternatives: ['values', 'communication'] },
-  disorganized: { primary: 'attachment-healing',     alternatives: ['values', 'mindful-sexuality'] },
-  secure:       { primary: 'relationship-renewal',   alternatives: ['love-languages', 'intimacy'] },
-};
+/**
+ * 9-route journey matching table.
+ *
+ * Routing considers: attachmentStyle + abandonmentFear + dysregulationLevel +
+ * traumaFlag + lifeContext + conflictStyle
+ */
+function resolveRoute(profile: DerivedProfile): { primary: string; alternatives: string[] } {
+  // Override: heavy life context always routes to staying-grounded
+  if (profile.lifeContext === 'heavy') {
+    return {
+      primary: 'staying-grounded',
+      alternatives: resolveBaseRoute(profile),
+    };
+  }
 
-// Journeys to deprioritise when lifeContext is heavy
-const HEAVY_CONTEXT_EXCLUDE = new Set(['sexual-intimacy', 'fantasy-exploration']);
+  const primary = resolveBaseRoute(profile)[0];
+  const alternatives = resolveAlternatives(profile, primary);
+
+  return { primary, alternatives };
+}
+
+/**
+ * Base routing by attachment style + sub-signals.
+ * Returns ordered list of journey IDs (best match first).
+ */
+function resolveBaseRoute(profile: DerivedProfile): string[] {
+  switch (profile.attachmentStyle) {
+    case 'anxious':
+      if (profile.abandonmentFear === 'high') {
+        return ['safe-in-love', 'building-trust', 'shared-language'];
+      }
+      return ['building-trust', 'safe-in-love', 'shared-language'];
+
+    case 'avoidant':
+      if (profile.dysregulationLevel === 'high') {
+        return ['calm-before-closeness', 'opening-heart', 'staying-grounded'];
+      }
+      return ['opening-heart', 'calm-before-closeness', 'deepening-good'];
+
+    case 'disorganized':
+      if (profile.traumaFlag) {
+        return ['healing-old-wounds', 'mixed-feelings', 'staying-grounded'];
+      }
+      return ['mixed-feelings', 'healing-old-wounds', 'opening-heart'];
+
+    case 'secure':
+      if (profile.conflictStyle === 'avoidant' || profile.conflictStyle === 'avoid') {
+        return ['shared-language', 'deepening-good', 'building-trust'];
+      }
+      return ['deepening-good', 'shared-language', 'building-trust'];
+
+    default:
+      return ['deepening-good', 'shared-language', 'building-trust'];
+  }
+}
+
+function resolveAlternatives(profile: DerivedProfile, primary: string): string[] {
+  const base = resolveBaseRoute(profile);
+  return base.filter(id => id !== primary).slice(0, 3);
+}
 
 export function matchJourney(profile: DerivedProfile): JourneyRecommendation {
-  const route = ROUTING[profile.attachmentStyle] ?? ROUTING.secure;
-  let primary = route.primary;
-  let alternatives = [...route.alternatives];
-
-  // Override: traumaFlag always surfaces attachment-healing
-  if (profile.traumaFlag && primary !== 'attachment-healing') {
-    alternatives = ['attachment-healing', ...alternatives.filter(id => id !== 'attachment-healing')].slice(0, 3);
-  }
-
-  // Override: heavy life context removes explicit content journeys
-  if (profile.lifeContext === 'heavy') {
-    if (HEAVY_CONTEXT_EXCLUDE.has(primary)) {
-      primary = alternatives[0] ?? 'attachment-healing';
-      alternatives = alternatives.slice(1);
-    }
-    alternatives = alternatives.filter(id => !HEAVY_CONTEXT_EXCLUDE.has(id));
-  }
+  const route = resolveRoute(profile);
 
   return {
-    primary: { journeyId: primary, reason: getReason(profile.attachmentStyle, primary), peterNote: getPeterNote(primary) },
-    alternatives: alternatives.slice(0, 3).map(id => ({
+    primary: {
+      journeyId: route.primary,
+      reason: getReason(route.primary),
+      peterNote: getPeterNote(route.primary),
+    },
+    alternatives: route.alternatives.slice(0, 3).map(id => ({
       journeyId: id,
-      reason: getReason(profile.attachmentStyle, id),
+      reason: getReason(id),
       peterNote: getPeterNote(id),
     })),
   };

@@ -18,7 +18,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { messages, systemOverride, eveningContext } = req.body as {
     messages: PeterMessage[];
     systemOverride?: string;
-    eveningContext?: { day: number; morningAction: string; turnNumber: number };
+    eveningContext?: {
+      day: number;
+      morningAction: string;
+      turnNumber: number;
+      reflectionPrompt?: string;
+      journeyTitle?: string;
+    };
   };
 
   if (!messages || !Array.isArray(messages)) {
@@ -135,16 +141,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Append evening context with reflection quality nudging (Phase 3)
     if (eveningContext) {
-      const { day, morningAction, turnNumber } = eveningContext;
+      const { day, morningAction, turnNumber, reflectionPrompt, journeyTitle } = eveningContext;
+
+      // Journey context preamble
+      const journeyCtx = journeyTitle ? ` (${journeyTitle})` : '';
 
       if (turnNumber >= 3) {
         // Natural close — Peter wraps up warmly, no more questions
-        systemPrompt += `\n\nEVENING CHECK-IN CONTEXT (Day ${day}):\nToday's action was: "${morningAction}"\nThis is the closing message. Give a warm, brief summary of what you heard tonight (2-3 sentences). End with an encouraging closing line like "Rest well — I'll have something new for you tomorrow." Do NOT ask any follow-up questions. Do NOT invite more sharing. This is a natural, satisfying ending to the conversation.`;
+        systemPrompt += `\n\nEVENING CHECK-IN CONTEXT (Day ${day}${journeyCtx}):\nToday's action was: "${morningAction}"\nThis is the closing message. Give a warm, brief summary of what you heard tonight (2-3 sentences). End with an encouraging closing line like "Rest well — I'll have something new for you tomorrow." Do NOT ask any follow-up questions. Do NOT invite more sharing. This is a natural, satisfying ending to the conversation.`;
       } else {
         const wrapUp = turnNumber >= 2
           ? " This is likely their last message — keep your response warm and brief. Do not ask another question unless their message clearly invites more conversation."
           : '';
-        systemPrompt += `\n\nEVENING CHECK-IN CONTEXT (Day ${day}):\nToday's action was: "${morningAction}"\nReflect back what you heard warmly. Celebrate effort, not outcome. 3-4 sentences, no clinical terms.${wrapUp}`;
+        systemPrompt += `\n\nEVENING CHECK-IN CONTEXT (Day ${day}${journeyCtx}):\nToday's action was: "${morningAction}"\nReflect back what you heard warmly. Celebrate effort, not outcome. 3-4 sentences, no clinical terms.${wrapUp}`;
+
+        // Use journey-specific reflection prompt as conversation opener when available
+        if (reflectionPrompt && turnNumber === 0) {
+          systemPrompt += `\n\nThe reflection question for tonight is: "${reflectionPrompt}". Use this as your opening question instead of a generic prompt. Weave it naturally into your greeting.`;
+        }
 
         // Assess reflection quality and nudge Peter's response style
         const quality = assessReflectionQuality(latestUserMessage);

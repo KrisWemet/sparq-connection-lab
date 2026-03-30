@@ -1,4 +1,4 @@
-import { Home, BookOpen, MessageCircle, TreePine, User2 } from "lucide-react";
+import { Home, BookOpen, MessageCircle, User2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -6,7 +6,6 @@ const navItems = [
   { icon: Home, label: "Home", path: "/dashboard" },
   { icon: BookOpen, label: "Journeys", path: "/journeys" },
   { icon: MessageCircle, label: "Daily", path: "/daily-growth" },
-  { icon: TreePine, label: "Skills", path: "/skill-tree" },
   { icon: User2, label: "Profile", path: "/profile" },
 ];
 
@@ -14,7 +13,7 @@ export function BottomNav() {
   const router = useRouter();
 
   // Hide on auth pages or landing page
-  if (['/', '/auth', '/login', '/signup', '/onboarding-flow', '/onboarding'].includes(router.pathname)) {
+  if (['/', '/auth', '/login', '/signup', '/onboarding'].includes(router.pathname)) {
     return null;
   }
 

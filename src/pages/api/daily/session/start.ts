@@ -7,6 +7,7 @@ import { resolveEntitlements } from '@/lib/server/entitlements';
 import { getWeekBounds, parseLocalDate } from '@/lib/server/date-utils';
 import { trackEvent } from '@/lib/server/analytics';
 import { computeTraitGaps, getSteeringHint, getSteeredTrait } from '@/lib/server/trait-gaps';
+import { resolveJourneyContent } from '@/lib/server/journey-content';
 
 const dailySessionColumnCache: Record<string, boolean | undefined> = {};
 
@@ -97,13 +98,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .eq('user_id', ctx.userId)
     .maybeSingle();
 
-  if (insightsRow?.skill_tree_unlocked || insightsRow?.onboarding_completed_at) {
-    return res.status(200).json({
-      graduated: true,
-      skill_tree_unlocked: true,
-      next_day_index: Math.max(15, insightsRow?.onboarding_day ?? 15),
-      reused: true,
-    });
+  // Journey-driven users skip the old graduation check entirely.
+  // Only apply the old day-14 graduation logic when there's no active journey.
+  const activeJourneyId: string | null = insightsRow?.active_journey_id ?? null;
+
+  if (!activeJourneyId) {
+    if (insightsRow?.skill_tree_unlocked || insightsRow?.onboarding_completed_at) {
+      return res.status(200).json({
+        graduated: true,
+        skill_tree_unlocked: true,
+        next_day_index: Math.max(15, insightsRow?.onboarding_day ?? 15),
+        reused: true,
+      });
+    }
   }
 
   const { data: latestCompletedRows, error: latestCompletedError } = await ctx.supabase
@@ -120,7 +127,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Use completed-session history when available; gracefully fall back on older schemas.
   if (!latestCompletedError) {
     const latestCompletedDay = latestCompletedRows?.[0]?.day_index ?? 0;
-    if (latestCompletedDay >= 14) {
+
+    // Only apply the old day-14 graduation when no active journey
+    if (!activeJourneyId && latestCompletedDay >= 14) {
       return res.status(200).json({
         graduated: true,
         skill_tree_unlocked: true,
@@ -194,6 +203,109 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }
 
+  // ── Journey content path: use static content when an active journey exists ──
+  const journeyContent = resolveJourneyContent(activeJourneyId, dayIndex);
+
+  if (journeyContent) {
+    const { day: jDay, journeyTitle, journeyDuration, modalityLabel } = journeyContent;
+
+    const insertPayload: Record<string, unknown> = {
+      user_id: ctx.userId,
+      session_local_date: localDate,
+      timezone,
+      day_index: dayIndex,
+      discovery_day: dayIndex,
+      status: 'morning_ready',
+      phase: 'morning',
+      morning_story: jDay.learn.story + '\n\n' + jDay.learn.keyInsight,
+      morning_action: jDay.action.prompt,
+      micro_action: jDay.action.prompt,
+      learn_response: jDay.learn.story,
+      evening_reflection_prompt: jDay.reflection.prompt,
+      journey_id: activeJourneyId,
+      journey_title: journeyTitle,
+      journey_day_index: dayIndex,
+      idempotency_key: body.idempotency_key || null,
+      active_track: modalityLabel || 'communication',
+      ...(steeredTrait ? { steered_trait: steeredTrait } : {}),
+    };
+
+    // Column compatibility checks
+    for (const col of ['session_date', 'local_date'] as const) {
+      if (await dailySessionHasColumn(ctx, col)) {
+        insertPayload[col] = localDate;
+      }
+    }
+    for (const col of ['active_track', 'steered_trait', 'micro_action', 'learn_response', 'discovery_day', 'idempotency_key', 'evening_reflection_prompt', 'journey_id', 'journey_title', 'journey_day_index'] as const) {
+      if (!(await dailySessionHasColumn(ctx, col))) {
+        delete insertPayload[col];
+      }
+    }
+
+    const { data: inserted, error: insertError } = await ctx.supabase
+      .from('daily_sessions')
+      .insert(insertPayload)
+      .select('*')
+      .single();
+
+    if (insertError || !inserted) {
+      const isDuplicate =
+        insertError?.code === '23505' ||
+        /duplicate key/i.test(insertError?.message || '');
+
+      if (isDuplicate) {
+        const { data: racedRows } = await ctx.supabase
+          .from('daily_sessions')
+          .select('*')
+          .eq('user_id', ctx.userId)
+          .eq('session_local_date', localDate)
+          .order('created_at', { ascending: false })
+          .limit(1);
+
+        const raced = racedRows?.[0];
+        if (raced) {
+          return res.status(200).json({ session: raced, reused: true, race_recovered: true });
+        }
+      }
+
+      if (insertError) {
+        console.error('Daily session insert error (journey path):', insertError);
+      }
+      return res.status(500).json({ error: 'Failed to create daily session' });
+    }
+
+    await ctx.supabase.from('daily_entries').upsert(
+      {
+        user_id: ctx.userId,
+        day: dayIndex,
+        morning_story: inserted.morning_story,
+        morning_action: inserted.morning_action,
+      },
+      { onConflict: 'user_id,day' }
+    );
+
+    await trackEvent(ctx.supabase, ctx.userId, 'daily_session_started', {
+      day_index: dayIndex,
+      local_date: localDate,
+      tier: entitlements.tier,
+      journey_id: activeJourneyId,
+      journey_day: dayIndex,
+    });
+
+    return res.status(200).json({
+      session: inserted,
+      reused: false,
+      journey: {
+        id: activeJourneyId,
+        title: journeyTitle,
+        duration: journeyDuration,
+        dayIndex,
+        modalityLabel,
+      },
+    });
+  }
+
+  // ── LLM generation path (no active journey or no static content) ──
   let storyRaw = "";
   let isValid = false;
   let attempts = 0;

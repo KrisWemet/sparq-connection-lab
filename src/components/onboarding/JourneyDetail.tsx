@@ -5,6 +5,7 @@ import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
 import { buildAuthedHeaders } from '@/lib/api-auth';
 import { supabase } from '@/lib/supabase';
 import { journeys } from '@/data/journeys';
+import { starterJourneyMap } from '@/data/starter-journeys';
 import type { DerivedProfile } from '@/lib/onboarding/types';
 
 interface JourneyDetailProps {
@@ -21,9 +22,15 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
   const [isStarting, setIsStarting] = useState(false);
 
   const journey = journeys.find(j => j.id === journeyId);
+  const starterJourney = starterJourneyMap.get(journeyId);
 
-  // Load Day 1 question from DB
+  // Load Day 1 preview — prefer static starter journey content, fall back to DB
   useEffect(() => {
+    if (starterJourney?.days?.[0]) {
+      setDay1Preview(starterJourney.days[0].action.prompt);
+      return;
+    }
+
     async function loadDay1() {
       const { data } = await supabase
         .from('journey_questions')
@@ -35,7 +42,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
       setDay1Preview(data?.question_text ?? journey?.overview ?? null);
     }
     loadDay1();
-  }, [journeyId, journey?.overview]);
+  }, [journeyId, journey?.overview, starterJourney]);
 
   async function handleStart() {
     if (isStarting) return;
@@ -43,11 +50,22 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
 
     try {
       const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
+
+      // Start the old journey system (for backward compat with journey pages)
       await fetch('/api/journeys/start', {
         method: 'POST',
         headers,
         body: JSON.stringify({ journey_id: journeyId }),
       });
+
+      // Activate starter journey content system (sets active_journey_id + resets day cursor)
+      if (starterJourney) {
+        await fetch('/api/journeys/activate', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ journey_id: journeyId }),
+        });
+      }
 
       // Mark onboarded
       await supabase
@@ -65,7 +83,13 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
     }
   }
 
-  if (!journey) return null;
+  // Use starter journey data when available, fall back to old journey catalog
+  const displayTitle = starterJourney?.title ?? journey?.title;
+  const displayDuration = starterJourney
+    ? `${starterJourney.duration} days`
+    : journey?.duration;
+
+  if (!journey && !starterJourney) return null;
 
   return (
     <div className="min-h-screen bg-brand-linen">
@@ -87,8 +111,8 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
           ✨
         </motion.div>
 
-        <h1 className="text-2xl font-bold text-[#1f2937] mb-1">{journey.title}</h1>
-        <p className="text-sm text-[#6b7280] mb-6">{journey.duration} · Beginner · Starts today</p>
+        <h1 className="text-2xl font-bold text-[#1f2937] mb-1">{displayTitle}</h1>
+        <p className="text-sm text-[#6b7280] mb-6">{displayDuration} · Beginner · Starts today</p>
 
         {/* What you'll be doing */}
         <div className="bg-white rounded-[20px] p-5 mb-4" style={{ border: '1px solid #e5e7eb' }}>

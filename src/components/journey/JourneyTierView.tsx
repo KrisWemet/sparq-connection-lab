@@ -92,6 +92,7 @@ function isTierUnlocked(journeyId: string, tierId: TierId): boolean {
 }
 
 function buildBestFitCopy(title: string, category?: string): string {
+  if (!title) return '';
   const lowerTitle = title.toLowerCase();
   if (lowerTitle.includes('communication')) return 'Best if talks turn into misses, tension, or shutdowns.';
   if (lowerTitle.includes('conflict')) return 'Best if hard moments get hot fast or never really get resolved.';
