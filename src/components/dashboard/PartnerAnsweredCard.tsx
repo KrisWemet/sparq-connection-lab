@@ -15,14 +15,26 @@ export function PartnerAnsweredCard({ partnerName, onPress }: Props) {
     >
       <button
         onClick={onPress}
-        className="w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-center gap-3 hover:shadow-md transition-shadow text-left"
+        className="w-full rounded-2xl p-4 flex items-center gap-3 text-left transition-all"
+        style={{
+          background: "linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%)",
+          border: "1px solid #DDD6FE",
+          boxShadow: "0 1px 3px rgba(124,58,237,0.08)",
+        }}
       >
-        <div className="w-10 h-10 rounded-full bg-amethyst-100 text-amethyst-600 flex items-center justify-center font-bold text-sm flex-shrink-0">
+        <div
+          className="w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0"
+          style={{ background: "#7C3AED", color: "#fff" }}
+        >
           {initials}
         </div>
-        <div>
-          <p className="text-gray-700 font-medium text-sm">{partnerName} has answered</p>
-          <p className="text-amethyst-500 text-sm mt-0.5">Tap to see their response →</p>
+        <div className="flex-1">
+          <p className="font-semibold text-sm" style={{ color: "#111827" }}>
+            {partnerName} has answered ✨
+          </p>
+          <p className="text-sm mt-0.5" style={{ color: "#7C3AED" }}>
+            Tap to see their response →
+          </p>
         </div>
       </button>
     </motion.div>

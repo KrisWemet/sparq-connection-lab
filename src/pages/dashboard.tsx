@@ -136,7 +136,7 @@ export default function Dashboard() {
   const isPostJourney = completionState === 'pending_decision' || completionState === 'resting';
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen pb-24" style={{ background: "linear-gradient(160deg, #F5F3FF 0%, #F9FAFB 40%, #EDE9FE 100%)" }}>
       <div className="max-w-lg mx-auto px-4 pt-6 space-y-5">
 
         <DashboardHeaderNew
@@ -164,9 +164,10 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.12 }}
-          className="bg-amethyst-600 rounded-2xl p-5"
+          className="rounded-2xl p-5"
+          style={{ background: "linear-gradient(135deg, #5B21B6 0%, #7C3AED 100%)" }}
         >
-          <p className="text-xs font-semibold tracking-widest uppercase text-white/70 mb-2">
+          <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: "rgba(255,255,255,0.65)" }}>
             {activeJourney ? `${activeJourney.title} — Day ${currentDay}` : `Day ${currentDay}`}
           </p>
           <p className="font-serif italic text-white text-base leading-snug mb-4">
@@ -179,14 +180,16 @@ export default function Dashboard() {
           {isPostJourney ? (
             <button
               onClick={() => router.push("/journeys")}
-              className="w-full bg-white text-amethyst-600 font-semibold rounded-xl py-3 text-sm hover:bg-gray-50 transition-colors"
+              className="w-full font-semibold rounded-xl py-3 text-sm transition-colors"
+              style={{ background: "rgba(255,255,255,0.95)", color: "#7C3AED" }}
             >
               Choose Next Journey
             </button>
           ) : (
             <button
               onClick={() => router.push("/daily-growth")}
-              className="w-full bg-white text-amethyst-600 font-semibold rounded-xl py-3 text-sm hover:bg-gray-50 transition-colors"
+              className="w-full font-semibold rounded-xl py-3 text-sm transition-colors"
+              style={{ background: "rgba(255,255,255,0.95)", color: "#7C3AED" }}
             >
               Begin Today&apos;s Practice →
             </button>
@@ -194,7 +197,8 @@ export default function Dashboard() {
           {showEveningCTA && !isPostJourney && (
             <button
               onClick={() => router.push("/daily-growth?mode=evening-checkin")}
-              className="w-full mt-3 bg-white/15 text-white font-medium rounded-xl py-3 text-sm hover:bg-white/25 transition-colors flex items-center justify-center gap-2"
+              className="w-full mt-3 font-medium rounded-xl py-3 text-sm flex items-center justify-center gap-2"
+              style={{ background: "rgba(255,255,255,0.12)", color: "#fff" }}
             >
               <Moon size={16} />
               Evening Check-in

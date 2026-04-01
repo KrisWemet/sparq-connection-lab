@@ -112,5 +112,15 @@ export default {
       },
     },
   },
+  safelist: [
+    { pattern: /^bg-amethyst-/ },
+    { pattern: /^text-amethyst-/ },
+    { pattern: /^border-amethyst-/ },
+    { pattern: /^ring-amethyst-/ },
+    { pattern: /^from-amethyst-/ },
+    { pattern: /^to-amethyst-/ },
+    { pattern: /^bg-gold-/ },
+    { pattern: /^text-gold-/ },
+  ],
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
