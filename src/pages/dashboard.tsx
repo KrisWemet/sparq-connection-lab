@@ -5,16 +5,16 @@ import { motion } from "framer-motion";
 import { PeterLoading } from "@/components/PeterLoading";
 
 // Dashboard components
-import { PeterGreeting } from "@/components/dashboard/PeterGreeting";
-import { WeeklyMirrorCard } from "@/components/dashboard/WeeklyMirrorCard";
-import { GrowthThread } from "@/components/dashboard/GrowthThread";
-import { JourneyArc } from "@/components/dashboard/JourneyArc";
-import { PartnerSynthesisCard } from "@/components/dashboard/PartnerSynthesisCard";
-import { HeartbeatButton } from "@/components/dashboard/HeartbeatButton";
+import { DashboardHeaderNew } from "@/components/dashboard/DashboardHeaderNew";
+import { DailyPulseBar } from "@/components/dashboard/DailyPulseBar";
+import { TodaysReflectionCard } from "@/components/dashboard/TodaysReflectionCard";
+import { PartnerAnsweredCard } from "@/components/dashboard/PartnerAnsweredCard";
+import { ActiveChallengeCard } from "@/components/dashboard/ActiveChallengeCard";
+import { SharedAchievements } from "@/components/dashboard/SharedAchievements";
 import { useRealtimeSync } from "@/hooks/useRealtimeSync";
 import { supabase } from "@/lib/supabase";
 
-import { Bell, Flame, Moon, Users, Heart, Plus, Circle } from "lucide-react";
+import { Moon } from "lucide-react";
 
 import { getJourneyVelocityStatus } from "@/services/journeyContentService";
 import { journeys } from "@/data/journeys";
@@ -136,74 +136,65 @@ export default function Dashboard() {
   const isPostJourney = completionState === 'pending_decision' || completionState === 'resting';
 
   return (
-    <div className="min-h-screen bg-brand-linen pb-24">
+    <div className="min-h-screen bg-gray-50 pb-24">
       <div className="max-w-lg mx-auto px-4 pt-6 space-y-5">
 
-        {/* ── TOP BAR ── */}
+        <DashboardHeaderNew
+          firstName={firstName}
+          partnerName={partnerName}
+          streakCount={streakCount}
+        />
+
+        <DailyPulseBar />
+
+        <TodaysReflectionCard
+          onPress={() => router.push("/daily-growth")}
+        />
+
+        {/* Partner answered — show when partner exists */}
+        {partnerName && (
+          <PartnerAnsweredCard
+            partnerName={partnerName}
+            onPress={() => router.push("/daily-growth")}
+          />
+        )}
+
+        {/* Today's Practice CTA card (keep existing amethyst-style, replacing brand-primary) */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="flex items-center justify-between"
+          transition={{ duration: 0.4, delay: 0.12 }}
+          className="bg-amethyst-600 rounded-2xl p-5"
         >
-          <span className="text-brand-espresso font-bold text-xl tracking-tight">SPARQ</span>
-          <div className="flex items-center gap-3">
-            <button
-              aria-label="Notifications"
-              className="p-2 rounded-full text-brand-text-secondary hover:bg-brand-parchment transition-colors"
-            >
-              <Bell size={20} />
-            </button>
-            <div className="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center">
-              <span className="text-white text-sm font-bold">{userInitials}</span>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* ── 1. PETER'S GREETING ── */}
-        <PeterGreeting firstName={firstName} />
-
-        {/* ── 2. TODAY'S PRACTICE CTA ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.08 }}
-          className="bg-brand-primary rounded-3xl p-6"
-        >
-          <p className="text-xs font-semibold tracking-widest uppercase text-white/70 mb-3">
-            {activeJourney
-              ? `${activeJourney.title} — Day ${currentDay}`
-              : `Day ${currentDay}`}
+          <p className="text-xs font-semibold tracking-widest uppercase text-white/70 mb-2">
+            {activeJourney ? `${activeJourney.title} — Day ${currentDay}` : `Day ${currentDay}`}
           </p>
-          <p className="font-serif italic text-white text-lg leading-snug mb-6">
+          <p className="font-serif italic text-white text-base leading-snug mb-4">
             {isPostJourney
               ? "Your journey is complete. What would you like to explore next?"
               : activeJourney
                 ? `Today's focus: ${activeJourney.title}`
-                : "What is one small thing you can do today to show up for your relationship?"}
+                : "A daily practice, however small, compounds into real change."}
           </p>
-
           {isPostJourney ? (
             <button
               onClick={() => router.push("/journeys")}
-              className="w-full bg-white text-brand-primary font-semibold rounded-2xl py-3 text-sm hover:bg-brand-linen transition-colors"
+              className="w-full bg-white text-amethyst-600 font-semibold rounded-xl py-3 text-sm hover:bg-gray-50 transition-colors"
             >
               Choose Next Journey
             </button>
           ) : (
             <button
               onClick={() => router.push("/daily-growth")}
-              className="w-full bg-white text-brand-primary font-semibold rounded-2xl py-3 text-sm hover:bg-brand-linen transition-colors"
+              className="w-full bg-white text-amethyst-600 font-semibold rounded-xl py-3 text-sm hover:bg-gray-50 transition-colors"
             >
-              Begin Today&apos;s Practice &rarr;
+              Begin Today&apos;s Practice →
             </button>
           )}
-
-          {/* Evening check-in CTA — shown when morning is done */}
           {showEveningCTA && !isPostJourney && (
             <button
-              onClick={() => router.push(`/daily-growth?mode=evening-checkin`)}
-              className="w-full mt-3 bg-white/15 text-white font-medium rounded-2xl py-3 text-sm hover:bg-white/25 transition-colors flex items-center justify-center gap-2"
+              onClick={() => router.push("/daily-growth?mode=evening-checkin")}
+              className="w-full mt-3 bg-white/15 text-white font-medium rounded-xl py-3 text-sm hover:bg-white/25 transition-colors flex items-center justify-center gap-2"
             >
               <Moon size={16} />
               Evening Check-in
@@ -211,126 +202,9 @@ export default function Dashboard() {
           )}
         </motion.div>
 
-        {/* ── 3. IDENTITY STATEMENT ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.12 }}
-          className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6"
-        >
-          <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
-            Your Identity
-          </p>
-          <p className="font-serif italic text-brand-espresso text-xl leading-snug mb-2">
-            {identityStatement}
-          </p>
-          <p className="text-sm text-brand-text-secondary">
-            {partnerName ? `Growing with ${partnerName}` : "Building solo strength"}
-          </p>
-        </motion.div>
+        <ActiveChallengeCard streakCount={streakCount} />
 
-        {/* ── 4. GROWTH THREAD ── */}
-        <GrowthThread />
-
-        {/* ── 5. WEEKLY MIRROR ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-        >
-          <WeeklyMirrorCard />
-        </motion.div>
-
-        {/* ── 6. JOURNEY ARC ── */}
-        <JourneyArc journeyDuration={journeyDuration} />
-
-        {/* ── PARTNER CONNECT ── */}
-        {(partnerId || !partnerName) && (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.3 }}
-            className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-5"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="relative w-10 h-10 rounded-full bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
-                  {partnerId ? (
-                    <Heart size={18} className="text-brand-primary" />
-                  ) : (
-                    <Users size={18} className="text-brand-primary" />
-                  )}
-                  {partnerId && partnerIsOnline && (
-                    <Circle
-                      size={10}
-                      fill="#4ade80"
-                      stroke="#FAF6F1"
-                      strokeWidth={2}
-                      className="absolute -top-0.5 -right-0.5"
-                    />
-                  )}
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-brand-espresso">
-                    {partnerName ? `Growing with ${partnerName}` : "Invite your partner"}
-                  </p>
-                  <p className="text-xs text-brand-text-secondary">
-                    {partnerId && partnerIsOnline
-                      ? "Online now"
-                      : partnerId && partnerDay
-                        ? partnerDay > 14
-                          ? "Graduated"
-                          : `Day ${partnerDay}`
-                        : partnerName
-                          ? "Progress is shared."
-                          : "Experience this together."}
-                  </p>
-                </div>
-              </div>
-
-              {partnerId ? (
-                <div className="flex -space-x-2">
-                  <div className="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center ring-2 ring-brand-parchment z-10">
-                    <span className="text-white text-xs font-bold">{userInitials}</span>
-                  </div>
-                  <div className="w-8 h-8 rounded-full bg-[#C8886A] flex items-center justify-center ring-2 ring-brand-parchment">
-                    <span className="text-white text-xs font-bold">{partnerInitials}</span>
-                  </div>
-                </div>
-              ) : (
-                <button
-                  onClick={() => router.push("/join-partner")}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-2xl border border-brand-primary text-brand-primary text-xs font-semibold hover:bg-brand-primary hover:text-white transition-colors"
-                >
-                  <Plus size={12} />
-                  Invite
-                </button>
-              )}
-            </div>
-
-            {partnerId && (
-              <div className="mt-4 space-y-3">
-                <PartnerSynthesisCard />
-                <HeartbeatButton />
-              </div>
-            )}
-          </motion.div>
-        )}
-
-        {/* ── 7. STREAK (compact, bottom) ── */}
-        {streakCount > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.35 }}
-            className="flex items-center justify-center gap-2 py-2"
-          >
-            <Flame size={16} className="text-brand-sand" />
-            <span className="font-bold text-brand-sand text-sm">
-              {streakCount} day streak
-            </span>
-          </motion.div>
-        )}
+        <SharedAchievements />
 
       </div>
     </div>
