@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import { journeys } from "@/data/journeys";
+import { WeeklyReflectionFeature } from "@/components/library/WeeklyReflectionFeature";
+import { LatestWisdomFeed } from "@/components/library/LatestWisdomFeed";
 import { Crown, Search, Lock } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -91,6 +93,7 @@ export default function Journeys() {
       </header>
 
       <main className="max-w-lg mx-auto px-4 pt-4">
+        <WeeklyReflectionFeature />
         {/* Category pills */}
         <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 relative z-10 pt-2">
           {CATEGORIES.map((cat) => (
@@ -185,6 +188,7 @@ export default function Journeys() {
             <p className="text-sm mt-1 text-zinc-500">Try a different search or category</p>
           </div>
         )}
+        <LatestWisdomFeed />
       </main>
     </div>
   );
