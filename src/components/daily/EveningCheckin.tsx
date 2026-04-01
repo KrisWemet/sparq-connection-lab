@@ -56,7 +56,7 @@ export function EveningCheckin({ sessionId, morningAction, journeyTitle, onCompl
   };
 
   return (
-    <div className="min-h-screen bg-brand-linen pb-24">
+    <div className="min-h-screen bg-gray-50 pb-24">
       <div className="max-w-lg mx-auto px-4 pt-8 space-y-6">
 
         {/* Header */}
@@ -66,8 +66,8 @@ export function EveningCheckin({ sessionId, morningAction, journeyTitle, onCompl
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="flex items-center gap-2"
         >
-          <Moon size={16} className="text-brand-primary" />
-          <span className="text-xs font-semibold tracking-widest uppercase text-brand-primary">
+          <Moon size={16} className="text-amethyst-600" />
+          <span className="text-xs font-semibold tracking-widest uppercase text-amethyst-600">
             Evening Check-in
           </span>
         </motion.div>
@@ -95,16 +95,16 @@ export function EveningCheckin({ sessionId, morningAction, journeyTitle, onCompl
               className="space-y-5"
             >
               {/* Morning action reminder */}
-              <div className="bg-brand-parchment rounded-3xl p-5 border border-brand-primary/10">
-                <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
+              <div className="bg-white rounded-3xl p-5 border border-gray-100">
+                <p className="text-xs font-semibold tracking-widest uppercase text-amethyst-600 mb-3">
                   Today&apos;s Practice
                 </p>
-                <p className="font-serif italic text-brand-espresso text-[15px] leading-relaxed">
+                <p className="font-serif italic text-gray-900 text-[15px] leading-relaxed">
                   {morningAction}
                 </p>
               </div>
 
-              <p className="font-serif italic text-brand-text-secondary text-[15px] text-center leading-relaxed">
+              <p className="font-serif italic text-gray-500 text-[15px] text-center leading-relaxed">
                 Did you get a chance to try this today?
               </p>
 
@@ -112,13 +112,13 @@ export function EveningCheckin({ sessionId, morningAction, journeyTitle, onCompl
               <div className="flex flex-col gap-3">
                 <button
                   onClick={() => handlePracticeChoice(true)}
-                  className="w-full p-4 rounded-2xl border-2 border-brand-primary/20 bg-brand-parchment text-brand-espresso font-medium text-left hover:border-brand-primary hover:bg-brand-primary/5 active:scale-[0.98] transition-all"
+                  className="w-full p-4 rounded-2xl border-2 border-amethyst-600/20 bg-white text-gray-900 font-medium text-left hover:border-amethyst-600 hover:bg-amethyst-600/5 active:scale-[0.98] transition-all"
                 >
                   Yes, I gave it a try
                 </button>
                 <button
                   onClick={() => handlePracticeChoice(false)}
-                  className="w-full p-4 rounded-2xl border-2 border-brand-primary/20 bg-brand-parchment text-brand-espresso font-medium text-left hover:border-brand-primary hover:bg-brand-primary/5 active:scale-[0.98] transition-all"
+                  className="w-full p-4 rounded-2xl border-2 border-amethyst-600/20 bg-white text-gray-900 font-medium text-left hover:border-amethyst-600 hover:bg-amethyst-600/5 active:scale-[0.98] transition-all"
                 >
                   Not today — and that&apos;s okay
                 </button>
@@ -136,13 +136,13 @@ export function EveningCheckin({ sessionId, morningAction, journeyTitle, onCompl
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               className="space-y-5"
             >
-              <p className="font-serif italic text-brand-espresso text-lg text-center leading-relaxed">
+              <p className="font-serif italic text-gray-900 text-lg text-center leading-relaxed">
                 {practiceAttempted
                   ? 'How did it go? What did you notice?'
                   : 'What was on your mind today instead?'}
               </p>
 
-              <div className="bg-brand-parchment rounded-3xl p-5 border border-brand-primary/10">
+              <div className="bg-white rounded-3xl p-5 border border-gray-100">
                 <textarea
                   value={reflectionText}
                   onChange={(e) => setReflectionText(e.target.value)}
@@ -150,7 +150,7 @@ export function EveningCheckin({ sessionId, morningAction, journeyTitle, onCompl
                     ? 'Even a sentence or two is perfect...'
                     : 'Whatever is on your mind...'
                   }
-                  className="w-full bg-transparent text-brand-text-primary text-[15px] leading-relaxed placeholder:text-brand-text-secondary/50 resize-none focus:outline-none min-h-[120px]"
+                  className="w-full bg-transparent text-gray-900 text-[15px] leading-relaxed placeholder:text-gray-500/50 resize-none focus:outline-none min-h-[120px]"
                   autoFocus
                 />
               </div>
@@ -158,7 +158,7 @@ export function EveningCheckin({ sessionId, morningAction, journeyTitle, onCompl
               <button
                 onClick={handleSubmitReflection}
                 disabled={!reflectionText.trim() || isSubmitting}
-                className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors disabled:opacity-50 text-base"
+                className="w-full bg-amethyst-600 text-white font-semibold py-4 rounded-2xl hover:bg-amethyst-700 transition-colors disabled:opacity-50 text-base"
               >
                 {isSubmitting ? 'Peter is reading...' : 'Share with Peter'}
               </button>
@@ -175,8 +175,8 @@ export function EveningCheckin({ sessionId, morningAction, journeyTitle, onCompl
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               className="space-y-6"
             >
-              <div className="bg-brand-parchment rounded-3xl p-5 border border-brand-primary/10">
-                <p className="font-serif italic text-brand-espresso text-[15px] leading-relaxed" style={{ whiteSpace: 'pre-wrap' }}>
+              <div className="bg-white rounded-3xl p-5 border border-gray-100">
+                <p className="font-serif italic text-gray-900 text-[15px] leading-relaxed" style={{ whiteSpace: 'pre-wrap' }}>
                   {peterResponse}
                 </p>
               </div>
@@ -191,7 +191,7 @@ export function EveningCheckin({ sessionId, morningAction, journeyTitle, onCompl
                     setStep('done');
                     onComplete();
                   }}
-                  className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors text-base"
+                  className="w-full bg-amethyst-600 text-white font-semibold py-4 rounded-2xl hover:bg-amethyst-700 transition-colors text-base"
                 >
                   <span className="flex items-center justify-center gap-2">
                     <CheckCircle size={18} />

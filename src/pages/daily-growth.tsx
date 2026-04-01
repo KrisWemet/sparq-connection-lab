@@ -482,14 +482,14 @@ export default function DailyGrowth() {
 
   if (showHome && phase === 'morning') {
     return (
-      <div className="min-h-screen bg-brand-linen pb-28 font-sans">
+      <div className="min-h-screen bg-gray-50 pb-28 font-sans">
         {/* ── Top bar: SPARQ wordmark + settings ── */}
         <div className="flex items-center justify-between px-5 pt-6 pb-2">
           <span className="text-lg font-bold tracking-tight text-[#2C1A14]">SPARQ</span>
           <button
             onClick={() => router.push('/settings')}
             aria-label="Settings"
-            className="p-1.5 rounded-xl text-brand-primary hover:bg-brand-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+            className="p-1.5 rounded-xl text-amethyst-600 hover:bg-amethyst-600/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amethyst-300 focus-visible:ring-offset-2"
           >
             <Settings size={20} />
           </button>
@@ -531,7 +531,7 @@ export default function DailyGrowth() {
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
           >
             <PeterAvatar mood="afternoon" size={64} />
-            <p className="font-serif italic text-brand-taupe text-[15px] text-center leading-relaxed max-w-xs">
+            <p className="font-serif italic text-gray-500 text-[15px] text-center leading-relaxed max-w-xs">
               Small things often. Connection isn&apos;t built in a day, but in the daily loops of shared vulnerability.
             </p>
           </motion.div>
@@ -541,7 +541,7 @@ export default function DailyGrowth() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-linen flex flex-col font-sans">
+    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
       {/* Header */}
       <div className="flex items-center justify-between px-5 pt-5 pb-3">
         <div className="flex items-center gap-2">
@@ -549,12 +549,12 @@ export default function DailyGrowth() {
             <button
               onClick={() => setShowHome(true)}
               aria-label="Back"
-              className="p-1.5 rounded-xl text-brand-primary hover:bg-brand-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+              className="p-1.5 rounded-xl text-amethyst-600 hover:bg-amethyst-600/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amethyst-300"
             >
               <ChevronLeft size={20} />
             </button>
           )}
-          <span className="text-xs font-semibold tracking-widest uppercase text-brand-primary">
+          <span className="text-xs font-semibold tracking-widest uppercase text-amethyst-600">
             Day {currentDay} &middot; {phase === 'morning' ? 'Morning' : (phase === 'evening' || phase === 'evening-checkin') ? 'Evening' : phase === 'journey-complete' ? 'Complete' : 'Complete'}
           </span>
         </div>
@@ -583,13 +583,13 @@ export default function DailyGrowth() {
                   <PeterAvatar mood="morning" size={56} />
 
                   {/* Speech card */}
-                  <div className="w-full bg-[#EDE4D8] rounded-3xl p-5 border border-brand-primary/10 shadow-sm">
+                  <div className="w-full bg-white rounded-3xl p-5 border border-gray-100 shadow-sm">
                     {isGenerating ? (
                       <div className="flex gap-2 items-center h-6">
                         {[0, 1, 2].map(i => (
                           <motion.div
                             key={i}
-                            className="w-2 h-2 rounded-full bg-brand-primary/40"
+                            className="w-2 h-2 rounded-full bg-amethyst-600/40"
                             animate={{ opacity: [0.3, 1, 0.3] }}
                             transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.2 }}
                           />
@@ -612,9 +612,9 @@ export default function DailyGrowth() {
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ type: 'spring', bounce: 0, duration: 0.6, delay: 0.15 }}
-                    className="bg-[#EDE4D8] rounded-3xl p-5 border border-brand-primary/10 shadow-sm"
+                    className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm"
                   >
-                    <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
+                    <p className="text-xs font-semibold tracking-widest uppercase text-amethyst-600 mb-3">
                       Today&apos;s Practice
                     </p>
                     <p className="text-[#2C1A14] font-medium leading-relaxed text-[15px]">
@@ -632,7 +632,7 @@ export default function DailyGrowth() {
                   >
                     <button
                       onClick={handleMorningRead}
-                      className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors text-base"
+                      className="w-full bg-amethyst-600 text-white font-semibold py-4 rounded-2xl hover:bg-amethyst-700 transition-colors text-base"
                     >
                       I&apos;ll practice this today
                     </button>
@@ -658,8 +658,8 @@ export default function DailyGrowth() {
                   <div className="max-w-lg mx-auto px-4 py-6 space-y-5">
 
                     {/* Morning action reminder */}
-                    <div className="bg-[#EDE4D8] rounded-2xl p-4 flex items-start gap-3 border border-brand-primary/10">
-                      <Sun size={16} className="text-brand-primary mt-0.5 flex-shrink-0" />
+                    <div className="bg-white rounded-2xl p-4 flex items-start gap-3 border border-gray-100">
+                      <Sun size={16} className="text-amethyst-600 mt-0.5 flex-shrink-0" />
                       <p className="text-sm text-[#6B4C3B] leading-relaxed">{morningAction}</p>
                     </div>
 
@@ -677,11 +677,11 @@ export default function DailyGrowth() {
                         onPointerDown={() => setIsHolding(true)}
                         onPointerUp={() => setIsHolding(false)}
                         onPointerLeave={() => setIsHolding(false)}
-                        className="relative w-full overflow-hidden bg-[#EDE4D8] border border-brand-primary/20 rounded-2xl py-4 select-none"
+                        className="relative w-full overflow-hidden bg-white border border-amethyst-600/20 rounded-2xl py-4 select-none"
                         style={{ touchAction: 'none' }}
                       >
                         <div
-                          className="absolute inset-0 bg-brand-primary origin-left transition-transform duration-[3000ms] ease-linear"
+                          className="absolute inset-0 bg-amethyst-600 origin-left transition-transform duration-[3000ms] ease-linear"
                           style={{ transform: `scaleX(${isHolding ? 1 : 0})` }}
                           onTransitionEnd={(e) => {
                             if (isHolding && e.propertyName === 'transform') {
@@ -710,8 +710,8 @@ export default function DailyGrowth() {
                 /* ── Chat state (actionVerified) ── */
                 <>
                   {/* Morning action reminder — slim card at top */}
-                  <div className="mx-4 mt-3 mb-1 bg-[#EDE4D8] border border-brand-primary/10 rounded-2xl px-4 py-3 flex items-start gap-3">
-                    <Sun size={15} className="text-brand-primary mt-0.5 flex-shrink-0" />
+                  <div className="mx-4 mt-3 mb-1 bg-white border border-gray-100 rounded-2xl px-4 py-3 flex items-start gap-3">
+                    <Sun size={15} className="text-amethyst-600 mt-0.5 flex-shrink-0" />
                     <p className="text-sm text-[#6B4C3B] leading-relaxed">
                       <span className="font-semibold text-[#2C1A14] mr-1">Today&apos;s action:</span>
                       {morningAction}
@@ -733,7 +733,7 @@ export default function DailyGrowth() {
                       initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ type: 'spring', bounce: 0.15, duration: 0.7 }}
-                      className="px-4 pt-4 pb-6 border-t border-brand-primary/10 bg-brand-linen"
+                      className="px-4 pt-4 pb-6 border-t border-gray-100 bg-gray-50"
                     >
                       <p className="text-center text-sm text-[#6B4C3B] mb-3 font-serif italic">
                         Your reflection is complete.
@@ -741,7 +741,7 @@ export default function DailyGrowth() {
                       <button
                         onClick={handleCompleteDay}
                         disabled={isSaving}
-                        className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors disabled:opacity-50 text-base"
+                        className="w-full bg-amethyst-600 text-white font-semibold py-4 rounded-2xl hover:bg-amethyst-700 transition-colors disabled:opacity-50 text-base"
                       >
                         {isSaving ? 'Synthesizing...' : `Complete Day ${currentDay}`}
                       </button>
@@ -751,12 +751,12 @@ export default function DailyGrowth() {
                       initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ type: 'spring', bounce: 0, duration: 0.6 }}
-                      className="px-4 py-4 border-t border-brand-primary/10 bg-brand-linen"
+                      className="px-4 py-4 border-t border-gray-100 bg-gray-50"
                     >
                       <button
                         onClick={handleCompleteDay}
                         disabled={isSaving}
-                        className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors disabled:opacity-50 text-base"
+                        className="w-full bg-amethyst-600 text-white font-semibold py-4 rounded-2xl hover:bg-amethyst-700 transition-colors disabled:opacity-50 text-base"
                       >
                         {isSaving ? 'Synthesizing...' : `Complete Day ${currentDay}`}
                       </button>
@@ -834,7 +834,7 @@ export default function DailyGrowth() {
                   </p>
 
                   {/* Streak badge card */}
-                  <div className="bg-[#EDE4D8] rounded-3xl p-5 border border-brand-primary/10 shadow-sm mt-6 max-w-xs w-full text-center">
+                  <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm mt-6 max-w-xs w-full text-center">
                     <Flame size={28} className="text-brand-sand mx-auto mb-2" />
                     <p className="text-brand-sand font-bold text-2xl">{currentDay - 1} days</p>
                     <p className="text-[#6B4C3B] text-sm mt-1">Consistent growth.</p>
@@ -843,7 +843,7 @@ export default function DailyGrowth() {
                   {/* Return button */}
                   <button
                     onClick={() => router.push('/dashboard')}
-                    className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors text-base mt-6"
+                    className="w-full bg-amethyst-600 text-white font-semibold py-4 rounded-2xl hover:bg-amethyst-700 transition-colors text-base mt-6"
                   >
                     Return to Dashboard
                   </button>
