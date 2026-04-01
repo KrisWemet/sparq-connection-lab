@@ -33,14 +33,14 @@ export function ActiveChallengeCard({ streakCount }: Props) {
 
       <div className="flex -space-x-2 mb-4">
         <div
-          className="w-8 h-8 rounded-full flex items-center justify-center ring-2 z-10"
-          style={{ background: "rgba(255,255,255,0.25)", ringColor: "#7C3AED" }}
+          className="w-8 h-8 rounded-full flex items-center justify-center z-10"
+          style={{ background: "rgba(255,255,255,0.25)", outline: "2px solid rgba(255,255,255,0.3)" }}
         >
           <span className="text-white text-xs font-bold">C</span>
         </div>
         <div
-          className="w-8 h-8 rounded-full flex items-center justify-center ring-2"
-          style={{ background: "rgba(255,255,255,0.18)", ringColor: "#7C3AED" }}
+          className="w-8 h-8 rounded-full flex items-center justify-center"
+          style={{ background: "rgba(255,255,255,0.18)", outline: "2px solid rgba(255,255,255,0.3)" }}
         >
           <span className="text-white text-xs font-bold">S</span>
         </div>
