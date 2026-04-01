@@ -1,12 +1,12 @@
-import { Home, BookOpen, MessageCircle, User2 } from "lucide-react";
+import { Home, BarChart2, BookOpen, Trophy } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 const navItems = [
   { icon: Home, label: "Home", path: "/dashboard" },
-  { icon: BookOpen, label: "Journeys", path: "/journeys" },
-  { icon: MessageCircle, label: "Daily", path: "/daily-growth" },
-  { icon: User2, label: "Profile", path: "/profile" },
+  { icon: BarChart2, label: "Insights", path: "/insights" },
+  { icon: BookOpen, label: "Library", path: "/journeys" },
+  { icon: Trophy, label: "Challenges", path: "/couples" },
 ];
 
 export function BottomNav() {
@@ -21,9 +21,8 @@ export function BottomNav() {
     <nav
       className="fixed bottom-0 left-0 right-0 backdrop-blur-xl py-3 px-6 flex justify-between items-center z-50 pb-[calc(0.75rem+env(safe-area-inset-bottom))]"
       style={{
-        background: 'rgba(255,255,255,0.92)',
-        borderTop: '1px solid rgba(200,106,88,0.1)',
-        boxShadow: '0 -4px 20px rgba(200,106,88,0.04)',
+        background: 'rgba(255,255,255,0.95)',
+        borderTop: '1px solid #F3F4F6',
       }}
     >
       {navItems.map((item) => {
@@ -36,17 +35,17 @@ export function BottomNav() {
           >
             <div
               className="flex items-center justify-center w-10 h-8 rounded-full transition-all"
-              style={isActive ? { background: 'rgba(192,97,74,0.1)' } : {}}
+              style={isActive ? { background: 'rgba(139,92,246,0.1)' } : {}}
             >
               <item.icon
                 size={22}
                 strokeWidth={isActive ? 2.5 : 1.8}
-                style={{ color: isActive ? '#C0614A' : '#9E8A86' }}
+                style={{ color: isActive ? '#7C3AED' : '#9CA3AF' }}
               />
             </div>
             <span
               className="text-[10px] font-semibold"
-              style={{ color: isActive ? '#C0614A' : '#9E8A86' }}
+              style={{ color: isActive ? '#7C3AED' : '#9CA3AF' }}
             >
               {item.label}
             </span>
