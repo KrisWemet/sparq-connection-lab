@@ -28,6 +28,19 @@ export default {
           taupe: "#3D2C28",     // Deep warm brown for grounding text
           growth: "#8FAF8A",    // Soft sage green for progress
         },
+        amethyst: {
+          50:  '#F5F3FF',
+          100: '#EDE9FE',
+          200: '#DDD6FE',
+          500: '#8B5CF6',
+          600: '#7C3AED',
+          700: '#6D28D9',
+        },
+        gold: {
+          100: '#FEF3C7',
+          400: '#FBBF24',
+          500: '#F59E0B',
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
