@@ -215,7 +215,7 @@ export default function RelationshipType() {
                       Answer questions specifically designed for {typeData.title.toLowerCase()} to strengthen your connection.
                     </p>
                     <Button 
-                      onClick={() => router.push("/daily-questions")}
+                      onClick={() => router.push("/daily-growth")}
                       className="w-full sm:w-auto"
                     >
                       Start Daily Questions
@@ -268,7 +268,7 @@ export default function RelationshipType() {
               <CardFooter>
                 <Button 
                   className="w-full"
-                  onClick={() => router.push("/daily-questions")}
+                  onClick={() => router.push("/daily-growth")}
                 >
                   Explore All Questions
                   <ArrowRight className="w-4 h-4 ml-1" />

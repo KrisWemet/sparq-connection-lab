@@ -32,7 +32,7 @@ export function DayProgressArc({ currentDay, totalDays = 14 }: DayProgressArcPro
             cx={CENTER}
             cy={CENTER}
             r={RADIUS}
-            stroke="#EDE4D8"
+            stroke="#EDE9FE"
             strokeWidth={STROKE}
             fill="none"
           />
@@ -41,7 +41,7 @@ export function DayProgressArc({ currentDay, totalDays = 14 }: DayProgressArcPro
             cx={CENTER}
             cy={CENTER}
             r={RADIUS}
-            stroke="#C0614A"
+            stroke="#8B5CF6"
             strokeWidth={STROKE}
             fill="none"
             strokeLinecap="round"
@@ -55,7 +55,7 @@ export function DayProgressArc({ currentDay, totalDays = 14 }: DayProgressArcPro
 
         {/* Text centered inside arc */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-2xl font-bold text-[#2C1A14] leading-none tabular-nums">
+          <span className="text-2xl font-bold text-[#2E1065] leading-none tabular-nums">
             Day {currentDay}
           </span>
           <span className="text-sm text-brand-taupe mt-0.5">of {totalDays}</span>
@@ -73,7 +73,7 @@ export function DayProgressArc({ currentDay, totalDays = 14 }: DayProgressArcPro
             className={
               i < currentDay
                 ? 'w-2 h-2 rounded-full bg-brand-primary'
-                : 'w-2 h-2 rounded-full bg-[#EDE4D8] border border-brand-primary/20'
+                : 'w-2 h-2 rounded-full bg-[#EDE9FE] border border-brand-primary/20'
             }
           />
         ))}

@@ -6,8 +6,9 @@ import { getAuthedContext } from '@/lib/server/supabase-auth';
 import { resolveEntitlements } from '@/lib/server/entitlements';
 import { getWeekBounds, parseLocalDate } from '@/lib/server/date-utils';
 import { trackEvent } from '@/lib/server/analytics';
+import { trackPrimaryPathServerError } from '@/lib/server/beta-ops';
 import { computeTraitGaps, getSteeringHint, getSteeredTrait } from '@/lib/server/trait-gaps';
-import { resolveJourneyContent } from '@/lib/server/journey-content';
+import { PracticeMode, resolveJourneyContent } from '@/lib/server/journey-content';
 
 const dailySessionColumnCache: Record<string, boolean | undefined> = {};
 
@@ -43,6 +44,37 @@ type StartBody = {
   idempotency_key?: string;
 };
 
+function inferPracticeMode(action: string | null | undefined): PracticeMode {
+  const normalized = (action || '').toLowerCase();
+
+  if (
+    normalized.includes('with your partner') ||
+    normalized.includes('tell your partner') ||
+    normalized.includes('ask your partner') ||
+    normalized.includes('together') ||
+    normalized.includes('both of you')
+  ) {
+    return 'partner_optional';
+  }
+
+  return 'solo';
+}
+
+function buildPracticeMetadata(
+  action: string | null | undefined,
+  mode?: PracticeMode
+) {
+  const practiceMode = mode || inferPracticeMode(action);
+
+  return {
+    practice_mode: practiceMode,
+    solo_prompt:
+      practiceMode === 'solo'
+        ? 'Practice this in how you show up today.'
+        : 'Try this with your partner if it fits. If not, practice it in how you show up.',
+  };
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -64,13 +96,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .limit(1);
 
   if (existingError) {
+    await trackPrimaryPathServerError(ctx.supabase, ctx.userId, 'daily_session_existing_lookup', existingError, {
+      local_date: localDate,
+    });
     return res.status(500).json({ error: 'Failed to check existing daily session' });
   }
 
   const existing = existingRows?.[0];
 
   if (existing) {
-    return res.status(200).json({ session: existing, reused: true });
+    return res.status(200).json({
+      session: {
+        ...existing,
+        ...buildPracticeMetadata(existing.morning_action),
+      },
+      reused: true,
+    });
   }
 
   const entitlements = await resolveEntitlements(ctx.supabase, ctx.userId);
@@ -207,7 +248,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const journeyContent = resolveJourneyContent(activeJourneyId, dayIndex);
 
   if (journeyContent) {
-    const { day: jDay, journeyTitle, journeyDuration, modalityLabel } = journeyContent;
+    const { day: jDay, journeyTitle, journeyDuration, modalityLabel, practiceMode } = journeyContent;
 
     const insertPayload: Record<string, unknown> = {
       user_id: ctx.userId,
@@ -290,10 +331,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       tier: entitlements.tier,
       journey_id: activeJourneyId,
       journey_day: dayIndex,
+      practice_mode: practiceMode,
     });
 
     return res.status(200).json({
-      session: inserted,
+      session: {
+        ...inserted,
+        ...buildPracticeMetadata(inserted.morning_action, practiceMode),
+      },
       reused: false,
       journey: {
         id: activeJourneyId,
@@ -301,6 +346,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         duration: journeyDuration,
         dayIndex,
         modalityLabel,
+        practiceMode,
       },
     });
   }
@@ -455,7 +501,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     day_index: dayIndex,
     local_date: localDate,
     tier: entitlements.tier,
+    practice_mode: inferPracticeMode(action),
   });
 
-  return res.status(200).json({ session: inserted, reused: false });
+  return res.status(200).json({
+    session: {
+      ...inserted,
+      ...buildPracticeMetadata(inserted.morning_action),
+    },
+    reused: false,
+  });
 }

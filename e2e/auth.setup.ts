@@ -27,9 +27,14 @@ setup('authenticate', async ({ page }) => {
     await page.locator('input[name="email"]').fill(email);
     await page.locator('input[name="password"]').fill(password);
     await page.locator('button[type="submit"]').click();
-    
-    // Wait for the redirect to dashboard
-    await page.waitForURL('**/dashboard', { timeout: 10_000 });
+
+    const consentButton = page.locator('button:has-text("I understand, create my account")');
+    if (await consentButton.isVisible({ timeout: 5_000 }).catch(() => false)) {
+      await consentButton.click();
+    }
+
+    // New accounts land in onboarding first; some existing test users may still route to dashboard.
+    await page.waitForURL(/\/(onboarding|dashboard)/, { timeout: 15_000 });
   }
 
   // Save real auth state for reuse across all tests

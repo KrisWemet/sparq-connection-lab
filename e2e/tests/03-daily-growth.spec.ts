@@ -1,120 +1,116 @@
 import { test, expect } from '@playwright/test';
-import { mockPeterRoutes } from '../helpers/mock-peter';
-import { mockUserInsights, mockDailyEntries } from '../helpers/mock-supabase';
+
+const morningStory = 'Good morning. Today you are becoming someone who slows down before reacting.';
+const morningAction = 'Pause before your next hard moment and choose the calmer version of what you want to say.';
 
 test.describe('Daily Growth Loop', () => {
   test.beforeEach(async ({ page }) => {
-    await mockPeterRoutes(page);
-    // Day 1, not yet unlocked, no existing entry today
-    await mockUserInsights(page, { onboarding_day: 1, skill_tree_unlocked: false });
-    await mockDailyEntries(page, null);
+    await page.route('**/api/daily/session/start', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          session: {
+            id: 'session-1',
+            day_index: 1,
+            status: 'morning_ready',
+            morning_story: morningStory,
+            morning_action: morningAction,
+            practice_mode: 'solo',
+          },
+          reused: false,
+        }),
+      });
+    });
+
+    await page.route('**/api/daily/session/morning-viewed', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ ok: true }),
+      });
+    });
+
+    await page.route('**/api/peter/chat', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          message: 'That was a strong rep. You stayed clear, and that matters.',
+        }),
+      });
+    });
+
+    await page.route('**/api/daily/session/complete', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          next_day_index: 2,
+          journey_completed: false,
+        }),
+      });
+    });
   });
 
-  test('morning phase: shows story and action card', async ({ page }) => {
+  test('shows the solo-first home state before the morning session begins', async ({ page }) => {
     await page.goto('/daily-growth');
 
-    // Header shows "Day 1 of 14"
-    await expect(page.locator('text=Day 1 of 14')).toBeVisible({ timeout: 10_000 });
-
-    // Morning badge visible
-    await expect(page.locator('span:has-text("Morning")').first()).toBeVisible();
-
-    // Peter's morning story should load (mocked instantly)
-    await expect(page.locator('text=Alex noticed Sam')).toBeVisible({ timeout: 10_000 });
-
-    // Today's Action card visible
-    await expect(page.locator('text=Today\'s Action')).toBeVisible();
-
-    // CTA button visible
-    await expect(
-      page.locator('button:has-text("Got it — I\'ll try this today")')
-    ).toBeVisible();
+    await expect(page.locator('text=Solo-first reminder')).toBeVisible();
+    await expect(page.locator('text=This is a solo-first step.')).toBeVisible();
+    await expect(page.locator('button:has-text("Start Morning Story")')).toBeVisible();
   });
 
-  test('morning → evening transition on "Got it" click', async ({ page }) => {
+  test('morning flow keeps the practice rooted in what one user can control', async ({ page }) => {
     await page.goto('/daily-growth');
 
-    // Wait for morning content to load
-    await expect(
-      page.locator('button:has-text("Got it — I\'ll try this today")')
-    ).toBeVisible({ timeout: 10_000 });
+    await page.locator('button:has-text("Start Morning Story")').click();
 
-    await page.locator('button:has-text("Got it — I\'ll try this today")').click();
+    await expect(page.locator(`text=${morningStory}`)).toBeVisible();
+    await expect(page.locator(`text=${morningAction}`)).toBeVisible();
+    await expect(page.locator('text=This is a solo-first step.')).toBeVisible();
+    await expect(page.locator('button:has-text("I\'ll do this today")')).toBeVisible();
+  });
 
-    // Phase transitions to evening
-    await expect(page.locator('span:has-text("Evening")').first()).toBeVisible({ timeout: 5_000 });
-    await expect(
-      page.locator('text=Hey, welcome back!')
-    ).toBeVisible({ timeout: 5_000 });
+  test('evening flow supports solo completion without partner dependency', async ({ page }) => {
+    await page.goto('/daily-growth');
 
-    // Evening action reminder shows
-    await expect(page.locator('text=Today\'s action:')).toBeVisible();
+    await page.locator('button:has-text("Start Morning Story")').click();
+    await page.locator('button:has-text("I\'ll do this today")').click();
 
-    // Chat input is ready
+    await expect(page.locator('text=How did you practice this in the way you showed up today?')).toBeVisible();
+    await expect(page.locator('text=This step still counts, even if your partner never opens the app.')).toBeVisible();
+
+    await page.locator('button:has-text("Skip Hold (Dev)")').click();
     await expect(page.locator('textarea[placeholder="How did it go today?"]')).toBeVisible();
+
+    await page.locator('textarea[placeholder="How did it go today?"]').fill('I paused, breathed, and said the kinder version.');
+    await page.locator('form button[type="submit"]').click();
+    await expect(page.locator('textarea')).toBeEnabled();
+
+    await page.locator('textarea').fill('I felt more steady, and the whole conversation stayed calmer.');
+    await page.locator('form button[type="submit"]').click();
+
+    await expect(page.locator('button:has-text("Finish Day 1")')).toBeVisible();
   });
 
-  test('evening phase: complete button appears after 2 messages', async ({ page }) => {
+  test('completion celebrates showing up, not partner adoption', async ({ page }) => {
     await page.goto('/daily-growth');
 
-    // Skip morning phase
-    await expect(
-      page.locator('button:has-text("Got it — I\'ll try this today")')
-    ).toBeVisible({ timeout: 10_000 });
-    await page.locator('button:has-text("Got it — I\'ll try this today")').click();
-    await expect(page.locator('textarea[placeholder="How did it go today?"]')).toBeVisible({ timeout: 5_000 });
+    await page.locator('button:has-text("Start Morning Story")').click();
+    await page.locator('button:has-text("I\'ll do this today")').click();
+    await page.locator('button:has-text("Skip Hold (Dev)")').click();
 
-    // Send first evening message
-    await page.locator('textarea[placeholder="How did it go today?"]').fill('We tried it together and it felt really good!');
+    await page.locator('textarea').fill('I repaired faster and owned my part.');
     await page.locator('form button[type="submit"]').click();
-    await expect(page.locator('textarea')).toBeEnabled({ timeout: 8_000 });
+    await expect(page.locator('textarea')).toBeEnabled();
 
-    // Complete button should NOT be visible yet (only 1 turn)
-    await expect(
-      page.locator('button:has-text("Complete Day")')
-    ).not.toBeVisible();
-
-    // Send second evening message
-    await page.locator('textarea').fill('It surprised me how much easier it was than I expected.');
+    await page.locator('textarea').fill('I noticed the shift right away.');
     await page.locator('form button[type="submit"]').click();
-    await expect(page.locator('textarea')).toBeEnabled({ timeout: 8_000 });
+    await page.locator('button:has-text("Finish Day 1")').click();
 
-    // Complete button should now appear
-    await expect(
-      page.locator('button:has-text("Complete Day 1")')
-    ).toBeVisible({ timeout: 5_000 });
-  });
-
-  test('completing a day shows celebration screen', async ({ page }) => {
-    await page.goto('/daily-growth');
-
-    // Morning phase
-    await expect(
-      page.locator('button:has-text("Got it — I\'ll try this today")')
-    ).toBeVisible({ timeout: 10_000 });
-    await page.locator('button:has-text("Got it — I\'ll try this today")').click();
-
-    // Evening phase — send 2 messages
-    await expect(page.locator('textarea')).toBeVisible({ timeout: 5_000 });
-    await page.locator('textarea').fill('It went really well today!');
-    await page.locator('form button[type="submit"]').click();
-    await expect(page.locator('textarea')).toBeEnabled({ timeout: 8_000 });
-
-    await page.locator('textarea').fill('I feel closer to my partner already.');
-    await page.locator('form button[type="submit"]').click();
-    await expect(page.locator('textarea')).toBeEnabled({ timeout: 8_000 });
-
-    // Click Complete Day 1
-    await page.locator('button:has-text("Complete Day 1")').click();
-
-    // Celebration screen
-    await expect(
-      page.locator('text=Day 1 complete!')
-    ).toBeVisible({ timeout: 10_000 });
-
-    // Back to Dashboard button for non-graduation days
-    await expect(
-      page.locator('button:has-text("Back to Dashboard")')
-    ).toBeVisible();
+    await expect(page.locator('text=Day 1 complete.')).toBeVisible();
+    await expect(page.locator("text=You showed up. That's everything.")).toBeVisible();
+    await expect(page.locator('button:has-text("Return to Dashboard")')).toBeVisible();
   });
 });

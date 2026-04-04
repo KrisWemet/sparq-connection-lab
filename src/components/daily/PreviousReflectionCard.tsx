@@ -12,7 +12,7 @@ export function PreviousReflectionCard({ quote, onViewJournal }: PreviousReflect
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], delay: 0.28 }}
-      className="bg-[#EDE4D8] rounded-2xl border border-brand-primary/10 shadow-sm p-5"
+      className="bg-[#EDE9FE] rounded-2xl border border-brand-primary/10 shadow-sm p-5"
     >
       {/* Label */}
       <p className="text-xs font-semibold tracking-widest uppercase text-brand-taupe mb-3">
@@ -20,7 +20,7 @@ export function PreviousReflectionCard({ quote, onViewJournal }: PreviousReflect
       </p>
 
       {/* Quoted reflection — serif italic, the user's own words */}
-      <p className="font-serif italic text-[#2C1A14] text-[15px] leading-relaxed">
+      <p className="font-serif italic text-[#2E1065] text-[15px] leading-relaxed">
         &ldquo;{quote}&rdquo;
       </p>
 

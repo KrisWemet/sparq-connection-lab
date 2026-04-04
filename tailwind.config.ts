@@ -20,13 +20,16 @@ export default {
     extend: {
       colors: {
         brand: {
-          primary: "#C0614A",   // Warm terracotta/rust
-          hover: "#A3513D",
-          light: "#FDF8F6",
-          linen: "#FAF6F1",     // Warm cream/linen (replaces pure white)
-          sand: "#E8A857",      // Gentle amber for highlights/streaks
-          taupe: "#3D2C28",     // Deep warm brown for grounding text
-          growth: "#8FAF8A",    // Soft sage green for progress
+          primary: "#8B5CF6",   // Soft violet — pastel periwinkle-purple
+          hover: "#7C3AED",     // Violet-600 — hover state
+          light: "#FAF9FF",     // Barely-there lavender white
+          linen: "#F5F3FF",     // Soft lavender page background
+          parchment: "#EDE9FE", // Lavender card surfaces
+          card: "#EDE9FE",      // Alias for parchment
+          espresso: "#2E1065",  // Deep violet near-black for headings
+          sand: "#F9C74F",      // Butter gold for highlights/streaks (pastel amber)
+          taupe: "#6B5B9E",     // Muted purple for secondary text
+          growth: "#93C5FD",    // Soft sky blue for progress
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -34,14 +37,14 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#C86A58",
+          DEFAULT: "#8B5CF6",
           foreground: "#FFFFFF",
-          100: "#FDF8F6",
-          200: "#F4EFEB",
+          100: "#FAF9FF",
+          200: "#EDE9FE",
         },
         secondary: {
-          DEFAULT: "#F4EFEB",
-          foreground: "#1F1235",
+          DEFAULT: "#EDE9FE",
+          foreground: "#2E1065",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",

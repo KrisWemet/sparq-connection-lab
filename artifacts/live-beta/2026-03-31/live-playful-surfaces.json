@@ -1,0 +1,61 @@
+{
+  "baseURL": "https://sparq-connection-lab.vercel.app",
+  "email": "live-playful-1774993934953@sparq.app",
+  "capturedAt": "2026-03-31T21:53:11.930Z",
+  "evidence": [
+    {
+      "step": "journey-recommendation-live-playful",
+      "status": "pass",
+      "note": "Reached the journey recommendation state in production.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774993981706-journey-recommendation-live-playful.png"
+    },
+    {
+      "step": "dashboard-live-playful",
+      "status": "pass",
+      "note": "Dashboard loaded after onboarding for live playful verification.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774993983053-dashboard-live-playful.png"
+    },
+    {
+      "step": "daily-spark-visible",
+      "status": "pass",
+      "note": "Daily Spark is visible on the live dashboard.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774993983745-daily-spark-visible.png"
+    },
+    {
+      "step": "daily-spark-try",
+      "status": "pass",
+      "note": "Daily Spark try interaction works in production.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774993985251-daily-spark-try.png"
+    },
+    {
+      "step": "daily-spark-swap",
+      "status": "pass",
+      "note": "Daily Spark swap interaction changes the live prompt.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774993985783-daily-spark-swap.png"
+    },
+    {
+      "step": "daily-spark-copy",
+      "status": "pass",
+      "note": "Daily Spark copy interaction works in production.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774993986054-daily-spark-copy.png"
+    },
+    {
+      "step": "favorite-us-visible",
+      "status": "pass",
+      "note": "Favorite Us is visible on the live daily-growth home.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774993990105-favorite-us-visible.png"
+    },
+    {
+      "step": "favorite-us-save",
+      "status": "pass",
+      "note": "Favorite Us keep interaction works in production.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774993991569-favorite-us-save.png"
+    },
+    {
+      "step": "favorite-us-copy",
+      "status": "pass",
+      "note": "Favorite Us copy interaction works in production.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774993991819-favorite-us-copy.png"
+    }
+  ]
+}

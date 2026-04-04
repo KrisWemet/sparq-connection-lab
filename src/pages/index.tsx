@@ -61,10 +61,10 @@ export default function Home() {
 
           <div className="max-w-4xl mx-auto text-center relative z-10">
             <h1 className="text-5xl md:text-6xl font-serif text-zinc-900 mb-6 tracking-tight leading-tight">
-              Finally, a <span className="text-brand-primary italic">shared language</span> for your relationship.
+              Become a <span className="text-brand-primary italic">steadier partner</span>, one small day at a time.
             </h1>
             <p className="text-lg md:text-xl text-zinc-500 mb-12 max-w-2xl mx-auto leading-relaxed">
-              Move past surface-level arguments and quiet disconnects. Sparq gently guides you both toward true understanding, using proven psychology that feels like a shared daily ritual, not a chore.
+              Sparq starts with you. Build calm habits. Say the true thing. Show up better at home. Invite your partner later if that helps.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link href="/login">
@@ -80,7 +80,7 @@ export default function Home() {
               </button>
             </div>
             <p className="mt-8 text-sm text-zinc-400 font-medium tracking-wide uppercase">
-              No judgment. No pressure. Just you and your partner.
+              No judgment. No pressure. Just one honest rep at a time.
             </p>
           </div>
         </section>
@@ -91,7 +91,7 @@ export default function Home() {
             <div className="text-center mb-20">
               <h2 className="text-3xl md:text-4xl font-serif text-black mb-4 tracking-tight">How Sparq Guides You</h2>
               <p className="text-lg text-zinc-500 max-w-2xl mx-auto leading-relaxed">
-                Our science-backed approach blends clinical psychology with an elegant methodology to create lasting, identity-level shifts in your relationship.
+                Sparq helps one person make real change first, then bring that change into the relationship.
               </p>
             </div>
 
@@ -104,10 +104,10 @@ export default function Home() {
                   <span className="text-brand-primary font-bold text-lg">1</span>
                 </div>
                 <h3 className="text-xl font-bold text-black mb-3 tracking-tight">
-                  Break the loop
+                  Change the part you control
                 </h3>
                 <p className="text-zinc-500 mb-8 leading-relaxed">
-                  Stop having the same argument. Learn to truly hear your partner and express your own needs without triggering defensiveness.
+                  Stop doing the same hurtful loop. Learn to slow down, listen, and say what is true.
                 </p>
                 <p className="font-semibold text-brand-primary group-hover:text-brand-hover transition-colors">
                   Experience Bridge <span aria-hidden="true">&rarr;</span>
@@ -122,10 +122,10 @@ export default function Home() {
                   <span className="text-brand-primary font-bold text-lg">2</span>
                 </div>
                 <h3 className="text-xl font-bold text-black mb-3 tracking-tight">
-                  Reignite the spark, gently
+                  Practice closeness in small moments
                 </h3>
                 <p className="text-zinc-500 mb-8 leading-relaxed">
-                  Intimacy isn&apos;t built in grand gestures, but in consistent, safe micro-moments. Discover how to nurture closeness at your own pace.
+                  Closeness grows in small safe moments. Sparq helps you build those moments, even if your partner is not here yet.
                 </p>
                 <p className="font-semibold text-brand-primary group-hover:text-brand-hover transition-colors">
                   Experience Bloom <span aria-hidden="true">&rarr;</span>
@@ -140,10 +140,10 @@ export default function Home() {
                   <span className="text-brand-primary font-bold text-lg">3</span>
                 </div>
                 <h3 className="text-xl font-bold text-black mb-3 tracking-tight">
-                  Navigate conflict together
+                  Bring a calmer self into conflict
                 </h3>
                 <p className="text-zinc-500 mb-8 leading-relaxed">
-                  Disagreements are natural. Learn to use tension as a tool for deeper understanding rather than a reason to pull away.
+                  Fights happen. Learn to pause, repair, and come back kinder.
                 </p>
                 <p className="font-semibold text-brand-primary group-hover:text-brand-hover transition-colors">
                   Experience Flow <span aria-hidden="true">&rarr;</span>
@@ -211,7 +211,7 @@ export default function Home() {
           <div className="max-w-4xl mx-auto text-center px-6 relative z-10">
             <h2 className="text-4xl md:text-5xl font-serif text-black mb-6 tracking-tight">Begin Your Experience</h2>
             <p className="text-lg text-zinc-500 mb-10 max-w-lg mx-auto leading-relaxed">
-              Step into a structured environment designed for deep communication and meaningful insight.
+              Start with your own daily practice. Invite your partner later if it helps.
             </p>
             <Link href="/login">
               <span className="px-10 py-4 bg-brand-primary text-white rounded-full hover:bg-brand-hover transition-colors font-medium shadow-xl shadow-brand-primary/20 text-base inline-block cursor-pointer">
@@ -228,6 +228,7 @@ export default function Home() {
             <div className="text-center md:text-left">
               <h2 className="text-lg font-bold text-black mb-1 tracking-tight">Sparq</h2>
               <p className="text-sm">Identity-level change through clinical design.</p>
+              <p className="text-sm mt-1">Solo-first growth for healthier relationships.</p>
             </div>
             <div className="flex flex-wrap justify-center gap-6 text-sm font-medium text-zinc-500">
               <Link href="/about">

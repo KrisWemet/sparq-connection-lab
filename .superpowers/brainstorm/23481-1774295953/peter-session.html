@@ -1,0 +1,124 @@
+<h2>Section 3 — Phase 2: Live Peter Session</h2>
+<p class="subtitle">2–5 real exchanges. Peter opens based on attachmentStyle. Closes when he has enough — or at 5 exchanges max.</p>
+
+<style>
+.chat-demo { max-width: 360px; margin: 0 auto; font-family: -apple-system, sans-serif; }
+.peter-msg { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+.peter-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #7c6a5a, #c0614a); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+.peter-bubble { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px 16px 16px 4px; padding: 10px 14px; font-size: 13px; color: #1f2937; line-height: 1.55; max-width: 290px; }
+.user-reply { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+.user-bubble { background: #c0614a; color: white; border-radius: 16px 16px 4px 16px; padding: 10px 14px; font-size: 13px; max-width: 260px; line-height: 1.5; }
+.closing-bubble { background: #fef3c7; border: 1px solid #fbbf24; border-radius: 16px 16px 16px 4px; padding: 10px 14px; font-size: 13px; color: #92400e; line-height: 1.55; max-width: 290px; }
+.tab-row { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.tab { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1.5px solid #e5e7eb; color: #6b7280; background: white; }
+.tab.active { background: #c0614a; color: white; border-color: #c0614a; }
+.section-label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #9ca3af; font-weight: 600; margin: 20px 0 10px; }
+.api-box { background: #1e1e2e; color: #e0e0e0; border-radius: 10px; padding: 16px 20px; font-family: monospace; font-size: 12px; line-height: 1.7; margin-top: 12px; }
+.api-key { color: #7dd3fc; }
+.api-val { color: #86efac; }
+.api-comment { color: #6b7280; }
+</style>
+
+<div class="section-label">Opening moves by attachment style — tap to preview</div>
+<div class="tab-row">
+  <div class="tab active" onclick="showStyle('anxious', this)">Anxious</div>
+  <div class="tab" onclick="showStyle('avoidant', this)">Avoidant</div>
+  <div class="tab" onclick="showStyle('disorganized', this)">Disorganized</div>
+  <div class="tab" onclick="showStyle('secure', this)">Secure</div>
+</div>
+
+<div id="chat-anxious" class="chat-demo">
+  <div class="peter-msg">
+    <div class="peter-avatar">🦦</div>
+    <div class="peter-bubble">Hey [Name]. I feel like I've got a real sense of you now — and I just want to say, the way you feel things so quickly? That's not a flaw. That's how much you care.<br><br>Here's something I'm curious about though. When things are calm between you and [partner] — really calm — do you trust it? Or does part of you wait for the other shoe to drop?</div>
+  </div>
+  <div class="user-reply"><div class="user-bubble">Honestly... I kind of wait for something to go wrong. I don't know why.</div></div>
+  <div class="peter-msg">
+    <div class="peter-avatar">🦦</div>
+    <div class="peter-bubble">That's one of the most honest things someone can say. And it tells me a lot — not about what's wrong with you, but about what you've learned to protect yourself from.<br><br>What would it feel like if you didn't have to scan for that?</div>
+  </div>
+  <div class="user-reply"><div class="user-bubble">Probably lighter. Like I could actually just... be there.</div></div>
+  <div class="peter-msg">
+    <div class="peter-avatar">🦦</div>
+    <div class="peter-bubble" style="background:#fef3c7;border-color:#fbbf24;color:#92400e;">That's exactly what we're going to work toward. "Just being there" — that's the whole thing, [Name]. That's the work.<br><br>I think I know right where to start with you. Let me show you something. 🦦</div>
+  </div>
+</div>
+
+<div id="chat-avoidant" class="chat-demo" style="display:none;">
+  <div class="peter-msg">
+    <div class="peter-avatar">🦦</div>
+    <div class="peter-bubble">Hey [Name]. I can already tell — you're someone who keeps it together. Probably the person in the relationship who stays calm when things get loud.<br><br>I'm curious about something. Right before you go quiet in a hard moment — what's actually happening inside? Like the half-second before you step back?</div>
+  </div>
+  <div class="user-reply"><div class="user-bubble">I think I just... shut down. Like a wall comes up and I don't even choose it.</div></div>
+  <div class="peter-msg">
+    <div class="peter-avatar">🦦</div>
+    <div class="peter-bubble">Yeah. That wall learned to go up fast because at some point it needed to. That's not weakness — that's protection that got really good at its job.<br><br>Does [partner] know the wall is there, or do they mostly see the quiet?</div>
+  </div>
+  <div class="user-reply"><div class="user-bubble">They see the quiet. I don't think they know what's underneath it.</div></div>
+  <div class="peter-msg">
+    <div class="peter-avatar">🦦</div>
+    <div class="peter-bubble" style="background:#fef3c7;border-color:#fbbf24;color:#92400e;">That gap — between what they see and what's really going on — that's exactly what we're going to start bridging. Gently. At your pace. Let me show you where I think we start. 🦦</div>
+  </div>
+</div>
+
+<div id="chat-disorganized" class="chat-demo" style="display:none;">
+  <div class="peter-msg">
+    <div class="peter-avatar">🦦</div>
+    <div class="peter-bubble">Hey [Name]. I hear you — and I just want to say first, before anything else: what you've carried makes sense. You're not broken. You learned to survive, and you did.<br><br>Can I ask — is there one time you can remember feeling genuinely safe? Doesn't have to be in your relationship. Anywhere, anyone, any moment.</div>
+  </div>
+  <div class="user-reply"><div class="user-bubble">My grandmother's house when I was little. It was always quiet and she never got angry.</div></div>
+  <div class="peter-msg">
+    <div class="peter-avatar">🦦</div>
+    <div class="peter-bubble">Hold onto that. That memory matters more than you might think. Safety existed for you — your body knows what it feels like.<br><br>That's actually where we're going to build from. Not from scratch — from that. Let me show you. 🦦</div>
+  </div>
+</div>
+
+<div id="chat-secure" class="chat-demo" style="display:none;">
+  <div class="peter-msg">
+    <div class="peter-avatar">🦦</div>
+    <div class="peter-bubble">Hey [Name] — I like you already. You've got a real groundedness about you, and it comes through.<br><br>So here's what I want to know: what kind of depth are you actually after here? Like if things got really good between you and [partner] — what would that actually look like for you?</div>
+  </div>
+  <div class="user-reply"><div class="user-bubble">I think I want us to feel like a real team. Like we could handle anything together and still actually enjoy each other.</div></div>
+  <div class="peter-msg">
+    <div class="peter-avatar">🦦</div>
+    <div class="peter-bubble">That's a beautiful goal — and honestly, you're closer to it than most people who show up here. The work for you isn't rebuilding. It's deepening.<br><br>I know exactly where to start. Let me show you. 🦦</div>
+  </div>
+</div>
+
+<script>
+function showStyle(style, el) {
+  ['anxious','avoidant','disorganized','secure'].forEach(s => {
+    document.getElementById('chat-' + s).style.display = 'none';
+  });
+  document.getElementById('chat-' + style).style.display = 'block';
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+</script>
+
+<hr style="border:none;border-top:1px solid #e5e7eb;margin:28px 0;">
+
+<div class="section-label">API design — /api/peter/onboarding</div>
+<div class="api-box">
+<span class="api-comment">// POST /api/peter/onboarding</span><br>
+<span class="api-comment">// Request body:</span><br>
+{<br>
+&nbsp;&nbsp;<span class="api-key">"messages"</span>: <span class="api-val">PeterMessage[]</span>, <span class="api-comment">// full conversation so far</span><br>
+&nbsp;&nbsp;<span class="api-key">"profile"</span>: <span class="api-val">DerivedProfile</span>, <span class="api-comment">// from deriveProfile()</span><br>
+&nbsp;&nbsp;<span class="api-key">"exchangeCount"</span>: <span class="api-val">number</span> <span class="api-comment">// 1–5, Peter closes at 5</span><br>
+}<br><br>
+<span class="api-comment">// Response:</span><br>
+{<br>
+&nbsp;&nbsp;<span class="api-key">"message"</span>: <span class="api-val">string</span>,<br>
+&nbsp;&nbsp;<span class="api-key">"shouldClose"</span>: <span class="api-val">boolean</span>, <span class="api-comment">// Peter decided he has enough</span><br>
+&nbsp;&nbsp;<span class="api-key">"safety"</span>: <span class="api-val">{ triggered: boolean }</span><br>
+}<br><br>
+<span class="api-comment">// No entitlement checks. No usage caps.</span><br>
+<span class="api-comment">// Crisis detection: YES (always on).</span><br>
+<span class="api-comment">// System prompt built from profile.attachmentStyle</span><br>
+<span class="api-comment">// + profile.toneMode + freeTextAnswers.</span>
+</div>
+
+<div style="background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:14px 18px;margin-top:16px;font-size:13px;color:#374151;">
+  <strong>Peter's closing signal:</strong> The system prompt instructs Peter to include <code style="background:#e5e7eb;padding:1px 5px;border-radius:4px;">READY_TO_CLOSE</code> as a hidden marker in his response JSON when he has enough. The client strips this before rendering — it just triggers the transition to journey recommendation.
+</div>

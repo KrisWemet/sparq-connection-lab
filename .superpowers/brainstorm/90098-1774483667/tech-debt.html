@@ -1,0 +1,78 @@
+<h2>Workstream 6: Tech Debt — Full Inventory</h2>
+<p class="subtitle">Cleaner than expected. No security issues. Mostly dead code.</p>
+
+<div class="section">
+  <div class="label" style="color: #ef4444;">Delete (High Priority)</div>
+  <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 8px; font-size: 14px;">
+    <div style="padding: 10px 14px; background: rgba(239,68,68,0.06); border-radius: 6px;">
+      <strong>src/lib/auth/</strong> — entire directory + hooks subdirectory
+      <div style="opacity: 0.6; margin-top: 2px;">Dead refactoring attempt. Never wired into _app.tsx. 0 real imports.</div>
+    </div>
+    <div style="padding: 10px 14px; background: rgba(239,68,68,0.06); border-radius: 6px;">
+      <strong>src/components/auth/ProtectedRoute.tsx</strong> — duplicate #1
+      <div style="opacity: 0.6; margin-top: 2px;">Unused. Keep src/components/ProtectedRoute.tsx (the active one).</div>
+    </div>
+    <div style="padding: 10px 14px; background: rgba(239,68,68,0.06); border-radius: 6px;">
+      <strong>src/components/ui/protected-route.tsx</strong> — duplicate #2
+      <div style="opacity: 0.6; margin-top: 2px;">Unused.</div>
+    </div>
+    <div style="padding: 10px 14px; background: rgba(239,68,68,0.06); border-radius: 6px;">
+      <strong>src/pages/test-page.tsx</strong> — debug page in production
+      <div style="opacity: 0.6; margin-top: 2px;">Console.logs, inline styles. No navigation to it but publicly accessible.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="label" style="color: #f59e0b;">Delete (Medium Priority — Dead Dashboard Components)</div>
+  <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; font-size: 13px;">
+    <span style="padding: 6px 12px; background: rgba(245,158,11,0.08); border-radius: 20px;">DashboardContent.tsx</span>
+    <span style="padding: 6px 12px; background: rgba(245,158,11,0.08); border-radius: 20px;">DashboardLayout.tsx</span>
+    <span style="padding: 6px 12px; background: rgba(245,158,11,0.08); border-radius: 20px;">JourneyMapCard.tsx</span>
+    <span style="padding: 6px 12px; background: rgba(245,158,11,0.08); border-radius: 20px;">LivingArtifact.tsx</span>
+    <span style="padding: 6px 12px; background: rgba(245,158,11,0.08); border-radius: 20px;">PetersInsightCard.tsx</span>
+    <span style="padding: 6px 12px; background: rgba(245,158,11,0.08); border-radius: 20px;">RelationshipScoreCard.tsx</span>
+    <span style="padding: 6px 12px; background: rgba(245,158,11,0.08); border-radius: 20px;">TodaysFocusCard.tsx</span>
+  </div>
+  <div style="font-size: 13px; opacity: 0.6; margin-top: 6px;">All 7 are in src/components/dashboard/ — not imported by Dashboard.tsx or any other file.</div>
+</div>
+
+<div class="section">
+  <div class="label" style="color: #6b7280;">Cleanup (Low Priority)</div>
+  <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 8px; font-size: 14px;">
+    <div style="padding: 10px 14px; background: rgba(255,255,255,0.03); border-radius: 6px;">
+      <strong>Remove useAuth re-export wrappers</strong>
+      <div style="opacity: 0.6; margin-top: 2px;">src/hooks/useAuth.ts + useAuth.tsx — just re-export from lib/auth-context</div>
+    </div>
+    <div style="padding: 10px 14px; background: rgba(255,255,255,0.03); border-radius: 6px;">
+      <strong>253 console.log statements</strong>
+      <div style="opacity: 0.6; margin-top: 2px;">Sweep before beta. Keep only error/warn cases.</div>
+    </div>
+    <div style="padding: 10px 14px; background: rgba(255,255,255,0.03); border-radius: 6px;">
+      <strong>5 build warnings</strong>
+      <div style="opacity: 0.6; margin-top: 2px;">img → Image, unescaped apostrophes, useEffect deps. All minor.</div>
+    </div>
+    <div style="padding: 10px 14px; background: rgba(255,255,255,0.03); border-radius: 6px;">
+      <strong>Review auth.tsx vs login.tsx</strong>
+      <div style="opacity: 0.6; margin-top: 2px;">Two login pages — consider consolidating.</div>
+    </div>
+    <div style="padding: 10px 14px; background: rgba(255,255,255,0.03); border-radius: 6px;">
+      <strong>ai-therapist.tsx</strong>
+      <div style="opacity: 0.6; margin-top: 2px;">Out of beta scope but still accessible. Consider removing or gating.</div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top: 24px; padding: 16px; background: rgba(16,185,129,0.06); border-radius: 8px;">
+  <div class="label" style="color: #10b981;">Good News</div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; font-size: 14px;">
+    <div>✓ No security issues — .env.local is gitignored</div>
+    <div>✓ Build compiles clean</div>
+    <div>✓ No import.meta.env remaining</div>
+    <div>✓ No react-router-dom usage</div>
+    <div>✓ vercel.json correctly set to nextjs</div>
+    <div>✓ All imports resolve correctly</div>
+    <div>✓ No broken partner-synthesis import</div>
+    <div>✓ Supabase client migration complete</div>
+  </div>
+</div>

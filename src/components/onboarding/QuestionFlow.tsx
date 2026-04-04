@@ -168,15 +168,15 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
       <div className="container max-w-md mx-auto px-4 py-8">
         {/* Progress bar */}
         <div className="w-full mb-6">
-          <div className="h-1 w-full rounded-full" style={{ backgroundColor: '#EDE4D8' }}>
+          <div className="h-1 w-full rounded-full" style={{ backgroundColor: '#EDE9FE' }}>
             <motion.div
               className="h-1 rounded-full"
-              style={{ backgroundColor: '#C0614A' }}
+              style={{ backgroundColor: '#8B5CF6' }}
               animate={{ width: `${((currentIndex) / QUESTIONS.length) * 100}%` }}
               transition={{ duration: 0.4, ease: 'easeInOut' }}
             />
           </div>
-          <p className="mt-1.5 text-xs text-[#6B4C3B]">
+          <p className="mt-1.5 text-xs text-[#5B4A86]">
             {currentIndex + 1} of {QUESTIONS.length}
           </p>
         </div>
@@ -220,14 +220,14 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
               value={textInput}
               onChange={e => setTextInput(e.target.value)}
               placeholder="Your first name..."
-              className="w-full px-4 py-3.5 rounded-2xl border-2 border-[#C0614A]/20 bg-[#EDE4D8] text-[#2C1A14] placeholder-[#6B4C3B]/50 focus:outline-none focus:border-[#C0614A] transition-colors text-base"
+              className="w-full px-4 py-3.5 rounded-2xl border-2 border-[#8B5CF6]/20 bg-[#EDE9FE] text-[#2E1065] placeholder-[#5B4A86]/50 focus:outline-none focus:border-[#8B5CF6] transition-colors text-base"
               onKeyDown={e => e.key === 'Enter' && textInput.trim() && handleFreeTextSubmit(textInput, 'firstName')}
               autoFocus
             />
             <button
               disabled={textInput.trim().length < 1}
               onClick={() => handleFreeTextSubmit(textInput, 'firstName')}
-              className="w-full bg-[#C0614A] text-white rounded-2xl py-3 font-semibold disabled:opacity-40"
+              className="w-full bg-[#8B5CF6] text-white rounded-2xl py-3 font-semibold disabled:opacity-40"
             >
               Continue →
             </button>
@@ -238,7 +238,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
         {question.index === 1 && !isBridging && (
           <div className="space-y-4">
             <div>
-              <p className="text-xs font-semibold tracking-widest uppercase text-[#C0614A] mb-2">How old are you?</p>
+              <p className="text-xs font-semibold tracking-widest uppercase text-[#8B5CF6] mb-2">How old are you?</p>
               <div className="flex flex-col gap-2">
                 {['Under 25', '25–34', '35–44', '45+'].map(label => (
                   <button
@@ -246,8 +246,8 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
                     onClick={() => setMultiPartState(s => ({ ...s, ageRange: label }))}
                     className={`w-full p-3 rounded-2xl border-2 text-left text-sm font-medium transition-all ${
                       multiPartState.ageRange === label
-                        ? 'border-[#C0614A] bg-[#C0614A]/5 text-[#2C1A14]'
-                        : 'border-[#C0614A]/20 bg-[#EDE4D8] text-[#2C1A14]'
+                        ? 'border-[#8B5CF6] bg-[#8B5CF6]/5 text-[#2E1065]'
+                        : 'border-[#8B5CF6]/20 bg-[#EDE9FE] text-[#2E1065]'
                     }`}
                   >
                     {label}
@@ -256,7 +256,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
               </div>
             </div>
             <div>
-              <p className="text-xs font-semibold tracking-widest uppercase text-[#C0614A] mb-2">Your pronouns</p>
+              <p className="text-xs font-semibold tracking-widest uppercase text-[#8B5CF6] mb-2">Your pronouns</p>
               <div className="flex flex-col gap-2">
                 {['She / Her', 'He / Him', 'They / Them'].map(label => (
                   <button
@@ -264,8 +264,8 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
                     onClick={() => setMultiPartState(s => ({ ...s, pronouns: label.toLowerCase().replace(' / ', '/') }))}
                     className={`w-full p-3 rounded-2xl border-2 text-left text-sm font-medium transition-all ${
                       multiPartState.pronouns === label.toLowerCase().replace(' / ', '/')
-                        ? 'border-[#C0614A] bg-[#C0614A]/5 text-[#2C1A14]'
-                        : 'border-[#C0614A]/20 bg-[#EDE4D8] text-[#2C1A14]'
+                        ? 'border-[#8B5CF6] bg-[#8B5CF6]/5 text-[#2E1065]'
+                        : 'border-[#8B5CF6]/20 bg-[#EDE9FE] text-[#2E1065]'
                     }`}
                   >
                     {label}
@@ -274,7 +274,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
                 <input
                   type="text"
                   placeholder="Something else..."
-                  className="w-full px-4 py-3 rounded-2xl border-2 border-[#C0614A]/20 bg-[#EDE4D8] text-[#2C1A14] text-sm focus:outline-none focus:border-[#C0614A]"
+                  className="w-full px-4 py-3 rounded-2xl border-2 border-[#8B5CF6]/20 bg-[#EDE9FE] text-[#2E1065] text-sm focus:outline-none focus:border-[#8B5CF6]"
                   onChange={e => e.target.value && setMultiPartState(s => ({ ...s, pronouns: e.target.value }))}
                 />
               </div>
@@ -292,7 +292,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
                 };
                 playBridge("Good to know. Let's keep going.", () => advanceQuestion(newProgress));
               }}
-              className="w-full bg-[#C0614A] text-white rounded-2xl py-3 font-semibold disabled:opacity-40"
+              className="w-full bg-[#8B5CF6] text-white rounded-2xl py-3 font-semibold disabled:opacity-40"
             >
               Continue →
             </button>
@@ -315,7 +315,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
                     setTimeout(() => { setActiveBridge(null); setAwaitingPartnerName(true); }, BRIDGE_DELAY_MS);
                   }
                 }}
-                className="w-full p-4 rounded-2xl border-2 border-[#C0614A]/20 bg-[#EDE4D8] text-[#2C1A14] text-left text-sm font-medium hover:border-[#C0614A]"
+                className="w-full p-4 rounded-2xl border-2 border-[#8B5CF6]/20 bg-[#EDE9FE] text-[#2E1065] text-left text-sm font-medium hover:border-[#8B5CF6]"
               >
                 {option.label}
               </button>
@@ -325,7 +325,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
 
         {question.index === 2 && !isBridging && awaitingPartnerName && (
           <div className="flex flex-col gap-3">
-            <label className="text-xs font-semibold tracking-widest uppercase text-[#C0614A]">
+            <label className="text-xs font-semibold tracking-widest uppercase text-[#8B5CF6]">
               Partner&apos;s name
             </label>
             <input
@@ -334,7 +334,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
               value={partnerNameInput}
               onChange={e => setPartnerNameInput(e.target.value)}
               placeholder="What should we call them?"
-              className="w-full px-4 py-3.5 rounded-2xl border-2 border-[#C0614A]/20 bg-[#EDE4D8] text-[#2C1A14] placeholder-[#6B4C3B]/50 focus:outline-none focus:border-[#C0614A] transition-colors text-base"
+              className="w-full px-4 py-3.5 rounded-2xl border-2 border-[#8B5CF6]/20 bg-[#EDE9FE] text-[#2E1065] placeholder-[#5B4A86]/50 focus:outline-none focus:border-[#8B5CF6] transition-colors text-base"
             />
             <button
               disabled={partnerNameInput.trim().length < 1}
@@ -346,7 +346,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
                 };
                 advanceQuestion(newProgress);
               }}
-              className="w-full bg-[#C0614A] text-white rounded-2xl py-3 font-semibold disabled:opacity-40"
+              className="w-full bg-[#8B5CF6] text-white rounded-2xl py-3 font-semibold disabled:opacity-40"
             >
               Continue →
             </button>
@@ -361,7 +361,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
               value={textInput}
               onChange={e => setTextInput(e.target.value)}
               placeholder="Type anything that comes to mind..."
-              className="w-full px-4 py-3.5 rounded-2xl border-2 border-[#C0614A]/20 bg-[#EDE4D8] text-[#2C1A14] placeholder-[#6B4C3B]/50 focus:outline-none focus:border-[#C0614A] transition-colors text-base resize-none"
+              className="w-full px-4 py-3.5 rounded-2xl border-2 border-[#8B5CF6]/20 bg-[#EDE9FE] text-[#2E1065] placeholder-[#5B4A86]/50 focus:outline-none focus:border-[#8B5CF6] transition-colors text-base resize-none"
             />
             <button
               disabled={textInput.trim().length < 3}
@@ -376,7 +376,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
                   setGrowthGoalSubmitted(true);
                 });
               }}
-              className="w-full bg-[#C0614A] text-white rounded-2xl py-3 font-semibold disabled:opacity-40"
+              className="w-full bg-[#8B5CF6] text-white rounded-2xl py-3 font-semibold disabled:opacity-40"
             >
               Continue →
             </button>
@@ -385,14 +385,14 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
 
         {question.index === 13 && !isBridging && growthGoalSubmitted && (
           <div className="flex flex-col gap-3">
-            <p className="text-[#6B4C3B] text-sm font-serif italic mb-2">
+            <p className="text-[#5B4A86] text-sm font-serif italic mb-2">
               Got it. How often would you like to check in with me?
             </p>
             {question.options?.map(option => (
               <button
                 key={option.label}
                 onClick={() => handleOptionSelect(option)}
-                className="w-full p-4 rounded-2xl border-2 border-[#C0614A]/20 bg-[#EDE4D8] text-[#2C1A14] text-left text-sm font-medium hover:border-[#C0614A]"
+                className="w-full p-4 rounded-2xl border-2 border-[#8B5CF6]/20 bg-[#EDE9FE] text-[#2E1065] text-left text-sm font-medium hover:border-[#8B5CF6]"
               >
                 {option.label}
               </button>
@@ -415,8 +415,8 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
                 }}
                 className={`w-full p-4 rounded-2xl border-2 text-left text-sm font-medium transition-all ${
                   option.isFreeText
-                    ? 'border-dashed border-[#C0614A]/30 bg-transparent text-[#6B4C3B] text-xs italic'
-                    : 'border-[#C0614A]/20 bg-[#EDE4D8] text-[#2C1A14] hover:border-[#C0614A]'
+                    ? 'border-dashed border-[#8B5CF6]/30 bg-transparent text-[#5B4A86] text-xs italic'
+                    : 'border-[#8B5CF6]/20 bg-[#EDE9FE] text-[#2E1065] hover:border-[#8B5CF6]'
                 }`}
               >
                 {option.label}
@@ -429,13 +429,13 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
                   rows={2}
                   autoFocus
                   placeholder="Type your answer..."
-                  className="w-full px-4 py-3 rounded-2xl border-2 border-[#C0614A]/20 bg-[#EDE4D8] text-[#2C1A14] placeholder-[#6B4C3B]/50 focus:outline-none focus:border-[#C0614A] text-sm resize-none"
+                  className="w-full px-4 py-3 rounded-2xl border-2 border-[#8B5CF6]/20 bg-[#EDE9FE] text-[#2E1065] placeholder-[#5B4A86]/50 focus:outline-none focus:border-[#8B5CF6] text-sm resize-none"
                   onChange={e => setTextInput(e.target.value === '' ? '__freetext__' : e.target.value)}
                 />
                 <button
                   disabled={textInput === '__freetext__' || (textInput as string).trim().length < 2}
                   onClick={() => handleFreeTextSubmit(textInput)}
-                  className="w-full bg-[#C0614A] text-white rounded-2xl py-3 font-semibold disabled:opacity-40 text-sm"
+                  className="w-full bg-[#8B5CF6] text-white rounded-2xl py-3 font-semibold disabled:opacity-40 text-sm"
                 >
                   Continue →
                 </button>
@@ -448,7 +448,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
         {showBack && (
           <button
             onClick={handleBack}
-            className="mt-6 text-[#6B4C3B] text-sm font-medium px-2 py-1"
+            className="mt-6 text-[#5B4A86] text-sm font-medium px-2 py-1"
           >
             ← Back
           </button>

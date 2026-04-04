@@ -8,6 +8,38 @@ export type TraitFeedback = 'yes' | 'not_really' | 'unsure';
 export type ConfidenceLabel = 'Likely' | 'Possible' | 'Not enough info yet';
 export type EntitlementTier = 'free' | 'premium';
 
+// ---------------------------------------------------------------------------
+// Trial logic — free users get 14 days of premium access on signup.
+// Trait inference runs for ALL users regardless of tier, so when a free
+// user converts, Peter already knows them.
+// ---------------------------------------------------------------------------
+
+export const TRIAL_DAYS = 14;
+
+export function getTrialDaysRemaining(accountCreatedAt: string | null | undefined): number {
+  if (!accountCreatedAt) return 0;
+  const created = new Date(accountCreatedAt).getTime();
+  const daysSince = Math.floor((Date.now() - created) / (1000 * 60 * 60 * 24));
+  return Math.max(0, TRIAL_DAYS - daysSince);
+}
+
+export function isInTrial(accountCreatedAt: string | null | undefined): boolean {
+  return getTrialDaysRemaining(accountCreatedAt) > 0;
+}
+
+/**
+ * Returns the tier that should be used for content and entitlement decisions.
+ * Trial users (within 14 days) receive premium access regardless of stored tier.
+ */
+export function getEffectiveTier(
+  storedTier: EntitlementTier,
+  accountCreatedAt: string | null | undefined,
+): EntitlementTier {
+  if (storedTier === 'premium') return 'premium';
+  if (isInTrial(accountCreatedAt)) return 'premium';
+  return storedTier;
+}
+
 export interface EntitlementShape {
   tier: EntitlementTier;
   loop_limit_per_week: number | null;

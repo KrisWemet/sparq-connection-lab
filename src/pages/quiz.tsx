@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Question } from "@/types/quiz";
-import { weekdayQuestions, weekendActivities } from "@/data/quizData";
+import { getQuestionsForTier, weekendActivities } from "@/data/quizData";
 import { WeekendActivities } from "@/components/quiz/WeekendActivities";
 import { QuestionView } from "@/components/quiz/QuestionView";
 import { CompletionView } from "@/components/quiz/CompletionView";
@@ -10,6 +10,9 @@ import { toast } from "sonner";
 import { useRouter } from 'next/router';
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
+import { useSubscription } from "@/lib/subscription-provider";
+import { getEffectiveTier, getTrialDaysRemaining, isInTrial } from "@/lib/product";
+import Link from "next/link";
 import { NoQuestionView } from "@/components/quiz/NoQuestionView";
 import { HealthScoreView } from "@/components/quiz/HealthScoreView";
 import { ConfettiAnimation } from "@/components/dashboard/ConfettiAnimation";
@@ -17,6 +20,10 @@ import { ConfettiAnimation } from "@/components/dashboard/ConfettiAnimation";
 export default function Quiz() {
   const router = useRouter();
   const { user } = useAuth();
+  const { subscription } = useSubscription();
+  const effectiveTier = getEffectiveTier(subscription.tier, user?.created_at);
+  const trialDaysLeft = user ? getTrialDaysRemaining(user.created_at) : 0;
+  const showTrialBanner = subscription.tier === 'free' && isInTrial(user?.created_at);
   const [selectedAnswers, setSelectedAnswers] = useState<{[key: number]: string}>({});
   const [isCompleted, setIsCompleted] = useState(false);
   const [customAnswer, setCustomAnswer] = useState("");
@@ -46,7 +53,8 @@ export default function Quiz() {
     if (!isWeekendDay) {
       const currentDayOfWeek = dayMap[now.getDay()];
       const timeSlot = isAM ? "AM" : "PM";
-      const availableQuestion = weekdayQuestions.find(
+      const tierQuestions = getQuestionsForTier(effectiveTier);
+      const availableQuestion = tierQuestions.find(
         q => q.dayOfWeek === currentDayOfWeek && q.timeSlot === timeSlot
       );
       setCurrentQuestion(availableQuestion || null);
@@ -59,7 +67,7 @@ export default function Quiz() {
       setLoadingScore(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [user, subscription.tier]);
   
   const fetchRelationshipScore = async () => {
     if (!user) return;
@@ -155,7 +163,10 @@ export default function Quiz() {
   }
   
   if (isWeekend) {
-    return <WeekendActivities activities={weekendActivities} />;
+    const tieredActivities = weekendActivities.filter(
+      a => a.tier === effectiveTier || a.tier === "free"
+    );
+    return <WeekendActivities activities={tieredActivities} />;
   }
 
   if (!currentQuestion) {
@@ -176,6 +187,19 @@ export default function Quiz() {
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
       <main className="container max-w-lg mx-auto px-4 pt-8 animate-slide-up">
+        {showTrialBanner && (
+          <div className="mb-4 rounded-xl bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-100 px-4 py-3 flex items-center justify-between gap-3">
+            <p className="text-sm text-violet-700 leading-snug">
+              <span className="font-medium">{trialDaysLeft} day{trialDaysLeft !== 1 ? 's' : ''} left</span> of your free trial — you're getting premium questions right now.
+            </p>
+            <Link
+              href="/subscription"
+              className="shrink-0 text-xs font-medium text-white bg-violet-600 hover:bg-violet-700 rounded-lg px-3 py-1.5 transition-colors"
+            >
+              Keep it
+            </Link>
+          </div>
+        )}
         {!isCompleted ? (
           <QuestionView
             currentQuestion={currentQuestion}

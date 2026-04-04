@@ -26,12 +26,12 @@ const plans = [
     id: "free",
     name: "Free",
     price: 0,
-    description: "Start your relationship growth journey",
+    description: "Start with simple daily steps",
     features: [
       { name: "14-day journey with Peter 🦦", included: true },
       { name: "Daily morning story + action", included: true },
       { name: "Evening reflection check-ins", included: true },
-      { name: "Silent relationship profiling", included: true },
+      { name: "Quiet pattern tracking", included: true },
       { name: "Skill Tree: Basic levels (all 3 tracks)", included: true },
       { name: "Partner linking (optional)", included: true },
       { name: "Daily connection questions", included: true },
@@ -55,15 +55,15 @@ const plans = [
     name: "Premium",
     price: 4.99,
     yearlyPrice: 49.99,
-    description: "Go deeper with Advanced Skill Tree access",
+    description: "Go deeper with more practice and more help",
     features: [
       { name: "Everything in Free", included: true },
       { name: "Skill Tree: Advanced levels (all 3 tracks)", included: true },
       { name: "The Translator (unlimited rephrases)", included: true },
-      { name: "Personalized insights report", included: true },
-      { name: "Extended Peter coaching sessions", included: true },
+      { name: "Personal insight report", included: true },
+      { name: "Longer Peter coaching sessions", included: true },
       { name: "Daily questions (unlimited)", included: true },
-      { name: "Relationship pattern dashboard", included: true },
+      { name: "Pattern dashboard", included: true },
       { name: "Skill Tree: Expert levels", included: false },
       { name: "Peter AI Coach (deep sessions)", included: false },
       { name: "Couples shared journey", included: false },
@@ -75,25 +75,25 @@ const plans = [
       quote: "The Advanced Skill Tree exercises are on a different level. We've been doing them together and it's like couples therapy but way more fun.",
       author: "Taylor & Jordan",
       relationship: "Married 3 years",
-      statistic: "90% of Premium users report a meaningful improvement in communication within 30 days"
+      statistic: "Most Premium users say talks feel calmer within 30 days"
     },
-    persuasiveText: "Unlock the levels where the real breakthroughs happen"
+    persuasiveText: "Unlock the tools that help good habits stick"
   },
   {
     id: "ultimate",
     name: "Ultimate",
     price: 19.99,
     yearlyPrice: 199.99,
-    description: "Your personal relationship coach — always available, always remembers you",
+    description: "Your deepest support plan",
     features: [
       { name: "Everything in Premium", included: true },
       { name: "Skill Tree: Expert levels (all 3 tracks)", included: true },
-      { name: "Peter remembers your full history", included: true, new: true },
-      { name: "Talk to Peter anytime (open chat)", included: true, new: true },
-      { name: "Weekly relationship snapshot from Peter", included: true, new: true },
-      { name: "Conflict First Aid — guided chat when things get hard", included: true },
-      { name: "Partner compatibility view (when both linked)", included: true },
-      { name: "Repeat the 14-day journey, personalized to your profile", included: true },
+      { name: "Peter remembers your full story", included: true, new: true },
+      { name: "Talk to Peter anytime", included: true, new: true },
+      { name: "Weekly check-in from Peter", included: true, new: true },
+      { name: "Conflict First Aid when things get hard", included: true },
+      { name: "Shared fit view when both join", included: true },
+      { name: "Repeat the 14-day journey with a better fit", included: true },
       { name: "Milestone celebrations from Peter", included: true },
     ],
     popular: false,
@@ -103,9 +103,9 @@ const plans = [
       quote: "Peter remembered something I shared on Day 3 and brought it up six weeks later. That's when I realized this wasn't just an app — it genuinely felt like having a coach who actually knew us.",
       author: "Sam & Riley",
       relationship: "Together 18 months",
-      statistic: "Ultimate users are 3x more likely to complete the full Skill Tree and report lasting shifts in how they handle conflict"
+      statistic: "Ultimate users are much more likely to finish the full path and stay calmer in conflict"
     },
-    persuasiveText: "Peter knows your story — and shows up every week to help you write the next chapter"
+    persuasiveText: "Peter knows your story and helps you use it in real life"
   }
 ];
 
@@ -239,7 +239,7 @@ export default function Subscription() {
     toast.success(
       planId === "premium" 
         ? "You've upgraded to Premium! Notice how your connection naturally deepens as you explore new features together."
-        : "You've upgraded to Ultimate! Feel the transformation in your relationship as you access all premium features.",
+        : "You've upgraded to Ultimate! You now have deeper support for the hard moments and the good ones too.",
       { duration: 5000 }
     );
   };

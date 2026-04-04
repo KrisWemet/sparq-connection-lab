@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getAuthedContext } from '@/lib/server/supabase-auth';
 import { trackEvent } from '@/lib/server/analytics';
+import { trackPrimaryPathServerError } from '@/lib/server/beta-ops';
 import { parseLocalDate } from '@/lib/server/date-utils';
 import { isJourneyComplete } from '@/lib/server/journey-content';
 
@@ -10,6 +11,21 @@ type CompleteBody = {
   evening_peter_response?: string;
   completion_local_date?: string;
 };
+
+function inferReflectionSignals(reflection: string) {
+  const normalized = reflection.toLowerCase();
+
+  return {
+    reflection_quality:
+      reflection.trim().split(/\s+/).length >= 20 ? 'deep' : reflection.trim().length > 0 ? 'brief' : 'empty',
+    repair_attempted:
+      /\bsorry\b|\brepair\b|\bcame back\b|\bowned\b|\bmy part\b/.test(normalized),
+    appreciation_attempted:
+      /\bappreciat|\bgrateful|\bthank|\badmire|\bnoticed something good\b/.test(normalized),
+    self_regulation_attempted:
+      /\bpause\b|\bbreathe\b|\bslowed down\b|\bcalm\b|\bsteady\b|\bregulated\b/.test(normalized),
+  };
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -38,6 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const completionDate = parseLocalDate(body.completion_local_date);
   const alreadyCompleted = session.status === 'completed';
   let updatedSession = session;
+  const reflectionSignals = inferReflectionSignals(body.evening_reflection || session.evening_reflection || '');
 
   if (!alreadyCompleted) {
     // Check for high emotional triggering ("fight or flight")
@@ -67,6 +84,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .single();
 
       if (lockError || !lockedSession) {
+        await trackPrimaryPathServerError(ctx.supabase, ctx.userId, 'daily_session_lock_forced_pause', lockError || new Error('Failed to lock session'), {
+          session_id: body.session_id,
+        });
         return res.status(500).json({ error: 'Failed to lock session' });
       }
 
@@ -110,6 +130,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .single();
 
     if (updateError || !updated) {
+      await trackPrimaryPathServerError(ctx.supabase, ctx.userId, 'daily_session_complete', updateError || new Error('Failed to complete session'), {
+        session_id: body.session_id,
+      });
       return res.status(500).json({ error: 'Failed to complete session' });
     }
     updatedSession = updated;
@@ -164,6 +187,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       insightsUpsert.last_completed_journey_id = activeJourneyId;
       insightsUpsert.journey_completion_state = 'pending_decision';
     }
+
+    await trackEvent(ctx.supabase, ctx.userId, 'solo_practice_completed', {
+      day_index: currentDay,
+      journey_id: activeJourneyId,
+      practice_mode: session.practice_mode || null,
+      ...reflectionSignals,
+    });
 
     await ctx.supabase.from('user_insights').upsert(
       insightsUpsert,
@@ -351,47 +381,14 @@ Output ONLY the synthesis text. No JSON, no formatting.`;
 
     // Fire-and-forget: generate Peter's greeting for next dashboard visit
     (async () => {
-      try {
-        const { peterChat } = await import('@/lib/openrouter');
-        const { stripMarkdown } = await import('@/lib/strip-markdown');
-
-        const { data: profileRow } = await ctx.supabase
-          .from('profiles')
-          .select('name')
-          .eq('id', ctx.userId)
-          .maybeSingle();
-
-        const firstName = profileRow?.name?.split(' ')[0] || '';
-        const journeyCtx = updatedSession.journey_title ? ` on ${updatedSession.journey_title}` : '';
-
-        const greetingPrompt = `Generate a warm, brief morning greeting from Peter the otter for tomorrow.
-
-Context from today's session:
-- The user reflected: "${(updatedSession.evening_reflection || '').slice(0, 200)}"
-- Day ${updatedSession.day_index}${journeyCtx}
-${firstName ? `- User's first name: ${firstName}` : ''}
-
-Write ONE sentence (max 30 words) that references something specific from today. Warm and forward-looking. Simple language.
-Output ONLY the greeting text.`;
-
-        const rawGreeting = await peterChat({
-          messages: [
-            { role: 'system', content: 'You are Peter, a warm otter companion. Write a brief, personalized morning greeting.' },
-            { role: 'user', content: greetingPrompt },
-          ],
-          maxTokens: 100,
-        });
-
-        const greeting = stripMarkdown(rawGreeting).trim();
-        await ctx.supabase
-          .from('user_insights')
-          .upsert(
-            { user_id: ctx.userId, next_greeting_text: greeting },
-            { onConflict: 'user_id' }
-          );
-      } catch (err) {
-        console.error('Greeting generation background error:', err);
-      }
+      const { generateGreeting } = await import('@/lib/server/generate-greeting');
+      generateGreeting(
+        ctx.supabase,
+        ctx.userId,
+        updatedSession.evening_reflection ?? '',
+        updatedSession.day_index,
+        updatedSession.journey_title ?? null,
+      );
     })();
   }
 

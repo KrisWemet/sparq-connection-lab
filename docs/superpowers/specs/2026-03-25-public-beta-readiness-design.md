@@ -182,6 +182,10 @@ Replace "Good to know. Let's keep going." x8 with:
 
 All `scoreDeltas` values remain unchanged. The rewrite changes language, not scoring. The same attachment/dysregulation/trauma signals are captured through different words.
 
+### Note: Question Count
+
+Splitting Q14 into Q14a + Q14b changes the total from 14 to 15 questions. Verify that no progress indicators, analytics events, or question-count references elsewhere in the codebase assume exactly 14.
+
 ### Files to Modify
 
 - `src/lib/onboarding/questions.ts` — all changes in this single file
@@ -209,7 +213,7 @@ The dashboard and growth loop infrastructure is ~90% implemented:
 
 `src/pages/api/daily/session/complete.ts` imports from `@/lib/server/partner-synthesis` — this file may not exist. If a partner has also completed their session the same day, this will crash at runtime.
 
-**Fix:** Either create a minimal `partner-synthesis.ts` stub that returns gracefully, or wrap the import/call in a try-catch so it degrades silently. Partner synthesis is post-beta scope — it should not block the session completion flow.
+**Fix:** The file exists but the dynamic import could still fail at runtime. Wrap the partner-synthesis call in a try-catch so it degrades gracefully. Partner synthesis is post-beta scope — it should not block the session completion flow.
 
 #### 2. Dashboard empty states
 
@@ -249,7 +253,7 @@ Remove 7 unused files from `src/components/dashboard/`:
 - `src/components/dashboard/GrowthThread.tsx` — empty state
 - `src/components/dashboard/WeeklyMirrorCard.tsx` — empty state
 - `src/components/dashboard/JourneyArc.tsx` — empty state
-- `src/pages/Dashboard.tsx` — conditional streak visibility
+- `src/pages/Dashboard.tsx` — conditional streak visibility (verify which file renders streak UI — may be a dedicated component)
 
 ### Files to Delete
 

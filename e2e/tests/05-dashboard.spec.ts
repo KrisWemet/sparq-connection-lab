@@ -1,59 +1,101 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Dashboard', () => {
+const authUserId = 'test-user-id';
+
+test.describe('Dashboard solo-first states', () => {
   test.beforeEach(async ({ page }) => {
+    await page.route('**/rest/v1/profiles*', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          id: authUserId,
+          name: 'Chris Example',
+          streak_count: 4,
+          identity_statement: 'I am someone who stays calm and says the true thing.',
+          partner_name: null,
+        }),
+      });
+    });
+
+    await page.route('**/rest/v1/user_insights*', async (route) => {
+      const url = route.request().url();
+
+      if (url.includes('select=onboarding_day%2Cjourney_completion_state%2Cactive_journey_id')) {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            onboarding_day: 3,
+            journey_completion_state: null,
+            active_journey_id: null,
+          }),
+        });
+        return;
+      }
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          onboarding_day: 3,
+          next_greeting_text: null,
+        }),
+      });
+    });
+
+    await page.route('**/rest/v1/daily_sessions*', async (route) => {
+      const url = route.request().url();
+
+      if (url.includes('evening_reflection') || url.includes('status=eq.completed')) {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify([]),
+        });
+        return;
+      }
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          id: 'session-1',
+          status: 'morning_viewed',
+          morning_viewed_at: new Date().toISOString(),
+          evening_completed_at: null,
+        }),
+      });
+    });
+
+    await page.route('**/api/growth-thread?limit=10', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ entries: [] }),
+      });
+    });
+
+    await page.addInitScript(() => {
+      window.localStorage.setItem('sparq_journey_progress', JSON.stringify({}));
+    });
+  });
+
+  test('shows a complete solo-first partner card instead of an empty state', async ({ page }) => {
     await page.goto('/dashboard');
-    // Wait for dashboard to fully load
-    await expect(page.locator('h1:has-text("Sparq")')).toBeVisible({ timeout: 10_000 });
+
+    await expect(page.locator('text=Your growth still counts on your own')).toBeVisible();
+    await expect(page.locator('text=Start solo. Invite your partner later if shared reflections would help.')).toBeVisible();
+    await expect(page.locator('text=Your Solo Reflection')).toBeVisible();
+    await expect(page.locator('button:has-text("Invite later")')).toBeVisible();
+    await expect(page.locator('button:has-text("Invite your partner when shared prompts would help")')).toBeVisible();
   });
 
-  test('shows key dashboard sections', async ({ page }) => {
-    // Header
-    await expect(page.locator('h1:has-text("Sparq")')).toBeVisible();
+  test('keeps the main CTA focused on personal follow-through', async ({ page }) => {
+    await page.goto('/dashboard');
 
-    // Today's Question CTA
-    await expect(page.locator('text=Today\'s Question')).toBeVisible();
-
-    // Metrics
-    await expect(page.locator('h3:has-text("Connection Score")')).toBeVisible();
-    
-    // Bottom Nav presence
-    await expect(page.locator('nav').locator('text=Home')).toBeVisible();
-    await expect(page.locator('nav').locator('text=Profile')).toBeVisible();
-  });
-
-  test('shows simplified daily action cards', async ({ page }) => {
-    await expect(page.locator('h3:has-text("Daily Loop")')).toBeVisible();
-    await expect(page.locator('h3:has-text("Today\'s Question")')).toBeVisible();
-    // Mirror Report is now in the progress section
-    await expect(page.locator('h3:has-text("Mirror Report")')).toBeVisible();
-  });
-
-  test('"Today\'s Question" navigates to /daily-questions', async ({ page }) => {
-    await page.locator('button:has-text("Today\'s Question")').click();
-    await page.waitForURL('**/daily-questions', { timeout: 5_000 });
-    await expect(page).toHaveURL(/\/daily-questions/);
-  });
-
-  test('"Daily Loop" navigates to /daily-growth', async ({ page }) => {
-    await page.locator('button:has-text("Daily Loop")').click();
-    await page.waitForURL('**/daily-growth', { timeout: 5_000 });
-    await expect(page).toHaveURL(/\/daily-growth/);
-  });
-
-  test('"Skills" in bottom nav navigates to /skill-tree', async ({ page }) => {
-    await page.locator('nav').locator('text=Skills').click();
-    await page.waitForURL('**/skill-tree', { timeout: 5_000 });
-    await expect(page).toHaveURL(/\/skill-tree/);
-  });
-
-  test('"Profile" in bottom nav navigates to /profile', async ({ page }) => {
-    await page.locator('nav').locator('text=Profile').click();
-    await page.waitForURL('**/profile', { timeout: 5_000 });
-    await expect(page).toHaveURL(/\/profile/);
-  });
-
-  test('partner invite section is visible', async ({ page }) => {
-    await expect(page.locator('text=Invite your partner')).toBeVisible();
+    await expect(page.locator('text=You started today already. Come back now and finish your evening reflection.')).toBeVisible();
+    await expect(page.locator("button:has-text(\"Resume Evening Reflection\")")).toBeVisible();
+    await expect(page.locator("button:has-text(\"Restart Morning Practice\")")).toBeVisible();
   });
 });

@@ -171,8 +171,8 @@ export default function SettingsPage() {
       } ${onClick ? 'cursor-pointer hover:bg-brand-primary/5 transition-colors' : ''}`}
     >
       <div>
-        <p className="text-sm font-medium text-[#2C1A14]">{label}</p>
-        {secondary && <p className="text-xs text-[#6B4C3B] mt-0.5">{secondary}</p>}
+        <p className="text-sm font-medium text-[#2E1065]">{label}</p>
+        {secondary && <p className="text-xs text-[#5B4A86] mt-0.5">{secondary}</p>}
       </div>
       {right && <div className="flex-shrink-0 ml-4">{right}</div>}
     </div>
@@ -200,7 +200,7 @@ export default function SettingsPage() {
         {/* ACCOUNT */}
         <motion.div custom={0} variants={cardVariants} initial="hidden" animate="visible">
           <SectionLabel>Account</SectionLabel>
-          <div className="bg-[#EDE4D8] rounded-3xl border border-brand-primary/10 shadow-sm overflow-hidden">
+          <div className="bg-[#EDE9FE] rounded-3xl border border-brand-primary/10 shadow-sm overflow-hidden">
             <Row
               label="Email"
               secondary={user?.email || '—'}
@@ -225,7 +225,7 @@ export default function SettingsPage() {
         {/* PREFERENCES */}
         <motion.div custom={1} variants={cardVariants} initial="hidden" animate="visible">
           <SectionLabel>Preferences</SectionLabel>
-          <div className="bg-[#EDE4D8] rounded-3xl border border-brand-primary/10 shadow-sm overflow-hidden">
+          <div className="bg-[#EDE9FE] rounded-3xl border border-brand-primary/10 shadow-sm overflow-hidden">
             <Row
               label="Daily reminder"
               secondary={notifications ? reminderTime : 'Off'}
@@ -237,7 +237,7 @@ export default function SettingsPage() {
                       value={reminderTime}
                       disabled={isLoading}
                       onChange={handleTimeChange}
-                      className="border border-brand-primary/20 rounded-lg px-2 py-1 text-xs text-[#2C1A14] bg-brand-linen focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                      className="border border-brand-primary/20 rounded-lg px-2 py-1 text-xs text-[#2E1065] bg-brand-linen focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
                     />
                   )}
                   <Toggle
@@ -278,14 +278,14 @@ export default function SettingsPage() {
         {/* PRIVACY */}
         <motion.div custom={2} variants={cardVariants} initial="hidden" animate="visible">
           <SectionLabel>Privacy</SectionLabel>
-          <div className="bg-[#EDE4D8] rounded-3xl border border-brand-primary/10 shadow-sm overflow-hidden">
+          <div className="bg-[#EDE9FE] rounded-3xl border border-brand-primary/10 shadow-sm overflow-hidden">
             {/* Trust summary pill */}
             <div className="px-5 pt-4 pb-2">
               <div className="rounded-xl bg-brand-linen border border-brand-primary/10 px-3 py-2">
-                <p className="text-xs font-medium text-[#2C1A14]">
+                <p className="text-xs font-medium text-[#2E1065]">
                   {trustSummary.hasConsent ? 'AI consent active' : 'AI consent needed'}
                 </p>
-                <p className="text-xs text-[#6B4C3B] mt-0.5">
+                <p className="text-xs text-[#5B4A86] mt-0.5">
                   {trustSummary.personalizationEnabled ? 'Personalization on' : 'Personalization off'}
                   {' · '}
                   Memory {trustSummary.memoryMode === 'off' ? 'off' : trustSummary.memoryMode === 'indefinite' ? 'indefinite' : '90-day'}
@@ -295,17 +295,17 @@ export default function SettingsPage() {
             <Row
               label="Memory settings"
               onClick={() => router.push('/trust-center')}
-              right={<ChevronRight className="w-4 h-4 text-[#6B4C3B]" />}
+              right={<ChevronRight className="w-4 h-4 text-[#5B4A86]" />}
             />
             <Row
               label="Download my data"
               onClick={() => toast.info("We'll email you a copy of your data within 24 hours.")}
-              right={<ChevronRight className="w-4 h-4 text-[#6B4C3B]" />}
+              right={<ChevronRight className="w-4 h-4 text-[#5B4A86]" />}
             />
             <Row
               label="Trust Center"
               onClick={() => router.push('/trust-center')}
-              right={<ChevronRight className="w-4 h-4 text-[#6B4C3B]" />}
+              right={<ChevronRight className="w-4 h-4 text-[#5B4A86]" />}
             />
           </div>
         </motion.div>
@@ -313,11 +313,11 @@ export default function SettingsPage() {
         {/* SUBSCRIPTION */}
         <motion.div custom={3} variants={cardVariants} initial="hidden" animate="visible">
           <SectionLabel>Plan</SectionLabel>
-          <div className="bg-[#EDE4D8] rounded-3xl border border-brand-primary/10 shadow-sm p-5">
-            <p className="font-semibold text-[#2C1A14] text-sm">
+          <div className="bg-[#EDE9FE] rounded-3xl border border-brand-primary/10 shadow-sm p-5">
+            <p className="font-semibold text-[#2E1065] text-sm">
               {subscription.name}
             </p>
-            <p className="text-xs text-[#6B4C3B] mt-0.5 mb-4">
+            <p className="text-xs text-[#5B4A86] mt-0.5 mb-4">
               {subscription.tier === "free"
                 ? "Upgrade to unlock all journeys and unlimited sessions"
                 : `Renews ${subscription.expiresAt?.toLocaleDateString()}`}
@@ -353,7 +353,7 @@ export default function SettingsPage() {
           </div>
         </motion.div>
 
-        <p className="text-center text-xs text-[#6B4C3B]/50 py-2 pb-6">
+        <p className="text-center text-xs text-[#5B4A86]/50 py-2 pb-6">
           Sparq v1.0.0 · © 2026 Sparq Connection Lab
         </p>
       </main>

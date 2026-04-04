@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../../lib/auth-context';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Lock, Mail, ArrowRight, Loader } from 'lucide-react';
+import { buildAuthedHeaders } from '@/lib/api-auth';
+import { markPrimarySignupDrivenPath, reportPrimaryPathClientError, trackPrimaryPathClientEvent } from '@/lib/beta/primaryPath';
 
 interface LoginFormProps {
   onToggleMode?: () => void;
@@ -88,6 +90,28 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
       if (result.success) {
         setSuccessMessage(isRegisterMode ? 'Account created! Setting up your experience...' : 'Login successful!');
 
+        if (isRegisterMode) {
+          const signupSource = router.query.source === 'signup' ? 'signup' : 'register';
+          markPrimarySignupDrivenPath(signupSource);
+          void trackPrimaryPathClientEvent('beta_primary_signup_register_success', {
+            stage: 'register_success',
+            entry_source: signupSource,
+          });
+          try {
+            const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
+            await fetch('/api/preferences', {
+              method: 'PATCH',
+              headers,
+              body: JSON.stringify({
+                grant_consent: true,
+                consent_source: 'login_register_flow',
+              }),
+            });
+          } catch (consentError) {
+            console.error('Consent save error:', consentError);
+          }
+        }
+
         setTimeout(() => {
           router.push(isRegisterMode ? '/onboarding' : '/dashboard');
         }, 1500);
@@ -107,6 +131,9 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
         }
       }
     } catch (err) {
+      void reportPrimaryPathClientError('login_form_submit', err, {
+        is_register_mode: isRegisterMode,
+      });
       setError('An unexpected error occurred. Please try again later.');
       console.error('Auth error:', err);
     } finally {

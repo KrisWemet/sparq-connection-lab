@@ -1,0 +1,17 @@
+{
+  "baseURL": "https://sparq-connection-lab.vercel.app",
+  "email": "live-beta-1774993199474@sparq.app",
+  "checkedAt": "2026-03-31T21:51:06.781Z",
+  "results": [
+    {
+      "step": "login",
+      "status": "pass",
+      "note": "Authenticated proven beta user reached dashboard."
+    },
+    {
+      "step": "script_error",
+      "status": "fail",
+      "note": "locator.waitFor: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Start Morning Story\")') to be visible\u001b[22m\n"
+    }
+  ]
+}

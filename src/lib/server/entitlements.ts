@@ -2,6 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import {
   EntitlementShape,
   FREE_ENTITLEMENTS,
+  isInTrial,
   normalizeEntitlementTier,
   PAID_ENTITLEMENTS,
 } from '@/lib/product';
@@ -13,22 +14,31 @@ export async function resolveEntitlements(
   const explicit = await loadExplicitEntitlements(supabase, userId);
 
   if (explicit) {
-    return {
-      tier: normalizeEntitlementTier(explicit.tier),
-      loop_limit_per_week: explicit.loop_limit_per_week,
-      coach_message_limit_per_day: explicit.coach_message_limit_per_day,
-      starter_quests_limit: explicit.starter_quests_limit,
-    } as EntitlementShape;
+    const tier = normalizeEntitlementTier(explicit.tier);
+    if (tier === 'premium') {
+      return {
+        tier,
+        loop_limit_per_week: explicit.loop_limit_per_week,
+        coach_message_limit_per_day: explicit.coach_message_limit_per_day,
+        starter_quests_limit: explicit.starter_quests_limit,
+      } as EntitlementShape;
+    }
+    // Even with explicit free entitlements, trial overrides loop limits
+    // so new users aren't blocked during their 14-day window.
   }
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('subscription_tier')
+    .select('subscription_tier, created_at')
     .eq('id', userId)
     .maybeSingle();
 
   const profileTier = normalizeEntitlementTier(profile?.subscription_tier);
-  if (profileTier === 'premium') {
+
+  // Paid subscribers and active trial users both get premium entitlements.
+  // Traits are inferred for everyone — so when a trial user converts, Peter
+  // already knows them.
+  if (profileTier === 'premium' || isInTrial(profile?.created_at)) {
     return PAID_ENTITLEMENTS;
   }
 

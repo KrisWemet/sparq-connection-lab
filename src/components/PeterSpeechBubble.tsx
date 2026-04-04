@@ -32,10 +32,10 @@ export default function PeterSpeechBubble({
         style={{
           background: 'rgba(255, 243, 237, 0.7)',
           backdropFilter: 'blur(12px)',
-          border: '1px solid rgba(192, 97, 74, 0.10)',
+          border: '1px solid rgba(139, 92, 246, 0.10)',
           borderRadius: 28,
           padding: '24px 28px',
-          boxShadow: '0 8px 30px rgba(192, 97, 74, 0.04)',
+          boxShadow: '0 8px 30px rgba(139, 92, 246, 0.04)',
           flex: 1,
           position: 'relative',
         }}
@@ -63,7 +63,7 @@ export default function PeterSpeechBubble({
             style={{
               margin: '8px 0 0',
               fontSize: 12,
-              color: '#C0614A',
+              color: '#8B5CF6',
               fontWeight: 600,
               letterSpacing: '0.02em',
             }}

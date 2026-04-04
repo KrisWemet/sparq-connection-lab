@@ -17,6 +17,7 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
   const [messages, setMessages] = useState<PeterMessage[]>([]);
   const [userInput, setUserInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [exchangeCount, setExchangeCount] = useState(0);
   const hasInitialized = useRef(false);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -34,6 +35,7 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
   }, [messages]);
 
   async function sendMessage(userText: string | null) {
+    if (isClosing) return;
     setIsLoading(true);
 
     const nextMessages: PeterMessage[] = userText
@@ -67,6 +69,7 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
       setExchangeCount(nextExchangeCount);
 
       if (shouldClose) {
+        setIsClosing(true);
         // Extract just the personalised observation sentence (first line before sign-off).
         // The system prompt instructs Peter to put the closing observation on its own first line
         // followed by "Let me show you where I think we start. 🦦" on the next line.
@@ -74,18 +77,23 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
         const updatedProfile: DerivedProfile = { ...profile, peterClosingSentence: closingObservation };
 
         // Second PATCH to psychological_profile to add closing sentence
-        await supabase
+        const { error: updateError } = await supabase
           .from('profiles')
           .update({
             psychological_profile: updatedProfile,
           })
           .eq('id', userId);
 
+        if (updateError) {
+          console.error('PeterSession profile save error:', updateError);
+        }
+
         // Pause briefly so user reads the closing message before transition
-        setTimeout(() => onComplete(updatedProfile), 2500);
+        setTimeout(() => onComplete(updatedProfile), 1200);
       }
     } catch (err) {
       console.error('PeterSession error:', err);
+      setIsClosing(false);
       setMessages(prev => [...prev, {
         role: 'assistant',
         content: "I'm having a moment — give me a second and try again. 🦦",
@@ -95,7 +103,7 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
     }
   }
 
-  const canSend = userInput.trim().length > 0 && !isLoading && exchangeCount < 5;
+  const canSend = userInput.trim().length > 0 && !isLoading && !isClosing && exchangeCount < 5;
 
   return (
     <div className="min-h-screen bg-brand-linen flex flex-col">
@@ -114,7 +122,7 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
                 className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
                   msg.role === 'assistant'
                     ? 'bg-white border border-[#e5e7eb] text-[#1f2937] rounded-tl-sm font-serif italic'
-                    : 'bg-[#C0614A] text-white rounded-tr-sm'
+                    : 'bg-[#8B5CF6] text-white rounded-tr-sm'
                 }`}
               >
                 {msg.content}
@@ -135,7 +143,7 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
                 {[0, 1, 2].map(i => (
                   <motion.div
                     key={i}
-                    className="w-2 h-2 rounded-full bg-[#C0614A]"
+                    className="w-2 h-2 rounded-full bg-[#8B5CF6]"
                     animate={{ y: [0, -4, 0] }}
                     transition={{ duration: 0.6, delay: i * 0.15, repeat: Infinity }}
                   />
@@ -148,8 +156,8 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
       </div>
 
       {/* Input bar */}
-      {messages.length > 0 && !isLoading && (
-        <div className="fixed bottom-0 left-0 right-0 bg-[#f5ede4] border-t border-[#e5e7eb] px-4 py-3">
+      {messages.length > 0 && !isLoading && !isClosing && (
+        <div className="fixed bottom-0 left-0 right-0 bg-[#f5f3ff] border-t border-[#e5e7eb] px-4 py-3">
           <div className="max-w-md mx-auto flex gap-2">
             <input
               type="text"
@@ -157,15 +165,23 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
               onChange={e => setUserInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && canSend && sendMessage(userInput)}
               placeholder="Type your response..."
-              className="flex-1 px-4 py-3 rounded-2xl border-2 border-[#C0614A]/20 bg-white text-[#2C1A14] placeholder-[#6B4C3B]/50 focus:outline-none focus:border-[#C0614A] text-sm"
+              className="flex-1 px-4 py-3 rounded-2xl border-2 border-[#8B5CF6]/20 bg-white text-[#2E1065] placeholder-[#5B4A86]/50 focus:outline-none focus:border-[#8B5CF6] text-sm"
             />
             <button
               onClick={() => sendMessage(userInput)}
               disabled={!canSend}
-              className="bg-[#C0614A] text-white rounded-2xl px-4 py-3 font-semibold text-sm disabled:opacity-40"
+              className="bg-[#8B5CF6] text-white rounded-2xl px-4 py-3 font-semibold text-sm disabled:opacity-40"
             >
               →
             </button>
+          </div>
+        </div>
+      )}
+
+      {messages.length > 0 && isClosing && (
+        <div className="fixed bottom-0 left-0 right-0 bg-[#f5f3ff] border-t border-[#e5e7eb] px-4 py-3">
+          <div className="max-w-md mx-auto text-center text-sm text-[#5B4A86]">
+            Taking you to your starting point...
           </div>
         </div>
       )}

@@ -4,7 +4,7 @@ export function fireElegantConfetti() {
   const duration = 3000;
   const end = Date.now() + duration;
 
-  const colors = ['#C86A58', '#F4EFEB', '#8C827A']; // Brand colors: primary, sand, taupe
+  const colors = ['#8B5CF6', '#F5F3FF', '#F9C74F']; // Brand colors: soft violet, lavender, butter gold
 
   (function frame() {
     confetti({
@@ -38,7 +38,7 @@ export function fireSubtleBurst() {
     particleCount: 40,
     spread: 70,
     origin: { y: 0.6 },
-    colors: ['#C86A58', '#FDF8F6', '#8C827A'],
+    colors: ['#8B5CF6', '#F5F3FF', '#F9C74F'],
     disableForReducedMotion: true,
     zIndex: 100,
   });

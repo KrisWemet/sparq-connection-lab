@@ -27,7 +27,7 @@ export function QuestionView({
 
   const handleAnswer = (answer: string) => {
     onAnswerSubmit(answer);
-    router.push('/daily-activity');
+    router.push('/daily-growth');
   };
 
   return (

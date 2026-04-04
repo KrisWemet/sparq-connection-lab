@@ -1,0 +1,123 @@
+<h2>Conversational Bridges Between Questions</h2>
+<p class="subtitle">Peter reacts to each answer before asking the next question — pre-written, client-side, zero API calls</p>
+
+<style>
+.chat-flow { max-width: 380px; margin: 0 auto; font-family: -apple-system, sans-serif; }
+.peter-msg { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 14px; }
+.peter-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #7c6a5a, #c0614a); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.peter-bubble { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px 16px 16px 4px; padding: 10px 14px; font-size: 13px; color: #1f2937; line-height: 1.5; max-width: 300px; }
+.user-reply { display: flex; justify-content: flex-end; margin-bottom: 14px; }
+.user-bubble { background: #c0614a; color: white; border-radius: 16px 16px 4px 16px; padding: 10px 14px; font-size: 13px; max-width: 260px; line-height: 1.5; }
+.quick-replies { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; margin-left: 42px; }
+.qr-btn { background: white; border: 1.5px solid #c0614a; border-radius: 20px; padding: 8px 16px; font-size: 12px; color: #c0614a; text-align: left; cursor: pointer; }
+.bridge-note { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: #9ca3af; font-weight: 600; margin: 20px 0 8px; }
+.divider { border: none; border-top: 1px dashed #e5e7eb; margin: 24px 0; }
+</style>
+
+<div class="chat-flow">
+
+  <!-- WITHOUT bridges (current feel) -->
+  <p class="bridge-note">❌ Current feel — intake form</p>
+
+  <div class="peter-msg">
+    <div class="peter-avatar">🦦</div>
+    <div class="peter-bubble">When something feels off between you — a short reply, a change in tone, a quiet night — how does it land for you?</div>
+  </div>
+  <div class="quick-replies">
+    <div class="qr-btn">It hits me fast and hard — I feel it right away</div>
+    <div class="qr-btn">I notice it, but I can usually breathe through it</div>
+    <div class="qr-btn">I tend to go quiet and not think about it much</div>
+  </div>
+  <div class="user-reply"><div class="user-bubble">It hits me fast and hard — I feel it right away</div></div>
+
+  <div class="peter-msg">
+    <div class="peter-avatar">🦦</div>
+    <div class="peter-bubble">And after a tough moment between you — how long does it usually take you to feel like yourself again?</div>
+  </div>
+  <div class="quick-replies">
+    <div class="qr-btn">I bounce back pretty fast</div>
+    <div class="qr-btn">A few hours — I need to process a bit</div>
+    <div class="qr-btn">It can take a day or more</div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- WITH bridges -->
+  <p class="bridge-note">✅ With conversational bridges</p>
+
+  <div class="peter-msg">
+    <div class="peter-avatar">🦦</div>
+    <div class="peter-bubble">When something feels off between you — a short reply, a change in tone, a quiet night — how does it land for you?</div>
+  </div>
+  <div class="quick-replies">
+    <div class="qr-btn">It hits me fast and hard — I feel it right away</div>
+    <div class="qr-btn">I notice it, but I can usually breathe through it</div>
+    <div class="qr-btn">I tend to go quiet and not think about it much</div>
+  </div>
+  <div class="user-reply"><div class="user-bubble">It hits me fast and hard — I feel it right away</div></div>
+
+  <!-- BRIDGE: Peter reacts before next question -->
+  <div class="peter-msg">
+    <div class="peter-avatar">🦦</div>
+    <div class="peter-bubble">Yeah — when you care, it's hard not to feel it. That makes sense. 🦦</div>
+  </div>
+  <div class="peter-msg">
+    <div class="peter-avatar">🦦</div>
+    <div class="peter-bubble">And after a tough moment between you — how long does it usually take you to feel like yourself again?</div>
+  </div>
+  <div class="quick-replies">
+    <div class="qr-btn">I bounce back pretty fast</div>
+    <div class="qr-btn">A few hours — I need to process a bit</div>
+    <div class="qr-btn">It can take a day or more</div>
+    <div class="qr-btn">I shut down and it takes a long while</div>
+  </div>
+  <div class="user-reply"><div class="user-bubble">It can take a day or more</div></div>
+
+  <!-- BRIDGE before Q8 -->
+  <div class="peter-msg">
+    <div class="peter-avatar">🦦</div>
+    <div class="peter-bubble">That's real — sometimes the feelings need somewhere to go before you can come back. I hear you.</div>
+  </div>
+  <div class="peter-msg">
+    <div class="peter-avatar">🦦</div>
+    <div class="peter-bubble">If [partnerName] went quiet for a whole day — nothing serious, just... quiet — what would probably go through your mind?</div>
+  </div>
+
+</div>
+
+<hr class="divider">
+
+<div class="section">
+  <p class="label">Bridge library — Q6 example (one bridge per option)</p>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <thead>
+      <tr style="border-bottom:2px solid #e5e7eb;">
+        <th style="text-align:left;padding:8px 12px;color:#6b7280;font-size:11px;text-transform:uppercase;">User picked</th>
+        <th style="text-align:left;padding:8px 12px;color:#6b7280;font-size:11px;text-transform:uppercase;">Peter says (bridge)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid #f3f4f6;">
+        <td style="padding:10px 12px;color:#374151;">"It hits me fast and hard"</td>
+        <td style="padding:10px 12px;color:#374151;font-style:italic;">"Yeah — when you care, it's hard not to feel it. That makes sense. 🦦"</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f3f4f6;">
+        <td style="padding:10px 12px;color:#374151;">"I notice it but can breathe through it"</td>
+        <td style="padding:10px 12px;color:#374151;font-style:italic;">"That's actually a real skill, even when it doesn't feel like one."</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f3f4f6;">
+        <td style="padding:10px 12px;color:#374151;">"I tend to go quiet"</td>
+        <td style="padding:10px 12px;color:#374151;font-style:italic;">"Stepping back to process — there's a kind of wisdom in that too."</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;color:#374151;">Write my own (free text)</td>
+        <td style="padding:10px 12px;color:#374151;font-style:italic;">"I appreciate you putting that into your own words." <em style="color:#9ca3af">(generic, always warm)</em></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section" style="background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:16px 20px;margin-top:16px;">
+  <p class="label" style="color:#166534;">Implementation note</p>
+  <p style="font-size:13px;color:#374151;margin-top:8px;">Each question in <code>questions.ts</code> includes a <code>bridges</code> map: <code>{ [optionKey]: string }</code>. When the user selects an option, the bridge message is shown as a Peter bubble for ~1.5s before the next question animates in. For "write my own" answers, a generic warm acknowledgment is used. Zero API calls — all pre-written copy.</p>
+</div>

@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getAuthedContext } from '@/lib/server/supabase-auth';
 import { resolveEntitlements } from '@/lib/server/entitlements';
 import { trackEvent } from '@/lib/server/analytics';
+import { trackPrimaryPathServerError } from '@/lib/server/beta-ops';
 
 type StartJourneyBody = {
   journey_id?: string;
@@ -27,6 +28,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .maybeSingle();
 
   if (journeyError) {
+    await trackPrimaryPathServerError(ctx.supabase, ctx.userId, 'journey_start_lookup', journeyError, {
+      journey_id,
+    });
     console.error('Journey lookup failed:', journeyError);
     return res.status(500).json({ error: 'Failed to load journey' });
   }
@@ -43,6 +47,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .maybeSingle();
 
   if (existingError) {
+    await trackPrimaryPathServerError(ctx.supabase, ctx.userId, 'journey_start_existing_progress', existingError, {
+      journey_id,
+    });
     console.error('Journey progress lookup failed:', existingError);
     return res.status(500).json({ error: 'Failed to check existing journey progress' });
   }
@@ -56,6 +63,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .single();
 
     if (reactivateError) {
+      await trackPrimaryPathServerError(ctx.supabase, ctx.userId, 'journey_reactivate', reactivateError, {
+        journey_id,
+      });
       console.error('Journey reactivation failed:', reactivateError);
       return res.status(500).json({ error: 'Failed to reactivate journey' });
     }
@@ -78,6 +88,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .eq('user_id', ctx.userId);
 
     if (countError) {
+      await trackPrimaryPathServerError(ctx.supabase, ctx.userId, 'journey_start_entitlement_check', countError, {
+        journey_id,
+      });
       console.error('Journey count failed:', countError);
       return res.status(500).json({ error: 'Failed to check starter quest allowance' });
     }
@@ -104,6 +117,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .single();
 
   if (createError || !created) {
+    await trackPrimaryPathServerError(ctx.supabase, ctx.userId, 'journey_start_create', createError || new Error('Journey start failed'), {
+      journey_id,
+    });
     console.error('Journey start failed:', createError);
     return res.status(500).json({ error: 'Failed to start journey' });
   }

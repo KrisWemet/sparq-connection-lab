@@ -8,7 +8,11 @@ interface PartnerSynthesis {
   generated_at: string;
 }
 
-export function PartnerSynthesisCard() {
+interface PartnerSynthesisCardProps {
+  hasPartner?: boolean;
+}
+
+export function PartnerSynthesisCard({ hasPartner = true }: PartnerSynthesisCardProps) {
   const [data, setData] = useState<PartnerSynthesis | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -35,7 +39,36 @@ export function PartnerSynthesisCard() {
     })();
   }, []);
 
-  if (loading || !data) return null;
+  if (loading) return null;
+
+  if (!hasPartner || !data) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="bg-brand-primary/5 backdrop-blur-md rounded-3xl border border-brand-primary/10 shadow-[0_8px_30px_rgb(200,106,88,0.04)] p-6 relative overflow-hidden"
+      >
+        <div className="flex items-center gap-4 mb-4 relative z-10">
+          <div className="w-12 h-12 rounded-2xl bg-white/60 flex items-center justify-center shadow-sm">
+            <span className="text-2xl">🌱</span>
+          </div>
+          <div>
+            <p className="text-lg font-serif text-zinc-900 tracking-tight">Your Solo Reflection</p>
+            <p className="text-xs font-medium text-brand-primary uppercase tracking-wide">Practice outside the app</p>
+          </div>
+        </div>
+
+        <p className="text-[15px] text-zinc-700 leading-relaxed mb-4 relative z-10 italic font-serif">
+          &quot;Take tonight&apos;s insight into one real moment. Pause, breathe, and say the truer, kinder version of what you mean.&quot;
+        </p>
+
+        <p className="text-xs text-zinc-500 leading-snug relative z-10">
+          Your partner does not need to join for this to matter. Shared reflections appear only when both of you are actively participating.
+        </p>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div

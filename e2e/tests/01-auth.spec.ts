@@ -4,31 +4,30 @@ test.describe('Authentication', () => {
   test('dashboard is accessible when logged in', async ({ page }) => {
     await page.goto('/dashboard');
     await expect(page).toHaveURL(/\/dashboard/);
-    // Should see the Sparq header and the "Today's Question" section
-    await expect(page.locator('h1:has-text("Sparq")')).toBeVisible();
-    await expect(page.locator('h3:has-text("Today\'s Question")')).toBeVisible();
+    await expect(page.getByText('SPARQ')).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: /Begin Today|Choose Next Journey|Evening Check-in/i }).first()
+    ).toBeVisible();
   });
 
-  test('/ redirects logged-in user to dashboard', async ({ page }) => {
-    await page.goto('/');
-    // Wait for the auth context to resolve and show the Dashboard link
-    await expect(page.locator('text=Go to Dashboard')).toBeVisible({ timeout: 5000 });
-  });
-
-  test('logout works from profile page', async ({ page }) => {
-    // Navigate from dashboard to profile via UI to ensure state is fully initialized
+  test('session survives a dashboard reload', async ({ page }) => {
     await page.goto('/dashboard');
-    await expect(page.locator('h1:has-text("Sparq")')).toBeVisible({ timeout: 10_000 });
-    
-    // Click Profile in the bottom nav
-    await page.locator('nav').locator('text=Profile').click();
-    await expect(page).toHaveURL(/\/profile/, { timeout: 10_000 });
-    
-    // Find and click the Privacy tab
-    await page.locator('button', { hasText: /Privacy/ }).first().click();
-    
-    // Click Sign Out
-    await page.locator('button', { hasText: 'Sign Out' }).click();
+    await expect(page).toHaveURL(/\/dashboard/);
+    await page.reload();
+    await expect(page).toHaveURL(/\/dashboard/);
+    await expect(page.getByText('SPARQ')).toBeVisible();
+  });
+
+  test('login page redirects logged-in users to dashboard', async ({ page }) => {
+    await page.goto('/login');
+    await page.waitForURL(/\/dashboard/, { timeout: 10_000 });
+    await expect(page.getByText('SPARQ')).toBeVisible();
+  });
+
+  test('logout works from settings page', async ({ page }) => {
+    await page.goto('/settings');
+    await expect(page).toHaveURL(/\/settings/, { timeout: 10_000 });
+    await page.getByRole('button', { name: 'Sign out' }).click();
     await page.waitForURL(/\/login/, { timeout: 10_000 });
     await expect(page).toHaveURL(/\/login/);
   });

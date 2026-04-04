@@ -34,8 +34,10 @@ export default function OnboardingPage() {
 
   // Auth redirect
   useEffect(() => {
-    if (!authLoading && !user) router.push('/login');
-  }, [user, authLoading]);
+    if (!authLoading && !user) {
+      router.replace('/login');
+    }
+  }, [authLoading, router, user]);
 
   // Load consent + check for dropout recovery
   useEffect(() => {
@@ -62,6 +64,11 @@ export default function OnboardingPage() {
             .eq('id', user.id)
             .single();
 
+          if (profileData?.isonboarded) {
+            router.replace('/dashboard');
+            return;
+          }
+
           if (profileData && !profileData.isonboarded && profileData.psychological_profile) {
             // User completed scoring but never confirmed a journey — resume from journey_rec
             setProfile(profileData.psychological_profile as DerivedProfile);
@@ -83,7 +90,7 @@ export default function OnboardingPage() {
     })();
 
     return () => { cancelled = true; };
-  }, [user]);
+  }, [router, user]);
 
   async function handleConsentAgree() {
     if (!user || consentSaving) return;
@@ -201,14 +208,14 @@ export default function OnboardingPage() {
     return (
       <div className="min-h-screen bg-brand-linen flex flex-col items-center justify-center px-4 gap-4">
         <PeterAvatar mood="morning" size={64} />
-        <p className="text-[#6B4C3B] text-center text-sm">{scoringError}</p>
+        <p className="text-[#5B4A86] text-center text-sm">{scoringError}</p>
         <button
           onClick={() => {
             setScoringError('');
             // If savedProgress was lost (e.g. page remounted), fall back to questions
             setPhase(savedProgress ? 'scoring_transition' : 'questions');
           }}
-          className="bg-[#C0614A] text-white rounded-2xl px-6 py-3 font-semibold text-sm"
+          className="bg-[#8B5CF6] text-white rounded-2xl px-6 py-3 font-semibold text-sm"
         >
           Try again
         </button>

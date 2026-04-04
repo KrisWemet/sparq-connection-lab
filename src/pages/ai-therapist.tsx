@@ -47,9 +47,9 @@ export default function AITherapist() {
 
       <main className="container max-w-lg mx-auto px-4 pt-6 animate-slide-up">
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">The Intimacy Builder</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Solo Coaching, Used With Care</h2>
           <p className="text-gray-600 mt-2">
-            Your path to a stronger, more connected relationship through personalized guidance and support.
+            This may become a deeper support tool for people who want more help between daily steps.
           </p>
         </div>
 
@@ -58,10 +58,10 @@ export default function AITherapist() {
             <Brain className="w-8 h-8 text-purple-500" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            AI Relationship Therapist
+            AI Relationship Coach
           </h2>
           <p className="text-gray-700 max-w-md">
-            Get personalized relationship advice and guidance powered by advanced AI
+            Get calm support to help you think clearer, feel steadier, and show up better at home
           </p>
           <Badge className="mt-4 bg-purple-200 text-purple-800 hover:bg-purple-300">Coming Soon</Badge>
         </div>
@@ -70,7 +70,7 @@ export default function AITherapist() {
           <CardHeader>
             <CardTitle>Ultimate Package Feature</CardTitle>
             <CardDescription>
-              The AI Therapist will be available exclusively in our Ultimate subscription package
+              This coaching layer is planned for Ultimate when it feels safe, clear, and truly helpful
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -79,7 +79,7 @@ export default function AITherapist() {
               <div>
                 <h4 className="font-medium mb-1">Personalized Guidance</h4>
                 <p className="text-sm text-gray-600">
-                  Get tailored advice based on your relationship history, communication patterns, and goals
+                  Get help that fits your patterns, your goals, and the small steps you are already taking
                 </p>
               </div>
             </div>
@@ -89,7 +89,7 @@ export default function AITherapist() {
               <div>
                 <h4 className="font-medium mb-1">Limited Free Usage</h4>
                 <p className="text-sm text-gray-600">
-                  Free tier will include 10 minutes per month, with options to purchase additional time
+                  Free use will stay limited so the help stays clear and useful
                 </p>
               </div>
             </div>
@@ -99,7 +99,7 @@ export default function AITherapist() {
               <div>
                 <h4 className="font-medium mb-1">Relationship Analysis</h4>
                 <p className="text-sm text-gray-600">
-                  Receive insights based on your interactions, question responses, and relationship data
+                  Get simple insight from your reflections, your follow-through, and the loops you want to change
                 </p>
               </div>
             </div>
@@ -109,7 +109,7 @@ export default function AITherapist() {
               <div>
                 <h4 className="font-medium mb-1">Scheduled Sessions</h4>
                 <p className="text-sm text-gray-600">
-                  Book regular therapy sessions for you individually or together with your partner
+                  Set aside time for solo coaching first, with shared support later if you invite your partner
                 </p>
               </div>
             </div>
@@ -131,7 +131,7 @@ export default function AITherapist() {
               <div>
                 <h4 className="font-medium mb-2">Coming Soon</h4>
                 <p className="text-sm text-gray-600 mb-4">
-                  Our AI Therapist feature is currently in development. Subscribe to our newsletter to be notified when it launches.
+                  This feature is still being built. We are keeping it off until it feels safe, honest, and clearly different from therapy.
                 </p>
                 <div className="flex flex-col items-center gap-3">
                   <Button variant="outline" size="sm" onClick={() => toast.success("You'll be notified when AI Therapist launches!")}>
@@ -151,24 +151,24 @@ export default function AITherapist() {
         <div className="bg-white p-6 rounded-lg border shadow-sm">
           <h3 className="text-lg font-semibold mb-3 text-center">How Sparq Connect Helps Couples</h3>
           <p className="text-gray-700 mb-4">
-            Sparq Connect is designed to be your relationship&apos;s best ally, helping you and your partner build deeper intimacy through:
+            Sparq helps a relationship by helping one person show up better first:
           </p>
           <ul className="space-y-3">
             <li className="flex items-start gap-2">
               <Heart className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-              <span className="text-sm">Daily questions that progressively build emotional connection</span>
+              <span className="text-sm">Daily steps that build calmer talks and more honest reflection</span>
             </li>
             <li className="flex items-start gap-2">
               <MessageSquare className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-              <span className="text-sm">Guided communication exercises based on relationship science</span>
+              <span className="text-sm">Guided talk practice based on relationship science</span>
             </li>
             <li className="flex items-start gap-2">
               <Calendar className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-              <span className="text-sm">Personalized date ideas to keep your relationship fresh and exciting</span>
+              <span className="text-sm">Support you can use in real life when a hard moment shows up</span>
             </li>
             <li className="flex items-start gap-2">
               <Brain className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-              <span className="text-sm">AI-powered insights that help you understand your relationship patterns</span>
+              <span className="text-sm">AI insight that helps you spot and change your own patterns first</span>
             </li>
           </ul>
         </div>

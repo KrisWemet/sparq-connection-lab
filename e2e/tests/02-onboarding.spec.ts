@@ -1,70 +1,83 @@
 import { test, expect } from '@playwright/test';
-import { mockPeterRoutes } from '../helpers/mock-peter';
 
-test.describe('Onboarding Flow', () => {
-  test.beforeEach(async ({ page }) => {
-    await mockPeterRoutes(page);
-  });
+test.describe('Onboarding', () => {
+  test('shows the consent gate first and keeps progress after refresh', async ({ page }) => {
+    let hasConsent = false;
 
-  test('shows Peter\'s welcome message on load', async ({ page }) => {
-    await page.goto('/onboarding-flow');
-    // Peter's initial message starts with "Hey there! I'm Peter"
-    await expect(page.locator('text=Hey there!')).toBeVisible({ timeout: 10_000 });
-    await expect(page.locator('text=Peter 🦦')).toBeVisible();
-    // Input should be ready
-    await expect(page.locator('textarea')).toBeVisible();
-  });
+    await page.route('**/api/preferences', async (route) => {
+      const method = route.request().method();
 
-  test('completes 5-turn conversation and redirects to dashboard', async ({ page }) => {
-    await page.goto('/onboarding-flow');
-
-    // Wait for Peter's initial message
-    await expect(page.locator('text=Hey there!')).toBeVisible({ timeout: 10_000 });
-
-    const responses = [
-      'My name is Alex',
-      'We have been struggling to communicate lately',
-      'Last week we had a small argument about chores',
-      'I usually need some space before talking it out',
-      'My partner shows care by making me coffee in the morning',
-    ];
-
-    for (let i = 0; i < responses.length; i++) {
-      const text = responses[i];
-      // Type and send message
-      await page.locator('textarea').fill(text);
-      await page.locator('form button[type="submit"]').click();
-      
-      // Only wait for textarea to re-enable if it's not the final message
-      if (i < responses.length - 1) {
-        await expect(page.locator('textarea')).toBeEnabled({ timeout: 8_000 });
+      if (method === 'PATCH') {
+        hasConsent = true;
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ ok: true }),
+        });
+        return;
       }
-    }
 
-    // After 5th turn, completion message appears
-    await expect(
-      page.locator('text=Taking you to your dashboard...')
-    ).toBeVisible({ timeout: 10_000 });
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          consent: { has_consented: hasConsent },
+          preferences: {},
+        }),
+      });
+    });
 
-    // Should redirect to dashboard after 3s delay
-    await page.waitForURL('**/dashboard', { timeout: 10_000 });
-    await expect(page).toHaveURL(/\/dashboard/);
+    await page.route('**/rest/v1/profiles*', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          isonboarded: false,
+          psychological_profile: null,
+        }),
+      });
+    });
+
+    await page.goto('/onboarding');
+
+    await expect(page.getByRole('heading', { name: 'Before we begin' })).toBeVisible();
+    await page.getByRole('button', { name: "I agree, let's start" }).click();
+
+    await expect(page.getByPlaceholder('Your first name...')).toBeVisible();
+
+    await page.reload();
+
+    await expect(page).toHaveURL(/\/onboarding/);
+    await expect(page.getByPlaceholder('Your first name...')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Before we begin' })).toHaveCount(0);
   });
 
-  test('progress dots advance with each turn', async ({ page }) => {
-    await page.goto('/onboarding-flow');
-    await expect(page.locator('text=Hey there!')).toBeVisible({ timeout: 10_000 });
+  test('redirects completed users away from onboarding to dashboard', async ({ page }) => {
+    await page.route('**/api/preferences', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          consent: { has_consented: true },
+          preferences: {},
+        }),
+      });
+    });
 
-    // Initially 0 dots are filled (all gray bg-gray-200)
-    const dots = page.locator('.rounded-full.bg-gray-200');
-    await expect(dots.first()).toBeVisible();
+    await page.route('**/rest/v1/profiles*', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          isonboarded: true,
+          psychological_profile: null,
+        }),
+      });
+    });
 
-    // Send first message
-    await page.locator('textarea').fill('My name is Jamie');
-    await page.locator('form button[type="submit"]').click();
-    await expect(page.locator('textarea')).toBeEnabled({ timeout: 8_000 });
+    await page.goto('/onboarding');
 
-    // At least one dot should now be filled (teal)
-    await expect(page.locator('.rounded-full.bg-teal-400')).toBeVisible();
+    await page.waitForURL(/\/dashboard/, { timeout: 10_000 });
+    await expect(page.getByText('SPARQ')).toBeVisible();
   });
 });

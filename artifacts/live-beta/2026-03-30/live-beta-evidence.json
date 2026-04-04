@@ -1,0 +1,79 @@
+{
+  "baseURL": "https://sparq-connection-lab.vercel.app",
+  "email": "live-beta-1774999395741@sparq.app",
+  "capturedAt": "2026-03-31T23:24:32.857Z",
+  "evidence": [
+    {
+      "step": "signup-page",
+      "status": "pass",
+      "note": "Signup route redirected to the live register experience.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-30/1774999397202-signup-page.png"
+    },
+    {
+      "step": "signup-complete",
+      "status": "pass",
+      "note": "Fresh account reached onboarding.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-30/1774999404259-signup-complete.png"
+    },
+    {
+      "step": "consent-gate",
+      "status": "pass",
+      "note": "Consent saved and question flow opened.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-30/1774999404883-consent-gate.png"
+    },
+    {
+      "step": "question-flow-complete",
+      "status": "pass",
+      "note": "Reached live Peter onboarding session.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-30/1774999437743-question-flow-complete.png"
+    },
+    {
+      "step": "journey-recommendation",
+      "status": "pass",
+      "note": "Peter session completed and journey recommendation loaded.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-30/1774999445835-journey-recommendation.png"
+    },
+    {
+      "step": "journey-detail",
+      "status": "pass",
+      "note": "Journey detail page loaded with solo-first framing.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-30/1774999445961-journey-detail.png"
+    },
+    {
+      "step": "dashboard",
+      "status": "pass",
+      "note": "Dashboard loaded after onboarding completion.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-30/1774999447339-dashboard.png"
+    },
+    {
+      "step": "daily-home",
+      "status": "pass",
+      "note": "Daily growth home state loaded.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-30/1774999451856-daily-home.png"
+    },
+    {
+      "step": "daily-morning",
+      "status": "pass",
+      "note": "Morning story and action loaded in production.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-30/1774999452246-daily-morning.png"
+    },
+    {
+      "step": "daily-evening-entry",
+      "status": "pass",
+      "note": "Evening reflection entry state loaded.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-30/1774999454730-daily-evening-entry.png"
+    },
+    {
+      "step": "daily-reflection",
+      "status": "pass",
+      "note": "Evening reflection reached completion state.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-30/1774999469520-daily-reflection.png"
+    },
+    {
+      "step": "daily-complete",
+      "status": "pass",
+      "note": "Solo-first daily loop completed in production.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-30/1774999472806-daily-complete.png"
+    }
+  ]
+}

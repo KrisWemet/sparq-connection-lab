@@ -17,7 +17,7 @@ function readAuthToken(): string {
 
   for (const origin of state.origins || []) {
     for (const entry of origin.localStorage || []) {
-      if (!entry.name.includes('-auth-token')) continue;
+      if (entry.name !== 'sparq-auth' && !entry.name.includes('-auth-token')) continue;
       try {
         const parsed = JSON.parse(entry.value) as { access_token?: string };
         if (parsed.access_token) return parsed.access_token;

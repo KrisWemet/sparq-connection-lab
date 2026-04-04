@@ -9,6 +9,7 @@ import { BottomNav } from '../components/bottom-nav';
 import { PageTransition } from '../components/PageTransition';
 import { PeterLoading } from '../components/PeterLoading';
 import { TimeOutOverlay } from '../components/TimeOutOverlay';
+import { reportPrimaryPathClientError, shouldReportPrimaryPathRouteError } from '@/lib/beta/primaryPath';
 import '../styles/globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -37,14 +38,20 @@ export default function App({ Component, pageProps }: AppProps) {
       setIsLoading(false);
     };
 
+    const handleRouteError = (error: unknown, url: string) => {
+      setIsLoading(false);
+      if (!shouldReportPrimaryPathRouteError(error, url)) return;
+      void reportPrimaryPathClientError('route_change', error, { url });
+    };
+
     router.events.on('routeChangeStart', handleStart);
     router.events.on('routeChangeComplete', handleComplete);
-    router.events.on('routeChangeError', handleComplete);
+    router.events.on('routeChangeError', handleRouteError);
 
     return () => {
       router.events.off('routeChangeStart', handleStart);
       router.events.off('routeChangeComplete', handleComplete);
-      router.events.off('routeChangeError', handleComplete);
+      router.events.off('routeChangeError', handleRouteError);
     };
   }, [router.events]);
 

@@ -1,0 +1,37 @@
+{
+  "baseURL": "https://sparq-connection-lab.vercel.app",
+  "cohortEmail": "phase16-cohort-20260331@sparq.app",
+  "capturedAt": "2026-03-31T23:28:59.262Z",
+  "evidence": [
+    {
+      "step": "dashboard-login-direct",
+      "status": "pass",
+      "note": "Existing cohort user reached dashboard directly.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774999733852-dashboard-login-direct.png"
+    },
+    {
+      "step": "cohort-dashboard-playful",
+      "status": "pass",
+      "note": "Pre-cutoff cohort user still sees Daily Spark on dashboard.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774999735103-cohort-dashboard-playful.png"
+    },
+    {
+      "step": "cohort-dashboard-feedback",
+      "status": "pass",
+      "note": "Dashboard playful feedback submitted.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774999737008-cohort-dashboard-feedback.png"
+    },
+    {
+      "step": "cohort-daily-playful",
+      "status": "pass",
+      "note": "Pre-cutoff cohort user still sees Favorite Us on daily-growth home.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774999738077-cohort-daily-playful.png"
+    },
+    {
+      "step": "cohort-daily-feedback",
+      "status": "pass",
+      "note": "Daily playful feedback submitted.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774999739158-cohort-daily-feedback.png"
+    }
+  ]
+}

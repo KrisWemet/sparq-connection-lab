@@ -7,10 +7,11 @@ interface ProtectedRouteProps {
   adminOnly?: boolean;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   adminOnly = false,
 }) => {
+  void adminOnly;
   const { user, loading } = useAuth();
   const router = useRouter();
   const [loadingTimeout, setLoadingTimeout] = useState(false);

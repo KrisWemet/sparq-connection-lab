@@ -2,12 +2,18 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { PETER_SYSTEM_PROMPT, type PeterMessage } from '@/lib/peterService';
 import { buildCrisisResponse, detectCrisisIntent, resolveCountryCode } from '@/lib/safety';
+import { trackPrimaryPathServerError } from '@/lib/server/beta-ops';
 import { getAuthedContext } from '@/lib/server/supabase-auth';
 import { stripMarkdown } from '@/lib/strip-markdown';
 import { peterChat } from '@/lib/openrouter';
+import {
+  getOnboardingHandoffPolicy,
+  ONBOARDING_MAX_EXCHANGES,
+  normalizeOnboardingClosingMessage,
+  READY_TO_CLOSE_MARKER,
+  resolveOnboardingShouldClose,
+} from '@/lib/onboarding/peterHandoffPolicy';
 import type { DerivedProfile } from '@/lib/onboarding/types';
-
-const READY_TO_CLOSE_MARKER = '[[READY_TO_CLOSE]]';
 
 const ATTACHMENT_OPENINGS: Record<string, string> = {
   anxious: `Hey {firstName}. I feel like I've got a real sense of you now — and the way you feel things so quickly? That's not a flaw. That's how much you care. Here's something I'm curious about though. When things are calm between you and {partnerRef} — really calm — do you trust it? Or does part of you wait for the other shoe to drop?`,
@@ -29,7 +35,7 @@ function buildOnboardingSystemPrompt(profile: DerivedProfile): string {
   return `${PETER_SYSTEM_PROMPT}
 
 ONBOARDING SESSION:
-You have just completed a profiling conversation with ${profile.firstName}. You now understand them deeply. This is a 2-5 exchange conversation to build connection and transition them to their first journey.
+You have just completed a profiling conversation with ${profile.firstName}. You now understand them deeply. This is a short 2-${ONBOARDING_MAX_EXCHANGES} exchange conversation to build connection and transition them to their first journey.
 
 TONE MODE: ${profile.toneMode}
 PRIMARY APPROACHES: ${profile.primaryModalities.join(', ')}
@@ -39,11 +45,12 @@ YOUR OPENING MESSAGE (send this as your first response — do not deviate):
 ${freeTextContext}
 
 SESSION RULES:
-- Maximum 5 exchanges total.
+- Maximum ${ONBOARDING_MAX_EXCHANGES} exchanges total.
 - Ask at most one question per response.
 - Never reference the onboarding questions directly.
 - Never use clinical language (no "attachment style", "avoidant", "anxious", "trauma", "dysregulation").
 - Only add a warm sign-off on your final message. Mid-session responses end cleanly without a sign-off.
+- By exchange 3, prefer closing instead of opening a new thread.
 - When you have enough context to close warmly and make a journey recommendation, end your response with ${READY_TO_CLOSE_MARKER}
 - Your final closing message MUST be formatted as exactly two lines separated by a newline (\\n):
   Line 1: One specific, accurate observation about this person — the "how did he know that" moment. No sign-off on this line.
@@ -84,9 +91,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   }
 
-  // Enforce minimum 2 exchanges before allowing close
-  const forceClose = exchangeCount >= 5;
-  const allowClose = exchangeCount >= 2;
+  const handoffPolicy = getOnboardingHandoffPolicy(exchangeCount);
 
   const systemPrompt = buildOnboardingSystemPrompt(profile);
 
@@ -95,22 +100,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       messages: [
         { role: 'system', content: systemPrompt },
         ...messages.map(m => ({ role: m.role, content: m.content })),
-        ...(forceClose
-          ? [{ role: 'system' as const, content: `This is exchange 5 of 5 — your final message. Close warmly with your specific observation about this person, then end with ${READY_TO_CLOSE_MARKER} and "Let me show you where I think we start. 🦦"` }]
+        ...(handoffPolicy.preferClose && !handoffPolicy.forceClose
+          ? [{ role: 'system' as const, content: `You likely have enough context now. Prefer closing on this turn. Ask no new question unless it is truly necessary. If you can close warmly now, end with ${READY_TO_CLOSE_MARKER}.` }]
+          : []),
+        ...(handoffPolicy.forceClose
+          ? [{ role: 'system' as const, content: `This is exchange ${ONBOARDING_MAX_EXCHANGES} of ${ONBOARDING_MAX_EXCHANGES} — your final message. Do not ask another question. Close warmly with your specific observation about this person, then end with ${READY_TO_CLOSE_MARKER} and "Let me show you where I think we start. 🦦"` }]
           : []),
       ],
       maxTokens: 512,
     });
 
-    const shouldClose = allowClose && rawMessage.includes(READY_TO_CLOSE_MARKER);
-    const message = stripMarkdown(rawMessage.replace(READY_TO_CLOSE_MARKER, '').trim());
+    const shouldClose = resolveOnboardingShouldClose(exchangeCount, rawMessage);
+    const safeMessage = shouldClose
+      ? normalizeOnboardingClosingMessage(rawMessage)
+      : rawMessage.replace(READY_TO_CLOSE_MARKER, '').trim();
+    const message = stripMarkdown(safeMessage);
 
     return res.status(200).json({
       message,
-      shouldClose: forceClose || shouldClose,
+      shouldClose,
       safety: { triggered: false },
     });
   } catch (err) {
+    await trackPrimaryPathServerError(authed.supabase, authed.userId, 'onboarding_peter', err, {
+      exchange_count: exchangeCount,
+    });
     console.error('peter/onboarding error:', err);
     return res.status(500).json({ error: 'Peter is having a moment. Please try again.' });
   }

@@ -4,6 +4,8 @@
 import { getJourneyDay, getJourneyMeta, starterJourneyMap } from '@/data/starter-journeys';
 import type { JourneyContentDay } from '@/data/starter-journeys/types';
 
+export type PracticeMode = 'solo' | 'partner_optional' | 'partner_joint';
+
 export interface ResolvedJourneyContent {
   /** The day's static content */
   day: JourneyContentDay;
@@ -11,6 +13,31 @@ export interface ResolvedJourneyContent {
   journeyTitle: string;
   journeyDuration: number;
   modalityLabel: string;
+  practiceMode: PracticeMode;
+}
+
+function inferPracticeModeFromPrompt(prompt: string): PracticeMode {
+  const normalized = prompt.toLowerCase();
+
+  if (
+    normalized.includes('together') ||
+    normalized.includes('both of you') ||
+    normalized.includes('each take turns') ||
+    normalized.includes('with your partner')
+  ) {
+    return 'partner_optional';
+  }
+
+  if (
+    normalized.includes('ask your partner') ||
+    normalized.includes('tell your partner') ||
+    normalized.includes('sit next to') ||
+    normalized.includes('say to your partner')
+  ) {
+    return 'partner_optional';
+  }
+
+  return 'solo';
 }
 
 /**
@@ -34,6 +61,7 @@ export function resolveJourneyContent(
     journeyTitle: meta.title,
     journeyDuration: meta.duration,
     modalityLabel: meta.modalityLabel,
+    practiceMode: inferPracticeModeFromPrompt(day.action.prompt),
   };
 }
 

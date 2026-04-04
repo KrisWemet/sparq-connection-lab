@@ -1,259 +1,317 @@
 # Sparq Connection Lab — Launch Checklist
 
-> **Goal:** Get the app fully functional for real user testing.
-> Repo-first audit refreshed: 2026-03-06
-> Note: items below that refer to database existence or deployed services still require live-environment verification.
+> Goal: make the solo-first beta path safe and believable for real user testing.
+> Repo-first refresh: 2026-03-30
+> Source of truth: `SPARQ_MASTER_SPEC.md`
 
 ---
 
 ## Status Key
-- 🔴 **Blocking** — app crashes or feature completely broken
-- 🟡 **Important** — feature exists but won't work correctly
-- 🟢 **Working** — confirmed functional
-- ⬜ **Nice-to-have** — quality of life, not launch-blocking
+- 🔴 Blocking — do not invite real users yet
+- 🟡 Important — beta can run, but trust or clarity is weaker
+- 🟢 Ready — checked in repo and matches the supported beta path
 
 ---
 
-## 🔴 BLOCKING — Fix Before Any User Testing
+## Supported Beta Path
 
-### 1. Verify Required Database Tables Exist in the Active Environment
+These are the routes and flows this checklist assumes:
+- `/login`
+- `/signup`
+- `/onboarding`
+- `/dashboard`
+- `/daily-growth`
 
-The repo now contains a migration for the core missing tables, but the live environment may still be out of sync. If these tables are absent remotely, the corresponding features will 500.
-
-| Table | Used By | What Breaks |
-|-------|---------|-------------|
-| `outcome_assessments` | `/api/me/assessment`, `src/pages/assessment.tsx` | Relationship assessment (baseline + Day 14 improvement) |
-| `conflict_episodes` | `/api/conflicts/index.ts`, `/api/conflicts/resolve.ts`, `src/pages/conflict-first-aid.tsx` | Conflict First Aid tracking |
-| `user_preferences` | `/api/preferences.ts`, `/api/me/memory-settings.ts`, `src/pages/trust-center.tsx` | Trust Center privacy settings, notification prefs, AI memory mode |
-| `analytics_events` | `src/lib/server/analytics.ts` → called from almost every API route | Event tracking (fails silently due to try/catch, but data is lost) |
-
-**Repo state:** `supabase/migrations/20260302120000_create_missing_tables.sql` exists.
-
-**Action:** Verify that migration has been applied to the active environment, or apply an equivalent schema update there:
-
-```sql
--- outcome_assessments
-CREATE TABLE public.outcome_assessments (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  milestone text NOT NULL,  -- 'baseline' | 'day_14' | etc.
-  responses jsonb NOT NULL DEFAULT '[]',
-  total_score numeric(5,2) NOT NULL DEFAULT 0,
-  completed_at timestamptz NOT NULL DEFAULT now()
-);
-ALTER TABLE public.outcome_assessments ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "users own assessments" ON public.outcome_assessments
-  FOR ALL USING (auth.uid() = user_id);
-
--- conflict_episodes
-CREATE TABLE public.conflict_episodes (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  severity integer NOT NULL DEFAULT 3,
-  tool_used text,
-  notes text,
-  resolved_at timestamptz,
-  resolution_notes text,
-  started_at timestamptz NOT NULL DEFAULT now()
-);
-ALTER TABLE public.conflict_episodes ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "users own episodes" ON public.conflict_episodes
-  FOR ALL USING (auth.uid() = user_id);
-
--- user_preferences
-CREATE TABLE public.user_preferences (
-  user_id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  insights_visible boolean NOT NULL DEFAULT true,
-  personalization_enabled boolean NOT NULL DEFAULT true,
-  ai_memory_mode text NOT NULL DEFAULT 'rolling_90_days',
-  relationship_mode text NOT NULL DEFAULT 'solo',
-  reminder_time text,
-  notifications_enabled boolean NOT NULL DEFAULT true,
-  timezone text,
-  updated_at timestamptz NOT NULL DEFAULT now()
-);
-ALTER TABLE public.user_preferences ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "users own preferences" ON public.user_preferences
-  FOR ALL USING (auth.uid() = user_id);
-
--- analytics_events
-CREATE TABLE public.analytics_events (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  event_name text NOT NULL,
-  event_props jsonb NOT NULL DEFAULT '{}',
-  created_at timestamptz NOT NULL DEFAULT now()
-);
-ALTER TABLE public.analytics_events ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "users own events" ON public.analytics_events
-  FOR ALL USING (auth.uid() = user_id);
-CREATE INDEX analytics_events_user_name_idx ON public.analytics_events (user_id, event_name, created_at DESC);
-```
+These older routes are now quarantined and should not be used for beta testing:
+- `/auth` -> redirects to `/login`
+- `/daily-questions` -> redirects to `/daily-growth`
+- `/daily-activity` -> redirects to `/daily-growth`
 
 ---
 
-### 2. Verify Supabase Schema Matches Code Expectations
+## 1. Repo Checks You Can Run Locally
 
-All migrations in `supabase/migrations/` before `20260301091500` are **empty placeholder files** — the actual schema was applied directly to the remote database, not through migrations. This means:
+### 🔴 1.1 Beta readiness script
 
-- A fresh Supabase project (for staging, testing, or a new dev) will be missing all core tables
-- `supabase db reset` will leave you with an empty database
+Run:
 
-**Action:** Export the full current remote schema and save it as the canonical migration:
 ```bash
-supabase db dump --schema public > supabase/schema_dump.sql
+node scripts/verify-beta-readiness.mjs
 ```
-Then verify all tables the code references actually exist in the remote DB.
 
----
+What it checks:
+- required env keys are documented in `.env.example`
+- supported beta routes exist
+- launch-blocker tables are referenced in `supabase/schema.sql` or `supabase/migrations/`
+- quarantined legacy routes redirect to the supported beta path
 
-### 3. Environment Variables — Confirm `.env.local` Is Set Up
+### 🟢 1.2 Lint and focused beta-path tests
 
-The repo contains a `.env` file with Supabase credentials (not gitignored), but Next.js reads from `.env.local`. Confirm the following are set in `.env.local`:
+Run:
+
+```bash
+npm run lint
+PLAYWRIGHT_PORT=3100 npx playwright test e2e/tests/02-onboarding.spec.ts e2e/tests/03-daily-growth.spec.ts e2e/tests/05-dashboard.spec.ts e2e/tests/10-onboarding-determinism.spec.ts e2e/tests/14-playful-connection.spec.ts --project=chromium
+```
+
+Expected result:
+- lint passes with only known pre-existing warnings outside this phase
+- focused primary-path specs pass together
+
+### 🟢 1.3 Environment contract
+
+The current beta path expects these keys:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://ujqdnyxdenadpowxrkjn.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=<your anon key>
-OPENAI_API_KEY=<your openai key>       # used by /api/date-ideas/generate and /api/peter/*
-OPENROUTER_API_KEY=<key if using>      # referenced in peter/chat.ts
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+OPENAI_API_KEY=
+OPENROUTER_API_KEY=
+NEXT_PUBLIC_GOOGLE_API_KEY=
 ```
 
-**Warning:** The `.env` file currently committed to git has real credentials. It should either be deleted or added to `.gitignore` to prevent accidentally committing updated secrets.
+Optional local beta helpers:
 
----
-
-## 🟡 IMPORTANT — Fix for Features to Work Correctly
-
-### 4. Peter AI — OpenAI / OpenRouter Key
-
-The daily growth loop (`/api/peter/morning`, `/api/peter/chat`) is the **core daily engagement feature**. It requires either:
-- `OPENAI_API_KEY` env var (for direct OpenAI calls), or
-- `OPENROUTER_API_KEY` env var (for OpenRouter)
-
-Without a valid key, Peter will fail to generate morning stories and evening responses, breaking the primary user loop.
-
-**Check:** Verify which API is configured in `src/pages/api/peter/morning.ts` and `src/pages/api/peter/chat.ts`, and confirm the corresponding env var is in `.env.local`.
-
----
-
-### 5. Date Ideas Feature — OpenAI Key
-
-`/api/date-ideas/generate` calls OpenAI to generate personalized date ideas. Without a key it will 500.
-
-**Action:** Add `OPENAI_API_KEY` to `.env.local`. If using the Vite-legacy client in `src/lib/api-config.ts`, also add `VITE_OPENAI_API_KEY` — but prefer moving to `process.env.OPENAI_API_KEY` server-side.
-
----
-
-### 6. `daily_sessions` Table — Confirm Exists
-
-The two real migration files (`20260301` and `20260302`) modify a `daily_sessions` table by adding columns — but only if it already exists. If the remote DB doesn't have this table, the migrations will silently no-op and the entire daily session API (`/api/daily/session/*`) will fail.
-
-**Action:** Run this query in Supabase SQL editor to confirm:
-```sql
-SELECT column_name FROM information_schema.columns
-WHERE table_name = 'daily_sessions' AND table_schema = 'public';
+```env
+TEST_USER_EMAIL=
+TEST_USER_PASSWORD=
+PLAYFUL_BETA_COHORT_CUTOFF=
 ```
-Expected columns: `id`, `user_id`, `session_local_date`, `day_index`, `status`, `morning_story`, `morning_action`, `morning_viewed_at`, `evening_reflection`, `evening_peter_response`, `evening_completed_at`.
+
+Notes:
+- use `.env.local` for local Next.js work
+- `.env.example` is current
+- do not treat old `VITE_*` keys as part of the beta contract
 
 ---
 
-### 7. New Pages Not Linked From Navigation
+## 2. Live Environment Checks Still Required
 
-Three new feature pages exist but are not reachable from the bottom nav or any dashboard link:
+These cannot be proven from repo state alone.
 
-| Page | Route | Entry Point Needed |
-|------|-------|--------------------|
-| `src/pages/assessment.tsx` | `/assessment` | Dashboard card or Profile page link |
-| `src/pages/conflict-first-aid.tsx` | `/conflict-first-aid` | Dashboard "SOS" card or Tools menu |
-| `src/pages/trust-center.tsx` | `/trust-center` | Settings page or Profile |
+### Latest live verification: 2026-03-31
 
-**Action:** Add navigation links to at least one of: the bottom nav, dashboard, or profile/settings pages.
+Evidence files:
+- [.planning/phases/03-live-beta-verification/03-LIVE-EVIDENCE.md](/Users/chris/sparq-connection-lab/.planning/phases/03-live-beta-verification/03-LIVE-EVIDENCE.md)
+- [.planning/phases/04-production-blocker-fixes/04-LIVE-EVIDENCE.md](/Users/chris/sparq-connection-lab/.planning/phases/04-production-blocker-fixes/04-LIVE-EVIDENCE.md)
+- [.planning/phases/05-live-onboarding-determinism/05-LIVE-EVIDENCE.md](/Users/chris/sparq-connection-lab/.planning/phases/05-live-onboarding-determinism/05-LIVE-EVIDENCE.md)
+- [.planning/phases/06-controlled-beta-ops/06-LIVE-EVIDENCE.md](/Users/chris/sparq-connection-lab/.planning/phases/06-controlled-beta-ops/06-LIVE-EVIDENCE.md)
+- [.planning/phases/07-live-onboarding-reliability-recovery/07-LIVE-EVIDENCE.md](/Users/chris/sparq-connection-lab/.planning/phases/07-live-onboarding-reliability-recovery/07-LIVE-EVIDENCE.md)
+- [.planning/phases/08-beta-ops-signal-cleanup/08-LIVE-EVIDENCE.md](/Users/chris/sparq-connection-lab/.planning/phases/08-beta-ops-signal-cleanup/08-LIVE-EVIDENCE.md)
+- [.planning/phases/09-route-change-noise-cleanup-and-production-audit/09-LIVE-EVIDENCE.md](/Users/chris/sparq-connection-lab/.planning/phases/09-route-change-noise-cleanup-and-production-audit/09-LIVE-EVIDENCE.md)
+- [.planning/phases/10-onboarding-activation-fail-closed/10-LIVE-EVIDENCE.md](/Users/chris/sparq-connection-lab/.planning/phases/10-onboarding-activation-fail-closed/10-LIVE-EVIDENCE.md)
+- [.planning/phases/15-playful-layer-live-verification-and-rollout-guardrails/15-LIVE-EVIDENCE.md](/Users/chris/sparq-connection-lab/.planning/phases/15-playful-layer-live-verification-and-rollout-guardrails/15-LIVE-EVIDENCE.md)
 
----
+Current result:
+- live schema: verified
+- deployed env keys: verified for core Supabase and Peter AI keys
+- public signup route: fixed in production
+- onboarding recommendation handoff: dependable again in production on the primary signup-driven path
+- full solo-first path to Day 1 completion: re-proven in production for the primary fresh-signup path
+- controlled beta ops layer: re-confirmed in production and writing to `analytics_events`
+- false-positive `journey_start_lookup` error signal: cleaned up on the primary successful run
+- false-positive `route_change` error signal during register redirect: cleaned up on the latest successful run
+- onboarding confirmation handoff: now fail-closed for activation and profile persistence while still passing the primary live path
+- playful MVP slice: live on production, additive on dashboard and daily-growth, and fail-soft under playful endpoint failure
+- playful rollout gate: live in production through `PLAYFUL_BETA_COHORT_CUTOFF`
 
-### 8. Onboarding Flow — Verify Completion State
+### 🔴 2.1 Confirm the active Supabase project has the launch-blocker tables
 
-The active onboarding flow is implemented directly in `src/pages/onboarding-flow.tsx`; the deprecated hook file is `src/hooks/useOnboarding.ts.deprecated`.
+Required tables:
+- `daily_sessions`
+- `user_preferences`
+- `analytics_events`
+- `outcome_assessments`
+- `conflict_episodes`
 
-Confirm:
-- The onboarding completion flag is persisted to the `profiles` table so users aren't re-shown onboarding on every login
-- The Day 14 transition and skill-tree unlock logic behave as intended
+Quick checks:
 
----
-
-### 9. Partner Connection Flow
-
-The partner linking feature (`/join-partner`) is implemented but needs end-to-end verification:
-- Invitation emails require the `send-partner-invite` Edge Function to be deployed and an email provider configured
-- Check `supabase/functions/send-partner-invite/` is deployed to the remote project
-- Without this, partner invites are generated but never delivered
-
-**Action:**
 ```bash
-supabase functions deploy send-partner-invite
+SUPABASE_ACCESS_TOKEN=... npx supabase inspect db tables --linked
+SUPABASE_ACCESS_TOKEN=... npx supabase migration list
 ```
 
----
+If the linked project is missing any of those tables, core beta features will fail.
 
-### 10. Subscription Tier Gating
+Status on 2026-03-30:
+- verified present in the linked project
+- proof captured in the Phase 3 live evidence file
 
-`SubscriptionProvider` currently uses `localStorage` — subscription state is not persisted to the database. This means:
-- Clearing browser storage resets users to the free tier
-- No server-side enforcement of tier limits
+### 🔴 2.2 Confirm `daily_sessions` matches the beta API
 
-For a real launch, this is a trust issue (users could manually set themselves to `ultimate`). However, if you're not charging yet, this is acceptable for testing.
+The core loop depends on `/api/daily/session/*`.
 
----
+Minimum expected fields:
+- `id`
+- `user_id`
+- `session_local_date`
+- `day_index`
+- `status`
+- `morning_story`
+- `morning_action`
+- `morning_viewed_at`
+- `evening_reflection`
+- `evening_peter_response`
+- `evening_completed_at`
 
-## 🟢 CONFIRMED WORKING
+Recommended live check:
 
-- **Authentication** — `AuthProvider` correctly wired in `_app.tsx`. Login, register, logout all functional.
-- **Subscription context** — `SubscriptionProvider` correctly wrapped in `_app.tsx`. `useSubscription()` works in all pages.
-- **Next.js routing** — All pages use `next/link` and `next/router`. No `react-router-dom` usage anywhere.
-- **Bottom navigation** — Correctly uses Next.js `Link` and `useRouter`.
-- **Vercel config** — `vercel.json` is correctly set to `"framework": "nextjs"` with proper build command.
-- **All npm dependencies** — `@tanstack/react-query`, `framer-motion`, `sonner`, `@supabase/supabase-js`, all Radix UI components, `mem0ai` — all installed in `package.json`.
-- **API auth middleware** — `getAuthedContext()` in `src/lib/server/supabase-auth.ts` correctly validates Bearer tokens.
-- **Assessment page UI** — Complete and polished (Hendrick scale, animated carousel, score submission).
-- **Conflict First Aid UI** — Complete (reset protocol, repair starters, episode tracking).
-- **Trust Center UI** — Complete (privacy toggles, AI memory window, relationship mode).
-- **E2E test framework** — Playwright configured correctly with auth state reuse.
-
----
-
-## ⬜ NICE-TO-HAVE (Post-Launch)
-
-### Technical Debt to Address Eventually
-
-1. **Mem0 is mocked** — `src/lib/mem0.ts` uses an in-memory Map. The `mem0ai` package is installed. Wire up `src/lib/server/memory.ts` with a real `MEM0_API_KEY` env var for persistent AI relationship memory.
-
-2. **Duplicate auth files** — `src/lib/auth/` directory is unused refactored code. Can be deleted once stable. Multiple `ProtectedRoute` components in different locations — consolidate to one.
-
-3. **Legacy Vite env vars** — `src/lib/api-config.ts` and `src/integrations/supabase/client.ts` use `import.meta.env.VITE_*`. These work locally but are fragile. Migrate to `process.env.NEXT_PUBLIC_*`.
-
-4. **Schema migration history** — Replace placeholder migrations with real SQL so the database can be recreated from scratch. Essential before adding team members or creating a staging environment.
-
-5. **Subscription persistence** — Move subscription state from `localStorage` to a `subscriptions` table if you plan to charge users.
-
-6. **Admin KPIs endpoint** — `/api/admin/kpis.ts` returns growth metrics. Ensure it's protected by an admin role check (verify it checks `is_admin()` or a similar guard before shipping).
-
-7. **CSP headers** — `vercel.json` has `'unsafe-eval'` and `'unsafe-inline'` in the script-src policy. Tighten these before production launch.
-
----
-
-## Launch Order of Operations
-
-```
-1. Verify or apply the existing migration for the 4 required DB tables (Step 1 above)
-2. Verify daily_sessions table exists with correct columns (Step 6)
-3. Set up .env.local with all required API keys (Steps 3, 4, 5)
-4. Deploy send-partner-invite edge function (Step 9)
-5. Add navigation links to the 3 new feature pages (Step 7)
-6. Run: npm run dev → manually test auth → daily growth loop → partner invite
-7. Run: npx playwright test (e2e tests)
-8. Deploy to Vercel
+```sql
+SELECT column_name
+FROM information_schema.columns
+WHERE table_schema = 'public'
+  AND table_name = 'daily_sessions'
+ORDER BY ordinal_position;
 ```
 
+Status on 2026-03-30:
+- verified by live REST query selecting the required beta fields
+
+### 🔴 2.3 Confirm real AI keys exist in the deployed environment
+
+The daily loop depends on Peter.
+
+Required:
+- `OPENAI_API_KEY` or a working `OPENROUTER_API_KEY`
+
+Without one of those keys:
+- morning story generation can fail
+- evening reflection replies can fail
+- the core beta loop will feel broken
+
+Status on 2026-03-30:
+- `OPENAI_API_KEY` present in production
+- `OPENROUTER_API_KEY` present in production
+- production env list did not show `NEXT_PUBLIC_GOOGLE_API_KEY`
+
+### 🟡 2.4 Confirm partner invites only if you plan to test them
+
+Solo-first beta does not require partner linking.
+
+If you do want to test invites:
+- deploy `supabase/functions/send-partner-invite`
+- confirm email delivery is configured
+
+If not:
+- keep partner testing out of the first beta round
+
+### 🟡 2.5 Confirm controlled-beta ops evidence is flowing
+
+For controlled beta, operators should be able to see:
+- `beta_feedback_submitted`
+- `beta_primary_signup_register_success`
+- `beta_primary_dashboard_arrived`
+- `beta_primary_daily_growth_started`
+- `beta_primary_day1_completed`
+- `beta_primary_path_error`
+
+Evidence on 2026-03-31:
+- Phase 7 live verification confirmed those events are writing to `analytics_events` on a fresh successful production walkthrough
+- confirmed again:
+  - `beta_primary_signup_register_success`
+  - `beta_primary_onboarding_completed`
+  - `beta_primary_dashboard_arrived`
+  - `beta_primary_daily_growth_started`
+  - `beta_primary_day1_completed`
+- Phase 8 live verification confirmed the noisy `journey_start_lookup` false-positive row no longer appears on the repaired successful run
+- Phase 9 live verification confirmed the noisy `route_change` false-positive row no longer appears on the repaired successful run
+- current residual follow-up is smaller:
+  - successful runs can still emit duplicate or misattributed daily-loop analytics, which affects operator signal quality more than user flow stability
+- Phase 15 live verification confirmed the playful events are also writing separately:
+  - `playful_daily_spark_viewed`
+  - `playful_daily_spark_tried`
+  - `playful_daily_spark_swapped`
+  - `playful_daily_spark_sent`
+  - `playful_favorite_us_viewed`
+  - `playful_favorite_us_saved`
+  - `playful_favorite_us_sent`
+
 ---
 
-*Generated by codebase audit on 2026-03-02. Update this file as items are completed.*
+## 3. Known Beta Decisions
+
+### 🟢 3.1 Solo-first is the supported testing stance
+
+Beta success means one person can:
+- sign up
+- finish onboarding
+- use the daily loop
+- get value without partner adoption
+
+### 🟡 3.2 Subscription enforcement is still light
+
+Current subscription state is not hardened for paid launch.
+
+That is acceptable for beta testing if:
+- you are not charging yet
+- you treat monetization as out of scope for this round
+
+### 🟡 3.3 Legacy auth and module drift still exist outside the core beta path
+
+Core flows use:
+- `@/lib/auth-context`
+- `@/lib/supabase`
+
+Older modules still exist in the repo for non-core surfaces, but they should not guide new beta work.
+
+### 🟢 3.4 Playful connection MVP is optional and fail-soft
+
+The new playful MVP surfaces:
+- `Daily Spark` on `/dashboard`
+- `Favorite Us` on the `/daily-growth` home
+
+They are intentionally not part of the critical signup, onboarding, or Day 1 gating logic.
+
+If playful prompts fail to load:
+- dashboard still shows the core CTA
+- daily-growth still shows the normal morning home state
+
+Phase 15 live result:
+- this behavior is now proven in production with a forced `/api/playful/today` outage during live browser verification
+
+### 🟢 3.5 Playful slice is safe for limited controlled-beta exposure
+
+Current recommendation:
+- expose only to the controlled-beta cohort first
+- keep the slice limited to:
+  - dashboard
+  - daily-growth home
+- do not widen into more playful features yet
+
+Phase 16 live result:
+- pre-cutoff cohort users still see the playful slice
+- post-cutoff users stay on the serious core only
+- fresh post-cutoff signup still completes the primary path through Day 1
+- qualitative feedback on the current playful placement was warm, optional, and non-intrusive
+- current decision:
+  - keep as is for the controlled-beta cohort
+  - gather a larger real-user sample before broader exposure or expansion
+
+Rollback conditions:
+- two consecutive fresh production primary-path failures after the playful rollout
+- any case where dashboard or daily-growth no longer loads the serious core when `/api/playful/today` fails
+- a sustained spike in `beta_primary_path_error` tied to dashboard or daily-growth after rollout
+
+---
+
+## 4. Ready-for-Beta Exit Bar
+
+Do not invite real users until all of these are true:
+- `node scripts/verify-beta-readiness.mjs` passes
+- lint passes at the same baseline as this phase
+- focused dashboard and daily-loop Playwright specs pass
+- active Supabase project contains the required launch-blocker tables
+- deployed environment has working AI keys
+- a manual solo-first test from signup to dashboard to daily completion succeeds
+
+### Current live beta verdict
+
+The core solo-first beta path now has the minimum ops layer required for controlled live testing.
+
+Residual notes after Phase 9:
+- the primary fresh-signup production walkthrough is still proven end to end through Day 1
+- the beta ops error stream is cleaner after both the `journey_start_lookup` and `route_change` false-positive cleanups
+- the onboarding confirmation handoff is now fail-closed instead of advancing on silent write failure
+- the next likely operator-facing follow-up is analytics signal quality inside the daily loop, not a blocker on the core user path
+- the secondary login-entry fallback live spec is still more variable than the main path and should be treated as follow-up hardening, not as the main beta gate

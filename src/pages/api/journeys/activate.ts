@@ -5,6 +5,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getAuthedContext } from '@/lib/server/supabase-auth';
 import { trackEvent } from '@/lib/server/analytics';
 import { starterJourneyMap } from '@/data/starter-journeys';
+import { trackPrimaryPathServerError } from '@/lib/server/beta-ops';
 
 type ActivateBody = {
   journey_id?: string;
@@ -43,6 +44,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
 
   if (upsertError) {
+    await trackPrimaryPathServerError(ctx.supabase, ctx.userId, 'journey_activate', upsertError, {
+      journey_id,
+    });
     console.error('Failed to activate journey:', upsertError);
     return res.status(500).json({ error: 'Failed to activate journey' });
   }

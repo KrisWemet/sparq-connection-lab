@@ -10,16 +10,27 @@ export default function LoginPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
 
+  useEffect(() => {
+    if (!router.isReady) return;
+    setIsRegisterMode(router.query.mode === 'register');
+  }, [router.isReady, router.query.mode]);
+
   // Redirect if already logged in
   useEffect(() => {
-    if (user && !loading) {
+    if (user && !loading && !isRegisterMode) {
       router.push('/dashboard');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, loading]);
+  }, [user, loading, isRegisterMode]);
 
   const toggleMode = () => {
-    setIsRegisterMode(!isRegisterMode);
+    const nextMode = !isRegisterMode;
+    setIsRegisterMode(nextMode);
+    router.replace(
+      nextMode ? '/login?mode=register' : '/login',
+      undefined,
+      { shallow: true }
+    );
   };
 
   // Testimonials data
@@ -68,7 +79,7 @@ export default function LoginPage() {
         <title>{isRegisterMode ? 'Join Sparq' : 'Welcome Back'} - Sparq Relationship Lab</title>
         <meta
           name="description"
-          content="Transform your relationship with powerful psychological techniques designed to deepen connection and understanding."
+          content="Build calmer habits and better talks with simple daily support from Sparq."
         />
       </Head>
 
@@ -108,15 +119,15 @@ export default function LoginPage() {
             <motion.div variants={itemVariants} className="relative z-10">
               <h2 className="text-4xl lg:text-5xl font-bold mb-4 tracking-tight text-black">
                 {isRegisterMode
-                  ? "A Structured Approach"
+                  ? "Start Small"
                   : "Welcome Back"
                 }
               </h2>
 
               <p className="text-lg mb-12 text-zinc-500 leading-relaxed max-w-lg">
                 {isRegisterMode
-                  ? "Join the forward-thinking individuals building profound relationships through structured communication."
-                  : "Return to your active sessions and continue the work."
+                  ? "Start with one small step. Build calmer talks and stronger habits over time."
+                  : "Come back to your next step."
                 }
               </p>
             </motion.div>
@@ -125,7 +136,7 @@ export default function LoginPage() {
               className="space-y-6 relative z-10"
               variants={itemVariants}
             >
-              <h3 className="text-sm font-semibold text-zinc-400 mb-6">Observations</h3>
+              <h3 className="text-sm font-semibold text-zinc-400 mb-6">What people say</h3>
 
               <div className="grid gap-4">
                 {testimonials.map((testimonial) => (
@@ -147,19 +158,19 @@ export default function LoginPage() {
               className="mt-16 border-t border-zinc-200 pt-8 relative z-10"
               variants={itemVariants}
             >
-              <h3 className="text-sm font-semibold text-zinc-400 mb-5">Methodology</h3>
+              <h3 className="text-sm font-semibold text-zinc-400 mb-5">How Sparq helps</h3>
               <ul className="space-y-4 text-sm text-zinc-600">
                 <li className="flex items-center">
                   <div className="w-1.5 h-1.5 rounded-full bg-brand-primary mr-4" />
-                  <span>Clinical psychology frameworks</span>
+                  <span>Simple steps based on real psychology</span>
                 </li>
                 <li className="flex items-center">
                   <div className="w-1.5 h-1.5 rounded-full bg-brand-primary mr-4" />
-                  <span>Objective pattern recognition</span>
+                  <span>Helps you spot the same old loops</span>
                 </li>
                 <li className="flex items-center">
                   <div className="w-1.5 h-1.5 rounded-full bg-brand-primary mr-4" />
-                  <span>Sustainable behavioral shifts</span>
+                  <span>Turns small reps into real change</span>
                 </li>
               </ul>
             </motion.div>

@@ -8,10 +8,11 @@ interface EveningCheckinProps {
   sessionId: string;
   morningAction: string;
   journeyTitle?: string | null;
+  triggerMoment?: string;
   onComplete: () => void;
 }
 
-export function EveningCheckin({ sessionId, morningAction, journeyTitle, onComplete }: EveningCheckinProps) {
+export function EveningCheckin({ sessionId, morningAction, journeyTitle, triggerMoment, onComplete }: EveningCheckinProps) {
   const [step, setStep] = useState<'practice' | 'reflect' | 'response' | 'done'>('practice');
   const [practiceAttempted, setPracticeAttempted] = useState<boolean | null>(null);
   const [reflectionText, setReflectionText] = useState('');
@@ -94,6 +95,13 @@ export function EveningCheckin({ sessionId, morningAction, journeyTitle, onCompl
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               className="space-y-5"
             >
+              {/* Peter's opening — references trigger if available */}
+              <p className="font-serif italic text-brand-espresso text-lg text-center leading-relaxed">
+                {triggerMoment
+                  ? `You said this would happen ${triggerMoment.toLowerCase()}. Did it?`
+                  : 'Did you get a chance to try today\'s practice?'}
+              </p>
+
               {/* Morning action reminder */}
               <div className="bg-brand-parchment rounded-3xl p-5 border border-brand-primary/10">
                 <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
@@ -103,10 +111,6 @@ export function EveningCheckin({ sessionId, morningAction, journeyTitle, onCompl
                   {morningAction}
                 </p>
               </div>
-
-              <p className="font-serif italic text-brand-text-secondary text-[15px] text-center leading-relaxed">
-                Did you get a chance to try this today?
-              </p>
 
               {/* Two-option selector */}
               <div className="flex flex-col gap-3">
@@ -138,7 +142,9 @@ export function EveningCheckin({ sessionId, morningAction, journeyTitle, onCompl
             >
               <p className="font-serif italic text-brand-espresso text-lg text-center leading-relaxed">
                 {practiceAttempted
-                  ? 'How did it go? What did you notice?'
+                  ? triggerMoment
+                    ? `What actually happened ${triggerMoment.toLowerCase()}?`
+                    : 'How did it go? What did you notice?'
                   : 'What was on your mind today instead?'}
               </p>
 

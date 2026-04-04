@@ -88,9 +88,9 @@ export function RelationshipScoreCard() {
 
   if (!data || data.building || !data.score) {
     return (
-      <div className="rounded-3xl p-8 text-center relative overflow-hidden" style={{ background: 'linear-gradient(145deg, #FFFFFF 0%, #FDF8F6 100%)', border: '1px solid rgba(200,106,88,0.1)', boxShadow: '0 4px 24px rgba(200,106,88,0.06)' }}>
-        <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full blur-2xl pointer-events-none" style={{ background: 'rgba(200,106,88,0.06)' }} />
-        <Activity className="w-10 h-10 mx-auto mb-4 relative z-10" style={{ color: 'rgba(200,106,88,0.4)' }} />
+      <div className="rounded-3xl p-8 text-center relative overflow-hidden" style={{ background: 'linear-gradient(145deg, #FFFFFF 0%, #FDF8F6 100%)', border: '1px solid rgba(139,92,246,0.1)', boxShadow: '0 4px 24px rgba(139,92,246,0.06)' }}>
+        <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full blur-2xl pointer-events-none" style={{ background: 'rgba(139,92,246,0.06)' }} />
+        <Activity className="w-10 h-10 mx-auto mb-4 relative z-10" style={{ color: 'rgba(139,92,246,0.4)' }} />
         <h3 className="text-xl font-serif text-zinc-800 mb-2 relative z-10">Building your connection score...</h3>
         <p className="text-sm max-w-sm mx-auto relative z-10" style={{ color: '#8C827A' }}>
           Complete a few more daily sessions and your Relationship OS Score will appear here.

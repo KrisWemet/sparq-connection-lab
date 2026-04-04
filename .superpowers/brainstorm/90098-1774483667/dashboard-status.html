@@ -1,0 +1,58 @@
+<h2>Workstream 2: Dashboard — Current State</h2>
+<p class="subtitle">Surprisingly close. Most components exist and are wired in.</p>
+
+<div class="section">
+  <div class="label" style="color: #10b981;">Already Built & Wired</div>
+  <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+    <div style="padding: 10px 14px; background: rgba(16,185,129,0.08); border-radius: 6px; display: flex; align-items: center; gap: 10px;">
+      <span style="color: #10b981;">✓</span> Peter's Greeting — reads next_greeting_text from DB
+    </div>
+    <div style="padding: 10px 14px; background: rgba(16,185,129,0.08); border-radius: 6px; display: flex; align-items: center; gap: 10px;">
+      <span style="color: #10b981;">✓</span> Today's Practice CTA — journey day + "Begin Today's Practice"
+    </div>
+    <div style="padding: 10px 14px; background: rgba(16,185,129,0.08); border-radius: 6px; display: flex; align-items: center; gap: 10px;">
+      <span style="color: #10b981;">✓</span> Evening Check-in CTA — conditional, shows after morning done
+    </div>
+    <div style="padding: 10px 14px; background: rgba(16,185,129,0.08); border-radius: 6px; display: flex; align-items: center; gap: 10px;">
+      <span style="color: #10b981;">✓</span> Identity Statement — serif italic + partner status
+    </div>
+    <div style="padding: 10px 14px; background: rgba(16,185,129,0.08); border-radius: 6px; display: flex; align-items: center; gap: 10px;">
+      <span style="color: #10b981;">✓</span> Growth Thread — timeline with type icons, expandable
+    </div>
+    <div style="padding: 10px 14px; background: rgba(16,185,129,0.08); border-radius: 6px; display: flex; align-items: center; gap: 10px;">
+      <span style="color: #10b981;">✓</span> Weekly Mirror — narrative synthesis + practice stats
+    </div>
+    <div style="padding: 10px 14px; background: rgba(16,185,129,0.08); border-radius: 6px; display: flex; align-items: center; gap: 10px;">
+      <span style="color: #10b981;">✓</span> Journey Arc — bar chart (height = engagement, color = tone)
+    </div>
+    <div style="padding: 10px 14px; background: rgba(16,185,129,0.08); border-radius: 6px; display: flex; align-items: center; gap: 10px;">
+      <span style="color: #10b981;">✓</span> Partner Connect — invite or dual-avatar + online status
+    </div>
+    <div style="padding: 10px 14px; background: rgba(16,185,129,0.08); border-radius: 6px; display: flex; align-items: center; gap: 10px;">
+      <span style="color: #10b981;">✓</span> Streak — flame icon + day count
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="label" style="color: #f59e0b;">What Actually Needs Work</div>
+  <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+    <div style="padding: 10px 14px; background: rgba(245,158,11,0.08); border-radius: 6px;">
+      <strong>1. Backend data isn't flowing yet</strong>
+      <p style="margin: 4px 0 0; opacity: 0.7; font-size: 14px;">Components are wired but the data they read (growth_thread entries, weekly_mirrors, next_greeting_text) may not be getting created. The pipes exist — nothing is flowing through them.</p>
+    </div>
+    <div style="padding: 10px 14px; background: rgba(245,158,11,0.08); border-radius: 6px;">
+      <strong>2. ~16 unused dashboard components</strong>
+      <p style="margin: 4px 0 0; opacity: 0.7; font-size: 14px;">BadgeSection, ConfettiAnimation, DateIdeasCard, RelationshipScoreCard, JourneyMapCard, PetersInsightCard, DailyConnectCard, PartnerConnectionCard, TodaysFocusCard, LivingArtifact, DashboardLayout/Header/Content, WeekendSpecialCard — all sitting in src/components/dashboard/ unused.</p>
+    </div>
+    <div style="padding: 10px 14px; background: rgba(245,158,11,0.08); border-radius: 6px;">
+      <strong>3. Visual polish / empty states</strong>
+      <p style="margin: 4px 0 0; opacity: 0.7; font-size: 14px;">What does the dashboard look like on Day 1 with no data? No growth thread, no weekly mirror, no journey arc. Empty states need to feel inviting, not barren.</p>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top: 24px; padding: 16px; background: rgba(59,130,246,0.06); border-radius: 8px;">
+  <div class="label" style="color: #3b82f6;">Verdict</div>
+  <p style="margin: 8px 0 0;">The dashboard is further along than expected. The real work is in <strong>Workstream 3 (Growth Loops)</strong> — making the data flow so the dashboard has something to show. Dashboard-specific work is mostly: empty states, cleanup of unused components, and visual QA.</p>
+</div>

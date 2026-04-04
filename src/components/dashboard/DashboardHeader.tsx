@@ -5,11 +5,13 @@ import { useAuth } from "@/lib/auth";
 const getGreeting = () => {
   const hour = new Date().getHours();
   const emojis = ["✨", "🌟", "💫", "💖", "🌈", "🚀", "😊", "🎉"];
-  const randomEmoji = () => emojis[Math.floor(Math.random() * emojis.length)];
-  
-  if (hour < 12) return `Good morning ${randomEmoji()}`;
-  if (hour < 17) return `Good afternoon ${randomEmoji()}`;
-  return `Good evening ${randomEmoji()}`;
+  const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+
+  let text = 'Good evening';
+  if (hour < 12) text = 'Good morning';
+  else if (hour < 17) text = 'Good afternoon';
+
+  return { text, emoji };
 };
 
 // Fun emoji pairs for partner references
@@ -20,24 +22,24 @@ export function DashboardHeader() {
   const { user, profile } = useAuth();
   const greeting = getGreeting();
   const partnerEmoji = getPartnerEmoji();
-  
+
   return (
     <header className="bg-gradient-to-r from-primary-100 via-white to-primary-100 border-b bg-[length:200%_100%] animate-gradient-x">
-      <motion.div 
+      <motion.div
         className="container max-w-lg mx-auto px-4 py-6"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
-        <motion.h1 
+        <motion.h1
           className="text-2xl font-bold text-gray-900 mb-1"
           initial={{ scale: 0.9 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.3, delay: 0.2 }}
         >
-          {greeting}
+          {greeting.text} <span aria-hidden="true">{greeting.emoji}</span>
         </motion.h1>
-        <motion.p 
+        <motion.p
           className="text-gray-600 flex items-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -46,15 +48,16 @@ export function DashboardHeader() {
           <span className="font-medium">{profile?.fullName || user?.email?.split('@')[0] || 'Partner'}</span>
           {profile?.partnerName && (
             <span className="flex items-center">
-              <motion.span 
+              <motion.span
                 className="mx-1 text-red-400"
+                aria-hidden="true"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ 
-                  type: "spring", 
-                  stiffness: 400, 
-                  damping: 10, 
-                  delay: 0.6 
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 10,
+                  delay: 0.6
                 }}
               >
                 {partnerEmoji}

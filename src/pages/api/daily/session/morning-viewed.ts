@@ -4,6 +4,7 @@ import { trackEvent } from '@/lib/server/analytics';
 
 type MorningViewedBody = {
   session_id?: string;
+  trigger_moment?: string;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -19,14 +20,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: 'session_id is required' });
   }
 
+  const updatePayload: Record<string, unknown> = {
+    status: 'morning_viewed',
+    phase: 'evening',
+    morning_viewed_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+  if (body.trigger_moment) {
+    updatePayload.trigger_moment = body.trigger_moment;
+  }
+
   const { data: updated, error } = await ctx.supabase
     .from('daily_sessions')
-    .update({
-      status: 'morning_viewed',
-      phase: 'evening',
-      morning_viewed_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    })
+    .update(updatePayload)
     .eq('id', body.session_id)
     .eq('user_id', ctx.userId)
     .select('*')

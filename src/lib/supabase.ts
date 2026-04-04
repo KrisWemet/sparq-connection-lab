@@ -13,7 +13,9 @@ if (!supabaseUrl || !supabaseAnonKey) {
 // timeouts caused by browser extensions interfering with the Lock API.
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    persistSession: false,
+    persistSession: true,
+    autoRefreshToken: true,
+    storageKey: 'sparq-auth',
     lock: async (name: string, _acquireTimeout: number, fn: () => Promise<any>) => {
       return await fn();
     },

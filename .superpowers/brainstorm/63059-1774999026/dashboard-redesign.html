@@ -1,0 +1,277 @@
+<style>
+  .phone {
+    width: 320px;
+    min-height: 580px;
+    background: #FAF6F1;
+    border-radius: 32px;
+    border: 2px solid #EDE4D8;
+    overflow: hidden;
+    font-family: Georgia, serif;
+    box-shadow: 0 12px 40px rgba(44,26,20,0.12);
+    flex-shrink: 0;
+  }
+  .phone-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #9E8A86;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .phones-row {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 24px 0;
+  }
+  .phone-col { display: flex; flex-direction: column; align-items: center; }
+
+  /* Phone internals */
+  .p-topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 18px 8px;
+  }
+  .p-wordmark { font-size: 13px; font-weight: 800; letter-spacing: 0.1em; color: #2C1A14; }
+  .p-avatar { width: 28px; height: 28px; background: #EDE4D8; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #9E8A86; }
+
+  .p-section { padding: 10px 18px; }
+
+  /* OLD dashboard */
+  .old-greeting { font-size: 13px; color: #6B4C3B; margin-bottom: 4px; }
+  .old-peter { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding: 12px; background: #EDE4D8; border-radius: 16px; }
+  .peter-dot { width: 36px; height: 36px; background: #C0614A; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .old-peter p { font-size: 12px; color: #2C1A14; font-style: italic; margin: 0; line-height: 1.5; }
+
+  .old-cta { background: #C0614A; border-radius: 20px; padding: 16px; margin-bottom: 10px; }
+  .old-cta-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-bottom: 6px; }
+  .old-cta-q { font-size: 13px; font-style: italic; color: white; line-height: 1.5; margin-bottom: 12px; }
+  .old-cta-btn { background: white; color: #C0614A; border-radius: 12px; padding: 8px 0; font-size: 12px; font-weight: 700; text-align: center; }
+
+  .old-streak { display: flex; align-items: center; gap: 6px; padding: 10px 12px; background: #EDE4D8; border-radius: 14px; margin-bottom: 10px; }
+  .old-streak-icon { font-size: 18px; }
+  .old-streak-text { font-size: 12px; color: #2C1A14; font-weight: 600; }
+
+  .old-card { background: #EDE4D8; border-radius: 16px; padding: 12px; margin-bottom: 10px; }
+  .old-card-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #C0614A; margin-bottom: 4px; }
+  .old-card-text { font-size: 11px; color: #6B4C3B; line-height: 1.5; }
+
+  /* NEW dashboard */
+  .new-greeting { font-size: 12px; color: #9E8A86; margin-bottom: 2px; font-style: italic; }
+  .new-name { font-size: 15px; font-weight: 700; color: #2C1A14; margin-bottom: 16px; }
+
+  .identity-arc {
+    background: #EDE4D8;
+    border-radius: 20px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 1.5px solid rgba(192,97,74,0.12);
+    position: relative;
+    overflow: hidden;
+  }
+  .ia-glow {
+    position: absolute; top: -20px; right: -20px;
+    width: 80px; height: 80px;
+    background: rgba(192,97,74,0.08);
+    border-radius: 50%;
+    filter: blur(20px);
+  }
+  .ia-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #C0614A; margin-bottom: 8px; }
+  .ia-statement { font-size: 15px; font-style: italic; color: #2C1A14; line-height: 1.5; margin-bottom: 12px; }
+  .ia-stage {
+    display: flex; gap: 4px; align-items: center;
+  }
+  .ia-stage-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: #C0614A;
+  }
+  .ia-stage-dot.inactive { background: #EDE4D8; border: 1.5px solid #C0614A; }
+  .ia-stage-label { font-size: 10px; color: #9E8A86; margin-left: 6px; font-style: italic; }
+
+  .coach-brief {
+    background: #C0614A;
+    border-radius: 20px;
+    padding: 16px;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cb-glow {
+    position: absolute; bottom: -15px; left: -15px;
+    width: 70px; height: 70px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+    filter: blur(15px);
+  }
+  .cb-peter { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .cb-peter-dot { width: 28px; height: 28px; background: rgba(255,255,255,0.2); border-radius: 50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+  .cb-peter-name { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: rgba(255,255,255,0.7); text-transform: uppercase; }
+  .cb-text { font-size: 13px; font-style: italic; color: white; line-height: 1.55; margin-bottom: 12px; }
+  .cb-btn { background: white; color: #C0614A; border-radius: 12px; padding: 9px 0; font-size: 12px; font-weight: 700; text-align: center; }
+
+  .practice-map-mini {
+    background: #EDE4D8;
+    border-radius: 14px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  .pm-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #C0614A; margin-bottom: 8px; }
+  .pm-dots { display: flex; gap: 4px; flex-wrap: wrap; }
+  .pm-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .pm-dot.done { background: #C0614A; }
+  .pm-dot.done.deep { background: #2C1A14; }
+  .pm-dot.done.light { background: rgba(192,97,74,0.4); }
+  .pm-dot.today { background: #E8A857; }
+  .pm-dot.future { background: transparent; border: 1.5px solid #C0614A; opacity: 0.3; }
+  .pm-legend { font-size: 10px; color: #9E8A86; margin-top: 6px; font-style: italic; }
+
+  .change-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(143,175,138,0.2);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 10px;
+    color: #4A7A45;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  .diff-callout {
+    background: rgba(192,97,74,0.05);
+    border: 1px solid rgba(192,97,74,0.15);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin: 16px 0;
+  }
+  .diff-callout h4 { font-size: 12px; font-weight: 700; color: #C0614A; margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.08em; font-family: system-ui, sans-serif; }
+  .diff-row { display: flex; gap: 8px; margin-bottom: 6px; align-items: flex-start; }
+  .diff-old { font-size: 12px; color: #9E8A86; text-decoration: line-through; flex: 1; font-family: system-ui; }
+  .diff-arrow { font-size: 12px; color: #C0614A; flex-shrink: 0; }
+  .diff-new { font-size: 12px; color: #2C1A14; font-weight: 600; flex: 1; font-family: system-ui; }
+</style>
+
+<h2>The Dashboard Redesign</h2>
+<p class="subtitle">The primary object shifts from "what to do today" to "who you're becoming"</p>
+
+<div class="phones-row">
+
+  <div class="phone-col">
+    <div class="phone-label">Current Dashboard</div>
+    <div class="phone">
+      <div class="p-topbar">
+        <div class="p-wordmark">SPARQ</div>
+        <div class="p-avatar">C</div>
+      </div>
+      <div class="p-section">
+        <div class="old-peter">
+          <div class="peter-dot">🦦</div>
+          <p>"Good morning, Chris. Ready for today's practice?"</p>
+        </div>
+        <div class="old-cta">
+          <div class="old-cta-label">Day 4 · Clear Connection</div>
+          <div class="old-cta-q">"What is one small thing you can do today to show up better?"</div>
+          <div class="old-cta-btn">Begin Today's Practice</div>
+        </div>
+        <div class="old-streak">
+          <div class="old-streak-icon">🔥</div>
+          <div class="old-streak-text">3 day streak</div>
+        </div>
+        <div class="old-card">
+          <div class="old-card-label">Identity</div>
+          <div class="old-card-text" style="font-style:italic">"I am someone who shows up with intention."</div>
+        </div>
+        <div class="old-card">
+          <div class="old-card-label">Growth Thread</div>
+          <div class="old-card-text">Day 1 started · Day 2 reflection · Pattern noticed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phone-col">
+    <div class="phone-label">Redesigned Dashboard</div>
+    <div class="phone">
+      <div class="p-topbar">
+        <div class="p-wordmark">SPARQ</div>
+        <div class="p-avatar">C</div>
+      </div>
+      <div class="p-section">
+        <div class="new-greeting">Day 4 of Clear Connection</div>
+        <div class="new-name">Good morning, Chris.</div>
+
+        <div class="identity-arc">
+          <div class="ia-glow"></div>
+          <div class="ia-label">Your arc</div>
+          <div class="ia-statement">"I'm becoming someone who stays present when it's hard."</div>
+          <div class="ia-stage">
+            <div class="ia-stage-dot"></div>
+            <div class="ia-stage-dot"></div>
+            <div class="ia-stage-dot inactive"></div>
+            <div class="ia-stage-dot inactive"></div>
+            <div class="ia-stage-label">Noticing → Pausing → Responding → Integrating</div>
+          </div>
+        </div>
+
+        <div class="coach-brief">
+          <div class="cb-glow"></div>
+          <div class="cb-peter">
+            <div class="cb-peter-dot">🦦</div>
+            <div class="cb-peter-name">Today's Brief</div>
+          </div>
+          <div class="cb-text">"You noticed the pattern yesterday. Today is about pausing one second before you respond. One second. That's the whole practice."</div>
+          <div class="cb-btn">Set my trigger moment →</div>
+        </div>
+
+        <div class="practice-map-mini">
+          <div class="pm-label">14-day practice map</div>
+          <div class="pm-dots">
+            <div class="pm-dot done deep" title="Deep reflection"></div>
+            <div class="pm-dot done light"></div>
+            <div class="pm-dot done"></div>
+            <div class="pm-dot today"></div>
+            <div class="pm-dot future"></div>
+            <div class="pm-dot future"></div>
+            <div class="pm-dot future"></div>
+            <div class="pm-dot future"></div>
+            <div class="pm-dot future"></div>
+            <div class="pm-dot future"></div>
+            <div class="pm-dot future"></div>
+            <div class="pm-dot future"></div>
+            <div class="pm-dot future"></div>
+            <div class="pm-dot future"></div>
+          </div>
+          <div class="pm-legend">darker = deeper reflection · gold = today</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="diff-callout">
+  <h4>What changed and why</h4>
+  <div class="diff-row">
+    <div class="diff-old">🔥 3 day streak</div>
+    <div class="diff-arrow">→</div>
+    <div class="diff-new">Practice map: 14 dots, depth encoded by color. Never breaks on a miss — it's a terrain, not a counter.</div>
+  </div>
+  <div class="diff-row">
+    <div class="diff-old">Generic "ready for today's practice?"</div>
+    <div class="diff-arrow">→</div>
+    <div class="diff-new">Specific coaching brief referencing yesterday: "You noticed X. Today is about Y." Peter proves he was listening.</div>
+  </div>
+  <div class="diff-row">
+    <div class="diff-old">Static identity statement card at the bottom</div>
+    <div class="diff-arrow">→</div>
+    <div class="diff-new">Identity arc at top, with visible stage progression. The first thing you see is who you're becoming.</div>
+  </div>
+  <div class="diff-row">
+    <div class="diff-old">"Begin Today's Practice" CTA</div>
+    <div class="diff-arrow">→</div>
+    <div class="diff-new">"Set my trigger moment →" — the action starts with WHERE in your day this will happen, not just starting the session.</div>
+  </div>
+</div>

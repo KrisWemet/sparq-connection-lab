@@ -117,18 +117,18 @@ function Prop({ mood }: { mood: PeterMood }) {
     return (
       <g transform="translate(32, 78)">
         {/* Journal cover */}
-        <rect x="0" y="0" width="36" height="26" rx="3" fill="#C0614A" />
+        <rect x="0" y="0" width="36" height="26" rx="3" fill="#8B5CF6" />
         {/* Spine */}
         <rect x="15" y="0" width="6" height="26" rx="1" fill="#A3513D" />
         {/* Pages left */}
-        <rect x="2" y="3" width="12" height="20" rx="1" fill="#FAF6F1" />
+        <rect x="2" y="3" width="12" height="20" rx="1" fill="#F5F3FF" />
         {/* Page lines */}
         <line x1="4" y1="7" x2="12" y2="7" stroke="#D4B896" strokeWidth="1" />
         <line x1="4" y1="10" x2="12" y2="10" stroke="#D4B896" strokeWidth="1" />
         <line x1="4" y1="13" x2="12" y2="13" stroke="#D4B896" strokeWidth="1" />
         <line x1="4" y1="16" x2="12" y2="16" stroke="#D4B896" strokeWidth="1" />
         {/* Pages right */}
-        <rect x="22" y="3" width="12" height="20" rx="1" fill="#FAF6F1" />
+        <rect x="22" y="3" width="12" height="20" rx="1" fill="#F5F3FF" />
         <line x1="24" y1="7" x2="32" y2="7" stroke="#D4B896" strokeWidth="1" />
         <line x1="24" y1="10" x2="32" y2="10" stroke="#D4B896" strokeWidth="1" />
         <line x1="24" y1="13" x2="32" y2="13" stroke="#D4B896" strokeWidth="1" />
@@ -148,9 +148,9 @@ function Prop({ mood }: { mood: PeterMood }) {
         {/* Liquid */}
         <rect x="2" y="2" width="20" height="6" rx="2" fill="#E8A857" opacity="0.8" />
         {/* Steam */}
-        <path d="M 8 -4 Q 10 -8, 8 -12" stroke="#C0614A" strokeWidth="1.5"
+        <path d="M 8 -4 Q 10 -8, 8 -12" stroke="#8B5CF6" strokeWidth="1.5"
           fill="none" strokeLinecap="round" opacity="0.5" />
-        <path d="M 14 -4 Q 16 -8, 14 -12" stroke="#C0614A" strokeWidth="1.5"
+        <path d="M 14 -4 Q 16 -8, 14 -12" stroke="#8B5CF6" strokeWidth="1.5"
           fill="none" strokeLinecap="round" opacity="0.5" />
       </g>
     );
@@ -162,7 +162,7 @@ function Prop({ mood }: { mood: PeterMood }) {
       <>
         <circle cx="18" cy="22" r="3" fill="#E8A857" opacity="0.8" />
         <circle cx="82" cy="18" r="2.5" fill="#8FAF8A" opacity="0.8" />
-        <circle cx="88" cy="50" r="2" fill="#C0614A" opacity="0.7" />
+        <circle cx="88" cy="50" r="2" fill="#8B5CF6" opacity="0.7" />
         <circle cx="12" cy="55" r="2.5" fill="#D4795F" opacity="0.7" />
         <rect x="15" y="70" width="6" height="6" rx="1"
           fill="#E8A857" opacity="0.7" transform="rotate(30, 18, 73)" />
@@ -170,7 +170,7 @@ function Prop({ mood }: { mood: PeterMood }) {
           fill="#8FAF8A" opacity="0.7" transform="rotate(-20, 80, 74)" />
         {/* Star bursts */}
         <text x="10" y="35" fontSize="10" fill="#E8A857" opacity="0.8">✦</text>
-        <text x="80" y="30" fontSize="8" fill="#C0614A" opacity="0.7">✦</text>
+        <text x="80" y="30" fontSize="8" fill="#8B5CF6" opacity="0.7">✦</text>
       </>
     );
   }
@@ -202,7 +202,7 @@ export function PeterAvatar({
       <motion.div
         className="absolute inset-[-12%] rounded-full"
         style={{
-          background: 'radial-gradient(circle, rgba(192,97,74,0.18) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(139,92,246,0.18) 0%, transparent 70%)',
         }}
         animate={{ scale: isTyping ? [1, 1.18, 1] : [1, 1.06, 1] }}
         transition={{ duration: isTyping ? 1.4 : 3.5, repeat: Infinity, ease: 'easeInOut' }}

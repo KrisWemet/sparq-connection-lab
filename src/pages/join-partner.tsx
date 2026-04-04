@@ -112,17 +112,16 @@ export default function JoinPartner() {
             <HeartHandshake className="w-8 h-8 text-primary" />
           </div>
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
-            Join Your Partner&apos;s Journey
+            Add a shared layer to your growth
           </h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
-            You&apos;ve been invited to join a relationship journey. Together, you&apos;ll explore activities
-            designed to strengthen your connection.
+            You&apos;ve been invited to link up in Sparq. Your own practice stays yours. This just adds shared reflections and shared prompts when they help.
           </p>
           
           {!user ? (
             <div className="space-y-4">
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Please sign in or create an account to accept this invitation.
+                Please sign in or create an account to accept this invitation. You can still use Sparq solo if you want to start there first.
               </p>
               <div className="flex flex-col gap-2">
                 <Button onClick={() => router.push('/login')}>

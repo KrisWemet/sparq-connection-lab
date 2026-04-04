@@ -19,9 +19,16 @@ import { DayProgressArc } from '@/components/daily/DayProgressArc';
 import { TodaysExerciseCard } from '@/components/daily/TodaysExerciseCard';
 import { PreviousReflectionCard } from '@/components/daily/PreviousReflectionCard';
 import { EveningCheckin } from '@/components/daily/EveningCheckin';
+import { MorningBrief } from '@/components/daily/MorningBrief';
 import { JourneyCompletion } from '@/components/daily/JourneyCompletion';
+import { BetaFeedbackDialog } from '@/components/beta/BetaFeedbackDialog';
+import { reportPrimaryPathClientError, trackPrimaryPathClientEvent } from '@/lib/beta/primaryPath';
+import { fetchPlayfulConnectionToday } from '@/lib/playfulConnection';
+import type { PlayfulPrompt } from '@/data/playful-prompts';
+import { FavoriteUsCard } from '@/components/playful/FavoriteUsCard';
 
 type Phase = 'loading' | 'morning' | 'evening' | 'evening-checkin' | 'journey-complete' | 'complete';
+type PracticeMode = 'solo' | 'partner_optional' | 'partner_joint';
 
 // Fallback modality label when no journey is active.
 function getModalityLabel(day: number): string {
@@ -35,6 +42,38 @@ const DEFAULT_EVENING_OPENER: PeterMessage = {
   role: 'assistant',
   content: "Hey, welcome back. 🌙 How did today's small step go? Tell me what happened. Tiny reps matter.",
 };
+
+function inferPracticeMode(action: string): PracticeMode {
+  const normalized = action.toLowerCase();
+
+  if (
+    normalized.includes('with your partner') ||
+    normalized.includes('tell your partner') ||
+    normalized.includes('ask your partner') ||
+    normalized.includes('together') ||
+    normalized.includes('both of you')
+  ) {
+    return 'partner_optional';
+  }
+
+  return 'solo';
+}
+
+function getPracticeSupportCopy(mode: PracticeMode) {
+  if (mode === 'solo') {
+    return {
+      home: 'This is a solo-first step. You can do it on your own and still change the relationship.',
+      evening: 'How did you practice this in the way you showed up today?',
+      reminder: 'This step still counts, even if your partner never opens the app.',
+    };
+  }
+
+  return {
+    home: 'Try this with your partner if it fits. If not, practice it in how you show up today.',
+    evening: 'What changed when you tried this with your partner, or in the way you showed up today?',
+    reminder: 'Partner optional. Your growth still counts if you practiced this on your own.',
+  };
+}
 
 export default function DailyGrowth() {
   const router = useRouter();
@@ -61,6 +100,11 @@ export default function DailyGrowth() {
   const [journeyDuration, setJourneyDuration] = useState<number | null>(null);
   const [journeyModalityLabel, setJourneyModalityLabel] = useState<string | null>(null);
   const [eveningReflectionPrompt, setEveningReflectionPrompt] = useState<string | null>(null);
+  const [practiceMode, setPracticeMode] = useState<PracticeMode>('solo');
+
+  // Brief + Trigger flow
+  const [peterBrief, setPeterBrief] = useState('');
+  const [triggerMoment, setTriggerMoment] = useState('');
 
   // New states for the Put the Phone Down Quest
   const [actionVerified, setActionVerified] = useState(false);
@@ -69,6 +113,8 @@ export default function DailyGrowth() {
   // Home screen state — shown before the user enters the morning session
   const [showHome, setShowHome] = useState(true);
   const [prevReflection, setPrevReflection] = useState<string | null>(null);
+  const [favoriteUsPrompt, setFavoriteUsPrompt] = useState<PlayfulPrompt | null>(null);
+  const [playfulDateKey, setPlayfulDateKey] = useState<string | null>(null);
 
   useEffect(() => {
     if (actionVerified && user) {
@@ -78,6 +124,28 @@ export default function DailyGrowth() {
       });
     }
   }, [actionVerified, user, currentDay, sessionId]);
+
+  useEffect(() => {
+    if (!user?.id || phase !== 'morning' || !showHome) return;
+
+    let isActive = true;
+
+    void fetchPlayfulConnectionToday()
+      .then((payload) => {
+        if (!isActive) return;
+        setFavoriteUsPrompt(payload.favoriteUs);
+        setPlayfulDateKey(payload.dateKey);
+      })
+      .catch(() => {
+        if (!isActive) return;
+        setFavoriteUsPrompt(null);
+        setPlayfulDateKey(null);
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [user?.id, phase, showHome]);
 
   // Fetch previous day's evening reflection for the home screen snippet
   useEffect(() => {
@@ -136,20 +204,37 @@ export default function DailyGrowth() {
             setMorningStory(stripMd(session.morning_story || ''));
             setMorningAction(stripMd(session.morning_action || ''));
 
+            // Load Peter's brief from user_insights in parallel
+            supabase
+              .from('user_insights')
+              .select('next_greeting_text')
+              .eq('user_id', user.id)
+              .maybeSingle()
+              .then(({ data }) => {
+                if (data?.next_greeting_text) setPeterBrief(data.next_greeting_text);
+              });
+
             // Populate journey metadata from response
             if (payload.journey) {
               setJourneyId(payload.journey.id);
               setJourneyTitle(payload.journey.title);
               setJourneyDuration(payload.journey.duration);
               setJourneyModalityLabel(payload.journey.modalityLabel);
+              if (payload.journey.practiceMode) {
+                setPracticeMode(payload.journey.practiceMode);
+              }
             }
             // Also check session-level journey fields (for reused sessions)
             if (session.journey_id) {
               setJourneyId(session.journey_id);
               if (session.journey_title) setJourneyTitle(session.journey_title);
             }
+            setPracticeMode(session.practice_mode || inferPracticeMode(session.morning_action || ''));
             if (session.evening_reflection_prompt) {
               setEveningReflectionPrompt(session.evening_reflection_prompt);
+            }
+            if (session.trigger_moment) {
+              setTriggerMoment(session.trigger_moment);
             }
 
             if (session.status === 'completed') {
@@ -194,6 +279,9 @@ export default function DailyGrowth() {
       };
       setCurrentDay(day);
       setInsights(userInsights);
+      if (insightsRow?.next_greeting_text) {
+        setPeterBrief(insightsRow.next_greeting_text);
+      }
 
       // Load today's daily entry
       const { data: entry } = await supabase
@@ -211,6 +299,7 @@ export default function DailyGrowth() {
       if (entry?.morning_viewed_at) {
         setMorningStory(stripMd(entry.morning_story || ''));
         setMorningAction(stripMd(entry.morning_action || ''));
+        setPracticeMode(inferPracticeMode(entry.morning_action || ''));
         setPhase('evening');
         return;
       }
@@ -242,6 +331,7 @@ export default function DailyGrowth() {
         const { story, action } = parseMorningContent(data.story);
         setMorningStory(story);
         setMorningAction(action);
+        setPracticeMode(inferPracticeMode(action));
 
         await supabase.from('daily_entries').upsert(
           { user_id: user.id, day, morning_story: story, morning_action: action },
@@ -250,12 +340,55 @@ export default function DailyGrowth() {
       } catch {
         setMorningStory("Good morning. 🌅 Your story is still loading. Come back in a moment.");
         setMorningAction('Tell your partner one true good thing you see in them today.');
+        setPracticeMode('partner_optional');
       } finally {
         setIsGenerating(false);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, authLoading]);
+
+  // Called when user completes the Brief + sets their trigger moment.
+  // Saves trigger, marks morning viewed, then sends user back to dashboard.
+  const handleBriefReady = async (trigger: string) => {
+    setTriggerMoment(trigger);
+
+    if (sessionId) {
+      try {
+        const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
+        await fetch('/api/daily/session/morning-viewed', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ session_id: sessionId, trigger_moment: trigger }),
+        });
+      } catch {
+        // Non-blocking — user goes to dashboard regardless
+      }
+    } else {
+      // Legacy fallback
+      if (user) {
+        await supabase.from('daily_entries').upsert(
+          {
+            user_id: user.id,
+            day: currentDay,
+            morning_story: morningStory,
+            morning_action: morningAction,
+            morning_viewed_at: new Date().toISOString(),
+          },
+          { onConflict: 'user_id,day' }
+        );
+      }
+    }
+
+    void trackPrimaryPathClientEvent('beta_primary_daily_growth_started', {
+      current_day: currentDay,
+      journey_id: journeyId,
+      trigger_set: true,
+    });
+
+    // Send user into the world — practice happens in real life
+    router.push('/dashboard');
+  };
 
   const handleMorningRead = async () => {
     if (!user) return;
@@ -403,6 +536,11 @@ export default function DailyGrowth() {
             is_graduation: currentDay >= 14,
             journey_completed: payload.journey_completed || false,
           });
+          if (currentDay === 1) {
+            void trackPrimaryPathClientEvent('beta_primary_day1_completed', {
+              session_id: sessionId,
+            });
+          }
           return;
         }
       }
@@ -456,7 +594,16 @@ export default function DailyGrowth() {
         session_id: sessionId,
         is_graduation: isGraduation
       });
+      if (currentDay === 1) {
+        void trackPrimaryPathClientEvent('beta_primary_day1_completed', {
+          session_id: sessionId,
+        });
+      }
     } catch (err) {
+      void reportPrimaryPathClientError('daily_complete', err, {
+        current_day: currentDay,
+        session_id: sessionId,
+      });
       console.error('Complete day error:', err);
     } finally {
       setIsSaving(false);
@@ -474,69 +621,28 @@ export default function DailyGrowth() {
 
   // Home screen teaser — does NOT reveal the exercise before the story.
   const homeQuestion = journeyTitle
-    ? `Your Day ${currentDay} practice is ready.`
-    : 'Your morning practice is ready.';
+    ? `Your Day ${currentDay} step is ready.`
+    : 'Your next step is ready.';
+  const practiceCopy = getPracticeSupportCopy(practiceMode);
 
   const DEFAULT_REFLECTION =
     'I noticed I jumped to fix things instead of just listening. Next time I want to try staying with them first.';
 
-  if (showHome && phase === 'morning') {
+  if (phase === 'morning') {
+    const briefFallback = currentDay === 1
+      ? "You're here. That's the most important thing you'll do today."
+      : journeyTitle
+        ? `${journeyTitle} is working on you. Here's your next step.`
+        : "Small things, done consistently, change everything. Here's today's step.";
+
     return (
-      <div className="min-h-screen bg-brand-linen pb-28 font-sans">
-        {/* ── Top bar: SPARQ wordmark + settings ── */}
-        <div className="flex items-center justify-between px-5 pt-6 pb-2">
-          <span className="text-lg font-bold tracking-tight text-[#2C1A14]">SPARQ</span>
-          <button
-            onClick={() => router.push('/settings')}
-            aria-label="Settings"
-            className="p-1.5 rounded-xl text-brand-primary hover:bg-brand-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
-          >
-            <Settings size={20} />
-          </button>
-        </div>
-
-        {/* ── Main content ── */}
-        <div className="max-w-lg mx-auto px-4 pt-6 space-y-5">
-          {/* Day progress arc — centered */}
-          <motion.div
-            className="flex justify-center pt-2 pb-1"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <DayProgressArc currentDay={currentDay} totalDays={journeyDuration ?? 14} />
-          </motion.div>
-
-          {/* Today's exercise card */}
-          <TodaysExerciseCard
-            durationMin={5}
-            question={homeQuestion}
-            sessionLabel={journeyTitle ? `${journeyTitle} — Day ${currentDay}` : 'Morning practice'}
-            onBegin={() => setShowHome(false)}
-          />
-
-          {/* Previous reflection — shown from day 2 onward */}
-          {(prevReflection || currentDay > 1) && (
-            <PreviousReflectionCard
-              quote={prevReflection || DEFAULT_REFLECTION}
-              onViewJournal={() => router.push('/profile')}
-            />
-          )}
-
-          {/* ── Peter — directly on linen, no container ── */}
-          <motion.div
-            className="flex flex-col items-center gap-3 pt-4 pb-2"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
-          >
-            <PeterAvatar mood="afternoon" size={64} />
-            <p className="font-serif italic text-brand-taupe text-[15px] text-center leading-relaxed max-w-xs">
-              Small things often. Connection isn&apos;t built in a day, but in the daily loops of shared vulnerability.
-            </p>
-          </motion.div>
-        </div>
-      </div>
+      <MorningBrief
+        morningAction={morningAction || 'Take one small step to show up better in your relationship today.'}
+        peterBrief={peterBrief || briefFallback}
+        journeyTitle={journeyTitle}
+        currentDay={currentDay}
+        onReady={handleBriefReady}
+      />
     );
   }
 
@@ -545,17 +651,8 @@ export default function DailyGrowth() {
       {/* Header */}
       <div className="flex items-center justify-between px-5 pt-5 pb-3">
         <div className="flex items-center gap-2">
-          {phase === 'morning' && (
-            <button
-              onClick={() => setShowHome(true)}
-              aria-label="Back"
-              className="p-1.5 rounded-xl text-brand-primary hover:bg-brand-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
-            >
-              <ChevronLeft size={20} />
-            </button>
-          )}
           <span className="text-xs font-semibold tracking-widest uppercase text-brand-primary">
-            Day {currentDay} &middot; {phase === 'morning' ? 'Morning' : (phase === 'evening' || phase === 'evening-checkin') ? 'Evening' : phase === 'journey-complete' ? 'Complete' : 'Complete'}
+            Day {currentDay} &middot; {(phase === 'evening' || phase === 'evening-checkin') ? 'Evening reflection' : phase === 'journey-complete' ? 'Journey complete' : 'Day complete'}
           </span>
         </div>
       </div>
@@ -565,82 +662,6 @@ export default function DailyGrowth() {
       {/* Main content */}
       <div className="flex-1 overflow-hidden">
         <AnimatePresence mode="wait">
-
-          {/* ── MORNING PHASE ── */}
-          {phase === 'morning' && (
-            <motion.div
-              key="morning"
-              initial={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
-              animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
-              transition={{ type: 'spring', bounce: 0, duration: 0.6 }}
-              className="h-full overflow-y-auto pb-24"
-            >
-              <div className="max-w-lg mx-auto px-4 py-6 space-y-5">
-
-                {/* ── Peter directly on linen, no container ── */}
-                <div className="flex flex-col items-center gap-4">
-                  <PeterAvatar mood="morning" size={56} />
-
-                  {/* Speech card */}
-                  <div className="w-full bg-[#EDE4D8] rounded-3xl p-5 border border-brand-primary/10 shadow-sm">
-                    {isGenerating ? (
-                      <div className="flex gap-2 items-center h-6">
-                        {[0, 1, 2].map(i => (
-                          <motion.div
-                            key={i}
-                            className="w-2 h-2 rounded-full bg-brand-primary/40"
-                            animate={{ opacity: [0.3, 1, 0.3] }}
-                            transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.2 }}
-                          />
-                        ))}
-                      </div>
-                    ) : (
-                      <p
-                        className="font-serif italic leading-relaxed text-[#2C1A14] text-[15px]"
-                        style={{ whiteSpace: 'pre-wrap' }}
-                      >
-                        {morningStory}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Today's Practice card */}
-                {!isGenerating && morningAction && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ type: 'spring', bounce: 0, duration: 0.6, delay: 0.15 }}
-                    className="bg-[#EDE4D8] rounded-3xl p-5 border border-brand-primary/10 shadow-sm"
-                  >
-                    <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
-                      Today&apos;s Practice
-                    </p>
-                    <p className="text-[#2C1A14] font-medium leading-relaxed text-[15px]">
-                      {morningAction}
-                    </p>
-                  </motion.div>
-                )}
-
-                {/* CTA button */}
-                {!isGenerating && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
-                  >
-                    <button
-                      onClick={handleMorningRead}
-                      className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors text-base"
-                    >
-                      I&apos;ll practice this today
-                    </button>
-                  </motion.div>
-                )}
-              </div>
-            </motion.div>
-          )}
 
           {/* ── EVENING PHASE ── */}
           {phase === 'evening' && (
@@ -658,16 +679,24 @@ export default function DailyGrowth() {
                   <div className="max-w-lg mx-auto px-4 py-6 space-y-5">
 
                     {/* Morning action reminder */}
-                    <div className="bg-[#EDE4D8] rounded-2xl p-4 flex items-start gap-3 border border-brand-primary/10">
+                    <div className="bg-[#EDE9FE] rounded-2xl p-4 flex items-start gap-3 border border-brand-primary/10">
                       <Sun size={16} className="text-brand-primary mt-0.5 flex-shrink-0" />
-                      <p className="text-sm text-[#6B4C3B] leading-relaxed">{morningAction}</p>
+                      <div>
+                        <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-1">
+                          Morning step
+                        </p>
+                        <p className="text-sm text-[#5B4A86] leading-relaxed">{morningAction}</p>
+                      </div>
                     </div>
 
                     {/* Peter + question */}
                     <div className="flex flex-col items-center gap-4 pt-2">
                       <PeterAvatar mood="evening" size={56} />
-                      <p className="font-serif italic text-[#6B4C3B] text-[15px] text-center leading-relaxed">
-                        Did you practice today? Even a small attempt counts.
+                      <p className="font-serif italic text-[#5B4A86] text-[15px] text-center leading-relaxed">
+                        {practiceCopy.evening}
+                      </p>
+                      <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary">
+                        Next step: mark today&apos;s practice done
                       </p>
                     </div>
 
@@ -677,7 +706,7 @@ export default function DailyGrowth() {
                         onPointerDown={() => setIsHolding(true)}
                         onPointerUp={() => setIsHolding(false)}
                         onPointerLeave={() => setIsHolding(false)}
-                        className="relative w-full overflow-hidden bg-[#EDE4D8] border border-brand-primary/20 rounded-2xl py-4 select-none"
+                        className="relative w-full overflow-hidden bg-[#EDE9FE] border border-brand-primary/20 rounded-2xl py-4 select-none"
                         style={{ touchAction: 'none' }}
                       >
                         <div
@@ -689,8 +718,8 @@ export default function DailyGrowth() {
                             }
                           }}
                         />
-                        <span className={`relative z-10 transition-colors duration-500 text-sm font-semibold tracking-wide ${isHolding ? 'text-white' : 'text-[#6B4C3B]'}`}>
-                          Hold to verify I did it
+                        <span className={`relative z-10 transition-colors duration-500 text-sm font-semibold tracking-wide ${isHolding ? 'text-white' : 'text-[#5B4A86]'}`}>
+                          Hold to mark today&apos;s step done
                         </span>
                       </button>
 
@@ -698,11 +727,15 @@ export default function DailyGrowth() {
                       {process.env.NODE_ENV === 'development' && (
                         <button
                           onClick={() => setActionVerified(true)}
-                          className="mt-4 text-[10px] text-[#6B4C3B]/40 hover:text-[#6B4C3B]/70 block w-full text-center uppercase font-semibold"
+                          className="mt-4 text-[10px] text-[#5B4A86]/40 hover:text-[#5B4A86]/70 block w-full text-center uppercase font-semibold"
                         >
                           Skip Hold (Dev)
                         </button>
                       )}
+
+                      <p className="text-xs text-[#5B4A86]/80 leading-relaxed mt-3 text-center">
+                        {practiceCopy.reminder}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -710,10 +743,10 @@ export default function DailyGrowth() {
                 /* ── Chat state (actionVerified) ── */
                 <>
                   {/* Morning action reminder — slim card at top */}
-                  <div className="mx-4 mt-3 mb-1 bg-[#EDE4D8] border border-brand-primary/10 rounded-2xl px-4 py-3 flex items-start gap-3">
+                  <div className="mx-4 mt-3 mb-1 bg-[#EDE9FE] border border-brand-primary/10 rounded-2xl px-4 py-3 flex items-start gap-3">
                     <Sun size={15} className="text-brand-primary mt-0.5 flex-shrink-0" />
-                    <p className="text-sm text-[#6B4C3B] leading-relaxed">
-                      <span className="font-semibold text-[#2C1A14] mr-1">Today&apos;s action:</span>
+                    <p className="text-sm text-[#5B4A86] leading-relaxed">
+                      <span className="font-semibold text-[#2E1065] mr-1">Today&apos;s action:</span>
                       {morningAction}
                     </p>
                   </div>
@@ -735,7 +768,7 @@ export default function DailyGrowth() {
                       transition={{ type: 'spring', bounce: 0.15, duration: 0.7 }}
                       className="px-4 pt-4 pb-6 border-t border-brand-primary/10 bg-brand-linen"
                     >
-                      <p className="text-center text-sm text-[#6B4C3B] mb-3 font-serif italic">
+                      <p className="text-center text-sm text-[#5B4A86] mb-3 font-serif italic">
                         Your reflection is complete.
                       </p>
                       <button
@@ -743,7 +776,7 @@ export default function DailyGrowth() {
                         disabled={isSaving}
                         className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors disabled:opacity-50 text-base"
                       >
-                        {isSaving ? 'Synthesizing...' : `Complete Day ${currentDay}`}
+                        {isSaving ? 'Saving...' : `Finish Day ${currentDay}`}
                       </button>
                     </motion.div>
                   ) : canCompleteDay ? (
@@ -758,7 +791,7 @@ export default function DailyGrowth() {
                         disabled={isSaving}
                         className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors disabled:opacity-50 text-base"
                       >
-                        {isSaving ? 'Synthesizing...' : `Complete Day ${currentDay}`}
+                        {isSaving ? 'Saving...' : `Finish Day ${currentDay}`}
                       </button>
                     </motion.div>
                   ) : null}
@@ -778,9 +811,10 @@ export default function DailyGrowth() {
               className="h-full overflow-y-auto"
             >
               <EveningCheckin
-                sessionId={sessionId}
+                sessionId={sessionId ?? ''}
                 morningAction={morningAction}
                 journeyTitle={journeyTitle}
+                triggerMoment={triggerMoment || undefined}
                 onComplete={() => {
                   fireElegantConfetti();
                   router.push('/dashboard');
@@ -824,20 +858,20 @@ export default function DailyGrowth() {
                   <PeterAvatar mood="celebrating" size={80} />
 
                   {/* Headline */}
-                  <h2 className="font-serif italic text-[#2C1A14] text-2xl text-center mt-6">
+                  <h2 className="font-serif italic text-[#2E1065] text-2xl text-center mt-6">
                     Day {currentDay - 1} complete.
                   </h2>
 
                   {/* Secondary text */}
-                  <p className="text-[#6B4C3B] text-center mt-2 leading-relaxed">
+                  <p className="text-[#5B4A86] text-center mt-2 leading-relaxed">
                     You showed up. That&apos;s everything.
                   </p>
 
                   {/* Streak badge card */}
-                  <div className="bg-[#EDE4D8] rounded-3xl p-5 border border-brand-primary/10 shadow-sm mt-6 max-w-xs w-full text-center">
+                  <div className="bg-[#EDE9FE] rounded-3xl p-5 border border-brand-primary/10 shadow-sm mt-6 max-w-xs w-full text-center">
                     <Flame size={28} className="text-brand-sand mx-auto mb-2" />
                     <p className="text-brand-sand font-bold text-2xl">{currentDay - 1} days</p>
-                    <p className="text-[#6B4C3B] text-sm mt-1">Consistent growth.</p>
+                    <p className="text-[#5B4A86] text-sm mt-1">Consistent growth.</p>
                   </div>
 
                   {/* Return button */}
@@ -847,6 +881,31 @@ export default function DailyGrowth() {
                   >
                     Return to Dashboard
                   </button>
+
+                  <div className="mt-4">
+                    <BetaFeedbackDialog
+                      stage={favoriteUsPrompt ? 'day1_complete_playful_layer' : 'day1_complete'}
+                      context={{
+                        completed_day: currentDay - 1,
+                        journey_id: journeyId,
+                        playful_visible: Boolean(favoriteUsPrompt),
+                        playful_surface: favoriteUsPrompt ? 'daily_growth' : null,
+                        playful_prompt_id: favoriteUsPrompt?.id || null,
+                        playful_prompt_bucket: favoriteUsPrompt?.bucket || null,
+                      }}
+                      title={favoriteUsPrompt ? 'How did the daily page feel?' : undefined}
+                      description={
+                        favoriteUsPrompt
+                          ? 'Did the light note feel warm and optional, or did it get in the way of the main flow?'
+                          : undefined
+                      }
+                      placeholder={
+                        favoriteUsPrompt
+                          ? 'Tell us if Favorite Us felt helpful, intrusive, confusing, or easy to skip.'
+                          : undefined
+                      }
+                    />
+                  </div>
                 </div>
               </motion.div>
             )

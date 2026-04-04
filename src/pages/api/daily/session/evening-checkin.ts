@@ -18,6 +18,21 @@ type EveningCheckinBody = {
   practice_attempted: boolean | null;
 };
 
+function inferReflectionSignals(reflection: string) {
+  const normalized = reflection.toLowerCase();
+
+  return {
+    reflection_quality:
+      reflection.trim().split(/\s+/).length >= 20 ? 'deep' : reflection.trim().length > 0 ? 'brief' : 'empty',
+    repair_attempted:
+      /\bsorry\b|\brepair\b|\bcame back\b|\bowned\b|\bmy part\b/.test(normalized),
+    appreciation_attempted:
+      /\bappreciat|\bgrateful|\bthank|\badmire|\bnoticed something good\b/.test(normalized),
+    self_regulation_attempted:
+      /\bpause\b|\bbreathe\b|\bslowed down\b|\bcalm\b|\bsteady\b|\bregulated\b/.test(normalized),
+  };
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -98,10 +113,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     : body.practice_attempted === false
       ? 'The user says they didn\'t get to the practice today.'
       : '';
+  const triggerCtx = session.trigger_moment
+    ? `\nThe user said this moment would happen: "${session.trigger_moment}". Reference this specifically in your response.`
+    : '';
 
   systemPrompt += `\n\nEVENING CHECK-IN CONTEXT (Day ${session.day_index}${journeyCtx}):
 Today's action was: "${session.morning_action}"
-${practiceNote}
+${practiceNote}${triggerCtx}
 
 This is a brief evening check-in (NOT a full session). Keep your response to 3-4 sentences max.
 Reflect back what you heard warmly. Celebrate effort, not outcome.
@@ -146,6 +164,10 @@ Output ONLY valid JSON. No text outside the JSON object.`;
       peterResponse = stripMarkdown(rawResponse);
     }
 
+    // Determine reflection depth for the practice map
+    const wordCount = body.reflection_text.trim().split(/\s+/).length;
+    const reflectionDepth = wordCount >= 30 ? 'deep' : wordCount > 0 ? 'light' : null;
+
     // Update the session with evening check-in data
     const { error: updateError } = await ctx.supabase
       .from('daily_sessions')
@@ -155,6 +177,7 @@ Output ONLY valid JSON. No text outside the JSON object.`;
         practice_attempted: body.practice_attempted,
         evening_emotional_tone: emotionalTone,
         evening_completed_at: new Date().toISOString(),
+        reflection_depth: reflectionDepth,
         updated_at: new Date().toISOString(),
       })
       .eq('id', body.session_id)
@@ -163,6 +186,11 @@ Output ONLY valid JSON. No text outside the JSON object.`;
     if (updateError) {
       console.error('Failed to update session:', updateError);
       return res.status(500).json({ error: 'Failed to save evening check-in' });
+    }
+
+    // Fire-and-forget: advance arc if this was a significant moment
+    if (isSignificant) {
+      advanceArcStage(ctx, body.reflection_text, peterResponse);
     }
 
     // Fire-and-forget: create growth thread entry if significant
@@ -181,10 +209,20 @@ Output ONLY valid JSON. No text outside the JSON object.`;
     generateNextGreeting(ctx, session, body.reflection_text, peterResponse, emotionalTone);
 
     // Fire-and-forget: track event
+    const reflectionSignals = inferReflectionSignals(body.reflection_text);
     trackEvent(ctx.supabase, ctx.userId, 'evening_checkin_completed', {
       day_index: session.day_index,
       practice_attempted: body.practice_attempted,
       emotional_tone: emotionalTone,
+      ...reflectionSignals,
+    });
+
+    trackEvent(ctx.supabase, ctx.userId, 'solo_reflection_logged', {
+      day_index: session.day_index,
+      journey_id: session.journey_id || null,
+      practice_mode: session.practice_mode || null,
+      practice_attempted: body.practice_attempted,
+      ...reflectionSignals,
     });
 
     return res.status(200).json({
@@ -195,6 +233,44 @@ Output ONLY valid JSON. No text outside the JSON object.`;
     const errMsg = error instanceof Error ? error.message : String(error);
     console.error('Evening check-in error:', errMsg);
     return res.status(500).json({ error: 'Peter is taking a nap — try again in a moment' });
+  }
+}
+
+const ARC_DEFAULT_STATEMENTS: Record<number, string> = {
+  1: "I'm becoming someone who notices the patterns in how I show up.",
+  2: "I'm becoming someone who creates space before reacting.",
+  3: "I'm becoming someone who chooses how to respond.",
+  4: "I'm becoming someone who shows up with presence without even trying.",
+};
+
+async function advanceArcStage(
+  ctx: { supabase: any; userId: string },
+  reflectionText: string,
+  peterResponse: string,
+) {
+  try {
+    const { data } = await ctx.supabase
+      .from('user_insights')
+      .select('arc_stage, arc_statement')
+      .eq('user_id', ctx.userId)
+      .maybeSingle();
+
+    const currentStage = Math.max(1, Math.min(4, data?.arc_stage ?? 1));
+    if (currentStage >= 4) return; // Already at max
+
+    const nextStage = currentStage + 1;
+    await ctx.supabase
+      .from('user_insights')
+      .upsert(
+        {
+          user_id: ctx.userId,
+          arc_stage: nextStage,
+          arc_statement: ARC_DEFAULT_STATEMENTS[nextStage],
+        },
+        { onConflict: 'user_id' }
+      );
+  } catch (err) {
+    console.error('Arc advancement error (non-blocking):', err);
   }
 }
 

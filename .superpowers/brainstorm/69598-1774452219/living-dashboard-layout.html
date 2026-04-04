@@ -1,0 +1,154 @@
+<h2>Living Dashboard — Layout</h2>
+<p class="subtitle">How the dashboard evolves as the user grows. Two layout philosophies.</p>
+
+<div class="split">
+  <div class="mockup" data-choice="a" onclick="toggleSelect(this)" style="cursor: pointer;">
+    <div class="mockup-header">A — Stacked Cards (Current Pattern, Enhanced)</div>
+    <div class="mockup-body" style="padding: 16px; font-size: 13px;">
+      <!-- Top: Identity -->
+      <div style="background: linear-gradient(135deg, #6366f1, #8b5cf6); padding: 14px; border-radius: 10px; color: white; margin-bottom: 12px;">
+        <div style="font-size: 11px; opacity: 0.8;">YOUR IDENTITY</div>
+        <div style="font-size: 15px; margin-top: 4px;">"I am becoming someone who leads with curiosity"</div>
+      </div>
+
+      <!-- Today's Practice CTA -->
+      <div style="background: linear-gradient(135deg, #1a1a2e, #2d1b4e); border: 1px solid #6366f1; padding: 14px; border-radius: 10px; margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 11px; color: #a78bfa;">DAY 5 OF 14 · BUILDING TRUST</div>
+            <div style="font-size: 14px; color: white; margin-top: 4px;">Today's Practice</div>
+          </div>
+          <div style="background: #6366f1; color: white; padding: 6px 14px; border-radius: 20px; font-size: 12px;">Begin →</div>
+        </div>
+      </div>
+
+      <!-- Peter's Notebook (NEW) -->
+      <div style="background: #1a1a2e; border: 1px solid rgba(255,255,255,0.08); padding: 14px; border-radius: 10px; margin-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+          <div style="width: 24px; height: 24px; background: #6366f1; border-radius: 50%; font-size: 10px; display: flex; align-items: center; justify-content: center;">🦦</div>
+          <div style="font-size: 11px; color: #a78bfa;">PETER'S NOTEBOOK</div>
+        </div>
+        <div style="font-size: 13px; color: #e2e8f0; line-height: 1.5; font-style: italic;">
+          "You tried the pause-before-responding exercise yesterday and said it felt 'surprisingly hard but good.' That's exactly what building trust feels like at first — uncomfortable and right at the same time."
+        </div>
+        <div style="font-size: 11px; color: #64748b; margin-top: 8px;">Tap to see your growth thread →</div>
+      </div>
+
+      <!-- Weekly Mirror (NEW) -->
+      <div style="background: #1a1a2e; border: 1px solid rgba(255,255,255,0.08); padding: 14px; border-radius: 10px; margin-bottom: 12px;">
+        <div style="font-size: 11px; color: #a78bfa; margin-bottom: 6px;">THIS WEEK'S MIRROR</div>
+        <div style="font-size: 13px; color: #e2e8f0; line-height: 1.5;">
+          3 practices tried · 2 felt natural · Trust comfort ↑
+        </div>
+        <div style="margin-top: 8px; height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px;">
+          <div style="height: 4px; width: 65%; background: linear-gradient(90deg, #6366f1, #a78bfa); border-radius: 2px;"></div>
+        </div>
+      </div>
+
+      <!-- Journey Arc (NEW) -->
+      <div style="background: #1a1a2e; border: 1px solid rgba(255,255,255,0.08); padding: 14px; border-radius: 10px; margin-bottom: 12px;">
+        <div style="font-size: 11px; color: #a78bfa; margin-bottom: 8px;">BUILDING TRUST · YOUR ARC</div>
+        <div style="display: flex; gap: 4px; align-items: end; height: 40px;">
+          <div style="flex: 1; background: #6366f1; border-radius: 2px; height: 60%;"></div>
+          <div style="flex: 1; background: #6366f1; border-radius: 2px; height: 45%;"></div>
+          <div style="flex: 1; background: #6366f1; border-radius: 2px; height: 70%;"></div>
+          <div style="flex: 1; background: #6366f1; border-radius: 2px; height: 80%;"></div>
+          <div style="flex: 1; background: #8b5cf6; border-radius: 2px; height: 90%;"></div>
+          <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 2px; height: 30%;"></div>
+          <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 2px; height: 30%;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 10px; color: #64748b; margin-top: 4px;">
+          <span>Day 1</span>
+          <span style="color: #a78bfa;">Today</span>
+          <span>Day 14</span>
+        </div>
+      </div>
+
+      <!-- Streak -->
+      <div style="background: #1a1a2e; border: 1px solid rgba(255,255,255,0.08); padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 12px; color: #94a3b8;">🔥 5-day streak</span>
+        <span style="font-size: 12px; color: #6366f1;">Your longest: 5</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup" data-choice="b" onclick="toggleSelect(this)" style="cursor: pointer;">
+    <div class="mockup-header">B — Peter-Led Narrative Dashboard</div>
+    <div class="mockup-body" style="padding: 16px; font-size: 13px;">
+      <!-- Peter Hero -->
+      <div style="text-align: center; padding: 20px 14px; margin-bottom: 12px;">
+        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 50%; margin: 0 auto 12px; font-size: 28px; display: flex; align-items: center; justify-content: center;">🦦</div>
+        <div style="font-size: 15px; color: white; line-height: 1.5;">
+          Good evening, Chris.
+        </div>
+        <div style="font-size: 13px; color: #94a3b8; margin-top: 6px; line-height: 1.5;">
+          You tried something brave yesterday — the pause exercise. Today's practice builds on that.
+        </div>
+      </div>
+
+      <!-- The One Thing - Today -->
+      <div style="background: linear-gradient(135deg, #1a1a2e, #2d1b4e); border: 1px solid #6366f1; padding: 16px; border-radius: 12px; margin-bottom: 16px;">
+        <div style="font-size: 11px; color: #a78bfa; margin-bottom: 4px;">DAY 5 · BUILDING TRUST</div>
+        <div style="font-size: 15px; color: white; margin-bottom: 10px;">Today's Practice</div>
+        <div style="font-size: 12px; color: #cbd5e1; line-height: 1.5; margin-bottom: 12px;">
+          Learning to hold space when your partner shares something hard.
+        </div>
+        <div style="background: #6366f1; color: white; padding: 10px; border-radius: 8px; text-align: center; font-size: 13px;">
+          Begin →
+        </div>
+      </div>
+
+      <!-- Growth Thread -->
+      <div style="margin-bottom: 16px;">
+        <div style="font-size: 11px; color: #a78bfa; margin-bottom: 10px;">YOUR GROWTH THREAD</div>
+
+        <!-- Thread items -->
+        <div style="border-left: 2px solid #6366f1; padding-left: 14px; margin-left: 6px;">
+          <div style="margin-bottom: 14px; position: relative;">
+            <div style="position: absolute; left: -20px; top: 2px; width: 10px; height: 10px; background: #8b5cf6; border-radius: 50%;"></div>
+            <div style="font-size: 11px; color: #64748b;">Today</div>
+            <div style="font-size: 13px; color: #e2e8f0; margin-top: 2px;">Ready for holding space practice</div>
+          </div>
+          <div style="margin-bottom: 14px; position: relative;">
+            <div style="position: absolute; left: -20px; top: 2px; width: 10px; height: 10px; background: #6366f1; border-radius: 50%;"></div>
+            <div style="font-size: 11px; color: #64748b;">Yesterday</div>
+            <div style="font-size: 13px; color: #e2e8f0; margin-top: 2px;">Tried pause exercise — "surprisingly hard but good"</div>
+          </div>
+          <div style="margin-bottom: 14px; position: relative;">
+            <div style="position: absolute; left: -20px; top: 2px; width: 10px; height: 10px; background: #4f46e5; border-radius: 50%;"></div>
+            <div style="font-size: 11px; color: #64748b;">Day 3</div>
+            <div style="font-size: 13px; color: #e2e8f0; margin-top: 2px;">Noticed automatic defensiveness pattern</div>
+          </div>
+          <div style="position: relative;">
+            <div style="position: absolute; left: -20px; top: 2px; width: 10px; height: 10px; background: #3730a3; border-radius: 50%;"></div>
+            <div style="font-size: 11px; color: #64748b;">Day 1</div>
+            <div style="font-size: 13px; color: #e2e8f0; margin-top: 2px;">Started Building Trust journey</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Weekly Mirror -->
+      <div style="background: #1a1a2e; border: 1px solid rgba(255,255,255,0.08); padding: 14px; border-radius: 10px; margin-bottom: 12px;">
+        <div style="font-size: 11px; color: #a78bfa; margin-bottom: 6px;">THIS WEEK'S MIRROR</div>
+        <div style="font-size: 13px; color: #e2e8f0; line-height: 1.5; font-style: italic;">
+          "You're starting to notice defensiveness before it takes over. That's the most important shift — awareness before reaction."
+        </div>
+      </div>
+
+      <!-- Streak -->
+      <div style="text-align: center; padding: 8px; font-size: 12px; color: #64748b;">
+        🔥 5-day streak · Building Trust Day 5 of 14
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top: 20px; padding: 16px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;">
+  <h3 style="margin-bottom: 8px;">Key Difference</h3>
+  <p style="font-size: 14px; line-height: 1.6; opacity: 0.85;">
+    <strong>A (Stacked Cards)</strong> — Organized, scannable, modular. Each growth dimension has its own card. Feels like a well-organized dashboard. Growth is visible through data-informed cards.
+  </p>
+  <p style="font-size: 14px; line-height: 1.6; opacity: 0.85; margin-top: 8px;">
+    <strong>B (Peter-Led Narrative)</strong> — Peter IS the dashboard. He greets you, contextualizes today in terms of yesterday, and your growth thread reads like a journal you co-wrote. Feels less like a dashboard, more like opening a conversation with someone who knows you.
+  </p>
+</div>

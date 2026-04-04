@@ -181,7 +181,7 @@ export default function TrustCenterPage() {
         <section className="rounded-2xl border border-slate-200 bg-white p-5">
           <h2 className="text-sm font-semibold text-slate-800">Consent Status</h2>
           <p className="mt-1 text-xs text-slate-500">
-            Personalization only runs after you agree to AI-guided coaching and data use for your private Sparq experience.
+            Peter only uses your data after you say yes.
           </p>
           <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
             <p className="text-sm font-medium text-slate-700">
@@ -190,7 +190,13 @@ export default function TrustCenterPage() {
             <p className="mt-1 text-xs text-slate-500">
               {consent.consent_given_at
                 ? `Recorded on ${new Date(consent.consent_given_at).toLocaleString()}`
-                : 'Without consent, Peter stays generic and no new personalization is stored.'}
+                : 'Without consent, Peter stays general and does not save new personal details.'}
+            </p>
+          </div>
+          <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+            <p className="text-sm font-medium text-slate-700">What stays private</p>
+            <p className="mt-1 text-xs text-slate-600 leading-relaxed">
+              Your journal notes and chats stay private to you. If you later use a shared feature, Sparq should share the pattern, not your exact words.
             </p>
           </div>
         </section>
@@ -198,19 +204,19 @@ export default function TrustCenterPage() {
         <section className="rounded-2xl border border-slate-200 bg-white p-5">
           <h2 className="text-sm font-semibold text-slate-800">Personalization Controls</h2>
           <p className="text-xs text-slate-500 mt-1">
-            Journals stay private by default. These controls change the backend behavior Peter uses for personalization.
+            Journals stay private by default. These settings change how Peter learns from you.
           </p>
 
           <div className="mt-4 space-y-3">
             <ToggleRow
               label="Show my insight labels"
-              hint="Turn this off to hide profile labels while keeping personalization available."
+              hint="Turn this off to hide labels while keeping Peter personal."
               checked={prefs.insights_visible}
               onToggle={() => setPrefs(p => ({ ...p, insights_visible: !p.insights_visible }))}
             />
             <ToggleRow
               label="Enable personalization"
-              hint="If off, Peter uses generic guidance and does not adapt from prior patterns."
+              hint="If off, Peter gives more general help and does not adapt from old patterns."
               checked={prefs.personalization_enabled}
               onToggle={() => setPrefs(p => ({ ...p, personalization_enabled: !p.personalization_enabled }))}
             />
@@ -223,19 +229,19 @@ export default function TrustCenterPage() {
             <MemoryOption
               active={prefs.ai_memory_mode === 'off'}
               title="Memory off"
-              detail="Peter will not save new memory context for future chats."
+              detail="Peter will not save new details for later chats."
               onClick={() => setPrefs(p => ({ ...p, ai_memory_mode: 'off' }))}
             />
             <MemoryOption
               active={prefs.ai_memory_mode === 'rolling_90_days'}
               title="90-day rolling window"
-              detail="Default. AI memory context is limited to recent activity."
+              detail="Default. Peter remembers recent things only."
               onClick={() => setPrefs(p => ({ ...p, ai_memory_mode: 'rolling_90_days' }))}
             />
             <MemoryOption
               active={prefs.ai_memory_mode === 'indefinite'}
               title="Indefinite memory"
-              detail="Keeps long-term memory enabled until you change this."
+              detail="Peter keeps long-term memory on until you change it."
               onClick={() => setPrefs(p => ({ ...p, ai_memory_mode: 'indefinite' }))}
             />
           </div>
@@ -243,18 +249,18 @@ export default function TrustCenterPage() {
 
         <section className="rounded-2xl border border-slate-200 bg-white p-5">
           <h2 className="text-sm font-semibold text-slate-800">Relationship Mode</h2>
-          <p className="text-xs text-slate-500 mt-1">Sparq launches solo-first, with optional partner sync later.</p>
+          <p className="text-xs text-slate-500 mt-1">Solo is the full default. Partnered mode just adds shared tools later.</p>
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
             <ModeOption
               active={prefs.relationship_mode === 'solo'}
               title="Solo"
-              detail="Private growth journey, individual coaching."
+              detail="Full daily practice, private coaching, and self-led growth."
               onClick={() => setPrefs(p => ({ ...p, relationship_mode: 'solo' }))}
             />
             <ModeOption
               active={prefs.relationship_mode === 'partnered'}
               title="Partnered"
-              detail="Prepares your profile for shared prompts when enabled."
+              detail="Adds shared prompts and reflections when both people join."
               onClick={() => setPrefs(p => ({ ...p, relationship_mode: 'partnered' }))}
             />
           </div>

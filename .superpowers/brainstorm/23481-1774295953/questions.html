@@ -1,0 +1,282 @@
+<h2>Section 2 — The 14 Questions</h2>
+<p class="subtitle">Peter's exact copy, quick-reply options, and silent scoring weights for each question</p>
+
+<div class="section">
+  <p class="label">Scoring Dimensions (raw scores, 0–10 each)</p>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">
+    <span style="background:#dbeafe;color:#1e40af;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;">anxious</span>
+    <span style="background:#dbeafe;color:#1e40af;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;">avoidant</span>
+    <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;">secure</span>
+    <span style="background:#fce7f3;color:#9d174d;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;">disorganized</span>
+    <span style="background:#fef3c7;color:#92400e;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;">dysregulation</span>
+    <span style="background:#ffedd5;color:#9a3412;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;">abandonment</span>
+    <span style="background:#f3f4f6;color:#374151;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;">selfWorth</span>
+    <span style="background:#fee2e2;color:#991b1b;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;">trauma</span>
+  </div>
+  <p style="font-size:12px;color:#6b7280;margin-top:8px;">selfWorth score = fragility indicators. High = fragile. Low = stable.</p>
+</div>
+
+<style>
+.q-card { background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:20px 24px; margin-bottom:16px; }
+.q-num { display:inline-block; background:#2563eb; color:white; width:24px; height:24px; border-radius:50%; text-align:center; font-size:12px; font-weight:700; line-height:24px; margin-right:10px; flex-shrink:0; }
+.q-header { display:flex; align-items:flex-start; margin-bottom:12px; }
+.q-title { font-weight:600; font-size:14px; color:#1f2937; }
+.q-topic { font-size:11px; color:#6b7280; margin-top:2px; text-transform:uppercase; letter-spacing:.04em; }
+.peter-bubble { background:white; border:1px solid #e5e7eb; border-radius:12px 12px 12px 4px; padding:12px 16px; font-style:italic; color:#374151; font-size:13px; line-height:1.5; margin-bottom:12px; }
+.options-grid { display:flex; flex-direction:column; gap:6px; }
+.option-row { display:flex; align-items:flex-start; gap:10px; background:white; border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; }
+.option-text { font-size:13px; color:#1f2937; flex:1; }
+.score-tags { display:flex; flex-wrap:wrap; gap:4px; }
+.score-tag { font-size:10px; font-weight:600; padding:2px 6px; border-radius:4px; }
+.tag-anxious { background:#dbeafe; color:#1e40af; }
+.tag-avoidant { background:#ede9fe; color:#5b21b6; }
+.tag-secure { background:#d1fae5; color:#065f46; }
+.tag-disorganized { background:#fce7f3; color:#9d174d; }
+.tag-dysreg { background:#fef3c7; color:#92400e; }
+.tag-abandon { background:#ffedd5; color:#9a3412; }
+.tag-selfworth { background:#f3f4f6; color:#374151; }
+.tag-trauma { background:#fee2e2; color:#991b1b; }
+.tag-identity { background:#f0fdf4; color:#166534; }
+.write-own { font-size:12px; color:#6b7280; font-style:italic; padding:6px 12px; border:1px dashed #d1d5db; border-radius:8px; }
+.captures { margin-top:10px; font-size:12px; color:#6b7280; }
+.captures strong { color:#374151; }
+.input-mock { background:white; border:1px solid #d1d5db; border-radius:8px; padding:8px 12px; font-size:13px; color:#9ca3af; font-style:italic; }
+</style>
+
+<!-- Q1 -->
+<div class="q-card">
+  <div class="q-header">
+    <span class="q-num">1</span>
+    <div><div class="q-title">Name</div><div class="q-topic">Identity</div></div>
+  </div>
+  <div class="peter-bubble">"Hi — I'm Peter. I'm going to be with you every step of the way. Let's start easy: what's your name?"</div>
+  <div class="input-mock">Type your first name...</div>
+  <div class="captures"><strong>Captures:</strong> firstName</div>
+</div>
+
+<!-- Q2 -->
+<div class="q-card">
+  <div class="q-header">
+    <span class="q-num">2</span>
+    <div><div class="q-title">Age + Pronouns</div><div class="q-topic">Identity — two quick-reply sets in one step</div></div>
+  </div>
+  <div class="peter-bubble">"[Name], really good to meet you. Couple of quick ones—"</div>
+  <p style="font-size:12px;color:#6b7280;margin:0 0 6px;">Age range:</p>
+  <div class="options-grid" style="margin-bottom:12px;">
+    <div class="option-row"><span class="option-text">Under 25</span><div class="score-tags"><span class="score-tag tag-identity">identity</span></div></div>
+    <div class="option-row"><span class="option-text">25–34</span><div class="score-tags"><span class="score-tag tag-identity">identity</span></div></div>
+    <div class="option-row"><span class="option-text">35–44</span><div class="score-tags"><span class="score-tag tag-identity">identity</span></div></div>
+    <div class="option-row"><span class="option-text">45+</span><div class="score-tags"><span class="score-tag tag-identity">identity</span></div></div>
+  </div>
+  <p style="font-size:12px;color:#6b7280;margin:0 0 6px;">Pronouns:</p>
+  <div class="options-grid">
+    <div class="option-row"><span class="option-text">She / Her</span><div class="score-tags"><span class="score-tag tag-identity">identity</span></div></div>
+    <div class="option-row"><span class="option-text">He / Him</span><div class="score-tags"><span class="score-tag tag-identity">identity</span></div></div>
+    <div class="option-row"><span class="option-text">They / Them</span><div class="score-tags"><span class="score-tag tag-identity">identity</span></div></div>
+    <div class="write-own">✏️ Something else → free text</div>
+  </div>
+  <div class="captures" style="margin-top:10px;"><strong>Captures:</strong> ageRange, pronouns</div>
+</div>
+
+<!-- Q3 -->
+<div class="q-card">
+  <div class="q-header">
+    <span class="q-num">3</span>
+    <div><div class="q-title">Relationship Status + Partner Name</div><div class="q-topic">Identity — partner name appears inline if partnered</div></div>
+  </div>
+  <div class="peter-bubble">"Tell me a little about your relationship right now."</div>
+  <div class="options-grid">
+    <div class="option-row"><span class="option-text">Married or long-term committed</span><div class="score-tags"><span class="score-tag tag-identity">identity</span></div></div>
+    <div class="option-row"><span class="option-text">In a serious relationship</span><div class="score-tags"><span class="score-tag tag-identity">identity</span></div></div>
+    <div class="option-row"><span class="option-text">It's been a complicated stretch</span><div class="score-tags"><span class="score-tag tag-dysreg">dysreg +1</span></div></div>
+  </div>
+  <p style="font-size:12px;color:#6b7280;margin:10px 0 4px;">If committed or serious → inline partner name field:</p>
+  <div class="input-mock">What's your partner's name?</div>
+  <div class="captures"><strong>Captures:</strong> relationshipStatus, partnerName</div>
+</div>
+
+<!-- Q4 -->
+<div class="q-card">
+  <div class="q-header">
+    <span class="q-num">4</span>
+    <div><div class="q-title">Relationship Length</div><div class="q-topic">Identity</div></div>
+  </div>
+  <div class="peter-bubble">"How long have you and [partnerName] been together?"</div>
+  <div class="options-grid">
+    <div class="option-row"><span class="option-text">Less than a year</span><div class="score-tags"><span class="score-tag tag-identity">identity</span></div></div>
+    <div class="option-row"><span class="option-text">1 to 3 years</span><div class="score-tags"><span class="score-tag tag-identity">identity</span></div></div>
+    <div class="option-row"><span class="option-text">3 to 7 years</span><div class="score-tags"><span class="score-tag tag-identity">identity</span></div></div>
+    <div class="option-row"><span class="option-text">More than 7 years</span><div class="score-tags"><span class="score-tag tag-identity">identity</span></div></div>
+  </div>
+  <div class="captures"><strong>Captures:</strong> relationshipLength</div>
+</div>
+
+<!-- Q5 -->
+<div class="q-card">
+  <div class="q-header">
+    <span class="q-num">5</span>
+    <div><div class="q-title">Partner Joining</div><div class="q-topic">Identity</div></div>
+  </div>
+  <div class="peter-bubble">"Is [partnerName] joining you on Sparq too, or are you the one leading the charge?"</div>
+  <div class="options-grid">
+    <div class="option-row"><span class="option-text">We're doing this together</span><div class="score-tags"><span class="score-tag tag-identity">identity</span></div></div>
+    <div class="option-row"><span class="option-text">I'm going first — hoping they join</span><div class="score-tags"><span class="score-tag tag-identity">identity</span></div></div>
+    <div class="option-row"><span class="option-text">Just me for now</span><div class="score-tags"><span class="score-tag tag-identity">identity</span></div></div>
+  </div>
+  <div class="captures"><strong>Captures:</strong> partnerUsing</div>
+</div>
+
+<!-- Q6 -->
+<div class="q-card">
+  <div class="q-header">
+    <span class="q-num">6</span>
+    <div><div class="q-title">Emotional Speed</div><div class="q-topic">Dysregulation signal — anxious / avoidant / secure</div></div>
+  </div>
+  <div class="peter-bubble">"When something feels off between you — a short reply, a change in tone, a quiet night — how does it land for you?"</div>
+  <div class="options-grid">
+    <div class="option-row"><span class="option-text">It hits me fast and hard — I feel it right away</span><div class="score-tags"><span class="score-tag tag-dysreg">dysreg +3</span><span class="score-tag tag-anxious">anxious +2</span></div></div>
+    <div class="option-row"><span class="option-text">I notice it, but I can usually breathe through it</span><div class="score-tags"><span class="score-tag tag-dysreg">dysreg +1</span><span class="score-tag tag-secure">secure +1</span></div></div>
+    <div class="option-row"><span class="option-text">I tend to go quiet and not think about it much</span><div class="score-tags"><span class="score-tag tag-avoidant">avoidant +2</span></div></div>
+    <div class="write-own">✏️ Write my own → free text (scored in transition)</div>
+  </div>
+</div>
+
+<!-- Q7 -->
+<div class="q-card">
+  <div class="q-header">
+    <span class="q-num">7</span>
+    <div><div class="q-title">Recovery Time</div><div class="q-topic">Dysregulation signal — avoidant / secure</div></div>
+  </div>
+  <div class="peter-bubble">"And after a tough moment between you — how long does it usually take you to feel like yourself again?"</div>
+  <div class="options-grid">
+    <div class="option-row"><span class="option-text">I bounce back pretty fast</span><div class="score-tags"><span class="score-tag tag-secure">secure +1</span></div></div>
+    <div class="option-row"><span class="option-text">A few hours — I need to process a bit</span><div class="score-tags"><span class="score-tag tag-dysreg">dysreg +1</span></div></div>
+    <div class="option-row"><span class="option-text">It can take a day or more</span><div class="score-tags"><span class="score-tag tag-dysreg">dysreg +3</span></div></div>
+    <div class="option-row"><span class="option-text">I shut down and it takes a long time to come back</span><div class="score-tags"><span class="score-tag tag-avoidant">avoidant +2</span><span class="score-tag tag-dysreg">dysreg +2</span></div></div>
+    <div class="write-own">✏️ Write my own</div>
+  </div>
+</div>
+
+<!-- Q8 -->
+<div class="q-card">
+  <div class="q-header">
+    <span class="q-num">8</span>
+    <div><div class="q-title">Abandonment Response</div><div class="q-topic">Abandonment + anxious / avoidant / secure</div></div>
+  </div>
+  <div class="peter-bubble">"If your partner went quiet for a whole day — nothing serious, just... quiet — what would probably go through your mind?"</div>
+  <div class="options-grid">
+    <div class="option-row"><span class="option-text">I'd start wondering if something's wrong between us</span><div class="score-tags"><span class="score-tag tag-abandon">abandon +3</span><span class="score-tag tag-anxious">anxious +3</span></div></div>
+    <div class="option-row"><span class="option-text">I'd figure they're busy or tired</span><div class="score-tags"><span class="score-tag tag-secure">secure +2</span></div></div>
+    <div class="option-row"><span class="option-text">Honestly, I'd enjoy the space</span><div class="score-tags"><span class="score-tag tag-avoidant">avoidant +3</span></div></div>
+    <div class="option-row"><span class="option-text">I'd notice it, but try not to make it mean something</span><div class="score-tags"><span class="score-tag tag-abandon">abandon +1</span><span class="score-tag tag-anxious">anxious +1</span></div></div>
+    <div class="write-own">✏️ Write my own</div>
+  </div>
+</div>
+
+<!-- Q9 -->
+<div class="q-card">
+  <div class="q-header">
+    <span class="q-num">9</span>
+    <div><div class="q-title">Inner Voice</div><div class="q-topic">Self-worth + abandonment + dysregulation</div></div>
+  </div>
+  <div class="peter-bubble">"When things get rocky between you, what does the voice inside your head usually sound like?"</div>
+  <div class="options-grid">
+    <div class="option-row"><span class="option-text">It says I'm probably the problem</span><div class="score-tags"><span class="score-tag tag-selfworth">selfWorth +3</span></div></div>
+    <div class="option-row"><span class="option-text">It says we're both human and we'll figure it out</span><div class="score-tags"><span style="font-size:10px;color:#6b7280;padding:2px 4px;">no increment (stable)</span></div></div>
+    <div class="option-row"><span class="option-text">It wonders if they're losing interest in me</span><div class="score-tags"><span class="score-tag tag-selfworth">selfWorth +2</span><span class="score-tag tag-abandon">abandon +2</span></div></div>
+    <div class="option-row"><span class="option-text">It gets pretty loud and hard to quiet</span><div class="score-tags"><span class="score-tag tag-selfworth">selfWorth +2</span><span class="score-tag tag-dysreg">dysreg +1</span></div></div>
+    <div class="write-own">✏️ Write my own</div>
+  </div>
+</div>
+
+<!-- Q10 -->
+<div class="q-card">
+  <div class="q-header">
+    <span class="q-num">10</span>
+    <div><div class="q-title">Childhood Safety</div><div class="q-topic">Trauma signal + disorganized attachment</div></div>
+  </div>
+  <div class="peter-bubble">"Growing up — was home a place that felt mostly safe and steady for you?"</div>
+  <div class="options-grid">
+    <div class="option-row"><span class="option-text">Mostly yes</span><div class="score-tags"><span style="font-size:10px;color:#6b7280;padding:2px 4px;">no increment</span></div></div>
+    <div class="option-row"><span class="option-text">It had its moments, but mostly okay</span><div class="score-tags"><span class="score-tag tag-trauma">trauma +1</span></div></div>
+    <div class="option-row"><span class="option-text">It was complicated</span><div class="score-tags"><span class="score-tag tag-trauma">trauma +3</span></div></div>
+    <div class="option-row"><span class="option-text">Not really — it was hard</span><div class="score-tags"><span class="score-tag tag-trauma">trauma +5</span><span class="score-tag tag-disorganized">disorganized +2</span></div></div>
+    <div class="write-own">✏️ Write my own</div>
+  </div>
+</div>
+
+<!-- Q11 -->
+<div class="q-card">
+  <div class="q-header">
+    <span class="q-num">11</span>
+    <div><div class="q-title">Conflict Style</div><div class="q-topic">conflictStyle field + minor avoidant / secure</div></div>
+  </div>
+  <div class="peter-bubble">"When you and [partnerName] hit a rough patch, which sounds most like you?"</div>
+  <div class="options-grid">
+    <div class="option-row"><span class="option-text">I bring it up — even when it's uncomfortable</span><div class="score-tags"><span class="score-tag tag-identity">conflictStyle: volatile</span></div></div>
+    <div class="option-row"><span class="option-text">I need space to cool down before I can talk</span><div class="score-tags"><span class="score-tag tag-identity">conflictStyle: avoidant</span><span class="score-tag tag-avoidant">avoidant +1</span></div></div>
+    <div class="option-row"><span class="option-text">I try to make sure we both feel heard</span><div class="score-tags"><span class="score-tag tag-identity">conflictStyle: validating</span><span class="score-tag tag-secure">secure +1</span></div></div>
+    <div class="write-own">✏️ Write my own</div>
+  </div>
+</div>
+
+<!-- Q12 -->
+<div class="q-card">
+  <div class="q-header">
+    <span class="q-num">12</span>
+    <div><div class="q-title">Love Language</div><div class="q-topic">loveLanguage field</div></div>
+  </div>
+  <div class="peter-bubble">"What makes you feel most loved by [partnerName]? Like, what really lands?"</div>
+  <div class="options-grid">
+    <div class="option-row"><span class="option-text">When they say it out loud — words really matter to me</span><div class="score-tags"><span class="score-tag tag-identity">words</span></div></div>
+    <div class="option-row"><span class="option-text">When they do something thoughtful without being asked</span><div class="score-tags"><span class="score-tag tag-identity">acts</span></div></div>
+    <div class="option-row"><span class="option-text">When we just spend real, present time together</span><div class="score-tags"><span class="score-tag tag-identity">time</span></div></div>
+    <div class="option-row"><span class="option-text">Physical closeness — a hug, a touch</span><div class="score-tags"><span class="score-tag tag-identity">touch</span></div></div>
+    <div class="write-own">✏️ Write my own → free text (could capture gifts, etc.)</div>
+  </div>
+</div>
+
+<!-- Q13 -->
+<div class="q-card">
+  <div class="q-header">
+    <span class="q-num">13</span>
+    <div><div class="q-title">Life Context</div><div class="q-topic">lifeContext field + minor trauma / dysregulation</div></div>
+  </div>
+  <div class="peter-bubble">"Last check-in before we really get going. What's life feeling like right now, outside the relationship?"</div>
+  <div class="options-grid">
+    <div class="option-row"><span class="option-text">Pretty steady — things are okay</span><div class="score-tags"><span class="score-tag tag-identity">stable</span></div></div>
+    <div class="option-row"><span class="option-text">Busy and a bit stretched thin</span><div class="score-tags"><span class="score-tag tag-identity">stressed</span><span class="score-tag tag-dysreg">dysreg +1</span></div></div>
+    <div class="option-row"><span class="option-text">We're going through a big change right now</span><div class="score-tags"><span class="score-tag tag-identity">transition</span><span class="score-tag tag-dysreg">dysreg +1</span></div></div>
+    <div class="option-row"><span class="option-text">It's been heavy — loss, grief, or something really hard</span><div class="score-tags"><span class="score-tag tag-identity">heavy</span><span class="score-tag tag-trauma">trauma +2</span><span class="score-tag tag-dysreg">dysreg +1</span></div></div>
+    <div class="write-own">✏️ Write my own</div>
+  </div>
+</div>
+
+<!-- Q14 -->
+<div class="q-card">
+  <div class="q-header">
+    <span class="q-num">14</span>
+    <div><div class="q-title">Growth Goal + Check-in Frequency</div><div class="q-topic">Free text (mandatory) + quick reply</div></div>
+  </div>
+  <div class="peter-bubble">"And what is it you're really hoping for — the thing you can't quite put words to yet, but you feel it?"</div>
+  <div class="input-mock" style="margin-bottom:12px;">Type anything that comes to mind... (free text, mandatory)</div>
+  <p style="font-size:12px;color:#6b7280;margin:0 0 6px;">Then Peter says: "Got it. How often would you like to check in with me?"</p>
+  <div class="options-grid">
+    <div class="option-row"><span class="option-text">Every day</span><div class="score-tags"><span class="score-tag tag-identity">daily</span></div></div>
+    <div class="option-row"><span class="option-text">A few times a week</span><div class="score-tags"><span class="score-tag tag-identity">few-times-week</span></div></div>
+    <div class="option-row"><span class="option-text">Once a week</span><div class="score-tags"><span class="score-tag tag-identity">weekly</span></div></div>
+  </div>
+  <div class="captures"><strong>Captures:</strong> growthGoal (free text for NLP intent), checkInFrequency</div>
+</div>
+
+<div class="section" style="background:#fffbeb;border:1px solid #fbbf24;border-radius:12px;padding:16px 20px;">
+  <p class="label" style="color:#92400e;">deriveProfile() Thresholds</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;font-size:12px;">
+    <div><strong>attachmentStyle</strong><br>Highest raw score wins.<br>disorganized requires trauma ≥ 5<br>AND (anxious ≥ 4 OR avoidant ≥ 4).<br>All low (&lt; 3) → defaults to "secure".</div>
+    <div><strong>toneMode</strong><br>abandonmentFear "high" OR selfWorthPattern "fragile" → "validation-first"<br>attachmentStyle "anxious"/"disorganized" → "nurturing"<br>else → "collaborative"</div>
+    <div><strong>dysregulationLevel</strong><br>0–3 → low | 4–6 → moderate | 7+ → high</div>
+    <div><strong>abandonmentFear</strong><br>0–3 → low | 4–6 → moderate | 7+ → high</div>
+    <div><strong>selfWorthPattern</strong><br>0–3 → stable | 4–6 → conditional | 7+ → fragile</div>
+    <div><strong>traumaFlag</strong><br>trauma score ≥ 5 → true</div>
+  </div>
+</div>

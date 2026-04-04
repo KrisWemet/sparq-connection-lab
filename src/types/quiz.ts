@@ -9,6 +9,8 @@ export interface Question {
   intimacyLevel: 1 | 2 | 3 | 4 | 5;
   modality: PsychologyModality;
   explanation?: string;
+  tier: "free" | "premium";
+  therapeuticIntent?: string;
 }
 
 export interface WeekendActivity {
@@ -18,6 +20,7 @@ export interface WeekendActivity {
   category: string;
   modality: PsychologyModality;
   explanation?: string;
+  tier: "free" | "premium";
 }
 
 export interface Journey {

@@ -18,9 +18,10 @@ export interface ChatMessage {
 interface PeterChatOptions {
   messages: ChatMessage[];
   maxTokens?: number;
+  temperature?: number;
 }
 
-export async function peterChat({ messages, maxTokens = 512 }: PeterChatOptions): Promise<string> {
+export async function peterChat({ messages, maxTokens = 512, temperature }: PeterChatOptions): Promise<string> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) throw new Error('OPENROUTER_API_KEY is not configured');
 
@@ -37,6 +38,7 @@ export async function peterChat({ messages, maxTokens = 512 }: PeterChatOptions)
       route: 'fallback',
       messages,
       max_tokens: maxTokens,
+      ...(temperature !== undefined ? { temperature } : {}),
     }),
   });
 

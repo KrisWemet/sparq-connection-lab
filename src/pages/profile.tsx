@@ -174,7 +174,7 @@ export default function ProfilePage() {
             variants={cardVariants}
             initial="hidden"
             animate="visible"
-            className="bg-[#EDE4D8] rounded-3xl border border-brand-primary/10 shadow-sm p-6 flex flex-col items-center text-center"
+            className="bg-[#EDE9FE] rounded-3xl border border-brand-primary/10 shadow-sm p-6 flex flex-col items-center text-center"
           >
             {/* Initials circle */}
             <div className="w-14 h-14 rounded-full bg-brand-primary flex items-center justify-center text-white font-bold text-xl">
@@ -182,10 +182,10 @@ export default function ProfilePage() {
             </div>
 
             {/* Name */}
-            <h1 className="font-bold text-[#2C1A14] text-xl mt-3">{displayName}</h1>
+            <h1 className="font-bold text-[#2E1065] text-xl mt-3">{displayName}</h1>
 
             {/* Identity statement */}
-            <p className="font-serif italic text-[#6B4C3B] text-[15px] mt-1 leading-relaxed">
+            <p className="font-serif italic text-[#5B4A86] text-[15px] mt-1 leading-relaxed">
               {identityStatement}
             </p>
 
@@ -211,7 +211,7 @@ export default function ProfilePage() {
                     value={formData.name}
                     onChange={handleInputChange}
                     placeholder="Enter your name"
-                    className="w-full rounded-xl border border-brand-primary/20 bg-brand-linen px-3 py-2 text-sm text-[#2C1A14] focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                    className="w-full rounded-xl border border-brand-primary/20 bg-brand-linen px-3 py-2 text-sm text-[#2E1065] focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
                   />
                 </div>
                 <div>
@@ -224,7 +224,7 @@ export default function ProfilePage() {
                     value={formData.partnerName}
                     onChange={handleInputChange}
                     placeholder="Enter your partner's name"
-                    className="w-full rounded-xl border border-brand-primary/20 bg-brand-linen px-3 py-2 text-sm text-[#2C1A14] focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                    className="w-full rounded-xl border border-brand-primary/20 bg-brand-linen px-3 py-2 text-sm text-[#2E1065] focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
                   />
                 </div>
                 <div className="flex gap-3 pt-1">
@@ -254,7 +254,7 @@ export default function ProfilePage() {
               variants={cardVariants}
               initial="hidden"
               animate="visible"
-              className="relative bg-[#EDE4D8] rounded-3xl border border-brand-primary/10 shadow-sm p-5 overflow-hidden"
+              className="relative bg-[#EDE9FE] rounded-3xl border border-brand-primary/10 shadow-sm p-5 overflow-hidden"
             >
               {/* Left accent bar */}
               <div className="absolute left-0 top-4 bottom-4 w-1 bg-brand-growth rounded-full" />
@@ -262,9 +262,9 @@ export default function ProfilePage() {
                 <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-1">
                   Your Archetype
                 </p>
-                <h2 className="font-bold text-[#2C1A14] text-lg">{archetype}</h2>
+                <h2 className="font-bold text-[#2E1065] text-lg">{archetype}</h2>
                 {archetypeDescription && (
-                  <p className="text-[#6B4C3B] text-sm mt-1 leading-relaxed">{archetypeDescription}</p>
+                  <p className="text-[#5B4A86] text-sm mt-1 leading-relaxed">{archetypeDescription}</p>
                 )}
               </div>
             </motion.div>
@@ -278,15 +278,15 @@ export default function ProfilePage() {
             animate="visible"
             className="grid grid-cols-2 gap-3"
           >
-            <div className="bg-[#EDE4D8] rounded-3xl border border-brand-primary/10 shadow-sm p-5 flex flex-col items-center">
+            <div className="bg-[#EDE9FE] rounded-3xl border border-brand-primary/10 shadow-sm p-5 flex flex-col items-center">
               <Flame className="w-6 h-6 text-brand-sand mb-1" />
-              <span className="text-2xl font-bold text-[#2C1A14]">{streak}</span>
-              <span className="text-xs text-[#6B4C3B] mt-0.5">day streak</span>
+              <span className="text-2xl font-bold text-[#2E1065]">{streak}</span>
+              <span className="text-xs text-[#5B4A86] mt-0.5">day streak</span>
             </div>
-            <div className="bg-[#EDE4D8] rounded-3xl border border-brand-primary/10 shadow-sm p-5 flex flex-col items-center">
+            <div className="bg-[#EDE9FE] rounded-3xl border border-brand-primary/10 shadow-sm p-5 flex flex-col items-center">
               <BookOpen className="w-6 h-6 text-brand-primary mb-1" />
-              <span className="text-2xl font-bold text-[#2C1A14]">{daysCompleted}</span>
-              <span className="text-xs text-[#6B4C3B] mt-0.5">days completed</span>
+              <span className="text-2xl font-bold text-[#2E1065]">{daysCompleted}</span>
+              <span className="text-xs text-[#5B4A86] mt-0.5">days completed</span>
             </div>
           </motion.div>
 
@@ -297,14 +297,14 @@ export default function ProfilePage() {
               variants={cardVariants}
               initial="hidden"
               animate="visible"
-              className="bg-[#EDE4D8] rounded-2xl border border-brand-primary/10 shadow-sm p-4 flex items-center gap-3"
+              className="bg-[#EDE9FE] rounded-2xl border border-brand-primary/10 shadow-sm p-4 flex items-center gap-3"
             >
               <div className="w-10 h-10 rounded-full bg-brand-primary/20 flex items-center justify-center text-brand-primary font-bold text-sm flex-shrink-0">
                 {partnerName[0]?.toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-[#2C1A14] text-sm">{partnerName}</p>
-                <p className="text-xs text-[#6B4C3B]">Your partner</p>
+                <p className="font-semibold text-[#2E1065] text-sm">{partnerName}</p>
+                <p className="text-xs text-[#5B4A86]">Your partner</p>
               </div>
               <span className="inline-flex items-center bg-brand-growth/20 text-brand-growth text-xs font-medium rounded-full px-3 py-1 flex-shrink-0">
                 Connected

@@ -1,0 +1,31 @@
+{
+  "baseURL": "https://sparq-connection-lab.vercel.app",
+  "email": "live-playful-outage-1774993613629@sparq.app",
+  "capturedAt": "2026-03-31T21:47:53.267Z",
+  "evidence": [
+    {
+      "step": "journey-recommendation-live-playful",
+      "status": "pass",
+      "note": "Reached the journey recommendation state in production.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774993664882-journey-recommendation-live-playful.png"
+    },
+    {
+      "step": "dashboard-live-playful",
+      "status": "pass",
+      "note": "Dashboard loaded after onboarding for live playful verification.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774993667142-dashboard-live-playful.png"
+    },
+    {
+      "step": "dashboard-fail-soft",
+      "status": "pass",
+      "note": "Dashboard still loads and core CTA stays visible when the playful endpoint fails.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774993669597-dashboard-fail-soft.png"
+    },
+    {
+      "step": "daily-growth-fail-soft",
+      "status": "pass",
+      "note": "Daily-growth still loads and the core home state remains intact when the playful endpoint fails.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774993673170-daily-growth-fail-soft.png"
+    }
+  ]
+}

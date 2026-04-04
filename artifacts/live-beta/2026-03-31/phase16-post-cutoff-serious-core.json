@@ -1,0 +1,25 @@
+{
+  "baseURL": "https://sparq-connection-lab.vercel.app",
+  "email": "phase16-post-cutoff-1774999739390@sparq.app",
+  "capturedAt": "2026-03-31T23:29:52.340Z",
+  "evidence": [
+    {
+      "step": "dashboard-after-signup-onboarding",
+      "status": "pass",
+      "note": "Fresh post-cutoff user completed onboarding and reached dashboard.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774999788750-dashboard-after-signup-onboarding.png"
+    },
+    {
+      "step": "post-cutoff-dashboard-serious-core",
+      "status": "pass",
+      "note": "Fresh post-cutoff signup reaches dashboard without Daily Spark.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774999789136-post-cutoff-dashboard-serious-core.png"
+    },
+    {
+      "step": "post-cutoff-daily-serious-core",
+      "status": "pass",
+      "note": "Fresh post-cutoff signup reaches daily-growth home without Favorite Us.",
+      "screenshot": "/Users/chris/sparq-connection-lab/artifacts/live-beta/2026-03-31/1774999792238-post-cutoff-daily-serious-core.png"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "baseURL": "https://sparq-connection-lab.vercel.app",
+  "email": "live-playful-1774993530832@sparq.app",
+  "checkedAt": "2026-03-31T21:49:23.635Z",
+  "results": [
+    {
+      "step": "login",
+      "status": "pass",
+      "note": "Authenticated verified playful user reached dashboard."
+    },
+    {
+      "step": "daily_spark_visible",
+      "status": "pass",
+      "note": "Today's SparkLight, quick, and fully optional.Ask: what felt good in your day today?"
+    },
+    {
+      "step": "daily_spark_swap",
+      "status": "pass",
+      "note": "Swap changed the visible spark prompt."
+    },
+    {
+      "step": "daily_spark_copy",
+      "status": "fail",
+      "note": "Copy text interaction did not show success state."
+    },
+    {
+      "step": "daily_growth_home",
+      "status": "pass",
+      "note": "Reached daily-growth home."
+    },
+    {
+      "step": "favorite_us_visible",
+      "status": "fail",
+      "note": "Favorite Us not visible on daily-growth home."
+    }
+  ]
+}

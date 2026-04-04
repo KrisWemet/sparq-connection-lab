@@ -1,0 +1,95 @@
+<h2>Section 1 — Page Architecture & State Machine</h2>
+<p class="subtitle">One page (<code>/onboarding</code>) manages all phases as a typed state machine</p>
+
+<div class="section">
+  <p class="label">State Flow</p>
+  <div style="font-family: monospace; font-size: 13px; line-height: 2; background: #1a1a2e; color: #e0e0e0; padding: 24px 28px; border-radius: 12px; margin-top: 8px;">
+    <span style="color:#a78bfa">consent</span>
+    <span style="color:#6b7280"> ──▶ </span>
+    <span style="color:#60a5fa">questions</span>
+    <span style="color:#6b7280"> [1–14] ──▶ </span>
+    <span style="color:#34d399">scoring_transition</span>
+    <span style="color:#6b7280"> ──▶ </span>
+    <span style="color:#f59e0b">peter_session</span>
+    <span style="color:#6b7280"> ──▶ </span>
+    <span style="color:#f472b6">journey_rec</span>
+    <span style="color:#6b7280"> ──▶ </span>
+    <span style="color:#fb923c">journey_detail</span>
+    <span style="color:#6b7280"> ──▶ </span>
+    <span style="color:#4ade80">dashboard</span>
+  </div>
+</div>
+
+<div class="section">
+  <p class="label">Phase Breakdown</p>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <thead>
+      <tr style="border-bottom:2px solid #e5e7eb;">
+        <th style="text-align:left;padding:10px 12px;color:#6b7280;font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:.05em;">State</th>
+        <th style="text-align:left;padding:10px 12px;color:#6b7280;font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:.05em;">What happens</th>
+        <th style="text-align:left;padding:10px 12px;color:#6b7280;font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:.05em;">API calls</th>
+        <th style="text-align:left;padding:10px 12px;color:#6b7280;font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:.05em;">Persisted to</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid #f3f4f6;">
+        <td style="padding:10px 12px;"><span style="background:#ede9fe;color:#7c3aed;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600;">consent</span></td>
+        <td style="padding:10px 12px;color:#374151;">Existing consent gate. User agrees to personalization.</td>
+        <td style="padding:10px 12px;color:#6b7280;">PATCH /api/preferences</td>
+        <td style="padding:10px 12px;color:#6b7280;">profiles.consent_given_at</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f3f4f6;">
+        <td style="padding:10px 12px;"><span style="background:#dbeafe;color:#1d4ed8;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600;">questions</span></td>
+        <td style="padding:10px 12px;color:#374151;">14 conversational questions. Client-side scoring only. Progress saved to localStorage on every answer.</td>
+        <td style="padding:10px 12px;color:#6b7280;">None</td>
+        <td style="padding:10px 12px;color:#6b7280;">localStorage (resilience)</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f3f4f6;">
+        <td style="padding:10px 12px;"><span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600;">scoring_transition</span></td>
+        <td style="padding:10px 12px;color:#374151;">deriveProfile() runs. If any free-text answers exist → POST /api/onboarding/score-freetext → adjusts raw scores. Profile written to DB.</td>
+        <td style="padding:10px 12px;color:#6b7280;">0–1 (conditional)</td>
+        <td style="padding:10px 12px;color:#6b7280;">profiles.psychological_profile (JSONB), profile_traits (3 key traits)</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f3f4f6;">
+        <td style="padding:10px 12px;"><span style="background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600;">peter_session</span></td>
+        <td style="padding:10px 12px;color:#374151;">Live 2–5 exchange conversation. Peter opens based on attachmentStyle. Peter determines when to close.</td>
+        <td style="padding:10px 12px;color:#6b7280;">2–5 × POST /api/peter/onboarding</td>
+        <td style="padding:10px 12px;color:#6b7280;">—</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f3f4f6;">
+        <td style="padding:10px 12px;"><span style="background:#fce7f3;color:#9d174d;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600;">journey_rec</span></td>
+        <td style="padding:10px 12px;color:#374151;">Peter's closing sentence + recommended journey card + 2–3 alternatives. User taps one.</td>
+        <td style="padding:10px 12px;color:#6b7280;">None (profile already computed)</td>
+        <td style="padding:10px 12px;color:#6b7280;">—</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f3f4f6;">
+        <td style="padding:10px 12px;"><span style="background:#ffedd5;color:#9a3412;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600;">journey_detail</span></td>
+        <td style="padding:10px 12px;color:#374151;">"Here's what you'll be doing" summary. User confirms → journey starts, profile marked isonboarded=true → /dashboard.</td>
+        <td style="padding:10px 12px;color:#6b7280;">POST /api/journeys/start</td>
+        <td style="padding:10px 12px;color:#6b7280;">user_journeys, profiles.isonboarded</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <p class="label">File Structure</p>
+  <div style="font-family:monospace;font-size:13px;line-height:1.8;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:20px 24px;">
+    <span style="color:#6b7280">src/pages/</span><br>
+    &nbsp;&nbsp;<span style="color:#2563eb">onboarding-flow.tsx</span> <span style="color:#9ca3af">← replaced entirely</span><br><br>
+    <span style="color:#6b7280">src/components/onboarding/</span><br>
+    &nbsp;&nbsp;<span style="color:#059669">ConsentGate.tsx</span> <span style="color:#9ca3af">← extracted from old flow</span><br>
+    &nbsp;&nbsp;<span style="color:#059669">QuestionFlow.tsx</span> <span style="color:#9ca3af">← 14 questions, scoring engine</span><br>
+    &nbsp;&nbsp;<span style="color:#059669">ScoringTransition.tsx</span> <span style="color:#9ca3af">← loading state + profile write</span><br>
+    &nbsp;&nbsp;<span style="color:#059669">PeterSession.tsx</span> <span style="color:#9ca3af">← live chat UI</span><br>
+    &nbsp;&nbsp;<span style="color:#059669">JourneyRecommendation.tsx</span> <span style="color:#9ca3af">← primary + alternatives</span><br>
+    &nbsp;&nbsp;<span style="color:#059669">JourneyDetail.tsx</span> <span style="color:#9ca3af">← confirm + start</span><br><br>
+    <span style="color:#6b7280">src/lib/onboarding/</span><br>
+    &nbsp;&nbsp;<span style="color:#059669">questions.ts</span> <span style="color:#9ca3af">← question definitions + scoring maps</span><br>
+    &nbsp;&nbsp;<span style="color:#059669">deriveProfile.ts</span> <span style="color:#9ca3af">← scoring → profile object</span><br>
+    &nbsp;&nbsp;<span style="color:#059669">journeyMatcher.ts</span> <span style="color:#9ca3af">← profile → journey recommendation</span><br><br>
+    <span style="color:#6b7280">src/pages/api/</span><br>
+    &nbsp;&nbsp;<span style="color:#059669">peter/onboarding.ts</span> <span style="color:#9ca3af">← new: Phase 2 Peter session</span><br>
+    &nbsp;&nbsp;<span style="color:#059669">onboarding/score-freetext.ts</span> <span style="color:#9ca3af">← new: free-text score adjustment</span><br>
+  </div>
+</div>
