@@ -78,7 +78,7 @@ export default function GoConnect() {
 
         {/* Override / Return */}
         <button
-          onClick={() => router.push('/dashboard')}
+          onClick={() => router.push('/connect')}
           className="text-zinc-600 text-sm hover:text-white transition-colors underline underline-offset-4"
         >
           I&apos;ve completed my mission
