@@ -374,3 +374,46 @@
 - The UI contract must define design tokens, type hierarchy, spacing rules, color allocation, copywriting rules, and registry safety expectations in a way the current codebase can implement.
 - The contract must explicitly avoid broad new feature scope and must not require a routing rewrite or product architecture change.
 - The contract must be actionable enough to drive a later implementation phase without guessing at the intended aesthetic.
+
+## Milestone: Sparq IA Contract And Home Simplification
+
+### IA-CONTRACT-01 — Define Final Destination Ownership
+- Sparq must define one explicit primary navigation structure grounded in the recovered implementation baseline.
+- The contract must assign clear jobs to `Home`, `Journeys`, `Connect`, `Journal`, and secondary access.
+- The contract must resolve ambiguous ownership between private reflection, structured progression, shared connection tools, and account surfaces.
+
+### IA-CONTRACT-02 — Define Exact Home Scope
+- The contract must define exactly what stays on Home and exactly what leaves Home.
+- Home must become the single-next-step launcher rather than a multi-purpose dashboard feed.
+- The contract must preserve `Daily Spark` on Home and keep `Favorite Us` on `daily-growth`.
+
+### IA-CONTRACT-03 — Preserve The Proven Daily Path
+- The contract must preserve the supported `/dashboard -> /daily-growth` launch path.
+- `Daily` must remain a flow launched from Home rather than a primary navigation destination.
+- The contract must not weaken the proven solo-first, signup-driven path or reopen onboarding and daily-loop logic.
+
+### IA-CONTRACT-04 — Produce Safe Rollout Guardrails
+- The IA contract must define a phased implementation order, key risks, and explicit guardrails for the first structural IA wave.
+- The contract must separate IA work from visual redesign, playful expansion, and unrelated feature work.
+- The contract must be grounded in full planning history, not just the later editorial phases.
+
+## Milestone: Implement IA Wave 1: Home Simplification and Navigation Restructure
+
+### IA-WAVE1-01 — Simplify Home To The Core Launcher
+- Home must be reduced to the agreed Wave 1 structure:
+  - Peter greeting
+  - one Today card
+  - `Daily Spark`
+  - one quiet destination strip
+- Home must stop owning progress, mirror/history, partner synthesis, and other non-launch modules.
+- The Home Today card must remain the single strongest call to action above the fold.
+
+### IA-WAVE1-02 — Establish Destination Ownership
+- The app must add or activate the new owned destinations needed for the IA contract, especially `Connect` and `Journal`.
+- Reflective and personal-history surfaces must move toward `Journal`, and shared or partner-aware tools must move under `Connect`.
+- `profile` must become secondary access for account, settings, trust, billing, and related controls only.
+
+### IA-WAVE1-03 — Switch Primary Navigation Without Breaking The Core Path
+- The primary navigation must become `Home`, `Journeys`, `Connect`, and `Journal`.
+- `/daily-growth` must remain Home-owned in navigation and behavior, not a standalone tab.
+- Navigation and ownership changes must preserve the proven daily loop, the current playful placements, and existing primary-path instrumentation.

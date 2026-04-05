@@ -21,6 +21,8 @@
 | 15 | Playful Layer Live Verification And Rollout Guardrails | Verify the deployed playful MVP slice in live production, confirm fail-soft behavior and analytics visibility, and define controlled exposure guardrails without weakening the proven primary path. | `PLAYFUL-LIVE-01`, `PLAYFUL-LIVE-02`, `PLAYFUL-LIVE-03`, `PLAYFUL-LIVE-04`, `PLAYFUL-LIVE-05` |
 | 16 | Playful Layer Controlled Beta Exposure And Signal Review | Expose the playful MVP only to the controlled-beta cohort, review real usage and feedback beside the core funnel, and decide whether to keep, tune, reduce, or expand later. | `PLAYFUL-COHORT-01`, `PLAYFUL-COHORT-02`, `PLAYFUL-COHORT-03`, `PLAYFUL-COHORT-04` |
 | 17 | Editorial Relationship Life UI Refresh | Define the visual and interaction contract for reshaping safe core surfaces into a more editorial, premium, relationship-life experience without disturbing the proven signup-driven path. | `UI-EDITORIAL-01`, `UI-EDITORIAL-02`, `UI-EDITORIAL-03` |
+| 18 | Sparq IA Contract And Home Simplification | Define the destination-based information architecture and exact Home simplification contract from the recovered baseline without changing the proven daily path. | `IA-CONTRACT-01`, `IA-CONTRACT-02`, `IA-CONTRACT-03`, `IA-CONTRACT-04` |
+| 19 | 1/3 | In Progress|  |
 
 ## Phase 1 Notes
 - Source of truth: `SPARQ_MASTER_SPEC.md`
@@ -533,3 +535,72 @@
   - the next UI phase now has a concrete editorial design contract instead of only a mood reference
   - dashboard and daily-growth should now be treated from the recovered `origin/main` baseline rather than the broken local-`main` merge state
   - `Daily Spark` and `Favorite Us` are part of the recovered safe-surface baseline for future UI planning
+
+## Phase 18 Notes
+- Source of truth: `SPARQ_MASTER_SPEC.md`
+- Implementation baseline:
+  - recovered `origin/main` branch
+  - current supported beta path in `IMPLEMENTATION_STATUS.md`
+- Product and UX references:
+  - `.planning/phases/11-relationship-life-expansion-strategy/11-PRODUCT-STRATEGY.md`
+  - `.planning/phases/12-playful-connection-mvp-definition/12-PRODUCT-DEFINITION.md`
+  - `.planning/phases/13-playful-connection-mvp-spec/13-MVP-SPEC.md`
+  - `.planning/phases/16-playful-layer-controlled-beta-exposure-and-signal-review/16-03-SUMMARY.md`
+  - `.planning/phases/17-editorial-relationship-life-ui-refresh/17-CONTEXT.md`
+  - `.planning/phases/17-editorial-relationship-life-ui-refresh/17-UI-SPEC.md`
+- Explicitly in scope:
+  - final primary tab structure
+  - destination job definition
+  - exact Home contents and removals
+  - exact module ownership by destination
+  - phased implementation order and guardrails
+- Explicitly out of scope:
+  - visual redesign execution
+  - onboarding flow changes
+  - daily-growth step logic changes
+  - new playful feature expansion
+  - new backend endpoints
+
+## Phase 18 Status
+- Status: complete
+- Plans:
+  - [x] 18-01-PLAN.md -- Navigation and destination contract
+  - [x] 18-02-PLAN.md -- Home simplification and module ownership contract
+  - [x] 18-03-PLAN.md -- IA rollout order, risks, and verification contract
+- Verification:
+  - contract references recovered `dashboard`, `daily-growth`, `journeys`, `bottom-nav`, and current secondary destinations
+  - contract preserves the proven `/dashboard -> /daily-growth` launch path
+  - contract keeps `Daily Spark` on Home and `Favorite Us` on `daily-growth`
+  - contract moves profile/settings/account to secondary access instead of primary tab ownership
+- Deliverables:
+  - `18-CONTEXT.md`
+  - `18-IA-CONTRACT.md`
+  - `18-01-SUMMARY.md`
+  - `18-02-SUMMARY.md`
+  - `18-03-SUMMARY.md`
+- Result:
+  - Sparq now has a destination-based IA contract grounded in the recovered baseline
+  - Home simplification is defined before visual redesign work
+  - later implementation can move modules with explicit ownership and guardrails instead of guesswork
+
+### Phase 19: Implement IA Wave 1: Home Simplification and Navigation Restructure
+
+**Goal:** Make Home a single-next-step launcher and switch primary navigation to destination ownership without regressing the proven `/dashboard -> /daily-growth` path or the locked playful placements.
+**Requirements**: `IA-WAVE1-01`, `IA-WAVE1-02`, `IA-WAVE1-03`
+**Depends on:** Phase 18
+**Plans:** 1/3 plans executed
+
+Plans:
+- [x] 19-01-PLAN.md -- Create `/connect` and `/journal` plus the shared reflective hook and Connect leaf return paths
+- [ ] 19-02-PLAN.md -- Restructure primary nav and simplify Home into Today card plus quiet destination strip
+- [ ] 19-03-PLAN.md -- Reduce `/profile` to secondary access and update focused Playwright IA coverage
+
+Verification:
+- `npm run lint -- --file src/hooks/useProfileTraits.ts --file src/pages/journal.tsx --file src/pages/connect.tsx --file src/pages/go-connect.tsx --file src/pages/translator.tsx`
+- `npx playwright test e2e/tests/19-connect-journal-ia.spec.ts -g "Connect landing|Journal ownership|Connect leaf return routes" --project=chromium`
+- `npx playwright test e2e/tests/19-connect-journal-ia.spec.ts --project=chromium` (later-wave nav ownership assertions still pending Plan 19-02 and 19-03)
+
+Result:
+- `/journal` now owns the reflective Wave 1 surfaces outside secondary account access
+- `/connect` now owns the curated landing path into Messages, Go Connect, Translator, and Join Partner
+- nav ownership and secondary-page nav hiding remain the next execution step
