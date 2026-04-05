@@ -1,12 +1,12 @@
-import { Home, BookOpen, MessageCircle, User2 } from "lucide-react";
+import { Home, BarChart2, BookOpen, Trophy } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 const navItems = [
   { icon: Home, label: "Home", path: "/dashboard" },
-  { icon: BookOpen, label: "Journeys", path: "/journeys" },
-  { icon: MessageCircle, label: "Daily", path: "/daily-growth" },
-  { icon: User2, label: "Profile", path: "/profile" },
+  { icon: BarChart2, label: "Insights", path: "/insights" },
+  { icon: BookOpen, label: "Library", path: "/journeys" },
+  { icon: Trophy, label: "Challenges", path: "/couples" },
 ];
 
 export function BottomNav() {
@@ -21,8 +21,8 @@ export function BottomNav() {
     <nav
       className="fixed bottom-0 left-0 right-0 backdrop-blur-xl py-3 px-6 flex justify-between items-center z-50 pb-[calc(0.75rem+env(safe-area-inset-bottom))]"
       style={{
-        background: 'rgba(255,255,255,0.92)',
-        borderTop: '1px solid rgba(139,92,246,0.15)',
+        background: 'rgba(255,255,255,0.95)',
+        borderTop: '1px solid rgba(139,92,246,0.12)',
         boxShadow: '0 -4px 20px rgba(139,92,246,0.06)',
       }}
     >
