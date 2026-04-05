@@ -19,7 +19,6 @@ import { DayProgressArc } from '@/components/daily/DayProgressArc';
 import { TodaysExerciseCard } from '@/components/daily/TodaysExerciseCard';
 import { PreviousReflectionCard } from '@/components/daily/PreviousReflectionCard';
 import { EveningCheckin } from '@/components/daily/EveningCheckin';
-import { MorningBrief } from '@/components/daily/MorningBrief';
 import { JourneyCompletion } from '@/components/daily/JourneyCompletion';
 import { BetaFeedbackDialog } from '@/components/beta/BetaFeedbackDialog';
 import { reportPrimaryPathClientError, trackPrimaryPathClientEvent } from '@/lib/beta/primaryPath';
@@ -348,48 +347,6 @@ export default function DailyGrowth() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, authLoading]);
 
-  // Called when user completes the Brief + sets their trigger moment.
-  // Saves trigger, marks morning viewed, then sends user back to dashboard.
-  const handleBriefReady = async (trigger: string) => {
-    setTriggerMoment(trigger);
-
-    if (sessionId) {
-      try {
-        const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
-        await fetch('/api/daily/session/morning-viewed', {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({ session_id: sessionId, trigger_moment: trigger }),
-        });
-      } catch {
-        // Non-blocking — user goes to dashboard regardless
-      }
-    } else {
-      // Legacy fallback
-      if (user) {
-        await supabase.from('daily_entries').upsert(
-          {
-            user_id: user.id,
-            day: currentDay,
-            morning_story: morningStory,
-            morning_action: morningAction,
-            morning_viewed_at: new Date().toISOString(),
-          },
-          { onConflict: 'user_id,day' }
-        );
-      }
-    }
-
-    void trackPrimaryPathClientEvent('beta_primary_daily_growth_started', {
-      current_day: currentDay,
-      journey_id: journeyId,
-      trigger_set: true,
-    });
-
-    // Send user into the world — practice happens in real life
-    router.push('/dashboard');
-  };
-
   const handleMorningRead = async () => {
     if (!user) return;
 
@@ -414,6 +371,11 @@ export default function DailyGrowth() {
               content: `Hey, welcome back. 🌙 ${eveningReflectionPrompt}`,
             }]);
           }
+          void trackPrimaryPathClientEvent('beta_primary_daily_growth_started', {
+            current_day: currentDay,
+            journey_id: journeyId,
+            trigger_set: false,
+          });
           setPhase('evening');
           return;
         }
@@ -432,6 +394,11 @@ export default function DailyGrowth() {
       },
       { onConflict: 'user_id,day' }
     );
+    void trackPrimaryPathClientEvent('beta_primary_daily_growth_started', {
+      current_day: currentDay,
+      journey_id: journeyId,
+      trigger_set: false,
+    });
     setPhase('evening');
   };
 
@@ -628,21 +595,183 @@ export default function DailyGrowth() {
   const DEFAULT_REFLECTION =
     'I noticed I jumped to fix things instead of just listening. Next time I want to try staying with them first.';
 
-  if (phase === 'morning') {
-    const briefFallback = currentDay === 1
-      ? "You're here. That's the most important thing you'll do today."
-      : journeyTitle
-        ? `${journeyTitle} is working on you. Here's your next step.`
-        : "Small things, done consistently, change everything. Here's today's step.";
+  if (showHome && phase === 'morning') {
+    const homeHeadline = journeyTitle
+      ? `Your Day ${currentDay} practice is ready.`
+      : 'Your morning practice is ready.';
+    const homePeterLine = peterBrief
+      || (currentDay === 1
+        ? "You're here. That's the most important thing you'll do today."
+        : journeyTitle
+          ? `${journeyTitle} is working on you. Here's your next step.`
+          : "Small things, done consistently, change everything. Here's today's step.");
 
     return (
-      <MorningBrief
-        morningAction={morningAction || 'Take one small step to show up better in your relationship today.'}
-        peterBrief={peterBrief || briefFallback}
-        journeyTitle={journeyTitle}
-        currentDay={currentDay}
-        onReady={handleBriefReady}
-      />
+      <div className="min-h-screen bg-brand-linen pb-28 font-sans">
+        <div className="flex items-center justify-between px-5 pt-6 pb-2">
+          <span className="text-lg font-bold tracking-tight text-brand-espresso">SPARQ</span>
+          <button
+            onClick={() => router.push('/settings')}
+            aria-label="Settings"
+            className="p-1.5 rounded-xl text-brand-primary hover:bg-brand-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/20 focus-visible:ring-offset-2"
+          >
+            <Settings size={20} />
+          </button>
+        </div>
+
+        <div className="max-w-lg mx-auto px-4 pt-6 space-y-5">
+          <motion.div
+            className="flex justify-center pt-2 pb-1"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <DayProgressArc currentDay={currentDay} totalDays={journeyDuration ?? 14} />
+          </motion.div>
+
+          <TodaysExerciseCard
+            durationMin={5}
+            question={homeHeadline}
+            sessionLabel={journeyTitle ? `${journeyTitle} — Day ${currentDay}` : 'Morning practice'}
+            buttonLabel="Start Morning Story"
+            onBegin={() => setShowHome(false)}
+          />
+
+          <div className="bg-brand-parchment rounded-2xl border border-brand-primary/10 shadow-sm p-5">
+            <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
+              Solo-first reminder
+            </p>
+            <p className="text-sm text-[#5B4A86] leading-relaxed">
+              {practiceCopy.home}
+            </p>
+          </div>
+
+          {favoriteUsPrompt && playfulDateKey && (
+            <FavoriteUsCard
+              prompt={favoriteUsPrompt}
+              dateKey={playfulDateKey}
+              surface="daily_growth"
+            />
+          )}
+
+          {(prevReflection || currentDay > 1) && (
+            <PreviousReflectionCard
+              quote={prevReflection || DEFAULT_REFLECTION}
+              onViewJournal={() => router.push('/profile')}
+            />
+          )}
+
+          <motion.div
+            className="flex flex-col items-center gap-3 pt-4 pb-2"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
+          >
+            <PeterAvatar mood="afternoon" size={64} />
+            <p className="font-serif italic text-brand-text-secondary text-[15px] text-center leading-relaxed max-w-xs">
+              {homePeterLine}
+            </p>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
+  if (phase === 'morning') {
+    return (
+      <div className="min-h-screen bg-brand-linen flex flex-col font-sans">
+        <div className="flex items-center justify-between px-5 pt-5 pb-3">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowHome(true)}
+              aria-label="Back"
+              className="p-1.5 rounded-xl text-brand-primary hover:bg-brand-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/20"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <span className="text-xs font-semibold tracking-widest uppercase text-brand-primary">
+              Day {currentDay} &middot; Morning
+            </span>
+          </div>
+        </div>
+
+        <DailyTimeline phase="morning" actionVerified={actionVerified} />
+
+        <motion.div
+          key="morning"
+          initial={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+          animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+          transition={{ type: 'spring', bounce: 0, duration: 0.6 }}
+          className="flex-1 overflow-y-auto pb-24"
+        >
+          <div className="max-w-lg mx-auto px-4 py-6 space-y-5">
+            <div className="flex flex-col items-center gap-4">
+              <PeterAvatar mood="morning" size={56} />
+              <div className="w-full bg-brand-parchment rounded-3xl p-5 border border-brand-primary/10 shadow-sm">
+                {isGenerating ? (
+                  <div className="flex gap-2 items-center h-6">
+                    {[0, 1, 2].map(i => (
+                      <motion.div
+                        key={i}
+                        className="w-2 h-2 rounded-full bg-brand-primary/40"
+                        animate={{ opacity: [0.3, 1, 0.3] }}
+                        transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.2 }}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <p
+                    className="font-serif italic leading-relaxed text-brand-espresso text-[15px]"
+                    style={{ whiteSpace: 'pre-wrap' }}
+                  >
+                    {morningStory}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {!isGenerating && morningAction && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ type: 'spring', bounce: 0, duration: 0.6, delay: 0.15 }}
+                className="bg-brand-parchment rounded-3xl p-5 border border-brand-primary/10 shadow-sm"
+              >
+                <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
+                  Today&apos;s Practice
+                </p>
+                <p className="text-brand-espresso font-medium leading-relaxed text-[15px]">
+                  {morningAction}
+                </p>
+              </motion.div>
+            )}
+
+            <div className="bg-brand-parchment rounded-2xl border border-brand-primary/10 shadow-sm p-5">
+              <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
+                Solo-first reminder
+              </p>
+              <p className="text-sm text-[#5B4A86] leading-relaxed">
+                {practiceCopy.home}
+              </p>
+            </div>
+
+            {!isGenerating && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
+                <button
+                  onClick={handleMorningRead}
+                  className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors text-base"
+                >
+                  I&apos;ll do this today
+                </button>
+              </motion.div>
+            )}
+          </div>
+        </motion.div>
+      </div>
     );
   }
 

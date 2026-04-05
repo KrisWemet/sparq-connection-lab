@@ -524,5 +524,12 @@
   - `17-UI-SPEC`
 - Verification:
   - visual contract reviewed against current Tailwind, shadcn, Radix, and existing brand-token constraints
+  - recovery branch re-verified the current implementation baseline with:
+    - `npm run lint`
+    - `npx tsc --noEmit`
+    - `PLAYWRIGHT_PORT=3108 npx playwright test e2e/tests/02-onboarding.spec.ts e2e/tests/03-daily-growth.spec.ts e2e/tests/05-dashboard.spec.ts e2e/tests/14-playful-connection.spec.ts --project=chromium`
+    - `PLAYWRIGHT_PORT=3109 npx playwright test e2e/tests/10-onboarding-determinism.spec.ts e2e/tests/13-onboarding-activation-fail-closed.spec.ts --project=chromium`
 - Result:
   - the next UI phase now has a concrete editorial design contract instead of only a mood reference
+  - dashboard and daily-growth should now be treated from the recovered `origin/main` baseline rather than the broken local-`main` merge state
+  - `Daily Spark` and `Favorite Us` are part of the recovered safe-surface baseline for future UI planning

@@ -8,6 +8,10 @@
 ## Current Inputs
 - Source of truth: `SPARQ_MASTER_SPEC.md`
 - Implementation snapshot: `IMPLEMENTATION_STATUS.md`
+- Recovered implementation baseline:
+  - `origin/main` dashboard and daily-growth are the working source of truth for current core flows
+  - `Daily Spark` and `Favorite Us` are wired on the recovered branch and locally re-verified
+  - the broken local-`main` dashboard merge is not part of the implementation baseline
 - Codebase map:
   - `.planning/codebase/STACK.md`
   - `.planning/codebase/INTEGRATIONS.md`
@@ -36,4 +40,5 @@
 - use `17-UI-SPEC.md` to plan a narrow visual refresh for safe existing surfaces
 - keep the proven signup-driven path, onboarding logic, and Day 1 core loop untouched
 - treat the playful layer as additive styling, not a new navigation or product branch
+- treat the recovered `origin/main` dashboard and daily-growth flows as the implementation baseline for future UI work
 - only move into implementation once the safe-surface scope and token contract are accepted

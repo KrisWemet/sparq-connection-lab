@@ -119,7 +119,7 @@ function Prop({ mood }: { mood: PeterMood }) {
         {/* Journal cover */}
         <rect x="0" y="0" width="36" height="26" rx="3" fill="#8B5CF6" />
         {/* Spine */}
-        <rect x="15" y="0" width="6" height="26" rx="1" fill="#A3513D" />
+        <rect x="15" y="0" width="6" height="26" rx="1" fill="#7C3AED" />
         {/* Pages left */}
         <rect x="2" y="3" width="12" height="20" rx="1" fill="#F5F3FF" />
         {/* Page lines */}
@@ -143,10 +143,10 @@ function Prop({ mood }: { mood: PeterMood }) {
         {/* Mug body */}
         <rect x="0" y="0" width="24" height="20" rx="4" fill="#D4795F" />
         {/* Handle */}
-        <path d="M 24 5 Q 32 5 32 10 Q 32 15 24 15" stroke="#A3513D"
+        <path d="M 24 5 Q 32 5 32 10 Q 32 15 24 15" stroke="#7C3AED"
           strokeWidth="3" fill="none" strokeLinecap="round" />
         {/* Liquid */}
-        <rect x="2" y="2" width="20" height="6" rx="2" fill="#E8A857" opacity="0.8" />
+        <rect x="2" y="2" width="20" height="6" rx="2" fill="#F9C74F" opacity="0.8" />
         {/* Steam */}
         <path d="M 8 -4 Q 10 -8, 8 -12" stroke="#8B5CF6" strokeWidth="1.5"
           fill="none" strokeLinecap="round" opacity="0.5" />
@@ -160,16 +160,16 @@ function Prop({ mood }: { mood: PeterMood }) {
     // Confetti bursts
     return (
       <>
-        <circle cx="18" cy="22" r="3" fill="#E8A857" opacity="0.8" />
-        <circle cx="82" cy="18" r="2.5" fill="#8FAF8A" opacity="0.8" />
+        <circle cx="18" cy="22" r="3" fill="#F9C74F" opacity="0.8" />
+        <circle cx="82" cy="18" r="2.5" fill="#93C5FD" opacity="0.8" />
         <circle cx="88" cy="50" r="2" fill="#8B5CF6" opacity="0.7" />
-        <circle cx="12" cy="55" r="2.5" fill="#D4795F" opacity="0.7" />
+        <circle cx="12" cy="55" r="2.5" fill="#A78BFA" opacity="0.7" />
         <rect x="15" y="70" width="6" height="6" rx="1"
-          fill="#E8A857" opacity="0.7" transform="rotate(30, 18, 73)" />
+          fill="#F9C74F" opacity="0.7" transform="rotate(30, 18, 73)" />
         <rect x="78" y="72" width="5" height="5" rx="1"
-          fill="#8FAF8A" opacity="0.7" transform="rotate(-20, 80, 74)" />
+          fill="#93C5FD" opacity="0.7" transform="rotate(-20, 80, 74)" />
         {/* Star bursts */}
-        <text x="10" y="35" fontSize="10" fill="#E8A857" opacity="0.8">✦</text>
+        <text x="10" y="35" fontSize="10" fill="#F9C74F" opacity="0.8">✦</text>
         <text x="80" y="30" fontSize="8" fill="#8B5CF6" opacity="0.7">✦</text>
       </>
     );
