@@ -21,6 +21,7 @@
 | 15 | Playful Layer Live Verification And Rollout Guardrails | Verify the deployed playful MVP slice in live production, confirm fail-soft behavior and analytics visibility, and define controlled exposure guardrails without weakening the proven primary path. | `PLAYFUL-LIVE-01`, `PLAYFUL-LIVE-02`, `PLAYFUL-LIVE-03`, `PLAYFUL-LIVE-04`, `PLAYFUL-LIVE-05` |
 | 16 | Playful Layer Controlled Beta Exposure And Signal Review | Expose the playful MVP only to the controlled-beta cohort, review real usage and feedback beside the core funnel, and decide whether to keep, tune, reduce, or expand later. | `PLAYFUL-COHORT-01`, `PLAYFUL-COHORT-02`, `PLAYFUL-COHORT-03`, `PLAYFUL-COHORT-04` |
 | 17 | Editorial Relationship Life UI Refresh | Define the visual and interaction contract for reshaping safe core surfaces into a more editorial, premium, relationship-life experience without disturbing the proven signup-driven path. | `UI-EDITORIAL-01`, `UI-EDITORIAL-02`, `UI-EDITORIAL-03` |
+| 18 | Dashboard Rebuild | Resolve the dashboard merge conflict (take upstream), then build the stashed dashboard components properly: IdentityArcCard, PracticeMapCard, WeeklyMirrorCard, JourneyArc, PartnerSynthesisCard, HeartbeatButton. | `DASH-REBUILD-01`, `DASH-REBUILD-02`, `DASH-REBUILD-03` |
 
 ## Phase 1 Notes
 - Source of truth: `SPARQ_MASTER_SPEC.md`
@@ -518,11 +519,25 @@
   - new features or new navigation sections
 
 ## Phase 17 Status
-- Status: defined
-- Deliverables created:
-  - `17-CONTEXT`
-  - `17-UI-SPEC`
+- Status: planned
+- **Plans:** 3 plans
+- Plans:
+  - [ ] 17-01-PLAN.md -- Design token contract: resolve Dashboard.tsx merge conflict, correct UI-SPEC.md color table to live lavender palette, document CSS variable divergence
+  - [ ] 17-02-PLAN.md -- Typography and editorial hierarchy: seven-role type hierarchy, per-surface type usage map, editorial card template, copywriting contract
+  - [ ] 17-03-PLAN.md -- Surface-by-surface component contract: per-component class specs for all safe surfaces, FavoriteUsCard wiring, bottom nav treatment, human review
 - Verification:
+  - `npx tsc --noEmit` (confirms merge conflict resolved)
+  - `npm run lint`
   - visual contract reviewed against current Tailwind, shadcn, Radix, and existing brand-token constraints
-- Result:
-  - the next UI phase now has a concrete editorial design contract instead of only a mood reference
+  - human review of complete 17-UI-SPEC.md
+
+## Phase 18 Notes
+- Depends on: Phase 17
+- Explicitly in scope:
+  - resolve the dashboard.tsx merge conflict by taking the upstream version
+  - build IdentityArcCard, PracticeMapCard, WeeklyMirrorCard, JourneyArc, PartnerSynthesisCard, HeartbeatButton
+  - add all missing variables (partnerHeadline, partnerSupportText, userInitials, partnerInitials) and imports
+- Explicitly out of scope:
+  - redesigning the daily-growth or onboarding flows
+  - new backend endpoints
+  - changing the proven primary path
