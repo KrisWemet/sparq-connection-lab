@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../lib/auth-context';
 import { motion } from 'framer-motion';
 import ProtectedRoute from '../components/ProtectedRoute';
 import { ChevronLeft, Pencil, Flame, BookOpen } from 'lucide-react';
-import { supabase } from '../lib/supabase';
 import { TraitCard } from '@/components/profile/TraitCard';
 import { PeterLoading } from '@/components/PeterLoading';
+import { useProfileTraits } from '@/hooks/useProfileTraits';
 
 export default function ProfilePage() {
   const { user, profile, updateProfile, loading, logout } = useAuth();
@@ -28,26 +28,7 @@ export default function ProfilePage() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-  const [traits, setTraits] = useState<any[]>([]);
-  const [accessToken, setAccessToken] = useState('');
-
-  const fetchTraits = useCallback(async () => {
-    if (!user) return;
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) return;
-      setAccessToken(session.access_token);
-      const res = await fetch('/api/profile/traits', {
-        headers: { Authorization: `Bearer ${session.access_token}` },
-      });
-      if (res.ok) {
-        const json = await res.json();
-        setTraits(json.traits || []);
-      }
-    } catch {}
-  }, [user]);
-
-  useEffect(() => { fetchTraits(); }, [fetchTraits]);
+  const { traits, accessToken, refreshTraits, archetype, archetypeDescription } = useProfileTraits();
 
   useEffect(() => {
     if (profile) {
@@ -116,8 +97,6 @@ export default function ProfilePage() {
   const streak = (profile as any)?.current_streak || 0;
   const daysCompleted = (profile as any)?.total_sessions || 0;
   const onboardingDay = (profile as any)?.onboarding_day || 1;
-  const archetype = (profile as any)?.archetype || null;
-  const archetypeDescription = (profile as any)?.archetype_description || null;
   const partnerName = (profile as any)?.partner_name || null;
 
   const cardVariants = {
@@ -323,7 +302,7 @@ export default function ProfilePage() {
               <TraitCard
                 traits={traits}
                 accessToken={accessToken}
-                onUpdated={fetchTraits}
+                onUpdated={refreshTraits}
               />
             </motion.div>
           )}
