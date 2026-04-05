@@ -240,8 +240,110 @@ export default function Dashboard() {
           />
         )}
 
+<<<<<<< Updated upstream
         {/* ── ACTIVE CHALLENGE ── */}
         <ActiveChallengeCard streakCount={streakCount} />
+=======
+        {/* ── 3. IDENTITY ARC ── */}
+        <IdentityArcCard />
+
+        {/* ── 4. PRACTICE MAP ── */}
+        <PracticeMapCard totalDays={journeyDuration || 14} />
+
+        {/* ── 5. WEEKLY MIRROR ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+        >
+          <WeeklyMirrorCard />
+        </motion.div>
+
+        {/* ── 6. JOURNEY ARC ── */}
+        <JourneyArc journeyDuration={journeyDuration} />
+
+        {/* ── PARTNER CONNECT ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
+          className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-5"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="relative w-10 h-10 rounded-full bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
+                {partnerId ? (
+                  <Heart size={18} className="text-brand-primary" />
+                ) : (
+                  <Users size={18} className="text-brand-primary" />
+                )}
+                {partnerId && partnerIsOnline && (
+                  <Circle
+                    size={10}
+                    fill="#4ade80"
+                    stroke="#F5F3FF"
+                    strokeWidth={2}
+                    className="absolute -top-0.5 -right-0.5"
+                  />
+                )}
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-brand-espresso">
+                  {partnerHeadline}
+                </p>
+                <p className="text-xs text-brand-text-secondary">
+                  {partnerSupportText}
+                </p>
+              </div>
+            </div>
+
+            {partnerId ? (
+              <div className="flex -space-x-2">
+                <div className="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center ring-2 ring-brand-parchment z-10">
+                  <span className="text-white text-xs font-bold">{userInitials}</span>
+                </div>
+                <div className="w-8 h-8 rounded-full bg-[#C8886A] flex items-center justify-center ring-2 ring-brand-parchment">
+                  <span className="text-white text-xs font-bold">{partnerInitials}</span>
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  analyticsService.trackEvent('partner_invite_prompt_opened', {
+                    source: 'dashboard_card',
+                    relationship_mode: 'solo',
+                  });
+                  router.push("/join-partner");
+                }}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-2xl border border-brand-primary text-brand-primary text-xs font-semibold hover:bg-brand-primary hover:text-white transition-colors"
+              >
+                <Plus size={12} />
+                Invite later
+              </button>
+            )}
+          </div>
+
+          <div className="mt-4 space-y-3">
+            <PartnerSynthesisCard hasPartner={Boolean(partnerId)} />
+            {partnerId ? (
+              <HeartbeatButton />
+            ) : (
+              <button
+                onClick={() => {
+                  analyticsService.trackEvent('partner_invite_prompt_opened', {
+                    source: 'dashboard_cta',
+                    relationship_mode: 'solo',
+                  });
+                  router.push('/join-partner');
+                }}
+                className="w-full bg-white text-brand-primary font-semibold rounded-3xl py-4 px-4 border border-brand-primary/20 hover:bg-brand-primary/5 transition-colors text-sm"
+              >
+                Invite your partner when shared prompts would help
+              </button>
+            )}
+          </div>
+        </motion.div>
+>>>>>>> Stashed changes
 
         {/* ── SHARED ACHIEVEMENTS ── */}
         <SharedAchievements />

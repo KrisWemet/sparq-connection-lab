@@ -64,17 +64,17 @@ export function JourneyMapCard({ currentDay, totalDays = 14, streakCount = 0 }: 
           <path 
             d="M 10,50 Q 30,80 50,50 T 90,50" 
             fill="none" 
-            stroke="#FAF6F1" 
-            strokeWidth="4" 
-            strokeLinecap="round" 
+            stroke="#EDE9FE"
+            strokeWidth="4"
+            strokeLinecap="round"
             className="drop-shadow-sm"
           />
-          
+
           {/* Active path (past) */}
-          <path 
-            d="M 10,50 Q 30,80 50,50 T 90,50" 
-            fill="none" 
-            stroke="#8FAF8A" 
+          <path
+            d="M 10,50 Q 30,80 50,50 T 90,50"
+            fill="none"
+            stroke="#93C5FD"
             strokeWidth="4" 
             strokeLinecap="round" 
             strokeDasharray="100"
@@ -87,13 +87,13 @@ export function JourneyMapCard({ currentDay, totalDays = 14, streakCount = 0 }: 
             <g key={i} transform={`translate(${wp.x}, ${wp.y})`}>
               <circle 
                 r={wp.isCurrent ? "6" : "4"} 
-                fill={wp.isCurrent ? "#E8A857" : wp.isPast ? "#8FAF8A" : "#FAF6F1"} 
+                fill={wp.isCurrent ? "#F9C74F" : wp.isPast ? "#93C5FD" : "#EDE9FE"}
                 stroke={wp.isCurrent ? "#FFFFFF" : "none"}
                 strokeWidth="2"
                 className={`transition-all duration-500 ${wp.isCurrent ? 'animate-pulse shadow-lg' : ''}`}
               />
               {wp.isCurrent && (
-                <circle r="12" fill="#E8A857" opacity="0.2" className="animate-ping" />
+                <circle r="12" fill="#F9C74F" opacity="0.2" className="animate-ping" />
               )}
             </g>
           ))}
