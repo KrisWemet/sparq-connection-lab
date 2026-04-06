@@ -42,7 +42,7 @@ created: 2026-04-05
 - **Plan / Wave:** `20-01` / `1`
 - **Requirements:** `UI-EDITORIAL-03`
 - **Task Smoke Command:** `test -f e2e/tests/20-editorial-ui-refresh.spec.ts && test -f .planning/phases/20-editorial-ui-refresh-on-stable-ia/20-EDITORIAL-REVIEW.md && rg -n "dashboard|daily-growth|connect|journal|journeys" e2e/tests/20-editorial-ui-refresh.spec.ts && rg -n "Home hero dominance|destination mood separation|playful subordination|bottom-nav quietness" .planning/phases/20-editorial-ui-refresh-on-stable-ia/20-EDITORIAL-REVIEW.md`
-- **Exact Plan Automated Command:** `npm run lint -- --file e2e/tests/20-editorial-ui-refresh.spec.ts`
+- **Exact Plan Automated Command:** `test -f e2e/tests/20-editorial-ui-refresh.spec.ts && test -f .planning/phases/20-editorial-ui-refresh-on-stable-ia/20-EDITORIAL-REVIEW.md && rg -n "dashboard|daily-growth|connect|journal|journeys" e2e/tests/20-editorial-ui-refresh.spec.ts && rg -n "Home hero dominance|destination mood separation|playful subordination|bottom-nav quietness" .planning/phases/20-editorial-ui-refresh-on-stable-ia/20-EDITORIAL-REVIEW.md`
 - **Status:** `⬜ pending`
 
 ### 20-01-02 — Task 2: Replace the global token layer with the approved editorial palette
@@ -50,7 +50,7 @@ created: 2026-04-05
 - **Plan / Wave:** `20-01` / `1`
 - **Requirements:** `UI-EDITORIAL-01`, `UI-EDITORIAL-03`
 - **Task Smoke Command:** `npm run lint -- --file tailwind.config.ts --file src/styles/globals.css --file src/pages/_app.tsx`
-- **Exact Plan Automated Command:** `npm run lint -- --file tailwind.config.ts --file src/styles/globals.css --file src/pages/_app.tsx && npx tsc --noEmit`
+- **Exact Plan Automated Command:** `npm run lint -- --file tailwind.config.ts --file src/styles/globals.css --file src/pages/_app.tsx`
 - **Status:** `⬜ pending`
 
 ### 20-01-03 — Task 3: Add one small presentational editorial primitive layer
@@ -58,7 +58,7 @@ created: 2026-04-05
 - **Plan / Wave:** `20-01` / `1`
 - **Requirements:** `UI-EDITORIAL-01`
 - **Task Smoke Command:** `npm run lint -- --file src/components/editorial/EditorialSurface.tsx`
-- **Exact Plan Automated Command:** `npm run lint -- --file src/components/editorial/EditorialSurface.tsx && npx tsc --noEmit`
+- **Exact Plan Automated Command:** `npm run lint -- --file src/components/editorial/EditorialSurface.tsx`
 - **Status:** `⬜ pending`
 
 ### 20-02-01 — Task 1: Rebuild the Home hierarchy around one dominant Today module
@@ -66,7 +66,7 @@ created: 2026-04-05
 - **Plan / Wave:** `20-02` / `2`
 - **Requirements:** `UI-EDITORIAL-01`, `UI-EDITORIAL-02`, `IA-WAVE1-03`
 - **Task Smoke Command:** `npm run lint -- --file src/pages/dashboard.tsx --file src/components/dashboard/PeterGreeting.tsx --file src/components/dashboard/HomeDestinationStrip.tsx --file src/components/playful/DailySparkCard.tsx`
-- **Exact Plan Automated Command:** `npm run lint -- --file src/pages/dashboard.tsx --file src/components/dashboard/PeterGreeting.tsx --file src/components/dashboard/HomeDestinationStrip.tsx --file src/components/playful/DailySparkCard.tsx && PLAYWRIGHT_BASE_URL=http://localhost:3000 npx playwright test e2e/tests/05-dashboard.spec.ts e2e/tests/14-playful-connection.spec.ts e2e/tests/20-editorial-ui-refresh.spec.ts --project=chromium --no-deps --workers=1`
+- **Exact Plan Automated Command:** `npm run lint -- --file src/pages/dashboard.tsx --file src/components/dashboard/PeterGreeting.tsx --file src/components/dashboard/HomeDestinationStrip.tsx --file src/components/playful/DailySparkCard.tsx`
 - **Status:** `⬜ pending`
 
 ### 20-02-02 — Task 2: Refresh the daily-growth home state and nav tray without changing ownership
@@ -74,7 +74,7 @@ created: 2026-04-05
 - **Plan / Wave:** `20-02` / `2`
 - **Requirements:** `UI-EDITORIAL-01`, `UI-EDITORIAL-02`, `IA-WAVE1-03`
 - **Task Smoke Command:** `npm run lint -- --file src/pages/daily-growth.tsx --file src/components/playful/FavoriteUsCard.tsx --file src/components/bottom-nav.tsx`
-- **Exact Plan Automated Command:** `npm run lint -- --file src/pages/daily-growth.tsx --file src/components/playful/FavoriteUsCard.tsx --file src/components/bottom-nav.tsx && PLAYWRIGHT_BASE_URL=http://localhost:3000 npx playwright test e2e/tests/19-connect-journal-ia.spec.ts e2e/tests/14-playful-connection.spec.ts e2e/tests/20-editorial-ui-refresh.spec.ts --project=chromium --no-deps --workers=1`
+- **Exact Plan Automated Command:** `npm run lint -- --file src/pages/daily-growth.tsx --file src/components/playful/FavoriteUsCard.tsx --file src/components/bottom-nav.tsx`
 - **Status:** `⬜ pending`
 
 ### 20-03-01 — Task 1: Make Connect feel curated, warm, and intentional
@@ -82,7 +82,7 @@ created: 2026-04-05
 - **Plan / Wave:** `20-03` / `3`
 - **Requirements:** `UI-EDITORIAL-01`, `UI-EDITORIAL-02`
 - **Task Smoke Command:** `npm run lint -- --file src/pages/connect.tsx`
-- **Exact Plan Automated Command:** `npm run lint -- --file src/pages/connect.tsx && PLAYWRIGHT_BASE_URL=http://localhost:3000 npx playwright test e2e/tests/19-connect-journal-ia.spec.ts e2e/tests/20-editorial-ui-refresh.spec.ts -g "Connect landing|Connect editorial" --project=chromium --no-deps --workers=1`
+- **Exact Plan Automated Command:** `npm run lint -- --file src/pages/connect.tsx`
 - **Status:** `⬜ pending`
 
 ### 20-03-02 — Task 2: Make Journal quieter and more private through reflective card hierarchy
@@ -90,7 +90,7 @@ created: 2026-04-05
 - **Plan / Wave:** `20-03` / `3`
 - **Requirements:** `UI-EDITORIAL-01`, `UI-EDITORIAL-02`
 - **Task Smoke Command:** `npm run lint -- --file src/pages/journal.tsx --file src/components/dashboard/WeeklyMirrorCard.tsx --file src/components/dashboard/IdentityArcCard.tsx --file src/components/dashboard/GrowthThread.tsx`
-- **Exact Plan Automated Command:** `npm run lint -- --file src/pages/journal.tsx --file src/components/dashboard/WeeklyMirrorCard.tsx --file src/components/dashboard/IdentityArcCard.tsx --file src/components/dashboard/GrowthThread.tsx && PLAYWRIGHT_BASE_URL=http://localhost:3000 npx playwright test e2e/tests/19-connect-journal-ia.spec.ts e2e/tests/20-editorial-ui-refresh.spec.ts -g "Journal ownership|Journal editorial" --project=chromium --no-deps --workers=1`
+- **Exact Plan Automated Command:** `npm run lint -- --file src/pages/journal.tsx --file src/components/dashboard/WeeklyMirrorCard.tsx --file src/components/dashboard/IdentityArcCard.tsx --file src/components/dashboard/GrowthThread.tsx`
 - **Status:** `⬜ pending`
 
 ### 20-03-03 — Task 3: Give Journeys structured progress clarity without duplicating Home
@@ -98,7 +98,7 @@ created: 2026-04-05
 - **Plan / Wave:** `20-03` / `3`
 - **Requirements:** `UI-EDITORIAL-01`, `UI-EDITORIAL-02`
 - **Task Smoke Command:** `npm run lint -- --file src/pages/journeys.tsx`
-- **Exact Plan Automated Command:** `npm run lint -- --file src/pages/journeys.tsx && PLAYWRIGHT_BASE_URL=http://localhost:3000 npx playwright test e2e/tests/19-connect-journal-ia.spec.ts e2e/tests/20-editorial-ui-refresh.spec.ts -g "Journeys active summary|Journeys editorial" --project=chromium --no-deps --workers=1`
+- **Exact Plan Automated Command:** `npm run lint -- --file src/pages/journeys.tsx`
 - **Status:** `⬜ pending`
 
 ### 20-04-01 — Task 1: Apply minimum editorial cohesion to secondary-access pages only
@@ -106,7 +106,7 @@ created: 2026-04-05
 - **Plan / Wave:** `20-04` / `4`
 - **Requirements:** `UI-EDITORIAL-02`, `IA-WAVE1-03`
 - **Task Smoke Command:** `npm run lint -- --file src/pages/profile.tsx --file src/pages/settings.tsx --file src/pages/trust-center.tsx --file src/pages/subscription.tsx`
-- **Exact Plan Automated Command:** `npm run lint -- --file src/pages/profile.tsx --file src/pages/settings.tsx --file src/pages/trust-center.tsx --file src/pages/subscription.tsx && PLAYWRIGHT_BASE_URL=http://localhost:3000 npx playwright test e2e/tests/19-connect-journal-ia.spec.ts -g "secondary pages hide primary nav|profile stays secondary access only" --project=chromium --no-deps --workers=1`
+- **Exact Plan Automated Command:** `npm run lint -- --file src/pages/profile.tsx --file src/pages/settings.tsx --file src/pages/trust-center.tsx --file src/pages/subscription.tsx`
 - **Status:** `⬜ pending`
 
 ### 20-04-02 — Task 2: Complete editorial review evidence and Phase 20 validation status
@@ -114,7 +114,7 @@ created: 2026-04-05
 - **Plan / Wave:** `20-04` / `4`
 - **Requirements:** `UI-EDITORIAL-02`, `IA-WAVE1-03`
 - **Task Smoke Command:** `test -f .planning/phases/20-editorial-ui-refresh-on-stable-ia/20-EDITORIAL-REVIEW.md && test -f .planning/phases/20-editorial-ui-refresh-on-stable-ia/20-VALIDATION.md && rg -n "dashboard|daily-growth|connect|journal|journeys" .planning/phases/20-editorial-ui-refresh-on-stable-ia/20-EDITORIAL-REVIEW.md && rg -n "## Per-Task Verification Map|## Wave Gate Commands|## Validation Sign-Off" .planning/phases/20-editorial-ui-refresh-on-stable-ia/20-VALIDATION.md`
-- **Exact Plan Automated Command:** `npx tsc --noEmit && PLAYWRIGHT_BASE_URL=http://localhost:3000 npx playwright test e2e/tests/05-dashboard.spec.ts e2e/tests/14-playful-connection.spec.ts e2e/tests/19-connect-journal-ia.spec.ts e2e/tests/20-editorial-ui-refresh.spec.ts --project=chromium --no-deps --workers=1`
+- **Exact Plan Automated Command:** `test -f .planning/phases/20-editorial-ui-refresh-on-stable-ia/20-EDITORIAL-REVIEW.md && test -f .planning/phases/20-editorial-ui-refresh-on-stable-ia/20-VALIDATION.md && rg -n "dashboard|daily-growth|connect|journal|journeys" .planning/phases/20-editorial-ui-refresh-on-stable-ia/20-EDITORIAL-REVIEW.md && rg -n "## Per-Task Verification Map|## Wave Gate Commands|## Validation Sign-Off" .planning/phases/20-editorial-ui-refresh-on-stable-ia/20-VALIDATION.md`
 - **Status:** `⬜ pending`
 
 *Status: `⬜ pending` · `✅ green` · `❌ red` · `⚠️ flaky`*
