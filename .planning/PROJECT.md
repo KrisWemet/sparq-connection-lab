@@ -3,20 +3,53 @@
 ## Vision
 Sparq is a solo-first relationship growth app that helps one person become a steadier, more connected partner through small daily actions, clear reflection, and a warm AI coach.
 
-## Current Milestone
+## Current Milestone: v2.0 Attachment-Aware Personalization
+
+**Goal:** Build a hidden intelligence layer that infers 8 relationship pattern dimensions from onboarding and daily loop behavior, then applies them to make Peter's tone, prompts, and journey routing feel genuinely tailored — without clinical labels, diagnostic framing, or new UI surfaces.
+
+**Target features:**
+- Extend onboarding to capture signals for repair style, reassurance need, space preference, stress communication, interpretation bias, vulnerability pace, and worth pattern
+- Extend evening reflection analysis to continuously infer all 8 dimensions from daily behavior
+- Extend Peter morning story personalization and chat tone to apply all 8 dimensions
+- Extend journey recommendation to weight by inferred pattern profile
+- Peter occasionally surfaces a named pattern naturally in context (no dashboard tab)
+
+## Previous Milestone
 Beta stabilization for the existing product surface.
 
-## Planning Guardrails
-- `SPARQ_MASTER_SPEC.md` is the source of truth.
-- `IMPLEMENTATION_STATUS.md` is supporting repo-state context.
-- `.planning/codebase/*.md` documents are supporting architecture and quality context.
-- Prioritize product credibility over feature breadth.
-- Do not expand into new broad feature work during this milestone.
+## Constraints
 
-## Beta Success Standard
-The beta should feel trustworthy in the three flows users must complete without friction:
-1. Auth and session continuity
-2. Onboarding completion and redirect reliability
-3. Daily loop creation, resume, and completion reliability
+- **Language:** No clinical labels in user-facing copy — never "avoidant", "anxious", "attachment style", "love language"
+- **Consent:** All inference is silent and gated behind existing `can_analyze_profile` privacy flag
+- **UI:** No new tabs, no diagnostic dashboard, no "your patterns" settings screen
+- **Data:** `profile_traits` table is the single source of truth for all inferred dimensions
+- **Architecture:** Next.js Pages Router, Supabase, shadcn/ui — no new libraries
+- **Solo-first:** All 8 dimensions must work without a partner present
 
-Architecture cleanup is in scope only when it directly reduces failure risk in those flows.
+## Key Decisions
+
+| Decision | Rationale | Outcome |
+|----------|-----------|---------|
+| `profile_traits` as single trait store | Already exists, holds arbitrary trait_key values, RLS-gated | — Pending |
+| Silent inference only (no explicit quiz) | Avoids clinical framing, builds trust through felt experience | — Pending |
+| Peter names patterns occasionally in context | Provides payoff without exposing the machinery | — Pending |
+
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd-transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd-complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
+
+---
+*Last updated: 2026-04-05 — Milestone v2.0 started*

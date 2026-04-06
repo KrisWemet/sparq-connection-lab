@@ -1,26 +1,27 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: Executing Phase 20
-last_updated: "2026-04-06T14:57:22.176Z"
+milestone: v2.0
+milestone_name: attachment-aware-personalization
+status: Defining requirements
+last_updated: "2026-04-05T00:00:00.000Z"
 progress:
-  total_phases: 2
-  completed_phases: 1
-  total_plans: 7
-  completed_plans: 5
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # State
 
 ## Current Position
 
-Phase: 20 (editorial-ui-refresh-on-stable-ia) — EXECUTING
-Plan: 3 of 4
+Phase: Not started (defining requirements)
+Plan: —
 
-- Milestone: Editorial Relationship Life UI Refresh
-- Active phase: 20
-- Phase status: Plan 01 and Plan 02 complete, Plan 03 pending
+- Milestone: Attachment-Aware Personalization (v2.0)
+- Active phase: none
+- Phase status: Defining requirements — Last activity: 2026-04-05 — Milestone v2.0 started
+- Note: Phase 20 (Editorial UI Refresh) still in flight — Plans 03 and 04 pending
 
 ## Current Inputs
 
