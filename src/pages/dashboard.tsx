@@ -6,47 +6,30 @@ import { PeterLoading } from "@/components/PeterLoading";
 
 // Dashboard components
 import { PeterGreeting } from "@/components/dashboard/PeterGreeting";
-import { WeeklyMirrorCard } from "@/components/dashboard/WeeklyMirrorCard";
-import { GrowthThread } from "@/components/dashboard/GrowthThread";
-import { JourneyArc } from "@/components/dashboard/JourneyArc";
-import { PartnerSynthesisCard } from "@/components/dashboard/PartnerSynthesisCard";
-import { HeartbeatButton } from "@/components/dashboard/HeartbeatButton";
-import { useRealtimeSync } from "@/hooks/useRealtimeSync";
 import { supabase } from "@/lib/supabase";
 
-import { Bell, Moon, Users, Heart, Plus, Circle } from "lucide-react";
-import { IdentityArcCard } from "@/components/dashboard/IdentityArcCard";
-import { PracticeMapCard } from "@/components/dashboard/PracticeMapCard";
+import { Bell, Moon } from "lucide-react";
 
 import { getJourneyVelocityStatus } from "@/services/journeyContentService";
 import { journeys } from "@/data/journeys";
-import { analyticsService } from "@/services/analyticsService";
 import { BetaFeedbackDialog } from '@/components/beta/BetaFeedbackDialog';
 import { trackPrimaryPathClientEvent } from '@/lib/beta/primaryPath';
 import { fetchPlayfulConnectionToday } from '@/lib/playfulConnection';
 import type { PlayfulPrompt } from '@/data/playful-prompts';
 import { DailySparkCard } from '@/components/playful/DailySparkCard';
+import { HomeDestinationStrip } from "@/components/dashboard/HomeDestinationStrip";
 
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 export default function Dashboard() {
   const { user, profile, loading } = useAuth();
   const router = useRouter();
-
-  const streakCount = (profile as any)?.streak_count || 0;
-  const partnerId = (profile as any)?.partner_id || null;
-
-  // Partner realtime presence
-  const { partnerIsOnline } = useRealtimeSync(partnerId);
   const [currentDay, setCurrentDay] = useState(1);
-  const [partnerDay, setPartnerDay] = useState<number | null>(null);
   const [activeJourney, setActiveJourney] = useState<any>(null);
-  const [journeyDuration, setJourneyDuration] = useState(14);
   const [dailySpark, setDailySpark] = useState<PlayfulPrompt | null>(null);
   const [dailySparkOffset, setDailySparkOffset] = useState(0);
 
   // Evening check-in eligibility
   const [showEveningCTA, setShowEveningCTA] = useState(false);
-  const [todaySessionId, setTodaySessionId] = useState<string | null>(null);
 
   // Journey completion state
   const [completionState, setCompletionState] = useState<string | null>(null);
@@ -109,7 +92,6 @@ export default function Dashboard() {
         // Show evening CTA if morning is viewed but evening not yet completed
         const session = sessionResult.data;
         if (session) {
-          setTodaySessionId(session.id);
           const morningDone = session.status === 'morning_viewed' || session.status === 'evening_active';
           const eveningNotDone = !session.evening_completed_at;
           if (morningDone && eveningNotDone) {
@@ -121,21 +103,6 @@ export default function Dashboard() {
 
     loadDashboardData();
   }, [user?.id]);
-
-  useEffect(() => {
-    if (!partnerId) return;
-    async function loadPartnerDay() {
-      try {
-        const { data } = await supabase
-          .from("user_insights")
-          .select("onboarding_day")
-          .eq("user_id", partnerId)
-          .maybeSingle();
-        if (data) setPartnerDay(data.onboarding_day);
-      } catch {}
-    }
-    loadPartnerDay();
-  }, [partnerId]);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -165,23 +132,7 @@ export default function Dashboard() {
     (profile as any)?.name?.split(" ")[0] ||
     user.email?.split("@")[0] ||
     "there";
-  const partnerName = (profile as any)?.partner_name;
-  const identityStatement =
-    (profile as any)?.identity_statement || "I am someone who shows up.";
   const userInitials = firstName[0]?.toUpperCase() ?? "?";
-  const partnerInitials = partnerName ? partnerName[0]?.toUpperCase() : "?";
-  const partnerHeadline = partnerId
-    ? `Growing with ${partnerName || 'your partner'}`
-    : 'Your growth still counts on your own';
-  const partnerSupportText = partnerId
-    ? partnerIsOnline
-      ? 'Online now'
-      : partnerDay
-        ? partnerDay > 14
-          ? 'Graduated'
-          : `Day ${partnerDay}`
-        : 'Shared progress is available when it helps.'
-    : 'Start solo. Invite your partner later if shared reflections would help.';
 
   // CTA logic: journey completed → choose next, otherwise → begin practice
   const isPostJourney = completionState === 'pending_decision' || completionState === 'resting';
@@ -224,9 +175,14 @@ export default function Dashboard() {
             >
               <Bell size={20} />
             </button>
-            <div className="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center">
+            <button
+              type="button"
+              aria-label="Open profile"
+              onClick={() => router.push("/profile")}
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+            >
               <span className="text-white text-sm font-bold">{userInitials}</span>
-            </div>
+            </button>
           </div>
         </motion.div>
 
@@ -302,106 +258,7 @@ export default function Dashboard() {
           />
         )}
 
-        {/* ── 3. IDENTITY ARC ── */}
-        <IdentityArcCard />
-
-        {/* ── 4. PRACTICE MAP ── */}
-        <PracticeMapCard totalDays={journeyDuration || 14} />
-
-        {/* ── 5. WEEKLY MIRROR ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-        >
-          <WeeklyMirrorCard />
-        </motion.div>
-
-        {/* ── 6. JOURNEY ARC ── */}
-        <JourneyArc journeyDuration={journeyDuration} />
-
-        {/* ── PARTNER CONNECT ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.3 }}
-          className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-5"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="relative w-10 h-10 rounded-full bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
-                {partnerId ? (
-                  <Heart size={18} className="text-brand-primary" />
-                ) : (
-                  <Users size={18} className="text-brand-primary" />
-                )}
-                {partnerId && partnerIsOnline && (
-                  <Circle
-                    size={10}
-                    fill="#4ade80"
-                    stroke="#FAF6F1"
-                    strokeWidth={2}
-                    className="absolute -top-0.5 -right-0.5"
-                  />
-                )}
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-brand-espresso">
-                  {partnerHeadline}
-                </p>
-                <p className="text-xs text-brand-text-secondary">
-                  {partnerSupportText}
-                </p>
-              </div>
-            </div>
-
-            {partnerId ? (
-              <div className="flex -space-x-2">
-                <div className="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center ring-2 ring-brand-parchment z-10">
-                  <span className="text-white text-xs font-bold">{userInitials}</span>
-                </div>
-                <div className="w-8 h-8 rounded-full bg-[#C8886A] flex items-center justify-center ring-2 ring-brand-parchment">
-                  <span className="text-white text-xs font-bold">{partnerInitials}</span>
-                </div>
-              </div>
-            ) : (
-              <button
-                onClick={() => {
-                  analyticsService.trackEvent('partner_invite_prompt_opened', {
-                    source: 'dashboard_card',
-                    relationship_mode: 'solo',
-                  });
-                  router.push("/join-partner");
-                }}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-2xl border border-brand-primary text-brand-primary text-xs font-semibold hover:bg-brand-primary hover:text-white transition-colors"
-              >
-                <Plus size={12} />
-                Invite later
-              </button>
-            )}
-          </div>
-
-          <div className="mt-4 space-y-3">
-            <PartnerSynthesisCard hasPartner={Boolean(partnerId)} />
-            {partnerId ? (
-              <HeartbeatButton />
-            ) : (
-              <button
-                onClick={() => {
-                  analyticsService.trackEvent('partner_invite_prompt_opened', {
-                    source: 'dashboard_cta',
-                    relationship_mode: 'solo',
-                  });
-                  router.push('/join-partner');
-                }}
-                className="w-full bg-white text-brand-primary font-semibold rounded-3xl py-4 px-4 border border-brand-primary/20 hover:bg-brand-primary/5 transition-colors text-sm"
-              >
-                Invite your partner when shared prompts would help
-              </button>
-            )}
-          </div>
-        </motion.div>
-
+        <HomeDestinationStrip />
 
       </div>
     </div>
