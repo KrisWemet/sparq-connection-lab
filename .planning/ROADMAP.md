@@ -22,7 +22,7 @@
 | 16 | Playful Layer Controlled Beta Exposure And Signal Review | Expose the playful MVP only to the controlled-beta cohort, review real usage and feedback beside the core funnel, and decide whether to keep, tune, reduce, or expand later. | `PLAYFUL-COHORT-01`, `PLAYFUL-COHORT-02`, `PLAYFUL-COHORT-03`, `PLAYFUL-COHORT-04` |
 | 17 | Editorial Relationship Life UI Refresh | Define the visual and interaction contract for reshaping safe core surfaces into a more editorial, premium, relationship-life experience without disturbing the proven signup-driven path. | `UI-EDITORIAL-01`, `UI-EDITORIAL-02`, `UI-EDITORIAL-03` |
 | 18 | Sparq IA Contract And Home Simplification | Define the destination-based information architecture and exact Home simplification contract from the recovered baseline without changing the proven daily path. | `IA-CONTRACT-01`, `IA-CONTRACT-02`, `IA-CONTRACT-03`, `IA-CONTRACT-04` |
-| 19 | 2/3 | In Progress|  |
+| 19 | 3/3 | Complete    | 2026-04-06 |
 
 ## Phase 1 Notes
 - Source of truth: `SPARQ_MASTER_SPEC.md`
@@ -588,12 +588,12 @@
 **Goal:** Make Home a single-next-step launcher and switch primary navigation to destination ownership without regressing the proven `/dashboard -> /daily-growth` path or the locked playful placements.
 **Requirements**: `IA-WAVE1-01`, `IA-WAVE1-02`, `IA-WAVE1-03`
 **Depends on:** Phase 18
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [x] 19-01-PLAN.md -- Create `/connect` and `/journal` plus the shared reflective hook and Connect leaf return paths
 - [x] 19-02-PLAN.md -- Restructure primary nav and simplify Home into Today card plus quiet destination strip
-- [ ] 19-03-PLAN.md -- Reduce `/profile` to secondary access and update focused Playwright IA coverage
+- [x] 19-03-PLAN.md -- Reduce `/profile` to secondary access and update focused Playwright IA coverage
 
 Verification:
 - `npm run lint -- --file src/hooks/useProfileTraits.ts --file src/pages/journal.tsx --file src/pages/connect.tsx --file src/pages/go-connect.tsx --file src/pages/translator.tsx`
