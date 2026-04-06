@@ -189,4 +189,41 @@ test.describe('Phase 19 IA ownership', () => {
       await expectPrimaryNavHidden(page);
     }
   });
+
+  test('Journeys active summary does not duplicate Today CTA', async ({ page }) => {
+    await page.addInitScript(() => {
+      window.localStorage.setItem(
+        'sparq_journey_progress',
+        JSON.stringify({
+          communication: [
+            {
+              journey_id: 'communication',
+              day: 3,
+              completed: true,
+              responses: {},
+              created_at: '2026-04-05T12:00:00.000Z',
+            },
+          ],
+        }),
+      );
+    });
+
+    await page.goto('/journeys');
+
+    const activeSummary = page.getByText(/current practice/i);
+    const searchInput = page.getByPlaceholder(/search journeys/i);
+
+    await expect(activeSummary).toBeVisible();
+    await expect(page.getByRole('link', { name: /continue clear connection/i })).toHaveAttribute(
+      'href',
+      '/journeys/communication',
+    );
+    await expect(page.getByText(/resume day 4 of 14/i)).toBeVisible();
+    await expect(page.getByRole('button', { name: /resume evening reflection|start today's practice/i })).toHaveCount(0);
+
+    const activeBox = await activeSummary.boundingBox();
+    const searchBox = await searchInput.boundingBox();
+
+    expect(activeBox?.y ?? 0).toBeLessThan(searchBox?.y ?? Number.POSITIVE_INFINITY);
+  });
 });

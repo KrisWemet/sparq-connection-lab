@@ -61,6 +61,59 @@ test.describe('Daily Growth Loop', () => {
     await expect(page.locator('button:has-text("Start Morning Story")')).toBeVisible();
   });
 
+  test('previous reflection hands off to Journal instead of profile', async ({ page }) => {
+    await page.addInitScript(() => {
+      window.localStorage.setItem(
+        'sparq_journey_progress',
+        JSON.stringify({
+          communication: [
+            {
+              journey_id: 'communication',
+              day: 1,
+              completed: true,
+              responses: {},
+              created_at: '2026-04-05T12:00:00.000Z',
+            },
+          ],
+        }),
+      );
+    });
+
+    await page.route('**/api/daily/session/start', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          session: {
+            id: 'session-2',
+            day_index: 2,
+            status: 'morning_ready',
+            morning_story: morningStory,
+            morning_action: morningAction,
+            practice_mode: 'solo',
+          },
+          reused: false,
+        }),
+      });
+    });
+
+    await page.route('**/rest/v1/daily_entries*', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          evening_reflection: 'I felt more steady, and the whole conversation stayed calmer.',
+        }),
+      });
+    });
+
+    await page.goto('/daily-growth');
+
+    await expect(page.getByRole('button', { name: /view journal/i })).toBeVisible();
+    await page.getByRole('button', { name: /view journal/i }).click();
+    await expect(page).toHaveURL(/\/journal$/);
+  });
+
   test('morning flow keeps the practice rooted in what one user can control', async ({ page }) => {
     await page.goto('/daily-growth');
 

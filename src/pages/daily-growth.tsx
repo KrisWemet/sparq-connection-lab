@@ -657,7 +657,7 @@ export default function DailyGrowth() {
           {(prevReflection || currentDay > 1) && (
             <PreviousReflectionCard
               quote={prevReflection || DEFAULT_REFLECTION}
-              onViewJournal={() => router.push('/profile')}
+              onViewJournal={() => router.push('/journal')}
             />
           )}
 
