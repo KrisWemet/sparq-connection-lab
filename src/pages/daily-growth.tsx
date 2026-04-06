@@ -593,8 +593,8 @@ export default function DailyGrowth() {
 
   if (showHome && phase === 'morning') {
     const homeHeadline = journeyTitle
-      ? `A steadier Day ${currentDay} starts here.`
-      : 'A steadier morning starts here.';
+      ? `Your Day ${currentDay} practice is ready.`
+      : 'Your morning practice is ready.';
     const homePeterLine = peterBrief
       || (currentDay === 1
         ? "You're here. That's the most important thing you'll do today."
