@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Executing Phase 20
-last_updated: "2026-04-06T14:35:56.407Z"
+last_updated: "2026-04-06T14:57:22.176Z"
 progress:
   total_phases: 2
   completed_phases: 1
   total_plans: 7
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # State
@@ -16,11 +16,11 @@ progress:
 ## Current Position
 
 Phase: 20 (editorial-ui-refresh-on-stable-ia) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 
 - Milestone: Editorial Relationship Life UI Refresh
 - Active phase: 20
-- Phase status: Plan 01 complete, Plan 02 pending
+- Phase status: Plan 01 and Plan 02 complete, Plan 03 pending
 
 ## Current Inputs
 
@@ -61,10 +61,10 @@ Plan: 2 of 4
 
 ## Next Expected Action
 
-- execute `20-02-PLAN.md`
-- apply the editorial hierarchy to Home and the `daily-growth` home state using the shared Phase 20 token layer
-- keep `Daily Spark` secondary on `/dashboard` and keep `Favorite Us` exclusive to `/daily-growth`
+- execute `20-03-PLAN.md`
+- extend the verified featured-module pattern from Home into `Connect`, `Journal`, and `Journeys`
 - preserve the proven `Home -> daily-growth` launch path and all Phase 19 destination ownership
+- keep playful placement and route-owner mapping untouched while destination personality becomes more distinct
 
 ## Accumulated Context
 
@@ -81,20 +81,25 @@ Plan: 2 of 4
 - Phase 20 context gathered: editorial refresh constrained to the completed Phase 19 IA, with Home focus, Connect warmth, Journal quietness, Journeys progress clarity, and no new feature scope
 - Phase 20 Plan 01 completed: Wave 0 editorial review assets, shared editorial token remap, and presentation-only editorial surface primitives landed
 - Phase 20 Plan 01 verification: lint, `npx tsc --noEmit`, and the targeted Playwright bundle for dashboard, IA ownership, and editorial route coverage all passed
+- Phase 20 Plan 02 completed: Home, the daily-growth home state, playful companion cards, and the bottom-nav shell now share the calmer editorial hierarchy without changing IA ownership
+- Phase 20 Plan 02 verification: targeted lint passed and `e2e/tests/05-dashboard.spec.ts`, `e2e/tests/14-playful-connection.spec.ts`, `e2e/tests/19-connect-journal-ia.spec.ts`, and `e2e/tests/20-editorial-ui-refresh.spec.ts` all passed against a local Next dev server
 
 ## Decisions
 
 - Preserve existing `brand-*` utility names and remap them to the approved editorial contract so later waves can restyle pages without a compatibility pass.
 - Load `Cormorant Garamond` as the display serif via `next/font` while keeping the shell body stack sans.
 - Ignore CSS files in Next ESLint so the plan's targeted lint command can verify `globals.css` without parsing it as JavaScript.
+- [Phase 20]: Home keeps a single accent-dominant Today hero while Peter, Daily Spark, and the destination strip stay visually subordinate.
+- [Phase 20]: The daily-growth home state keeps its existing Home-owned copy contract even after the editorial layout refresh so existing browser coverage stays valid.
 
 ## Performance Metrics
 
 | Phase | Plan | Duration | Tasks | Files | Notes |
 | --- | --- | --- | --- | --- | --- |
 | 20 | 01 | 7min | 3 | 7 | Wave 1 foundation gate passed |
+| 20 | 02 | 6min | 2 | 8 | Wave 2 lint and Playwright gates passed |
 
 ## Session
 
-- Last session: 2026-04-06T14:35:00Z
-- Stopped at: Completed 20-01-PLAN.md
+- Last session: 2026-04-06T14:55:23Z
+- Stopped at: Completed 20-02-PLAN.md
