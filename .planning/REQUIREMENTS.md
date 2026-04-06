@@ -417,3 +417,53 @@
 - The primary navigation must become `Home`, `Journeys`, `Connect`, and `Journal`.
 - `/daily-growth` must remain Home-owned in navigation and behavior, not a standalone tab.
 - Navigation and ownership changes must preserve the proven daily loop, the current playful placements, and existing primary-path instrumentation.
+
+## Milestone: Attachment-Aware Personalization
+
+### ATTACH-INFRA-01 — Define Pattern Vocabulary
+- The system must define 7 new `profile_traits` key values: `repair_style`, `reassurance_need`, `space_preference`, `stress_communication`, `interpretation_bias`, `vulnerability_pace`, `worth_pattern`.
+- Each key must have 2–4 allowed pattern values expressed in plain human language (no clinical labels).
+- Allowed values must be enforced via server-side validation before any insert, mirroring the existing pattern in `profile-analysis.ts`.
+- A migration must document the new keys and their allowed values so future phases have a stable contract.
+
+### ATTACH-INFRA-02 — Unified Pattern Context Builder
+- A server helper (`src/lib/server/attachment-context.ts`) must consolidate `profile_traits` reads for all 8 dimensions into a single `PatternContext` object.
+- The helper must be used by Peter morning, Peter chat, and journey recommendation so trait reads are consistent and not scattered.
+- The helper must handle missing traits gracefully (return null per dimension, never throw).
+
+### ATTACH-SIGNAL-01 — Onboarding Signal Capture
+- The onboarding question set must capture behavioral signals for `repair_style`, `reassurance_need`, and `space_preference` through adapted quick-reply options and score deltas.
+- No new onboarding steps may be added — signals must be captured through existing question slots or gentle rephrasing of existing options.
+- No clinical framing or label language may appear in any onboarding question or option.
+
+### ATTACH-SIGNAL-02 — Evening Reflection Inference
+- Evening reflection analysis (`src/lib/server/profile-analysis.ts`) must infer all 8 pattern dimensions from reflection text, extending the existing fire-and-forget pattern.
+- Inference must remain non-blocking and silent — it must never delay or fail the session completion response.
+- Each new dimension must have an allowed-value validation step that discards hallucinated or out-of-vocab values before any insert.
+- Confidence must be updated using the existing quality-weighted boost pattern from `reflection-quality.ts`.
+
+### ATTACH-SIGNAL-03 — Trait Gap Steering
+- The trait gap system (`src/lib/server/trait-gaps.ts`) must include all 8 dimensions in its `CORE_TRAITS` list and `STEERING_HINTS` map.
+- Steering hints must guide morning story generation toward surfacing signals for under-profiled dimensions without naming or revealing the dimension being explored.
+- Steering hint language must be non-clinical and consistent with Peter's voice.
+
+### ATTACH-PETER-01 — Morning Story Personalization
+- Morning story generation (`src/lib/peterService.ts` → `getMorningStoryPrompt`) must apply personalization hints for all 8 dimensions when confidence meets the threshold.
+- Hints must adapt narrative tone, micro-action framing, and story scenario to match the user's inferred pattern without naming the pattern.
+- The personalization must remain additive — no existing personalization branches for `attachment_style`, `love_language`, or `conflict_style` may be removed.
+
+### ATTACH-PETER-02 — Peter Chat Tone Adaptation
+- Peter chat responses must adapt tone and framing based on `reassurance_need` and `repair_style`, with specific language adjustments per pattern value.
+- High `reassurance_need` must produce warmer, more affirming openings before any reflection or challenge.
+- `repair_style` must shape how Peter frames repair suggestions (direct invitation vs. space-giving vs. process-first framing).
+
+### ATTACH-PETER-03 — Pattern Insight Moments
+- Peter must be able to name a pattern naturally in context during evening check-in or chat using plain human language.
+- Insight moments must only trigger when a dimension's confidence is 0.7 or higher.
+- The named pattern must be framed as an observation, not a diagnosis: "I've noticed you tend to..." not "You are..." or "Your attachment style is...".
+- No clinical label may appear in any user-facing insight moment copy.
+
+### ATTACH-JOURNEY-01 — Pattern-Weighted Journey Routing
+- Journey recommendations (`src/lib/server/next-journey-recommender.ts`) must weight available journeys by affinity to the user's inferred pattern profile.
+- Journeys aligned to a user's highest-confidence, lowest-satisfaction dimensions must score higher in the recommendation ranking.
+- The weighting must be additive to the existing attachment-style affinity scoring, not a replacement.
