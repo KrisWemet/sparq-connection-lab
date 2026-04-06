@@ -95,17 +95,38 @@ async function mockJournalData(page: Page) {
   });
 }
 
-async function expectConnectNavActive(page: Page) {
-  const connectLink = page.getByRole('link', { name: /connect/i });
-  await expect(connectLink).toBeVisible();
-  await expect(connectLink).toHaveAttribute('href', '/connect');
-  await expect(connectLink).toHaveClass(/text-brand-primary|bg-brand-primary|active/i);
+async function mockDailyGrowthOwnership(page: Page) {
+  await page.route('**/api/daily/session/start', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        session: {
+          id: 'session-1',
+          day_index: 1,
+          status: 'morning_ready',
+          morning_story: 'Good morning. This is your story.',
+          morning_action: 'Pause before your next hard moment and choose the calmer version of what you want to say.',
+          practice_mode: 'solo',
+        },
+        reused: false,
+      }),
+    });
+  });
 }
 
-async function expectHomeNavActive(page: Page) {
-  const homeLink = page.getByRole('link', { name: /home/i });
-  await expect(homeLink).toBeVisible();
-  await expect(homeLink).toHaveClass(/text-brand-primary|bg-brand-primary|active/i);
+async function expectPrimaryNavLabels(page: Page) {
+  await expect(page.getByRole('link', { name: /^home$/i })).toHaveAttribute('href', '/dashboard');
+  await expect(page.getByRole('link', { name: /^journeys$/i })).toHaveAttribute('href', '/journeys');
+  await expect(page.getByRole('link', { name: /^connect$/i })).toHaveAttribute('href', '/connect');
+  await expect(page.getByRole('link', { name: /^journal$/i })).toHaveAttribute('href', '/journal');
+}
+
+async function expectPrimaryNavOwner(page: Page, label: 'Home' | 'Journeys' | 'Connect' | 'Journal') {
+  await expectPrimaryNavLabels(page);
+
+  const activeLink = page.getByRole('link', { name: new RegExp(`^${label}$`, 'i') });
+  await expect(activeLink).toHaveAttribute('aria-current', 'page');
 }
 
 async function expectPrimaryNavHidden(page: Page) {
@@ -149,14 +170,16 @@ test.describe('Phase 19 IA ownership', () => {
   });
 
   test('Home owns /daily-growth in primary navigation', async ({ page }) => {
+    await mockDailyGrowthOwnership(page);
     await page.goto('/daily-growth');
-    await expectHomeNavActive(page);
+    await expectPrimaryNavOwner(page, 'Home');
+    await expect(page.getByRole('link', { name: /^daily$/i })).toHaveCount(0);
   });
 
   test('Connect owns leaf routes in primary navigation', async ({ page }) => {
     for (const route of ['/messages', '/go-connect', '/translator', '/join-partner']) {
       await page.goto(route);
-      await expectConnectNavActive(page);
+      await expectPrimaryNavOwner(page, 'Connect');
     }
   });
 
