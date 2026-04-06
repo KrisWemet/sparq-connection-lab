@@ -115,6 +115,28 @@ async function mockDailyGrowthOwnership(page: Page) {
   });
 }
 
+async function mockSecondaryAccessProfile(page: Page) {
+  await mockProfile(page);
+
+  await page.route('**/api/profile/traits', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        traits: [
+          {
+            trait_key: 'attachment_style',
+            inferred_value: 'secure',
+            confidence: 0.81,
+            effective_weight: 0.81,
+            user_feedback: null,
+          },
+        ],
+      }),
+    });
+  });
+}
+
 async function expectPrimaryNavLabels(page: Page) {
   await expect(page.getByRole('link', { name: /^home$/i })).toHaveAttribute('href', '/dashboard');
   await expect(page.getByRole('link', { name: /^journeys$/i })).toHaveAttribute('href', '/journeys');
@@ -188,6 +210,33 @@ test.describe('Phase 19 IA ownership', () => {
       await page.goto(route);
       await expectPrimaryNavHidden(page);
     }
+  });
+
+  test('/profile stays secondary access only with settings, trust, billing, and logout controls', async ({
+    page,
+  }) => {
+    await mockSecondaryAccessProfile(page);
+
+    await page.goto('/profile');
+
+    await expect(page.getByRole('button', { name: /edit profile/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /settings/i })).toHaveAttribute('href', '/settings');
+    await expect(page.getByRole('link', { name: /trust center/i })).toHaveAttribute(
+      'href',
+      '/trust-center',
+    );
+    await expect(page.getByRole('link', { name: /billing|subscription/i })).toHaveAttribute(
+      'href',
+      '/subscription',
+    );
+    await expect(page.getByRole('button', { name: /logout/i })).toBeVisible();
+
+    await expect(page.getByText(/your archetype/i)).toHaveCount(0);
+    await expect(page.getByText(/day streak/i)).toHaveCount(0);
+    await expect(page.getByText(/days completed/i)).toHaveCount(0);
+    await expect(page.getByText(/your partner/i)).toHaveCount(0);
+    await expect(page.getByText(/what peter has learned about you/i)).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /view journal/i })).toHaveCount(0);
   });
 
   test('Journeys active summary does not duplicate Today CTA', async ({ page }) => {
