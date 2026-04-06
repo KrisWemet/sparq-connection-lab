@@ -520,7 +520,7 @@
   - new features or new navigation sections
 
 ## Phase 17 Status
-- Status: defined
+- Status: complete
 - Deliverables created:
   - `17-CONTEXT`
   - `17-UI-SPEC`
@@ -637,7 +637,11 @@ Plans:
   2. `src/lib/server/attachment-context.ts` exists and exports a `buildPatternContext(userId)` function that returns a typed `PatternContext` object for any user, returning `null` per missing dimension rather than throwing.
   3. Calling `buildPatternContext` for a user with no trait rows returns an object with all 8 dimensions set to `null` — it does not throw or return `undefined`.
   4. The migration file documents all 7 new `profile_traits` keys and their allowed values in a comment block a developer can read without opening application code.
-**Plans:** TBD
+**Plans:** 3 plans
+Plans:
+- [ ] 21-01-PLAN.md — Vocabulary enforcement: migration + validation updates + TRAIT_DESCRIPTIONS fix
+- [ ] 21-02-PLAN.md — PatternContext builder: type definition + buildPatternContext + toProfileTraits helper
+- [ ] 21-03-PLAN.md — Caller migration: morning.ts, chat.ts, and next-journey-recommender.ts
 
 ## Phase 21 Notes
 - Source of truth: `SPARQ_MASTER_SPEC.md`
@@ -647,7 +651,7 @@ Plans:
 - Explicitly out of scope: signal inference, Peter changes, journey routing changes
 
 ## Phase 21 Status
-- Status: defined
+- Status: planned
 
 ### Phase 22: Signal Capture
 
