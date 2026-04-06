@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Milestone complete
-last_updated: "2026-04-06T00:45:18.167Z"
+status: In progress
+last_updated: "2026-04-06T00:59:43.000Z"
 progress:
-  total_phases: 1
+  total_phases: 2
   completed_phases: 1
   total_plans: 3
   completed_plans: 3
@@ -15,12 +15,12 @@ progress:
 
 ## Current Position
 
-Phase: 19
+Phase: 20
 Plan: Not started
 
 - Milestone: Editorial Relationship Life UI Refresh
-- Active phase: 19
-- Phase status: UI-SPEC approved
+- Active phase: 20
+- Phase status: Context gathered
 
 ## Current Inputs
 
@@ -41,10 +41,10 @@ Plan: Not started
 
 ## Why This Phase Exists
 
-- Phase 18 defined the destination-based IA contract and the full planning-history synthesis behind it
-- the next step is to implement the first safe structural wave from that contract
-- Home still carries too many jobs at once and the current bottom nav still mixes destinations with a task flow
-- this phase exists to simplify Home and restructure primary navigation without breaking the proven daily path
+- Phase 19 locked the stable destination structure across `Home`, `Journeys`, `Connect`, and `Journal`
+- the next step is to visually refine that now-stable structure without reopening IA or behavior
+- the current product still reads too much like a utility dashboard instead of a calmer relationship-life app
+- this phase exists to make the stable primary destinations feel more premium, more coherent, and more emotionally intentional
 
 ## Current Risks
 
@@ -56,15 +56,15 @@ Plan: Not started
 - destination ownership is still blurred between Home, Journeys, Connect, Journal, and secondary access
 - direct-login re-entry behavior is still a smaller watch item compared with the fresh signup-driven primary path
 - the playful layer is now cohort-gated and looks non-intrusive, but the real-user sample is still too small to claim a retention lift
-- a visual refresh before Wave 1 IA implementation would risk polishing the wrong structure
+- a visual refresh that reopens IA or feature scope would destabilize the newly proven structure
+- editorial polish can accidentally flatten Home hierarchy or make `Connect`, `Journal`, and `Journeys` feel interchangeable if the destination moods are not kept distinct
 
 ## Next Expected Action
 
-- execute `19-02-PLAN.md`
-- update primary-nav ownership to `Home`, `Journeys`, `Connect`, and `Journal`
-- make `/daily-growth` read as Home-owned in nav state
-- hide primary navigation on `/profile`, `/settings`, `/subscription`, and `/trust-center`
-- preserve the proven `dashboard -> daily-growth` launch path during navigation changes
+- run `$gsd-plan-phase 20`
+- translate the locked editorial goals into an implementation plan for the stable primary destinations
+- preserve the proven `Home -> daily-growth` launch path and all Phase 19 destination ownership
+- keep the editorial pass focused on hierarchy, spacing, card treatment, and cohesive destination personality
 - keep playful placement narrow: `Daily Spark` on Home and `Favorite Us` on `daily-growth`
 
 ## Accumulated Context
@@ -79,3 +79,4 @@ Plan: Not started
 - Phase 19 Plan 01 completed: Wave 0 IA coverage, shared reflective trait hook, `/journal`, `/connect`, and Connect leaf returns to `/connect`
 - Phase 19 Plan 01 verification: focused Connect/Journal ownership checks passed; full IA spec remains red only on later-wave nav ownership assertions
 - Phase 20 added: Editorial UI Refresh on Stable IA
+- Phase 20 context gathered: editorial refresh constrained to the completed Phase 19 IA, with Home focus, Connect warmth, Journal quietness, Journeys progress clarity, and no new feature scope
