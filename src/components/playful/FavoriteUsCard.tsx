@@ -103,30 +103,30 @@ export function FavoriteUsCard({ prompt, dateKey, surface }: FavoriteUsCardProps
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.42, delay: 0.2 }}
-      className="bg-white rounded-3xl border border-brand-primary/10 shadow-sm p-5"
+      className="rounded-[30px] border border-brand-primary/10 bg-[linear-gradient(135deg,rgba(247,217,120,0.18),rgba(255,255,255,0.82))] p-5 shadow-[0_16px_38px_rgba(42,34,52,0.06)]"
     >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-2">
+          <p className="mb-2 text-xs font-semibold tracking-widest uppercase text-brand-primary/80">
             Favorite Us
           </p>
-          <p className="text-sm text-brand-text-secondary mb-2">
+          <p className="mb-2 text-sm text-brand-taupe">
             A small warm note for an ordinary day.
           </p>
-          <p className="font-serif italic text-brand-espresso text-lg leading-snug">
+          <p className="font-serif italic text-[17px] leading-snug text-brand-espresso">
             {prompt.prompt}
           </p>
         </div>
-        <div className="w-10 h-10 rounded-2xl bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
-          <Heart size={18} className="text-brand-primary" />
+        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[18px] border border-brand-primary/10 bg-white/80 shadow-sm">
+          <Heart size={16} className="text-brand-primary" />
         </div>
       </div>
 
-      <p className="text-sm text-brand-text-secondary leading-relaxed mt-3">
+      <p className="mt-3 text-sm leading-relaxed text-brand-taupe">
         {prompt.hint}
       </p>
 
-      <p className="text-xs text-brand-text-secondary mt-3">
+      <p className="mt-3 text-xs text-brand-taupe">
         Keep it easy. One line is enough. You can keep this private or send a short version.
       </p>
 
@@ -139,20 +139,20 @@ export function FavoriteUsCard({ prompt, dateKey, surface }: FavoriteUsCardProps
         }}
         rows={3}
         placeholder="Write one small thing that felt good about us."
-        className="w-full mt-4 rounded-2xl border border-brand-primary/15 bg-brand-linen/70 px-4 py-3 text-sm text-brand-espresso placeholder:text-brand-text-secondary/80 focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+        className="mt-4 w-full rounded-[22px] border border-brand-primary/12 bg-white/70 px-4 py-3 text-sm text-brand-espresso placeholder:text-brand-taupe/80 focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
       />
 
       <div className="mt-4 flex flex-col sm:flex-row gap-2">
         <button
           onClick={handleSave}
           disabled={!draft.trim()}
-          className="rounded-2xl bg-brand-primary text-white px-4 py-3 text-sm font-semibold hover:bg-brand-hover transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-[22px] border border-brand-primary/15 bg-white px-4 py-3 text-sm font-semibold text-brand-primary transition-colors hover:bg-brand-primary/5 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {saved ? 'Kept for today' : 'Keep this note'}
         </button>
         <button
           onClick={handleSend}
-          className="rounded-2xl border border-brand-primary/20 text-brand-primary px-4 py-3 text-sm font-semibold hover:bg-brand-primary/5 transition-colors inline-flex items-center justify-center gap-2"
+          className="inline-flex items-center justify-center gap-2 rounded-[22px] border border-brand-primary/12 bg-transparent px-4 py-3 text-sm font-semibold text-brand-taupe transition-colors hover:bg-white/60 hover:text-brand-primary"
         >
           <Send size={14} />
           {sendState === 'copied' ? 'Copied short note' : sendState === 'shared' ? 'Sent' : 'Copy short note'}

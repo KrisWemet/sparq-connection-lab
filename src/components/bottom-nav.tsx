@@ -73,9 +73,9 @@ export function BottomNav() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
       <div
-        className="mx-auto flex max-w-lg items-center justify-between rounded-[28px] border border-brand-primary/10 bg-white/85 px-4 py-3 shadow-[0_-4px_20px_rgba(139,92,246,0.06)] backdrop-blur-xl"
+        className="mx-auto flex max-w-lg items-center justify-between rounded-[30px] border border-white/70 bg-brand-linen/88 px-4 py-3 shadow-[0_18px_42px_rgba(42,34,52,0.16)] backdrop-blur-2xl"
         style={{
-          boxShadow: "0 -4px 20px rgba(139,92,246,0.06)",
+          boxShadow: "0 18px 42px rgba(42, 34, 52, 0.16)",
         }}
       >
         {navItems.map((item) => {
@@ -86,20 +86,20 @@ export function BottomNav() {
               key={item.label}
               href={item.path}
               aria-current={isActive ? "page" : undefined}
-              className="flex min-h-11 w-[4.5rem] flex-col items-center justify-center gap-1 rounded-2xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+              className="flex min-h-11 w-[4.5rem] flex-col items-center justify-center gap-1 rounded-[22px] transition-all hover:bg-white/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
             >
               <div
-                className={`flex h-9 w-11 items-center justify-center rounded-full transition-all ${
-                  isActive ? "bg-brand-primary/10" : ""
+                className={`flex h-9 w-11 items-center justify-center rounded-full border transition-all ${
+                  isActive ? "border-brand-primary/12 bg-brand-primary/12 shadow-inner" : "border-transparent bg-transparent"
                 }`}
               >
                 <item.icon
                   size={22}
                   strokeWidth={isActive ? 2.5 : 1.8}
-                  className={isActive ? "text-brand-primary" : "text-brand-taupe/60"}
+                  className={isActive ? "text-brand-primary" : "text-brand-taupe/70"}
                 />
               </div>
-              <span className={`text-[10px] font-semibold ${isActive ? "text-brand-primary" : "text-brand-taupe/60"}`}>
+              <span className={`text-[10px] font-semibold ${isActive ? "text-brand-primary" : "text-brand-taupe/70"}`}>
                 {item.label}
               </span>
             </Link>
