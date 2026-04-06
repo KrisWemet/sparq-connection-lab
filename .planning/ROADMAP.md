@@ -610,10 +610,10 @@ Result:
 **Goal:** Apply a token-first editorial refresh to the locked Phase 19 destinations so Home, daily-growth, Connect, Journal, and Journeys feel calmer, more premium, and more distinct without reopening IA, route ownership, or the Home-owned daily path.
 **Requirements**: `UI-EDITORIAL-01`, `UI-EDITORIAL-02`, `UI-EDITORIAL-03`, `IA-WAVE1-03`
 **Depends on:** Phase 19
-**Plans:** 4 plans
+**Plans:** 1/4 plans executed
 
 Plans:
-- [ ] 20-01-PLAN.md -- Establish the editorial token system, shared surface primitives, and Wave 0 verification assets
+- [x] 20-01-PLAN.md -- Establish the editorial token system, shared surface primitives, and Wave 0 verification assets
 - [ ] 20-02-PLAN.md -- Refresh Home, the daily-growth home state, playful companion cards, and the bottom-nav shell
 - [ ] 20-03-PLAN.md -- Give Connect, Journal, and Journeys distinct editorial personalities on the locked IA
 - [ ] 20-04-PLAN.md -- Apply minimum secondary-surface cohesion polish and close the phase with editorial verification evidence

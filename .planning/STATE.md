@@ -2,25 +2,25 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: In progress
-last_updated: "2026-04-06T00:59:43.000Z"
+status: Executing Phase 20
+last_updated: "2026-04-06T14:35:56.407Z"
 progress:
   total_phases: 2
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 7
+  completed_plans: 4
 ---
 
 # State
 
 ## Current Position
 
-Phase: 20
-Plan: Not started
+Phase: 20 (editorial-ui-refresh-on-stable-ia) — EXECUTING
+Plan: 2 of 4
 
 - Milestone: Editorial Relationship Life UI Refresh
 - Active phase: 20
-- Phase status: Context gathered
+- Phase status: Plan 01 complete, Plan 02 pending
 
 ## Current Inputs
 
@@ -61,11 +61,10 @@ Plan: Not started
 
 ## Next Expected Action
 
-- run `$gsd-plan-phase 20`
-- translate the locked editorial goals into an implementation plan for the stable primary destinations
+- execute `20-02-PLAN.md`
+- apply the editorial hierarchy to Home and the `daily-growth` home state using the shared Phase 20 token layer
+- keep `Daily Spark` secondary on `/dashboard` and keep `Favorite Us` exclusive to `/daily-growth`
 - preserve the proven `Home -> daily-growth` launch path and all Phase 19 destination ownership
-- keep the editorial pass focused on hierarchy, spacing, card treatment, and cohesive destination personality
-- keep playful placement narrow: `Daily Spark` on Home and `Favorite Us` on `daily-growth`
 
 ## Accumulated Context
 
@@ -80,3 +79,22 @@ Plan: Not started
 - Phase 19 Plan 01 verification: focused Connect/Journal ownership checks passed; full IA spec remains red only on later-wave nav ownership assertions
 - Phase 20 added: Editorial UI Refresh on Stable IA
 - Phase 20 context gathered: editorial refresh constrained to the completed Phase 19 IA, with Home focus, Connect warmth, Journal quietness, Journeys progress clarity, and no new feature scope
+- Phase 20 Plan 01 completed: Wave 0 editorial review assets, shared editorial token remap, and presentation-only editorial surface primitives landed
+- Phase 20 Plan 01 verification: lint, `npx tsc --noEmit`, and the targeted Playwright bundle for dashboard, IA ownership, and editorial route coverage all passed
+
+## Decisions
+
+- Preserve existing `brand-*` utility names and remap them to the approved editorial contract so later waves can restyle pages without a compatibility pass.
+- Load `Cormorant Garamond` as the display serif via `next/font` while keeping the shell body stack sans.
+- Ignore CSS files in Next ESLint so the plan's targeted lint command can verify `globals.css` without parsing it as JavaScript.
+
+## Performance Metrics
+
+| Phase | Plan | Duration | Tasks | Files | Notes |
+| --- | --- | --- | --- | --- | --- |
+| 20 | 01 | 7min | 3 | 7 | Wave 1 foundation gate passed |
+
+## Session
+
+- Last session: 2026-04-06T14:35:00Z
+- Stopped at: Completed 20-01-PLAN.md
