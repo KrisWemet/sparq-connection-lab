@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BookOpen, HeartHandshake, NotebookPen } from "lucide-react";
+import { EditorialEyebrow, EditorialQuietSurface } from "@/components/editorial/EditorialSurface";
 
 const destinations = [
   {
@@ -24,28 +25,37 @@ const destinations = [
 
 export function HomeDestinationStrip() {
   return (
-    <section className="rounded-3xl border border-brand-primary/10 bg-[#EDE9FE] p-4 shadow-sm">
+    <EditorialQuietSurface className="overflow-hidden rounded-[30px] border-brand-primary/8 bg-white/55 px-4 py-4 shadow-[0_18px_42px_rgba(42,34,52,0.05)] backdrop-blur-sm">
+      <div className="mb-4 flex items-end justify-between gap-3">
+        <div>
+          <EditorialEyebrow className="text-brand-primary/70">Elsewhere</EditorialEyebrow>
+          <p className="mt-2 max-w-[15rem] text-sm leading-relaxed text-brand-taupe">
+            Quiet doors into the rest of your relationship life.
+          </p>
+        </div>
+      </div>
+
       <div className="grid grid-cols-3 gap-3">
         {destinations.map((destination) => (
           <Link
             key={destination.href}
             href={destination.href}
-            className="flex min-h-28 flex-col items-start justify-between rounded-[24px] border border-brand-primary/10 bg-white/70 p-4 text-left transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+            className="flex min-h-[7.75rem] flex-col items-start justify-between rounded-[24px] border border-white/80 bg-brand-linen/80 p-3.5 text-left transition-all hover:-translate-y-0.5 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-primary/10 text-brand-primary">
-              <destination.icon size={18} />
+            <div className="flex h-9 w-9 items-center justify-center rounded-[18px] border border-brand-primary/10 bg-white text-brand-primary shadow-sm">
+              <destination.icon size={16} />
             </div>
             <div>
-              <p className="text-sm font-semibold leading-snug text-[#2E1065]">
+              <p className="text-sm font-semibold leading-snug text-brand-espresso">
                 {destination.label}
               </p>
-              <p className="mt-1 text-xs leading-relaxed text-[#5B4A86]">
+              <p className="mt-1 text-[11px] leading-relaxed text-brand-taupe">
                 {destination.description}
               </p>
             </div>
           </Link>
         ))}
       </div>
-    </section>
+    </EditorialQuietSurface>
   );
 }

@@ -18,6 +18,7 @@ import { fetchPlayfulConnectionToday } from '@/lib/playfulConnection';
 import type { PlayfulPrompt } from '@/data/playful-prompts';
 import { DailySparkCard } from '@/components/playful/DailySparkCard';
 import { HomeDestinationStrip } from "@/components/dashboard/HomeDestinationStrip";
+import { EditorialEyebrow } from "@/components/editorial/EditorialSurface";
 
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 export default function Dashboard() {
@@ -158,7 +159,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-brand-linen pb-24">
-      <div className="max-w-lg mx-auto px-4 pt-6 space-y-5">
+      <div className="mx-auto max-w-lg space-y-6 px-4 pt-6">
 
         {/* ── TOP BAR ── */}
         <motion.div
@@ -167,7 +168,12 @@ export default function Dashboard() {
           transition={{ duration: 0.4 }}
           className="flex items-center justify-between"
         >
-          <span className="text-brand-espresso font-bold text-xl tracking-tight">SPARQ</span>
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-brand-primary/70">
+              Home
+            </p>
+            <span className="text-xl font-semibold tracking-tight text-brand-espresso">SPARQ</span>
+          </div>
           <div className="flex items-center gap-3">
             <button
               aria-label="Notifications"
@@ -194,60 +200,71 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.08 }}
-          className="bg-brand-primary rounded-3xl p-6"
+          className="relative overflow-hidden rounded-[34px] border border-brand-primary/12 bg-brand-parchment px-6 py-6 shadow-[0_26px_60px_rgba(42,34,52,0.12)]"
         >
-          <p className="text-xs font-semibold tracking-widest uppercase text-white/70 mb-3">
-            {activeJourney
-              ? `${activeJourney.title} — Day ${currentDay}`
-              : `Day ${currentDay}`}
-          </p>
-          <p className="font-serif italic text-white text-lg leading-snug mb-6">
-            {primaryPrompt}
-          </p>
-
-          <button
-            onClick={() => router.push(primaryCtaHref)}
-            className="w-full bg-white text-brand-primary font-semibold rounded-2xl py-3 text-sm hover:bg-brand-linen transition-colors"
-          >
-            {primaryCtaLabel} &rarr;
-          </button>
-
-          <div className="mt-3 flex justify-center">
-            <BetaFeedbackDialog
-              stage={dailySpark ? 'dashboard_playful_layer' : 'dashboard'}
-              context={{
-                current_day: currentDay,
-                active_journey_id: activeJourney?.id || null,
-                playful_visible: Boolean(dailySpark),
-                playful_surface: dailySpark ? 'dashboard' : null,
-                playful_prompt_id: dailySpark?.id || null,
-                playful_prompt_bucket: dailySpark?.bucket || null,
-              }}
-              title={dailySpark ? 'How did this page feel?' : undefined}
-              description={
-                dailySpark
-                  ? 'Did the light prompt feel warm, helpful, easy to ignore, or a little off?'
-                  : undefined
-              }
-              placeholder={
-                dailySpark
-                  ? 'Tell us if the spark felt helpful, cheesy, distracting, or easy to use.'
-                  : undefined
-              }
-              triggerClassName="inline-flex items-center gap-2 text-sm font-medium text-white/85 hover:text-white"
-            />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute right-0 top-0 h-36 w-36 rounded-full bg-brand-primary/10 blur-3xl"
+          />
+          <div className="relative">
+            <EditorialEyebrow className="mb-3 text-brand-primary/80">
+              {activeJourney
+                ? `${activeJourney.title} — Day ${currentDay}`
+                : `Day ${currentDay}`}
+            </EditorialEyebrow>
+            <p className="max-w-[16rem] font-serif italic text-[28px] leading-[1.15] text-brand-espresso">
+              {primaryPrompt}
+            </p>
+            <p className="mt-4 max-w-[18rem] text-sm leading-relaxed text-brand-taupe">
+              Start with the one next step that matters most today.
+            </p>
           </div>
 
-          {/* Evening check-in CTA — shown when morning is done */}
-          {showEveningCTA && !isPostJourney && (
+          <div className="relative mt-6 space-y-3">
             <button
-              onClick={() => router.push(needsEveningReflection ? '/daily-growth' : '/daily-growth?mode=evening-checkin')}
-              className="w-full mt-3 bg-white/15 text-white font-medium rounded-2xl py-3 text-sm hover:bg-white/25 transition-colors flex items-center justify-center gap-2"
+              onClick={() => router.push(primaryCtaHref)}
+              className="w-full rounded-[22px] bg-brand-primary px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-hover"
             >
-              <Moon size={16} />
-              {secondaryCtaLabel}
+              {primaryCtaLabel}
             </button>
-          )}
+
+            <div className="flex justify-center">
+              <BetaFeedbackDialog
+                stage={dailySpark ? 'dashboard_playful_layer' : 'dashboard'}
+                context={{
+                  current_day: currentDay,
+                  active_journey_id: activeJourney?.id || null,
+                  playful_visible: Boolean(dailySpark),
+                  playful_surface: dailySpark ? 'dashboard' : null,
+                  playful_prompt_id: dailySpark?.id || null,
+                  playful_prompt_bucket: dailySpark?.bucket || null,
+                }}
+                title={dailySpark ? 'How did this page feel?' : undefined}
+                description={
+                  dailySpark
+                    ? 'Did the light prompt feel warm, helpful, easy to ignore, or a little off?'
+                    : undefined
+                }
+                placeholder={
+                  dailySpark
+                    ? 'Tell us if the spark felt helpful, cheesy, distracting, or easy to use.'
+                    : undefined
+                }
+                triggerClassName="inline-flex items-center gap-2 text-sm font-medium text-brand-taupe transition-colors hover:text-brand-espresso"
+              />
+            </div>
+
+            {/* Evening check-in CTA — shown when morning is done */}
+            {showEveningCTA && !isPostJourney && (
+              <button
+                onClick={() => router.push(needsEveningReflection ? '/daily-growth' : '/daily-growth?mode=evening-checkin')}
+                className="flex w-full items-center justify-center gap-2 rounded-[22px] border border-brand-primary/12 bg-white/65 py-3 text-sm font-medium text-brand-espresso transition-colors hover:bg-white"
+              >
+                <Moon size={16} />
+                {secondaryCtaLabel}
+              </button>
+            )}
+          </div>
         </motion.div>
 
         {dailySpark && (
@@ -259,7 +276,6 @@ export default function Dashboard() {
         )}
 
         <HomeDestinationStrip />
-
       </div>
     </div>
   );
