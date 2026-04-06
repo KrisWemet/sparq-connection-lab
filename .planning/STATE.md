@@ -78,3 +78,4 @@ Plan: Not started
 - Phase 19 UI-SPEC approved: Wave 1 visual and interaction contract documented in `19-UI-SPEC.md`
 - Phase 19 Plan 01 completed: Wave 0 IA coverage, shared reflective trait hook, `/journal`, `/connect`, and Connect leaf returns to `/connect`
 - Phase 19 Plan 01 verification: focused Connect/Journal ownership checks passed; full IA spec remains red only on later-wave nav ownership assertions
+- Phase 20 added: Editorial UI Refresh on Stable IA

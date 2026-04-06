@@ -604,3 +604,13 @@ Result:
 - `/journal` now owns the reflective Wave 1 surfaces outside secondary account access
 - `/connect` now owns the curated landing path into Messages, Go Connect, Translator, and Join Partner
 - nav ownership and secondary-page nav hiding remain the next execution step
+
+### Phase 20: Editorial UI Refresh on Stable IA
+
+**Goal:** [To be planned]
+**Requirements**: TBD
+**Depends on:** Phase 19
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 20 to break down)
