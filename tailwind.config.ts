@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
   darkMode: ["class"],
@@ -20,16 +21,21 @@ export default {
     extend: {
       colors: {
         brand: {
-          primary: "#8B5CF6",   // Soft violet — pastel periwinkle-purple
-          hover: "#7C3AED",     // Violet-600 — hover state
-          light: "#FAF9FF",     // Barely-there lavender white
-          linen: "#F5F3FF",     // Soft lavender page background
-          parchment: "#EDE9FE", // Lavender card surfaces
-          card: "#EDE9FE",      // Alias for parchment
-          espresso: "#2E1065",  // Deep violet near-black for headings
-          sand: "#F9C74F",      // Butter gold for highlights/streaks (pastel amber)
-          taupe: "#6B5B9E",     // Muted purple for secondary text
-          growth: "#93C5FD",    // Soft sky blue for progress
+          primary: "#6E56F7",
+          hover: "#5B45DE",
+          light: "#FCF8F4",
+          linen: "#F7F1EC",
+          parchment: "#EEE7F8",
+          card: "#EEE7F8",
+          espresso: "#2A2234",
+          taupe: "#655D73",
+          growth: "#7A9B80",
+          sand: "#F7D978",
+          border: "#DED6EA",
+          "text-primary": "#2A2234",
+          "text-secondary": "#655D73",
+          "warm-highlight": "#F7D978",
+          destructive: "#C95B6A",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -37,17 +43,17 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#8B5CF6",
+          DEFAULT: "#6E56F7",
           foreground: "#FFFFFF",
-          100: "#FAF9FF",
-          200: "#EDE9FE",
+          100: "#F7F1EC",
+          200: "#EEE7F8",
         },
         secondary: {
-          DEFAULT: "#EDE9FE",
-          foreground: "#2E1065",
+          DEFAULT: "#EEE7F8",
+          foreground: "#2A2234",
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
+          DEFAULT: "#C95B6A",
           foreground: "hsl(var(--destructive-foreground))",
         },
         muted: {
@@ -98,7 +104,11 @@ export default {
         "fade-in": "fade-in 0.3s ease-out",
       },
       fontFamily: {
-        serif: ['var(--font-serif)', 'ui-serif', 'Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'],
+        sans: ["var(--font-sans)", ...defaultTheme.fontFamily.sans],
+        serif: [
+          "var(--font-serif)",
+          ...defaultTheme.fontFamily.serif,
+        ],
       },
     },
   },
