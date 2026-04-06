@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: attachment-aware-personalization
-status: Defining requirements
+status: Phase 21 defined
 last_updated: "2026-04-05T00:00:00.000Z"
 progress:
-  total_phases: 0
+  total_phases: 4
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -15,13 +15,13 @@ progress:
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 21 — Pattern Infrastructure
 Plan: —
 
 - Milestone: Attachment-Aware Personalization (v2.0)
-- Active phase: none
-- Phase status: Defining requirements — Last activity: 2026-04-05 — Milestone v2.0 started
-- Note: Phase 20 (Editorial UI Refresh) still in flight — Plans 03 and 04 pending
+- Active phase: 21
+- Phase status: defined — Last activity: 2026-04-05 — Roadmap created for v2.0
+- Note: Phase 20 (Editorial UI Refresh) still in flight — Plans 03 and 04 pending on previous milestone
 
 ## Current Inputs
 
@@ -42,30 +42,21 @@ Plan: —
 
 ## Why This Phase Exists
 
-- Phase 19 locked the stable destination structure across `Home`, `Journeys`, `Connect`, and `Journal`
-- the next step is to visually refine that now-stable structure without reopening IA or behavior
-- the current product still reads too much like a utility dashboard instead of a calmer relationship-life app
-- this phase exists to make the stable primary destinations feel more premium, more coherent, and more emotionally intentional
+- Phase 20 completed the editorial UI refresh and destination structure is now locked
+- the app has no hidden personalization layer — Peter tone, morning stories, and journey routing treat every user identically
+- users with different relationship patterns (repair style, reassurance need, etc.) receive identical experiences
+- Phase 21 lays the vocabulary foundation and shared context builder that makes silent personalization possible without clinical labels or new UI surfaces
 
 ## Current Risks
 
-- daily-loop analytics still have duplicate or misattributed signals on successful runs
-- entitlement fallback and analytics insert failures can still hide operator-facing production problems
-- the secondary login-entry fallback path is still less dependable than the primary signup-driven path
-- live migration history drift still weakens fresh-project reproducibility
-- Home is overloaded and weakens clarity about the single next step
-- destination ownership is still blurred between Home, Journeys, Connect, Journal, and secondary access
-- direct-login re-entry behavior is still a smaller watch item compared with the fresh signup-driven primary path
-- the playful layer is now cohort-gated and looks non-intrusive, but the real-user sample is still too small to claim a retention lift
-- a visual refresh that reopens IA or feature scope would destabilize the newly proven structure
-- editorial polish can accidentally flatten Home hierarchy or make `Connect`, `Journal`, and `Journeys` feel interchangeable if the destination moods are not kept distinct
+- pattern vocabulary must be non-clinical throughout — one leaked label in a user-facing surface breaks the trust contract
+- inference is silent and fire-and-forget; any blocking behavior in evening reflection would regress a proven daily-loop completion path
+- the `buildPatternContext` type signature locked in Phase 21 becomes load-bearing for phases 22, 23, and 24 — changes after Phase 21 would cascade
+- all 8 dimensions must work solo-first; none can depend on partner presence
 
 ## Next Expected Action
 
-- execute `20-03-PLAN.md`
-- extend the verified featured-module pattern from Home into `Connect`, `Journal`, and `Journeys`
-- preserve the proven `Home -> daily-growth` launch path and all Phase 19 destination ownership
-- keep playful placement and route-owner mapping untouched while destination personality becomes more distinct
+- execute Phase 21: write the Supabase migration documenting the 7 new `profile_traits` keys and allowed values, then implement `src/lib/server/attachment-context.ts` with the `buildPatternContext` helper
 
 ## Accumulated Context
 
@@ -84,6 +75,16 @@ Plan: —
 - Phase 20 Plan 01 verification: lint, `npx tsc --noEmit`, and the targeted Playwright bundle for dashboard, IA ownership, and editorial route coverage all passed
 - Phase 20 Plan 02 completed: Home, the daily-growth home state, playful companion cards, and the bottom-nav shell now share the calmer editorial hierarchy without changing IA ownership
 - Phase 20 Plan 02 verification: targeted lint passed and `e2e/tests/05-dashboard.spec.ts`, `e2e/tests/14-playful-connection.spec.ts`, `e2e/tests/19-connect-journal-ia.spec.ts`, and `e2e/tests/20-editorial-ui-refresh.spec.ts` all passed against a local Next dev server
+- Phases 21–24 added: Attachment-Aware Personalization roadmap created — infrastructure, signal capture, Peter adaptation, and journey routing in four sequential phases
+
+### Milestone v2.0 Phase Map
+
+| Phase | Name | Status |
+|-------|------|--------|
+| 21 | Pattern Infrastructure | defined |
+| 22 | Signal Capture | defined |
+| 23 | Peter Adaptation | defined |
+| 24 | Pattern-Weighted Journey Routing | defined |
 
 ## Decisions
 
@@ -92,6 +93,9 @@ Plan: —
 - Ignore CSS files in Next ESLint so the plan's targeted lint command can verify `globals.css` without parsing it as JavaScript.
 - [Phase 20]: Home keeps a single accent-dominant Today hero while Peter, Daily Spark, and the destination strip stay visually subordinate.
 - [Phase 20]: The daily-growth home state keeps its existing Home-owned copy contract even after the editorial layout refresh so existing browser coverage stays valid.
+- [Phase 21]: `profile_traits` is the single store for all 8 inferred dimensions — no new tables.
+- [Phase 21]: `buildPatternContext` returns `null` per missing dimension, never throws — this is the contract downstream phases depend on.
+- [v2.0]: All pattern vocabulary must use plain human language — no clinical labels anywhere in any server path or user-facing surface.
 
 ## Performance Metrics
 
@@ -103,4 +107,4 @@ Plan: —
 ## Session
 
 - Last session: 2026-04-06T14:55:23Z
-- Stopped at: Completed 20-02-PLAN.md
+- Stopped at: Roadmap created for v2.0 Attachment-Aware Personalization

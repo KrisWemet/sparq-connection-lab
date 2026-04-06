@@ -617,3 +617,102 @@ Plans:
 - [x] 20-02-PLAN.md -- Refresh Home, the daily-growth home state, playful companion cards, and the bottom-nav shell
 - [ ] 20-03-PLAN.md -- Give Connect, Journal, and Journeys distinct editorial personalities on the locked IA
 - [ ] 20-04-PLAN.md -- Apply minimum secondary-surface cohesion polish and close the phase with editorial verification evidence
+
+## Milestone: Attachment-Aware Personalization
+
+| Phase | Name | Goal | Requirements |
+|-------|------|------|--------------|
+| 21 | Pattern Infrastructure | Establish the stable vocabulary and shared context builder that all downstream personalization phases depend on. | `ATTACH-INFRA-01`, `ATTACH-INFRA-02` |
+| 22 | Signal Capture | Extend onboarding, evening reflection, and trait-gap steering to capture and infer all 8 pattern dimensions from real user behavior. | `ATTACH-SIGNAL-01`, `ATTACH-SIGNAL-02`, `ATTACH-SIGNAL-03` |
+| 23 | Peter Adaptation | Apply inferred pattern dimensions to Peter morning stories, chat tone, and contextual insight moments. | `ATTACH-PETER-01`, `ATTACH-PETER-02`, `ATTACH-PETER-03` |
+| 24 | Pattern-Weighted Journey Routing | Extend journey recommendation to weight available journeys by the user's inferred pattern profile. | `ATTACH-JOURNEY-01` |
+
+### Phase 21: Pattern Infrastructure
+
+**Goal:** Establish a stable pattern vocabulary and shared context builder so all downstream signal, Peter, and routing phases draw from a single consistent source of truth.
+**Depends on:** Phase 20
+**Requirements:** `ATTACH-INFRA-01`, `ATTACH-INFRA-02`
+**Success Criteria** (what must be TRUE):
+  1. A developer can query `profile_traits` and find only values from the allowed vocabulary for the 7 new keys — no out-of-vocab values can be inserted via any server path.
+  2. `src/lib/server/attachment-context.ts` exists and exports a `buildPatternContext(userId)` function that returns a typed `PatternContext` object for any user, returning `null` per missing dimension rather than throwing.
+  3. Calling `buildPatternContext` for a user with no trait rows returns an object with all 8 dimensions set to `null` — it does not throw or return `undefined`.
+  4. The migration file documents all 7 new `profile_traits` keys and their allowed values in a comment block a developer can read without opening application code.
+**Plans:** TBD
+
+## Phase 21 Notes
+- Source of truth: `SPARQ_MASTER_SPEC.md`
+- Key files: `supabase/migrations/`, `src/lib/server/attachment-context.ts`, `src/lib/server/profile-analysis.ts`
+- Allowed values must mirror the non-clinical language constraint from `PROJECT.md` — no "avoidant", "anxious", "attachment style"
+- `buildPatternContext` is the shared interface downstream phases use; get the type signature right here so phases 22–24 do not need to rework it
+- Explicitly out of scope: signal inference, Peter changes, journey routing changes
+
+## Phase 21 Status
+- Status: defined
+
+### Phase 22: Signal Capture
+
+**Goal:** Extend onboarding, evening reflection analysis, and trait-gap steering so all 8 pattern dimensions accumulate confidence from real user behavior through existing channels.
+**Depends on:** Phase 21
+**Requirements:** `ATTACH-SIGNAL-01`, `ATTACH-SIGNAL-02`, `ATTACH-SIGNAL-03`
+**Success Criteria** (what must be TRUE):
+  1. After a user completes onboarding, `profile_traits` rows exist for `repair_style`, `reassurance_need`, and `space_preference` with values from the Phase 21 allowed vocabulary.
+  2. After a user submits an evening reflection, `profile-analysis.ts` attempts inference for all 8 dimensions and any successfully inferred values are written to `profile_traits` — the session completion API response is not delayed or changed.
+  3. If the evening inference produces a value outside the allowed vocabulary for any dimension, that dimension is silently discarded and no insert is attempted.
+  4. `trait-gaps.ts` lists all 8 dimensions in `CORE_TRAITS` and returns a steering hint for any under-profiled dimension when called during morning story generation.
+  5. No onboarding screen gains a new step — signals are captured through adapted options on existing question slots.
+**Plans:** TBD
+
+## Phase 22 Notes
+- Source of truth: `SPARQ_MASTER_SPEC.md`
+- Key files: `src/lib/onboarding/`, `src/lib/server/profile-analysis.ts`, `src/lib/server/trait-gaps.ts`
+- Signal capture must remain fire-and-forget — the session completion response must not wait on trait writes
+- Onboarding signal capture must not add clinical framing or label language to any question or option
+- Explicitly out of scope: Peter morning story application, chat tone changes, journey routing changes
+
+## Phase 22 Status
+- Status: defined
+
+### Phase 23: Peter Adaptation
+
+**Goal:** Apply inferred pattern dimensions to Peter morning story generation, chat tone, and contextual insight moments so the experience feels genuinely tailored without naming or diagnosing the user.
+**Depends on:** Phase 22
+**Requirements:** `ATTACH-PETER-01`, `ATTACH-PETER-02`, `ATTACH-PETER-03`
+**Success Criteria** (what must be TRUE):
+  1. When a user has `repair_style` or `reassurance_need` at any confidence level, Peter's chat response opening reflects the appropriate tone variant — a developer can verify by inspecting the system prompt sent to OpenRouter.
+  2. When a user has any of the 8 pattern dimensions at confidence 0.35 or above, the morning story prompt includes a personalization hint for that dimension — verifiable by logging the prompt string in development.
+  3. When a user has a dimension at confidence 0.7 or above, Peter's evening check-in or chat can produce an insight moment using plain human language in the form "I've noticed you tend to..." — not "You are..." or any clinical label.
+  4. No existing personalization branches for `attachment_style`, `love_language`, or `conflict_style` are removed or changed by this phase.
+  5. The `buildPatternContext` helper from Phase 21 is the only `profile_traits` read path used by morning story and chat — no scattered direct trait queries exist after this phase.
+**Plans:** TBD
+
+## Phase 23 Notes
+- Source of truth: `SPARQ_MASTER_SPEC.md`
+- Key files: `src/lib/peterService.ts`, `src/pages/api/peter/`, `src/lib/server/attachment-context.ts`
+- All insight moment copy must pass the non-clinical language constraint — load the NLP language framework before writing any copy
+- Insight moments are an additive path; the existing Peter chat and morning story must still work for users with no trait data
+- Explicitly out of scope: journey routing changes, onboarding changes, new UI surfaces
+
+## Phase 23 Status
+- Status: defined
+
+### Phase 24: Pattern-Weighted Journey Routing
+
+**Goal:** Extend journey recommendation so journeys aligned to a user's highest-confidence, lowest-satisfaction pattern dimensions score higher, producing a genuinely personalized next-journey suggestion.
+**Depends on:** Phase 23
+**Requirements:** `ATTACH-JOURNEY-01`
+**Success Criteria** (what must be TRUE):
+  1. `next-journey-recommender.ts` reads the user's `PatternContext` via `buildPatternContext` and applies affinity weights before returning its ranked journey list.
+  2. A user with a high-confidence pattern dimension and low journey satisfaction in the aligned category receives a different top recommendation than a user with no pattern data — verifiable by injecting fixture trait rows in a local test scenario.
+  3. The weighting is additive: the existing `attachment_style` affinity scoring is still present and contributes to the final score alongside the new pattern weights.
+  4. If `buildPatternContext` returns all nulls (no trait data), the recommender falls back cleanly to the existing scoring without throwing or returning an empty list.
+**Plans:** TBD
+
+## Phase 24 Notes
+- Source of truth: `SPARQ_MASTER_SPEC.md`
+- Key files: `src/lib/server/next-journey-recommender.ts`, `src/lib/server/attachment-context.ts`
+- Additive weighting means the existing attachment-style affinity must still apply — do not replace it
+- Journey affinity mapping (which journeys align to which pattern dimensions) must be defined here, not deferred to a later phase
+- Explicitly out of scope: new journey content, new UI, Peter changes
+
+## Phase 24 Status
+- Status: defined

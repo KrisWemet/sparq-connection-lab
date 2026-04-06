@@ -467,3 +467,17 @@
 - Journey recommendations (`src/lib/server/next-journey-recommender.ts`) must weight available journeys by affinity to the user's inferred pattern profile.
 - Journeys aligned to a user's highest-confidence, lowest-satisfaction dimensions must score higher in the recommendation ranking.
 - The weighting must be additive to the existing attachment-style affinity scoring, not a replacement.
+
+## Traceability — Milestone: Attachment-Aware Personalization
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| ATTACH-INFRA-01 | Phase 21 | Pending |
+| ATTACH-INFRA-02 | Phase 21 | Pending |
+| ATTACH-SIGNAL-01 | Phase 22 | Pending |
+| ATTACH-SIGNAL-02 | Phase 22 | Pending |
+| ATTACH-SIGNAL-03 | Phase 22 | Pending |
+| ATTACH-PETER-01 | Phase 23 | Pending |
+| ATTACH-PETER-02 | Phase 23 | Pending |
+| ATTACH-PETER-03 | Phase 23 | Pending |
+| ATTACH-JOURNEY-01 | Phase 24 | Pending |
