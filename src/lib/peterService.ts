@@ -264,10 +264,10 @@ Use simple identity language like: "That is how steady love grows" or "This is h
 // Trait descriptions mapped to natural language (Peter never uses clinical terms)
 const TRAIT_DESCRIPTIONS: Record<string, Record<string, string>> = {
   attachment_style: {
-    anxious: 'you sometimes worry about whether your partner is really there for you',
-    avoidant: 'you sometimes need space to process your feelings before opening up',
-    disorganized: 'you can feel pulled between wanting closeness and needing distance',
-    secure: 'you generally feel comfortable being open and close with your partner',
+    reaches_out:  'you sometimes worry about whether your partner is really there for you',
+    steps_back:   'you sometimes need space to process your feelings before opening up',
+    feels_torn:   'you can feel pulled between wanting closeness and needing distance',
+    feels_steady: 'you generally feel comfortable being open and close with your partner',
   },
   love_language: {
     words: 'hearing that you\'re appreciated means a lot to you',
