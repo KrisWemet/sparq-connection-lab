@@ -77,7 +77,7 @@ function getPracticeSupportCopy(mode: PracticeMode) {
 
 export default function DailyGrowth() {
   const router = useRouter();
-  const { user, loading: authLoading } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
 
   const [phase, setPhase] = useState<Phase>('loading');
   const [currentDay, setCurrentDay] = useState(1);
@@ -613,9 +613,20 @@ export default function DailyGrowth() {
         : journeyTitle
           ? `${journeyTitle} is working on you. Here's your next step.`
           : "Small things, done consistently, change everything. Here's today's step.");
+    const anchors = (profile as any)?.habit_anchors as string[] | undefined;
+    const primaryAnchor = anchors?.[0];
+    const anchorCopy: Record<string, string> = {
+      morning_coffee: 'While you have your morning coffee, take five quiet minutes for this.',
+      commute_start: 'While you settle in for your commute, take five minutes for this.',
+      lunch_break: 'During your lunch break today, take five minutes for this.',
+      evening_winddown: 'As you wind down this evening, take five minutes for this.',
+      bedtime: 'Before you sleep tonight, take five minutes for this.',
+    };
     const homeSupportLine = journeyTitle
       ? `${journeyTitle} keeps today's practice focused, warm, and small enough to carry into real life.`
-      : 'Five quiet minutes now can change the tone of the rest of your day.';
+      : (primaryAnchor && anchorCopy[primaryAnchor])
+        ? anchorCopy[primaryAnchor]
+        : 'Five quiet minutes now can change the tone of the rest of your day.';
 
     return (
       <div className="min-h-screen bg-brand-linen pb-28 font-sans">
