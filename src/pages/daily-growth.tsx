@@ -18,6 +18,7 @@ import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
 import { DayProgressArc } from '@/components/daily/DayProgressArc';
 import { PreviousReflectionCard } from '@/components/daily/PreviousReflectionCard';
 import { EveningCheckin } from '@/components/daily/EveningCheckin';
+import { IfThenPlanStep } from '@/components/daily/IfThenPlanStep';
 import { JourneyCompletion } from '@/components/daily/JourneyCompletion';
 import { BetaFeedbackDialog } from '@/components/beta/BetaFeedbackDialog';
 import { reportPrimaryPathClientError, trackPrimaryPathClientEvent } from '@/lib/beta/primaryPath';
@@ -26,7 +27,7 @@ import type { PlayfulPrompt } from '@/data/playful-prompts';
 import { FavoriteUsCard } from '@/components/playful/FavoriteUsCard';
 import { EditorialEyebrow } from '@/components/editorial/EditorialSurface';
 
-type Phase = 'loading' | 'morning' | 'evening' | 'evening-checkin' | 'journey-complete' | 'complete';
+type Phase = 'loading' | 'morning' | 'evening' | 'evening-checkin' | 'if_then_plan' | 'journey-complete' | 'complete';
 type PracticeMode = 'solo' | 'partner_optional' | 'partner_joint';
 
 // Fallback modality label when no journey is active.
@@ -92,6 +93,7 @@ export default function DailyGrowth() {
   const [reflectionClosed, setReflectionClosed] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [pendingCompletion, setPendingCompletion] = useState<{ userMsg: string; peterMsg: string } | null>(null);
 
   // Journey-specific state
   const [journeyId, setJourneyId] = useState<string | null>(null);
@@ -462,14 +464,23 @@ export default function DailyGrowth() {
     }
   };
 
-  const handleCompleteDay = async () => {
+  // Step 1: Evening reflection done — gate on if-then plan before saving
+  const handleCompleteDay = () => {
     if (!user || isSaving) return;
-    setIsSaving(true);
-
     const userMsgs = eveningMessages.filter(m => m.role === 'user');
     const peterMsgs = eveningMessages.filter(m => m.role === 'assistant');
-    const lastUserMsg = userMsgs[userMsgs.length - 1]?.content || '';
-    const lastPeterMsg = peterMsgs[peterMsgs.length - 1]?.content || '';
+    setPendingCompletion({
+      userMsg: userMsgs[userMsgs.length - 1]?.content || '',
+      peterMsg: peterMsgs[peterMsgs.length - 1]?.content || '',
+    });
+    setPhase('if_then_plan');
+  };
+
+  // Step 2: If-then plan captured — now persist and show completion
+  const handleFinalComplete = async (plan: string | null) => {
+    if (!user || !pendingCompletion) return;
+    setIsSaving(true);
+    const { userMsg: lastUserMsg, peterMsg: lastPeterMsg } = pendingCompletion;
 
     try {
       if (sessionId) {
@@ -482,6 +493,7 @@ export default function DailyGrowth() {
             evening_reflection: lastUserMsg,
             evening_peter_response: lastPeterMsg,
             completion_local_date: localDateString(),
+            if_then_plan: plan,
           }),
         });
 
@@ -490,7 +502,6 @@ export default function DailyGrowth() {
           setCurrentDay(payload.next_day_index || currentDay + 1);
           fireElegantConfetti();
 
-          // If a journey just completed, show the journey completion screen
           if (payload.journey_completed && payload.completed_journey_id) {
             setPhase('journey-complete');
           } else {
@@ -502,6 +513,7 @@ export default function DailyGrowth() {
             session_id: sessionId,
             is_graduation: currentDay >= 14,
             journey_completed: payload.journey_completed || false,
+            has_if_then_plan: Boolean(plan),
           });
           if (currentDay === 1) {
             void trackPrimaryPathClientEvent('beta_primary_day1_completed', {
@@ -512,7 +524,7 @@ export default function DailyGrowth() {
         }
       }
 
-      // Silent profile analysis
+      // Fallback: no session_id — direct Supabase writes
       const analyzeRes = await fetch('/api/peter/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -528,7 +540,6 @@ export default function DailyGrowth() {
       const isGraduation = currentDay >= 14;
 
       await Promise.all([
-        // Save evening entry
         supabase.from('daily_entries').upsert(
           {
             user_id: user.id,
@@ -539,7 +550,6 @@ export default function DailyGrowth() {
           },
           { onConflict: 'user_id,day' }
         ),
-        // Advance day + update insights
         supabase.from('user_insights').upsert(
           {
             user_id: user.id,
@@ -554,12 +564,14 @@ export default function DailyGrowth() {
       ]);
 
       setCurrentDay(nextDay);
+      fireElegantConfetti();
       setPhase('complete');
 
       analyticsService.trackEvent('daily_session_completed', {
         day: currentDay,
         session_id: sessionId,
-        is_graduation: isGraduation
+        is_graduation: isGraduation,
+        has_if_then_plan: Boolean(plan),
       });
       if (currentDay === 1) {
         void trackPrimaryPathClientEvent('beta_primary_day1_completed', {
@@ -815,7 +827,7 @@ export default function DailyGrowth() {
         </div>
       </div>
 
-      <DailyTimeline phase={phase === 'evening-checkin' ? 'evening' : phase === 'journey-complete' ? 'complete' : phase} actionVerified={actionVerified} />
+      <DailyTimeline phase={phase === 'evening-checkin' || phase === 'if_then_plan' ? 'evening' : phase === 'journey-complete' ? 'complete' : phase} actionVerified={actionVerified} />
 
       {/* Main content */}
       <div className="flex-1 overflow-hidden">
@@ -979,6 +991,14 @@ export default function DailyGrowth() {
                 }}
               />
             </motion.div>
+          )}
+
+          {/* ── IF-THEN PLAN PHASE ── */}
+          {phase === 'if_then_plan' && (
+            <IfThenPlanStep
+              suggestedPlan="When I notice tension rising in a conversation, I will take one breath and say what I appreciate before responding."
+              onComplete={handleFinalComplete}
+            />
           )}
 
           {/* ── JOURNEY COMPLETE PHASE ── */}

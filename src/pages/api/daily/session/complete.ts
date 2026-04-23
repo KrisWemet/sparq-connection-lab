@@ -10,6 +10,8 @@ type CompleteBody = {
   evening_reflection?: string;
   evening_peter_response?: string;
   completion_local_date?: string;
+  if_then_plan?: string | null;
+  trigger_source?: string;
 };
 
 function inferReflectionSignals(reflection: string) {
@@ -121,7 +123,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         evening_peter_response: body.evening_peter_response ?? session.evening_peter_response,
         evening_completed_at: new Date().toISOString(),
         completed_local_date: completionDate,
-        is_locked_for_pause: false, // Clear lock on successful completion
+        is_locked_for_pause: false,
+        if_then_plan: body.if_then_plan ?? null,
+        trigger_source: body.trigger_source ?? 'scheduled',
         updated_at: new Date().toISOString(),
       })
       .eq('id', body.session_id)
