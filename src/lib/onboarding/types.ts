@@ -78,7 +78,8 @@ export type OnboardingPhase =
   | 'scoring_transition'
   | 'peter_session'
   | 'journey_rec'
-  | 'journey_detail';
+  | 'journey_detail'
+  | 'habit_anchors';
 
 // Persisted to localStorage under key 'sparq_onboarding_progress'
 export interface OnboardingProgress {

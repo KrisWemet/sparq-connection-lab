@@ -12,6 +12,7 @@ import { ScoringTransition } from '@/components/onboarding/ScoringTransition';
 import { PeterSession } from '@/components/onboarding/PeterSession';
 import { JourneyRecommendation } from '@/components/onboarding/JourneyRecommendation';
 import { JourneyDetail } from '@/components/onboarding/JourneyDetail';
+import { HabitAnchorStep } from '@/components/onboarding/HabitAnchorStep';
 import type { DerivedProfile, OnboardingPhase, OnboardingProgress } from '@/lib/onboarding/types';
 
 const STORAGE_KEY = 'sparq_onboarding_progress';
@@ -198,7 +199,16 @@ export default function OnboardingPage() {
         profile={profile}
         userId={user.id}
         onBack={() => setPhase('journey_rec')}
-        onConfirm={() => router.push('/dashboard?from=onboarding')}
+        onConfirm={() => setPhase('habit_anchors')}
+      />
+    );
+  }
+
+  if (phase === 'habit_anchors' && user) {
+    return (
+      <HabitAnchorStep
+        userId={user.id}
+        onComplete={() => router.push('/dashboard?from=onboarding')}
       />
     );
   }

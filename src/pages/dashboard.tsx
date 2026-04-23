@@ -19,6 +19,8 @@ import type { PlayfulPrompt } from '@/data/playful-prompts';
 import { DailySparkCard } from '@/components/playful/DailySparkCard';
 import { HomeDestinationStrip } from "@/components/dashboard/HomeDestinationStrip";
 import { EditorialEyebrow } from "@/components/editorial/EditorialSurface";
+import { IfThenCheckinCard } from "@/components/dashboard/IfThenCheckinCard";
+import { StateTagRow } from "@/components/dashboard/StateTagRow";
 
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 export default function Dashboard() {
@@ -31,6 +33,9 @@ export default function Dashboard() {
 
   // Evening check-in eligibility
   const [showEveningCTA, setShowEveningCTA] = useState(false);
+
+  // If-then plan check-in
+  const [pendingCheckin, setPendingCheckin] = useState<{ sessionId: string; planText: string } | null>(null);
 
   // Journey completion state
   const [completionState, setCompletionState] = useState<string | null>(null);
@@ -97,6 +102,31 @@ export default function Dashboard() {
           const eveningNotDone = !session.evening_completed_at;
           if (morningDone && eveningNotDone) {
             setShowEveningCTA(true);
+          }
+        }
+
+        // Check for a completed session with an if-then plan that hasn't been checked in yet
+        const cutoff = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
+        const { data: planSession } = await supabase
+          .from('daily_sessions')
+          .select('id, if_then_plan')
+          .eq('user_id', userId)
+          .eq('status', 'completed')
+          .not('if_then_plan', 'is', null)
+          .gte('evening_completed_at', cutoff)
+          .order('evening_completed_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (planSession?.if_then_plan) {
+          const { data: existingCheckin } = await supabase
+            .from('if_then_checkins')
+            .select('id')
+            .eq('session_id', planSession.id)
+            .maybeSingle();
+
+          if (!existingCheckin) {
+            setPendingCheckin({ sessionId: planSession.id, planText: planSession.if_then_plan });
           }
         }
       } catch {}
@@ -195,6 +225,18 @@ export default function Dashboard() {
         {/* ── 1. PETER'S GREETING ── */}
         <PeterGreeting firstName={firstName} />
 
+        {/* ── IF-THEN CHECKIN ── */}
+        {pendingCheckin && (
+          <IfThenCheckinCard
+            sessionId={pendingCheckin.sessionId}
+            planText={pendingCheckin.planText}
+            onDismiss={() => setPendingCheckin(null)}
+          />
+        )}
+
+        {/* ── STATE TAG ROW (JITAI Phase 1) ── */}
+        {user && <StateTagRow userId={user.id} />}
+
         {/* ── 2. TODAY'S PRACTICE CTA ── */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -273,6 +315,21 @@ export default function Dashboard() {
             surface="dashboard"
             onSwap={() => setDailySparkOffset((current) => current + 1)}
           />
+        )}
+
+        {/* Lally habit-formation framing — shown while user is building the habit */}
+        {currentDay <= 90 && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.15 }}
+            className="rounded-2xl border border-brand-primary/8 bg-white/40 px-4 py-3"
+          >
+            <p className="text-xs leading-relaxed text-brand-taupe">
+              <span className="font-medium text-brand-espresso">Building a habit takes about 66 days</span> — not 21.
+              Missing a day doesn&apos;t break it. Just show up again tomorrow.
+            </p>
+          </motion.div>
         )}
 
         <HomeDestinationStrip />

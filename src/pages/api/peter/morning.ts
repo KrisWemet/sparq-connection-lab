@@ -1,12 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { peterChat } from '@/lib/openrouter';
-import { PETER_SYSTEM_PROMPT, getMorningStoryPrompt, UserInsights, buildPersonalizedPrompt, type ProfileTrait, type MemoryResult } from '@/lib/peterService';
+import { PETER_SYSTEM_PROMPT, getMorningStoryPrompt, UserInsights, buildPersonalizedPrompt, type MemoryResult } from '@/lib/peterService';
+
 import { parseMorningContent } from '@/lib/morning-parser';
 import { stripMarkdown } from '@/lib/strip-markdown';
 import { getAuthedContext } from '@/lib/server/supabase-auth';
 import { parseLocalDate } from '@/lib/server/date-utils';
 import { getRecentMemories } from '@/lib/server/memory';
 import { loadPrivacyState } from '@/lib/server/privacy';
+import { buildPatternContext, patternContextToTraits } from '@/lib/server/attachment-context';
 
 // Per-user cache keyed by userId:day
 const storyCache = new Map<string, { text: string; timestamp: number }>();
@@ -88,11 +90,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const privacy = await loadPrivacyState(authed.supabase, authed.userId);
 
         if (privacy.can_personalize) {
-          const [traitsResult, profileResult, insightsResult, memResult] = await Promise.all([
+          const [patternContext, remainingTraitsResult, profileResult, insightsResult, memResult] = await Promise.all([
+            buildPatternContext(authed.supabase, authed.userId),
             authed.supabase
               .from('profile_traits')
               .select('trait_key, inferred_value, confidence, effective_weight')
               .eq('user_id', authed.userId)
+              .in('trait_key', ['love_language', 'conflict_style'])
               .gte('effective_weight', 0.3),
             authed.supabase
               .from('profiles')
@@ -109,7 +113,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               : Promise.resolve({ results: [] }),
           ]);
 
-          const traits: ProfileTrait[] = traitsResult.data || [];
+          const traits = [
+            ...patternContextToTraits(patternContext),
+            ...(remainingTraitsResult.data || []),
+          ];
           const memories: MemoryResult[] = (memResult?.results || []).map((r: any) => ({
             memory: r.memory || r.content || '',
             score: r.score,
