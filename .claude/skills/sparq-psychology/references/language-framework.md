@@ -1,4 +1,4 @@
-# Sparq NLP & Language Framework
+# Sparq Language & Conversational Design Framework
 ## The layer that makes Sparq feel different from every other relationship app
 
 This document defines how Sparq communicates — not just what it says, but how language is constructed to create genuine change. Add this to `.claude/skills/sparq-psychology/references/`.
@@ -57,7 +57,7 @@ Every question, exercise, and Peter line should be designed to **pull** — to s
 
 ### 3. Presupposition Structures
 
-A presupposition assumes something is already true inside the question. The user's brain accepts the assumption and moves forward. This is one of the most powerful NLP tools in Sparq's language system.
+A presupposition assumes something is already true inside the question. The user's brain accepts the assumption and moves forward. This is one of the most effective linguistic design techniques in Sparq's communication system (rooted in standard pragmatics literature).
 
 **Without presupposition:** "Do you want to reflect on that?"
 *(User can say no and stay stuck)*

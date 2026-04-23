@@ -534,7 +534,7 @@ When building a new Sparq component:
 - **For Peter avatar poses, moods, SVG specs, and copy voice**: see `sparq-peter` skill
 - **For architecture and page structure**: see `sparq-architecture` skill
 - **For psychology-driven content, personalization, and language**: see `sparq-psychology` skill
-- **For NLP language patterns and copy rules**: see `sparq-psychology/references/nlp-language-framework`
+- **For language patterns and copy rules**: see `sparq-psychology/references/language-framework`
 
 ---
 

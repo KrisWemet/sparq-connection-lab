@@ -392,9 +392,11 @@ User profile fields: primary_attachment_style, secondary_attachment_style, attac
 
 ---
 
-### 3.12 Influence & Persuasion Psychology
+### 3.12 Neuroplasticity + Habit Science (formerly "Influence & Persuasion Psychology")
 
-**Research Foundation**: Robert Cialdini (Influence: The Psychology of Persuasion).
+> **Framework update:** This section's content maps to the revised Pillar 6 (Neuroplasticity + Habit Science) and Pillar 7 (Positive Psychology & Relationship Science) in the current eight-pillar architecture. The underlying techniques (reciprocity, commitment, habit formation) are valid; the "Influence & Persuasion" label has been retired. Core research: Wendy Wood (USC), James Clear, Robert Cialdini.
+
+**Research Foundation**: Robert Cialdini (Influence: The Psychology of Persuasion); Wendy Wood (habit science, USC).
 
 **Ethical Application for Positive Relationship Dynamics**:
 - **Reciprocity**: Balanced giving and receiving — exercises that create positive exchange cycles
@@ -534,7 +536,7 @@ For **Secure** attachment:
 - Warm, accessible, conversational — like a supportive, knowledgeable friend
 - Never clinical, academic, or textbook-like
 - Never preachy, never lecturing
-- Light NLP: Identity reinforcement ("As a Growth Seeker, you...") — no embedded commands
+- Identity-based framing (James Clear, Atomic Habits): identity reinforcement ("As a Growth Seeker, you...") — no embedded commands
 - Peter the otter's voice when delivering celebration/encouragement (see Peter specs)
 
 ### Framing
@@ -736,7 +738,7 @@ Reflection:
 What did you notice in your body? Did anything shift between the start and end?
 
 Why this matters:
-Our nervous systems are wired to sync with the people closest to us. Research by Stephen Porges shows that co-regulation — calming ourselves through connection with a trusted person — is one of the most powerful ways to reduce stress and build security.
+Our nervous systems are wired to sync with the people closest to us. Research on autonomic nervous system regulation shows that co-regulation — calming ourselves through connection with a trusted person — is one of the most powerful ways to reduce stress and build security. (This includes the clinical work of Stephen Porges, alongside HRV research by Thayer & Lane and affective neuroscience by Davidson et al.)
 
 Attachment adaptations:
 - Anxious: "This exercise is about being present, not about getting a specific response. Notice what YOUR body feels, not just your partner's reaction."

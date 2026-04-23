@@ -182,7 +182,7 @@ Most people use ~10 emotion words. NVC teaches ~100+. This precision reduces mis
 
 ## 11. Somatic Approaches
 
-**Research basis**: Peter Levine (Somatic Experiencing), Bessel van der Kolk ("The Body Keeps the Score"), Stephen Porges (Polyvagal Theory). Core insight: the body stores and processes emotional experience — cognitive understanding alone is insufficient.
+**Research basis**: Peter Levine (Somatic Experiencing), Bessel van der Kolk ("The Body Keeps the Score"), autonomic nervous system regulation research (HRV: Thayer & Lane, 2000; affective neuroscience: Davidson et al., 2000). Clinical framework reference: Stephen Porges (Polyvagal Theory — a widely-used clinical lens for understanding nervous system states; underlying neurophysiology is contested in peer-reviewed literature). Core insight: the body stores and processes emotional experience — cognitive understanding alone is insufficient.
 
 ### Window of Tolerance
 

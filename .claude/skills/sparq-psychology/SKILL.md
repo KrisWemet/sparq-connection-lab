@@ -150,7 +150,7 @@ Sparq helps users change **without feeling like they're being changed**. This is
 - Assessment is woven into content, not presented as a test
 - Psychological frameworks are demonstrated through stories and exercises, never lectured
 - Users experience "aha moments" that feel like their own discovery, not the app telling them something
-- Identity reinforcement through archetypes ("As a Growth Seeker, you...") uses light NLP — no embedded commands
+- Identity reinforcement through archetypes ("As a Growth Seeker, you...") uses identity-based habit formation (James Clear, Atomic Habits) — no embedded commands
 - Peter references traits naturally ("I've noticed you tend to..."), never clinically ("Your profile shows...")
 - The 14-day structure creates progressive depth without the user noticing the scaffolding
 
