@@ -60,11 +60,11 @@ export function recommendNextJourneys(
   const scored = available.map(j => {
     let score = 0;
 
-    // Boost journeys that match the user's attachment profile
-    if (attachmentStyle === 'anxious' && ['building-trust', 'safe-in-love'].includes(j.id)) score += 2;
-    if (attachmentStyle === 'avoidant' && ['opening-heart', 'calm-before-closeness'].includes(j.id)) score += 2;
-    if (attachmentStyle === 'disorganized' && ['mixed-feelings', 'healing-old-wounds'].includes(j.id)) score += 2;
-    if (attachmentStyle === 'secure' && ['deepening-good', 'shared-language'].includes(j.id)) score += 2;
+    // Boost journeys that match the user's attachment profile (behavioral vocabulary, D-01)
+    if (attachmentStyle === 'reaches_out' && ['building-trust', 'safe-in-love'].includes(j.id)) score += 2;
+    if (attachmentStyle === 'steps_back' && ['opening-heart', 'calm-before-closeness'].includes(j.id)) score += 2;
+    if (attachmentStyle === 'feels_torn' && ['mixed-feelings', 'healing-old-wounds'].includes(j.id)) score += 2;
+    if (attachmentStyle === 'feels_steady' && ['deepening-good', 'shared-language'].includes(j.id)) score += 2;
 
     // Slightly prefer shorter journeys (easier commitment)
     if (j.duration <= 10) score += 1;
