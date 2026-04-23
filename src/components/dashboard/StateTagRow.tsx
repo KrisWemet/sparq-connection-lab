@@ -5,7 +5,7 @@ import { buildAuthedHeaders } from '@/lib/api-auth';
 type StateTag = 'just_had_conflict' | 'partner_shared_good_news' | 'feeling_disconnected' | 'tense_anxious';
 
 const STATE_TAGS: { value: StateTag; label: string; emoji: string; route: string }[] = [
-  { value: 'just_had_conflict',        label: 'Just had a conflict',     emoji: '🌊', route: '/daily-growth' },
+  { value: 'just_had_conflict',        label: 'Just had a conflict',     emoji: '🌊', route: '/neutral-observer?trigger=conflict' },
   { value: 'partner_shared_good_news', label: 'Partner shared good news', emoji: '🎉', route: '/daily-growth' },
   { value: 'feeling_disconnected',     label: 'Feeling disconnected',     emoji: '🌫️', route: '/daily-growth' },
   { value: 'tense_anxious',            label: 'Tense or anxious',         emoji: '🫁', route: '/daily-growth' },

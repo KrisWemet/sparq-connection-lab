@@ -40,6 +40,9 @@ export default function Dashboard() {
   // Journey completion state
   const [completionState, setCompletionState] = useState<string | null>(null);
 
+  // Neutral Observer Reflection nudge
+  const [showNorNudge, setShowNorNudge] = useState(false);
+
   // Load Active Journey Context + check today's session status
   useEffect(() => {
     async function loadContext() {
@@ -128,6 +131,18 @@ export default function Dashboard() {
           if (!existingCheckin) {
             setPendingCheckin({ sessionId: planSession.id, planText: planSession.if_then_plan });
           }
+        }
+
+        // Check if Neutral Observer Reflection is due
+        const { data: profileRow } = await supabase
+          .from('profiles')
+          .select('next_neutral_observer_due')
+          .eq('id', userId)
+          .maybeSingle();
+
+        const norDue = profileRow?.next_neutral_observer_due;
+        if (!norDue || new Date(norDue) <= new Date()) {
+          setShowNorNudge(true);
         }
       } catch {}
     }
@@ -329,6 +344,32 @@ export default function Dashboard() {
               <span className="font-medium text-brand-espresso">Building a habit takes about 66 days</span> — not 21.
               Missing a day doesn&apos;t break it. Just show up again tomorrow.
             </p>
+          </motion.div>
+        )}
+
+        {/* ── NOR NUDGE — shown when reflection is due ── */}
+        {showNorNudge && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.18 }}
+            className="rounded-2xl border border-brand-primary/12 bg-brand-parchment px-5 py-4 flex items-center justify-between gap-3"
+          >
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-primary/60 mb-0.5">
+                The Finkel Method
+              </p>
+              <p className="text-sm font-medium text-brand-espresso">
+                Time for a Neutral Observer Reflection
+              </p>
+              <p className="text-xs text-brand-taupe mt-0.5">Three minutes.</p>
+            </div>
+            <button
+              onClick={() => router.push('/neutral-observer')}
+              className="flex-shrink-0 rounded-full bg-brand-primary px-4 py-2 text-xs font-semibold text-white hover:bg-brand-hover transition-colors"
+            >
+              Start now
+            </button>
           </motion.div>
         )}
 
