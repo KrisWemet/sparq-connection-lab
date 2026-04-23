@@ -62,8 +62,7 @@ export interface JourneyResponse {
   created_at: string;
 }
 
-export type PsychologyModality = 
-  | "Influence & Persuasion"
+export type PsychologyModality =
   | "Positive Psychology"
   | "CBT"
   | "Motivational Interviewing"

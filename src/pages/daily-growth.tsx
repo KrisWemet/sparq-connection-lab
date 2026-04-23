@@ -16,7 +16,6 @@ import { fireElegantConfetti } from '@/lib/ElegantConfetti';
 import { PeterLoading } from '@/components/PeterLoading';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
 import { DayProgressArc } from '@/components/daily/DayProgressArc';
-import { TodaysExerciseCard } from '@/components/daily/TodaysExerciseCard';
 import { PreviousReflectionCard } from '@/components/daily/PreviousReflectionCard';
 import { EveningCheckin } from '@/components/daily/EveningCheckin';
 import { JourneyCompletion } from '@/components/daily/JourneyCompletion';
@@ -25,6 +24,7 @@ import { reportPrimaryPathClientError, trackPrimaryPathClientEvent } from '@/lib
 import { fetchPlayfulConnectionToday } from '@/lib/playfulConnection';
 import type { PlayfulPrompt } from '@/data/playful-prompts';
 import { FavoriteUsCard } from '@/components/playful/FavoriteUsCard';
+import { EditorialEyebrow } from '@/components/editorial/EditorialSurface';
 
 type Phase = 'loading' | 'morning' | 'evening' | 'evening-checkin' | 'journey-complete' | 'complete';
 type PracticeMode = 'solo' | 'partner_optional' | 'partner_joint';
@@ -586,10 +586,6 @@ export default function DailyGrowth() {
   // Shown once per session, before the user enters the morning exercise flow.
   // Only applies to the morning phase — evening/complete go straight through.
 
-  // Home screen teaser — does NOT reveal the exercise before the story.
-  const homeQuestion = journeyTitle
-    ? `Your Day ${currentDay} step is ready.`
-    : 'Your next step is ready.';
   const practiceCopy = getPracticeSupportCopy(practiceMode);
 
   const DEFAULT_REFLECTION =
@@ -605,6 +601,9 @@ export default function DailyGrowth() {
         : journeyTitle
           ? `${journeyTitle} is working on you. Here's your next step.`
           : "Small things, done consistently, change everything. Here's today's step.");
+    const homeSupportLine = journeyTitle
+      ? `${journeyTitle} keeps today's practice focused, warm, and small enough to carry into real life.`
+      : 'Five quiet minutes now can change the tone of the rest of your day.';
 
     return (
       <div className="min-h-screen bg-brand-linen pb-28 font-sans">
@@ -629,19 +628,61 @@ export default function DailyGrowth() {
             <DayProgressArc currentDay={currentDay} totalDays={journeyDuration ?? 14} />
           </motion.div>
 
-          <TodaysExerciseCard
-            durationMin={5}
-            question={homeHeadline}
-            sessionLabel={journeyTitle ? `${journeyTitle} — Day ${currentDay}` : 'Morning practice'}
-            buttonLabel="Start Morning Story"
-            onBegin={() => setShowHome(false)}
-          />
+          <motion.section
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
+            className="relative overflow-hidden rounded-[34px] border border-brand-primary/12 bg-brand-parchment px-6 py-6 shadow-[0_24px_54px_rgba(42,34,52,0.12)]"
+          >
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute left-0 top-0 h-32 w-32 rounded-full bg-brand-primary/10 blur-3xl"
+            />
+            <div className="relative">
+              <EditorialEyebrow className="text-brand-primary/80">
+                {journeyTitle ? `${journeyTitle} — Day ${currentDay}` : 'Morning practice'}
+              </EditorialEyebrow>
+              <p className="mt-3 max-w-[17rem] font-serif italic text-[31px] leading-[1.08] text-brand-espresso">
+                {homeHeadline}
+              </p>
+              <p className="mt-4 max-w-[18rem] text-sm leading-relaxed text-brand-taupe">
+                {homeSupportLine}
+              </p>
+            </div>
 
-          <div className="bg-brand-parchment rounded-2xl border border-brand-primary/10 shadow-sm p-5">
+            <div className="relative mt-6 flex items-center justify-between gap-3 border-t border-brand-primary/10 pt-4">
+              <span className="text-sm text-brand-taupe">5 min morning page</span>
+              <button
+                onClick={() => setShowHome(false)}
+                className="rounded-[22px] bg-brand-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+              >
+                Start Morning Story
+              </button>
+            </div>
+          </motion.section>
+
+          <motion.div
+            className="flex items-start gap-3.5 px-1 pt-1"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: 0.22 }}
+          >
+            <PeterAvatar mood="afternoon" size={56} />
+            <div className="flex-1 pt-1">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-primary/70">
+                Peter&apos;s nudge
+              </p>
+              <p className="pt-2 font-serif italic text-[16px] leading-relaxed text-brand-text-secondary">
+                {homePeterLine}
+              </p>
+            </div>
+          </motion.div>
+
+          <div className="rounded-[28px] border border-brand-primary/10 bg-white/60 p-5 shadow-[0_14px_34px_rgba(42,34,52,0.05)]">
             <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
               Solo-first reminder
             </p>
-            <p className="text-sm text-[#5B4A86] leading-relaxed">
+            <p className="text-sm leading-relaxed text-brand-taupe">
               {practiceCopy.home}
             </p>
           </div>
@@ -657,21 +698,9 @@ export default function DailyGrowth() {
           {(prevReflection || currentDay > 1) && (
             <PreviousReflectionCard
               quote={prevReflection || DEFAULT_REFLECTION}
-              onViewJournal={() => router.push('/profile')}
+              onViewJournal={() => router.push('/journal')}
             />
           )}
-
-          <motion.div
-            className="flex flex-col items-center gap-3 pt-4 pb-2"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
-          >
-            <PeterAvatar mood="afternoon" size={64} />
-            <p className="font-serif italic text-brand-text-secondary text-[15px] text-center leading-relaxed max-w-xs">
-              {homePeterLine}
-            </p>
-          </motion.div>
         </div>
       </div>
     );
@@ -750,7 +779,7 @@ export default function DailyGrowth() {
               <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
                 Solo-first reminder
               </p>
-              <p className="text-sm text-[#5B4A86] leading-relaxed">
+              <p className="text-sm text-brand-taupe leading-relaxed">
                 {practiceCopy.home}
               </p>
             </div>
@@ -808,20 +837,20 @@ export default function DailyGrowth() {
                   <div className="max-w-lg mx-auto px-4 py-6 space-y-5">
 
                     {/* Morning action reminder */}
-                    <div className="bg-[#EDE9FE] rounded-2xl p-4 flex items-start gap-3 border border-brand-primary/10">
+                    <div className="bg-brand-parchment rounded-2xl p-4 flex items-start gap-3 border border-brand-primary/10">
                       <Sun size={16} className="text-brand-primary mt-0.5 flex-shrink-0" />
                       <div>
                         <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-1">
                           Morning step
                         </p>
-                        <p className="text-sm text-[#5B4A86] leading-relaxed">{morningAction}</p>
+                        <p className="text-sm text-brand-taupe leading-relaxed">{morningAction}</p>
                       </div>
                     </div>
 
                     {/* Peter + question */}
                     <div className="flex flex-col items-center gap-4 pt-2">
                       <PeterAvatar mood="evening" size={56} />
-                      <p className="font-serif italic text-[#5B4A86] text-[15px] text-center leading-relaxed">
+                      <p className="font-serif italic text-brand-taupe text-[15px] text-center leading-relaxed">
                         {practiceCopy.evening}
                       </p>
                       <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary">
@@ -835,7 +864,7 @@ export default function DailyGrowth() {
                         onPointerDown={() => setIsHolding(true)}
                         onPointerUp={() => setIsHolding(false)}
                         onPointerLeave={() => setIsHolding(false)}
-                        className="relative w-full overflow-hidden bg-[#EDE9FE] border border-brand-primary/20 rounded-2xl py-4 select-none"
+                        className="relative w-full overflow-hidden bg-brand-parchment border border-brand-primary/20 rounded-2xl py-4 select-none"
                         style={{ touchAction: 'none' }}
                       >
                         <div
@@ -847,7 +876,7 @@ export default function DailyGrowth() {
                             }
                           }}
                         />
-                        <span className={`relative z-10 transition-colors duration-500 text-sm font-semibold tracking-wide ${isHolding ? 'text-white' : 'text-[#5B4A86]'}`}>
+                        <span className={`relative z-10 transition-colors duration-500 text-sm font-semibold tracking-wide ${isHolding ? 'text-white' : 'text-brand-taupe'}`}>
                           Hold to mark today&apos;s step done
                         </span>
                       </button>
@@ -856,13 +885,13 @@ export default function DailyGrowth() {
                       {process.env.NODE_ENV === 'development' && (
                         <button
                           onClick={() => setActionVerified(true)}
-                          className="mt-4 text-[10px] text-[#5B4A86]/40 hover:text-[#5B4A86]/70 block w-full text-center uppercase font-semibold"
+                          className="mt-4 block w-full text-center text-[10px] font-semibold uppercase text-brand-taupe/40 hover:text-brand-taupe/70"
                         >
                           Skip Hold (Dev)
                         </button>
                       )}
 
-                      <p className="text-xs text-[#5B4A86]/80 leading-relaxed mt-3 text-center">
+                      <p className="mt-3 text-center text-xs leading-relaxed text-brand-taupe/80">
                         {practiceCopy.reminder}
                       </p>
                     </div>
@@ -872,10 +901,10 @@ export default function DailyGrowth() {
                 /* ── Chat state (actionVerified) ── */
                 <>
                   {/* Morning action reminder — slim card at top */}
-                  <div className="mx-4 mt-3 mb-1 bg-[#EDE9FE] border border-brand-primary/10 rounded-2xl px-4 py-3 flex items-start gap-3">
+                  <div className="mx-4 mt-3 mb-1 flex items-start gap-3 rounded-2xl border border-brand-primary/10 bg-brand-parchment px-4 py-3">
                     <Sun size={15} className="text-brand-primary mt-0.5 flex-shrink-0" />
-                    <p className="text-sm text-[#5B4A86] leading-relaxed">
-                      <span className="font-semibold text-[#2E1065] mr-1">Today&apos;s action:</span>
+                    <p className="text-sm text-brand-taupe leading-relaxed">
+                      <span className="mr-1 font-semibold text-brand-espresso">Today&apos;s action:</span>
                       {morningAction}
                     </p>
                   </div>
@@ -897,7 +926,7 @@ export default function DailyGrowth() {
                       transition={{ type: 'spring', bounce: 0.15, duration: 0.7 }}
                       className="px-4 pt-4 pb-6 border-t border-brand-primary/10 bg-brand-linen"
                     >
-                      <p className="text-center text-sm text-[#5B4A86] mb-3 font-serif italic">
+                      <p className="mb-3 text-center text-sm font-serif italic text-brand-taupe">
                         Your reflection is complete.
                       </p>
                       <button
@@ -987,20 +1016,20 @@ export default function DailyGrowth() {
                   <PeterAvatar mood="celebrating" size={80} />
 
                   {/* Headline */}
-                  <h2 className="font-serif italic text-[#2E1065] text-2xl text-center mt-6">
+                  <h2 className="mt-6 text-center font-serif text-2xl italic text-brand-espresso">
                     Day {currentDay - 1} complete.
                   </h2>
 
                   {/* Secondary text */}
-                  <p className="text-[#5B4A86] text-center mt-2 leading-relaxed">
+                  <p className="mt-2 text-center leading-relaxed text-brand-taupe">
                     You showed up. That&apos;s everything.
                   </p>
 
                   {/* Streak badge card */}
-                  <div className="bg-[#EDE9FE] rounded-3xl p-5 border border-brand-primary/10 shadow-sm mt-6 max-w-xs w-full text-center">
+                  <div className="mt-6 w-full max-w-xs rounded-3xl border border-brand-primary/10 bg-brand-parchment p-5 text-center shadow-sm">
                     <Flame size={28} className="text-brand-sand mx-auto mb-2" />
                     <p className="text-brand-sand font-bold text-2xl">{currentDay - 1} days</p>
-                    <p className="text-[#5B4A86] text-sm mt-1">Consistent growth.</p>
+                    <p className="mt-1 text-sm text-brand-taupe">Consistent growth.</p>
                   </div>
 
                   {/* Return button */}

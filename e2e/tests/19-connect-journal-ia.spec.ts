@@ -1,0 +1,278 @@
+import { expect, test, type Page } from '@playwright/test';
+
+const authUserId = 'test-user-id';
+
+async function mockProfile(page: Page) {
+  await page.route('**/rest/v1/profiles*', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        id: authUserId,
+        name: 'Chris Example',
+        partner_name: null,
+        archetype: 'The Steady Repairer',
+        archetype_description: 'You keep returning to the calmer, truer version of yourself.',
+      }),
+    });
+  });
+}
+
+async function mockJournalData(page: Page) {
+  await mockProfile(page);
+
+  await page.route('**/api/profile/traits', async (route) => {
+    if (route.request().method() === 'PATCH') {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ ok: true }),
+      });
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        traits: [
+          {
+            trait_key: 'attachment_style',
+            inferred_value: 'secure',
+            confidence: 0.81,
+            effective_weight: 0.81,
+            user_feedback: null,
+          },
+        ],
+      }),
+    });
+  });
+
+  await page.route('**/api/me/patterns', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        patterns: ['You pause before reacting.'],
+        growth_edge: 'Repair faster after tension',
+        strength: 'You stay calm and direct',
+      }),
+    });
+  });
+
+  await page.route('**/api/weekly-mirror/generate', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        mirror: {
+          narrative_text: 'This week you kept choosing the kinder version of what you meant.',
+          practice_count: 4,
+          practices_felt_natural: 2,
+          week_start: '2026-04-01',
+        },
+      }),
+    });
+  });
+
+  await page.route('**/api/growth-thread?limit=10', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        entries: [
+          {
+            id: 'entry-1',
+            date: '2026-04-03',
+            label: 'You repaired before the evening got heavy.',
+            type: 'breakthrough',
+            journey_id: null,
+            detail: 'You came back to the conversation with less heat and more clarity.',
+          },
+        ],
+      }),
+    });
+  });
+}
+
+async function mockDailyGrowthOwnership(page: Page) {
+  await page.route('**/api/daily/session/start', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        session: {
+          id: 'session-1',
+          day_index: 1,
+          status: 'morning_ready',
+          morning_story: 'Good morning. This is your story.',
+          morning_action: 'Pause before your next hard moment and choose the calmer version of what you want to say.',
+          practice_mode: 'solo',
+        },
+        reused: false,
+      }),
+    });
+  });
+}
+
+async function mockSecondaryAccessProfile(page: Page) {
+  await mockProfile(page);
+
+  await page.route('**/api/profile/traits', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        traits: [
+          {
+            trait_key: 'attachment_style',
+            inferred_value: 'secure',
+            confidence: 0.81,
+            effective_weight: 0.81,
+            user_feedback: null,
+          },
+        ],
+      }),
+    });
+  });
+}
+
+async function expectPrimaryNavLabels(page: Page) {
+  await expect(page.getByRole('link', { name: /^home$/i })).toHaveAttribute('href', '/dashboard');
+  await expect(page.getByRole('link', { name: /^journeys$/i })).toHaveAttribute('href', '/journeys');
+  await expect(page.getByRole('link', { name: /^connect$/i })).toHaveAttribute('href', '/connect');
+  await expect(page.getByRole('link', { name: /^journal$/i })).toHaveAttribute('href', '/journal');
+}
+
+async function expectPrimaryNavOwner(page: Page, label: 'Home' | 'Journeys' | 'Connect' | 'Journal') {
+  await expectPrimaryNavLabels(page);
+
+  const activeLink = page.getByRole('link', { name: new RegExp(`^${label}$`, 'i') });
+  await expect(activeLink).toHaveAttribute('aria-current', 'page');
+}
+
+async function expectPrimaryNavHidden(page: Page) {
+  await expect(page.getByRole('link', { name: /^home$/i })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: /^journeys$/i })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: /^connect$/i })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: /^journal$/i })).toHaveCount(0);
+}
+
+test.describe('Phase 19 IA ownership', () => {
+  test('Connect landing ownership shows four curated destination rows', async ({ page }) => {
+    await page.goto('/connect');
+
+    await expect(page.getByRole('heading', { name: /connect/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /messages/i })).toHaveAttribute('href', '/messages');
+    await expect(page.getByRole('link', { name: /go connect/i })).toHaveAttribute('href', '/go-connect');
+    await expect(page.getByRole('link', { name: /translator/i })).toHaveAttribute('href', '/translator');
+    await expect(page.getByRole('link', { name: /join partner/i })).toHaveAttribute('href', '/join-partner');
+  });
+
+  test('Journal ownership keeps reflective surfaces together on /journal', async ({ page }) => {
+    await mockJournalData(page);
+
+    await page.goto('/journal');
+
+    await expect(page.getByRole('heading', { name: /journal/i })).toBeVisible();
+    await expect(page.getByText(/weekly mirror/i)).toBeVisible();
+    await expect(page.getByText(/your arc/i)).toBeVisible();
+    await expect(page.getByText(/what peter has learned about you/i)).toBeVisible();
+    await expect(page.getByText(/growth thread/i)).toBeVisible();
+  });
+
+  test('Connect leaf return routes point back to /connect', async ({ page }) => {
+    await page.goto('/go-connect');
+    await page.getByRole('button', { name: /completed my mission/i }).click();
+    await expect(page).toHaveURL(/\/connect$/);
+
+    await page.goto('/translator');
+    await page.getByRole('button', { name: /back to connect/i }).click();
+    await expect(page).toHaveURL(/\/connect$/);
+  });
+
+  test('Home owns /daily-growth in primary navigation', async ({ page }) => {
+    await mockDailyGrowthOwnership(page);
+    await page.goto('/daily-growth');
+    await expectPrimaryNavOwner(page, 'Home');
+    await expect(page.getByRole('link', { name: /^daily$/i })).toHaveCount(0);
+  });
+
+  test('Connect owns leaf routes in primary navigation', async ({ page }) => {
+    for (const route of ['/messages', '/go-connect', '/translator', '/join-partner']) {
+      await page.goto(route);
+      await expectPrimaryNavOwner(page, 'Connect');
+    }
+  });
+
+  test('secondary pages hide primary nav', async ({ page }) => {
+    for (const route of ['/profile', '/settings', '/subscription', '/trust-center']) {
+      await page.goto(route);
+      await expectPrimaryNavHidden(page);
+    }
+  });
+
+  test('/profile stays secondary access only with settings, trust, billing, and logout controls', async ({
+    page,
+  }) => {
+    await mockSecondaryAccessProfile(page);
+
+    await page.goto('/profile');
+
+    await expect(page.getByRole('button', { name: /edit profile/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /settings/i })).toHaveAttribute('href', '/settings');
+    await expect(page.getByRole('link', { name: /trust center/i })).toHaveAttribute(
+      'href',
+      '/trust-center',
+    );
+    await expect(page.getByRole('link', { name: /billing|subscription/i })).toHaveAttribute(
+      'href',
+      '/subscription',
+    );
+    await expect(page.getByRole('button', { name: /logout/i })).toBeVisible();
+
+    await expect(page.getByText(/your archetype/i)).toHaveCount(0);
+    await expect(page.getByText(/day streak/i)).toHaveCount(0);
+    await expect(page.getByText(/days completed/i)).toHaveCount(0);
+    await expect(page.getByText(/your partner/i)).toHaveCount(0);
+    await expect(page.getByText(/what peter has learned about you/i)).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /view journal/i })).toHaveCount(0);
+  });
+
+  test('Journeys active summary does not duplicate Today CTA', async ({ page }) => {
+    await page.addInitScript(() => {
+      window.localStorage.setItem(
+        'sparq_journey_progress',
+        JSON.stringify({
+          communication: [
+            {
+              journey_id: 'communication',
+              day: 3,
+              completed: true,
+              responses: {},
+              created_at: '2026-04-05T12:00:00.000Z',
+            },
+          ],
+        }),
+      );
+    });
+
+    await page.goto('/journeys');
+
+    const activeSummary = page.getByText(/current practice/i);
+    const searchInput = page.getByPlaceholder(/search journeys/i);
+
+    await expect(activeSummary).toBeVisible();
+    await expect(page.getByRole('link', { name: /continue clear connection/i })).toHaveAttribute(
+      'href',
+      '/journeys/communication',
+    );
+    await expect(page.getByText(/resume day 4 of 14/i)).toBeVisible();
+    await expect(page.getByRole('button', { name: /resume evening reflection|start today's practice/i })).toHaveCount(0);
+
+    const activeBox = await activeSummary.boundingBox();
+    const searchBox = await searchInput.boundingBox();
+
+    expect(activeBox?.y ?? 0).toBeLessThan(searchBox?.y ?? Number.POSITIVE_INFINITY);
+  });
+});

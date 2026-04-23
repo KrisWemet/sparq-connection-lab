@@ -374,3 +374,110 @@
 - The UI contract must define design tokens, type hierarchy, spacing rules, color allocation, copywriting rules, and registry safety expectations in a way the current codebase can implement.
 - The contract must explicitly avoid broad new feature scope and must not require a routing rewrite or product architecture change.
 - The contract must be actionable enough to drive a later implementation phase without guessing at the intended aesthetic.
+
+## Milestone: Sparq IA Contract And Home Simplification
+
+### IA-CONTRACT-01 — Define Final Destination Ownership
+- Sparq must define one explicit primary navigation structure grounded in the recovered implementation baseline.
+- The contract must assign clear jobs to `Home`, `Journeys`, `Connect`, `Journal`, and secondary access.
+- The contract must resolve ambiguous ownership between private reflection, structured progression, shared connection tools, and account surfaces.
+
+### IA-CONTRACT-02 — Define Exact Home Scope
+- The contract must define exactly what stays on Home and exactly what leaves Home.
+- Home must become the single-next-step launcher rather than a multi-purpose dashboard feed.
+- The contract must preserve `Daily Spark` on Home and keep `Favorite Us` on `daily-growth`.
+
+### IA-CONTRACT-03 — Preserve The Proven Daily Path
+- The contract must preserve the supported `/dashboard -> /daily-growth` launch path.
+- `Daily` must remain a flow launched from Home rather than a primary navigation destination.
+- The contract must not weaken the proven solo-first, signup-driven path or reopen onboarding and daily-loop logic.
+
+### IA-CONTRACT-04 — Produce Safe Rollout Guardrails
+- The IA contract must define a phased implementation order, key risks, and explicit guardrails for the first structural IA wave.
+- The contract must separate IA work from visual redesign, playful expansion, and unrelated feature work.
+- The contract must be grounded in full planning history, not just the later editorial phases.
+
+## Milestone: Implement IA Wave 1: Home Simplification and Navigation Restructure
+
+### IA-WAVE1-01 — Simplify Home To The Core Launcher
+- Home must be reduced to the agreed Wave 1 structure:
+  - Peter greeting
+  - one Today card
+  - `Daily Spark`
+  - one quiet destination strip
+- Home must stop owning progress, mirror/history, partner synthesis, and other non-launch modules.
+- The Home Today card must remain the single strongest call to action above the fold.
+
+### IA-WAVE1-02 — Establish Destination Ownership
+- The app must add or activate the new owned destinations needed for the IA contract, especially `Connect` and `Journal`.
+- Reflective and personal-history surfaces must move toward `Journal`, and shared or partner-aware tools must move under `Connect`.
+- `profile` must become secondary access for account, settings, trust, billing, and related controls only.
+
+### IA-WAVE1-03 — Switch Primary Navigation Without Breaking The Core Path
+- The primary navigation must become `Home`, `Journeys`, `Connect`, and `Journal`.
+- `/daily-growth` must remain Home-owned in navigation and behavior, not a standalone tab.
+- Navigation and ownership changes must preserve the proven daily loop, the current playful placements, and existing primary-path instrumentation.
+
+## Milestone: Attachment-Aware Personalization
+
+### ATTACH-INFRA-01 — Define Pattern Vocabulary
+- The system must define 7 new `profile_traits` key values: `repair_style`, `reassurance_need`, `space_preference`, `stress_communication`, `interpretation_bias`, `vulnerability_pace`, `worth_pattern`.
+- Each key must have 2–4 allowed pattern values expressed in plain human language (no clinical labels).
+- Allowed values must be enforced via server-side validation before any insert, mirroring the existing pattern in `profile-analysis.ts`.
+- A migration must document the new keys and their allowed values so future phases have a stable contract.
+
+### ATTACH-INFRA-02 — Unified Pattern Context Builder
+- A server helper (`src/lib/server/attachment-context.ts`) must consolidate `profile_traits` reads for all 8 dimensions into a single `PatternContext` object.
+- The helper must be used by Peter morning, Peter chat, and journey recommendation so trait reads are consistent and not scattered.
+- The helper must handle missing traits gracefully (return null per dimension, never throw).
+
+### ATTACH-SIGNAL-01 — Onboarding Signal Capture
+- The onboarding question set must capture behavioral signals for `repair_style`, `reassurance_need`, and `space_preference` through adapted quick-reply options and score deltas.
+- No new onboarding steps may be added — signals must be captured through existing question slots or gentle rephrasing of existing options.
+- No clinical framing or label language may appear in any onboarding question or option.
+
+### ATTACH-SIGNAL-02 — Evening Reflection Inference
+- Evening reflection analysis (`src/lib/server/profile-analysis.ts`) must infer all 8 pattern dimensions from reflection text, extending the existing fire-and-forget pattern.
+- Inference must remain non-blocking and silent — it must never delay or fail the session completion response.
+- Each new dimension must have an allowed-value validation step that discards hallucinated or out-of-vocab values before any insert.
+- Confidence must be updated using the existing quality-weighted boost pattern from `reflection-quality.ts`.
+
+### ATTACH-SIGNAL-03 — Trait Gap Steering
+- The trait gap system (`src/lib/server/trait-gaps.ts`) must include all 8 dimensions in its `CORE_TRAITS` list and `STEERING_HINTS` map.
+- Steering hints must guide morning story generation toward surfacing signals for under-profiled dimensions without naming or revealing the dimension being explored.
+- Steering hint language must be non-clinical and consistent with Peter's voice.
+
+### ATTACH-PETER-01 — Morning Story Personalization
+- Morning story generation (`src/lib/peterService.ts` → `getMorningStoryPrompt`) must apply personalization hints for all 8 dimensions when confidence meets the threshold.
+- Hints must adapt narrative tone, micro-action framing, and story scenario to match the user's inferred pattern without naming the pattern.
+- The personalization must remain additive — no existing personalization branches for `attachment_style`, `love_language`, or `conflict_style` may be removed.
+
+### ATTACH-PETER-02 — Peter Chat Tone Adaptation
+- Peter chat responses must adapt tone and framing based on `reassurance_need` and `repair_style`, with specific language adjustments per pattern value.
+- High `reassurance_need` must produce warmer, more affirming openings before any reflection or challenge.
+- `repair_style` must shape how Peter frames repair suggestions (direct invitation vs. space-giving vs. process-first framing).
+
+### ATTACH-PETER-03 — Pattern Insight Moments
+- Peter must be able to name a pattern naturally in context during evening check-in or chat using plain human language.
+- Insight moments must only trigger when a dimension's confidence is 0.7 or higher.
+- The named pattern must be framed as an observation, not a diagnosis: "I've noticed you tend to..." not "You are..." or "Your attachment style is...".
+- No clinical label may appear in any user-facing insight moment copy.
+
+### ATTACH-JOURNEY-01 — Pattern-Weighted Journey Routing
+- Journey recommendations (`src/lib/server/next-journey-recommender.ts`) must weight available journeys by affinity to the user's inferred pattern profile.
+- Journeys aligned to a user's highest-confidence, lowest-satisfaction dimensions must score higher in the recommendation ranking.
+- The weighting must be additive to the existing attachment-style affinity scoring, not a replacement.
+
+## Traceability — Milestone: Attachment-Aware Personalization
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| ATTACH-INFRA-01 | Phase 21 | Pending |
+| ATTACH-INFRA-02 | Phase 21 | Pending |
+| ATTACH-SIGNAL-01 | Phase 22 | Pending |
+| ATTACH-SIGNAL-02 | Phase 22 | Pending |
+| ATTACH-SIGNAL-03 | Phase 22 | Pending |
+| ATTACH-PETER-01 | Phase 23 | Pending |
+| ATTACH-PETER-02 | Phase 23 | Pending |
+| ATTACH-PETER-03 | Phase 23 | Pending |
+| ATTACH-JOURNEY-01 | Phase 24 | Pending |

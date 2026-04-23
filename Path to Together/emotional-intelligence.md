@@ -127,7 +127,7 @@ Each day includes:
 This journey draws from:
 - Emotion-Focused Therapy: Understanding emotional patterns
 - Mindfulness-Based Stress Reduction: Developing awareness
-- Polyvagal Theory: Understanding nervous system responses
+- Nervous System Regulation: Understanding autonomic responses (informed by clinical frameworks including Polyvagal Theory as a widely-used clinical lens, anchored in HRV and affective neuroscience research)
 - Attachment Theory: Creating emotional safety
 
 ## Expected Outcomes

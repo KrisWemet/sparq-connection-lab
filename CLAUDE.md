@@ -16,14 +16,14 @@ Before working in any of these domains, read the corresponding skill file:
 | Domain | Skill to load |
 |---|---|
 | Psychology content, questions, exercises, personalization | `.claude/skills/sparq-psychology` |
-| Language, copy, NLP patterns, voice | `.claude/skills/sparq-psychology/references/nlp-language-framework` |
+| Language, copy, voice, conversational design | `.claude/skills/sparq-psychology/references/language-framework` |
 | Peter (SVG, animations, copy, poses, voice) | `.claude/skills/sparq-peter` |
 | Database schema, Supabase patterns | `.claude/skills/sparq-db` |
 | UI components, design tokens, layout | `.claude/skills/sparq-ui` |
 | Architecture decisions, API patterns | `.claude/skills/sparq-architecture` |
 | Frontend design quality | `.claude/skills/frontend-design` |
 
-If you're not sure which skill applies — load `sparq-psychology` and `sparq-architecture` as defaults. If you are writing any user-facing copy — also load the NLP language framework.
+If you're not sure which skill applies — load `sparq-psychology` and `sparq-architecture` as defaults. If you are writing any user-facing copy — also load the language framework.
 
 ---
 
@@ -35,7 +35,7 @@ It is a **relationship gym** — not therapy, not a wellness platform, not a gam
 
 The transformation arc: **autopilot → intentional → deeply connected.**
 
-Sparq integrates 12 evidence-based modalities (Gottman, EFT, ACT, CBT, Positive Psychology, Attachment Theory, IFS, Mindfulness, NVC, Somatic, Narrative Therapy, Influence Psychology). This is the core competitive advantage. See `sparq-psychology` skill for the full framework.
+Sparq is built on eight evidence-based frameworks (Attachment Theory, Gottman Method, EFT, CBT/CBCT, ACT, Neuroplasticity & Habit Science, Positive Psychology & Relationship Science, Contemplative Practices). This is the core competitive advantage. See `sparq-psychology` skill for the full framework.
 
 ---
 
@@ -93,7 +93,7 @@ Each partner answers independently, then answers are revealed. The loop closes w
 
 It should feel like a ritual, not a checklist.
 
-Full Daily Loop structure, modality sequencing, and session architecture: see `sparq-psychology` skill. Language and tone for all session copy: see NLP language framework.
+Full Daily Loop structure, modality sequencing, and session architecture: see `sparq-psychology` skill. Language and tone for all session copy: see language framework.
 
 ---
 
@@ -616,7 +616,7 @@ toast("Title", { description: "Details", action: { label: "Go", onClick: () => {
 
 Sparq uses a layered language system to create genuine change — not just insights. When writing any user-facing content:
 
-- **Load the NLP language framework** (`.claude/skills/sparq-psychology/references/nlp-language-framework`) before writing any copy, questions, or Peter dialogue
+- **Load the language framework** (`.claude/skills/sparq-psychology/references/language-framework`) before writing any copy, questions, or Peter dialogue
 - Questions must pull the user forward, not push — surface emotional truth, not intellectual compliance
 - Maximum 2 options per question (3 absolute maximum) — never more
 - Always presuppose forward movement — never ask "do you want to"
@@ -631,7 +631,7 @@ Core language techniques used throughout the app:
 - **Identity reinforcement** — "you're becoming someone who..." not "you should..."
 - **Shadow reframing** — honoring protective patterns and releasing them when no longer needed
 
-Full framework: `.claude/skills/sparq-psychology/references/nlp-language-framework`
+Full framework: `.claude/skills/sparq-psychology/references/language-framework`
 
 ---
 

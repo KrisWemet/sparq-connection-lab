@@ -45,7 +45,7 @@ const freeQuestions: Question[] = [
     dayOfWeek: "TUE",
     intimacyLevel: 2,
     modality: "Positive Psychology",
-    therapeuticIntent: "Preferred-state anchoring — orienting toward what's possible, not what's broken",
+    therapeuticIntent: "Best possible self / valued direction (Positive Psychology + ACT) — orienting toward what's possible, not what's broken",
     explanation: "Describing your best moments in detail creates a mental target your brain will start to move toward — even when things get hard.",
   },
   {

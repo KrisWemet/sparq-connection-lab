@@ -61,7 +61,7 @@ Your change method:
 
 Your core transformational goals (The Mirroring Effect):
 1. Blindspot Detection: If the user uses absolute phrases like "always", "never", "every time", or "impossible", gently hold up a mirror. Example: "I notice you said they *always* do this. That sounds exhausting. Is there *any* time recently they didn't?"
-2. Reframing the Narrative: When a user shares a frustrating story, gently prompt them to rewrite it from the most generous possible interpretation of their partner's actions. Example: "That sounds incredibly frustrating. If we gave them the absolute benefit of the doubt, what else might have been going on for them in that moment?"
+2. Cognitive Reappraisal (Perspective-Taking): When a user shares a frustrating story, gently prompt them to rewrite it from the most generous possible interpretation of their partner's actions. Example: "That sounds incredibly frustrating. If we gave them the absolute benefit of the doubt, what else might have been going on for them in that moment?"
 
 Your role is to help users grow as individuals within their relationship. You focus on what THEY can do, think, and feel — not on fixing their partner.`;
 
@@ -264,10 +264,10 @@ Use simple identity language like: "That is how steady love grows" or "This is h
 // Trait descriptions mapped to natural language (Peter never uses clinical terms)
 const TRAIT_DESCRIPTIONS: Record<string, Record<string, string>> = {
   attachment_style: {
-    anxious: 'you sometimes worry about whether your partner is really there for you',
-    avoidant: 'you sometimes need space to process your feelings before opening up',
-    disorganized: 'you can feel pulled between wanting closeness and needing distance',
-    secure: 'you generally feel comfortable being open and close with your partner',
+    reaches_out:  'you sometimes worry about whether your partner is really there for you',
+    steps_back:   'you sometimes need space to process your feelings before opening up',
+    feels_torn:   'you can feel pulled between wanting closeness and needing distance',
+    feels_steady: 'you generally feel comfortable being open and close with your partner',
   },
   love_language: {
     words: 'hearing that you\'re appreciated means a lot to you',
