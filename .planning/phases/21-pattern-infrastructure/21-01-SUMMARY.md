@@ -60,7 +60,7 @@ completed: 2026-04-28
 - **Duration:** 15 min
 - **Started:** 2026-04-28T19:00:00Z
 - **Completed:** 2026-04-28T19:15:00Z
-- **Tasks:** 2 of 3 executed (Task 03 blocked by auth gate — documented below)
+- **Tasks:** 3 of 3 — Tasks 01-02 executed in commits, Task 03 verified already-applied to live DB (see below)
 - **Files modified:** 3
 
 ## Accomplishments
@@ -75,7 +75,7 @@ Each task was committed atomically (pre-existing commits on this branch):
 
 1. **Task 01: Create pattern vocabulary migration file** - `c9ca4e7` (chore)
 2. **Task 02: Update profile-analysis.ts VALID_TRAIT_VALUES and peterService.ts TRAIT_DESCRIPTIONS** - `18c2197` (feat)
-3. **Task 03: Push database schema migration** - BLOCKED (auth gate, see below)
+3. **Task 03: Push database schema migration** - Already applied to live DB (see Issues Encountered below)
 
 ## Files Created/Modified
 
@@ -94,38 +94,26 @@ None - plan executed exactly as written for Tasks 01 and 02.
 
 ## Issues Encountered
 
-**Task 03: Auth gate on `supabase db push`**
+**Task 03: Apparent auth gate on `supabase db push` — verified already-applied via MCP**
 
-- Supabase CLI requires `SUPABASE_ACCESS_TOKEN` or interactive `supabase login`
-- Neither was available in the execution environment
-- This is an expected gate documented in the plan: "If `SUPABASE_ACCESS_TOKEN` is not set and the push fails with an auth error, create a `checkpoint:human-action`"
-- The migration file is committed and correct — the database push is a manual step
+The plan-executing agent reported Task 03 as blocked because `SUPABASE_ACCESS_TOKEN` was not in env and `supabase login` was not interactive. However, post-execution verification via the Supabase MCP showed the migration content is already in production:
 
-**Manual step required to complete Task 03:**
-```bash
-# Option 1: Authenticate first
-npx supabase login
-npx supabase db push
+- Live `supabase_migrations` log contains `pattern_vocabulary` at version `20260423025703` (applied 2026-04-23, before this phase began)
+- Live data check: `SELECT inferred_value, COUNT(*) FROM profile_traits WHERE trait_key = 'attachment_style' GROUP BY inferred_value` returned only `reaches_out` (30 rows) — zero clinical values remain
+- Conclusion: the SQL effect documented in this migration was already executed in production via a path other than `supabase db push` (likely direct application through the Supabase MCP on April 23)
 
-# Option 2: Use access token
-SUPABASE_ACCESS_TOKEN=<token> npx supabase db push
-```
+**Migration timestamp drift (follow-up, not blocking):**
 
-**Verification after push:**
-```sql
-SELECT COUNT(*) FROM profile_traits 
-WHERE trait_key = 'attachment_style' 
-AND inferred_value IN ('anxious', 'avoidant', 'disorganized', 'secure');
--- Expected: 0 (all old values migrated)
-```
+Local file: `supabase/migrations/20260406000000_pattern_vocabulary.sql`
+Live registered: `20260423025703 pattern_vocabulary`
 
-## User Setup Required
+Same logical migration, two different version IDs. This matches risk #3 from `IMPLEMENTATION_STATUS.md` ("Live migration history has drifted away from local migration history"). Reconciliation options for a future cleanup phase:
 
-**Database migration must be applied manually** (`supabase db push` requires authentication):
+- Rename the local file to match the live version (`20260423025703_pattern_vocabulary.sql`), or
+- Insert a row into the local `supabase_migrations` shadow tracking the live version, or
+- Tolerate the drift since the SQL effect is already correct in both places
 
-1. Run `npx supabase login` or set `SUPABASE_ACCESS_TOKEN`
-2. Run `npx supabase db push` from the project root
-3. Verify: query `profile_traits` table — zero rows should have old clinical attachment_style values
+This is a reproducibility concern for fresh-environment setup, not a production blocker.
 
 ## Known Stubs
 
@@ -135,8 +123,8 @@ None. No stubs introduced. This plan is vocabulary infrastructure only — no UI
 
 - Vocabulary contract is established and documented — Phase 21 Plan 02 can proceed with `buildPatternContext` implementation using the 8 dimension keys
 - profile-analysis.ts validation guard is ready for new inference writes using behavioral labels
-- peterService.ts personalization lookup will produce correct output once the DB migration is applied
-- **Blocker for production:** DB migration must be applied before new attachment_style inferences are written (old clinical values would be rejected by the updated validation guard)
+- peterService.ts personalization lookup produces correct output against live DB (verified — all `attachment_style` rows are on behavioral values)
+- **No production blocker.** The DB migration is already applied. The validation guard, the data, and the personalization lookup are all consistent in production.
 
 ---
 
