@@ -622,7 +622,7 @@ Plans:
 
 | Phase | Name | Goal | Requirements |
 |-------|------|------|--------------|
-| 21 | Pattern Infrastructure | Establish the stable vocabulary and shared context builder that all downstream personalization phases depend on. | `ATTACH-INFRA-01`, `ATTACH-INFRA-02` |
+| 21 | 3/3 | Complete    | 2026-04-29 |
 | 22 | Signal Capture | Extend onboarding, evening reflection, and trait-gap steering to capture and infer all 8 pattern dimensions from real user behavior. | `ATTACH-SIGNAL-01`, `ATTACH-SIGNAL-02`, `ATTACH-SIGNAL-03` |
 | 23 | Peter Adaptation | Apply inferred pattern dimensions to Peter morning stories, chat tone, and contextual insight moments. | `ATTACH-PETER-01`, `ATTACH-PETER-02`, `ATTACH-PETER-03` |
 | 24 | Pattern-Weighted Journey Routing | Extend journey recommendation to weight available journeys by the user's inferred pattern profile. | `ATTACH-JOURNEY-01` |
@@ -637,11 +637,11 @@ Plans:
   2. `src/lib/server/attachment-context.ts` exists and exports a `buildPatternContext(userId)` function that returns a typed `PatternContext` object for any user, returning `null` per missing dimension rather than throwing.
   3. Calling `buildPatternContext` for a user with no trait rows returns an object with all 8 dimensions set to `null` — it does not throw or return `undefined`.
   4. The migration file documents all 7 new `profile_traits` keys and their allowed values in a comment block a developer can read without opening application code.
-**Plans:** 3 plans
+**Plans:** 3/3 plans complete
 Plans:
-- [ ] 21-01-PLAN.md — Vocabulary enforcement: migration + validation updates + TRAIT_DESCRIPTIONS fix
-- [ ] 21-02-PLAN.md — PatternContext builder: type definition + buildPatternContext + toProfileTraits helper
-- [ ] 21-03-PLAN.md — Caller migration: morning.ts, chat.ts, and next-journey-recommender.ts
+- [x] 21-01-PLAN.md — Vocabulary enforcement: migration + validation updates + TRAIT_DESCRIPTIONS fix
+- [x] 21-02-PLAN.md — PatternContext builder: type definition + buildPatternContext + toProfileTraits helper
+- [x] 21-03-PLAN.md — Caller migration: morning.ts, chat.ts, and next-journey-recommender.ts
 
 ## Phase 21 Notes
 - Source of truth: `SPARQ_MASTER_SPEC.md`
