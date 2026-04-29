@@ -9,6 +9,7 @@ import { searchMemories } from '@/lib/server/memory';
 import { loadPrivacyState } from '@/lib/server/privacy';
 import { assessReflectionQuality } from '@/lib/server/reflection-quality';
 import { stripMarkdown } from '@/lib/strip-markdown';
+import { buildPatternContext, patternContextToTraits } from '@/lib/server/attachment-context';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -99,11 +100,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const privacy = await loadPrivacyState(authed.supabase, authed.userId);
 
         if (privacy.can_personalize) {
-          const [traitsResult, memResult, profileResult, insightsResult] = await Promise.all([
+          const [patternContext, remainingTraitsResult, memResult, profileResult, insightsResult] = await Promise.all([
+            buildPatternContext(authed.supabase, authed.userId),
             authed.supabase
               .from('profile_traits')
               .select('trait_key, inferred_value, confidence, effective_weight')
               .eq('user_id', authed.userId)
+              .in('trait_key', ['love_language', 'conflict_style'])
               .gte('effective_weight', 0.3),
             privacy.can_store_memories
               ? searchMemories(authed.userId, latestUserMessage, 5).catch(() => ({ results: [] }))
@@ -120,7 +123,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               .maybeSingle(),
           ]);
 
-          const traits: ProfileTrait[] = traitsResult.data || [];
+          const traits: ProfileTrait[] = [
+            ...patternContextToTraits(patternContext),
+            ...(remainingTraitsResult.data || []),
+          ];
           const memories: MemoryResult[] = (memResult?.results || []).map((r: any) => ({
             memory: r.memory || r.content || '',
             score: r.score,
