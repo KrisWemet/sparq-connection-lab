@@ -91,59 +91,59 @@ export function DailySparkCard({ prompt, surface, onSwap }: DailySparkCardProps)
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.14 }}
-      className="bg-white rounded-3xl border border-brand-primary/10 shadow-sm p-5"
+      className="rounded-[30px] border border-brand-primary/10 bg-brand-linen/90 p-5 shadow-[0_16px_36px_rgba(42,34,52,0.05)]"
     >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-2">
+          <p className="mb-2 text-xs font-semibold tracking-widest uppercase text-brand-primary/80">
             Today&apos;s Spark
           </p>
-          <p className="text-sm text-brand-text-secondary mb-2">
+          <p className="mb-2 text-sm text-brand-taupe">
             Light, quick, and fully optional.
           </p>
-          <p className="font-serif italic text-brand-espresso text-lg leading-snug">
+          <p className="font-serif italic text-[17px] leading-snug text-brand-espresso">
             {prompt.prompt}
           </p>
         </div>
-        <div className="w-10 h-10 rounded-2xl bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
-          <Sparkles size={18} className="text-brand-primary" />
+        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[18px] border border-brand-primary/10 bg-white text-brand-primary shadow-sm">
+          <Sparkles size={16} className="text-brand-primary" />
         </div>
       </div>
 
-      <p className="text-sm text-brand-text-secondary leading-relaxed mt-3">
+      <p className="mt-3 text-sm leading-relaxed text-brand-taupe">
         {prompt.hint}
       </p>
 
       <div className="mt-3 flex flex-wrap gap-2">
-        <span className="rounded-full bg-brand-primary/8 text-brand-primary px-3 py-1 text-xs font-semibold">
+        <span className="rounded-full border border-brand-primary/10 bg-white/70 px-2.5 py-1 text-[11px] font-semibold text-brand-primary">
           Under a minute
         </span>
-        <span className="rounded-full bg-brand-primary/8 text-brand-primary px-3 py-1 text-xs font-semibold">
+        <span className="rounded-full border border-brand-primary/10 bg-white/70 px-2.5 py-1 text-[11px] font-semibold text-brand-primary">
           Text or say it live
         </span>
       </div>
 
-      <p className="text-xs text-brand-text-secondary mt-3">
+      <p className="mt-3 text-xs text-brand-taupe">
         Keep it light. Skip this one if today feels tender.
       </p>
 
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
+      <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-3">
         <button
           onClick={handleTry}
-          className="rounded-2xl bg-brand-primary text-white px-4 py-3 text-sm font-semibold hover:bg-brand-hover transition-colors"
+          className="rounded-2xl border border-brand-primary/15 bg-white px-4 py-3 text-sm font-semibold text-brand-primary transition-colors hover:bg-brand-primary/5"
         >
           {tried ? 'Doing this today' : 'Try this'}
         </button>
         <button
           onClick={handleSend}
-          className="rounded-2xl border border-brand-primary/20 text-brand-primary px-4 py-3 text-sm font-semibold hover:bg-brand-primary/5 transition-colors inline-flex items-center justify-center gap-2"
+          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-brand-primary/12 bg-transparent px-4 py-3 text-sm font-semibold text-brand-taupe transition-colors hover:bg-white/60 hover:text-brand-primary"
         >
           <Send size={14} />
           {shareState === 'copied' ? 'Copied to send' : shareState === 'shared' ? 'Sent' : 'Copy text'}
         </button>
         <button
           onClick={handleSwap}
-          className="rounded-2xl border border-brand-primary/20 text-brand-text-secondary px-4 py-3 text-sm font-semibold hover:bg-brand-primary/5 transition-colors inline-flex items-center justify-center gap-2"
+          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-brand-primary/12 bg-transparent px-4 py-3 text-sm font-semibold text-brand-taupe transition-colors hover:bg-white/60 hover:text-brand-primary"
         >
           <RefreshCcw size={14} />
           Another one

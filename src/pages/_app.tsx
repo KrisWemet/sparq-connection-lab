@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { AppProps } from 'next/app';
-import { Inter, Lora } from 'next/font/google';
+import { Cormorant_Garamond, Inter } from 'next/font/google';
 import { useRouter } from 'next/router';
 import { AuthProvider } from '../lib/auth-context';
 import { SubscriptionProvider } from '../lib/subscription-provider';
@@ -12,8 +12,12 @@ import { TimeOutOverlay } from '../components/TimeOutOverlay';
 import { reportPrimaryPathClientError, shouldReportPrimaryPathRouteError } from '@/lib/beta/primaryPath';
 import '../styles/globals.css';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-const lora = Lora({ subsets: ['latin'], variable: '--font-serif' });
+const sans = Inter({ subsets: ['latin'], variable: '--font-sans' });
+const editorialSerif = Cormorant_Garamond({
+  subsets: ['latin'],
+  variable: '--font-serif',
+  weight: ['500', '600', '700'],
+});
 
 // Create a client
 const queryClient = new QueryClient({
@@ -59,7 +63,9 @@ export default function App({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <SubscriptionProvider>
-          <div className={`${inter.variable} ${lora.variable} font-sans min-h-screen bg-brand-linen text-brand-taupe selection:bg-brand-primary/30 texture-bg`}>
+          <div
+            className={`${sans.variable} ${editorialSerif.variable} texture-bg min-h-screen bg-brand-linen font-sans text-brand-text-primary selection:bg-brand-primary/20 selection:text-white`}
+          >
             <PeterLoading isLoading={isLoading} />
             <TimeOutOverlay />
             <div className="pb-20"> {/* Add padding for BottomNav */}

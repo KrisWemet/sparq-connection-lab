@@ -76,19 +76,43 @@ test.describe('Dashboard solo-first states', () => {
       });
     });
 
+    await page.route('**/api/playful/today**', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          dateKey: '2026-04-05',
+          dailySpark: {
+            id: 'spark-1',
+            type: 'daily_spark',
+            bucket: 'connect_us',
+            prompt: 'Send one short text that says what you still like about them.',
+            hint: 'Keep it simple. One true line is enough.',
+            soloOk: true,
+            partnerOptional: true,
+            sendText: 'One thing I still like about you is how warm you are.',
+          },
+          favoriteUs: null,
+        }),
+      });
+    });
+
     await page.addInitScript(() => {
       window.localStorage.setItem('sparq_journey_progress', JSON.stringify({}));
     });
   });
 
-  test('shows a complete solo-first partner card instead of an empty state', async ({ page }) => {
+  test('renders the simplified Home shape with quiet destination links only', async ({ page }) => {
     await page.goto('/dashboard');
 
-    await expect(page.locator('text=Your growth still counts on your own')).toBeVisible();
-    await expect(page.locator('text=Start solo. Invite your partner later if shared reflections would help.')).toBeVisible();
-    await expect(page.locator('text=Your Solo Reflection')).toBeVisible();
-    await expect(page.locator('button:has-text("Invite later")')).toBeVisible();
-    await expect(page.locator('button:has-text("Invite your partner when shared prompts would help")')).toBeVisible();
+    await expect(page.getByText(/today's spark/i)).toBeVisible();
+    await expect(page.getByRole('link', { name: /journey progress/i })).toHaveAttribute('href', '/journeys');
+    await expect(page.getByRole('link', { name: /shared connection/i })).toHaveAttribute('href', '/connect');
+    await expect(page.getByRole('link', { name: /^journal$/i })).toHaveAttribute('href', '/journal');
+
+    await expect(page.getByText(/your growth still counts on your own/i)).toHaveCount(0);
+    await expect(page.getByText(/your solo reflection/i)).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /invite later/i })).toHaveCount(0);
   });
 
   test('keeps the main CTA focused on personal follow-through', async ({ page }) => {
@@ -97,5 +121,12 @@ test.describe('Dashboard solo-first states', () => {
     await expect(page.locator('text=You started today already. Come back now and finish your evening reflection.')).toBeVisible();
     await expect(page.locator("button:has-text(\"Resume Evening Reflection\")")).toBeVisible();
     await expect(page.locator("button:has-text(\"Restart Morning Practice\")")).toBeVisible();
+  });
+
+  test('routes the avatar entry to profile secondary access', async ({ page }) => {
+    await page.goto('/dashboard');
+
+    await page.getByRole('button', { name: /open profile/i }).click();
+    await expect(page).toHaveURL(/\/profile$/);
   });
 });

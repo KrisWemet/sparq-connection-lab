@@ -1,5 +1,6 @@
 {
   "extends": "next/core-web-vitals",
+  "ignorePatterns": ["**/*.css"],
   "rules": {
     "react/no-unescaped-entities": "warn",
     "@next/next/no-html-link-for-pages": "warn"

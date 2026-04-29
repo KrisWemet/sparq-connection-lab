@@ -56,12 +56,17 @@ export function PeterGreeting({ firstName }: PeterGreetingProps) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="flex items-start gap-4"
+      className="flex items-start gap-3.5"
     >
-      <PeterAvatar mood={getPeterMood()} size={48} />
-      <p className="font-serif italic text-brand-text-secondary text-[15px] leading-relaxed pt-1 flex-1">
-        {displayText}
-      </p>
+      <PeterAvatar mood={getPeterMood()} size={50} />
+      <div className="flex-1 pt-1">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-primary/70">
+          A note from Peter
+        </p>
+        <p className="pt-2 font-serif italic text-[17px] leading-relaxed text-brand-text-secondary">
+          {displayText}
+        </p>
+      </div>
     </motion.div>
   );
 }

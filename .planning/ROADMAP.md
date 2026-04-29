@@ -21,6 +21,8 @@
 | 15 | Playful Layer Live Verification And Rollout Guardrails | Verify the deployed playful MVP slice in live production, confirm fail-soft behavior and analytics visibility, and define controlled exposure guardrails without weakening the proven primary path. | `PLAYFUL-LIVE-01`, `PLAYFUL-LIVE-02`, `PLAYFUL-LIVE-03`, `PLAYFUL-LIVE-04`, `PLAYFUL-LIVE-05` |
 | 16 | Playful Layer Controlled Beta Exposure And Signal Review | Expose the playful MVP only to the controlled-beta cohort, review real usage and feedback beside the core funnel, and decide whether to keep, tune, reduce, or expand later. | `PLAYFUL-COHORT-01`, `PLAYFUL-COHORT-02`, `PLAYFUL-COHORT-03`, `PLAYFUL-COHORT-04` |
 | 17 | Editorial Relationship Life UI Refresh | Define the visual and interaction contract for reshaping safe core surfaces into a more editorial, premium, relationship-life experience without disturbing the proven signup-driven path. | `UI-EDITORIAL-01`, `UI-EDITORIAL-02`, `UI-EDITORIAL-03` |
+| 18 | Sparq IA Contract And Home Simplification | Define the destination-based information architecture and exact Home simplification contract from the recovered baseline without changing the proven daily path. | `IA-CONTRACT-01`, `IA-CONTRACT-02`, `IA-CONTRACT-03`, `IA-CONTRACT-04` |
+| 19 | 3/3 | Complete    | 2026-04-06 |
 
 ## Phase 1 Notes
 - Source of truth: `SPARQ_MASTER_SPEC.md`
@@ -518,7 +520,7 @@
   - new features or new navigation sections
 
 ## Phase 17 Status
-- Status: defined
+- Status: complete
 - Deliverables created:
   - `17-CONTEXT`
   - `17-UI-SPEC`
@@ -533,3 +535,188 @@
   - the next UI phase now has a concrete editorial design contract instead of only a mood reference
   - dashboard and daily-growth should now be treated from the recovered `origin/main` baseline rather than the broken local-`main` merge state
   - `Daily Spark` and `Favorite Us` are part of the recovered safe-surface baseline for future UI planning
+
+## Phase 18 Notes
+- Source of truth: `SPARQ_MASTER_SPEC.md`
+- Implementation baseline:
+  - recovered `origin/main` branch
+  - current supported beta path in `IMPLEMENTATION_STATUS.md`
+- Product and UX references:
+  - `.planning/phases/11-relationship-life-expansion-strategy/11-PRODUCT-STRATEGY.md`
+  - `.planning/phases/12-playful-connection-mvp-definition/12-PRODUCT-DEFINITION.md`
+  - `.planning/phases/13-playful-connection-mvp-spec/13-MVP-SPEC.md`
+  - `.planning/phases/16-playful-layer-controlled-beta-exposure-and-signal-review/16-03-SUMMARY.md`
+  - `.planning/phases/17-editorial-relationship-life-ui-refresh/17-CONTEXT.md`
+  - `.planning/phases/17-editorial-relationship-life-ui-refresh/17-UI-SPEC.md`
+- Explicitly in scope:
+  - final primary tab structure
+  - destination job definition
+  - exact Home contents and removals
+  - exact module ownership by destination
+  - phased implementation order and guardrails
+- Explicitly out of scope:
+  - visual redesign execution
+  - onboarding flow changes
+  - daily-growth step logic changes
+  - new playful feature expansion
+  - new backend endpoints
+
+## Phase 18 Status
+- Status: complete
+- Plans:
+  - [x] 18-01-PLAN.md -- Navigation and destination contract
+  - [x] 18-02-PLAN.md -- Home simplification and module ownership contract
+  - [x] 18-03-PLAN.md -- IA rollout order, risks, and verification contract
+- Verification:
+  - contract references recovered `dashboard`, `daily-growth`, `journeys`, `bottom-nav`, and current secondary destinations
+  - contract preserves the proven `/dashboard -> /daily-growth` launch path
+  - contract keeps `Daily Spark` on Home and `Favorite Us` on `daily-growth`
+  - contract moves profile/settings/account to secondary access instead of primary tab ownership
+- Deliverables:
+  - `18-CONTEXT.md`
+  - `18-IA-CONTRACT.md`
+  - `18-01-SUMMARY.md`
+  - `18-02-SUMMARY.md`
+  - `18-03-SUMMARY.md`
+- Result:
+  - Sparq now has a destination-based IA contract grounded in the recovered baseline
+  - Home simplification is defined before visual redesign work
+  - later implementation can move modules with explicit ownership and guardrails instead of guesswork
+
+### Phase 19: Implement IA Wave 1: Home Simplification and Navigation Restructure
+
+**Goal:** Make Home a single-next-step launcher and switch primary navigation to destination ownership without regressing the proven `/dashboard -> /daily-growth` path or the locked playful placements.
+**Requirements**: `IA-WAVE1-01`, `IA-WAVE1-02`, `IA-WAVE1-03`
+**Depends on:** Phase 18
+**Plans:** 3/3 plans complete
+
+Plans:
+- [x] 19-01-PLAN.md -- Create `/connect` and `/journal` plus the shared reflective hook and Connect leaf return paths
+- [x] 19-02-PLAN.md -- Restructure primary nav and simplify Home into Today card plus quiet destination strip
+- [x] 19-03-PLAN.md -- Reduce `/profile` to secondary access and update focused Playwright IA coverage
+
+Verification:
+- `npm run lint -- --file src/hooks/useProfileTraits.ts --file src/pages/journal.tsx --file src/pages/connect.tsx --file src/pages/go-connect.tsx --file src/pages/translator.tsx`
+- `npx playwright test e2e/tests/19-connect-journal-ia.spec.ts -g "Connect landing|Journal ownership|Connect leaf return routes" --project=chromium`
+- `npx playwright test e2e/tests/19-connect-journal-ia.spec.ts --project=chromium` (later-wave nav ownership assertions still pending Plan 19-02 and 19-03)
+
+Result:
+- `/journal` now owns the reflective Wave 1 surfaces outside secondary account access
+- `/connect` now owns the curated landing path into Messages, Go Connect, Translator, and Join Partner
+- nav ownership and secondary-page nav hiding remain the next execution step
+
+### Phase 20: Editorial UI Refresh on Stable IA
+
+**Goal:** Apply a token-first editorial refresh to the locked Phase 19 destinations so Home, daily-growth, Connect, Journal, and Journeys feel calmer, more premium, and more distinct without reopening IA, route ownership, or the Home-owned daily path.
+**Requirements**: `UI-EDITORIAL-01`, `UI-EDITORIAL-02`, `UI-EDITORIAL-03`, `IA-WAVE1-03`
+**Depends on:** Phase 19
+**Plans:** 2/4 plans executed
+
+Plans:
+- [x] 20-01-PLAN.md -- Establish the editorial token system, shared surface primitives, and Wave 0 verification assets
+- [x] 20-02-PLAN.md -- Refresh Home, the daily-growth home state, playful companion cards, and the bottom-nav shell
+- [ ] 20-03-PLAN.md -- Give Connect, Journal, and Journeys distinct editorial personalities on the locked IA
+- [ ] 20-04-PLAN.md -- Apply minimum secondary-surface cohesion polish and close the phase with editorial verification evidence
+
+## Milestone: Attachment-Aware Personalization
+
+| Phase | Name | Goal | Requirements |
+|-------|------|------|--------------|
+| 21 | Pattern Infrastructure | Establish the stable vocabulary and shared context builder that all downstream personalization phases depend on. | `ATTACH-INFRA-01`, `ATTACH-INFRA-02` |
+| 22 | Signal Capture | Extend onboarding, evening reflection, and trait-gap steering to capture and infer all 8 pattern dimensions from real user behavior. | `ATTACH-SIGNAL-01`, `ATTACH-SIGNAL-02`, `ATTACH-SIGNAL-03` |
+| 23 | Peter Adaptation | Apply inferred pattern dimensions to Peter morning stories, chat tone, and contextual insight moments. | `ATTACH-PETER-01`, `ATTACH-PETER-02`, `ATTACH-PETER-03` |
+| 24 | Pattern-Weighted Journey Routing | Extend journey recommendation to weight available journeys by the user's inferred pattern profile. | `ATTACH-JOURNEY-01` |
+
+### Phase 21: Pattern Infrastructure
+
+**Goal:** Establish a stable pattern vocabulary and shared context builder so all downstream signal, Peter, and routing phases draw from a single consistent source of truth.
+**Depends on:** Phase 20
+**Requirements:** `ATTACH-INFRA-01`, `ATTACH-INFRA-02`
+**Success Criteria** (what must be TRUE):
+  1. A developer can query `profile_traits` and find only values from the allowed vocabulary for the 7 new keys — no out-of-vocab values can be inserted via any server path.
+  2. `src/lib/server/attachment-context.ts` exists and exports a `buildPatternContext(userId)` function that returns a typed `PatternContext` object for any user, returning `null` per missing dimension rather than throwing.
+  3. Calling `buildPatternContext` for a user with no trait rows returns an object with all 8 dimensions set to `null` — it does not throw or return `undefined`.
+  4. The migration file documents all 7 new `profile_traits` keys and their allowed values in a comment block a developer can read without opening application code.
+**Plans:** 3 plans
+Plans:
+- [ ] 21-01-PLAN.md — Vocabulary enforcement: migration + validation updates + TRAIT_DESCRIPTIONS fix
+- [ ] 21-02-PLAN.md — PatternContext builder: type definition + buildPatternContext + toProfileTraits helper
+- [ ] 21-03-PLAN.md — Caller migration: morning.ts, chat.ts, and next-journey-recommender.ts
+
+## Phase 21 Notes
+- Source of truth: `SPARQ_MASTER_SPEC.md`
+- Key files: `supabase/migrations/`, `src/lib/server/attachment-context.ts`, `src/lib/server/profile-analysis.ts`
+- Allowed values must mirror the non-clinical language constraint from `PROJECT.md` — no "avoidant", "anxious", "attachment style"
+- `buildPatternContext` is the shared interface downstream phases use; get the type signature right here so phases 22–24 do not need to rework it
+- Explicitly out of scope: signal inference, Peter changes, journey routing changes
+
+## Phase 21 Status
+- Status: planned
+
+### Phase 22: Signal Capture
+
+**Goal:** Extend onboarding, evening reflection analysis, and trait-gap steering so all 8 pattern dimensions accumulate confidence from real user behavior through existing channels.
+**Depends on:** Phase 21
+**Requirements:** `ATTACH-SIGNAL-01`, `ATTACH-SIGNAL-02`, `ATTACH-SIGNAL-03`
+**Success Criteria** (what must be TRUE):
+  1. After a user completes onboarding, `profile_traits` rows exist for `repair_style`, `reassurance_need`, and `space_preference` with values from the Phase 21 allowed vocabulary.
+  2. After a user submits an evening reflection, `profile-analysis.ts` attempts inference for all 8 dimensions and any successfully inferred values are written to `profile_traits` — the session completion API response is not delayed or changed.
+  3. If the evening inference produces a value outside the allowed vocabulary for any dimension, that dimension is silently discarded and no insert is attempted.
+  4. `trait-gaps.ts` lists all 8 dimensions in `CORE_TRAITS` and returns a steering hint for any under-profiled dimension when called during morning story generation.
+  5. No onboarding screen gains a new step — signals are captured through adapted options on existing question slots.
+**Plans:** TBD
+
+## Phase 22 Notes
+- Source of truth: `SPARQ_MASTER_SPEC.md`
+- Key files: `src/lib/onboarding/`, `src/lib/server/profile-analysis.ts`, `src/lib/server/trait-gaps.ts`
+- Signal capture must remain fire-and-forget — the session completion response must not wait on trait writes
+- Onboarding signal capture must not add clinical framing or label language to any question or option
+- Explicitly out of scope: Peter morning story application, chat tone changes, journey routing changes
+
+## Phase 22 Status
+- Status: defined
+
+### Phase 23: Peter Adaptation
+
+**Goal:** Apply inferred pattern dimensions to Peter morning story generation, chat tone, and contextual insight moments so the experience feels genuinely tailored without naming or diagnosing the user.
+**Depends on:** Phase 22
+**Requirements:** `ATTACH-PETER-01`, `ATTACH-PETER-02`, `ATTACH-PETER-03`
+**Success Criteria** (what must be TRUE):
+  1. When a user has `repair_style` or `reassurance_need` at any confidence level, Peter's chat response opening reflects the appropriate tone variant — a developer can verify by inspecting the system prompt sent to OpenRouter.
+  2. When a user has any of the 8 pattern dimensions at confidence 0.35 or above, the morning story prompt includes a personalization hint for that dimension — verifiable by logging the prompt string in development.
+  3. When a user has a dimension at confidence 0.7 or above, Peter's evening check-in or chat can produce an insight moment using plain human language in the form "I've noticed you tend to..." — not "You are..." or any clinical label.
+  4. No existing personalization branches for `attachment_style`, `love_language`, or `conflict_style` are removed or changed by this phase.
+  5. The `buildPatternContext` helper from Phase 21 is the only `profile_traits` read path used by morning story and chat — no scattered direct trait queries exist after this phase.
+**Plans:** TBD
+
+## Phase 23 Notes
+- Source of truth: `SPARQ_MASTER_SPEC.md`
+- Key files: `src/lib/peterService.ts`, `src/pages/api/peter/`, `src/lib/server/attachment-context.ts`
+- All insight moment copy must pass the non-clinical language constraint — load the NLP language framework before writing any copy
+- Insight moments are an additive path; the existing Peter chat and morning story must still work for users with no trait data
+- Explicitly out of scope: journey routing changes, onboarding changes, new UI surfaces
+
+## Phase 23 Status
+- Status: defined
+
+### Phase 24: Pattern-Weighted Journey Routing
+
+**Goal:** Extend journey recommendation so journeys aligned to a user's highest-confidence, lowest-satisfaction pattern dimensions score higher, producing a genuinely personalized next-journey suggestion.
+**Depends on:** Phase 23
+**Requirements:** `ATTACH-JOURNEY-01`
+**Success Criteria** (what must be TRUE):
+  1. `next-journey-recommender.ts` reads the user's `PatternContext` via `buildPatternContext` and applies affinity weights before returning its ranked journey list.
+  2. A user with a high-confidence pattern dimension and low journey satisfaction in the aligned category receives a different top recommendation than a user with no pattern data — verifiable by injecting fixture trait rows in a local test scenario.
+  3. The weighting is additive: the existing `attachment_style` affinity scoring is still present and contributes to the final score alongside the new pattern weights.
+  4. If `buildPatternContext` returns all nulls (no trait data), the recommender falls back cleanly to the existing scoring without throwing or returning an empty list.
+**Plans:** TBD
+
+## Phase 24 Notes
+- Source of truth: `SPARQ_MASTER_SPEC.md`
+- Key files: `src/lib/server/next-journey-recommender.ts`, `src/lib/server/attachment-context.ts`
+- Additive weighting means the existing attachment-style affinity must still apply — do not replace it
+- Journey affinity mapping (which journeys align to which pattern dimensions) must be defined here, not deferred to a later phase
+- Explicitly out of scope: new journey content, new UI, Peter changes
+
+## Phase 24 Status
+- Status: defined

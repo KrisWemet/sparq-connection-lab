@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { journeys } from "@/data/journeys";
-import { Crown, Search, Lock } from "lucide-react";
+import { ArrowRight, BookOpen, Crown, Lock, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
@@ -28,16 +28,59 @@ const CARD_COLORS = [
 
 const CATEGORIES = ["All", "Foundation", "Growth", "Intimacy", "Advanced"];
 
+const JOURNEY_PROGRESS_STORAGE_KEY = "sparq_journey_progress";
+
+function parseJourneyDurationInDays(duration: string) {
+  const [value, unit] = duration.toLowerCase().split(" ");
+  const amount = Number.parseInt(value, 10);
+
+  if (!Number.isFinite(amount)) return 14;
+  if (unit.startsWith("week")) return amount * 7;
+  return amount;
+}
+
+function getActiveJourneyNextDay(journeyId: string) {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const raw = window.localStorage.getItem(JOURNEY_PROGRESS_STORAGE_KEY);
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw) as Record<
+      string,
+      Array<{ journey_id?: string; day?: number; completed?: boolean }>
+    >;
+
+    const completedEntries = Object.entries(parsed)
+      .filter(([storageKey]) => storageKey === journeyId || storageKey.startsWith(`${journeyId}_`))
+      .flatMap(([, entries]) => entries || [])
+      .filter((entry) => entry.completed && typeof entry.day === "number");
+
+    if (!completedEntries.length) return null;
+
+    const highestCompletedDay = completedEntries.reduce(
+      (max, entry) => Math.max(max, entry.day ?? 0),
+      0,
+    );
+
+    return highestCompletedDay + 1;
+  } catch {
+    return null;
+  }
+}
+
 export default function Journeys() {
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
   const [activeJourneyId, setActiveJourneyId] = useState<string | null>(null);
+  const [activeJourneyNextDay, setActiveJourneyNextDay] = useState<number | null>(null);
 
   useEffect(() => {
     async function loadVelocityStatus() {
       const status = await getJourneyVelocityStatus();
       setActiveJourneyId(status.activeJourneyId);
+      setActiveJourneyNextDay(status.activeJourneyId ? getActiveJourneyNextDay(status.activeJourneyId) : null);
     }
     loadVelocityStatus();
   }, []);
@@ -61,6 +104,16 @@ export default function Journeys() {
     return matchesSearch && matchesCategory;
   });
 
+  const activeJourney = activeJourneyId
+    ? journeys.find((journey) => journey.id === activeJourneyId) ?? null
+    : null;
+  const activeJourneyTotalDays = activeJourney
+    ? parseJourneyDurationInDays(activeJourney.duration)
+    : null;
+  const resumeDay = activeJourney && activeJourneyNextDay
+    ? Math.min(activeJourneyNextDay, activeJourneyTotalDays ?? activeJourneyNextDay)
+    : null;
+
   return (
     <div className="min-h-screen bg-brand-linen pb-28 relative overflow-hidden">
       {/* Ambient backgrounds */}
@@ -76,21 +129,59 @@ export default function Journeys() {
       >
         <div className="max-w-lg mx-auto">
           <h1 className="text-3xl font-serif font-bold text-brand-taupe mb-4 tracking-tight">Journeys</h1>
-          {/* Search */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-            <input
-              type="text"
-              placeholder="Search journeys..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 rounded-2xl bg-white/70 backdrop-blur-md border border-brand-primary/10 text-sm text-brand-taupe placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 shadow-inner transition-all"
-            />
-          </div>
         </div>
       </header>
 
       <main className="max-w-lg mx-auto px-4 pt-4">
+        {activeJourney && (
+          <motion.section
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.28 }}
+            className="mb-4 rounded-3xl border border-brand-primary/10 bg-[#EDE9FE] p-5 shadow-sm"
+          >
+            <div className="flex items-start gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-primary/10 text-brand-primary">
+                <BookOpen className="h-5 w-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary">
+                  current practice
+                </p>
+                <h2 className="mt-2 text-xl font-semibold text-brand-taupe">
+                  {activeJourney.title}
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-brand-text-secondary">
+                  Stay with one lane at a time. This is where your active journey lives while Home keeps today&apos;s next step lighter.
+                </p>
+                {resumeDay && activeJourneyTotalDays && (
+                  <p className="mt-3 text-sm font-medium text-[#5B4A86]">
+                    Resume Day {resumeDay} of {activeJourneyTotalDays}
+                  </p>
+                )}
+                <Link
+                  href={`/journeys/${activeJourney.id}`}
+                  className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-primary hover:text-brand-hover"
+                >
+                  Continue {activeJourney.title}
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+          </motion.section>
+        )}
+
+        <div className="relative mb-4">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+          <input
+            type="text"
+            placeholder="Search journeys..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full rounded-2xl border border-brand-primary/10 bg-white/70 py-3 pl-10 pr-4 text-sm text-brand-taupe placeholder-zinc-400 shadow-inner transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+          />
+        </div>
+
         {/* Category pills */}
         <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 relative z-10 pt-2">
           {CATEGORIES.map((cat) => (

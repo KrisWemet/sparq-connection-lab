@@ -16,7 +16,7 @@ interface TraitAnalysis {
 const TRAIT_KEYS = ['attachment_style', 'love_language', 'conflict_style'] as const;
 
 const VALID_TRAIT_VALUES: Record<string, Set<string>> = {
-  attachment_style: new Set(['anxious', 'avoidant', 'disorganized', 'secure']),
+  attachment_style: new Set(['reaches_out', 'steps_back', 'feels_torn', 'feels_steady']),
   love_language: new Set(['words', 'acts', 'gifts', 'time', 'touch']),
   conflict_style: new Set(['avoidant', 'volatile', 'validating']),
 };
