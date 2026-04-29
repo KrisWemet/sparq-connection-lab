@@ -114,7 +114,7 @@ Phase 1 stabilized backend reliability. Phase 2 tightened the user-facing clarit
 
 1. The secondary login-entry fallback live walkthrough is still more variable than the primary signup-driven path.
 2. Daily-loop analytics still duplicate or misattribute some completion and verification signals on successful runs.
-3. Live migration history has drifted away from local migration history, which is a reproducibility risk even though the required tables exist.
+3. ~~Live migration history has drifted away from local migration history, which is a reproducibility risk even though the required tables exist.~~ **Resolved 2026-04-29 in Phase 21:** local repo now mirrors live for all 7 previously-drifted Apr 2026 migrations (2 renamed to live timestamps, 5 sprint files copied from sprint-3 worktree with live timestamps).
 4. Older `@/lib/auth` consumers remain in non-core pages and can still mislead contributors.
 5. Entitlements and analytics writes can still degrade silently enough to weaken operator trust during beta.
 

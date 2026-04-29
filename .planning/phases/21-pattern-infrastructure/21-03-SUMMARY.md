@@ -69,5 +69,5 @@ src/lib/server/next-journey-recommender.ts  (modified: +5 / -4)
 
 ## Notes / Outstanding
 
-- The D-11 live DB migration (`supabase db push` for `20260406000000_pattern_vocabulary.sql`) is still pending an auth gate from plan 21-01 and is required before existing rows in production carry the new behavioral labels. Until that push runs, scoring against existing rows will not match the new conditionals — this is expected and documented as a deploy step, not a code defect.
+- The D-11 live DB migration (`pattern_vocabulary`) is already applied to production at version `20260423025703`. Verified via Supabase MCP: all 30 `attachment_style` rows are on behavioral values (`reaches_out`), zero clinical values remain. The local file was renamed from `20260406000000_pattern_vocabulary.sql` to `20260423025703_pattern_vocabulary.sql` to match live history.
 - The executor agent for this plan completed all code work in 2 atomic commits (`8d3d304`, `ec8186e`) before hitting a usage quota; SUMMARY.md, ROADMAP, and STATE updates were finished by the orchestrator.

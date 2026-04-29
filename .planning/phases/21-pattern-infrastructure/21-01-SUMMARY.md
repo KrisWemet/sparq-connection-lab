@@ -28,7 +28,7 @@ tech-stack:
 
 key-files:
   created:
-    - supabase/migrations/20260406000000_pattern_vocabulary.sql
+    - supabase/migrations/20260423025703_pattern_vocabulary.sql
   modified:
     - src/lib/server/profile-analysis.ts
     - src/lib/peterService.ts
@@ -65,7 +65,7 @@ completed: 2026-04-28
 
 ## Accomplishments
 
-- Created `supabase/migrations/20260406000000_pattern_vocabulary.sql` with vocabulary contract comment block documenting all 8 pattern dimension keys and their allowed values, plus CASE-based UPDATE migrating attachment_style from clinical to behavioral labels
+- Created `supabase/migrations/20260423025703_pattern_vocabulary.sql` with vocabulary contract comment block documenting all 8 pattern dimension keys and their allowed values, plus CASE-based UPDATE migrating attachment_style from clinical to behavioral labels
 - Updated `profile-analysis.ts` VALID_TRAIT_VALUES to accept `reaches_out`, `steps_back`, `feels_torn`, `feels_steady` for attachment_style — preventing future writes of old clinical values
 - Updated `peterService.ts` TRAIT_DESCRIPTIONS attachment_style keys to behavioral labels — ensuring `buildPersonalizedPrompt` does not silently return `undefined` after the data migration
 
@@ -79,7 +79,7 @@ Each task was committed atomically (pre-existing commits on this branch):
 
 ## Files Created/Modified
 
-- `supabase/migrations/20260406000000_pattern_vocabulary.sql` - Vocabulary contract comment block for all 8 pattern dimensions + CASE-based UPDATE to migrate attachment_style rows from clinical to behavioral labels
+- `supabase/migrations/20260423025703_pattern_vocabulary.sql` - Vocabulary contract comment block for all 8 pattern dimensions + CASE-based UPDATE to migrate attachment_style rows from clinical to behavioral labels
 - `src/lib/server/profile-analysis.ts` - VALID_TRAIT_VALUES.attachment_style updated: `['reaches_out', 'steps_back', 'feels_torn', 'feels_steady']`
 - `src/lib/peterService.ts` - TRAIT_DESCRIPTIONS.attachment_style keys updated to behavioral labels to prevent silent personalization loss
 
@@ -104,7 +104,7 @@ The plan-executing agent reported Task 03 as blocked because `SUPABASE_ACCESS_TO
 
 **Migration timestamp drift (follow-up, not blocking):**
 
-Local file: `supabase/migrations/20260406000000_pattern_vocabulary.sql`
+Local file: `supabase/migrations/20260423025703_pattern_vocabulary.sql`
 Live registered: `20260423025703 pattern_vocabulary`
 
 Same logical migration, two different version IDs. This matches risk #3 from `IMPLEMENTATION_STATUS.md` ("Live migration history has drifted away from local migration history"). Reconciliation options for a future cleanup phase:
@@ -135,7 +135,7 @@ None. No stubs introduced. This plan is vocabulary infrastructure only — no UI
 
 ### Files Verified
 
-- `supabase/migrations/20260406000000_pattern_vocabulary.sql`: FOUND
+- `supabase/migrations/20260423025703_pattern_vocabulary.sql`: FOUND
 - `src/lib/server/profile-analysis.ts`: FOUND, contains `reaches_out`
 - `src/lib/peterService.ts`: FOUND, contains `reaches_out`
 
