@@ -377,7 +377,9 @@ export function getProfileAnalysisPrompt(conversationHistory: PeterMessage[]): s
 
   return `Based on this conversation between a user and Peter the Otter, infer signals about the user's relationship patterns.
 
-CRITICAL INSTRUCTION: You must have a VERY HIGH confidence threshold (80%+) before assigning a psychological trait. If there is any ambiguity, or if the data only reflects a single isolated incident rather than a consistent pattern, you MUST return null. Do not guess.
+CRITICAL INSTRUCTION: You must have a VERY HIGH confidence threshold (80%+) before assigning a value. If there is any ambiguity, or if the data only reflects a single isolated incident rather than a consistent pattern, you MUST return null for that field. Do not guess.
+
+Use the EXACT enum values listed below — any value outside the listed options will be discarded.
 
 Conversation:
 ${transcript}
@@ -385,12 +387,32 @@ ${transcript}
 Return a JSON object with your estimates.
 
 {
-  "attachment_style": "anxious" | "avoidant" | "disorganized" | "secure" | null,
-  "love_language": "words" | "acts" | "gifts" | "time" | "touch" | null,
-  "conflict_style": "avoidant" | "volatile" | "validating" | null,
-  "emotional_state": "struggling" | "neutral" | "thriving",
-  "reasoning": "1-2 sentences explaining your main signal (or why you chose null)"
+  "attachment_style":     "reaches_out" | "steps_back" | "feels_torn" | "feels_steady" | null,
+  "repair_style":         "reaches_out_first" | "needs_space_first" | "uses_humor" | "wants_direct_talk" | null,
+  "reassurance_need":     "frequent_check_ins" | "words_matter_most" | "actions_over_words" | "figures_it_out" | null,
+  "space_preference":     "process_together" | "process_alone_first" | "moves_between_both" | null,
+  "stress_communication": "goes_quiet" | "talks_it_through" | "gets_louder" | "needs_to_move_first" | null,
+  "interpretation_bias":  "assumes_the_best" | "looks_for_patterns" | "takes_it_personally" | "asks_directly" | null,
+  "vulnerability_pace":   "opens_up_early" | "opens_slowly" | "needs_full_safety" | "struggles_to_open" | null,
+  "worth_pattern":        "tied_to_being_needed" | "tied_to_being_chosen" | "tied_to_achieving" | "relatively_stable" | null,
+  "love_language":        "words" | "acts" | "gifts" | "time" | "touch" | null,
+  "conflict_style":       "avoidant" | "volatile" | "validating" | null,
+  "emotional_state":      "struggling" | "neutral" | "thriving",
+  "reasoning":            "1-2 sentences explaining your main signal (or why you chose null)"
 }
+
+Field meanings (use these to interpret what to infer — do NOT use these labels in your response):
+- attachment_style: how the user seeks or creates distance when uncertain
+- repair_style: how they initiate reconnection after friction
+- reassurance_need: how much external confirmation they need to feel secure
+- space_preference: how they manage personal energy within the relationship
+- stress_communication: how they communicate when overwhelmed
+- interpretation_bias: how they interpret ambiguous partner behavior
+- vulnerability_pace: the pace at which they open up emotionally
+- worth_pattern: what makes them feel worthy in the relationship
+- love_language: what makes them feel loved
+- conflict_style: how they handle disagreement
+- emotional_state: their current emotional baseline
 
 Only return valid JSON. No explanation outside the JSON.`;
 }

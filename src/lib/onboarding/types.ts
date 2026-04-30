@@ -1,4 +1,7 @@
 // src/lib/onboarding/types.ts
+import type { PatternKey } from '@/lib/server/attachment-context';
+
+export type OptionTraits = Partial<Record<PatternKey, string>>;
 
 export interface RawScores {
   anxious: number;
@@ -57,6 +60,9 @@ export interface QuestionOption {
     field: keyof DerivedProfile;
     value: string;
   };
+  // Phase 22: pattern dimension signals captured from option choice.
+  // Values must be in the allowed vocabulary defined in attachment-context.ts.
+  traits?: OptionTraits;
   bridge: string;
   isFreeText?: true; // marks the "write my own" option
 }
@@ -85,6 +91,9 @@ export interface OnboardingProgress {
   answers: Record<number, string | { ageRange: string; pronouns: string }>;
   freeTextAnswers: Record<number, string>;
   scores: RawScores;
+  // Phase 22: pattern dimension values accumulated from selected option metadata.
+  // Each question maps to at most one dimension; later answers can overwrite earlier ones if a question is re-answered.
+  optionTraits: OptionTraits;
   lastQuestionIndex: number;
   // Partial identity collected so far
   firstName: string;

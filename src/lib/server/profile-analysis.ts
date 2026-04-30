@@ -3,20 +3,46 @@ import { getProfileAnalysisPrompt, PeterMessage } from '@/lib/peterService';
 import { addMemory } from '@/lib/server/memory';
 import { loadPrivacyState } from '@/lib/server/privacy';
 import { assessReflectionQuality, getConfidenceBoost } from '@/lib/server/reflection-quality';
+import { VALID_PATTERN_VALUES } from '@/lib/server/attachment-context';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 interface TraitAnalysis {
+  // 8 pattern dimensions (Phase 21 vocabulary)
   attachment_style?: string | null;
+  repair_style?: string | null;
+  reassurance_need?: string | null;
+  space_preference?: string | null;
+  stress_communication?: string | null;
+  interpretation_bias?: string | null;
+  vulnerability_pace?: string | null;
+  worth_pattern?: string | null;
+  // Legacy traits (still inferred, still used by Peter morning/chat personalization)
   love_language?: string | null;
   conflict_style?: string | null;
+  // Emotional baseline (written to user_insights, not profile_traits)
   emotional_state?: string | null;
   reasoning?: string;
 }
 
-const TRAIT_KEYS = ['attachment_style', 'love_language', 'conflict_style'] as const;
+// All trait keys that get upserted to profile_traits.
+// 8 PATTERN_KEYS + love_language + conflict_style (which remain in legacy validation).
+const TRAIT_KEYS = [
+  'attachment_style',
+  'repair_style',
+  'reassurance_need',
+  'space_preference',
+  'stress_communication',
+  'interpretation_bias',
+  'vulnerability_pace',
+  'worth_pattern',
+  'love_language',
+  'conflict_style',
+] as const;
 
+// Vocab guard: combine the 8 pattern dimensions (single source of truth in attachment-context.ts)
+// with love_language and conflict_style (legacy traits not part of PATTERN_KEYS).
 const VALID_TRAIT_VALUES: Record<string, Set<string>> = {
-  attachment_style: new Set(['reaches_out', 'steps_back', 'feels_torn', 'feels_steady']),
+  ...VALID_PATTERN_VALUES,
   love_language: new Set(['words', 'acts', 'gifts', 'time', 'touch']),
   conflict_style: new Set(['avoidant', 'volatile', 'validating']),
 };

@@ -71,12 +71,23 @@ export function ScoringTransition({ progress, onComplete, onError, userId }: Sco
         })
         .eq('id', userId);
 
-      // 3b: Upsert profile_traits for the 3 key traits
-      const traitUpserts = [
-        profile.attachmentStyle && {
+      // 3b: Upsert profile_traits for the 3 derived traits + Phase 22 onboarding-captured pattern dimensions.
+      // attachment_style values from deriveProfile are still legacy clinical labels — map to Phase 21 behavioral vocab before write.
+      const ATTACHMENT_STYLE_LEGACY_TO_BEHAVIORAL: Record<string, string> = {
+        anxious: 'reaches_out',
+        avoidant: 'steps_back',
+        disorganized: 'feels_torn',
+        secure: 'feels_steady',
+      };
+      const mappedAttachmentStyle = profile.attachmentStyle
+        ? ATTACHMENT_STYLE_LEGACY_TO_BEHAVIORAL[profile.attachmentStyle] ?? null
+        : null;
+
+      const baseUpserts = [
+        mappedAttachmentStyle && {
           user_id: userId,
           trait_key: 'attachment_style',
-          inferred_value: profile.attachmentStyle,
+          inferred_value: mappedAttachmentStyle,
           confidence: 0.7,
           effective_weight: 1.0,
         },
@@ -95,6 +106,18 @@ export function ScoringTransition({ progress, onComplete, onError, userId }: Sco
           effective_weight: 1.0,
         },
       ].filter(Boolean);
+
+      const optionTraitUpserts = Object.entries(progress.optionTraits ?? {})
+        .filter(([, value]) => Boolean(value))
+        .map(([trait_key, inferred_value]) => ({
+          user_id: userId,
+          trait_key,
+          inferred_value,
+          confidence: 0.7,
+          effective_weight: 1.0,
+        }));
+
+      const traitUpserts = [...baseUpserts, ...optionTraitUpserts];
 
       if (traitUpserts.length > 0) {
         await supabase

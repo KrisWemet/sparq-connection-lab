@@ -1,8 +1,11 @@
 // Phase 2: Gap-Aware Trait Inference
 // Computes which psychological trait dimensions are under-profiled and
 // generates subtle steering hints for morning story generation.
+//
+// Phase 22 (ATTACH-SIGNAL-03): expanded to all 8 pattern dimensions from PATTERN_KEYS.
 
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { PATTERN_KEYS } from '@/lib/server/attachment-context';
 
 export interface TraitGap {
   trait_key: string;
@@ -10,7 +13,7 @@ export interface TraitGap {
   priority: 'high' | 'medium' | 'low';
 }
 
-const CORE_TRAITS = ['attachment_style', 'love_language', 'conflict_style'] as const;
+const CORE_TRAITS = PATTERN_KEYS;
 
 /**
  * Compute trait coverage gaps for a user.
@@ -52,12 +55,22 @@ export async function computeTraitGaps(
 }
 
 const STEERING_HINTS: Record<string, string> = {
-  love_language:
-    'Include a moment where one character notices how the other shows care — through words, actions, a small gift, quality time, or physical closeness',
   attachment_style:
-    'Include a moment where one character feels uncertain about the relationship and notice how they respond — do they reach out, pull away, or feel torn',
-  conflict_style:
-    'Include a moment of mild disagreement and show how the characters handle it — do they talk it through, step back, or get heated',
+    'Include a moment where one character feels uncertain about the relationship — notice whether they reach toward the other, pull inward, or feel pulled both ways',
+  repair_style:
+    'Include a small rupture between the characters — notice how the one who feels it first moves toward repair, whether through a touch, a joke, an honest sentence, or quiet space first',
+  reassurance_need:
+    'Include a quiet moment where one character is unsure how the other feels about them — notice what kind of signal finally settles them',
+  space_preference:
+    'Include a moment where the characters need to process something hard — notice whether they stay close, give each other room, or move between the two',
+  stress_communication:
+    'Include a scene where one character is overwhelmed — notice what shape their communication takes when they reach the edge',
+  interpretation_bias:
+    'Include a small ambiguous moment between them — a delayed reply, a short answer — and notice how one character makes meaning of it',
+  vulnerability_pace:
+    'Include a moment where one character has something tender they could share — notice how quickly or slowly they let it surface',
+  worth_pattern:
+    'Include a quiet moment where one character notices what makes them feel they belong in the relationship — being needed, being chosen, being capable, or simply being themselves',
 };
 
 /**

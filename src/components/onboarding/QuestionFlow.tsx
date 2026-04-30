@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
 import { QUESTIONS } from '@/lib/onboarding/questions';
 import { INITIAL_SCORES } from '@/lib/onboarding/types';
-import type { OnboardingProgress, RawScores, QuestionOption } from '@/lib/onboarding/types';
+import type { OnboardingProgress, RawScores, QuestionOption, OptionTraits } from '@/lib/onboarding/types';
 
 const STORAGE_KEY = 'sparq_onboarding_progress';
 const BRIDGE_DELAY_MS = 1500;
@@ -35,6 +35,7 @@ const EMPTY_PROGRESS: OnboardingProgress = {
   answers: {},
   freeTextAnswers: {},
   scores: { ...INITIAL_SCORES },
+  optionTraits: {},
   lastQuestionIndex: 0,
   firstName: '',
   ageRange: '',
@@ -79,6 +80,11 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
     return next;
   }
 
+  function applyOptionTraits(current: OptionTraits, traits: OptionTraits | undefined): OptionTraits {
+    if (!traits) return current;
+    return { ...current, ...traits };
+  }
+
   function playBridge(bridgeText: string, then: () => void) {
     setActiveBridge(bridgeText);
     setIsBridging(true);
@@ -110,6 +116,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
     const newProgress: OnboardingProgress = {
       ...progress,
       scores: applyScoreDeltas(progress.scores, option.scoreDeltas),
+      optionTraits: applyOptionTraits(progress.optionTraits, option.traits),
       answers: { ...progress.answers, [currentIndex]: option.label },
       ...updatedFields,
     };
@@ -139,12 +146,14 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
     // Clear the answer at prevIndex so the user starts fresh at that question.
     // Then replay scores for all answers before prevIndex.
     let replayedScores = { ...INITIAL_SCORES };
+    let replayedTraits: OptionTraits = {};
     for (let i = 0; i < prevIndex; i++) {
       const q = QUESTIONS[i];
       const answer = progress.answers[i];
       if (answer && q.options) {
         const opt = q.options.find(o => o.label === answer);
         if (opt?.scoreDeltas) replayedScores = applyScoreDeltas(replayedScores, opt.scoreDeltas);
+        if (opt?.traits) replayedTraits = applyOptionTraits(replayedTraits, opt.traits);
       }
     }
     setProgress(prev => {
@@ -152,7 +161,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
       delete updatedAnswers[prevIndex];
       const updatedFreeText = { ...prev.freeTextAnswers };
       delete updatedFreeText[prevIndex];
-      return { ...prev, scores: replayedScores, answers: updatedAnswers, freeTextAnswers: updatedFreeText };
+      return { ...prev, scores: replayedScores, optionTraits: replayedTraits, answers: updatedAnswers, freeTextAnswers: updatedFreeText };
     });
     setCurrentIndex(prevIndex);
     setTextInput('');
