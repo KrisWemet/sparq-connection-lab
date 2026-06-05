@@ -7,7 +7,9 @@ import { getAuthedContext } from '@/lib/server/supabase-auth';
 import { parseLocalDate } from '@/lib/server/date-utils';
 import { getRecentMemories } from '@/lib/server/memory';
 import { loadPrivacyState } from '@/lib/server/privacy';
-import { buildPatternContext, patternContextToTraits } from '@/lib/server/attachment-context';
+import { buildPatternContext, buildLegacyTraits, patternContextToTraits, type PatternContext } from '@/lib/server/attachment-context';
+import { getPatternHints } from '@/lib/server/pattern-hints';
+import { logFinalPrompt } from '@/lib/server/dev-prompt-log';
 
 // Per-user cache keyed by userId:day
 const storyCache = new Map<string, { text: string; timestamp: number }>();
@@ -83,20 +85,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Build personalized system prompt if authenticated
     let systemPrompt = PETER_SYSTEM_PROMPT;
+    let savedPatternContext: PatternContext | null = null;
 
     if (authed) {
       try {
         const privacy = await loadPrivacyState(authed.supabase, authed.userId);
 
         if (privacy.can_personalize) {
-          const [patternContext, remainingTraitsResult, profileResult, insightsResult, memResult] = await Promise.all([
+          const [patternContext, legacyTraits, profileResult, insightsResult, memResult] = await Promise.all([
             buildPatternContext(authed.supabase, authed.userId),
-            authed.supabase
-              .from('profile_traits')
-              .select('trait_key, inferred_value, confidence, effective_weight')
-              .eq('user_id', authed.userId)
-              .in('trait_key', ['love_language', 'conflict_style'])
-              .gte('effective_weight', 0.3),
+            buildLegacyTraits(authed.supabase, authed.userId),
             authed.supabase
               .from('profiles')
               .select('name, partner_name')
@@ -112,9 +110,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               : Promise.resolve({ results: [] }),
           ]);
 
+          savedPatternContext = patternContext;
+
           const traits: ProfileTrait[] = [
             ...patternContextToTraits(patternContext),
-            ...(remainingTraitsResult.data || []),
+            ...legacyTraits,
           ];
           const memories: MemoryResult[] = (memResult?.results || []).map((r: any) => ({
             memory: r.memory || r.content || '',
@@ -134,7 +134,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
-    const prompt = getMorningStoryPrompt(day, insights ?? {});
+    let prompt = getMorningStoryPrompt(day, insights ?? {});
+
+    // Phase 23: append pattern-aware story-shape hints (D-02)
+    if (savedPatternContext) {
+      const { morningHints } = getPatternHints(savedPatternContext, 'morning');
+      if (morningHints.length > 0) {
+        prompt += '\n\nPattern-aware story shape:\n- ' + morningHints.join('\n- ');
+      }
+    }
+
+    logFinalPrompt('peter/morning', systemPrompt, prompt);
 
     const story = await peterChat({
       messages: [

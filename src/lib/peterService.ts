@@ -159,13 +159,6 @@ export function getMorningStoryPrompt(
   }
 
   const personalizationHints: string[] = [];
-  if (insights.attachment_style === 'anxious') {
-    personalizationHints.push('Make the story feel steady and reassuring. Show calm follow-through.');
-  } else if (insights.attachment_style === 'avoidant') {
-    personalizationHints.push('Make the action low-pressure. Give the person room to stay open without forcing a big talk.');
-  } else if (insights.attachment_style === 'disorganized') {
-    personalizationHints.push('Keep the message extra grounding. Show a simple kind move that lowers stress fast.');
-  }
 
   if (insights.love_language === 'words') {
     personalizationHints.push('Let the tiny action use spoken appreciation or clear praise.');

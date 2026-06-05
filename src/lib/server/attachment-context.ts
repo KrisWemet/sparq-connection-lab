@@ -131,6 +131,42 @@ export async function buildPatternContext(
   return context;
 }
 
+// ─── Legacy Trait Reader (D-19, D-20, D-21, D-22) ────────────────────────────
+
+/**
+ * Reads love_language + conflict_style from profile_traits.
+ *
+ * These two keys remain a separate "legacy" surface (D-21) — they predate the
+ * pattern vocabulary work and are NOT part of the 8-dimension PatternContext.
+ * Phase 23 callers (morning.ts, chat.ts) use this helper INSTEAD OF an inline
+ * profile_traits query so neither file contains a direct .from('profile_traits')
+ * call after Phase 23 (criterion 5).
+ *
+ * Returns ProfileTrait[] for direct splatting into the existing traits array
+ * passed to buildPersonalizedPrompt (D-22, minimal call-site diff).
+ *
+ * Mirrors buildPatternContext non-blocking contract: NEVER throws — returns []
+ * on any DB or network error.
+ *
+ * Filter: effective_weight >= 0.3 (matches existing call sites, D-19).
+ */
+export async function buildLegacyTraits(
+  supabase: SupabaseClient,
+  userId: string,
+): Promise<ProfileTrait[]> {
+  try {
+    const { data } = await supabase
+      .from('profile_traits')
+      .select('trait_key, inferred_value, confidence, effective_weight')
+      .eq('user_id', userId)
+      .in('trait_key', ['love_language', 'conflict_style'])
+      .gte('effective_weight', 0.3);
+    return (data || []) as ProfileTrait[];
+  } catch {
+    return [];
+  }
+}
+
 // ─── Conversion Helper (D-18) ────────────────────────────────────────────────
 
 /**
