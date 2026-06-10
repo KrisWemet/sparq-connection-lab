@@ -17,6 +17,7 @@ import { trackPrimaryPathClientEvent } from '@/lib/beta/primaryPath';
 import { fetchPlayfulConnectionToday } from '@/lib/playfulConnection';
 import type { PlayfulPrompt } from '@/data/playful-prompts';
 import { DailySparkCard } from '@/components/playful/DailySparkCard';
+import { CsiPulseCard } from '@/components/dashboard/CsiPulseCard';
 import { HomeDestinationStrip } from "@/components/dashboard/HomeDestinationStrip";
 import { EditorialEyebrow } from "@/components/editorial/EditorialSurface";
 
@@ -274,6 +275,8 @@ export default function Dashboard() {
             onSwap={() => setDailySparkOffset((current) => current + 1)}
           />
         )}
+
+        <CsiPulseCard />
 
         <HomeDestinationStrip />
       </div>
