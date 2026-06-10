@@ -198,7 +198,7 @@ Identical philosophy to existing personalization code:
 No automated test infra (per CLAUDE.md). Verification:
 - `npm run lint` + `npm run build` green.
 - Grep assertions: forbidden vocabulary absent from new copy; surfaces contain no detection logic (`growth-engine` imported only by mirror generation); no direct `growth_moments` writes outside the engine + surfacing-status updates.
-- Dev prompt inspection via existing `logFinalPrompt` at all three surfaces.
+- Dev prompt inspection via existing `logFinalPrompt` at all three surfaces. (Currently wired only into `peter/chat.ts` and `peter/morning.ts` — the plan must add calls in `weekly-mirror/generate.ts` and the graduation-report path.)
 - Seeded-user manual UAT: seed traits/sessions/memories across 3 synthetic weeks → run Mirror generation → verify emitted moments match hand-computed expectations → walk chat, Mirror, Day-14 reveal.
 
 ## 9. Out of Scope
