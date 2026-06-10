@@ -109,7 +109,7 @@ Engine output. The single source of truth all surfaces read.
 - **Chat** picks the single oldest `active` moment, voices it, then marks `surfaced` + `surfaced_at` (7-day cooldown between chat growth moments).
 - **Day-14 Compound Reveal** reads **all** moments in the journey window regardless of status — it is a retrospective compilation, and re-telling is the point.
 - Cross-surface repetition (Mirror → chat → Day-14) is **intentional reinforcement**, with each surface framing differently (weekly synthesis / conversational hand-back / milestone story). Same-surface repetition in chat is prevented by status.
-- `active` moments flip to `expired` after 3 weeks un-voiced **in chat** — stale conversational growth claims are worse than none. Expiry does not hide a moment from the Day-14 reveal.
+- `active` moments flip to `expired` after 3 weeks un-voiced **in chat** — stale conversational growth claims are worse than none. Expiry does not hide a moment from the Day-14 reveal. **The flip is performed by the weekly engine batch** (mark expired, then detect new) — no cron, no expiry-on-read in chat.
 
 ### 3.4 `csi_pulses`
 CSI-4 (Couples Satisfaction Index, 4-item) scores.
@@ -134,7 +134,7 @@ Pure deterministic module. **No LLM calls.** Never throws (Phase 21/23 non-block
 **Strong:**
 1. **Pattern shift** — a dimension's value in the current state differs from the value in an older snapshot AND has held its new value for 2 consecutive snapshots. "Consecutive" means **adjacent stored `pattern_snapshots` rows with ≤21 days between them** — Mirror generation is user-triggered, so calendar weeks can have gaps; adjacent-rows-with-bounded-staleness keeps the signal available to irregular users without comparing against stale data.
 2. **Practice consistency** — `practice_attempted` rate over the current 7-day window ≥ 5/7 when the user's own prior 3-week baseline was ≤ 3/7.
-3. **CSI delta** — latest monthly pulse ≥ 3 points above baseline (above test-retest noise for CSI-4).
+3. **CSI delta** — latest monthly pulse ≥ 3 points above baseline (above test-retest noise for CSI-4). Note: structurally unavailable until ~day 30+ (needs baseline + one monthly pulse), so this signal never feeds the Day-14 reveal — consistent with the effort-fallback design.
 
 **Soft:**
 4. **Tone trend** — `evening_emotional_tone` is open-vocabulary free text (one-word LLM output, not an enum), so determinism requires a **fixed valence lookup table in code**: an explicit word list mapping common tones to three buckets (positive / neutral / negative). Unmapped words are **excluded** from the trend. The signal fires on an improving bucket trend across ≥2 consecutive weeks and **abstains** unless ≥4 mapped data points exist in the window. The lookup table lives in `growth-engine.ts` and is extended by hand, never by model.
@@ -152,17 +152,17 @@ For each emitted moment, attempt to attach a verbatim `before_quote` (from `base
 
 ## 5. Surfaces
 
-All three read `growth_moments` (status `active`); none compute anything.
+All three read `growth_moments`; none compute anything. Selection differs per surface (see §3.3 lifecycle): chat reads `status = 'active'`, Mirror selects by `week_start` = current batch, Day-14 reads all moments in the journey window regardless of status.
 
-### 5.1 Peter in conversation (`chat.ts`)
+### 5.1 Peter in conversation (`src/pages/api/peter/chat.ts`)
 Extends the Phase 23 insertion point (after `buildPersonalizedPrompt`, before `eveningContext`). At most **one** active moment is appended per conversation as a system-prompt block:
 
 - Frame: *name it, then hand it back* — "State this specific observed change, citing the evidence given. End by handing ownership back with a light question ('Do you feel that shift too?'). Never declare what it means about who they are."
 - `tentative: true` → instruct "it feels like something's shifting" phrasing, never declarative.
 - After the conversation uses it, mark `surfaced_at` + status `surfaced` (fire-and-forget update). 7-day cooldown between growth moments in chat.
 
-### 5.2 Weekly Mirror (`weekly-mirror/generate.ts`)
-Verified moments are passed into the narrative prompt with the constraint: *"You may reference ONLY the growth moments listed; do not infer or invent others."* Each surfaced moment also writes a `growth_thread` entry with `type: 'growth'` (table already exists).
+### 5.2 Weekly Mirror (`src/pages/api/weekly-mirror/generate.ts`)
+Verified moments are passed into the narrative prompt with the constraint: *"You may reference ONLY the growth moments listed; do not infer or invent others."* Each surfaced moment also writes a `growth_thread` entry with `type: 'growth'`. **Schema note:** the existing `growth_thread.type` CHECK constraint (`milestone | breakthrough | pattern | mirror | pinned`, from `20260325_growth_ecosystem.sql`) does not allow `'growth'` — the new migration must extend this constraint to include it, otherwise the fail-soft insert would be silently swallowed forever.
 
 ### 5.3 Day-14 Compound Reveal
 At the existing Day-14 graduation moment (`src/components/onboarding/Day14Graduation.tsx` + `src/pages/api/me/graduation-report.ts`), a new reveal step composed from `baseline_snapshots` + all journey-window `growth_moments` (regardless of status — see §3.3 lifecycle) + practice stats:
