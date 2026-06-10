@@ -1398,7 +1398,7 @@ This section describes the features that will make Sparq transformatively effect
 **What it does:** Show users their behavioral change in concrete terms, not abstract scores.
 
 **How to build:**
-- Track specific micro-behaviors in evening reflections via NLP in profile-analysis:
+- Track specific micro-behaviors in evening reflections via natural-language analysis in profile-analysis:
   - Repair attempt ("I apologized", "we talked it through")
   - Vulnerability ("I told them how I really felt")
   - De-escalation ("I took a pause", "I stepped away")

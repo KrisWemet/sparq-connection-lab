@@ -16,14 +16,14 @@ Before working in any of these domains, read the corresponding skill file:
 | Domain | Skill to load |
 |---|---|
 | Psychology content, questions, exercises, personalization | `.claude/skills/sparq-psychology` |
-| Language, copy, NLP patterns, voice | `.claude/skills/sparq-psychology/references/nlp-language-framework` |
+| Language, copy, influence patterns, voice | `.claude/skills/sparq-psychology/references/language-framework` |
 | Peter (SVG, animations, copy, poses, voice) | `.claude/skills/sparq-peter` |
 | Database schema, Supabase patterns | `.claude/skills/sparq-db` |
 | UI components, design tokens, layout | `.claude/skills/sparq-ui` |
 | Architecture decisions, API patterns | `.claude/skills/sparq-architecture` |
 | Frontend design quality | `.claude/skills/frontend-design` |
 
-If you're not sure which skill applies — load `sparq-psychology` and `sparq-architecture` as defaults. If you are writing any user-facing copy — also load the NLP language framework.
+If you're not sure which skill applies — load `sparq-psychology` and `sparq-architecture` as defaults. If you are writing any user-facing copy — also load the language framework.
 
 ---
 
@@ -93,7 +93,7 @@ Each partner answers independently, then answers are revealed. The loop closes w
 
 It should feel like a ritual, not a checklist.
 
-Full Daily Loop structure, modality sequencing, and session architecture: see `sparq-psychology` skill. Language and tone for all session copy: see NLP language framework.
+Full Daily Loop structure, modality sequencing, and session architecture: see `sparq-psychology` skill. Language and tone for all session copy: see the language framework.
 
 ---
 
@@ -616,7 +616,7 @@ toast("Title", { description: "Details", action: { label: "Go", onClick: () => {
 
 Sparq uses a layered language system to create genuine change — not just insights. When writing any user-facing content:
 
-- **Load the NLP language framework** (`.claude/skills/sparq-psychology/references/nlp-language-framework`) before writing any copy, questions, or Peter dialogue
+- **Load the language framework** (`.claude/skills/sparq-psychology/references/language-framework`) before writing any copy, questions, or Peter dialogue
 - Questions must pull the user forward, not push — surface emotional truth, not intellectual compliance
 - Maximum 2 options per question (3 absolute maximum) — never more
 - Always presuppose forward movement — never ask "do you want to"
@@ -631,7 +631,9 @@ Core language techniques used throughout the app:
 - **Identity reinforcement** — "you're becoming someone who..." not "you should..."
 - **Shadow reframing** — honoring protective patterns and releasing them when no longer needed
 
-Full framework: `.claude/skills/sparq-psychology/references/nlp-language-framework`
+Full framework: `.claude/skills/sparq-psychology/references/language-framework`
+
+> Framework note (2026-06): these techniques are grounded in validated constructs — cognitive reappraisal (Gross 2002), linguistic presupposition (pragmatics), identity-based motivation (Oyserman 2009), autonomy support (Deci & Ryan 2000). The "NLP" umbrella label is retired; never use it in copy, docs, or marketing. Construct names are for internal/marketing layers only — users never see them (enjoyment-first principle).
 
 ---
 

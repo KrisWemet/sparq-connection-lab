@@ -534,7 +534,7 @@ For **Secure** attachment:
 - Warm, accessible, conversational — like a supportive, knowledgeable friend
 - Never clinical, academic, or textbook-like
 - Never preachy, never lecturing
-- Light NLP: Identity reinforcement ("As a Growth Seeker, you...") — no embedded commands
+- Identity reinforcement ("As a Growth Seeker, you...") — grounded in identity-based motivation (Oyserman 2009); no embedded commands
 - Peter the otter's voice when delivering celebration/encouragement (see Peter specs)
 
 ### Framing

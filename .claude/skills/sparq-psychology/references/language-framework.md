@@ -1,7 +1,19 @@
-# Sparq NLP & Language Framework
+# Sparq Language & Influence Framework
 ## The layer that makes Sparq feel different from every other relationship app
 
 This document defines how Sparq communicates — not just what it says, but how language is constructed to create genuine change. Add this to `.claude/skills/sparq-psychology/references/`.
+
+> **Scientific grounding (2026-06 framework update):** Every technique in this document is retained under its validated parent construct. The umbrella label "NLP" is retired (weak empirical support as a brand: Witkowski 2010; Sturt et al. 2012) — the techniques themselves are not, because they predate and outlive that label:
+>
+> | Technique in this doc | Validated construct | Key citation |
+> |---|---|---|
+> | Reframing / outcome framing | Cognitive reappraisal | Gross, J. J. (2002), *Psychophysiology*, 39, 281–291 |
+> | Presupposition structures | Linguistic presupposition (pragmatics) | Standard pragmatics literature (Levinson 1983) |
+> | Identity reinforcement ("you're becoming…") | Identity-based motivation / self-perception | Oyserman (2009); Bem (1972) |
+> | Rapport / matching tone | Behavioral mimicry ("chameleon effect") | Chartrand & Bargh (1999), *JPSP*, 76, 893–910 |
+> | Pull language / intrinsic framing | Autonomy support (Self-Determination Theory) | Deci & Ryan (2000) |
+>
+> When describing Sparq's approach anywhere — copy, docs, marketing — use these construct names, never "NLP." **User-facing copy uses neither: the user should never see construct names at all (enjoyment-first principle — the science lives in metadata and the science page, not the experience).**
 
 ---
 
@@ -57,7 +69,7 @@ Every question, exercise, and Peter line should be designed to **pull** — to s
 
 ### 3. Presupposition Structures
 
-A presupposition assumes something is already true inside the question. The user's brain accepts the assumption and moves forward. This is one of the most powerful NLP tools in Sparq's language system.
+A presupposition assumes something is already true inside the question. The user's brain accepts the assumption and moves forward. This is one of the most powerful linguistic tools in Sparq's language system (well-described in the pragmatics literature).
 
 **Without presupposition:** "Do you want to reflect on that?"
 *(User can say no and stay stuck)*
