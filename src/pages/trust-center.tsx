@@ -276,6 +276,8 @@ export default function TrustCenterPage() {
           </ul>
         </section>
 
+        <ScienceSection />
+
         {saved && <p className="text-sm text-emerald-600">Saved.</p>}
       </main>
     </div>
@@ -360,5 +362,88 @@ function ModeOption({
       <p className="text-sm font-medium text-slate-700">{title}</p>
       <p className="text-xs text-slate-500 mt-0.5">{detail}</p>
     </button>
+  );
+}
+
+// The Science section (science upgrade spec §6, condensed for Trust Center).
+// Honesty rules baked in: never claim d > 0.5, never claim parity with
+// therapy, never guarantee outcomes, no claims about unbuilt features.
+const SCIENCE_PILLARS: Array<{ name: string; founder: string; note: string }> = [
+  { name: 'Attachment Theory', founder: 'Hazan & Shaver — Cornell / UC Davis', note: 'How early bonds shape how we love as adults.' },
+  { name: 'Gottman Method', founder: 'John Gottman — University of Washington', note: 'Four decades of observing what makes couples last.' },
+  { name: 'Emotionally Focused Therapy', founder: 'Sue Johnson — University of Ottawa', note: 'Reaching for each other underneath the argument.' },
+  { name: 'Cognitive Behavioral Approaches', founder: 'CBCT research tradition', note: 'How thoughts shape the moments between you.' },
+  { name: 'Acceptance & Commitment Therapy', founder: 'Steven Hayes — emerging evidence for couples', note: 'Making room for hard feelings while acting on your values.' },
+  { name: 'Neuroplasticity & Habit Science', founder: 'Wendy Wood — USC; Peter Gollwitzer — NYU', note: 'Why small daily reps change what feels automatic.' },
+  { name: 'Positive Relationship Science', founder: 'Harry Reis — Rochester; Shelly Gable — UCLA/UCSB', note: 'Responding well to good news matters as much as handling conflict.' },
+  { name: 'Mindfulness-Based Practices', founder: 'Barbara Fredrickson — UNC Chapel Hill', note: 'A few minutes of loving-kindness measurably increases connection.' },
+];
+
+function ScienceSection() {
+  return (
+    <section className="rounded-2xl border border-slate-200 bg-white p-5">
+      <h2 className="text-sm font-semibold text-slate-800">The Science</h2>
+      <p className="mt-1 text-xs text-slate-500 leading-relaxed">
+        Sparq is built on decades of relationship science from Harvard, Stanford, Northwestern,
+        University of Washington, University of Rochester, UCLA, and UNC Chapel Hill — translated
+        into short daily practices. The research stays back here; the practice stays simple.
+      </p>
+
+      <div className="mt-3 rounded-xl border border-indigo-100 bg-brand-linen px-4 py-3">
+        <p className="text-sm font-medium text-slate-800">21 minutes. Over 2 years. Measurable results.</p>
+        <p className="mt-1 text-xs text-slate-600 leading-relaxed">
+          In a 2013 study in <em>Psychological Science</em>, Northwestern researchers led by Eli Finkel
+          had married couples write for 7 minutes, three times a year, about a recent disagreement from
+          the eyes of a neutral observer who wants the best for both people. That alone eliminated the
+          normal two-year decline in marital quality — satisfaction, love, intimacy, trust, passion, and
+          commitment all held while the control group&apos;s declined. Short, solo, reflection-based practice
+          works. That finding is Sparq&apos;s foundation.
+        </p>
+      </div>
+
+      <details className="mt-3 group">
+        <summary className="cursor-pointer text-xs font-medium text-slate-700 hover:text-slate-900">
+          The eight research pillars behind Sparq
+        </summary>
+        <ul className="mt-2 space-y-2">
+          {SCIENCE_PILLARS.map(p => (
+            <li key={p.name} className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-2">
+              <p className="text-xs font-semibold text-slate-700">{p.name}</p>
+              <p className="text-[11px] text-slate-500">{p.founder}</p>
+              <p className="mt-0.5 text-[11px] text-slate-600">{p.note}</p>
+            </li>
+          ))}
+        </ul>
+      </details>
+
+      <details className="mt-2">
+        <summary className="cursor-pointer text-xs font-medium text-slate-700 hover:text-slate-900">
+          What to honestly expect
+        </summary>
+        <div className="mt-2 space-y-2 text-xs text-slate-600 leading-relaxed">
+          <p>
+            Digital relationship programs like Sparq produce meaningful but modest improvements in
+            relationship satisfaction — research benchmarks land around d = 0.3–0.5 (Hatch et al., 2023,
+            found d = 0.52 for fully-automated programs). That&apos;s the bar we design against.
+          </p>
+          <p>
+            Sparq is not therapy and doesn&apos;t replace it. For couples in crisis, in-person couples therapy
+            produces larger effects (Roddy et al., 2020). Sparq is a daily practice for couples who want
+            to grow — most of whom will never sit in a therapist&apos;s office.
+          </p>
+          <p>
+            We also tell you what we treat carefully: some frameworks we use (like nervous-system
+            co-regulation language) are clinical lenses that practitioners find useful, not settled
+            neuroscience. Where the evidence is still emerging, we say so.
+          </p>
+        </div>
+      </details>
+
+      <p className="mt-3 text-[11px] text-slate-400">
+        The Harvard Study of Adult Development — the longest-running study of human happiness — found
+        that relationship quality is the single strongest predictor of long-term health and happiness.
+        That&apos;s why this practice is worth five minutes of your day.
+      </p>
+    </section>
   );
 }
