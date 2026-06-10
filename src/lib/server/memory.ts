@@ -102,6 +102,40 @@ export async function searchMemories(
 }
 
 /**
+ * Age-aware semantic search: only memories created BEFORE the given date.
+ * Used by the growth engine's moment_pair signal (spec §4.1 #5) — the plain
+ * searchMemories has no age filter and would self-match the current reflection.
+ * Returns empty results (never throws, no recency fallback) when embeddings
+ * are unavailable — an unfiltered fallback would reintroduce self-matching.
+ */
+export async function searchMemoriesBefore(
+  userId: string,
+  query: string,
+  beforeIso: string,
+  limit = 5,
+): Promise<SearchResult> {
+  const client = getServiceClient();
+  const queryEmbedding = await embed(query);
+  if (!queryEmbedding) return { results: [] };
+
+  const { data, error } = await client.rpc('match_memories_before', {
+    query_embedding: `[${queryEmbedding.join(',')}]`,
+    match_user_id: userId,
+    before_date: beforeIso,
+    match_count: limit,
+  });
+  if (error || !data) return { results: [] };
+  return {
+    results: data.map((row: any) => ({
+      id: row.id,
+      memory: row.memory,
+      metadata: row.metadata,
+      score: row.similarity,
+    })),
+  };
+}
+
+/**
  * Get all memories for a user (sorted by recency), filtering out expired ones.
  */
 export async function getRecentMemories(
