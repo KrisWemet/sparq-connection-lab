@@ -77,12 +77,14 @@ The silent "before" snapshot. Written **once** per user.
 |---|---|---|
 | id | uuid PK | |
 | user_id | uuid FK | unique |
-| quotes | jsonb | array of `{ text, source, captured_at }` — verbatim user phrases from onboarding answers + first 3 evening reflections |
+| quotes | jsonb | array of `{ text, source, captured_at }` — verbatim user phrases (sources below) |
 | summary | text | LLM-distilled structured summary of where the user started (fears, patterns described, hopes) |
 | sources | jsonb | refs to the rows the quotes came from |
 | created_at | timestamptz | |
 
-**Trigger:** the existing profile-analysis hook (`runProfileAnalysis` after evening reflection) checks "user has ≥3 completed evening reflections AND no baseline_snapshot" → fire-and-forget extraction. Quote selection is deterministic (longest emotionally-salient user sentences, verbatim); only the `summary` field uses the LLM, and the summary is never quoted back as the user's words.
+**Quote sources:** verbatim quotes come from `daily_sessions.evening_reflection` (first 3 completed) and any free-text fields inside `profiles.psychological_profile` (jsonb, written by onboarding). Structured/multiple-choice onboarding answers inform the `summary` only — they are **never** presented as the user's own words.
+
+**Trigger:** the existing profile-analysis hook (`analyzeProfileTraits` in `src/lib/server/profile-analysis.ts`, invoked from `src/pages/api/daily/session/complete.ts`) checks "user has ≥3 completed evening reflections AND no baseline_snapshot" → fire-and-forget extraction. Quote selection is deterministic (longest emotionally-salient user sentences, verbatim); only the `summary` field uses the LLM, and the summary is never quoted back as the user's words.
 
 ### 3.3 `growth_moments`
 Engine output. The single source of truth all surfaces read.
@@ -95,12 +97,19 @@ Engine output. The single source of truth all surfaces read.
 | strength | text | `strong` \| `soft` |
 | tentative | boolean | true when surfaced on soft-signals-only — Peter must use tentative phrasing |
 | evidence | jsonb | `{ dimension?, before_value?, after_value?, before_quote?, after_quote?, stats? }` — quotes are verbatim memory text retrieved deterministically, never generated |
-| status | text | `active` \| `surfaced` \| `expired` |
-| surfaced_at | timestamptz null | set when a surface uses it |
+| status | text | `active` \| `surfaced` \| `expired` — tracks **chat consumption only** (see lifecycle below) |
+| surfaced_at | timestamptz null | set when the chat surface uses it |
 | week_start | date | the detection batch that produced it |
 | created_at | timestamptz | |
 
-Moments expire (status `expired`) if unsurfaced after 3 weeks — stale growth claims are worse than none.
+**Moment lifecycle & consumption semantics** (resolves which surface consumes what):
+
+- `status` tracks **chat availability only**. It is not a global "has any surface mentioned this" flag.
+- **Weekly Mirror** voices moments from its own batch (`week_start` = current batch) and does **not** change status — referencing without consuming.
+- **Chat** picks the single oldest `active` moment, voices it, then marks `surfaced` + `surfaced_at` (7-day cooldown between chat growth moments).
+- **Day-14 Compound Reveal** reads **all** moments in the journey window regardless of status — it is a retrospective compilation, and re-telling is the point.
+- Cross-surface repetition (Mirror → chat → Day-14) is **intentional reinforcement**, with each surface framing differently (weekly synthesis / conversational hand-back / milestone story). Same-surface repetition in chat is prevented by status.
+- `active` moments flip to `expired` after 3 weeks un-voiced **in chat** — stale conversational growth claims are worse than none. Expiry does not hide a moment from the Day-14 reveal.
 
 ### 3.4 `csi_pulses`
 CSI-4 (Couples Satisfaction Index, 4-item) scores.
@@ -123,12 +132,12 @@ Pure deterministic module. **No LLM calls.** Never throws (Phase 21/23 non-block
 ### 4.1 Signals
 
 **Strong:**
-1. **Pattern shift** — a dimension's value in the current state differs from the value in the snapshot 2+ weeks ago AND has held its new value for 2 consecutive weekly snapshots (flip-and-hold, not flicker).
+1. **Pattern shift** — a dimension's value in the current state differs from the value in an older snapshot AND has held its new value for 2 consecutive snapshots. "Consecutive" means **adjacent stored `pattern_snapshots` rows with ≤21 days between them** — Mirror generation is user-triggered, so calendar weeks can have gaps; adjacent-rows-with-bounded-staleness keeps the signal available to irregular users without comparing against stale data.
 2. **Practice consistency** — `practice_attempted` rate over the current 7-day window ≥ 5/7 when the user's own prior 3-week baseline was ≤ 3/7.
 3. **CSI delta** — latest monthly pulse ≥ 3 points above baseline (above test-retest noise for CSI-4).
 
 **Soft:**
-4. **Tone trend** — `evening_emotional_tone` mapped to ordinal scale, improving trend across ≥2 consecutive weeks.
+4. **Tone trend** — `evening_emotional_tone` is open-vocabulary free text (one-word LLM output, not an enum), so determinism requires a **fixed valence lookup table in code**: an explicit word list mapping common tones to three buckets (positive / neutral / negative). Unmapped words are **excluded** from the trend. The signal fires on an improving bucket trend across ≥2 consecutive weeks and **abstains** unless ≥4 mapped data points exist in the window. The lookup table lives in `growth-engine.ts` and is extended by hand, never by model.
 5. **Moment pair** — vector search (`searchMemories`) finds a memory >21 days old on a theme similar to a current-week reflection, where the old memory's content aligns with the *previous* pattern value and the current reflection aligns with the *new* one. (Retrieval is deterministic; the pairing rule is code, not model judgment.)
 
 ### 4.2 Trust bar
@@ -156,7 +165,7 @@ Extends the Phase 23 insertion point (after `buildPersonalizedPrompt`, before `e
 Verified moments are passed into the narrative prompt with the constraint: *"You may reference ONLY the growth moments listed; do not infer or invent others."* Each surfaced moment also writes a `growth_thread` entry with `type: 'growth'` (table already exists).
 
 ### 5.3 Day-14 Compound Reveal
-At the existing Day-14 graduation moment, a new reveal step composed from `baseline_snapshots` + accumulated `growth_moments` + practice stats:
+At the existing Day-14 graduation moment (`src/components/onboarding/Day14Graduation.tsx` + `src/pages/api/me/graduation-report.ts`), a new reveal step composed from `baseline_snapshots` + all journey-window `growth_moments` (regardless of status — see §3.3 lifecycle) + practice stats:
 
 - With verified delta: "Two weeks ago you told me: '{verbatim before quote}'. On Tuesday you said: '{verbatim after quote}'." Peter names the shift, hands it back.
 - **Guaranteed-payoff rule:** with no verified delta, the reveal honors effort with real numbers ("You showed up 12 of 14 days. That is not nothing — that is how every change starts.") and **never claims change that didn't happen**.
