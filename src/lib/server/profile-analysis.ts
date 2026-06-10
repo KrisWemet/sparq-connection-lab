@@ -1,6 +1,7 @@
 import { peterChat } from '@/lib/openrouter';
 import { getProfileAnalysisPrompt, PeterMessage } from '@/lib/peterService';
 import { addMemory } from '@/lib/server/memory';
+import { maybeExtractBaseline } from '@/lib/server/baseline-snapshot';
 import { loadPrivacyState } from '@/lib/server/privacy';
 import { assessReflectionQuality, getConfidenceBoost } from '@/lib/server/reflection-quality';
 import { VALID_PATTERN_VALUES } from '@/lib/server/attachment-context';
@@ -153,6 +154,10 @@ export async function analyzeProfileTraits(
       } catch (memError) {
         console.error('Memory extraction error (non-blocking):', memError);
       }
+
+      // Growth Engine — one-time baseline extraction (spec §3.2).
+      // Fire-and-forget; runs only until a baseline_snapshot exists.
+      maybeExtractBaseline(supabase, userId).catch(() => {});
     }
 
     // Update emotional_state in user_insights
