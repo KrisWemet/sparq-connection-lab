@@ -2,6 +2,10 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getAuthedContext } from '@/lib/server/supabase-auth';
 import { peterChat } from '@/lib/openrouter';
 import { stripMarkdown } from '@/lib/strip-markdown';
+import { runGrowthDetection, type GrowthMomentRow } from '@/lib/server/growth-engine';
+import { describeMomentsForMirror } from '@/lib/server/growth-moments';
+import { logFinalPrompt } from '@/lib/server/dev-prompt-log';
+import { loadPrivacyState } from '@/lib/server/privacy';
 
 function getWeekStart(): string {
   const now = new Date();
@@ -50,6 +54,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   }
 
+  // Growth Engine weekly batch (spec §4): snapshot → expire → detect.
+  // Gated on can_personalize (spec §6); fail-soft — Mirror proceeds regardless.
+  let growthMoments: GrowthMomentRow[] = [];
+  try {
+    const privacy = await loadPrivacyState(ctx.supabase, ctx.userId);
+    if (privacy.can_personalize) {
+      growthMoments = await runGrowthDetection(ctx.supabase, ctx.userId, weekStart);
+    }
+  } catch {
+    // fail-soft: no growth lines this week
+  }
+  const growthLines = describeMomentsForMirror(growthMoments);
+
   // Build context for Peter's narrative synthesis
   const practiceCount = sessions.length;
   const practicesAttempted = sessions.filter(s => s.practice_attempted === true).length;
@@ -69,6 +86,7 @@ ${sessionSummaries}
 Emotional tones observed: ${tones.join(', ') || 'none detected'}
 Sessions completed: ${practiceCount}
 Practices attempted: ${practicesAttempted}
+${growthLines.length > 0 ? `\nVERIFIED growth this week (you may reference ONLY these growth moments; do not infer or invent others):\n${growthLines.map(l => `- ${l}`).join('\n')}` : '\nNo verified growth moments this week — do NOT claim any specific change; reflect honestly on the practice itself.'}
 
 Write a 2-3 sentence narrative synthesis of their week. Focus on:
 - What PATTERN you notice across sessions (not a summary of each day)
@@ -88,6 +106,8 @@ Also return a JSON object with:
 }
 
 Output ONLY valid JSON. No text outside the JSON object.`;
+
+  logFinalPrompt('weekly-mirror/generate', prompt);
 
   try {
     const raw = await peterChat({
@@ -133,14 +153,28 @@ Output ONLY valid JSON. No text outside the JSON object.`;
       return res.status(500).json({ error: 'Failed to store weekly mirror' });
     }
 
-    // Fire-and-forget: create growth thread entry for this mirror
+    // Growth thread entries. MUST await: supabase-js builders are lazy — an
+    // un-awaited .insert() never executes (the previous fire-and-forget version
+    // of the mirror insert silently never ran).
     if (keyPatterns.length > 0) {
-      ctx.supabase.from('growth_thread').insert({
+      await ctx.supabase.from('growth_thread').insert({
         user_id: ctx.userId,
         date: weekStart,
         label: keyPatterns[0],
         type: 'mirror',
         detail: narrative,
+      });
+    }
+
+    // Growth moments land on the thread as their own type (constraint extended
+    // in the growth_engine migration).
+    for (const line of growthLines) {
+      await ctx.supabase.from('growth_thread').insert({
+        user_id: ctx.userId,
+        date: weekStart,
+        label: line.slice(0, 80),
+        type: 'growth',
+        detail: line,
       });
     }
 
