@@ -11,6 +11,13 @@ interface GraduationReport {
   relationship_superpower: string;
   focus_next: string;
   recommended_track?: string;
+  reveal?: {
+    narrative: string;
+    before_quote: string | null;
+    after_quote: string | null;
+    verified: boolean;
+    days_showed_up: number;
+  } | null;
 }
 
 const TRACK_LABELS: Record<string, string> = {
@@ -126,6 +133,28 @@ export function Day14Graduation() {
                         transition={{ duration: 0.5, delay: 0.3 }}
                         className="space-y-4 mb-6"
                     >
+                        {/* Compound Reveal — the user's own words, then and now (spec §5.3) */}
+                        {report.reveal?.narrative && (
+                            <div className="rounded-2xl bg-white border border-teal-100 p-4 shadow-sm">
+                                <p className="text-xs font-bold text-teal-600 uppercase tracking-wider mb-3">
+                                    Something I kept for you
+                                </p>
+                                {report.reveal.verified && report.reveal.before_quote && (
+                                    <blockquote className="mb-2 border-l-2 border-teal-200 pl-3 text-sm italic text-gray-500">
+                                        &ldquo;{report.reveal.before_quote}&rdquo;
+                                        <span className="mt-1 block not-italic text-xs text-gray-400">— you, when we started</span>
+                                    </blockquote>
+                                )}
+                                {report.reveal.verified && report.reveal.after_quote && (
+                                    <blockquote className="mb-3 border-l-2 border-teal-500 pl-3 text-sm italic text-gray-700">
+                                        &ldquo;{report.reveal.after_quote}&rdquo;
+                                        <span className="mt-1 block not-italic text-xs text-gray-400">— you, this week</span>
+                                    </blockquote>
+                                )}
+                                <p className="text-sm text-gray-700 leading-relaxed">{report.reveal.narrative}</p>
+                            </div>
+                        )}
+
                         {/* What Peter Noticed */}
                         <div className="rounded-2xl bg-brand-linen border border-indigo-100 p-4">
                             <p className="text-xs font-bold text-brand-primary uppercase tracking-wider mb-2 flex items-center gap-1.5">

@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getAuthedContext } from '@/lib/server/supabase-auth';
 import { peterChat } from '@/lib/openrouter';
 import { PETER_SYSTEM_PROMPT } from '@/lib/peterService';
+import { getAllGrowthMoments } from '@/lib/server/growth-moments';
+import { logFinalPrompt } from '@/lib/server/dev-prompt-log';
 
 const TRACK_MAP: Record<string, string> = {
   avoidant: 'trust_security',
@@ -61,6 +63,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const traits = traitsData || [];
   const recommended_track = recommendTrack(traits);
 
+  // Compound Reveal inputs (spec §5.3): baseline + ALL moments regardless of status
+  const [{ data: baseline }, allMoments] = await Promise.all([
+    ctx.supabase.from('baseline_snapshots').select('quotes, summary').eq('user_id', ctx.userId).maybeSingle(),
+    getAllGrowthMoments(ctx.supabase, ctx.userId),
+  ]);
+  const beforeQuote: string | null = baseline?.quotes?.[0]?.text ?? null;
+  const strongMoment = allMoments.find(m => !m.tentative) || null;
+  const afterQuote: string | null =
+    (strongMoment?.evidence.after_quote as string | undefined) ??
+    (sessions && sessions.length > 0 ? (sessions[sessions.length - 1].evening_reflection || '').slice(0, 200) : null);
+  const daysShowedUp = (sessions || []).length;
+
   const reflectionSummary = (sessions || [])
     .map(s => `Day ${s.day_index}: "${s.evening_reflection}"`)
     .join('\n');
@@ -76,12 +90,19 @@ ${reflectionSummary || '(reflections not available)'}
 
 What you know about them: ${traitSummary || 'still getting to know them'}
 
+Verified evidence for the reveal (use ONLY this — never invent):
+${beforeQuote ? `What they said when they started: "${beforeQuote}"` : '(no baseline quote on record)'}
+${afterQuote ? `What they said recently: "${afterQuote}"` : '(no recent quote on record)'}
+${strongMoment ? `Verified change: ${strongMoment.kind.replace(/_/g, ' ')}` : 'Verified change: NONE — use the effort fallback.'}
+Days they showed up: ${daysShowedUp} of 14
+
 Generate JSON with exactly this shape:
 {
   "what_i_learned": "<2-3 sentences about what you observed about this person over 14 days — warm, specific, personal>",
   "biggest_growth": "<1-2 sentences about the most meaningful growth you witnessed>",
   "relationship_superpower": "<1 sentence identifying their clearest strength in relationships>",
-  "focus_next": "<1-2 sentences about the next area to explore — hopeful, not prescriptive>"
+  "focus_next": "<1-2 sentences about the next area to explore — hopeful, not prescriptive>",
+  "reveal_narrative": "<2-3 sentences. ${strongMoment && beforeQuote ? 'A verified change happened — name it plainly using ONLY the evidence provided, then hand ownership back with a light question.' : `NO verified change is on record — honor effort with the real number: they showed up ${daysShowedUp} of 14 days. Never claim a change that is not in the evidence.`}>"
 }
 
 Rules:
@@ -90,8 +111,10 @@ Rules:
 - No clinical terms
 - Return ONLY the JSON object`;
 
+  logFinalPrompt('me/graduation-report', prompt);
+
   try {
-    const raw = await peterChat({ messages: [{ role: 'user', content: prompt }], maxTokens: 600 });
+    const raw = await peterChat({ messages: [{ role: 'user', content: prompt }], maxTokens: 700 });
     const jsonMatch = raw.match(/\{[\s\S]*\}/);
     if (!jsonMatch) throw new Error('No JSON in response');
 
@@ -105,6 +128,16 @@ Rules:
       return res.status(500).json({ error: 'Incomplete report generated' });
     }
 
+    // Compound Reveal payload (spec §5.3). Quotes only ship when a verified
+    // (non-tentative) moment exists — never pair quotes around an unverified claim.
+    const reveal = {
+      narrative: (parsed.reveal_narrative as string) || '',
+      before_quote: strongMoment && beforeQuote ? beforeQuote : null,
+      after_quote: strongMoment && afterQuote ? afterQuote : null,
+      verified: Boolean(strongMoment),
+      days_showed_up: daysShowedUp,
+    };
+
     const { data: inserted, error: insertError } = await ctx.supabase
       .from('graduation_reports')
       .insert({
@@ -114,6 +147,7 @@ Rules:
         relationship_superpower,
         focus_next,
         recommended_track,
+        reveal,
       })
       .select('*')
       .single();
@@ -126,6 +160,7 @@ Rules:
         relationship_superpower,
         focus_next,
         recommended_track,
+        reveal,
       });
     }
 
