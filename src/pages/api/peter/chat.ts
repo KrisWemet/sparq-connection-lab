@@ -12,6 +12,7 @@ import { stripMarkdown } from '@/lib/strip-markdown';
 import { buildPatternContext, buildLegacyTraits, patternContextToTraits } from '@/lib/server/attachment-context';
 import { getPatternHints } from '@/lib/server/pattern-hints';
 import { logFinalPrompt } from '@/lib/server/dev-prompt-log';
+import { getActiveGrowthMomentForChat, markMomentSurfaced, buildGrowthMomentBlock } from '@/lib/server/growth-moments';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -144,6 +145,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           }
           if (insightLines.length > 0) {
             systemPrompt += '\n\n' + insightLines.join('\n');
+          }
+
+          // Growth Engine (spec §5.1): at most one verified moment per conversation.
+          // Known tradeoff: the moment is marked consumed when APPENDED to the
+          // prompt, but the block allows Peter to stay silent — a moment can be
+          // consumed without being voiced. Acceptable: it still appears in the
+          // Mirror and Day-14 reveal, and output inspection isn't available.
+          const growthMoment = await getActiveGrowthMomentForChat(authed.supabase, authed.userId);
+          if (growthMoment) {
+            const block = buildGrowthMomentBlock(growthMoment);
+            if (block) {
+              systemPrompt += block;
+              // Mark chat-consumed (fire-and-forget; 7-day cooldown enforced on read)
+              markMomentSurfaced(authed.supabase, growthMoment.id);
+            }
           }
         }
       } catch (personalizeError) {
