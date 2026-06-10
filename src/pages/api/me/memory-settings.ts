@@ -1,8 +1,23 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { getAuthedContext } from '@/lib/server/supabase-auth';
 import { deleteUserMemories } from '@/lib/server/memory';
 
 type MemoryWindow = 'none' | '90_days' | 'indefinite';
+
+/**
+ * Growth Engine cascade (spec §6): baseline quotes ARE stored memories;
+ * growth/snapshot/pulse rows are derived from them. Every path that wipes
+ * memories must wipe these too.
+ */
+async function deleteGrowthData(supabase: SupabaseClient, userId: string): Promise<void> {
+  await Promise.all([
+    supabase.from('baseline_snapshots').delete().eq('user_id', userId),
+    supabase.from('growth_moments').delete().eq('user_id', userId),
+    supabase.from('pattern_snapshots').delete().eq('user_id', userId),
+    supabase.from('csi_pulses').delete().eq('user_id', userId),
+  ]);
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const ctx = await getAuthedContext(req);
@@ -36,10 +51,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       { onConflict: 'user_id' }
     );
 
-    // If set to "none", delete all existing memories
+    // If set to "none", delete all existing memories + derived growth data
     if (memory_window === 'none') {
       try {
         await deleteUserMemories(ctx.userId);
+        await deleteGrowthData(ctx.supabase, ctx.userId);
       } catch (err) {
         console.error('Failed to delete memories on setting none:', err);
       }
@@ -52,6 +68,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Explicit "delete all my memories" action
     try {
       await deleteUserMemories(ctx.userId);
+      await deleteGrowthData(ctx.supabase, ctx.userId);
       return res.status(200).json({ deleted: true });
     } catch (err) {
       console.error('Failed to delete user memories:', err);
