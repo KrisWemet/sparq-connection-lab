@@ -48,7 +48,7 @@ Governing principle: [enjoyment-first / below-the-critical-factor] — the user 
 **After capture:**
 - Dashboard shows the placecard: just the line, serif, quiet. No label, no edit affordance.
 - Peter's chat + morning prompts gain one orientation block (see §5).
-- Day-14 graduation / journey completion: "When we started, you told me '{line}'. Is that still the truest version of where you're headed?" Yes → reaffirmed (timestamp). No → mini-ladder (max 2 follow-ups) → new line; old row retired, new row created. The retired-line history is future Compound Reveal material.
+- Day-14 graduation / journey completion: the graduation surface is static (fetch-and-render, no chat plumbing) — so the boundary moment is **two quiet buttons under the displayed line**, not a conversation: "When we started, you told me '{line}'. Is that still the truest version?" → **"Still true"** (POST → `reaffirmed_at` timestamp) or **"It's shifting"** (POST → sets `needs_reladder = true` on the active row). The actual re-ladder then happens through the **same evening ladder machinery**: `shouldLadderTonight` returns true again (attempt counters reset), and the next evening Peter opens with the shift context — "At your graduation you mentioned '{line}' might be changing. What's true now?" Old row retires on new confirmation; retired-line history is future Compound Reveal material. No new conversational surface is built.
 
 ---
 
@@ -67,6 +67,7 @@ Governing principle: [enjoyment-first / below-the-critical-factor] — the user 
 | last_attempt_at | timestamptz null | cooldown anchor |
 | confirmed_at | timestamptz null | |
 | reaffirmed_at | timestamptz null | journey-boundary "still true" timestamps |
+| needs_reladder | boolean default false | set by the graduation "It's shifting" button; re-enables evening ladder eligibility |
 | created_at | timestamptz | |
 
 RLS user-scoped, same pattern as `growth_moments`. Index on `(user_id, status)`.
@@ -76,8 +77,8 @@ RLS user-scoped, same pattern as `growth_moments`. Index on `(user_id, status)`.
 ## 4. Server logic — `src/lib/server/north-star.ts` (single owner of ladder state)
 
 Exports (all fail-soft, never throw):
-- `getNorthStarState(supabase, userId)` → `{ row, shouldLadderTonight }` — true when: day 2–4 of journey, no `active`/`declined` row, `attempt_count < 3`, `last_attempt_at` ≥ 2 days ago (or null), privacy `can_personalize`.
-- `seedNorthStar(supabase, userId)` → derives seed from `profiles.psychological_profile` free-text fields; inserts `seeded` row. Called fire-and-forget from onboarding completion (ScoringTransition's existing server path) — idempotent.
+- `getNorthStarState(supabase, userId)` → `{ row, shouldLadderTonight }` — true when EITHER (a) first capture: day 2–4 of journey, no `active`/`declined` row, `attempt_count < 3`, `last_attempt_at` ≥ 2 days ago (or null); OR (b) re-ladder: active row has `needs_reladder = true` (attempt counter treated as reset; ladder opens with the shift context). Both gated on privacy `can_personalize`.
+- `seedNorthStar(supabase, userId)` → derives seed from `profiles.psychological_profile` free-text fields; inserts `seeded` row; idempotent. **Called lazily from `getNorthStarState` on the first evening-eligibility check** — NOT from onboarding. (ScoringTransition writes `psychological_profile` directly from the browser with no post-write server hook, so onboarding-time seeding has no clean attachment point; lazy seeding reads the profile when the ladder first becomes relevant and requires zero onboarding changes — which also honors the "nothing new at Day 0" decision literally.)
 - `buildLadderPromptBlock(state, turnNumber)` → the evening system-prompt replacement for ladder turns: opening, follow-up guidance, bedrock tells, deflection-exit rule, distill instruction with the **structured marker contract** (below), bridge-to-reflection instruction.
 - `processLadderTurn(supabase, userId, peterResponse, userMessage)` → parses markers, advances state, appends to `ladder_transcript`, increments attempts on open, writes `line`+`active` on confirmation.
 - `getActiveNorthStar(supabase, userId)` → the `active` row's line or null (read by surfaces).
@@ -91,6 +92,13 @@ chat.ts strips `[[...]]` markers from the user-visible message (extend existing 
 
 **chat.ts integration:** in the evening path only — when `shouldLadderTonight`, swap the eveningContext block for `buildLadderPromptBlock` and route each turn through `processLadderTurn` (fire-and-forget where possible). Any module error → normal evening check-in (try/catch fail-soft, the established contract). Crisis detection continues to run first and aborts the ladder.
 
+**Turn-cap extension (REQUIRED — the existing check-in is hard-capped at 3 turns on both sides):**
+- Server: `chat.ts` currently forces a no-follow-up close at `turnNumber >= 3`. On ladder nights this close is **suppressed while the ladder state is open**; the ladder's own bounds take over (max 4 follow-ups + distill/confirm + adjust + bridge), with a server-side hard cap of `turnNumber >= 8` forcing `[[NORTH_STAR_DEFERRED]]` + normal close as the safety net.
+- Client: `daily-growth.tsx` sets `canCompleteDay` at turn ≥ 2 and `reflectionClosed` at turn ≥ 3, and intercepts short (<5-word) first answers with a canned local response. The chat API response gains a `ladder_active: boolean` field; while true, the client suspends the turn-cap close AND the low-effort interceptor (short answers can be legitimate bedrock — "I don't know", "my dad"). When the response stops carrying `ladder_active`, normal close behavior resumes and the session completes as usual (streak intact).
+- Marker parsing order: `processLadderTurn` parses `[[NORTH_STAR_*]]` markers on the **raw LLM output before `stripMarkdown`** runs; markers are then stripped from the user-visible message.
+- Day source of truth: the ladder trusts the client-supplied `eveningContext.day` — consistent with how the existing evening path already uses it; the `daily_sessions` idempotency guards bound any abuse.
+- `processLadderTurn` handles the no-row case by creating the row on first ladder open (`shouldLadderTonight` deliberately doesn't require a row); with `can_store_memories` off, ladder state advances via status + markers + the client-sent messages array only — never reads `ladder_transcript` for state.
+
 ---
 
 ## 5. Orientation wiring (the payoff)
@@ -99,7 +107,7 @@ Phase 23 insertion pattern, one block, both prompt surfaces (chat.ts, morning.ts
 
 > `This person is becoming: "{line}" (their own confirmed words). Never quote this at them or mention you know it; let it quietly shape what you notice, the stories you choose, and what you encourage.`
 
-Appended after `buildPersonalizedPrompt`, before evening/growth blocks. The Day-14 graduation report gains the reaffirm/re-ladder beat (extends the existing reveal step). **No growth-engine changes in this phase** (YAGNI — the engine can read `north_stars` in a later phase).
+Appended after `buildPersonalizedPrompt`, before evening/growth blocks. The Day-14 graduation surface gains the boundary beat as **two buttons** (see §2): "Still true" / "It's shifting", both POSTing to `/api/me/north-star` (the same endpoint the placecard reads — GET line, POST reaffirm/needs_reladder). The conversational re-ladder itself runs through the existing evening machinery — no graduation chat surface. **No growth-engine changes in this phase** (YAGNI — the engine can read `north_stars` in a later phase).
 
 ## 6. Dashboard placecard — `src/components/dashboard/NorthStarCard.tsx`
 
