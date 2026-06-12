@@ -18,6 +18,7 @@ import { fetchPlayfulConnectionToday } from '@/lib/playfulConnection';
 import type { PlayfulPrompt } from '@/data/playful-prompts';
 import { DailySparkCard } from '@/components/playful/DailySparkCard';
 import { CsiPulseCard } from '@/components/dashboard/CsiPulseCard';
+import { NorthStarCard } from '@/components/dashboard/NorthStarCard';
 import { HomeDestinationStrip } from "@/components/dashboard/HomeDestinationStrip";
 import { EditorialEyebrow } from "@/components/editorial/EditorialSurface";
 
@@ -195,6 +196,9 @@ export default function Dashboard() {
 
         {/* ── 1. PETER'S GREETING ── */}
         <PeterGreeting firstName={firstName} />
+
+        {/* ── NORTH STAR — who you're becoming (renders only once captured) ── */}
+        <NorthStarCard />
 
         {/* ── 2. TODAY'S PRACTICE CTA ── */}
         <motion.div

@@ -30,6 +30,8 @@ export function Day14Graduation() {
     const router = useRouter();
     const [report, setReport] = useState<GraduationReport | null>(null);
     const [reportLoading, setReportLoading] = useState(true);
+    const [northStar, setNorthStar] = useState<string | null>(null);
+    const [boundaryDone, setBoundaryDone] = useState(false);
 
     useEffect(() => {
         // Fire confetti on mount
@@ -75,11 +77,36 @@ export function Day14Graduation() {
                     const data = await res.json();
                     if (data && !data.error) setReport(data);
                 }
+
+                // North Star boundary beat (spec §2/§5)
+                const nsRes = await fetch('/api/me/north-star', {
+                    headers: { Authorization: `Bearer ${session.access_token}` },
+                });
+                if (nsRes.ok) {
+                    const ns = await nsRes.json();
+                    if (ns.line) setNorthStar(ns.line);
+                }
             } catch {} finally {
                 setReportLoading(false);
             }
         })();
     }, []);
+
+    const answerBoundary = async (action: 'reaffirm' | 'shift') => {
+        setBoundaryDone(true);
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session?.access_token) return;
+            await fetch('/api/me/north-star', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify({ action }),
+            });
+        } catch { /* fail-soft */ }
+    };
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-teal-50 flex flex-col items-center justify-start p-6 pb-12">
@@ -152,6 +179,34 @@ export function Day14Graduation() {
                                     </blockquote>
                                 )}
                                 <p className="text-sm text-gray-700 leading-relaxed">{report.reveal.narrative}</p>
+                            </div>
+                        )}
+
+                        {/* North Star boundary beat (spec §2/§5) */}
+                        {northStar && (
+                            <div className="rounded-2xl bg-white border border-indigo-100 p-4 shadow-sm">
+                                <p className="text-sm text-gray-700 leading-relaxed mb-1">
+                                    When we started, you told me:
+                                </p>
+                                <p className="text-sm italic text-gray-800 mb-3">&ldquo;{northStar}&rdquo;</p>
+                                {boundaryDone ? (
+                                    <p className="text-xs text-gray-500">Thank you. I&apos;ll keep that close. 🦦</p>
+                                ) : (
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => answerBoundary('reaffirm')}
+                                            className="flex-1 rounded-xl border border-teal-200 bg-teal-50 px-3 py-2 text-xs font-medium text-teal-800 hover:bg-teal-100"
+                                        >
+                                            Still true
+                                        </button>
+                                        <button
+                                            onClick={() => answerBoundary('shift')}
+                                            className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                                        >
+                                            It&apos;s shifting
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         )}
 

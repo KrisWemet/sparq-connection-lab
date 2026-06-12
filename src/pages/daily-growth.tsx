@@ -450,8 +450,15 @@ export default function DailyGrowth() {
       const peterMsg: PeterMessage = { role: 'assistant', content: data.message };
       setEveningMessages([...updated, peterMsg]);
 
-      if (newTurn >= 2) setCanCompleteDay(true);
-      if (newTurn >= 3) setReflectionClosed(true);
+      // North Star ladder nights (spec §4 turn-cap extension): while the
+      // server reports an open ladder, suspend the turn-cap close so the
+      // conversation can reach bedrock. Normal nights are unchanged. The
+      // turn-0 low-effort interceptor needs no gating — it always precedes
+      // the first API call, so a ladder can never be open when it fires.
+      if (!data.ladder_active) {
+        if (newTurn >= 2) setCanCompleteDay(true);
+        if (newTurn >= 3) setReflectionClosed(true);
+      }
     } catch {
       setEveningMessages(prev => [
         ...prev,
