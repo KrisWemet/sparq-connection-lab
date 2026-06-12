@@ -64,7 +64,14 @@ export function isEncryptionConfigured(): boolean {
 **Files:**
 - Create: `src/pages/api/reflections/index.ts`, `src/pages/api/reflections/[id].ts` (from `$WT` same paths)
 
-- [ ] **Step 1: Copy both** — `mkdir -p src/pages/api/reflections && cp $WT/src/pages/api/reflections/index.ts $WT/src/pages/api/reflections/[id].ts src/pages/api/reflections/`
+- [ ] **Step 1: Copy both** (quote `[id].ts` — unquoted it's a zsh glob that errors; set WT inline — shell state doesn't persist):
+
+```bash
+WT=.worktrees/sprint-3-finkel-method
+mkdir -p src/pages/api/reflections
+cp "$WT/src/pages/api/reflections/index.ts" src/pages/api/reflections/
+cp "$WT/src/pages/api/reflections/[id].ts" 'src/pages/api/reflections/[id].ts'
+```
 
 - [ ] **Step 2: Guard in `index.ts`.** Update the import to include `isEncryptionConfigured`; immediately after the auth check (`if (!ctx) ...`), insert:
 
@@ -77,7 +84,7 @@ export function isEncryptionConfigured(): boolean {
 
 - [ ] **Step 3: Same guard in `[id].ts`** (same import + same insert after auth check).
 
-- [ ] **Step 4: Verify** — `npx tsc --noEmit` exit 0; `grep -c "isEncryptionConfigured" src/pages/api/reflections/index.ts src/pages/api/reflections/[id].ts` → 2 each (import + call).
+- [ ] **Step 4: Verify** — `npx tsc --noEmit` exit 0; `grep -c "isEncryptionConfigured" src/pages/api/reflections/index.ts 'src/pages/api/reflections/[id].ts'` → 2 each (import + call; note the quoted glob).
 
 - [ ] **Step 5: Commit** — `git add src/pages/api/reflections && git commit -m "feat(finkel): port encrypted reflections APIs with 503 guard"`
 
@@ -126,7 +133,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 **Files:**
 - Create: `src/pages/neutral-observer.tsx`, `src/pages/neutral-observer/history.tsx` (from `$WT`)
 
-- [ ] **Step 1: Copy** — `cp $WT/src/pages/neutral-observer.tsx src/pages/ && mkdir -p src/pages/neutral-observer && cp $WT/src/pages/neutral-observer/history.tsx src/pages/neutral-observer/`
+- [ ] **Step 1: Copy** —
+
+```bash
+WT=.worktrees/sprint-3-finkel-method
+cp "$WT/src/pages/neutral-observer.tsx" src/pages/
+mkdir -p src/pages/neutral-observer
+cp "$WT/src/pages/neutral-observer/history.tsx" src/pages/neutral-observer/
+```
 
 - [ ] **Step 2: Fix the trigger mapping** (the ported page never maps `scheduled` — quarterly completions would save as `on_demand` and the schedule would never advance). Replace:
 
@@ -173,10 +187,10 @@ with:
 
 (The Info tooltip with the full study story STAYS — it is exactly the "quiet credentials" vehicle.)
 
-- [ ] **Step 4: Credential line.** Immediately after the `It's your turn.` paragraph, before the Begin button, insert:
+- [ ] **Step 4: Credential line.** Change the `It's your turn.` paragraph's `mb-7` → `mb-2` (the new line below takes over the pre-button gap), then immediately after it, before the Begin button, insert:
 
 ```tsx
-                  <p className="text-[11px] text-brand-taupe/70 mb-5">
+                  <p className="text-[11px] text-brand-taupe/70 mb-7">
                     Backed by Northwestern research.
                   </p>
 ```
@@ -211,7 +225,7 @@ with:
 
 ```tsx
 // Quarterly Neutral Observer card (spec §4). Appears only when due
-// (Finkel dosage: 3x/year). Launches with trigger=scheduled so completion
+// (study dosage: 3×/year). Launches with trigger=scheduled so completion
 // advances next_neutral_observer_due +90d.
 
 import { useEffect, useState } from 'react';
@@ -285,8 +299,9 @@ export function NeutralObserverCard() {
 - [ ] **Step 1:** Read the tools-phase render (the `return (...)` after the somatic branch, line ~264 onward) and append, as the LAST content block inside the tools-phase main container (after the repair-starters section, before the container closes):
 
 ```tsx
-        {/* A Different Pair of Eyes — post-conflict reappraisal offer (spec §4) */}
-        <div className="mx-auto max-w-3xl px-4 pb-10">
+        {/* A Different Pair of Eyes — post-conflict reappraisal offer (spec §4).
+            Plain div — the parent <main> already provides max-w/px/space-y. */}
+        <div>
           <div className="rounded-2xl border border-brand-primary/10 bg-brand-parchment p-5">
             <p className="text-sm leading-relaxed text-brand-espresso mb-1 font-medium">
               When you&apos;re ready
@@ -361,10 +376,10 @@ and change `grid-cols-3` → `grid-cols-2` (4 items in cols-3 wraps 3+1; 2×2 re
 - [ ] **Step 1: Greps (all must pass)**
 
 ```bash
-grep -c "isEncryptionConfigured" src/pages/api/reflections/index.ts src/pages/api/reflections/[id].ts   # → 2 each
+grep -c "isEncryptionConfigured" src/pages/api/reflections/index.ts 'src/pages/api/reflections/[id].ts'   # → 2 each (quoted glob)
 grep -rn "peterChat\|openrouter" src/pages/neutral-observer.tsx src/pages/neutral-observer/ src/pages/api/reflections/ | wc -l   # → 0 (no LLM)
 grep -rn "from('reflections')" src --include="*.ts" --include="*.tsx" | grep -v "api/reflections" | grep -v memory-settings | wc -l   # → 0
-grep -rn "Finkel" src --include="*.tsx" | grep -v trust-center | grep -v neutral-observer | wc -l   # → 0 (warm-label check; tooltip story mention allowed in the flow)
+grep -rn "Finkel" src --include="*.tsx" | grep -v trust-center | grep -v neutral-observer | wc -l   # → 0 (warm-label check; the flow's tooltip story and the Trust Center are the only allowed mentions — the card comment uses "study dosage" specifically so this passes)
 ```
 
 - [ ] **Step 2: Crypto round-trip (one-off tsx script, not committed)** — with a test key in env: encrypt→decrypt identity; tampered tag throws; `isEncryptionConfigured()` false with empty env, true with 64-hex-char env.
