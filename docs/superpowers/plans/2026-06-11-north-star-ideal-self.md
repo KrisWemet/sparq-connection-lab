@@ -31,6 +31,8 @@
 
 **Spec deviation (documented):** the spec's turn-cap fix says to suspend the client low-effort interceptor while `ladder_active`. Reading `daily-growth.tsx:409-421`, the interceptor only fires at `eveningTurns === 0` — before any API call, therefore always before a ladder can open. No interceptor change is needed; only the turn-cap gating at lines 453–454 changes.
 
+**Known limitation (spec-inherited, accepted):** users whose row reaches `declined` (3 deflected attempts) have no path to a north star — the graduation boundary card only renders when an active line exists. Spec §2 implies boundary moments could still offer one; deferred to a future phase (backlog: a gentle graduation-time offer for declined/never-captured users).
+
 ---
 
 ### Task 1: Migration — `north_stars`
@@ -190,9 +192,37 @@ export async function getNorthStarState(
     let row = await getCurrentRow(supabase, userId);
 
     if (row?.status === 'laddering') {
+      // Mid-ladder continuation — but guard against abandonment: a 'laddering'
+      // row whose last attempt is >1 day old means the user closed the app
+      // mid-conversation. Treat as deferred (graceful, honors cooldown intent)
+      // instead of reopening every evening forever.
+      const { data: full } = await supabase
+        .from('north_stars').select('last_attempt_at').eq('id', row.id).maybeSingle();
+      const last = full?.last_attempt_at ? new Date(full.last_attempt_at).getTime() : 0;
+      if (Date.now() - last > 86400000) {
+        await supabase.from('north_stars').update({
+          status: row.needs_reladder ? 'active' : (row.attempt_count >= 3 ? 'declined' : 'seeded'),
+          proposed_line: null,
+        }).eq('id', row.id);
+        return { row, shouldLadderTonight: false, isReladder: false };
+      }
       return { row, shouldLadderTonight: true, isReladder: row.needs_reladder };
     }
     if (row?.status === 'active' && row.needs_reladder) {
+      // Re-ladder eligibility (b) — same courtesy rules as first capture:
+      // attempt cap and 2-day cooldown, so a deferred re-ladder retries
+      // "on a later evening", never nightly (spec deflection decision).
+      if (row.attempt_count >= 3) {
+        await supabase.from('north_stars')
+          .update({ needs_reladder: false }).eq('id', row.id); // give up; old line stays active
+        return { row, shouldLadderTonight: false, isReladder: false };
+      }
+      const { data: full } = await supabase
+        .from('north_stars').select('last_attempt_at').eq('id', row.id).maybeSingle();
+      const last = full?.last_attempt_at ? new Date(full.last_attempt_at).getTime() : 0;
+      if (last && Date.now() - last < 2 * 86400000) {
+        return { row, shouldLadderTonight: false, isReladder: false };
+      }
       return { row, shouldLadderTonight: true, isReladder: true };
     }
     if (row?.status === 'active' || row?.status === 'declined') {
@@ -278,23 +308,36 @@ export async function processLadderTurn(
   rawOutput: string,
   userMessage: string,
   canStoreTranscript: boolean,
+  turnNumber: number,
 ): Promise<LadderTurnResult> {
-  const visibleMessage = rawOutput.replace(STRIP_ALL_MARKERS, ' ').trim();
+  const visibleMessage = rawOutput
+    .replace(STRIP_ALL_MARKERS, ' ')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
   try {
     let row = state.row;
     if (!row) return { visibleMessage, ladderOpen: false };
 
-    // First ladder turn: open the attempt
+    // DETERMINISTIC hard cap (spec §4 safety net): at turn >= 8 the ladder
+    // closes regardless of what the LLM emitted. Without this, one
+    // marker-less wrap-up strands ladder_active=true and the client can
+    // never set canCompleteDay — streak loss from a disobedient LLM turn.
+    const forceClose = turnNumber >= 8;
+
+    // First ladder turn: open the attempt. Re-ladders ALSO move through
+    // 'laddering' (line preserved on the row; needs_reladder stays true as
+    // the re-ladder flag) so continuation works identically for both paths
+    // and eligibility (b)'s cooldown can't kill a mid-conversation ladder.
     if (row.status === 'seeded' || (row.status === 'active' && row.needs_reladder)) {
       await supabase
         .from('north_stars')
         .update({
-          status: row.status === 'active' ? 'active' : 'laddering',
-          attempt_count: row.status === 'active' ? row.attempt_count : row.attempt_count + 1,
+          status: 'laddering',
+          attempt_count: row.attempt_count + 1,
           last_attempt_at: new Date().toISOString(),
         })
         .eq('id', row.id);
-      if (row.status === 'seeded') row = { ...row, status: 'laddering' };
+      row = { ...row, status: 'laddering', attempt_count: row.attempt_count + 1 };
     }
 
     if (canStoreTranscript) {
@@ -308,7 +351,7 @@ export async function processLadderTurn(
     }
 
     const proposed = rawOutput.match(MARKER_PROPOSED);
-    if (proposed) {
+    if (proposed && !forceClose) {
       await supabase.from('north_stars')
         .update({ proposed_line: proposed[1].slice(0, 300) }).eq('id', row.id);
       return { visibleMessage, ladderOpen: true };
@@ -339,14 +382,23 @@ export async function processLadderTurn(
         }
         return { visibleMessage, ladderOpen: false };
       }
-      // CONFIRMED without a stored proposal — treat as deferral (never invent a line)
+      // CONFIRMED without a stored proposal — fall through to deferral
+      // (never invent a line)
     }
 
-    if (MARKER_DEFERRED.test(rawOutput) || MARKER_CONFIRMED.test(rawOutput)) {
-      const terminalStatus = row.attempt_count >= 3 ? 'declined' : 'seeded';
-      await supabase.from('north_stars')
-        .update({ status: row.needs_reladder ? 'active' : terminalStatus, proposed_line: null })
-        .eq('id', row.id);
+    if (MARKER_DEFERRED.test(rawOutput) || MARKER_CONFIRMED.test(rawOutput) || forceClose) {
+      // Graceful exit. Re-ladder: old line returns to 'active', needs_reladder
+      // stays true — eligibility (b)'s cooldown + attempt cap govern the
+      // retry, so it resumes "on a later evening", never nightly, and gives
+      // up entirely after 3 attempts (eligibility clears the flag).
+      // First capture: back to 'seeded' (cooldown applies) or 'declined' at cap.
+      const update = state.isReladder
+        ? { status: 'active' as const, proposed_line: null }
+        : {
+            status: row.attempt_count >= 3 ? ('declined' as const) : ('seeded' as const),
+            proposed_line: null,
+          };
+      await supabase.from('north_stars').update(update).eq('id', row.id);
       return { visibleMessage, ladderOpen: false };
     }
 
@@ -413,35 +465,45 @@ git commit -m "feat(north-star): ladder state module — eligibility, lazy seed,
 import { getNorthStarState, buildLadderPromptBlock, processLadderTurn, getActiveNorthStar, buildNorthStarOrientation, type NorthStarState } from '@/lib/server/north-star';
 ```
 
-- [ ] **Step 2: Orientation block** — inside the `privacy.can_personalize` block, immediately after the growth-moment block ends, add:
+- [ ] **Step 2: Hoisted state + ladder resolution** — declare BEFORE the personalization block (so they're visible at the post-LLM site):
 
 ```typescript
-          // North Star orientation (spec §5) — quiet ideal-self shaping
-          const northStarLine = await getActiveNorthStar(authed.supabase, authed.userId);
-          if (northStarLine) {
-            systemPrompt += buildNorthStarOrientation(northStarLine);
+    // North Star state (spec §4/§5) — resolved inside the personalization
+    // block (single loadPrivacyState), consumed at the evening block and
+    // post-LLM marker site.
+    let ladderState: NorthStarState | null = null;
+    let privacyCanStoreMemories = false;
+```
+
+Then inside the existing personalization `try`, immediately after `const privacy = await loadPrivacyState(...)`:
+
+```typescript
+        privacyCanStoreMemories = privacy.can_store_memories;
+```
+
+and inside `if (privacy.can_personalize) { ... }`, BEFORE the `Promise.all` fan-out:
+
+```typescript
+          if (eveningContext) {
+            const st = await getNorthStarState(authed.supabase, authed.userId, eveningContext.day);
+            if (st.shouldLadderTonight) ladderState = st;
           }
 ```
 
-- [ ] **Step 3: Ladder state resolution** — BEFORE the `if (eveningContext)` block, add:
+(The whole personalization block is already wrapped in try/catch fail-soft — a `getNorthStarState` error degrades to a normal evening, per contract.)
+
+- [ ] **Step 3: Orientation block** — inside `privacy.can_personalize`, immediately after the growth-moment block ends, add (skipped on ladder nights — the ladder block quotes the old line directly, and the orientation's "never quote this" instruction would contradict it):
 
 ```typescript
-    // North Star ladder (spec §4): evening-only; privacy-gated; fail-soft.
-    let ladderState: NorthStarState | null = null;
-    if (authed && !systemOverride && eveningContext) {
-      try {
-        const privacy = await loadPrivacyState(authed.supabase, authed.userId);
-        if (privacy.can_personalize) {
-          const st = await getNorthStarState(authed.supabase, authed.userId, eveningContext.day);
-          if (st.shouldLadderTonight) ladderState = st;
-        }
-      } catch {
-        ladderState = null; // normal evening check-in
-      }
-    }
+          // North Star orientation (spec §5) — quiet ideal-self shaping.
+          // Skipped while a ladder is open (the ladder block handles the line).
+          if (!ladderState) {
+            const northStarLine = await getActiveNorthStar(authed.supabase, authed.userId);
+            if (northStarLine) {
+              systemPrompt += buildNorthStarOrientation(northStarLine);
+            }
+          }
 ```
-
-(Note: `loadPrivacyState` is called twice on personalized evening turns — acceptable; it is a single-row read, and threading it out of the existing try/catch would widen the diff. Do NOT restructure the existing personalization block.)
 
 - [ ] **Step 4: Swap the evening block** — wrap the existing `if (eveningContext) { ... }` body:
 
@@ -470,13 +532,15 @@ New:
 ```typescript
     const rawMessage = await peterChat({ ... });
 
-    // North Star markers parse on RAW output before stripMarkdown (spec §4)
+    // North Star markers parse on RAW output before stripMarkdown (spec §4).
+    // turnNumber drives the deterministic turn-8 hard close — the ladder can
+    // never stay open past it regardless of what the LLM emitted.
     let ladderActive = false;
     let preStripped = rawMessage;
-    if (ladderState && authed) {
+    if (ladderState && authed && eveningContext) {
       const result = await processLadderTurn(
         authed.supabase, authed.userId, ladderState, rawMessage,
-        latestUserMessage, privacyCanStoreMemories,
+        latestUserMessage, privacyCanStoreMemories, eveningContext.turnNumber,
       );
       preStripped = result.visibleMessage;
       ladderActive = result.ladderOpen;
@@ -484,7 +548,7 @@ New:
     const message = stripMarkdown(preStripped);
 ```
 
-For `privacyCanStoreMemories`: hoist a `let privacyCanStoreMemories = false;` near the top of the try block and set it inside the Step-3 privacy load (`privacyCanStoreMemories = privacy.can_store_memories;`).
+(`ladderState` and `privacyCanStoreMemories` were hoisted in Step 2.)
 
 - [ ] **Step 6: Response payload** — add `ladder_active: ladderActive` to the success JSON:
 
@@ -793,8 +857,14 @@ git commit -m "feat(north-star): graduation boundary — still-true / it's-shift
 **Files:**
 - Modify: `src/pages/api/me/memory-settings.ts`
 
-- [ ] **Step 1:** Per spec §7 the transcript is memory-class data but the line itself was consented in-conversation:
-- DELETE route (delete ALL my data): add `supabase.from('north_stars').delete().eq('user_id', userId)` to the `deleteGrowthData` Promise.all.
+- [ ] **Step 1:** Per spec §7 the transcript is memory-class data but the line itself was consented in-conversation. **Leave `deleteGrowthData` untouched** — putting the `north_stars` delete inside the shared helper would delete confirmed lines on the PATCH memory=none path, violating spec §7. Instead:
+
+- DELETE route (delete ALL my data): immediately after the existing `deleteGrowthData(...)` call, add:
+
+```typescript
+      await ctx.supabase.from('north_stars').delete().eq('user_id', ctx.userId);
+```
+
 - PATCH memory_window='none' route: after the existing deletes, null transcripts but KEEP lines:
 
 ```typescript
@@ -805,8 +875,6 @@ git commit -m "feat(north-star): graduation boundary — still-true / it's-shift
           .update({ ladder_transcript: [] })
           .eq('user_id', ctx.userId);
 ```
-
-To implement cleanly: add the `north_stars` delete line inside `deleteGrowthData` ONLY if you also split call sites — simplest correct shape: leave `deleteGrowthData` as-is, add `.delete()` call next to it in the DELETE route, and the transcript-null in the PATCH route.
 
 - [ ] **Step 2: Verify + commit**
 
