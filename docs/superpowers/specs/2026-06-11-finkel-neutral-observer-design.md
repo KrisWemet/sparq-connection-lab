@@ -50,7 +50,7 @@ Governing principle: enjoyment-first — the science credential is one quiet lin
 |---|---|---|
 | `src/lib/server/encryption.ts` | same path | **Add missing-key guard**: today it silently encrypts with an empty master key if `REFLECTION_ENCRYPTION_KEY` is unset. Port adds `isEncryptionConfigured()` and the APIs refuse with 503 instead of storing weakly-encrypted text |
 | `src/pages/api/reflections/index.ts` | same path | Keep auth (`getAuthedContext`), per-user encryption, `trigger_source` semantics, +90d schedule advance for scheduled completions; add the missing-key 503 guard |
-| `src/pages/api/reflections/[id].ts` | same path | Same guard; verify delete/read are user-scoped |
+| `src/pages/api/reflections/[id].ts` | same path | Same guard; verify read is user-scoped (it is — GET-only endpoint; no per-reflection delete exists; deletion happens only via the memory-settings cascade, §4) |
 | `src/pages/neutral-observer.tsx` | same path | Retitle + credential line per labeling decision; align styling to current brand tokens/components; `?trigger=conflict` → `trigger_source: 'state_tag'` (keep ported value for analytics continuity) |
 | `src/pages/neutral-observer/history.tsx` | same path | Brand alignment only |
 
@@ -58,7 +58,7 @@ Governing principle: enjoyment-first — the science credential is one quiet lin
 
 ## 4. New integrations (written fresh against today's main)
 
-- `src/components/dashboard/NeutralObserverCard.tsx` — quarterly card; fetches due-state from a small GET (`/api/reflections/due` or piggyback on existing endpoint — executor's choice, fail-soft renders nothing); mounted on `dashboard.tsx` near the other cards.
+- `src/components/dashboard/NeutralObserverCard.tsx` — quarterly card; fetches due-state from a small dedicated GET (`/api/reflections/due` returning `{ due: boolean }` from `profiles.next_neutral_observer_due`) — do NOT piggyback on the reflections list GET, which decrypts full reflection bodies (overkill + unnecessary plaintext exposure for a boolean). Fail-soft renders nothing; mounted on `dashboard.tsx` near the other cards.
 - `src/pages/conflict-first-aid.tsx` — end-of-flow offer card linking `/neutral-observer?trigger=conflict`. Must not interfere with the page's auto-resolve-on-leave behavior.
 - `src/components/dashboard/HomeDestinationStrip.tsx` — 4th destination.
 - `src/pages/api/me/memory-settings.ts` — DELETE (delete-all) gains `reflections` cascade. PATCH memory=none does NOT touch reflections (they are deliberate journaling with their own privacy contract, not ambient memory).
