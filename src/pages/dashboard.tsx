@@ -19,6 +19,7 @@ import type { PlayfulPrompt } from '@/data/playful-prompts';
 import { DailySparkCard } from '@/components/playful/DailySparkCard';
 import { CsiPulseCard } from '@/components/dashboard/CsiPulseCard';
 import { NorthStarCard } from '@/components/dashboard/NorthStarCard';
+import { NeutralObserverCard } from '@/components/dashboard/NeutralObserverCard';
 import { HomeDestinationStrip } from "@/components/dashboard/HomeDestinationStrip";
 import { EditorialEyebrow } from "@/components/editorial/EditorialSurface";
 
@@ -281,6 +282,8 @@ export default function Dashboard() {
         )}
 
         <CsiPulseCard />
+
+        <NeutralObserverCard />
 
         <HomeDestinationStrip />
       </div>
