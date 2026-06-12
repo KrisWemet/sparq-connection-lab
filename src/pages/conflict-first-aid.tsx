@@ -319,6 +319,27 @@ export default function ConflictFirstAidPage() {
             ))}
           </div>
         </section>
+
+        {/* A Different Pair of Eyes — post-conflict reappraisal offer (spec §4).
+            Plain div — the parent <main> already provides max-w/px/space-y.
+            Purely additive: router.push fires the auto-resolve-on-leave
+            handlers naturally (episode resolves, then the reflection opens). */}
+        <div>
+          <div className="rounded-2xl border border-brand-primary/10 bg-brand-parchment p-5">
+            <p className="text-sm leading-relaxed text-brand-espresso mb-1 font-medium">
+              When you&apos;re ready
+            </p>
+            <p className="text-sm leading-relaxed text-brand-taupe mb-4">
+              Sometimes it helps to see what happened through different eyes. 90 seconds, just you.
+            </p>
+            <button
+              onClick={() => router.push('/neutral-observer?trigger=conflict')}
+              className="rounded-full border border-brand-primary/20 px-4 py-2 text-xs font-medium text-brand-espresso hover:bg-brand-primary/10 transition-colors"
+            >
+              A different pair of eyes
+            </button>
+          </div>
+        </div>
       </main>
     </div>
   );
