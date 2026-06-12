@@ -56,6 +56,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       try {
         await deleteUserMemories(ctx.userId);
         await deleteGrowthData(ctx.supabase, ctx.userId);
+        // North Star: transcript is memory-class (wipe); the confirmed line
+        // was consented in-conversation and is preserved (spec §7).
+        await ctx.supabase
+          .from('north_stars')
+          .update({ ladder_transcript: [] })
+          .eq('user_id', ctx.userId);
       } catch (err) {
         console.error('Failed to delete memories on setting none:', err);
       }
@@ -69,6 +75,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       await deleteUserMemories(ctx.userId);
       await deleteGrowthData(ctx.supabase, ctx.userId);
+      // North Star rows go entirely on delete-all (kept OUT of the shared
+      // deleteGrowthData helper — the PATCH memory=none path must preserve
+      // confirmed lines per spec §7).
+      await ctx.supabase.from('north_stars').delete().eq('user_id', ctx.userId);
       return res.status(200).json({ deleted: true });
     } catch (err) {
       console.error('Failed to delete user memories:', err);
