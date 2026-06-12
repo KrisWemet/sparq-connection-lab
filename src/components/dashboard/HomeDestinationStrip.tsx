@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookOpen, HeartHandshake, NotebookPen } from "lucide-react";
+import { BookOpen, Eye, HeartHandshake, NotebookPen } from "lucide-react";
 import { EditorialEyebrow, EditorialQuietSurface } from "@/components/editorial/EditorialSurface";
 
 const destinations = [
@@ -21,6 +21,12 @@ const destinations = [
     description: "Review what changed",
     icon: NotebookPen,
   },
+  {
+    href: "/neutral-observer",
+    label: "Fresh Eyes",
+    description: "See it from outside",
+    icon: Eye,
+  },
 ] as const;
 
 export function HomeDestinationStrip() {
@@ -35,7 +41,7 @@ export function HomeDestinationStrip() {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 gap-3">
         {destinations.map((destination) => (
           <Link
             key={destination.href}
