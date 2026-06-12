@@ -79,6 +79,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // deleteGrowthData helper — the PATCH memory=none path must preserve
       // confirmed lines per spec §7).
       await ctx.supabase.from('north_stars').delete().eq('user_id', ctx.userId);
+      // Reflections are deliberate private journaling — wiped on delete-all,
+      // NOT on memory=none (their privacy contract is the encryption).
+      await ctx.supabase.from('reflections').delete().eq('user_id', ctx.userId);
       return res.status(200).json({ deleted: true });
     } catch (err) {
       console.error('Failed to delete user memories:', err);
