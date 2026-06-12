@@ -13,6 +13,7 @@ import { buildPatternContext, buildLegacyTraits, patternContextToTraits } from '
 import { getPatternHints } from '@/lib/server/pattern-hints';
 import { logFinalPrompt } from '@/lib/server/dev-prompt-log';
 import { getActiveGrowthMomentForChat, markMomentSurfaced, buildGrowthMomentBlock } from '@/lib/server/growth-moments';
+import { getNorthStarState, buildLadderPromptBlock, processLadderTurn, getActiveNorthStar, buildNorthStarOrientation, type NorthStarState } from '@/lib/server/north-star';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -98,11 +99,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Build personalized system prompt (traits + memories in parallel)
     let systemPrompt = systemOverride || PETER_SYSTEM_PROMPT;
 
+    // North Star state (spec §4/§5) — resolved inside the personalization
+    // block (single loadPrivacyState), consumed at the evening block and
+    // post-LLM marker site.
+    let ladderState: NorthStarState | null = null;
+    let privacyCanStoreMemories = false;
+
     if (authed && !systemOverride) {
       try {
         const privacy = await loadPrivacyState(authed.supabase, authed.userId);
+        privacyCanStoreMemories = privacy.can_store_memories;
 
         if (privacy.can_personalize) {
+          if (eveningContext) {
+            const st = await getNorthStarState(authed.supabase, authed.userId, eveningContext.day);
+            if (st.shouldLadderTonight) ladderState = st;
+          }
           const [patternContext, legacyTraits, memResult, profileResult, insightsResult] = await Promise.all([
             buildPatternContext(authed.supabase, authed.userId),
             buildLegacyTraits(authed.supabase, authed.userId),
@@ -161,14 +173,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               markMomentSurfaced(authed.supabase, growthMoment.id);
             }
           }
+
+          // North Star orientation (spec §5) — quiet ideal-self shaping.
+          // Skipped while a ladder is open (the ladder block handles the line).
+          if (!ladderState) {
+            const northStarLine = await getActiveNorthStar(authed.supabase, authed.userId);
+            if (northStarLine) {
+              systemPrompt += buildNorthStarOrientation(northStarLine);
+            }
+          }
         }
       } catch (personalizeError) {
         console.error('Personalization error (falling back to base prompt):', personalizeError);
       }
     }
 
-    // Append evening context with reflection quality nudging (Phase 3)
-    if (eveningContext) {
+    // North Star ladder night (spec §4): replace the normal evening context
+    // entirely. The turn-3 forced close in the else-branch is thereby
+    // suppressed; buildLadderPromptBlock enforces its own bounds and a
+    // turn-7 hard wrap, with processLadderTurn's turn-8 cap as the net.
+    if (eveningContext && ladderState) {
+      systemPrompt += buildLadderPromptBlock(ladderState, eveningContext.turnNumber, eveningContext.day);
+    } else if (eveningContext) {
+      // Append evening context with reflection quality nudging (Phase 3)
       const { day, morningAction, turnNumber, reflectionPrompt, journeyTitle } = eveningContext;
 
       // Journey context preamble
@@ -208,7 +235,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ],
       maxTokens: 512,
     });
-    const message = stripMarkdown(rawMessage);
+
+    // North Star markers parse on RAW output before stripMarkdown (spec §4).
+    // turnNumber drives the deterministic turn-8 hard close — the ladder can
+    // never stay open past it regardless of what the LLM emitted.
+    let ladderActive = false;
+    let preStripped = rawMessage;
+    if (ladderState && authed && eveningContext) {
+      const result = await processLadderTurn(
+        authed.supabase, authed.userId, ladderState, rawMessage,
+        latestUserMessage, privacyCanStoreMemories, eveningContext.turnNumber,
+      );
+      preStripped = result.visibleMessage;
+      ladderActive = result.ladderOpen;
+    }
+    const message = stripMarkdown(preStripped);
 
     // Return response immediately — do usage tracking in the background
     // (Vercel will keep the function alive briefly for fire-and-forget promises)
@@ -247,6 +288,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(200).json({
       message,
       safety: { triggered: false },
+      ladder_active: ladderActive,
       usage: { remaining_daily_messages: remainingDailyMessages, limit_reached: false },
     });
   } catch (error) {

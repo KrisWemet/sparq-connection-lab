@@ -10,6 +10,7 @@ import { loadPrivacyState } from '@/lib/server/privacy';
 import { buildPatternContext, buildLegacyTraits, patternContextToTraits, type PatternContext } from '@/lib/server/attachment-context';
 import { getPatternHints } from '@/lib/server/pattern-hints';
 import { logFinalPrompt } from '@/lib/server/dev-prompt-log';
+import { getActiveNorthStar, buildNorthStarOrientation } from '@/lib/server/north-star';
 
 // Per-user cache keyed by userId:day
 const storyCache = new Map<string, { text: string; timestamp: number }>();
@@ -128,6 +129,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             emotionalState: insightsResult.data?.emotional_state ?? insights?.emotional_state ?? null,
             surface: 'morning',
           });
+
+          // North Star orientation (spec §5) — the morning story quietly
+          // points toward who they're becoming.
+          const northStarLine = await getActiveNorthStar(authed.supabase, authed.userId);
+          if (northStarLine) {
+            systemPrompt += buildNorthStarOrientation(northStarLine);
+          }
         }
       } catch {
         // Personalization failure is non-blocking
