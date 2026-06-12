@@ -108,6 +108,7 @@ export interface NorthStarRow {
   proposed_line: string | null;
   attempt_count: number;
   needs_reladder: boolean;
+  last_attempt_at: string | null;
 }
 
 export interface NorthStarState {
@@ -128,7 +129,7 @@ async function getCurrentRow(
 ): Promise<NorthStarRow | null> {
   const { data } = await supabase
     .from('north_stars')
-    .select('id, status, seed_text, line, proposed_line, attempt_count, needs_reladder')
+    .select('id, status, seed_text, line, proposed_line, attempt_count, needs_reladder, last_attempt_at')
     .eq('user_id', userId)
     .neq('status', 'retired')
     .order('created_at', { ascending: false })
@@ -165,7 +166,7 @@ async function seedNorthStar(
     const { data } = await supabase
       .from('north_stars')
       .insert({ user_id: userId, status: 'seeded', seed_text: seed })
-      .select('id, status, seed_text, line, proposed_line, attempt_count, needs_reladder')
+      .select('id, status, seed_text, line, proposed_line, attempt_count, needs_reladder, last_attempt_at')
       .single();
     return (data as NorthStarRow) || null;
   } catch {
@@ -196,9 +197,7 @@ export async function getNorthStarState(
       // row whose last attempt is >1 day old means the user closed the app
       // mid-conversation. Treat as deferred (graceful, honors cooldown intent)
       // instead of reopening every evening forever.
-      const { data: full } = await supabase
-        .from('north_stars').select('last_attempt_at').eq('id', row.id).maybeSingle();
-      const last = full?.last_attempt_at ? new Date(full.last_attempt_at).getTime() : 0;
+      const last = row.last_attempt_at ? new Date(row.last_attempt_at).getTime() : 0;
       if (Date.now() - last > 86400000) {
         await supabase.from('north_stars').update({
           status: row.needs_reladder ? 'active' : (row.attempt_count >= 3 ? 'declined' : 'seeded'),
@@ -217,9 +216,7 @@ export async function getNorthStarState(
           .update({ needs_reladder: false }).eq('id', row.id); // give up; old line stays active
         return { row, shouldLadderTonight: false, isReladder: false };
       }
-      const { data: full } = await supabase
-        .from('north_stars').select('last_attempt_at').eq('id', row.id).maybeSingle();
-      const last = full?.last_attempt_at ? new Date(full.last_attempt_at).getTime() : 0;
+      const last = row.last_attempt_at ? new Date(row.last_attempt_at).getTime() : 0;
       if (last && Date.now() - last < 2 * 86400000) {
         return { row, shouldLadderTonight: false, isReladder: false };
       }
@@ -241,12 +238,7 @@ export async function getNorthStarState(
       await supabase.from('north_stars').update({ status: 'declined' }).eq('id', row.id);
       return { row, shouldLadderTonight: false, isReladder: false };
     }
-    const { data: full } = await supabase
-      .from('north_stars')
-      .select('last_attempt_at')
-      .eq('id', row.id)
-      .maybeSingle();
-    const last = full?.last_attempt_at ? new Date(full.last_attempt_at).getTime() : 0;
+    const last = row.last_attempt_at ? new Date(row.last_attempt_at).getTime() : 0;
     if (Date.now() - last < 2 * 86400000) {
       return { row, shouldLadderTonight: false, isReladder: false };
     }
@@ -310,9 +302,10 @@ export async function processLadderTurn(
   canStoreTranscript: boolean,
   turnNumber: number,
 ): Promise<LadderTurnResult> {
+  // Collapse only horizontal runs — \n\n paragraph breaks must survive
   const visibleMessage = rawOutput
     .replace(STRIP_ALL_MARKERS, ' ')
-    .replace(/\s{2,}/g, ' ')
+    .replace(/ {2,}/g, ' ')
     .trim();
   try {
     let row = state.row;
@@ -633,7 +626,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     const update = action === 'reaffirm'
       ? { reaffirmed_at: new Date().toISOString() }
-      : { needs_reladder: true };
+      // Spec §4(b): "attempt counter treated as reset" — each user-initiated
+      // shift earns a fresh set of (max 3, cooldown-spaced) re-ladder attempts.
+      // Without the reset, a lifetime counter at cap makes this button
+      // permanently inert.
+      : { needs_reladder: true, attempt_count: 0, last_attempt_at: null };
     const { error } = await ctx.supabase
       .from('north_stars')
       .update(update)
