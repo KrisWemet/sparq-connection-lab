@@ -38,6 +38,8 @@ Rewrite `public.update_streak_on_session()` (a new migration that `CREATE OR REP
 
 New logic: any `last_session_date < CURRENT_DATE` (yesterday OR a longer gap) → `current_streak + 1`. Missed days are simply skipped, never punished. Because the trigger fires once per session-day (daily_sessions has a per-user-per-day uniqueness constraint), `current_streak` becomes a clean "count of days you've shown up" that only grows.
 
+**Preserve the first-session path explicitly.** The existing `IF v_streak IS NULL` branch (no `user_streaks` row yet → INSERT with `current_streak = 1`) stays untouched — only the ELSE (existing-row) branch's gap reset is removed. The rewrite must NOT leave a brand-new user at streak 0: first session = 1, as today. (Guard against the SQL `NULL < CURRENT_DATE → NULL` trap — that case is handled by the `IS NULL` branch, never the date comparison.)
+
 **Trigger unchanged** (`on_daily_session_created AFTER INSERT`). **Re-grant note:** the migration must re-apply the hardening from `20260610092000` (the function is `CREATE OR REPLACE`d, which preserves grants, but the migration explicitly re-states `SET search_path = public` inside the body to be safe). No retroactive healing of already-reset users — going forward it simply stops punishing.
 
 **No UI copy change required:** the active `dashboard.tsx` renders no streak indicator. `JourneyMapCard` (`"{n} day streak"`), `StreakIndicator` (`"{n}-Day Streak!"`), and `DashboardContent` are legacy components not mounted on the beta path — left untouched (they also carry separate Phase-A-style issues like embedded-command copy and unsourced stats; flagged for a future cleanup, out of scope here).
@@ -51,7 +53,7 @@ New module `src/lib/server/return-state.ts` + endpoint `src/pages/api/me/return-
 ```
 
 - Reads `user_streaks` (`last_session_date`, `total_sessions`) for the user.
-- `days_away` = whole days between `last_session_date` and today; `practice_days` = `total_sessions`.
+- `days_away` = whole days between `last_session_date` and today, computed in the **same date basis as the trigger** (DB `CURRENT_DATE`, i.e. `CURRENT_DATE - last_session_date` via SQL — not a JS `Date` diff) so the streak logic and the greeting band never disagree at a day boundary. `practice_days` = `total_sessions`.
 - `returning = days_away >= 3 AND last_session_date is not null` (a user who never practiced isn't "returning").
 - Fail-soft: any error or missing row → `{ returning: false, days_away: 0, practice_days: 0 }` (normal dashboard).
 
