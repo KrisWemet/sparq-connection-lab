@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
 import { supabase } from '@/lib/supabase';
+import { buildAuthedHeaders } from '@/lib/api-auth';
+import { welcomeGreeting } from '@/lib/welcome-back';
 
 function getTimeGreeting(): string {
   const h = new Date().getHours();
@@ -23,6 +25,7 @@ interface PeterGreetingProps {
 
 export function PeterGreeting({ firstName }: PeterGreetingProps) {
   const [greeting, setGreeting] = useState<string | null>(null);
+  const [welcome, setWelcome] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -40,6 +43,19 @@ export function PeterGreeting({ firstName }: PeterGreetingProps) {
         if (data?.next_greeting_text) {
           setGreeting(data.next_greeting_text);
         }
+
+        // Gap-aware welcome-back (spec §4): override the (possibly stale)
+        // greeting with a warm line when the user is returning after a gap.
+        try {
+          const headers = await buildAuthedHeaders();
+          const res = await fetch('/api/me/return-state', { headers });
+          if (res.ok) {
+            const rs = await res.json();
+            if (rs.returning) setWelcome(welcomeGreeting(firstName, rs.days_away));
+          }
+        } catch {
+          // fail-soft: no welcome override
+        }
       } catch {} finally {
         setLoading(false);
       }
@@ -47,7 +63,7 @@ export function PeterGreeting({ firstName }: PeterGreetingProps) {
   }, []);
 
   const fallback = `${getTimeGreeting()}${firstName ? `, ${firstName}` : ''}. Ready for today's practice?`;
-  const displayText = greeting || fallback;
+  const displayText = welcome || greeting || fallback;
 
   if (loading) return null;
 
