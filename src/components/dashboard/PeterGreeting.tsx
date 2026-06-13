@@ -60,7 +60,7 @@ export function PeterGreeting({ firstName }: PeterGreetingProps) {
         setLoading(false);
       }
     })();
-  }, []);
+  }, [firstName]);
 
   const fallback = `${getTimeGreeting()}${firstName ? `, ${firstName}` : ''}. Ready for today's practice?`;
   const displayText = welcome || greeting || fallback;
