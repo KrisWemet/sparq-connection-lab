@@ -19,6 +19,7 @@ import type { PlayfulPrompt } from '@/data/playful-prompts';
 import { DailySparkCard } from '@/components/playful/DailySparkCard';
 import { CsiPulseCard } from '@/components/dashboard/CsiPulseCard';
 import { NorthStarCard } from '@/components/dashboard/NorthStarCard';
+import { WelcomeBackCard } from '@/components/dashboard/WelcomeBackCard';
 import { NeutralObserverCard } from '@/components/dashboard/NeutralObserverCard';
 import { HomeDestinationStrip } from "@/components/dashboard/HomeDestinationStrip";
 import { EditorialEyebrow } from "@/components/editorial/EditorialSurface";
@@ -197,6 +198,9 @@ export default function Dashboard() {
 
         {/* ── 1. PETER'S GREETING ── */}
         <PeterGreeting firstName={firstName} />
+
+        {/* ── WELCOME BACK — renders only after a 3+ day gap (spec §4) ── */}
+        <WelcomeBackCard />
 
         {/* ── NORTH STAR — who you're becoming (renders only once captured) ── */}
         <NorthStarCard />
