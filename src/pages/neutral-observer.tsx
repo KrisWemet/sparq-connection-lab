@@ -48,9 +48,14 @@ export default function NeutralObserver() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const partnerName = (profile as any)?.partner_name || 'your partner';
+  // 'hook' = the PRD §4.2 Day-1 onboarding run (trial proof point). Like
+  // on-demand it does NOT consume the quarterly schedule — the first
+  // scheduled reflection should still arrive on its own cadence.
+  const isOnboardingHook = router.query.trigger === 'hook';
   const triggerSource =
     router.query.trigger === 'conflict' ? 'state_tag'
     : router.query.trigger === 'scheduled' ? 'scheduled'
+    : isOnboardingHook ? 'onboarding_hook'
     : 'on_demand';
 
   useEffect(() => {
@@ -355,10 +360,10 @@ export default function NeutralObserver() {
                     the whole intervention.
                   </p>
                   <button
-                    onClick={() => router.push('/dashboard')}
+                    onClick={() => router.push(isOnboardingHook ? '/dashboard?from=onboarding' : '/dashboard')}
                     className="w-full rounded-[22px] bg-brand-primary px-4 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-brand-hover mb-3"
                   >
-                    Done
+                    {isOnboardingHook ? 'Take me to my practice' : 'Done'}
                   </button>
                   <div className="flex justify-center">
                     <button

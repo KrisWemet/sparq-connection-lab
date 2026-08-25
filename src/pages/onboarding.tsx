@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase';
 import { buildAuthedHeaders } from '@/lib/api-auth';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
 import { ConsentGate } from '@/components/onboarding/ConsentGate';
+import { CsiBaseline } from '@/components/onboarding/CsiBaseline';
 import { QuestionFlow } from '@/components/onboarding/QuestionFlow';
 import { ScoringTransition } from '@/components/onboarding/ScoringTransition';
 import { PeterSession } from '@/components/onboarding/PeterSession';
@@ -106,7 +107,10 @@ export default function OnboardingPage() {
       });
       if (!resp.ok) throw new Error('Failed to record consent');
       setHasConsent(true);
-      setPhase('questions');
+      // PRD §4.2: sign-up → CSI-4 baseline → hook. Baseline is captured
+      // BEFORE the profiling questions so it measures the relationship as it
+      // was, untouched by anything Sparq has said.
+      setPhase('csi_baseline');
     } catch {
       setConsentError('We could not save your consent. Please try again.');
     } finally {
@@ -136,6 +140,10 @@ export default function OnboardingPage() {
         error={consentError}
       />
     );
+  }
+
+  if (phase === 'csi_baseline') {
+    return <CsiBaseline onComplete={() => setPhase('questions')} />;
   }
 
   if (phase === 'questions') {
@@ -198,7 +206,11 @@ export default function OnboardingPage() {
         profile={profile}
         userId={user.id}
         onBack={() => setPhase('journey_rec')}
-        onConfirm={() => router.push('/dashboard?from=onboarding')}
+        // PRD §4.2 Day-1 hook: the Neutral Observer runs once on a live
+        // recalled grievance as the trial's emotional proof point. Placed
+        // AFTER journey confirm (not inside the Peter handoff) so the
+        // hardened onboarding conversation stays untouched.
+        onConfirm={() => router.push('/neutral-observer?trigger=hook')}
       />
     );
   }

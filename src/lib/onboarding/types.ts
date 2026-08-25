@@ -80,6 +80,7 @@ export interface Question {
 // State machine phases
 export type OnboardingPhase =
   | 'consent'
+  | 'csi_baseline'   // PRD §4.2: sign-up → CSI-4 baseline → hook. Measured before anything changes.
   | 'questions'
   | 'scoring_transition'
   | 'peter_session'
