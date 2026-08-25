@@ -147,11 +147,22 @@ Add `consecutive_streak` column maintained by the trigger (increments on consecu
 
 ## 7b. WHAT'S ACTUALLY LEFT
 
-### Task 5 — Conversion arc, PRD gates 3–5 (the actual v1) ← **THE NEXT REAL WORK**
+### ✅ Gates 3 & 5 SHIPPED (2026-06-12). Gate 4 (micro-primes) is what's left.
+
+**Gate 3 — onboarding conversion arc (done):** new `csi_baseline` phase runs right after consent (before the profiling questions, so it measures the relationship untouched); `CsiBaseline.tsx` is Peter-framed, 4 taps, skippable. Journey confirm now routes into the **Day-1 Neutral Observer hook** (`?trigger=hook` → `trigger_source: 'onboarding_hook'`, which deliberately does NOT consume the quarterly schedule), then on to the dashboard.
+
+**Gate 5 — Day-14 conversion moment (done):** `/api/csi/delta` (states: `no_baseline | too_early | remeasure_due | ready`) + `CsiTrajectoryCard` on the graduation screen. Asks the same four questions again, shows day-one → today side by side, and has **honest copy for all four outcomes including flat and DOWN** per the PRD's non-negotiable. Footnote names the instrument and calls two weeks "a first data point, not a verdict."
+
+**Gate 4 — micro-primes (NOT built):** PPR + Capitalization on the habit-anchor schedule, each with an implementation intention. Seed content exists in the science package (`03_PRIME_AUTHORING_TEMPLATES.md`). Also still missing: the **habit-anchor pick** in onboarding (the `profiles.onboarding_anchor_set_at` column exists from sprint 2 but nothing sets it).
+
+<details>
+<summary>Original Task 5 spec (for reference)</summary>
 - **Gate 3:** onboarding order → sign-up → **CSI-4 baseline** → **Day-1 Neutral Observer hook** (live recalled grievance = the trial's emotional proof point) → habit-anchor pick. *Insertion design:* CSI-4 right after consent (4 taps, Peter-framed); the Neutral Observer as the **first practice immediately after journey confirm** — preserves "Day 1 proof" without bloating an onboarding that took two phases to harden.
 - **Gate 5:** Day-14 CSI **remeasure** + trajectory + honest conversion screen (must report honestly even if flat).
 - **Gate 4:** PPR + Capitalization micro-primes on the anchor schedule.
 - PRD mandates a **working demo + screenshot at each gate** before starting the next — this is deliberately designed around Chris's documented 80–90%-then-pivot pattern.
+
+</details>
 
 ### Also outstanding
 - **Apply the streak-dopamine migration** to the live DB (see §7 warning above).
