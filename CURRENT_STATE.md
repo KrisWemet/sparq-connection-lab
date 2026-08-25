@@ -98,9 +98,20 @@ All migrations through `20260611140000_forgiving_streak_and_return_state.sql` ar
 
 ---
 
-## 7. PENDING WORK QUEUE (fully specified, not yet executed)
+## 7. PENDING WORK QUEUE
 
-A platform outage (safety classifier down, 24+ blocked tool calls) stopped execution mid-flight. These are ready to run in order:
+**✅ Tasks 1–4 were EXECUTED and pushed (2026-06-12).** See §7b for what's left.
+
+**⚠️ ONE BLOCKED ITEM:** the streak-dopamine migration
+(`20260612100000_streak_dopamine_layer.sql`) is **committed to the repo but NOT
+applied to the live DB** — Supabase connections were timing out. Apply it with
+the Supabase MCP `apply_migration` (or `npx supabase db push`) when reachable.
+The app is safe until then: `consecutive_streak` defaults to 0, so the
+celebration beat simply doesn't render rather than erroring.
+
+<details>
+<summary>Original spec for tasks 1–4 (kept for reference — all now done)</summary>
+
 
 ### Task 1 — Crisis → manual link (PRD §4.2/§7 compliance) ⚠️ IN PROGRESS, NOT APPLIED
 Shipped code **violates** the locked decision. Required:
@@ -130,11 +141,34 @@ Recommended system (color theory: warm analogous core + single cool counterweigh
 ### Task 4 — Streak dopamine layer (PRD decision 4)
 Add `consecutive_streak` column maintained by the trigger (increments on consecutive days, **silently resets on a gap**) alongside the forgiving `current_streak`. Surface a **gold celebration beat** on the `/daily-growth` completion screen (the existing streak badge, ~line 1036) when the run ≥2. Never any punitive/guilt copy on a miss.
 
-### Task 5 — Conversion arc, PRD gates 3–5 (the actual v1)
+</details>
+
+---
+
+## 7b. WHAT'S ACTUALLY LEFT
+
+### Task 5 — Conversion arc, PRD gates 3–5 (the actual v1) ← **THE NEXT REAL WORK**
 - **Gate 3:** onboarding order → sign-up → **CSI-4 baseline** → **Day-1 Neutral Observer hook** (live recalled grievance = the trial's emotional proof point) → habit-anchor pick. *Insertion design:* CSI-4 right after consent (4 taps, Peter-framed); the Neutral Observer as the **first practice immediately after journey confirm** — preserves "Day 1 proof" without bloating an onboarding that took two phases to harden.
 - **Gate 5:** Day-14 CSI **remeasure** + trajectory + honest conversion screen (must report honestly even if flat).
 - **Gate 4:** PPR + Capitalization micro-primes on the anchor schedule.
 - PRD mandates a **working demo + screenshot at each gate** before starting the next — this is deliberately designed around Chris's documented 80–90%-then-pivot pattern.
+
+### Also outstanding
+- **Apply the streak-dopamine migration** to the live DB (see §7 warning above).
+- **Manual UAT** for Phases B/C/D + the new crisis/palette/streak work — nobody has walked the real browser flow with a seeded user yet.
+- **Hardcoded legacy hexes** — ~10 older components still carry `#6E56F7` / `#8B5CF6` / `#5B4A86` inline (PeterAvatar, PeterSession, MorningBrief, DailyTimeline, etc.). The token swap covers everything using `brand-*` classes; these inline ones need a manual pass.
+- **Legacy streak components** (`StreakIndicator`, `JourneyMapCard`, `DashboardContent`) are unmounted on the beta path and contain unsourced stats + "embedded command" copy — retire or clean up.
+
+---
+
+## 7c. Completed 2026-06-12 (post-outage execution)
+
+| Task | What shipped |
+|---|---|
+| **Crisis → manual link** | Removed the OpenAI Moderation layer from `safety.ts` (ML-scanned every message, sent user text to a third party) + the `safety_events` insert in `chat.ts` that logged **verbatim matched crisis phrases** + the crisis analytics event. Added `/help-now` (region-aware, no auth, no scanning) and persistent "Need help now?" links on dashboard + Neutral Observer footer. Kept a local explicit-disclosure check so Peter answers with resources instead of coaching — **response routing, not monitoring**. Audited `peter/onboarding.ts` + `rehearsal/message.ts`: they only respond, never log — unchanged. |
+| **Ladder-night defect** | Growth-moment block + insight skeletons now gated on `!ladderState`. Previously a verified growth moment was marked consumed while Peter was busy running the values ladder — burned without the user ever hearing it. |
+| **Palette** | Violet → **Warm Clay**. `tailwind.config.ts` brand tokens + `globals.css` HSL vars swapped in sync. The old "parchment" was `#EEE7F8` — a lavender that silently broke the warm intent. |
+| **Streak dopamine** | Two-track: forgiving `current_streak` (never resets) + new `consecutive_streak` (dopamine track, silently resets on a gap). Completion screen shows "Days you've shown up" always, and a gold "N in a row" beat only when a run is live. No guilt copy on a miss. *(Migration pending — see §7.)* |
 
 ---
 
