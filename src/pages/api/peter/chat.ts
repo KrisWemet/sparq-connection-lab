@@ -47,20 +47,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (crisisDetection.triggered) {
       const countryCode = resolveCountryCode(req);
-      if (authed) {
-        // Fire-and-forget: don't await these
-        authed.supabase.from('safety_events').insert({
-          user_id: authed.userId,
-          crisis_types: crisisDetection.types,
-          matched_terms: crisisDetection.matches,
-          country_code: countryCode,
-          metadata: { source: 'api/peter/chat' },
-        });
-        trackEvent(authed.supabase, authed.userId, 'crisis_escalation_triggered', {
-          country_code: countryCode,
-          crisis_types: crisisDetection.types,
-        });
-      }
+      // Master PRD §4.2/§7 (locked): manual help link only — no crisis
+      // monitoring. The safety_events insert here logged VERBATIM matched
+      // phrases from the user's message, and the analytics event recorded
+      // that a person was in crisis. Both removed: Peter still answers with
+      // resources, but nothing about it is stored or tracked.
       return res.status(200).json({
         message: buildCrisisResponse(countryCode, crisisDetection.types),
         safety: { triggered: true, countryCode, types: crisisDetection.types },

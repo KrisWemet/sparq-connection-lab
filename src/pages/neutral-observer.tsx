@@ -373,6 +373,17 @@ export default function NeutralObserver() {
             )}
 
           </AnimatePresence>
+
+          {/* Persistent crisis link in the flow footer (Master PRD §4.2/§7).
+              Reflection text is never scanned — this link is the only path. */}
+          <div className="mt-8 text-center">
+            <button
+              onClick={() => router.push('/help-now')}
+              className="text-xs text-brand-taupe/70 underline underline-offset-2 transition-colors hover:text-brand-taupe"
+            >
+              Need help now?
+            </button>
+          </div>
         </div>
       </div>
     </div>

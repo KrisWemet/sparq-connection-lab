@@ -290,6 +290,16 @@ export default function Dashboard() {
         <NeutralObserverCard />
 
         <HomeDestinationStrip />
+
+        {/* Persistent, low-key crisis link (Master PRD §4.2/§7 — manual link only) */}
+        <div className="pb-2 text-center">
+          <button
+            onClick={() => router.push('/help-now')}
+            className="text-xs text-brand-taupe/70 underline underline-offset-2 transition-colors hover:text-brand-taupe"
+          >
+            Need help now?
+          </button>
+        </div>
       </div>
     </div>
   );

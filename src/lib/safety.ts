@@ -1,5 +1,4 @@
 import type { NextApiRequest } from 'next';
-import OpenAI from 'openai';
 
 export type CrisisType =
   | 'self_harm'
@@ -67,17 +66,29 @@ const CRISIS_RESOURCES: Record<string, Resource[]> = {
   ],
 };
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
+/**
+ * Response routing for Peter's live conversations — NOT monitoring.
+ *
+ * Master PRD locked decision (§4.2/§7): manual help link only; no automated
+ * crisis text-scanning. Accordingly:
+ *  - The OpenAI Moderation layer was REMOVED (ML scanning of every message,
+ *    false-alarm prone, and it shipped user text to a third party).
+ *  - Nothing here is persisted. Callers must never store matches — the
+ *    `safety_events` insert that logged verbatim matched phrases was removed
+ *    from chat.ts alongside this change.
+ *  - Reflection content (Neutral Observer) never passes through this at all.
+ *
+ * What remains is a purely local check for EXPLICIT disclosures ("I want to
+ * kill myself") so Peter answers with resources instead of relationship
+ * coaching. That decides what Peter says next; it does not surveil the user.
+ * The always-available /help-now link is the actual crisis strategy.
+ */
 export async function detectCrisisIntent(text: string): Promise<CrisisDetectionResult> {
   if (!text?.trim()) return { triggered: false, types: [], matches: [] };
 
   const types: CrisisType[] = [];
   const matches: string[] = [];
 
-  // 1. Static Regex checks
   for (const [type, patterns] of Object.entries(CRISIS_PATTERNS) as [CrisisType, RegExp[]][]) {
     for (const pattern of patterns) {
       const match = text.match(pattern);
@@ -85,34 +96,6 @@ export async function detectCrisisIntent(text: string): Promise<CrisisDetectionR
         if (!types.includes(type)) types.push(type);
         if (match[0]) matches.push(match[0]);
       }
-    }
-  }
-
-  // 2. OpenAI Moderation API — only call if regex didn't already trigger
-  //    and OPENAI_API_KEY is configured. Skipped to stay within Vercel
-  //    serverless timeout on Hobby plan; regex patterns cover critical cases.
-  if (types.length === 0 && process.env.OPENAI_API_KEY) {
-    try {
-      const response = await openai.moderations.create({ input: text });
-      const result = response.results[0];
-
-      if (result.flagged) {
-        const categories = result.categories as unknown as Record<string, boolean>;
-
-        if (categories['self-harm'] || categories['self-harm/intent'] || categories['self-harm/instructions']) {
-          types.push('self_harm');
-        }
-
-        if (categories['violence'] || categories['violence/graphic']) {
-          types.push('violence_or_abuse');
-        }
-
-        if (categories['sexual/minors']) {
-          types.push('child_harm');
-        }
-      }
-    } catch (error) {
-      console.error('Moderation API failed, relying on regex fallback', error);
     }
   }
 
