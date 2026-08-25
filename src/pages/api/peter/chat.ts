@@ -141,27 +141,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             surface: eveningContext ? 'evening' : 'chat',
           });
 
-          // Phase 23: append chat tone hints + insight moment skeletons (D-03, D-13)
+          // Phase 23: append chat tone hints (D-03). Tone always applies.
           const { chatToneHints, insightLines } = getPatternHints(patternContext, 'chat');
           if (chatToneHints.length > 0) {
             systemPrompt += '\n\nTone guidance for this conversation:\n- ' + chatToneHints.join('\n- ');
           }
-          if (insightLines.length > 0) {
-            systemPrompt += '\n\n' + insightLines.join('\n');
-          }
 
-          // Growth Engine (spec §5.1): at most one verified moment per conversation.
-          // Known tradeoff: the moment is marked consumed when APPENDED to the
-          // prompt, but the block allows Peter to stay silent — a moment can be
-          // consumed without being voiced. Acceptable: it still appears in the
-          // Mirror and Day-14 reveal, and output inspection isn't available.
-          const growthMoment = await getActiveGrowthMomentForChat(authed.supabase, authed.userId);
-          if (growthMoment) {
-            const block = buildGrowthMomentBlock(growthMoment);
-            if (block) {
-              systemPrompt += block;
-              // Mark chat-consumed (fire-and-forget; 7-day cooldown enforced on read)
-              markMomentSurfaced(authed.supabase, growthMoment.id);
+          // On a North Star ladder night Peter has ONE job: run the ladder to
+          // bedrock. Insight skeletons ("you may quietly observe...") and a
+          // growth-moment block ("name this change, then hand it back") are
+          // competing instructions that pull him off it — and worse, the
+          // growth moment was being marked consumed while he was busy
+          // laddering, burning a verified moment the user never heard.
+          // Both are suppressed on ladder nights; they return the next night.
+          if (!ladderState) {
+            if (insightLines.length > 0) {
+              systemPrompt += '\n\n' + insightLines.join('\n');
+            }
+
+            // Growth Engine (spec §5.1): at most one verified moment per conversation.
+            // Known tradeoff: the moment is marked consumed when APPENDED to the
+            // prompt, but the block allows Peter to stay silent — a moment can be
+            // consumed without being voiced. Acceptable: it still appears in the
+            // Mirror and Day-14 reveal, and output inspection isn't available.
+            const growthMoment = await getActiveGrowthMomentForChat(authed.supabase, authed.userId);
+            if (growthMoment) {
+              const block = buildGrowthMomentBlock(growthMoment);
+              if (block) {
+                systemPrompt += block;
+                // Mark chat-consumed (fire-and-forget; 7-day cooldown enforced on read)
+                markMomentSurfaced(authed.supabase, growthMoment.id);
+              }
             }
           }
 
