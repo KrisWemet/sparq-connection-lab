@@ -22,6 +22,8 @@
 | Verification | `npx tsc --noEmit && npm run lint && npm run build` |
 | **No automated tests** | Deliberate decision (see `CLAUDE.md`). Verification = tsc/lint/build + greps + live SQL checks + manual UAT. Do not add test infra unasked. |
 
+**Deployment: automatic.** Vercel project `prj_NKGFCHHu6ZmjqGtRbl3cvuqqTsAt` (team `team_lHUrq8HUE80iaXl8uSjQ3U3a`) builds **every push to `main` straight to production** — there is no manual deploy step and no staging gate. Everything committed in this session is live. Production alias: `sparq-connection-lab-git-main-chris-os-projects-77292ad2.vercel.app`. **Treat every push as a production release.**
+
 **Source-of-truth hierarchy:** Master PRD (`SC-PRD-MASTER-1.0`, Chris has it at `~/Downloads/SPARQ_CONNECTION_MASTER_PRD.md`) → `CLAUDE.md` (working rules + architecture) → per-feature specs in `docs/superpowers/specs/` → this file (state only).
 
 ---
@@ -44,7 +46,7 @@ A "relationship gym" for couples — **"a stronger individual creates stronger c
 
 ### Master PRD §9 decisions (Chris, 2026-06-12)
 1. **ICP** = couples in their first **0–18 months of marriage** / whoever will actually pay. Reachable via Rustic Retreat's wedding audience.
-2. **Palette** = reconcile via color theory → adopt **Warm Clay** system (see §7 pending task 3). Live app is currently a *third* unreconciled direction (violet).
+2. **Palette** = reconcile via color theory → **Warm Clay** system. ✅ Done and **verified live in production**. Context worth knowing: the violet wasn't drift — an April commit deliberately shifted "terracotta → pastel lavender-violet". This decision reverses that back to warm, per Chris. If anyone asks why the app looks different, that's why.
 3. **Crisis handling** = **MANUAL LINK ONLY.** No automated text-scanning. (Currently violated in shipped code — see §7 task 1.)
 4. **Streak** = **two-track.** Keep the forgiving "practice days" count (never resets, no shame) AND add a consecutive-streak **dopamine kick** when alive; a miss silently removes the kick, never zeroes the cumulative count, never guilt copy.
 5. **§4.2 defaults confirmed** for this ICP: CSI-4 (short, validated), `best_for_all` A/B default (Finkel's), in-app-only delivery (no push in v1).
