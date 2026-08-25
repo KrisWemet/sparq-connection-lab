@@ -15,12 +15,33 @@
 |---|---|
 | Repo (local) | `/Users/chris/sparq-connection-lab` |
 | GitHub | `KrisWemet/sparq-connection-lab` (main, pushed through `05b353c`) |
-| Supabase project id | `ujqdnyxdenadpowxrkjn` (LIVE — ~102 real users) |
+| Supabase project id | `ujqdnyxdenadpowxrkjn` (~102 real users). **Free plan — auto-pauses after ~7 days of inactivity.** |
 | Stack | Next.js **Pages Router**, TypeScript strict, Supabase, Tailwind + shadcn/ui, Framer Motion, Vercel |
 | AI | OpenRouter → Claude Haiku 4.5 (Peter). OpenAI used only for embeddings. |
 | Dev | `npm run dev` → localhost:3000 |
 | Verification | `npx tsc --noEmit && npm run lint && npm run build` |
 | **No automated tests** | Deliberate decision (see `CLAUDE.md`). Verification = tsc/lint/build + greps + live SQL checks + manual UAT. Do not add test infra unasked. |
+
+> ## ⚠️ READ FIRST: the Supabase project auto-pauses
+>
+> **On 2026-06-12 the project was found `INACTIVE`** — paused by Supabase's free-tier
+> ~7-day inactivity rule. Its DNS record disappears entirely when this happens
+> (`NXDOMAIN`), so **the production app's backend is fully unreachable and no
+> user can log in or save anything.** The frontend still serves from Vercel, so
+> the app *looks* fine while being completely non-functional.
+>
+> Symptom to recognize instantly: every DB call times out with
+> "Connection terminated due to connection timeout", and
+> `nslookup <ref>.supabase.co` returns NXDOMAIN.
+>
+> Fix: Supabase MCP `restore_project` (free, reversible, ~2–5 min to come up).
+> Check `get_project` → `status` should be `ACTIVE_HEALTHY`; `COMING_UP` means
+> the schema is still mounting — **do not run DDL until it's healthy**, tables
+> will transiently appear to not exist.
+>
+> **Implication for launch:** a free-tier project that pauses every week is not
+> viable for real users. Either keep it warm with scheduled traffic or move to
+> a paid plan before onboarding the ICP.
 
 **Deployment: automatic.** Vercel project `prj_NKGFCHHu6ZmjqGtRbl3cvuqqTsAt` (team `team_lHUrq8HUE80iaXl8uSjQ3U3a`) builds **every push to `main` straight to production** — there is no manual deploy step and no staging gate. Everything committed in this session is live. Production alias: `sparq-connection-lab-git-main-chris-os-projects-77292ad2.vercel.app`. **Treat every push as a production release.**
 
