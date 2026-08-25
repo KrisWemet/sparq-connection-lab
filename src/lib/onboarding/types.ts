@@ -85,7 +85,8 @@ export type OnboardingPhase =
   | 'scoring_transition'
   | 'peter_session'
   | 'journey_rec'
-  | 'journey_detail';
+  | 'journey_detail'
+  | 'habit_anchor';  // PRD §4.3: the existing routine every micro-prime rides on
 
 // Persisted to localStorage under key 'sparq_onboarding_progress'
 export interface OnboardingProgress {

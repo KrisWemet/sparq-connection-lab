@@ -8,6 +8,7 @@ import { buildAuthedHeaders } from '@/lib/api-auth';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
 import { ConsentGate } from '@/components/onboarding/ConsentGate';
 import { CsiBaseline } from '@/components/onboarding/CsiBaseline';
+import { HabitAnchorPick } from '@/components/onboarding/HabitAnchorPick';
 import { QuestionFlow } from '@/components/onboarding/QuestionFlow';
 import { ScoringTransition } from '@/components/onboarding/ScoringTransition';
 import { PeterSession } from '@/components/onboarding/PeterSession';
@@ -210,7 +211,17 @@ export default function OnboardingPage() {
         // recalled grievance as the trial's emotional proof point. Placed
         // AFTER journey confirm (not inside the Peter handoff) so the
         // hardened onboarding conversation stays untouched.
-        onConfirm={() => router.push('/neutral-observer?trigger=hook')}
+        onConfirm={() => setPhase('habit_anchor')}
+      />
+    );
+  }
+
+  // PRD gate 3 final beat: anchor pick, then the Day-1 Neutral Observer hook.
+  if (phase === 'habit_anchor' && user) {
+    return (
+      <HabitAnchorPick
+        userId={user.id}
+        onComplete={() => router.push('/neutral-observer?trigger=hook')}
       />
     );
   }

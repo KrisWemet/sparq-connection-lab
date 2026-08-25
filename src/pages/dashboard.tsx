@@ -21,6 +21,7 @@ import { CsiPulseCard } from '@/components/dashboard/CsiPulseCard';
 import { NorthStarCard } from '@/components/dashboard/NorthStarCard';
 import { WelcomeBackCard } from '@/components/dashboard/WelcomeBackCard';
 import { NeutralObserverCard } from '@/components/dashboard/NeutralObserverCard';
+import { DailyPrimeCard } from '@/components/dashboard/DailyPrimeCard';
 import { HomeDestinationStrip } from "@/components/dashboard/HomeDestinationStrip";
 import { EditorialEyebrow } from "@/components/editorial/EditorialSurface";
 
@@ -288,6 +289,9 @@ export default function Dashboard() {
         <CsiPulseCard />
 
         <NeutralObserverCard />
+
+        {/* Daily micro-prime (PRD §4.3) — connective tissue between reflections */}
+        <DailyPrimeCard />
 
         <HomeDestinationStrip />
 
