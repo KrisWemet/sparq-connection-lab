@@ -172,7 +172,7 @@ Add `consecutive_streak` column maintained by the trigger (increments on consecu
 
 ### Also outstanding
 - **Apply the streak-dopamine migration** to the live DB (see §7 warning above).
-- **Manual UAT** for Phases B/C/D + the new crisis/palette/streak work — nobody has walked the real browser flow with a seeded user yet.
+- **Manual UAT — PARTIALLY DONE (2026-06-12).** Unauthenticated pass completed against a live dev server: all new/changed routes return 200 with no runtime errors (`/help-now`, `/neutral-observer`, `/login`, `/onboarding`, `/dashboard`), and the Warm Clay palette + Cormorant serif were verified in-browser with computed styles. **This pass is what caught the dual-Tailwind-config bug.** Still needed: an **authenticated** walkthrough (real signup → CSI baseline → questions → Peter → journey → anchor → Day-1 hook → dashboard → day-14), which needs test credentials.
 - **Hardcoded legacy hexes** — ~10 older components still carry `#6E56F7` / `#8B5CF6` / `#5B4A86` inline (PeterAvatar, PeterSession, MorningBrief, DailyTimeline, etc.). The token swap covers everything using `brand-*` classes; these inline ones need a manual pass.
 - **Legacy streak components** (`StreakIndicator`, `JourneyMapCard`, `DashboardContent`) are unmounted on the beta path and contain unsourced stats + "embedded command" copy — retire or clean up.
 
@@ -204,6 +204,7 @@ Add `consecutive_streak` column maintained by the trigger (increments on consecu
 
 ## 9. Craft lessons / traps hit (save future-you the pain)
 
+- **⚠️ TWO Tailwind configs existed (`.js` + `.ts`) and `.js` silently won.** Found only by looking at the running app in a browser — tsc, lint, AND the production build all passed while the app rendered the *wrong design system*: the Warm Clay palette was inert, `brand-text-secondary`/`brand-border` didn't exist (15 files), and `font-serif` didn't exist (52 files — the whole editorial voice was falling back to sans). The `.js` was a shim added because `.ts` needs `tailwindcss-animate`, which was never installed. Fixed by installing the dep and deleting the `.js`. **Lesson: green build ≠ correct app. Look at the thing.**
 - **supabase-js query builders are LAZY.** An un-awaited `.insert()` **never executes.** This silently broke an existing `growth_thread` mirror insert. Always `await`.
 - **`git add -A` in this repo sweeps in junk** — `.claude/cheatsheets/`, `.claude/worktrees/` (embedded git repos!), stale `.planning/` docs. Always use scoped `git add <files>`.
 - **zsh globs unquoted paths:** `src/pages/api/reflections/[id].ts` must be quoted or the command errors with "no matches found".
