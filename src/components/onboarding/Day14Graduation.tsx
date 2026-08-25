@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { CheckCircle, Award, ArrowRight, Sparkles, TrendingUp } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { supabase } from '@/lib/supabase';
+import { CsiTrajectoryCard } from '@/components/dashboard/CsiTrajectoryCard';
 
 interface GraduationReport {
   what_i_learned: string;
@@ -181,6 +182,11 @@ export function Day14Graduation() {
                                 <p className="text-sm text-gray-700 leading-relaxed">{report.reveal.narrative}</p>
                             </div>
                         )}
+
+                        {/* Day-14 CSI trajectory — PRD §4.2 conversion moment.
+                            Renders only when a baseline exists; reports honestly
+                            even when flat or down. */}
+                        <CsiTrajectoryCard />
 
                         {/* North Star boundary beat (spec §2/§5) */}
                         {northStar && (
