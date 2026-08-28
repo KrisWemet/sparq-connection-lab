@@ -15,7 +15,7 @@
 |---|---|
 | Repo (local) | `/Users/chris/sparq-connection-lab` |
 | GitHub | `KrisWemet/sparq-connection-lab` (main, pushed through `05b353c`) |
-| Supabase project id | `ujqdnyxdenadpowxrkjn` (~102 real users). **Free plan — auto-pauses after ~7 days of inactivity.** |
+| Supabase project id | `ujqdnyxdenadpowxrkjn` (**102 accounts — all dev/E2E test accounts, ZERO real users**, see §5b). **Free plan — auto-pauses after ~7 days of inactivity.** |
 | Stack | Next.js **Pages Router**, TypeScript strict, Supabase, Tailwind + shadcn/ui, Framer Motion, Vercel |
 | AI | OpenRouter → Claude Haiku 4.5 (Peter). OpenAI used only for embeddings. |
 | Dev | `npm run dev` → localhost:3000 |
@@ -114,6 +114,27 @@ All migrations through `20260611140000_forgiving_streak_and_return_state.sql` ar
 
 ---
 
+## 5b. Who is actually in the database (measured 2026-08-28)
+
+**There are no real users.** The earlier "~102 real users" note was wrong and had
+started to look like traction. Measured directly against `auth.users`:
+
+| Signal | Value |
+|---|---|
+| Accounts | 102 |
+| Created | all between 2026-03-01 and **2026-04-06** — nothing in the ~5 months since |
+| Distinct email domains | **3** |
+| Emails containing `test` / `example` / a `+` alias | **63 of 102** |
+| Confirmed + signed in at least once | 102 (every one) |
+| `daily_sessions` rows | 31, across 23 users |
+| Highest `current_streak` (forgiving practice days) | **1** — nobody has ever returned for a second day |
+| `reflections` rows | 0 |
+
+These are Chris's own dev and E2E accounts from the March–April build sprints.
+Sparq has not been opened to the public. **Do not read retention, engagement, or
+CSI signal out of this data** — there is none to read, and the Day-14 Compound
+Reveal / CSI delta have never run against a real person.
+
 ## 6. Two things Chris must do manually
 
 1. **`REFLECTION_ENCRYPTION_KEY` in Vercel** — generate with `openssl rand -hex 32`. Local `.env.local` already has one. Until set in prod, the Neutral Observer flow returns a graceful 503 "not available yet" (by design — never weak encryption).
@@ -125,12 +146,34 @@ All migrations through `20260611140000_forgiving_streak_and_return_state.sql` ar
 
 **✅ Tasks 1–4 were EXECUTED and pushed (2026-06-12).** See §7b for what's left.
 
-**⚠️ ONE BLOCKED ITEM:** the streak-dopamine migration
-(`20260612100000_streak_dopamine_layer.sql`) is **committed to the repo but NOT
-applied to the live DB** — Supabase connections were timing out. Apply it with
-the Supabase MCP `apply_migration` (or `npx supabase db push`) when reachable.
-The app is safe until then: `consecutive_streak` defaults to 0, so the
-celebration beat simply doesn't render rather than erroring.
+**✅ THE BLOCKED ITEM IS NOW APPLIED (2026-08-28).** The streak-dopamine
+migration (`20260612100000_streak_dopamine_layer.sql`) is live and verified:
+`user_streaks.consecutive_streak` / `longest_consecutive` exist, `get_return_state()`
+now returns 4 columns, the `on_daily_session_created` trigger is still attached and
+enabled on `daily_sessions`, and all 102 rows survived intact.
+
+Two things a future session must know about applying migrations here:
+
+1. **The migration file had a latent defect.** It redefined `get_return_state()`
+   from 2 OUT columns to 4 using bare `CREATE OR REPLACE`, which Postgres rejects
+   with `42P13 cannot change return type of existing function`. A
+   `DROP FUNCTION IF EXISTS public.get_return_state();` now precedes it, inside the
+   same transaction. Any future OUT-column change needs the same treatment.
+2. **`npx supabase db push` DOES NOT WORK on this project.** The remote
+   `supabase_migrations.schema_migrations` history carries different version stamps
+   than the local filenames, because earlier migrations were applied through the
+   Supabase MCP `apply_migration`, which writes its own timestamp. The CLI reacts by
+   demanding `migration repair --status reverted` on ~24 old migrations — **do not run
+   that**, it would re-run historical migrations against the live DB. Apply migrations
+   instead with:
+
+   ```
+   npx supabase db query --linked -f <file.sql>
+   ```
+
+   Wrap the file in `BEGIN; ... COMMIT;` and append an
+   `INSERT INTO supabase_migrations.schema_migrations (version, name) ... ON CONFLICT DO NOTHING;`
+   row yourself so history stays honest. Requires `npx supabase login` first.
 
 <details>
 <summary>Original spec for tasks 1–4 (kept for reference — all now done)</summary>

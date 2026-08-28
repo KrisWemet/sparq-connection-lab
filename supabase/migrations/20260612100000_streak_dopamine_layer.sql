@@ -67,6 +67,9 @@ END;
 $function$;
 
 -- Extend the return-state RPC so surfaces can read both tracks in one call.
+-- NOTE: the OUT column list changes (2 -> 4 cols), so CREATE OR REPLACE alone
+-- fails with 42P13 "cannot change return type". Drop first; same transaction.
+DROP FUNCTION IF EXISTS public.get_return_state();
 CREATE OR REPLACE FUNCTION public.get_return_state()
  RETURNS TABLE (
    days_away integer,
