@@ -330,7 +330,7 @@ export default function SettingsPage() {
                   : "border border-brand-primary text-brand-primary hover:bg-brand-primary/5"
               }`}
             >
-              {subscription.tier === "free" ? "Upgrade Now" : "Manage Subscription"}
+              {subscription.tier === "free" ? "Explore Premium" : "Manage Subscription"}
             </button>
           </div>
         </motion.div>

@@ -142,6 +142,27 @@ const TRACK_CONCEPTS: Record<string, string[]> = {
 };
 
 // Prompt for generating morning stories
+// Rotating morning-story cast. A new couple each day of the 14-day arc so
+// every user eventually sees people like themselves — repetition breaks
+// story absorption. Pronouns are given so the story stays consistent.
+// Recipe: .claude/skills/sparq-psychology/references/language-framework.md
+const STORY_CAST: { names: string; context: string }[] = [
+  { names: 'Maya (she) and Dev (he)', context: 'newly married, getting ready to move' },
+  { names: 'Rosa (she) and Ben (he)', context: 'married eight years, two young kids' },
+  { names: 'Jordan (they) and Priya (she)', context: 'engaged, planning a small wedding' },
+  { names: 'Sam (he) and Theo (he)', context: 'together five years, share an old dog' },
+  { names: 'Leah (she) and Marcus (he)', context: 'newlyweds who both work long shifts' },
+  { names: 'Aiko (she) and Daniel (he)', context: 'married twelve years, busy with work' },
+  { names: 'Nia (she) and Omar (he)', context: 'first year of marriage, new city' },
+  { names: 'Grace (she) and Luis (he)', context: 'married three years, a new baby at home' },
+  { names: 'Ellie (she) and Jo (she)', context: 'married two years, love hosting friends' },
+  { names: 'Kofi (he) and Anna (she)', context: 'together six years, a blended family' },
+  { names: 'Hannah (she) and Raj (he)', context: 'married one year, one works from home' },
+  { names: 'Mateo (he) and Clara (she)', context: 'married twenty years, kids just moved out' },
+  { names: 'Zoe (she) and Isaac (he)', context: 'newlyweds in their first home' },
+  { names: 'Wei (he) and Sophie (she)', context: 'married four years, long commutes' },
+];
+
 export function getMorningStoryPrompt(
   day: number,
   insights: Partial<UserInsights>,
@@ -186,22 +207,31 @@ export function getMorningStoryPrompt(
     personalizationHints.push('Match a brighter, confident tone while still keeping the action simple.');
   }
 
+  const cast = STORY_CAST[(Math.max(day, 1) - 1) % STORY_CAST.length];
+
   let prompt = `Write a short morning message from Peter the otter for Day ${day} of someone's relationship growth journey.
 
 Today's concept: ${concept}
 
 Format (use this EXACT structure with no deviations):
-1. A warm "good morning" greeting (1 sentence, feel like a text from a friend)
-2. A short relatable story about "Alex and Sam" (a couple — 3-4 sentences) that shows the concept in action WITHOUT naming the concept. CRITICAL: Ensure the logic of who does what for whom makes perfect sense and the characters' motivations align clearly.
-3. On its own line, write exactly "Today's Action:" followed by one specific, small, doable task related to the concept (1-2 sentences, starts with a verb)
-4. Weave in one very short identity-reinforcing line somewhere in the greeting or story. Example style: "Little by little, this is how trust grows." Keep it natural and simple.
+1. A warm "good morning" greeting (1 sentence, feel like a text from a friend).
+2. A short story about ${cast.names} — ${cast.context} — in 4-5 short sentences. Show the concept in action WITHOUT naming it. Follow this story recipe:
+   - Open in the middle of an ordinary moment, with one concrete sensory detail (a sound, a smell, something in their hands).
+   - Show the familiar first reaction most people would have. Make it relatable, never foolish.
+   - Show the inner turn: what one of them notices in their own body or thoughts, then the small choice they make instead.
+   - End on a small, honest result — a moment that went a little better, not a fairy tale.
+   - Neither partner is the villain. They face the moment together.
+   - Use their names often and only the pronouns given. Make sure who does what for whom makes perfect sense.
+3. One bridge sentence in second person that turns the story toward the reader's own life — a gentle question that assumes they have lived something like it.
+4. On its own line, write exactly "Today's Action:" followed by one specific, small, doable task related to the concept (1-2 sentences, starts with a verb).
+5. Weave in one very short identity-reinforcing line in the greeting or after the story. Example style: "Little by little, this is how trust grows." Keep it natural and simple.
 
 CRITICAL FORMATTING RULES:
 - Do NOT use any markdown formatting. No bold (**), no italics (*), no headers (#), no bullet points.
 - Write in plain text only. The output is displayed in a mobile app that does not render markdown.
 - The "Today's Action:" label must appear exactly as written — no bold markers around it.
 
-Keep it under 150 words total. No clinical terms. Warm and encouraging tone.
+Keep it under 150 words total. No clinical terms. No moral at the end of the story.
 Use 4th-grade reading level.
 Use pull language. Let the user feel drawn toward the action.
 Use one presupposition that assumes forward movement.
@@ -413,8 +443,8 @@ Only return valid JSON. No explanation outside the JSON.`;
 // Prompt for the Editorial QA Agent to validate story logic
 export function getMorningStoryValidationPrompt(storyText: string): string {
   return `You are an expert editorial QA agent for a relationship app.
-Your job is to read a short story about a couple (Alex and Sam) and verify that it makes strict logical sense.
-Specifically check for contradictory actions, mixed-up roles, or confusing motivations (e.g., Alex making coffee the way Alex likes it, but Sam thanking Alex even though Sam doesn't drink coffee).
+Your job is to read a short story about a couple and verify that it makes strict logical sense.
+Specifically check for contradictory actions, mixed-up roles, pronouns that switch between characters, or confusing motivations (e.g., one partner making coffee the way they like it, but the other thanking them even though they don't drink coffee).
 
 Critique this story:
 """

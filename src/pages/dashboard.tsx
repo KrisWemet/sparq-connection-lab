@@ -144,7 +144,7 @@ export default function Dashboard() {
   const isPostJourney = completionState === 'pending_decision' || completionState === 'resting';
   const needsEveningReflection = showEveningCTA && !isPostJourney;
   const primaryPrompt = isPostJourney
-    ? "Your journey is complete. What would you like to explore next?"
+    ? "You finished this journey. Where will you grow next?"
     : needsEveningReflection
       ? "You started today already. Come back now and finish your evening reflection."
       : activeJourney

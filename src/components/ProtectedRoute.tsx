@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/lib/auth-context';
+import { PeterLoading } from '@/components/PeterLoading';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -33,12 +34,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   if (loading && !loadingTimeout) {
     return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <div className="flex flex-col items-center gap-2">
-          <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary" />
-          <p className="text-sm text-muted-foreground">Loading...</p>
-        </div>
-      </div>
+      <PeterLoading isLoading />
     );
   }
 

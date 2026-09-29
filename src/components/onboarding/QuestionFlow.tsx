@@ -395,7 +395,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
         {question.index === 13 && !isBridging && growthGoalSubmitted && (
           <div className="flex flex-col gap-3">
             <p className="text-brand-text-secondary text-sm font-serif italic mb-2">
-              Got it. How often would you like to check in with me?
+              Got it. What rhythm feels right for our check-ins?
             </p>
             {question.options?.map(option => (
               <button

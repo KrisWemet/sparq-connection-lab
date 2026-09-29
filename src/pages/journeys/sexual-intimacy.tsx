@@ -114,7 +114,7 @@ export default function SexualIntimacyJourney() {
           description: "Identifying and gently working through the mental and emotional barriers to sexual connection",
           icon: <Brain className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
-          example: "Naming the blocks honestly: body shame, past trauma, performance anxiety, resentment from unresolved conflict. Each block has a path through it, but the path starts with acknowledgment. Saying 'I think my body image is affecting our intimacy' opens a door that silence keeps locked.",
+          example: "Naming the blocks honestly: body shame, hard past experiences, performance anxiety, resentment from unresolved conflict. Each block has a path through it, but the path starts with acknowledgment. Saying 'I think my body image is affecting our intimacy' opens a door that silence keeps locked.",
         },
         {
           id: "pleasure-mapping",

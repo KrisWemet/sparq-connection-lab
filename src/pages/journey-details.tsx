@@ -7,6 +7,7 @@ import { ChevronLeft, Heart, MessageCircle, Shield, Flame, Target, Lightbulb, He
 import { toast } from "sonner";
 import { loadJourneyContent, type JourneyContent } from "@/services/journeyService";
 import ReactMarkdown from 'react-markdown';
+import { PeterLoading } from '@/components/PeterLoading';
 
 // This array matches the one in PathToTogether.tsx - in a real app, this would be fetched from an API
 const journeys = [
@@ -590,7 +591,7 @@ export default function JourneyDetails() {
   }, [journeyId]);
 
   if (loading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+    return <PeterLoading isLoading />;
   }
 
   if (error || !journey) {
