@@ -29,6 +29,7 @@ export default function EmotionalIntelligenceJourney() {
           icon: <Eye className="w-5 h-5 text-blue-500" />,
           color: "blue",
           example: "Pausing mid-conversation and noticing: 'My chest feels tight and my jaw is clenched. I think I'm feeling anxious, not angry.' Most people misidentify their emotions, which leads to mismatched responses.",
+          story: "Halfway through a talk about the move, Maya noticed her chest was tight and her jaw was clenched. She'd thought she was angry. She stopped and checked again. \"I'm not mad,\" she told Dev. \"I think I'm scared.\" The whole talk changed.",
         },
         {
           id: "naming-emotions",
@@ -37,6 +38,7 @@ export default function EmotionalIntelligenceJourney() {
           icon: <MessageSquare className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
           example: "Instead of saying 'I'm upset,' distinguishing between disappointed, frustrated, hurt, or overwhelmed. Research shows that precisely labeling an emotion reduces its intensity by up to 50% — this is called 'affect labeling.'",
+          story: "\"I'm upset,\" Jo said. Then she tried to be more exact. \"Actually — I'm disappointed. I was looking forward to tonight.\" Ellie nodded. Somehow, having the right word made the feeling a little smaller for both of them.",
         },
         {
           id: "recognizing-triggers",
@@ -45,6 +47,7 @@ export default function EmotionalIntelligenceJourney() {
           icon: <Thermometer className="w-5 h-5 text-amber-500" />,
           color: "amber",
           example: "Noticing that you feel a wave of shame whenever your partner mentions finances. The trigger isn't the topic itself — it's an old story about not being good enough. Recognizing the trigger gives you a choice point.",
+          story: "Every time Raj mentioned the budget, Hannah felt a hot wave of shame. One night she noticed it and got curious. It wasn't about Raj. It was the old voice from growing up: \"You're bad with money.\" Seeing it gave her a choice.",
         },
         {
           id: "basic-regulation",
@@ -53,6 +56,7 @@ export default function EmotionalIntelligenceJourney() {
           icon: <Shield className="w-5 h-5 text-brand-primary" />,
           color: "purple",
           example: "When you feel anger rising, using the 'STOP' technique: Stop what you're doing, Take three slow breaths, Observe what you're feeling in your body, Proceed with intention. This 30-second practice creates space between stimulus and response.",
+          story: "Theo felt the anger rising when the plumber cancelled again. He stopped. Took three slow breaths. Noticed his fists were tight. Then he picked up the phone and rescheduled — calmly. Thirty seconds made all the difference.",
         },
         {
           id: "empathy-foundations",
@@ -61,6 +65,7 @@ export default function EmotionalIntelligenceJourney() {
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
           example: "Your partner comes home quiet and tense. Instead of asking 'What's wrong?' (which can feel like pressure), you say 'You seem like you're carrying something heavy today. I'm here if you want to talk, or just sit together.'",
+          story: "Omar came home quiet, dropping his bag by the door. Nia didn't ask \"What's wrong?\" She said, \"You look like you're carrying something heavy today. I'm here if you want to talk — or we can just sit.\" He sat down next to her.",
         },
         {
           id: "self-compassion",
@@ -69,6 +74,7 @@ export default function EmotionalIntelligenceJourney() {
           icon: <HandHeart className="w-5 h-5 text-sky-500" />,
           color: "sky",
           example: "After snapping at your partner, instead of spiraling into self-criticism ('I'm a terrible partner'), saying to yourself: 'I'm having a hard time right now. Everyone struggles sometimes. What do I need to get back on track?'",
+          story: "Right after snapping at Luis, Grace started in on herself: \"I'm such a terrible partner.\" Then she caught it. She put a hand on her heart. \"I'm tired, and this is hard. What do I need right now?\" She went back and apologized — kindly, to both of them.",
         },
         {
           id: "emotional-vocabulary",
@@ -77,6 +83,7 @@ export default function EmotionalIntelligenceJourney() {
           icon: <Brain className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
           example: "Learning that what you've been calling 'anger' is actually a constellation: resentment, frustration, feeling unheard, or feeling controlled. Each word opens a different door to understanding and communication.",
+          story: "For years, Daniel called every hard feeling \"annoyed.\" Aiko gave him a list of feeling words as a half-joke. He surprised her one night: \"I think I'm not annoyed. I feel unheard.\" That one word opened a whole new conversation.",
         },
       ],
     },
@@ -92,6 +99,7 @@ export default function EmotionalIntelligenceJourney() {
           icon: <Users className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
           example: "When your partner is spiraling with anxiety, instead of trying to fix it with logic, you sit close, match their breathing, and say 'I'm right here. We're okay.' Your regulated nervous system helps calm theirs — this is the science of co-regulation.",
+          story: "Sophie was spiraling about a work deadline, talking faster and faster. Wei didn't argue with her logic. He sat close, slowed his own breathing, and said, \"I'm right here. We're okay.\" A few minutes later, her breathing slowed to match his.",
         },
         {
           id: "emotional-bids",
@@ -100,6 +108,7 @@ export default function EmotionalIntelligenceJourney() {
           icon: <Sparkles className="w-5 h-5 text-amber-500" />,
           color: "amber",
           example: "Your partner sighs heavily while reading something on their phone. That sigh is an emotional bid — a request for attention. Turning toward it ('What's going on?') builds trust. Ignoring it ('...' ) erodes connection. Gottman found that couples who 'turn toward' 86% of the time stay together.",
+          story: "Isaac let out a big sigh while reading his phone. Zoe almost kept scrolling her own. Then she looked up. \"What's going on?\" He turned the screen toward her. It was just a small thing — but she'd turned toward him, and he felt it.",
         },
         {
           id: "sitting-with-discomfort",
@@ -108,6 +117,7 @@ export default function EmotionalIntelligenceJourney() {
           icon: <Compass className="w-5 h-5 text-brand-primary" />,
           color: "purple",
           example: "When sadness arises after a difficult conversation, instead of immediately distracting yourself, sitting with it for five minutes. Noticing where it lives in your body. Breathing into it. Often, emotions that are allowed to exist fully pass through more quickly than emotions we resist.",
+          story: "After a sad talk with her sister, Leah wanted to scroll or clean or do anything else. Instead, she sat on the couch for five minutes and let herself feel it. The heaviness sat in her chest, then slowly got lighter. It passed through instead of getting stuck.",
         },
         {
           id: "validating-without-fixing",
@@ -116,6 +126,7 @@ export default function EmotionalIntelligenceJourney() {
           icon: <HandHeart className="w-5 h-5 text-rose-500" />,
           color: "rose",
           example: "Your partner says 'I feel like a failure at work.' Instead of 'No you're not! You got that promotion last year!' — saying 'That sounds really painful. Tell me more about what happened.' Validation means the feeling is heard before it's solved.",
+          story: "\"I feel like a failure at work,\" Ben said. Rosa almost said, \"No, you're great!\" Instead she said, \"That sounds really painful. What happened?\" Ben let out a breath and told her. He didn't need to be fixed. He needed to be heard.",
         },
         {
           id: "managing-flooding",
@@ -124,6 +135,7 @@ export default function EmotionalIntelligenceJourney() {
           icon: <Thermometer className="w-5 h-5 text-red-500" />,
           color: "red",
           example: "Your heart rate spikes above 100 BPM and your partner's words sound like attacks even though they're speaking calmly. You recognize: 'I'm flooded right now.' You say: 'I need to take 20 minutes. I'm not leaving — I'll be back.' Then you self-soothe: walk, breathe, splash cold water.",
+          story: "Mid-argument, Kofi's heart was racing and even Anna's calm words sounded like attacks. He noticed it. \"I'm flooded,\" he said. \"I need twenty minutes. I'm not leaving — I'll be back.\" He walked, breathed, and came back ready to listen.",
         },
         {
           id: "reading-subtext",
@@ -132,6 +144,7 @@ export default function EmotionalIntelligenceJourney() {
           icon: <Eye className="w-5 h-5 text-blue-500" />,
           color: "blue",
           example: "Your partner says 'I don't care, do whatever you want' in a flat voice. The words say indifference; the tone says hurt. Emotional subtext literacy means noticing the mismatch and gently saying 'I think you do care. Can you help me understand what's going on?'",
+          story: "\"Whatever. Do what you want,\" Priya said, in a flat voice. The words said she didn't care. Her voice said she did. Jordan sat down. \"I think this matters to you. Help me understand?\" Priya's eyes filled. \"It really does.\"",
         },
       ],
     },
@@ -147,6 +160,7 @@ export default function EmotionalIntelligenceJourney() {
           icon: <Layers className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
           example: "You notice your partner's energy shift subtly during a family dinner — a slight withdrawal, a quieter voice. Later you say 'I noticed something shifted for you at dinner, around when your mom mentioned the house. Want to talk about it?' Attunement is empathy in real-time.",
+          story: "At dinner with Clara's family, Mateo noticed her go quiet right when her brother mentioned the old house. Later, in the car, he said gently, \"Something shifted for you at dinner. Want to talk about it?\" Clara reached for his hand. \"How did you know?\"",
         },
         {
           id: "creating-emotional-safety",
@@ -155,6 +169,7 @@ export default function EmotionalIntelligenceJourney() {
           icon: <ShieldCheck className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
           example: "Your partner cries during a movie and instead of teasing or being uncomfortable, you move closer and hold their hand. Over time, these moments accumulate: 'I can feel anything here and it's okay.' This is the foundation of secure attachment.",
+          story: "Dev cried at the end of the movie and tried to hide it. Maya didn't tease him. She scooted closer and held his hand. Nothing was said. But he learned something that night: here, he could feel anything.",
         },
         {
           id: "complex-emotions-together",
@@ -163,6 +178,7 @@ export default function EmotionalIntelligenceJourney() {
           icon: <Sparkles className="w-5 h-5 text-amber-500" />,
           color: "amber",
           example: "Your partner says 'I'm excited about the baby but also terrified and kind of grieving our life as just the two of us.' Instead of picking one emotion to validate, you hold all of them: 'That makes complete sense. All of those things can be true at once.'",
+          story: "\"I'm excited about the baby,\" Hannah said, \"but also terrified. And a little sad about our life as just us.\" Raj didn't pick one feeling to fix. \"All of that makes sense,\" he said. \"I feel some of it too.\"",
         },
         {
           id: "emotional-resilience",
@@ -171,6 +187,7 @@ export default function EmotionalIntelligenceJourney() {
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
           example: "After a devastating disappointment — a failed adoption, a job loss, a health scare — you don't crumble separately. You sit together and say 'This is terrible. And we're going to get through it.' Resilience isn't about not feeling pain; it's about not feeling it alone.",
+          story: "When the job offer fell through, Grace and Luis didn't go to separate rooms. They sat on the kitchen floor together. \"This is awful,\" Grace said. \"And we'll get through it,\" said Luis. Both things were true.",
         },
         {
           id: "mentalization",
@@ -179,6 +196,7 @@ export default function EmotionalIntelligenceJourney() {
           icon: <Brain className="w-5 h-5 text-brand-primary" />,
           color: "purple",
           example: "When your partner is quiet after an argument, instead of assuming they're punishing you with silence, wondering: 'Maybe they're processing. Maybe they're hurt. Maybe they need space to figure out what they feel.' Mentalization replaces projection with genuine curiosity.",
+          story: "After their argument, Ellie went quiet. Jo's first thought was, \"She's punishing me.\" Then she wondered instead: \"Maybe she's hurt. Maybe she's still thinking.\" She knocked gently on the door. \"Take your time. I'm here when you're ready.\"",
         },
         {
           id: "emotional-leadership",
@@ -187,6 +205,7 @@ export default function EmotionalIntelligenceJourney() {
           icon: <Lightbulb className="w-5 h-5 text-sky-500" />,
           color: "sky",
           example: "When family drama threatens to hijack your holiday, you model calm: 'I can feel the tension rising. Let's take a walk before we respond to that text.' Emotional leadership isn't controlling others' feelings — it's being the kind of regulated presence that invites others to regulate too.",
+          story: "The family group chat was blowing up, and Aiko could feel everyone's temper rising. Daniel set down his phone. \"Let's take a walk before we answer that,\" he said. Twenty minutes later, they wrote back calmly — and the whole family calmed down with them.",
         },
       ],
     },
