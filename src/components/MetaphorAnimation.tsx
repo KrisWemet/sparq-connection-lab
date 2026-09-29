@@ -60,7 +60,7 @@ export function MetaphorAnimation({
     bridge: {
       primary: "from-blue-500 to-brand-primary",
       secondary: "text-brand-hover",
-      background: "bg-gradient-to-br from-blue-50 to-indigo-50",
+      background: "bg-gradient-to-br from-blue-50 to-brand-linen",
       border: "border-blue-200"
     },
     tree: {

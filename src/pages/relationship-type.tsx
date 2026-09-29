@@ -51,8 +51,8 @@ const relationshipTypes = {
   polyamorous: {
     title: "Polyamorous Relationships",
     description: "Support and guidance for ethical non-monogamy and multiple loving relationships",
-    icon: <Users className="w-8 h-8 text-violet-500" />,
-    color: "from-violet-100 to-violet-50",
+    icon: <Users className="w-8 h-8 text-brand-primary" />,
+    color: "from-brand-parchment to-brand-linen",
     resources: [
       {
         id: "agreements",
@@ -78,7 +78,7 @@ const relationshipTypes = {
     title: "LGBTQ+ Relationships",
     description: "Specialized resources for LGBTQ+ couples and relationships",
     icon: <Heart className="w-8 h-8 text-brand-primary/80" />,
-    color: "from-indigo-100 to-indigo-50",
+    color: "from-brand-primary/10 to-brand-linen",
     resources: [
       {
         id: "identity",

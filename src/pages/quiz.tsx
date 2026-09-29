@@ -188,13 +188,13 @@ export default function Quiz() {
     <div className="min-h-screen bg-gray-50 pb-24">
       <main className="container max-w-lg mx-auto px-4 pt-8 animate-slide-up">
         {showTrialBanner && (
-          <div className="mb-4 rounded-xl bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-100 px-4 py-3 flex items-center justify-between gap-3">
-            <p className="text-sm text-violet-700 leading-snug">
+          <div className="mb-4 rounded-xl bg-gradient-to-r from-brand-linen to-brand-parchment border border-brand-primary/10 px-4 py-3 flex items-center justify-between gap-3">
+            <p className="text-sm text-brand-text-primary leading-snug">
               <span className="font-medium">{trialDaysLeft} day{trialDaysLeft !== 1 ? 's' : ''} left</span> of your free trial — you&apos;re getting premium questions right now.
             </p>
             <Link
               href="/subscription"
-              className="shrink-0 text-xs font-medium text-white bg-violet-600 hover:bg-violet-700 rounded-lg px-3 py-1.5 transition-colors"
+              className="shrink-0 text-xs font-medium text-white bg-brand-primary hover:bg-brand-hover rounded-lg px-3 py-1.5 transition-colors"
             >
               Keep it
             </Link>

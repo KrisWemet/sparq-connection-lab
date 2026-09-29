@@ -110,7 +110,7 @@ export function Day14Graduation() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-teal-50 flex flex-col items-center justify-start p-6 pb-12">
+        <div className="min-h-screen bg-gradient-to-br from-brand-linen to-brand-parchment flex flex-col items-center justify-start p-6 pb-12">
             <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -190,7 +190,7 @@ export function Day14Graduation() {
 
                         {/* North Star boundary beat (spec §2/§5) */}
                         {northStar && (
-                            <div className="rounded-2xl bg-white border border-indigo-100 p-4 shadow-sm">
+                            <div className="rounded-2xl bg-white border border-brand-primary/10 p-4 shadow-sm">
                                 <p className="text-sm text-gray-700 leading-relaxed mb-1">
                                     When we started, you told me:
                                 </p>
@@ -217,7 +217,7 @@ export function Day14Graduation() {
                         )}
 
                         {/* What Peter Noticed */}
-                        <div className="rounded-2xl bg-brand-linen border border-indigo-100 p-4">
+                        <div className="rounded-2xl bg-brand-linen border border-brand-primary/10 p-4">
                             <p className="text-xs font-bold text-brand-primary uppercase tracking-wider mb-2 flex items-center gap-1.5">
                                 <Sparkles size={12} />
                                 What Peter Noticed
@@ -253,7 +253,7 @@ export function Day14Graduation() {
                         {/* Recommended Track */}
                         {report.recommended_track && (
                             <div className="rounded-2xl bg-brand-primary p-4 text-white">
-                                <p className="text-xs font-bold uppercase tracking-wider mb-1 text-indigo-200">
+                                <p className="text-xs font-bold uppercase tracking-wider mb-1 text-white/70">
                                     Recommended Skill Track
                                 </p>
                                 <p className="font-semibold text-base">
