@@ -153,59 +153,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Testimonials Section */}
-        <section className="py-24 bg-brand-linen">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-serif text-black mb-4 tracking-tight">What Couples Say</h2>
-              <p className="text-lg text-zinc-500 max-w-2xl mx-auto">
-                Results from those who have engaged with the Sparq methodology.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white p-8 rounded-3xl shadow-sm border border-zinc-100 border-t-4 border-t-brand-primary/40">
-                <div className="flex items-center mb-4">
-                  <div className="w-10 h-10 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary font-bold mr-4">J&M</div>
-                  <div>
-                    <h3 className="font-semibold text-black leading-tight">John & Maria</h3>
-                    <p className="text-xs text-zinc-500 mt-0.5">Together 5 years</p>
-                  </div>
-                </div>
-                <p className="text-zinc-600 text-sm leading-relaxed">
-                  &quot;Before Sparq, we were talking but not communicating. Now we truly understand each other, and our connection is deeper than ever before.&quot;
-                </p>
-              </div>
-
-              <div className="bg-white p-8 rounded-3xl shadow-sm border border-zinc-100 border-t-4 border-t-brand-primary/40">
-                <div className="flex items-center mb-4">
-                  <div className="w-10 h-10 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary font-bold mr-4">S&K</div>
-                  <div>
-                    <h3 className="font-semibold text-black leading-tight">Sarah & Kevin</h3>
-                    <p className="text-xs text-zinc-500 mt-0.5">Together 3 years</p>
-                  </div>
-                </div>
-                <p className="text-zinc-600 text-sm leading-relaxed">
-                  &quot;The objective mirroring of our blind spots completely changed how we view our relationship. We now have a shared language for tension.&quot;
-                </p>
-              </div>
-
-              <div className="bg-white p-8 rounded-3xl shadow-sm border border-zinc-100 border-t-4 border-t-brand-primary/40">
-                <div className="flex items-center mb-4">
-                  <div className="w-10 h-10 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary font-bold mr-4">L&D</div>
-                  <div>
-                    <h3 className="font-semibold text-black leading-tight">Lisa & David</h3>
-                    <p className="text-xs text-zinc-500 mt-0.5">Together 10 years</p>
-                  </div>
-                </div>
-                <p className="text-zinc-600 text-sm leading-relaxed">
-                  &quot;After years of feeling stuck, the structural pacing helped us regulate. We&apos;re finally addressing the core patterns instead of the surface symptoms.&quot;
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* CTA Section */}
         <section className="py-24 bg-white border-y border-zinc-100">
           <div className="max-w-4xl mx-auto text-center px-6 relative z-10">

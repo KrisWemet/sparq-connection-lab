@@ -43,12 +43,7 @@ const plans = [
     ],
     popular: false,
     buttonText: "Current Plan",
-    disabled: true,
-    testimonial: {
-      quote: "Peter made it feel like I had a friend walking me through it. The 14 days went by so fast and I genuinely noticed a shift.",
-      author: "Jamie & Alex",
-      relationship: "Dating 2 years"
-    }
+    disabled: true
   },
   {
     id: "premium",
@@ -71,12 +66,6 @@ const plans = [
     popular: true,
     buttonText: "Go deeper with Premium",
     disabled: false,
-    testimonial: {
-      quote: "The Advanced Skill Tree exercises are on a different level. We've been doing them together and it's like couples therapy but way more fun.",
-      author: "Taylor & Jordan",
-      relationship: "Married 3 years",
-      statistic: "Most Premium users say talks feel calmer within 30 days"
-    },
     persuasiveText: "Unlock the tools that help good habits stick"
   },
   {
@@ -99,12 +88,6 @@ const plans = [
     popular: false,
     buttonText: "Get Ultimate",
     disabled: false,
-    testimonial: {
-      quote: "Peter remembered something I shared on Day 3 and brought it up six weeks later. That's when I realized this wasn't just an app — it genuinely felt like having a coach who actually knew us.",
-      author: "Sam & Riley",
-      relationship: "Together 18 months",
-      statistic: "Ultimate users are much more likely to finish the full path and stay calmer in conflict"
-    },
     persuasiveText: "Peter knows your story and helps you use it in real life"
   }
 ];
@@ -179,32 +162,10 @@ const journeys = [
   }
 ];
 
-// Testimonials data
-const testimonials = [
-  {
-    id: 1,
-    name: "Sarah & Michael",
-    text: "Sparq Connect has transformed our relationship. The daily questions have helped us discover things about each other we never knew, even after 5 years together!",
-    image: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=200&h=200"
-  },
-  {
-    id: 2,
-    name: "Jessica & David",
-    text: "The relationship journeys are worth every penny. We completed the Communication journey and it's like we finally speak the same language.",
-    image: "https://images.unsplash.com/photo-1499952127939-9bbf5af6c51c?auto=format&fit=crop&w=200&h=200"
-  },
-  {
-    id: 3,
-    name: "Alex & Jordan",
-    text: "We started using Sparq when we first began dating, and now we're engaged! The compatibility assessments were eye-opening and helped us build a strong foundation.",
-    image: "https://images.unsplash.com/photo-1520466809213-7b9a56adcd45?auto=format&fit=crop&w=200&h=200"
-  }
-];
 
 export default function Subscription() {
   const router = useRouter();
   const [billingCycle, setBillingCycle] = useState("monthly");
-  const [showTestimonial, setShowTestimonial] = useState<string | null>(null);
   const [highlightFeature, setHighlightFeature] = useState<{planId: string, featureIndex: number} | null>(null);
   
   // Highlight a random premium feature every few seconds
@@ -394,20 +355,6 @@ export default function Subscription() {
                     ))}
                   </div>
                   
-                  {/* Testimonial preview */}
-                  {plan.testimonial && (
-                    <div 
-                      className="mt-4 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors"
-                      onClick={() => setShowTestimonial(plan.id)}
-                    >
-                      <div className="flex items-center text-sm">
-                        <span className="text-gray-600 italic line-clamp-1">&quot;{plan.testimonial.quote.substring(0, 60)}...&quot;</span>
-                        <Button variant="ghost" size="sm" className="ml-auto h-6 text-xs">
-                          Read
-                        </Button>
-                      </div>
-                    </div>
-                  )}
                 </CardContent>
                 
                 <CardFooter>
@@ -499,68 +446,6 @@ export default function Subscription() {
         </div>
       </div>
       
-      {/* Testimonial modal */}
-      {showTestimonial && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
-          onClick={() => setShowTestimonial(null)}
-        >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="bg-white rounded-lg p-6 max-w-md w-full"
-            onClick={e => e.stopPropagation()}
-          >
-            {plans.find(p => p.id === showTestimonial)?.testimonial && (
-              <>
-                <div className="mb-4">
-                  <p className="text-lg italic text-gray-700 mb-3">
-                    &quot;{plans.find(p => p.id === showTestimonial)?.testimonial.quote}&quot;
-                  </p>
-                  <div className="flex items-center">
-                    <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold">
-                      {plans.find(p => p.id === showTestimonial)?.testimonial.author.split(' ')[0][0]}
-                      {plans.find(p => p.id === showTestimonial)?.testimonial.author.split(' ')[2] ? 
-                        plans.find(p => p.id === showTestimonial)?.testimonial.author.split(' ')[2][0] : 
-                        plans.find(p => p.id === showTestimonial)?.testimonial.author.split(' ')[1][0]}
-                    </div>
-                    <div className="ml-3">
-                      <p className="font-medium">{plans.find(p => p.id === showTestimonial)?.testimonial.author}</p>
-                      <p className="text-sm text-gray-500">{plans.find(p => p.id === showTestimonial)?.testimonial.relationship}</p>
-                    </div>
-                  </div>
-                </div>
-                
-                {plans.find(p => p.id === showTestimonial)?.testimonial.statistic && (
-                  <div className="bg-primary-50 p-3 rounded-lg text-sm text-primary-700 font-medium mb-4">
-                    {plans.find(p => p.id === showTestimonial)?.testimonial.statistic}
-                  </div>
-                )}
-                
-                <div className="flex justify-end">
-                  <Button 
-                    variant="outline" 
-                    onClick={() => setShowTestimonial(null)}
-                    className="mr-2"
-                  >
-                    Close
-                  </Button>
-                  <Button 
-                    onClick={() => {
-                      setShowTestimonial(null);
-                      handleSubscribe(showTestimonial);
-                    }}
-                  >
-                    {showTestimonial === "premium" ? "Get Premium" : "Get Ultimate"}
-                  </Button>
-                </div>
-              </>
-            )}
-          </motion.div>
-        </motion.div>
-      )}
       
     </div>
   );
