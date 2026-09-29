@@ -60,7 +60,7 @@ const TIER_META: Record<TierId, { name: string; tagline: string; color: string; 
   bloom: {
     name: 'Bloom',
     tagline: 'Integrate into your natural way of relating',
-    color: 'text-brand-primary',
+    color: 'text-brand-hover',
     bgColor: 'bg-brand-primary/5',
     borderColor: 'border-brand-primary/20',
   },
@@ -151,7 +151,7 @@ export function JourneyTierView({
           <h1 className="text-3xl font-serif font-bold text-brand-taupe tracking-tight mb-2">{title}</h1>
           <p className="text-zinc-500 leading-relaxed">{description}</p>
           <div className="mt-4 rounded-[1.5rem] bg-white/80 border border-brand-primary/10 p-5 shadow-sm">
-            <p className="text-xs font-bold text-brand-primary uppercase tracking-[0.2em] mb-2">Before You Start</p>
+            <p className="text-xs font-bold text-brand-hover uppercase tracking-[0.2em] mb-2">Before You Start</p>
             <p className="text-sm text-brand-taupe leading-relaxed mb-3">
               {overview || description}
             </p>

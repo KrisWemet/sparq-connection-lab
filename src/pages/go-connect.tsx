@@ -49,12 +49,12 @@ export default function GoConnect() {
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           className="w-24 h-24 bg-brand-primary/20 rounded-full flex items-center justify-center"
         >
-          <Heart size={40} className="text-brand-primary fill-brand-primary" />
+          <Heart size={40} className="text-brand-hover fill-brand-primary" />
         </motion.div>
 
         {/* Mission Text */}
         <div className="space-y-4">
-          <h2 className="text-brand-primary text-sm font-semibold tracking-widest uppercase">
+          <h2 className="text-brand-hover text-sm font-semibold tracking-widest uppercase">
             Real World Mission
           </h2>
           <p className="text-2xl font-serif italic leading-relaxed text-zinc-200 px-4">

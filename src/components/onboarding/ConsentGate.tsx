@@ -34,7 +34,7 @@ export function ConsentGate({ onAgree, onReviewTrust, isSaving, error }: Consent
           className="rounded-2xl p-4 mb-5 text-sm space-y-2.5"
           style={{ backgroundColor: 'rgba(197,107,77,0.06)' }}
         >
-          <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary">
+          <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover">
             What you&apos;re agreeing to
           </p>
           <p className="text-brand-text-secondary leading-6">

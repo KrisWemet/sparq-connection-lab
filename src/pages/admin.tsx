@@ -144,7 +144,7 @@ export default function Admin() {
             Admin Dashboard
           </h1>
           <div className="ml-auto">
-            <Badge variant="outline" className="bg-primary/10 text-primary border-primary">
+            <Badge variant="outline" className="bg-primary/10 text-brand-hover border-primary">
               Admin Mode
             </Badge>
           </div>

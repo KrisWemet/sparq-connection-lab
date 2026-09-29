@@ -73,7 +73,7 @@ export function BetaFeedbackDialog({
     <Dialog open={open} onOpenChange={resetDialog}>
       <DialogTrigger asChild>
         <button
-          className={triggerClassName || 'inline-flex items-center gap-2 text-sm font-medium text-brand-primary hover:text-brand-hover'}
+          className={triggerClassName || 'inline-flex items-center gap-2 text-sm font-medium text-brand-hover hover:text-brand-espresso'}
         >
           <MessageSquare size={16} />
           Beta feedback
@@ -102,7 +102,7 @@ export function BetaFeedbackDialog({
                     className={`h-9 w-9 rounded-full border text-sm font-semibold transition-colors ${
                       sentiment === value
                         ? 'border-brand-primary bg-brand-primary text-white'
-                        : 'border-brand-primary/20 text-brand-primary hover:bg-brand-primary/10'
+                        : 'border-brand-primary/20 text-brand-hover hover:bg-brand-primary/10'
                     }`}
                   >
                     {value}

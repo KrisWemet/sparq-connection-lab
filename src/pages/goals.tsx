@@ -371,7 +371,7 @@ export default function Goals() {
                                 <CardDescription>{goal.description}</CardDescription>
                               </div>
                               {goal.isPremium && (
-                                <Badge variant="outline" className="border-primary text-primary flex items-center gap-1">
+                                <Badge variant="outline" className="border-primary text-brand-hover flex items-center gap-1">
                                   <Lock className="w-3 h-3" />
                                   Premium
                                 </Badge>
@@ -485,7 +485,7 @@ export default function Goals() {
                         <div className="flex justify-between items-start">
                           <CardTitle className="text-lg">{template.title}</CardTitle>
                           {template.isPremium && (
-                            <Badge variant="outline" className="border-primary text-primary flex items-center gap-1">
+                            <Badge variant="outline" className="border-primary text-brand-hover flex items-center gap-1">
                               <Lock className="w-3 h-3" />
                               Premium
                             </Badge>

@@ -202,9 +202,9 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
           animate={{ opacity: 1, height: 'auto' }}
         >
           <h3 className="text-sm font-semibold text-brand-hover mb-3">Before we get started</h3>
-          <div className="text-sm text-brand-primary space-y-2 mb-4">
+          <div className="text-sm text-brand-hover space-y-2 mb-4">
             <p>Sparq uses AI to personalize your experience and help you build a stronger relationship.</p>
-            <ul className="list-disc list-inside space-y-1 text-xs text-brand-primary">
+            <ul className="list-disc list-inside space-y-1 text-xs text-brand-hover">
               <li>Your journals and reflections are private and encrypted</li>
               <li>Peter (your AI guide) learns from your conversations to give better support</li>
               <li>In crisis moments, safety resources are always prioritized</li>
@@ -231,12 +231,12 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
             <button
               type="button"
               onClick={() => setShowConsent(false)}
-              className="px-4 py-2 text-sm text-brand-primary hover:text-brand-hover"
+              className="px-4 py-2 text-sm text-brand-hover hover:text-brand-espresso"
             >
               Back
             </button>
           </div>
-          <p className="mt-3 text-xs text-brand-primary/80">
+          <p className="mt-3 text-xs text-brand-hover">
             By continuing, you agree to our{' '}
             <a href="#" className="underline">Privacy Policy</a>.
           </p>
@@ -373,7 +373,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
           <button
             type="button"
             onClick={onToggleMode}
-            className="ml-1 text-brand-primary hover:text-brand-hover font-medium"
+            className="ml-1 text-brand-hover hover:text-brand-espresso font-medium"
           >
             {isRegisterMode ? 'Sign In' : 'Create Account'}
           </button>
@@ -386,11 +386,11 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
       >
         <p>
           By {isRegisterMode ? 'creating an account' : 'signing in'}, you agree to our{' '}
-          <a href="#" className="text-brand-primary hover:text-brand-hover">
+          <a href="#" className="text-brand-hover hover:text-brand-espresso">
             Terms of Service
           </a>{' '}
           and{' '}
-          <a href="#" className="text-brand-primary hover:text-brand-hover">
+          <a href="#" className="text-brand-hover hover:text-brand-espresso">
             Privacy Policy
           </a>
         </p>

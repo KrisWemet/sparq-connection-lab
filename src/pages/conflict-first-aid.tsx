@@ -267,7 +267,7 @@ export default function ConflictFirstAidPage() {
         <div className="mx-auto max-w-3xl px-4 py-4 flex items-center justify-between">
           <button
             onClick={() => router.back()}
-            className="rounded-xl px-4 py-2 text-sm text-brand-primary hover:bg-brand-linen transition-colors font-medium -ml-4"
+            className="rounded-xl px-4 py-2 text-sm text-brand-hover hover:bg-brand-linen transition-colors font-medium -ml-4"
           >
             ← Retreat
           </button>
@@ -294,7 +294,7 @@ export default function ConflictFirstAidPage() {
           <ol className="mt-3 space-y-3 text-base text-black">
             {RESET_PROTOCOL.map((step, idx) => (
               <li key={step} className="rounded-2xl bg-brand-linen px-5 py-4 leading-relaxed flex items-start">
-                <span className="font-bold text-brand-primary mr-3 mt-0.5">{idx + 1}.</span>
+                <span className="font-bold text-brand-hover mr-3 mt-0.5">{idx + 1}.</span>
                 <span>{step}</span>
               </li>
             ))}

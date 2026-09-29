@@ -45,7 +45,7 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
         </motion.div>
 
         <div className="bg-[#fff7ed] border border-[#fdba74] rounded-2xl p-4 mb-6">
-          <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-2">
+          <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-2">
             Solo-first start
           </p>
           <p className="text-sm text-brand-text-secondary leading-relaxed">
@@ -54,7 +54,7 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
         </div>
 
         {/* Primary recommendation */}
-        <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
+        <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
           Your starting point
         </p>
 
@@ -80,7 +80,7 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
               <span className="text-4xl">{primaryJourney.id === 'attachment-healing' ? '🧡' : '✨'}</span>
             </div>
             <div className="p-4">
-              <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-1">
+              <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-1">
                 Recommended for you
               </p>
               <p className="text-lg font-bold text-[#1f2937] mb-2">{primaryJourney.title}</p>

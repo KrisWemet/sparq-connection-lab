@@ -104,7 +104,7 @@ export function WeeklyMirrorCard() {
       {mirror && mirror.practice_count > 0 && (
         <div className="flex gap-4 mb-4 relative z-10">
           <div className="text-center">
-            <p className="text-lg font-bold text-brand-primary">{mirror.practice_count}</p>
+            <p className="text-lg font-bold text-brand-hover">{mirror.practice_count}</p>
             <p className="text-xs text-brand-text-secondary">sessions</p>
           </div>
           {mirror.practices_felt_natural > 0 && (
@@ -120,11 +120,11 @@ export function WeeklyMirrorCard() {
       {hasPatterns && (
         <div className="flex flex-wrap gap-2 relative z-10">
           <span className="inline-flex items-center gap-1.5 bg-brand-linen border border-brand-primary/10 text-brand-text-secondary text-xs font-semibold px-3 py-1.5 rounded-full">
-            <span className="text-brand-primary">Edge:</span>
+            <span className="text-brand-hover">Edge:</span>
             <span className="font-medium">{data.growth_edge}</span>
           </span>
           <span className="inline-flex items-center gap-1.5 bg-brand-linen border border-brand-primary/10 text-brand-text-secondary text-xs font-semibold px-3 py-1.5 rounded-full">
-            <span className="text-brand-primary">Strength:</span>
+            <span className="text-brand-hover">Strength:</span>
             <span className="font-medium">{data.strength}</span>
           </span>
         </div>

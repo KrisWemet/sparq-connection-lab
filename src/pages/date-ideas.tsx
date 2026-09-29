@@ -304,7 +304,7 @@ export default function DateIdeas() {
                             className="object-cover"
                           />
                           <div className="absolute top-3 right-3 flex gap-2">
-                            <Badge className="bg-white/80 text-primary hover:bg-white/90 dark:bg-gray-800/80 dark:text-primary">
+                            <Badge className="bg-white/80 text-brand-hover hover:bg-white/90 dark:bg-gray-800/80 dark:text-primary">
                               {idea.category}
                             </Badge>
                           </div>
@@ -341,7 +341,7 @@ export default function DateIdeas() {
                                 size="sm" 
                                 variant="outline"
                                 onClick={() => handleSaveIdea(idea.id)}
-                                className={`dark:bg-gray-800 dark:border-gray-700 dark:text-white ${savedIdeas.includes(idea.id) ? "text-primary border-primary dark:border-primary dark:text-primary" : ""}`}
+                                className={`dark:bg-gray-800 dark:border-gray-700 dark:text-white ${savedIdeas.includes(idea.id) ? "text-brand-hover border-primary dark:border-primary dark:text-primary" : ""}`}
                               >
                                 <Bookmark className={`w-4 h-4 mr-1 ${savedIdeas.includes(idea.id) ? "fill-primary" : ""}`} />
                                 {savedIdeas.includes(idea.id) ? "Saved" : "Save"}
@@ -386,7 +386,7 @@ export default function DateIdeas() {
                           <span className="text-sm font-medium dark:text-gray-300">{idea.rating}</span>
                         </div>
                       </div>
-                      <Badge className="mb-3 bg-primary/10 text-primary border-primary/30">
+                      <Badge className="mb-3 bg-primary/10 text-brand-hover border-primary/30">
                         {idea.category}
                       </Badge>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{idea.description}</p>
@@ -405,7 +405,7 @@ export default function DateIdeas() {
                             size="sm" 
                             variant="outline"
                             onClick={() => handleSaveIdea(idea.id)}
-                            className={`dark:bg-gray-800 dark:border-gray-700 dark:text-white ${savedIdeas.includes(idea.id) ? "text-primary border-primary dark:border-primary dark:text-primary" : ""}`}
+                            className={`dark:bg-gray-800 dark:border-gray-700 dark:text-white ${savedIdeas.includes(idea.id) ? "text-brand-hover border-primary dark:border-primary dark:text-primary" : ""}`}
                           >
                             <Bookmark className={`w-4 h-4 mr-1 ${savedIdeas.includes(idea.id) ? "fill-primary" : ""}`} />
                             {savedIdeas.includes(idea.id) ? "Saved" : "Save"}
@@ -466,7 +466,7 @@ export default function DateIdeas() {
                               className="object-cover"
                             />
                             <div className="absolute top-3 right-3 flex gap-2">
-                              <Badge className="bg-white/80 text-primary hover:bg-white/90 dark:bg-gray-800/80 dark:text-primary">
+                              <Badge className="bg-white/80 text-brand-hover hover:bg-white/90 dark:bg-gray-800/80 dark:text-primary">
                                 {idea.category}
                               </Badge>
                             </div>
@@ -481,7 +481,7 @@ export default function DateIdeas() {
                             </div>
                           </div>
                           {!idea.image && (
-                            <Badge className="mb-3 bg-primary/10 text-primary border-primary/30">
+                            <Badge className="mb-3 bg-primary/10 text-brand-hover border-primary/30">
                               {idea.category}
                             </Badge>
                           )}
@@ -500,7 +500,7 @@ export default function DateIdeas() {
                               size="sm" 
                               variant="outline"
                               onClick={() => handleSaveIdea(idea.id)}
-                              className="text-primary border-primary dark:border-primary dark:text-primary"
+                              className="text-brand-hover border-primary dark:border-primary dark:text-primary"
                             >
                               <Bookmark className="w-4 h-4 mr-1 fill-primary" />
                               Remove

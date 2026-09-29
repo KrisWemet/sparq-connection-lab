@@ -426,7 +426,7 @@ export default function RehearsalRoom() {
               </button>
               <button
                 onClick={endRehearsal}
-                className="text-xs text-brand-primary font-semibold px-3 py-1 rounded-xl bg-brand-primary/10"
+                className="text-xs text-brand-hover font-semibold px-3 py-1 rounded-xl bg-brand-primary/10"
               >
                 Debrief
               </button>
@@ -457,7 +457,7 @@ export default function RehearsalRoom() {
               )}
               {msg.role === 'assistant' && msg.isPartner && (
                 <div className="w-10 h-10 rounded-full bg-brand-parchment border border-brand-primary/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-brand-primary text-sm font-semibold">P</span>
+                  <span className="text-brand-hover text-sm font-semibold">P</span>
                 </div>
               )}
               <div
@@ -580,7 +580,7 @@ export default function RehearsalRoom() {
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-brand-espresso font-semibold text-sm">{opt.label}</span>
                   {opt.default && (
-                    <span className="text-xs text-brand-primary font-semibold tracking-widest uppercase">Default</span>
+                    <span className="text-xs text-brand-hover font-semibold tracking-widest uppercase">Default</span>
                   )}
                 </div>
                 <span className="text-brand-text-secondary text-xs">{opt.desc}</span>
@@ -598,7 +598,7 @@ export default function RehearsalRoom() {
           >
             <button
               onClick={() => sendDebriefMessage(null)}
-              className="text-sm text-brand-primary font-semibold underline underline-offset-2"
+              className="text-sm text-brand-hover font-semibold underline underline-offset-2"
             >
               Get my anchor →
             </button>
@@ -615,7 +615,7 @@ export default function RehearsalRoom() {
             {/* Anchor card */}
             {peterAnchor && (
               <div className="bg-white border border-brand-primary/15 rounded-2xl p-5 mb-6 shadow-sm">
-                <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
+                <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
                   Your anchor
                 </p>
                 <p className="text-brand-espresso font-serif italic leading-relaxed mb-4">
@@ -623,7 +623,7 @@ export default function RehearsalRoom() {
                 </p>
                 <button
                   onClick={copyAnchor}
-                  className="flex items-center gap-2 text-sm text-brand-primary font-medium"
+                  className="flex items-center gap-2 text-sm text-brand-hover font-medium"
                 >
                   {anchorCopied ? (
                     <>

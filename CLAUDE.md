@@ -511,7 +511,7 @@ import { Button } from "../../components/ui/button";
 2. **Missing Supabase env vars crash every page.** `src/lib/supabase.ts` calls `createClient` at import time; with no `NEXT_PUBLIC_SUPABASE_URL` every route 500s. Set env vars before building.
 3. **Unused shadcn/ui primitives** remain in `src/components/ui/` by convention — harmless, leave them.
 4. **`run_dev.py` targets port 8085**, but Next.js defaults to 3000 — use `npm run dev`.
-5. **Brand clay fails WCAG AA for small text.** `#C56B4D` on linen is 3.3:1 and white on clay is 3.8:1 (AA needs 4.5:1 for normal text). Use `brand-hover` (`#A85539`, 4.6:1) for small clay text until the palette is revisited — a design decision for Chris.
+5. **Contrast rule (decided 2026-09, option 2): clay for fills and large text only.** Small clay-colored text uses `text-brand-hover` (`#A85539`, 4.6:1 on linen); `brand-primary` text is allowed only at `text-2xl`+ or `text-xl` bold, and for icons. Still open: white text on clay-filled buttons is 3.8:1 (passes only for bold ≥14px), and shadcn's `button` `link` variant in `src/components/ui/` still uses `text-primary`.
 6. **Dark theme in `globals.css` is still the old violet.** Dormant: nothing enables dark mode today. Re-derive it from Warm Clay before turning dark mode on.
 
 Resolved in the 2026-09 cleanup: all hardcoded violet hexes, Tailwind purple/indigo classes and violet-tinted shadows (now Warm Clay tokens), made-up testimonials and social-proof stats, Vite leftovers and the legacy Supabase client shim, the unwired `src/lib/auth/` rewrite, ~80 unreachable legacy components/hooks/services (including the Mem0 mock `src/lib/mem0.ts`), a leaked auth listener in `auth-context.tsx`, and the public `/test-page` debug route.

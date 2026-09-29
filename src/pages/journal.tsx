@@ -25,7 +25,7 @@ export default function JournalPage() {
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <span className="text-xs font-semibold tracking-widest uppercase text-brand-primary">
+            <span className="text-xs font-semibold tracking-widest uppercase text-brand-hover">
               Journal
             </span>
             <div className="w-10 h-10" aria-hidden="true" />
@@ -40,7 +40,7 @@ export default function JournalPage() {
             className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6 relative overflow-hidden"
           >
             <div className="absolute -top-12 right-0 w-32 h-32 rounded-full bg-brand-primary/10 blur-3xl pointer-events-none" />
-            <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
+            <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
               Journal
             </p>
             <h1 className="text-xl font-semibold text-brand-text-primary">Journal</h1>
@@ -66,7 +66,7 @@ export default function JournalPage() {
                 <Compass className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-1">
+                <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-1">
                   Your interpretation
                 </p>
                 <h2 className="text-lg font-semibold text-brand-text-primary">
@@ -97,7 +97,7 @@ export default function JournalPage() {
                 <NotebookPen className="w-5 h-5" />
               </div>
               <div className="flex-1">
-                <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-1">
+                <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-1">
                   Reflection history
                 </p>
                 <p className="text-sm text-brand-text-secondary leading-relaxed">
@@ -106,7 +106,7 @@ export default function JournalPage() {
               </div>
               <Link
                 href="/daily-growth"
-                className="text-xs font-semibold tracking-wide text-brand-primary hover:text-brand-hover"
+                className="text-xs font-semibold tracking-wide text-brand-hover hover:text-brand-espresso"
               >
                 Open practice
               </Link>

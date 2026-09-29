@@ -54,7 +54,7 @@ export function DailyPrimeCard() {
       animate={{ opacity: 1, y: 0 }}
       className="rounded-3xl border border-brand-primary/10 bg-white/60 p-5 shadow-sm backdrop-blur-sm"
     >
-      <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-primary/60">
+      <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-hover">
         Today&apos;s nudge
       </p>
       {prime.story && (

@@ -57,7 +57,7 @@ export function PersuasiveJourneyPrompt({
         return (
           <motion.span
             key={index}
-            className="font-medium text-brand-primary"
+            className="font-medium text-brand-hover"
             initial={{ opacity: 0.8 }}
             animate={{
               opacity: [0.8, 1, 0.8],

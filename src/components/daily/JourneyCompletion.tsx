@@ -193,7 +193,7 @@ export function JourneyCompletion({ journeyId, journeyTitle }: JourneyCompletion
             transition={{ duration: 0.5 }}
             className="space-y-4"
           >
-            <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary pl-1">
+            <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover pl-1">
               Peter suggests
             </p>
 
@@ -226,7 +226,7 @@ export function JourneyCompletion({ journeyId, journeyTitle }: JourneyCompletion
 
             <button
               onClick={() => router.push('/journeys')}
-              className="w-full text-brand-primary font-medium text-sm text-center py-2"
+              className="w-full text-brand-hover font-medium text-sm text-center py-2"
             >
               Or browse all journeys
             </button>

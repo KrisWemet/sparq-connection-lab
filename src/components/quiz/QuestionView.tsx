@@ -63,7 +63,7 @@ export function QuestionView({
                 <Button
                   key={index}
                   variant="outline"
-                  className="w-full justify-between text-left font-normal hover:text-primary hover:border-primary"
+                  className="w-full justify-between text-left font-normal hover:text-brand-hover hover:border-primary"
                   onClick={() => handleAnswer(option)}
                 >
                   {option}
@@ -72,7 +72,7 @@ export function QuestionView({
               ))}
               <Button
                 variant="outline"
-                className="w-full justify-between text-left font-normal hover:text-primary hover:border-primary"
+                className="w-full justify-between text-left font-normal hover:text-brand-hover hover:border-primary"
                 onClick={() => onAnswerSubmit("other")}
               >
                 Something else...

@@ -77,7 +77,7 @@ export function CsiBaseline({ onComplete }: CsiBaselineProps) {
           <div className="flex items-center gap-3 mb-5">
             <PeterAvatar mood="morning" size={40} />
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-primary/60">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-hover">
                 Before we start
               </p>
               <p className="text-sm text-brand-taupe">

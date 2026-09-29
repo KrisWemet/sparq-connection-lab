@@ -443,7 +443,7 @@ These create depth without heavy imagery.
 
 - **Focus visible**: All interactive elements have `focus-visible:ring-2 focus-visible:ring-offset-2`
 - **Touch targets**: Minimum 44px height on all interactive elements
-- **Color contrast** (measured 2026-09): `#2E2620` espresso on `#F5F1EA` linen = 13.2:1 ✅. `#A85539` (brand-hover) on linen = 4.6:1 ✅ AA. **`#C56B4D` brand-primary on linen = 3.3:1 and white on `#C56B4D` = 3.8:1 — these pass AA only for large text (≥18px, or ≥14px bold).** For small clay-colored text, use `brand-hover`; keep clay fills behind large or bold white text. (Open palette decision — see CLAUDE.md known debt.)
+- **Color contrast** (measured 2026-09): `#2E2620` espresso on `#F5F1EA` linen = 13.2:1 ✅. `#A85539` (brand-hover) on linen = 4.6:1 ✅ AA. **`#C56B4D` brand-primary on linen = 3.3:1 and white on `#C56B4D` = 3.8:1 — these pass AA only for large text (≥18px, or ≥14px bold).** **Rule:** small clay-colored text uses `text-brand-hover`; `text-brand-primary` only for icons, fills, and text at `text-2xl`+ (or `text-xl` bold). Hover states on `brand-hover` text go to `brand-espresso`. Keep clay-filled buttons' white text bold and ≥14px.
 - **Screen reader labels**: `aria-label` on icon-only buttons, `sr-only` text where needed
 - **Reduced motion**: Confetti respects `disableForReducedMotion`. CSS animations include `@media (prefers-reduced-motion: reduce)` overrides.
 - **Keyboard navigation**: All interactive elements reachable via Tab, activatable via Enter/Space
