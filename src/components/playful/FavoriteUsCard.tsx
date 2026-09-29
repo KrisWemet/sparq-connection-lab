@@ -103,7 +103,7 @@ export function FavoriteUsCard({ prompt, dateKey, surface }: FavoriteUsCardProps
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.42, delay: 0.2 }}
-      className="rounded-[30px] border border-brand-primary/10 bg-[linear-gradient(135deg,rgba(247,217,120,0.18),rgba(255,255,255,0.82))] p-5 shadow-[0_16px_38px_rgba(42,34,52,0.06)]"
+      className="rounded-[30px] border border-brand-primary/10 bg-[linear-gradient(135deg,rgba(247,217,120,0.18),rgba(255,255,255,0.82))] p-5 shadow-[0_16px_38px_rgba(46,38,32,0.06)]"
     >
       <div className="flex items-start justify-between gap-3">
         <div>

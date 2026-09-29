@@ -1,24 +1,47 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
-// Environment variables should be set in .env.local
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+// Defer initialization so importing a page does not fail when a preview or
+// local checkout has no Supabase settings. Keep one client for all consumers.
+let client: SupabaseClient | undefined;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables');
+export function getSupabaseClient(): SupabaseClient {
+  if (client) return client;
+
+  // Keep direct process.env references so Next.js inlines public settings.
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const missing = [
+    !supabaseUrl && 'NEXT_PUBLIC_SUPABASE_URL',
+    !supabaseAnonKey && 'NEXT_PUBLIC_SUPABASE_ANON_KEY',
+  ].filter(Boolean);
+
+  if (missing.length) {
+    throw new Error(
+      `Supabase is not configured: missing ${missing.join(', ')}. Set these environment variables and restart or rebuild the app.`
+    );
+  }
+
+  client = createClient(supabaseUrl!, supabaseAnonKey!, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      storageKey: 'sparq-auth',
+      // Avoid Navigator LockManager timeouts caused by browser extensions.
+      lock: async (name: string, _acquireTimeout: number, fn: () => Promise<any>) => {
+        return await fn();
+      },
+    },
+  });
+  return client;
 }
 
-// Create a single supabase client for the entire app
-// Use a simple in-process lock instead of Navigator LockManager to avoid
-// timeouts caused by browser extensions interfering with the Lock API.
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    storageKey: 'sparq-auth',
-    lock: async (name: string, _acquireTimeout: number, fn: () => Promise<any>) => {
-      return await fn();
-    },
+// Preserve existing imports without eagerly creating the client. Bind methods
+// to the real client so SDK calls retain their expected `this` receiver.
+export const supabase = new Proxy({} as SupabaseClient, {
+  get(_target, property) {
+    const instance = getSupabaseClient();
+    const value = Reflect.get(instance, property, instance);
+    return typeof value === 'function' ? value.bind(instance) : value;
   },
 });
 
