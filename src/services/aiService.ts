@@ -77,7 +77,7 @@ export class AIService {
         duration: "2-3 hours",
         cost: "Low",
         rating: 4.7,
-        image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&h=500"
+        image: "/images/dates/picnic.jpg"
       },
       {
         id: 1002,
@@ -87,7 +87,7 @@ export class AIService {
         duration: "2-3 hours",
         cost: "Medium",
         rating: 4.5,
-        image: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&h=500"
+        image: "/images/dates/cooking.jpg"
       },
       {
         id: 1003,
@@ -97,7 +97,7 @@ export class AIService {
         duration: "2-4 hours",
         cost: "Low",
         rating: 4.3,
-        image: "https://images.unsplash.com/photo-1503152394-c571994fd383?auto=format&fit=crop&w=800&h=500"
+        image: "/images/dates/gallery.jpg"
       }
     ];
   }
