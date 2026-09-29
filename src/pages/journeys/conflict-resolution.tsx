@@ -31,6 +31,7 @@ export default function ConflictResolutionJourney() {
           icon: <Waypoints className="w-5 h-5 text-brand-primary" />,
           color: "purple",
           example: "Noticing that most of your arguments follow the same script: one partner raises a concern, the other gets defensive, the first escalates, and both withdraw. Seeing the pattern is the first step to interrupting it.",
+          story: "Rosa brought up the dishes. Ben got defensive. Rosa pushed harder, and they both went quiet for the night. The next morning, Rosa said, \"That's the same fight we always have, isn't it?\" Ben laughed a little. \"Same script. Different dishes.\" Just naming it made them both softer.",
         },
         {
           id: "triggers",
@@ -39,6 +40,7 @@ export default function ConflictResolutionJourney() {
           icon: <AlertTriangle className="w-5 h-5 text-amber-500" />,
           color: "amber",
           example: "Realizing that when your partner says 'you always...' you immediately shut down — not because of this argument, but because it echoes criticism from your childhood. The trigger isn't your partner; it's the echo.",
+          story: "\"You always leave the lights on,\" Nia said. Omar felt his chest go tight, and he wanted to walk away. Later he realized why: his dad used to say \"you always\" before a long lecture. He told Nia. She squeezed his hand. \"I'll say what I mean without the 'always.'\"",
         },
         {
           id: "flooding",
@@ -47,6 +49,7 @@ export default function ConflictResolutionJourney() {
           icon: <Thermometer className="w-5 h-5 text-red-500" />,
           color: "red",
           example: "Your heart is pounding, your thoughts are racing, and everything your partner says sounds like an attack. This is flooding — your body has entered survival mode. Gottman research shows nothing productive happens once your heart rate exceeds 100 BPM.",
+          story: "Halfway through the talk about money, Daniel's heart was pounding and his face felt hot. Every word from Aiko sounded like an attack, even the kind ones. He put his hand on his chest. \"I'm flooded,\" he said. \"I can't hear you well right now.\" Aiko nodded. Saying it out loud was the first step back.",
         },
         {
           id: "four-horsemen",
@@ -55,6 +58,7 @@ export default function ConflictResolutionJourney() {
           icon: <Shield className="w-5 h-5 text-slate-500" />,
           color: "slate",
           example: "Catching yourself rolling your eyes (contempt) or responding to a complaint with 'well, you do it too' (defensiveness). Gottman's research shows these four behaviors predict relationship failure with 93% accuracy — but only if left unchecked.",
+          story: "Jo felt her eyes start to roll when Ellie brought up the guest room again. She caught it halfway. That eye roll said \"you're ridiculous\" louder than any words. Jo stopped, took a breath, and said, \"Okay. Tell me what's bugging you about it.\"",
         },
         {
           id: "repair-attempts",
@@ -63,6 +67,7 @@ export default function ConflictResolutionJourney() {
           icon: <RotateCcw className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
           example: "In the middle of a heated exchange, one partner says 'Wait, I don't want to fight. I love you and I want to figure this out together.' The repair attempt doesn't solve the problem — it keeps the relationship safe while you work on the problem.",
+          story: "The argument about the in-laws was heating up. Then Marcus stopped and said, \"Wait. I don't want to fight with you. I love you, and I want to figure this out together.\" The problem didn't disappear. But Leah's shoulders came down, and they kept talking — gently.",
         },
         {
           id: "taking-breaks",
@@ -71,6 +76,7 @@ export default function ConflictResolutionJourney() {
           icon: <Pause className="w-5 h-5 text-blue-500" />,
           color: "blue",
           example: "Instead of storming out, saying 'I'm getting flooded and I need 20 minutes to calm my nervous system. I'm not leaving this conversation — I'm taking care of myself so I can show up better. I'll come back at 8:30.'",
+          story: "Grace felt the fight slipping out of her hands. Instead of storming out, she said, \"I'm getting flooded. I need twenty minutes to calm down. I'm not leaving this talk — I'll be back at 8:30.\" She walked around the block. At 8:30, she came back and sat down next to Luis.",
         },
         {
           id: "listening-in-conflict",
@@ -79,6 +85,7 @@ export default function ConflictResolutionJourney() {
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
           example: "Your partner is upset about something you did. Instead of explaining or defending, you say 'Tell me more about how that affected you.' You listen not to respond, but to understand.",
+          story: "Priya was upset that Jordan had made weekend plans without asking. Jordan felt the excuses lining up. They set them aside. \"Tell me more about how that felt,\" they said, and then they just listened. By the end, Priya didn't need an explanation. She needed exactly that.",
         },
       ],
     },
@@ -94,6 +101,7 @@ export default function ConflictResolutionJourney() {
           icon: <MessageSquare className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
           example: "Instead of 'You never help with the kids,' using Gottman's soft startup formula: 'I feel overwhelmed when I'm handling bedtime alone. I need us to share that responsibility. Could we talk about a plan?'",
+          story: "Hannah had done bedtime alone five nights in a row. \"You never help\" was ready on her tongue. She started softer instead: \"I'm worn out from doing bedtime alone. Can we make a plan to share it?\" Raj looked up from his laptop. \"Yeah. I didn't realize. Let's figure it out.\"",
         },
         {
           id: "antidotes",
@@ -102,6 +110,7 @@ export default function ConflictResolutionJourney() {
           icon: <ShieldCheck className="w-5 h-5 text-blue-500" />,
           color: "blue",
           example: "Catching yourself about to say 'You're so selfish' (criticism) and converting it to 'I felt hurt when my birthday wasn't acknowledged' (complaint about a specific behavior). The antidote isn't suppressing — it's translating.",
+          story: "Zoe almost said, \"You're so selfish.\" She caught it and found the true, specific thing underneath. \"I felt hurt when you forgot my work dinner.\" Isaac winced. \"That's fair. I'm sorry.\" Same feeling, different words — and a totally different talk.",
         },
         {
           id: "gridlocked-problems",
@@ -110,6 +119,7 @@ export default function ConflictResolutionJourney() {
           icon: <Waypoints className="w-5 h-5 text-brand-primary" />,
           color: "purple",
           example: "Gottman found that 69% of couple conflicts are perpetual. The introvert-extrovert tension, different spending philosophies, different parenting styles. The goal shifts from resolution to dialogue: 'How do we live with this difference with humor and grace?'",
+          story: "Mateo loves a full house. Clara needs quiet. After twenty years, they've stopped trying to win. Now they plan it: friends over on Friday, a quiet Sunday just for them. \"We're never going to agree on this,\" Clara said, smiling. \"But we're good at living with it.\"",
         },
         {
           id: "turning-toward",
@@ -118,6 +128,7 @@ export default function ConflictResolutionJourney() {
           icon: <HandHeart className="w-5 h-5 text-rose-500" />,
           color: "rose",
           example: "Your partner says something hurtful. Everything in you wants to shut down. Instead, you take a breath and say 'That really stung. I know you're upset, but I need you to say that differently.'",
+          story: "In the middle of a tense talk, Sophie said something sharp. Wei felt himself start to shut down. Instead, he took a breath and said, \"That really stung. I know you're upset — can you say it another way?\" Sophie paused. \"You're right. Let me try again.\"",
         },
         {
           id: "meta-conflict",
@@ -126,6 +137,7 @@ export default function ConflictResolutionJourney() {
           icon: <Brain className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
           example: "On a peaceful Sunday morning, saying 'I've noticed that when we argue about money, we both get really activated. What if we set some ground rules for those conversations — like sitting side by side and using a timer?'",
+          story: "On a calm Sunday morning, Anna said, \"I've noticed money talks always get heated for us.\" Kofi nodded. \"Maybe we try them side by side on the couch, not across the table?\" They set a few simple rules. The next money talk wasn't easy. But it was kinder.",
         },
         {
           id: "repair-under-pressure",
@@ -134,6 +146,7 @@ export default function ConflictResolutionJourney() {
           icon: <RotateCcw className="w-5 h-5 text-sky-500" />,
           color: "sky",
           example: "Mid-argument, your partner reaches for your hand. Your instinct is to pull away, but you let them hold it. The ability to repair in real-time is the strongest predictor of relationship success.",
+          story: "Mid-argument, Theo reached for Sam's hand. Sam's first instinct was to pull away. He didn't. He let Theo hold it, and something in the room softened. They were still upset. But now they were upset together.",
         },
         {
           id: "underneath-the-fight",
@@ -142,6 +155,7 @@ export default function ConflictResolutionJourney() {
           icon: <Eye className="w-5 h-5 text-amber-500" />,
           color: "amber",
           example: "The argument about dirty dishes isn't about dishes. It's about feeling unseen. EFT teaches that most conflicts are really about: 'Do you see me? Am I important to you? Can I count on you?'",
+          story: "Leah and Marcus were fighting about the dishes, again. Then Leah stopped. \"It's not the dishes,\" she said quietly. \"I just feel like you don't see how tired I am.\" Marcus set down the towel. \"I do see it. I'm sorry I haven't shown it.\"",
         },
       ],
     },
@@ -157,6 +171,7 @@ export default function ConflictResolutionJourney() {
           icon: <Sparkles className="w-5 h-5 text-amber-500" />,
           color: "amber",
           example: "A disagreement about vacation planning becomes an honest conversation about what 'rest' means to each of you. The conflict generates a new understanding that neither partner had before — and a plan that honors both.",
+          story: "Ellie wanted a busy vacation. Jo wanted to do nothing. The disagreement turned into a real talk about what \"rest\" means to each of them. They ended up planning something neither had thought of: three quiet mornings, and three full afternoons.",
         },
         {
           id: "conflict-as-intimacy",
@@ -165,6 +180,7 @@ export default function ConflictResolutionJourney() {
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
           example: "After a difficult but respectful argument about parenting, one partner says 'That was hard, but I feel closer to you now. I know we can disagree without losing each other.' Conflict handled well becomes proof of safety.",
+          story: "After a hard but careful talk about parenting, Rosa sat back. \"That was tough,\" she said. \"But I feel closer to you now.\" Ben nodded. \"Me too. We disagreed, and we didn't lose each other.\"",
         },
         {
           id: "custom-repair-rituals",
@@ -173,6 +189,7 @@ export default function ConflictResolutionJourney() {
           icon: <RotateCcw className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
           example: "One couple's repair ritual: after any argument, they sit on the porch together and one person says 'Tell me what I missed.' Another couple takes a walk. The ritual matters less than the consistency.",
+          story: "After every argument, Mateo and Clara take their tea out to the porch. One of them says, \"Tell me what I missed.\" They've done it for years. The tea changes. The question doesn't.",
         },
         {
           id: "perpetual-with-grace",
@@ -181,6 +198,7 @@ export default function ConflictResolutionJourney() {
           icon: <Scale className="w-5 h-5 text-brand-primary" />,
           color: "purple",
           example: "After 15 years, you can laugh about the thermostat wars. 'Here we are again — the great temperature debate continues.' Gottman calls this 'dialogue with the perpetual problem.' Masters turn gridlock into an inside joke.",
+          story: "Aiko turned the heat up. Daniel turned it down. Aiko turned it up again. Then they both burst out laughing. \"The great thermostat war continues,\" Daniel said. After twelve years, their oldest fight has become an inside joke.",
         },
         {
           id: "teaching-repair",
@@ -189,6 +207,7 @@ export default function ConflictResolutionJourney() {
           icon: <MessageSquare className="w-5 h-5 text-blue-500" />,
           color: "blue",
           example: "Saying 'When we're in conflict, the thing that helps me most is when you touch my arm and say something gentle. What helps you?' — and then actually doing it next time.",
+          story: "One quiet evening, Nia said, \"When we fight, it really helps when you touch my arm and say something gentle. What helps you?\" Omar thought about it. \"When you tell me we're okay.\" The next time things got tense, they both remembered.",
         },
         {
           id: "conflict-resilience",
@@ -197,6 +216,7 @@ export default function ConflictResolutionJourney() {
           icon: <Compass className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
           example: "Early in your relationship, a big argument took days to recover from. Now, you can have a tough conversation at dinner and genuinely laugh together by bedtime — not because you're avoiding, but because your repair muscles are strong.",
+          story: "In their first year, a big fight would cost Grace and Luis a whole weekend. Last week they had a hard talk over dinner — and were laughing on the couch by bedtime. They hadn't stopped disagreeing. They'd just gotten good at coming back.",
         },
       ],
     },
