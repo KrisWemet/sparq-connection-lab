@@ -33,6 +33,7 @@ export default function IntimacyJourney() {
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
           example: "Sharing your fears, hopes, and dreams with your partner, and creating a safe space where both of you can be vulnerable without fear of judgment.",
+          story: "Lying in the dark, Nia said, \"Can I tell you something I've never said out loud?\" Omar turned toward her. She told him about the fear she'd carried since she was a kid. He didn't try to fix it. He just said, \"Thank you for trusting me with that.\"",
         },
         {
           id: "physical-intimacy",
@@ -41,6 +42,7 @@ export default function IntimacyJourney() {
           icon: <Flame className="w-5 h-5 text-amber-500" />,
           color: "amber",
           example: "Developing a rich language of physical connection that includes both sexual intimacy and everyday affectionate touches like holding hands, hugging, or gentle caresses.",
+          story: "It wasn't anything big. Luis played with Grace's hair while they watched TV. She rested her feet in his lap. A hug by the coffee maker that lasted a little longer than usual. By the end of the week, they both felt closer than they had in months.",
         },
         {
           id: "intellectual-intimacy",
@@ -49,6 +51,7 @@ export default function IntimacyJourney() {
           icon: <MessageSquare className="w-5 h-5 text-blue-500" />,
           color: "blue",
           example: "Having deep conversations about your values, interests, or perspectives on life, and feeling intellectually stimulated by your exchanges with your partner.",
+          story: "Wei asked Sophie what she thought happens after we die — right in the middle of washing dishes. They talked until the water went cold. They didn't agree on everything. But it was the most awake either of them had felt all week.",
         },
         {
           id: "experiential-intimacy",
@@ -57,6 +60,7 @@ export default function IntimacyJourney() {
           icon: <Users className="w-5 h-5 text-green-500" />,
           color: "green",
           example: "Traveling together, trying new activities as a couple, or creating meaningful rituals and traditions that strengthen your bond through shared memories.",
+          story: "Ellie and Jo signed up for a pottery class, terrible at it together. Their bowls came out lopsided and cracked. They kept every single one. Now each one holds a story only the two of them know.",
         },
         {
           id: "spiritual-intimacy",
@@ -65,6 +69,7 @@ export default function IntimacyJourney() {
           icon: <Sparkles className="w-5 h-5 text-brand-primary" />,
           color: "purple",
           example: "Discussing your core values, exploring existential questions together, or sharing spiritual practices that help you feel aligned on a deeper level.",
+          story: "Every New Year's morning, Mateo and Clara take a slow walk and ask each other the same question: \"What matters most to us this year?\" The answers change. The walk has become their quiet, sacred place.",
         },
         {
           id: "self-intimacy",
@@ -73,6 +78,7 @@ export default function IntimacyJourney() {
           icon: <User className="w-5 h-5 text-orange-500" />,
           color: "orange",
           example: "Practicing self-awareness and self-compassion, which allows you to bring your authentic self to your relationship rather than projecting needs or insecurities.",
+          story: "Before a hard talk with Ben, Rosa sat alone for five minutes and asked herself, \"What do I actually need?\" The answer surprised her. She didn't need him to agree. She needed to feel heard. Knowing that, she could ask for it clearly.",
         },
         {
           id: "vulnerability",
@@ -81,6 +87,7 @@ export default function IntimacyJourney() {
           icon: <BadgeCheck className="w-5 h-5 text-sky-500" />,
           color: "sky",
           example: "Sharing a personal insecurity with your partner, being honest about a mistake you've made, or expressing a need that you fear might be rejected.",
+          story: "Raj had been hiding it for weeks. Finally he told Hannah: \"I think I'm bad at my new job. I'm scared.\" His heart pounded. Hannah set down her book. \"I'm really glad you told me. You don't have to carry that alone.\"",
         },
         {
           id: "reciprocity",
@@ -89,6 +96,7 @@ export default function IntimacyJourney() {
           icon: <ArrowRightLeft className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
           example: "Both partners having space to be vulnerable and supportive at different times, creating a dance of intimacy where both feel equally valued and understood.",
+          story: "Some weeks Jordan leans on Priya. Some weeks Priya leans on Jordan. Last month it was Priya's turn to fall apart, and Jordan held steady. This week, Jordan got bad news, and Priya was right there. Nobody keeps score.",
         },
       ],
     },
@@ -104,6 +112,7 @@ export default function IntimacyJourney() {
           icon: <ShieldCheck className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
           example: "Instead of waiting for your partner to open up, saying 'I want to share something that's been on my mind. I've been feeling disconnected from us lately, and I think it's because I've been afraid to ask for more closeness.'",
+          story: "Dev didn't wait for Maya to bring it up. \"I want to share something,\" he said. \"I've felt far from you lately. I think I've been afraid to ask for more closeness.\" Maya's eyes softened. \"I've felt it too.\"",
         },
         {
           id: "deepening-physical-presence",
@@ -112,6 +121,7 @@ export default function IntimacyJourney() {
           icon: <Fingerprint className="w-5 h-5 text-rose-500" />,
           color: "rose",
           example: "During a hug, instead of the quick pat-and-release, pausing to feel your partner's breathing, matching your rhythm to theirs, and staying for three extra breaths. Noticing how the quality of touch changes when you're truly present.",
+          story: "Usually their hugs were quick — pat, pat, done. Tonight Theo held on. He noticed Sam's breathing and slowed his own to match. Three extra breaths. Sam's whole body let go. \"Wow,\" he said softly. \"I needed that.\"",
         },
         {
           id: "creating-intimacy-rituals",
@@ -120,6 +130,7 @@ export default function IntimacyJourney() {
           icon: <Clock className="w-5 h-5 text-amber-500" />,
           color: "amber",
           example: "Establishing a nightly 10-minute check-in where you each share one thing you appreciated about the other and one thing that's weighing on you. Over time this becomes a sacred space where intimacy deepens predictably.",
+          story: "Every night before bed, Aiko and Daniel take ten minutes. One thing they appreciated about each other today. One thing weighing on them. Some nights it's quick. Some nights it goes an hour. Either way, they never go to sleep as strangers.",
         },
         {
           id: "navigating-intimacy-mismatches",
@@ -128,6 +139,7 @@ export default function IntimacyJourney() {
           icon: <Layers className="w-5 h-5 text-brand-primary" />,
           color: "purple",
           example: "When one partner wants to talk through emotions and the other needs quiet physical closeness, saying 'I can see we need different things right now. How about I hold you while I share what's on my mind — would that work for both of us?'",
+          story: "Kofi wanted to talk it through. Anna needed quiet closeness. For a moment they both felt stuck. Then Anna said, \"What if you hold me while you tell me what's on your mind?\" It worked for both of them.",
         },
         {
           id: "curiosity-over-assumption",
@@ -136,6 +148,7 @@ export default function IntimacyJourney() {
           icon: <Eye className="w-5 h-5 text-blue-500" />,
           color: "blue",
           example: "After years together, asking 'What's something you've been thinking about lately that you haven't told me?' — and being genuinely surprised by the answer. Curiosity is the antidote to the intimacy-killing belief that you already know everything about your partner.",
+          story: "After twelve years, Daniel thought he knew everything about Aiko. One night he asked, \"What's something you've been thinking about that you haven't told me?\" She told him she'd been dreaming about learning the cello. He had no idea.",
         },
         {
           id: "emotional-risk-taking",
@@ -144,6 +157,7 @@ export default function IntimacyJourney() {
           icon: <Compass className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
           example: "Telling your partner about a dream you've never shared because you feared they'd think it was silly, or admitting 'I sometimes worry I'm not enough for you' — and discovering that the risk creates more closeness, not less.",
+          story: "Zoe finally said it: \"Sometimes I worry I'm not enough for you.\" Her voice shook. Isaac put down his phone and took both her hands. \"You are more than enough. I'm so glad you told me.\" The risk brought them closer, not further.",
         },
         {
           id: "repairing-after-withdrawal",
@@ -152,6 +166,7 @@ export default function IntimacyJourney() {
           icon: <HandHeart className="w-5 h-5 text-sky-500" />,
           color: "sky",
           example: "After a period of emotional distance, saying 'I notice we've been passing each other like roommates this week. I miss us. Can we find 20 minutes tonight to just be together — no screens, no agenda?'",
+          story: "All week, Leah and Marcus had passed each other like roommates. On Friday, Leah said, \"I miss us. Can we take twenty minutes tonight — no screens, no plans?\" They sat on the back step with tea. Twenty minutes turned into two hours.",
         },
       ],
     },
@@ -167,6 +182,7 @@ export default function IntimacyJourney() {
           icon: <TreePine className="w-5 h-5 text-green-600" />,
           color: "green",
           example: "New parents recognizing that their intimacy needs to evolve, not disappear. Creating new forms of connection — a 5-minute hand-hold after the baby sleeps, whispering 'I see how hard you're working' — that honor the season they're in.",
+          story: "With a new baby, date nights were a joke. So Grace and Luis found smaller ways. Five minutes holding hands after the baby fell asleep. A whispered \"I see how hard you're working.\" Their closeness didn't disappear. It just changed shape.",
         },
         {
           id: "repairing-intimacy-ruptures",
@@ -175,6 +191,7 @@ export default function IntimacyJourney() {
           icon: <Puzzle className="w-5 h-5 text-amber-600" />,
           color: "amber",
           example: "After months of emotional distance following a betrayal, one partner says 'I know trust is still rebuilding. I want you to know I'm here for the long work. What would help you feel safer letting me close again?' This isn't a quick fix — it's sustained, patient re-engagement.",
+          story: "Months after the hard season, Ben said gently, \"I know trust is still coming back. I'm here for the long work. What would help you feel safer letting me close?\" Rosa thought about it. Nobody had asked her that before.",
         },
         {
           id: "creating-your-intimacy-language",
@@ -183,6 +200,7 @@ export default function IntimacyJourney() {
           icon: <MessageSquare className="w-5 h-5 text-brand-primary" />,
           color: "purple",
           example: "Over time, couples develop their own shorthand — a specific look that means 'I need you,' a code word for 'I'm feeling vulnerable right now,' a ritual touch that says 'we're okay.' These private symbols create a world that belongs only to you two.",
+          story: "Ellie and Jo have a look that means \"I need you.\" A squeeze of the hand, three times, that means \"we're okay.\" A silly word for \"I'm feeling tender today.\" Nobody else knows these. That's the point.",
         },
         {
           id: "embodied-attunement",
@@ -191,6 +209,7 @@ export default function IntimacyJourney() {
           icon: <Eye className="w-5 h-5 text-sky-500" />,
           color: "sky",
           example: "Noticing that your partner's shoulders are tight and their breathing is shallow, and instead of asking 'what's wrong,' placing a warm hand on their back and saying 'I'm here' — matching what they need before they have to articulate it.",
+          story: "Wei noticed Sophie's shoulders were up by her ears and her breath was short. He didn't ask what was wrong. He just put a warm hand on her back and said, \"I'm here.\" She leaned into him and let out a long breath.",
         },
         {
           id: "integrating-all-dimensions",
@@ -199,6 +218,7 @@ export default function IntimacyJourney() {
           icon: <Layers className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
           example: "A single evening that naturally flows between deep conversation (intellectual), holding each other (physical), sharing gratitude (emotional), and reflecting on what your relationship means (spiritual) — not as separate activities, but as one seamless experience of connection.",
+          story: "It started with a talk about a book, turned into holding each other on the couch, then into sharing what they were grateful for, then into wondering out loud what their marriage means. Mateo and Clara didn't plan any of it. It just flowed.",
         },
         {
           id: "exploring-growing-edges",
@@ -207,6 +227,7 @@ export default function IntimacyJourney() {
           icon: <Compass className="w-5 h-5 text-rose-500" />,
           color: "rose",
           example: "Asking 'Where do we still hold back with each other?' and being willing to hear the answer. Maybe it's talking about money fears, or a sexual desire, or grief that hasn't been fully shared. The edge is where the next level of closeness lives.",
+          story: "\"Where do we still hold back with each other?\" Priya asked. Jordan took a long breath. \"Money,\" they said. \"I get scared and don't say it.\" It was a hard talk. It was also the start of something new.",
         },
       ],
     },

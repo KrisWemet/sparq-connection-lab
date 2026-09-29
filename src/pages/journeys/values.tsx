@@ -32,6 +32,7 @@ export default function ValuesJourney() {
           icon: <Compass className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
           example: "Using a values card sort exercise, you each privately rank what matters most — then compare. One partner discovers 'creativity' ranks higher than 'security,' which explains why they resist rigid routines. The surprise is in what you assumed versus what's actually true.",
+          story: "Zoe and Isaac each sorted a stack of value cards, then compared. Isaac put \"creativity\" above \"security.\" Zoe blinked. \"That's why you hate the budget spreadsheet,\" she laughed. \"It's not that you don't care. It's that it feels like a cage.\"",
         },
         {
           id: "value-origins",
@@ -40,6 +41,7 @@ export default function ValuesJourney() {
           icon: <TreePine className="w-5 h-5 text-amber-600" />,
           color: "amber",
           example: "Through narrative exploration, you discover the stories behind your values. A partner who fiercely values independence may trace it to watching a parent lose themselves in a relationship. Understanding the origin story transforms a conflict point into compassion.",
+          story: "Priya always pushed back when Jordan planned too much for them as a couple. One night she told them why: her mom had disappeared into her dad's life. \"I promised myself I'd never lose me.\" Jordan finally understood. It wasn't about them at all.",
         },
         {
           id: "values-vs-goals",
@@ -48,6 +50,7 @@ export default function ValuesJourney() {
           icon: <Target className="w-5 h-5 text-blue-500" />,
           color: "blue",
           example: "'Buy a house' is a goal. 'Creating security and belonging' is the value beneath it. When couples fight about goals, they're often in violent agreement about values. Values are like compass directions — you never 'arrive' at west.",
+          story: "Maya and Dev kept fighting about buying a house. One night Maya asked, \"What do you actually want the house to give us?\" Dev thought. \"Feeling settled. Like we belong somewhere.\" Maya laughed. \"That's what I want too.\" They'd been agreeing the whole time.",
         },
         {
           id: "lived-values-audit",
@@ -56,6 +59,7 @@ export default function ValuesJourney() {
           icon: <Fingerprint className="w-5 h-5 text-brand-primary" />,
           color: "purple",
           example: "You track how you spend your time, energy, and money for a week, then compare it to your stated values. Someone who says 'family' is their top value but works 70 hours a week faces a powerful moment of truth. This isn't guilt — it's awareness.",
+          story: "Kofi said family was his top value. Then he tracked his week: sixty-two hours at work, four with the kids. He stared at the notebook for a long time. That Friday, he left at five for the first time in a year.",
         },
         {
           id: "partner-value-exploration",
@@ -64,6 +68,7 @@ export default function ValuesJourney() {
           icon: <Users className="w-5 h-5 text-teal-500" />,
           color: "teal",
           example: "You interview each other about peak moments — times you felt most alive and fulfilled. Your partner's eyes light up describing a spontaneous road trip, and you realize 'adventure' isn't frivolous to them — it's essential.",
+          story: "Clara asked Mateo about the time he felt most alive. His eyes lit up telling the story of a road trip where they got lost for a whole day. After twenty years, Clara realized: adventure wasn't a hobby for him. It was part of who he was.",
         },
         {
           id: "finding-alignment",
@@ -72,6 +77,7 @@ export default function ValuesJourney() {
           icon: <Handshake className="w-5 h-5 text-green-500" />,
           color: "green",
           example: "Couples often share 60-80% of their core values without realizing it. By mapping values side by side, you discover that 'loyalty' and 'commitment' are both present, just expressed differently. Same value, different language.",
+          story: "Leah and Marcus mapped their values side by side, expecting a fight. Instead, most of the list matched. Loyalty. Family. Honesty. They just showed them differently. \"Huh,\" Marcus said. \"We're more alike than I thought.\"",
         },
         {
           id: "recognizing-tensions",
@@ -80,6 +86,7 @@ export default function ValuesJourney() {
           icon: <AlertTriangle className="w-5 h-5 text-orange-500" />,
           color: "orange",
           example: "One partner values spontaneity; the other values planning. Rather than framing this as a flaw to fix, you ask: 'What does it say about our relationship that it can hold both of these?' Tension becomes richness.",
+          story: "Jo loves surprises. Ellie loves a plan. For years it felt like a problem. Then Jo asked, \"What does it say about us that our marriage can hold both?\" Ellie smiled. \"That we're pretty good at making room.\"",
         },
       ],
     },
@@ -95,6 +102,7 @@ export default function ValuesJourney() {
           icon: <Scale className="w-5 h-5 text-amber-600" />,
           color: "amber",
           example: "A job offer in another city activates one partner's value of 'growth' and the other's value of 'community.' Instead of debating who's right, you ask: 'What am I willing to be uncomfortable about so we can honor both values?'",
+          story: "The job offer was across the country. For Hannah, it meant growth. For Raj, it meant leaving his whole community. Instead of arguing about who was right, they asked, \"What are we each willing to be uncomfortable about?\" The answer took weeks. But they found it together.",
         },
         {
           id: "values-based-decisions",
@@ -103,6 +111,7 @@ export default function ValuesJourney() {
           icon: <Compass className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
           example: "Before making significant decisions, you ask: 'Which choice moves us closer to what we both value?' A couple who values 'presence' might decline a promotion that requires heavy travel — not because it's wrong, but because it doesn't align.",
+          story: "Daniel was offered a promotion — with travel every week. He and Aiko asked one question: \"Which choice moves us toward what we both care about?\" They both value being present. Daniel said no. It wasn't a sacrifice. It was a choice.",
         },
         {
           id: "living-values-daily",
@@ -111,6 +120,7 @@ export default function ValuesJourney() {
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
           example: "If you value 'connection,' what does that look like on a Tuesday evening? Maybe it's phones away during dinner, asking a real question, or 10 minutes of undistracted conversation before sleep. Small, repeatable behaviors that embody your values.",
+          story: "Rosa and Ben both said they value connection. So what does that look like on a Tuesday? They decided: phones in a basket at dinner, and one real question each. Nothing fancy. Just their values, on a weeknight.",
         },
         {
           id: "shared-rituals",
@@ -119,6 +129,7 @@ export default function ValuesJourney() {
           icon: <Sparkles className="w-5 h-5 text-pink-500" />,
           color: "pink",
           example: "A couple who values 'adventure' creates a monthly mystery date. A couple who values 'gratitude' starts a Sunday evening practice of sharing three things they appreciated that week. Rituals are values made tangible.",
+          story: "Sam and Theo value adventure, so once a month one of them plans a mystery date. Last month it was a night hike. This month it's a tiny taco stand an hour away. The ritual keeps their values alive.",
         },
         {
           id: "values-conversations",
@@ -127,6 +138,7 @@ export default function ValuesJourney() {
           icon: <MessageSquare className="w-5 h-5 text-brand-primary" />,
           color: "violet",
           example: "Instead of 'You don't value family,' trying 'It feels like busyness has been pulling us away from the family time we both want.' The value isn't weaponized — it's a shared aspiration you're both reaching toward.",
+          story: "Nia almost said, \"You don't care about family.\" Instead she said, \"It feels like busy weeks keep pulling us away from the family time we both want.\" Omar nodded. \"You're right. Let's protect Sunday.\"",
         },
         {
           id: "flexibility-vs-nonnegotiables",
@@ -135,6 +147,7 @@ export default function ValuesJourney() {
           icon: <ShieldCheck className="w-5 h-5 text-slate-600" />,
           color: "slate",
           example: "'Honesty' is non-negotiable, but radical transparency about every passing thought isn't the only way to live it. The question becomes: 'Is this a core value I need to protect, or a preferred strategy I can adapt?'",
+          story: "Honesty is a must for Grace. But she realized Luis didn't need to report every passing thought. \"Is this a core value,\" she asked herself, \"or just the way I'd do it?\" Knowing the difference made her kinder — and firmer where it counted.",
         },
       ],
     },
@@ -150,6 +163,7 @@ export default function ValuesJourney() {
           icon: <Telescope className="w-5 h-5 text-blue-600" />,
           color: "blue",
           example: "You each write a detailed description of your ideal shared life in 5 years — not just circumstances, but how you feel, how you treat each other, what a typical day looks like. The overlaps become your shared vision. The differences become conversations.",
+          story: "Wei and Sophie each wrote about their life five years from now — not just where they'd live, but how they'd treat each other. Then they read them out loud. Both had written about slow Sunday breakfasts. That became their north star.",
         },
         {
           id: "values-life-design",
@@ -158,6 +172,7 @@ export default function ValuesJourney() {
           icon: <Fingerprint className="w-5 h-5 text-cyan-500" />,
           color: "cyan",
           example: "You audit your life — budget, calendar, home environment, friendships — against your shared values. A couple who values 'creativity' but spends every evening watching TV recognizes the gap and redesigns their evenings.",
+          story: "Jordan and Priya both said they value creativity. Then they noticed they spent every night watching TV. So they cleared a corner of the living room for paints and a guitar. Most nights now, the TV stays off.",
         },
         {
           id: "evolving-values",
@@ -166,6 +181,7 @@ export default function ValuesJourney() {
           icon: <TreePine className="w-5 h-5 text-green-600" />,
           color: "green",
           example: "The values that brought you together at 25 may not be identical at 40. A couple who once centered on 'achievement' finds 'peace' and 'meaning' rising after becoming parents. An annual values check-in lets you evolve together rather than growing apart.",
+          story: "At twenty-five, Mateo and Clara cared most about getting ahead. Now, with the kids grown, they care most about peace and meaning. Every New Year's Day, they check in: \"What matters most to us now?\" The answer keeps growing with them.",
         },
         {
           id: "legacy-meaning",
@@ -174,6 +190,7 @@ export default function ValuesJourney() {
           icon: <BookOpen className="w-5 h-5 text-amber-700" />,
           color: "amber",
           example: "You ask: 'What will our relationship have contributed when we look back in 30 years?' A couple realizes their legacy isn't the house or career, but the model of love they're giving their children.",
+          story: "\"What will our marriage have given the world in thirty years?\" Anna asked. Kofi thought about it. Not the house. Not their jobs. \"Our kids will know what it looks like when two people keep choosing each other.\"",
         },
         {
           id: "values-under-pressure",
@@ -182,6 +199,7 @@ export default function ValuesJourney() {
           icon: <Flame className="w-5 h-5 text-red-500" />,
           color: "red",
           example: "During a health crisis, a partner who values 'patience' catches themselves snapping — and instead of shame, practices self-compassion and recommits. Couples develop shared language: 'I'm off my values right now and I need help getting back.'",
+          story: "During her mom's illness, Leah snapped at Marcus — and patience was one of her top values. She felt the shame rise. Instead of spiraling, she said, \"I'm off track. Help me get back.\" Marcus squeezed her hand. \"You've got a lot on you. We'll get there.\"",
         },
         {
           id: "values-aligned-partners",
@@ -190,6 +208,7 @@ export default function ValuesJourney() {
           icon: <Crown className="w-5 h-5 text-yellow-600" />,
           color: "yellow",
           example: "Values-aligned partnership means gentle accountability. When one partner drifts from what they care about, the other notices and says, 'I know connection matters to you — how can I help you get back to that?' Partners sculpting each other toward who they truly want to be.",
+          story: "Dev noticed Maya hadn't called her sister in weeks — and family mattered so much to her. He didn't lecture. He said, \"I know connection matters to you. Want me to take the dishes so you can call her?\" She hugged him and picked up the phone.",
         },
       ],
     },
