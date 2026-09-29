@@ -22,7 +22,7 @@ const dateIdeas = [
     cost: "Low",
     rating: 4.8,
     saved: false,
-    image: "https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?auto=format&fit=crop&w=800&h=500"
+    image: "/images/dates/stargazing.jpg"
   },
   {
     id: 2,
@@ -33,7 +33,7 @@ const dateIdeas = [
     cost: "Medium",
     rating: 4.6,
     saved: true,
-    image: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&h=500"
+    image: "/images/dates/cooking.jpg"
   },
   {
     id: 3,
@@ -44,7 +44,7 @@ const dateIdeas = [
     cost: "High",
     rating: 4.9,
     saved: false,
-    image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=800&h=500"
+    image: "/images/dates/wellness.jpg"
   },
   {
     id: 4,
@@ -55,7 +55,7 @@ const dateIdeas = [
     cost: "Free",
     rating: 4.7,
     saved: false,
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&h=500"
+    image: "/images/dates/beach.jpg"
   },
   {
     id: 5,
@@ -66,7 +66,7 @@ const dateIdeas = [
     cost: "Low",
     rating: 4.5,
     saved: true,
-    image: "https://images.unsplash.com/photo-1610890716171-6b1bb98ffd09?auto=format&fit=crop&w=800&h=500"
+    image: "/images/dates/board-games.jpg"
   }
 ];
 

@@ -14,24 +14,15 @@ interface DateIdea {
   image?: string;
 }
 
+// Sparq's own warm, people-free date imagery (public/images/dates).
+const img = (name: string) => `/images/dates/${name}.jpg`;
 const categoryImages: Record<string, string[]> = {
-  Outdoor: [
-    'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&h=500',
-    'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&h=500',
-  ],
-  Indoor: [
-    'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&h=500',
-    'https://images.unsplash.com/photo-1610890716171-6b1bb98ffd09?auto=format&fit=crop&w=800&h=500',
-  ],
-  Food: [
-    'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=800&h=500',
-  ],
-  Adventure: [
-    'https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=800&h=500',
-  ],
-  Romantic: [
-    'https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=800&h=500',
-  ],
+  Outdoor: [img('picnic'), img('beach'), img('stargazing')],
+  Indoor: [img('cooking'), img('board-games'), img('gallery')],
+  Food: [img('dinner'), img('cooking')],
+  Adventure: [img('adventure')],
+  Romantic: [img('dinner'), img('stargazing')],
+  Wellness: [img('wellness')],
 };
 
 function getImageForCategory(category: string): string {
