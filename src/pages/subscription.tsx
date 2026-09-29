@@ -126,7 +126,7 @@ const journeys = [
     description: "Strengthen your emotional and physical connection",
     price: 4.99,
     steps: 7,
-    image: "/images/journeys/intimacy.png",
+    image: "/images/journeys/intimacy.jpg",
     popular: false
   },
   {
@@ -135,7 +135,7 @@ const journeys = [
     description: "Create a foundation of security and reliability",
     price: 3.99,
     steps: 4,
-    image: "/images/journeys/trust-rebuilding.png",
+    image: "/images/journeys/trust-rebuilding.jpg",
     popular: false
   },
   {

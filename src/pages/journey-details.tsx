@@ -162,7 +162,7 @@ const journeys = [
     duration: "5 weeks",
     category: "Connection",
     sequence: 4,
-    image: "/images/journeys/intimacy.png",
+    image: "/images/journeys/intimacy.jpg",
     psychology: [
       "Sternberg's Triangular Theory of Love",
       "Sensate Focus Techniques",
@@ -353,7 +353,7 @@ const journeys = [
     description: "Strengthen your bond through fun, laughter and lighthearted activities",
     duration: "2 weeks",
     category: "Fun",
-    image: "/images/journeys/fantasy-exploration.png",
+    image: "/images/journeys/fantasy-exploration.jpg",
     psychology: [
       "Positive Psychology",
       "Play Therapy Concepts",
@@ -449,7 +449,7 @@ const journeys = [
     description: "Discover and communicate desires, fantasies, and preferences in a safe, supportive space",
     duration: "3 weeks",
     category: "Connection",
-    image: "/images/journeys/sexual-intimacy.png",
+    image: "/images/journeys/sexual-intimacy.jpg",
     psychology: [
       "Erotic Intelligence Research",
       "Cognitive Flexibility",
