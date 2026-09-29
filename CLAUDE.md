@@ -508,7 +508,7 @@ import { Button } from "../../components/ui/button";
 ## Known Technical Debt
 
 1. **Supabase free tier auto-pauses** after ~7 days idle — the backend disappears while Vercel still serves the frontend. See `CURRENT_STATE.md`.
-2. **Missing Supabase env vars crash every page.** `src/lib/supabase.ts` calls `createClient` at import time; with no `NEXT_PUBLIC_SUPABASE_URL` every route 500s. Set env vars before building.
+2. **Missing Supabase env vars disable the backend (no longer a crash).** `src/lib/supabase.ts` falls back to a never-resolving placeholder host and exports `isSupabaseConfigured`, so pages render and data calls fail fast instead of every route 500ing. Still set the env vars before any real build.
 3. **Unused shadcn/ui primitives** remain in `src/components/ui/` by convention — harmless, leave them.
 4. **`run_dev.py` targets port 8085**, but Next.js defaults to 3000 — use `npm run dev`.
 5. **Contrast rule (decided 2026-09, option 2): clay for fills and large text only.** Small clay-colored text uses `text-brand-hover` (`#A85539`, 4.6:1 on linen); `brand-primary` text is allowed only at `text-2xl`+ or `text-xl` bold, and for icons. White text on clay fills must be bold and ≥14px (bold ≥14px counts as WCAG large text, which needs 3:1; white on clay is 3.8:1) — the `Button` default/destructive variants are bold, and hand-built clay buttons follow the same rule.

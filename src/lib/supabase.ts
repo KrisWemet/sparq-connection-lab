@@ -1,12 +1,23 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Environment variables should be set in .env.local
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const envUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const envAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables');
+/** False when the Supabase env vars are missing (misconfigured build or preview). */
+export const isSupabaseConfigured = Boolean(envUrl && envAnonKey);
+
+if (!isSupabaseConfigured) {
+  console.error(
+    'Missing NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY — Supabase calls will fail until they are set.'
+  );
 }
+
+// createClient throws on an empty URL at import time, which used to 500 every
+// page. Fall back to a reserved never-resolving host so pages still render and
+// data calls fail fast (and get handled) instead.
+const supabaseUrl = envUrl || 'https://supabase-not-configured.invalid';
+const supabaseAnonKey = envAnonKey || 'missing-anon-key';
 
 // Create a single supabase client for the entire app
 // Use a simple in-process lock instead of Navigator LockManager to avoid
