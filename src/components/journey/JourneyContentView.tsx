@@ -587,7 +587,7 @@ export function JourneyContentView({
             </div>
             <h2 className="text-3xl font-serif font-bold text-brand-taupe mb-4">Rest & Reflect</h2>
             <p className="text-zinc-600 text-lg leading-relaxed max-w-sm mb-8">
-              You've completed your session for today. 30 minutes of thoughtful focus builds a stronger foundation than rushing through. Let today's concepts sink in, and come back tomorrow to continue your growth!
+              You&apos;ve completed your session for today. 30 minutes of thoughtful focus builds a stronger foundation than rushing through. Let today&apos;s concepts sink in, and come back tomorrow to continue your growth!
             </p>
             <Button
               onClick={() => router.push('/journeys')}

@@ -8,8 +8,8 @@ import { CompletionView } from "@/components/quiz/CompletionView";
 import { RelationshipHealthQuiz } from "@/components/quiz/RelationshipHealthQuiz";
 import { toast } from "sonner";
 import { useRouter } from 'next/router';
-import { useAuth } from "@/lib/auth";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/lib/auth-context";
+import { supabase } from "@/lib/supabase";
 import { useSubscription } from "@/lib/subscription-provider";
 import { getEffectiveTier, getTrialDaysRemaining, isInTrial } from "@/lib/product";
 import Link from "next/link";
@@ -190,7 +190,7 @@ export default function Quiz() {
         {showTrialBanner && (
           <div className="mb-4 rounded-xl bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-100 px-4 py-3 flex items-center justify-between gap-3">
             <p className="text-sm text-violet-700 leading-snug">
-              <span className="font-medium">{trialDaysLeft} day{trialDaysLeft !== 1 ? 's' : ''} left</span> of your free trial — you're getting premium questions right now.
+              <span className="font-medium">{trialDaysLeft} day{trialDaysLeft !== 1 ? 's' : ''} left</span> of your free trial — you&apos;re getting premium questions right now.
             </p>
             <Link
               href="/subscription"

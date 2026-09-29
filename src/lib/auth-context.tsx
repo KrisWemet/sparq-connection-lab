@@ -57,11 +57,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Initial session and user fetch
   useEffect(() => {
+    let cancelled = false;
+    let signOutTimer: ReturnType<typeof setTimeout> | null = null;
+
+    // Subscribe before reading the initial session so the listener exists on
+    // every path (including stale-session recovery) and is torn down on unmount.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
+      if (cancelled) return;
+
+      // Skip INITIAL_SESSION — handled by getSession() below
+      if (event === 'INITIAL_SESSION') return;
+
+      // Cancel any pending sign-out if a new session arrives
+      if (signOutTimer) {
+        clearTimeout(signOutTimer);
+        signOutTimer = null;
+      }
+
+      setSession(newSession);
+
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        if (newSession?.user) {
+          await fetchUserData(newSession.user);
+        }
+      } else if (event === 'SIGNED_OUT') {
+        // Debounce: Supabase fires SIGNED_OUT → SIGNED_IN during token
+        // refresh. Wait briefly to see if SIGNED_IN follows before clearing state.
+        signOutTimer = setTimeout(() => {
+          setUser(null);
+          setProfile(null);
+          signOutTimer = null;
+        }, 500);
+      } else if (!newSession && event === 'USER_UPDATED') {
+        clearLocalAuthState();
+      }
+    });
+
     async function getInitialSession() {
       setLoading(true);
 
-      // Get the current session
       const { data: { session: initialSession }, error: sessionError } = await supabase.auth.getSession();
+      if (cancelled) return;
 
       if (sessionError) {
         if (isStaleSessionError(sessionError)) {
@@ -81,49 +117,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await fetchUserData(initialSession.user);
       }
 
-      setLoading(false);
-
-      // Set up auth state change listener
-      let signOutTimer: ReturnType<typeof setTimeout> | null = null;
-
-      const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
-        console.log('Auth state change:', event);
-
-        // Skip INITIAL_SESSION — already handled by getSession() above
-        if (event === 'INITIAL_SESSION') return;
-
-        // Cancel any pending sign-out if a new session arrives
-        if (signOutTimer) {
-          clearTimeout(signOutTimer);
-          signOutTimer = null;
-        }
-
-        setSession(newSession);
-
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          if (newSession?.user) {
-            await fetchUserData(newSession.user);
-          }
-        } else if (event === 'SIGNED_OUT') {
-          // Debounce: Supabase fires SIGNED_OUT → SIGNED_IN during token
-          // refresh. Wait briefly to see if SIGNED_IN follows before clearing state.
-          signOutTimer = setTimeout(() => {
-            setUser(null);
-            setProfile(null);
-            signOutTimer = null;
-          }, 500);
-        } else if (!newSession && event === 'USER_UPDATED') {
-          clearLocalAuthState();
-        }
-      });
-
-      // Cleanup subscription on unmount
-      return () => {
-        subscription.unsubscribe();
-      };
+      if (!cancelled) setLoading(false);
     }
 
-    getInitialSession();
+    getInitialSession().catch((err) => {
+      console.error('Initial session load failed:', err);
+      if (!cancelled) setLoading(false);
+    });
+
+    return () => {
+      cancelled = true;
+      if (signOutTimer) clearTimeout(signOutTimer);
+      subscription.unsubscribe();
+    };
+    // Mount-only: the helpers used here only call stable state setters.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Fetch user profile data
