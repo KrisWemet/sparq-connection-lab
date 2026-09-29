@@ -218,7 +218,7 @@ export function Day14Graduation() {
 
                         {/* What Peter Noticed */}
                         <div className="rounded-2xl bg-brand-linen border border-brand-primary/10 p-4">
-                            <p className="text-xs font-bold text-brand-primary uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <p className="text-xs font-bold text-brand-hover uppercase tracking-wider mb-2 flex items-center gap-1.5">
                                 <Sparkles size={12} />
                                 What Peter Noticed
                             </p>

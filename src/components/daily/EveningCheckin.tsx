@@ -67,8 +67,8 @@ export function EveningCheckin({ sessionId, morningAction, journeyTitle, trigger
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="flex items-center gap-2"
         >
-          <Moon size={16} className="text-brand-primary" />
-          <span className="text-xs font-semibold tracking-widest uppercase text-brand-primary">
+          <Moon size={16} className="text-brand-hover" />
+          <span className="text-xs font-semibold tracking-widest uppercase text-brand-hover">
             Evening Check-in
           </span>
         </motion.div>
@@ -104,7 +104,7 @@ export function EveningCheckin({ sessionId, morningAction, journeyTitle, trigger
 
               {/* Morning action reminder */}
               <div className="bg-brand-parchment rounded-3xl p-5 border border-brand-primary/10">
-                <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
+                <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
                   Today&apos;s Practice
                 </p>
                 <p className="font-serif italic text-brand-espresso text-[15px] leading-relaxed">

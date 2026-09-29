@@ -247,7 +247,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
         {question.index === 1 && !isBridging && (
           <div className="space-y-4">
             <div>
-              <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-2">How old are you?</p>
+              <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-2">How old are you?</p>
               <div className="flex flex-col gap-2">
                 {['Under 25', '25–34', '35–44', '45+'].map(label => (
                   <button
@@ -265,7 +265,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
               </div>
             </div>
             <div>
-              <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-2">Your pronouns</p>
+              <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-2">Your pronouns</p>
               <div className="flex flex-col gap-2">
                 {['She / Her', 'He / Him', 'They / Them'].map(label => (
                   <button
@@ -334,7 +334,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
 
         {question.index === 2 && !isBridging && awaitingPartnerName && (
           <div className="flex flex-col gap-3">
-            <label className="text-xs font-semibold tracking-widest uppercase text-brand-primary">
+            <label className="text-xs font-semibold tracking-widest uppercase text-brand-hover">
               Partner&apos;s name
             </label>
             <input

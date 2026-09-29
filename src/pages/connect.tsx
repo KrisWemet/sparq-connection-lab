@@ -69,7 +69,7 @@ export default function ConnectPage() {
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <span className="text-xs font-semibold tracking-widest uppercase text-brand-primary">
+            <span className="text-xs font-semibold tracking-widest uppercase text-brand-hover">
               Connect
             </span>
             <div className="w-10 h-10" aria-hidden="true" />
@@ -83,7 +83,7 @@ export default function ConnectPage() {
             transition={{ duration: 0.24 }}
             className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6"
           >
-            <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
+            <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
               Connect
             </p>
             <h1 className="font-serif italic text-2xl leading-snug text-brand-text-primary">

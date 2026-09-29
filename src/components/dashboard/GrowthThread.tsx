@@ -14,10 +14,10 @@ interface GrowthEntry {
 
 const TYPE_CONFIG: Record<GrowthEntry['type'], { icon: typeof Sparkles; color: string; bg: string }> = {
   milestone: { icon: Star, color: 'text-brand-sand', bg: 'bg-brand-sand/15' },
-  breakthrough: { icon: Sparkles, color: 'text-brand-primary', bg: 'bg-brand-primary/10' },
+  breakthrough: { icon: Sparkles, color: 'text-brand-hover', bg: 'bg-brand-primary/10' },
   pattern: { icon: TrendingUp, color: 'text-brand-growth', bg: 'bg-brand-growth/15' },
   mirror: { icon: Eye, color: 'text-brand-text-secondary', bg: 'bg-brand-parchment' },
-  pinned: { icon: Pin, color: 'text-brand-primary', bg: 'bg-brand-primary/5' },
+  pinned: { icon: Pin, color: 'text-brand-hover', bg: 'bg-brand-primary/5' },
 };
 
 function formatDate(dateStr: string): string {
@@ -66,7 +66,7 @@ export function GrowthThread() {
       transition={{ duration: 0.4, delay: 0.2 }}
       className="space-y-3"
     >
-      <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary pl-1">
+      <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover pl-1">
         Growth Thread
       </p>
 
@@ -120,7 +120,7 @@ export function GrowthThread() {
         {entries.length > 3 && (
           <button
             onClick={() => setExpanded(!expanded)}
-            className="w-full px-4 py-3 border-t border-brand-primary/10 flex items-center justify-center gap-1 text-sm text-brand-primary font-medium hover:bg-brand-primary/5 transition-colors"
+            className="w-full px-4 py-3 border-t border-brand-primary/10 flex items-center justify-center gap-1 text-sm text-brand-hover font-medium hover:bg-brand-primary/5 transition-colors"
           >
             {expanded ? 'Show less' : `See all ${entries.length}`}
             <ChevronDown

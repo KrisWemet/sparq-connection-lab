@@ -180,7 +180,7 @@ export default function ProfilePage() {
             <ChevronLeft className="h-5 w-5 text-brand-primary" />
           </button>
 
-          <span className="text-xs font-semibold uppercase tracking-widest text-brand-primary">
+          <span className="text-xs font-semibold uppercase tracking-widest text-brand-hover">
             Profile
           </span>
 
@@ -227,7 +227,7 @@ export default function ProfilePage() {
                 className="mt-5 space-y-3 text-left"
               >
                 <div>
-                  <label className="mb-1 block text-xs font-semibold uppercase tracking-widest text-brand-primary">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-widest text-brand-hover">
                     Your Name
                   </label>
                   <input
@@ -241,7 +241,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs font-semibold uppercase tracking-widest text-brand-primary">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-widest text-brand-hover">
                     Partner&apos;s Name
                   </label>
                   <input
@@ -255,7 +255,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs font-semibold uppercase tracking-widest text-brand-primary">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-widest text-brand-hover">
                     Bio
                   </label>
                   <textarea
@@ -272,7 +272,7 @@ export default function ProfilePage() {
                   <button
                     type="button"
                     onClick={() => setEditMode(false)}
-                    className="flex-1 rounded-2xl border border-brand-primary py-3 text-sm font-medium text-brand-primary"
+                    className="flex-1 rounded-2xl border border-brand-primary py-3 text-sm font-medium text-brand-hover"
                   >
                     Cancel
                   </button>
@@ -295,7 +295,7 @@ export default function ProfilePage() {
             animate="visible"
             className="space-y-3"
           >
-            <p className="px-1 text-xs font-semibold uppercase tracking-widest text-brand-primary">
+            <p className="px-1 text-xs font-semibold uppercase tracking-widest text-brand-hover">
               Secondary Access
             </p>
 

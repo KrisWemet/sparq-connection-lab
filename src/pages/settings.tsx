@@ -145,7 +145,7 @@ export default function SettingsPage() {
 
   // Section label above a card
   const SectionLabel = ({ children }: { children: React.ReactNode }) => (
-    <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary px-1 mb-2">
+    <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover px-1 mb-2">
       {children}
     </p>
   );
@@ -189,7 +189,7 @@ export default function SettingsPage() {
         >
           <ChevronLeft className="w-5 h-5 text-brand-primary" />
         </button>
-        <span className="text-xs font-semibold tracking-widest uppercase text-brand-primary">
+        <span className="text-xs font-semibold tracking-widest uppercase text-brand-hover">
           Settings
         </span>
         {/* Spacer to center title */}
@@ -205,7 +205,7 @@ export default function SettingsPage() {
               label="Email"
               secondary={user?.email || '—'}
               right={
-                <button className="text-brand-primary text-sm font-medium">
+                <button className="text-brand-hover text-sm font-medium">
                   Change
                 </button>
               }
@@ -214,7 +214,7 @@ export default function SettingsPage() {
               label="Password"
               secondary="••••••••"
               right={
-                <button className="text-brand-primary text-sm font-medium">
+                <button className="text-brand-hover text-sm font-medium">
                   Update
                 </button>
               }
@@ -327,7 +327,7 @@ export default function SettingsPage() {
               className={`w-full rounded-2xl py-3 text-sm font-medium transition-colors ${
                 subscription.tier === "free"
                   ? "bg-brand-primary text-white hover:bg-brand-hover"
-                  : "border border-brand-primary text-brand-primary hover:bg-brand-primary/5"
+                  : "border border-brand-primary text-brand-hover hover:bg-brand-primary/5"
               }`}
             >
               {subscription.tier === "free" ? "Explore Premium" : "Manage Subscription"}
@@ -340,7 +340,7 @@ export default function SettingsPage() {
           <div className="flex flex-col gap-3">
             <button
               onClick={handleLogout}
-              className="w-full border border-brand-primary text-brand-primary rounded-2xl py-3 text-sm font-medium hover:bg-brand-primary/5 transition-colors"
+              className="w-full border border-brand-primary text-brand-hover rounded-2xl py-3 text-sm font-medium hover:bg-brand-primary/5 transition-colors"
             >
               Sign out
             </button>

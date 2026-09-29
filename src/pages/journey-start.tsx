@@ -204,9 +204,9 @@ export default function JourneyStart() {
                   className="bg-brand-linen p-4 rounded-lg cursor-pointer hover:bg-brand-primary/10 transition-colors"
                   onClick={handleShowMetaphor}
                 >
-                  <h3 className="font-medium text-brand-primary mb-2">{metaphor.title}</h3>
+                  <h3 className="font-medium text-brand-hover mb-2">{metaphor.title}</h3>
                   <p className="text-sm text-gray-600">{metaphor.description}</p>
-                  <p className="text-xs text-brand-primary mt-2 font-medium">Click to experience the visualization</p>
+                  <p className="text-xs text-brand-hover mt-2 font-medium">Click to experience the visualization</p>
                 </div>
                 
                 <div 
@@ -215,7 +215,7 @@ export default function JourneyStart() {
                 >
                   <h3 className="font-medium text-brand-espresso mb-2">Future Vision Journey</h3>
                   <p className="text-sm text-gray-600">Envision the future of your relationship as you apply the skills from this journey.</p>
-                  <p className="text-xs text-brand-primary mt-2 font-medium">Click to experience the future pacing</p>
+                  <p className="text-xs text-brand-hover mt-2 font-medium">Click to experience the future pacing</p>
                 </div>
               </div>
             </CardContent>

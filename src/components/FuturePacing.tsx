@@ -42,11 +42,11 @@ export function FuturePacing({
             <h3 className="text-lg font-medium text-brand-espresso">{title}</h3>
           </div>
           
-          <p className="text-sm text-brand-primary">{description}</p>
+          <p className="text-sm text-brand-hover">{description}</p>
           
           {activeTimeframe === null ? (
             <div className="space-y-3 py-2">
-              <p className="text-xs text-center text-brand-primary italic">
+              <p className="text-xs text-center text-brand-hover italic">
                 How far ahead should we look first?
               </p>
               
@@ -141,7 +141,7 @@ export function FuturePacing({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="text-center text-sm text-brand-primary pt-2"
+              className="text-center text-sm text-brand-hover pt-2"
             >
               <p>
                 Every small step you take this week brings this picture a little closer.

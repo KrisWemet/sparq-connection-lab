@@ -145,7 +145,7 @@ export default function Journeys() {
                 <BookOpen className="h-5 w-5" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary">
+                <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover">
                   current practice
                 </p>
                 <h2 className="mt-2 text-xl font-semibold text-brand-taupe">
@@ -161,7 +161,7 @@ export default function Journeys() {
                 )}
                 <Link
                   href={`/journeys/${activeJourney.id}`}
-                  className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-primary hover:text-brand-hover"
+                  className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-hover hover:text-brand-espresso"
                 >
                   Continue {activeJourney.title}
                   <ArrowRight className="h-4 w-4" />
@@ -251,7 +251,7 @@ export default function Journeys() {
 
                     {/* Card text */}
                     <div className="p-4 bg-white relative z-20">
-                      <p className="text-[10px] font-bold text-brand-primary uppercase tracking-[0.2em] mb-1.5">
+                      <p className="text-[10px] font-bold text-brand-hover uppercase tracking-[0.2em] mb-1.5">
                         {journey.category}
                       </p>
                       <h3 className="font-bold text-brand-taupe text-base leading-tight line-clamp-2 mix-blend-hard-light">

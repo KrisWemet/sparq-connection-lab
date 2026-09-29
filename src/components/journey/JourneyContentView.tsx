@@ -545,7 +545,7 @@ export function JourneyContentView({
 
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <button className="text-sm font-medium text-zinc-500 hover:text-brand-primary transition-colors whitespace-nowrap">
+                <button className="text-sm font-medium text-zinc-500 hover:text-brand-hover transition-colors whitespace-nowrap">
                   Leave Journey
                 </button>
               </AlertDialogTrigger>
@@ -572,7 +572,7 @@ export function JourneyContentView({
           <div className="rounded-[1.5rem] bg-white/70 backdrop-blur-md border border-white p-5 shadow-sm">
             <div className="flex justify-between text-sm mb-3">
               <span className="font-semibold text-brand-taupe">Day {currentDay} of {totalDays}</span>
-              <span className="text-brand-primary font-medium">{Math.round(progress)}%</span>
+              <span className="text-brand-hover font-medium">{Math.round(progress)}%</span>
             </div>
             <Progress value={progress} className="h-1.5 bg-brand-primary/10" />
           </div>
@@ -614,7 +614,7 @@ export function JourneyContentView({
                 {currentDayContent.conceptIcon}
               </div>
               <div>
-                <p className="text-xs font-semibold text-brand-primary uppercase tracking-widest">Day {currentDay}</p>
+                <p className="text-xs font-semibold text-brand-hover uppercase tracking-widest">Day {currentDay}</p>
                 <h2 className="text-lg font-bold text-brand-taupe">{currentDayContent.title}</h2>
               </div>
             </motion.div>
@@ -670,7 +670,7 @@ export function JourneyContentView({
                   <div className="w-8 h-8 rounded-full bg-brand-primary/10 flex items-center justify-center">
                     <Pencil className="w-4 h-4 text-brand-primary" />
                   </div>
-                  <p className="text-xs font-bold text-brand-primary uppercase tracking-[0.2em]">Activity</p>
+                  <p className="text-xs font-bold text-brand-hover uppercase tracking-[0.2em]">Activity</p>
                 </div>
                 <h3 className="text-lg font-bold text-brand-taupe">{currentDayContent.activity.title}</h3>
               </div>
@@ -690,7 +690,7 @@ export function JourneyContentView({
                 {/* Reflection questions */}
                 {currentDayContent.activity.reflectionQuestions.length > 0 && (
                   <div className="mt-4 space-y-4">
-                    <p className="text-xs font-semibold text-brand-primary uppercase tracking-widest">
+                    <p className="text-xs font-semibold text-brand-hover uppercase tracking-widest">
                       Reflection
                     </p>
                     {currentDayContent.activity.reflectionQuestions.map((question, index) => (
@@ -712,7 +712,7 @@ export function JourneyContentView({
                   <motion.p
                     initial={{ opacity: 0, y: -4 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-sm text-brand-primary bg-brand-primary/5 rounded-xl px-4 py-3"
+                    className="text-sm text-brand-hover bg-brand-primary/5 rounded-xl px-4 py-3"
                   >
                     {validationError}
                   </motion.p>

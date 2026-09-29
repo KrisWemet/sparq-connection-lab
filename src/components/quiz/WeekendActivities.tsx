@@ -26,7 +26,7 @@ export function WeekendActivities({ activities }: WeekendActivitiesProps) {
             <div key={activity.id} className="bg-white rounded-2xl p-6 shadow-sm">
               <div className="flex justify-between items-start mb-2">
                 <h3 className="text-xl font-semibold">{activity.title}</h3>
-                <span className="text-sm text-primary bg-primary/10 px-3 py-1 rounded-full">
+                <span className="text-sm text-brand-hover bg-primary/10 px-3 py-1 rounded-full">
                   {activity.modality}
                 </span>
               </div>

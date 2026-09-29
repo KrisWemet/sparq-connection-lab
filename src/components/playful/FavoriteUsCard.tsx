@@ -107,7 +107,7 @@ export function FavoriteUsCard({ prompt, dateKey, surface }: FavoriteUsCardProps
     >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="mb-2 text-xs font-semibold tracking-widest uppercase text-brand-primary/80">
+          <p className="mb-2 text-xs font-semibold tracking-widest uppercase text-brand-hover">
             Favorite Us
           </p>
           <p className="mb-2 text-sm text-brand-taupe">
@@ -118,7 +118,7 @@ export function FavoriteUsCard({ prompt, dateKey, surface }: FavoriteUsCardProps
           </p>
         </div>
         <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[18px] border border-brand-primary/10 bg-white/80 shadow-sm">
-          <Heart size={16} className="text-brand-primary" />
+          <Heart size={16} className="text-brand-hover" />
         </div>
       </div>
 
@@ -146,13 +146,13 @@ export function FavoriteUsCard({ prompt, dateKey, surface }: FavoriteUsCardProps
         <button
           onClick={handleSave}
           disabled={!draft.trim()}
-          className="rounded-[22px] border border-brand-primary/15 bg-white px-4 py-3 text-sm font-semibold text-brand-primary transition-colors hover:bg-brand-primary/5 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-[22px] border border-brand-primary/15 bg-white px-4 py-3 text-sm font-semibold text-brand-hover transition-colors hover:bg-brand-primary/5 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {saved ? 'Kept for today' : 'Keep this note'}
         </button>
         <button
           onClick={handleSend}
-          className="inline-flex items-center justify-center gap-2 rounded-[22px] border border-brand-primary/12 bg-transparent px-4 py-3 text-sm font-semibold text-brand-taupe transition-colors hover:bg-white/60 hover:text-brand-primary"
+          className="inline-flex items-center justify-center gap-2 rounded-[22px] border border-brand-primary/12 bg-transparent px-4 py-3 text-sm font-semibold text-brand-taupe transition-colors hover:bg-white/60 hover:text-brand-hover"
         >
           <Send size={14} />
           {sendState === 'copied' ? 'Copied short note' : sendState === 'shared' ? 'Sent' : 'Copy short note'}

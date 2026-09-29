@@ -85,11 +85,11 @@ export default function Translator() {
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={() => router.push('/connect')}
-            className="text-sm text-brand-primary hover:text-brand-primary font-semibold"
+            className="text-sm text-brand-hover hover:text-brand-espresso font-semibold"
           >
             ← Back to Connect
           </button>
-          <span className="text-xs uppercase tracking-wide text-brand-primary/80 font-semibold">
+          <span className="text-xs uppercase tracking-wide text-brand-hover font-semibold">
             Translator
           </span>
         </div>
@@ -146,7 +146,7 @@ export default function Translator() {
               Peter’s suggested rephrase
             </h2>
             {suggestion && (
-              <span className="text-xs text-brand-primary/80 font-medium">Ready</span>
+              <span className="text-xs text-brand-hover font-medium">Ready</span>
             )}
           </div>
           <div className="min-h-[96px] rounded-xl border border-brand-primary/10 bg-brand-linen p-4 text-gray-700 leading-relaxed">

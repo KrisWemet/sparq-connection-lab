@@ -61,7 +61,7 @@ export default function Home() {
 
           <div className="max-w-4xl mx-auto text-center relative z-10">
             <h1 className="text-5xl md:text-6xl font-serif text-zinc-900 mb-6 tracking-tight leading-tight">
-              Become a <span className="text-brand-primary italic">steadier partner</span>, one small day at a time.
+              Become a <span className="text-brand-hover italic">steadier partner</span>, one small day at a time.
             </h1>
             <p className="text-lg md:text-xl text-zinc-500 mb-12 max-w-2xl mx-auto leading-relaxed">
               Sparq starts with you. Build calm habits. Say the true thing. Show up better at home. Invite your partner later if that helps.
@@ -101,7 +101,7 @@ export default function Home() {
                 onClick={() => handleShowMetaphor('bridge')}
               >
                 <div className="w-12 h-12 bg-brand-primary/10 rounded-2xl shadow-sm flex items-center justify-center mb-6">
-                  <span className="text-brand-primary font-bold text-lg">1</span>
+                  <span className="text-brand-hover font-bold text-lg">1</span>
                 </div>
                 <h3 className="text-xl font-bold text-black mb-3 tracking-tight">
                   Change the part you control
@@ -109,7 +109,7 @@ export default function Home() {
                 <p className="text-zinc-500 mb-8 leading-relaxed">
                   Stop doing the same hurtful loop. Learn to slow down, listen, and say what is true.
                 </p>
-                <p className="font-semibold text-brand-primary group-hover:text-brand-hover transition-colors">
+                <p className="font-semibold text-brand-hover group-hover:text-brand-espresso transition-colors">
                   Experience Bridge <span aria-hidden="true">&rarr;</span>
                 </p>
               </div>
@@ -119,7 +119,7 @@ export default function Home() {
                 onClick={() => handleShowMetaphor('flower')}
               >
                 <div className="w-12 h-12 bg-brand-primary/10 rounded-2xl shadow-sm flex items-center justify-center mb-6">
-                  <span className="text-brand-primary font-bold text-lg">2</span>
+                  <span className="text-brand-hover font-bold text-lg">2</span>
                 </div>
                 <h3 className="text-xl font-bold text-black mb-3 tracking-tight">
                   Practice closeness in small moments
@@ -127,7 +127,7 @@ export default function Home() {
                 <p className="text-zinc-500 mb-8 leading-relaxed">
                   Closeness grows in small safe moments. Sparq helps you build those moments, even if your partner is not here yet.
                 </p>
-                <p className="font-semibold text-brand-primary group-hover:text-brand-hover transition-colors">
+                <p className="font-semibold text-brand-hover group-hover:text-brand-espresso transition-colors">
                   Experience Bloom <span aria-hidden="true">&rarr;</span>
                 </p>
               </div>
@@ -137,7 +137,7 @@ export default function Home() {
                 onClick={() => handleShowMetaphor('river')}
               >
                 <div className="w-12 h-12 bg-brand-primary/10 rounded-2xl shadow-sm flex items-center justify-center mb-6">
-                  <span className="text-brand-primary font-bold text-lg">3</span>
+                  <span className="text-brand-hover font-bold text-lg">3</span>
                 </div>
                 <h3 className="text-xl font-bold text-black mb-3 tracking-tight">
                   Bring a calmer self into conflict
@@ -145,7 +145,7 @@ export default function Home() {
                 <p className="text-zinc-500 mb-8 leading-relaxed">
                   Fights happen. Learn to pause, repair, and come back kinder.
                 </p>
-                <p className="font-semibold text-brand-primary group-hover:text-brand-hover transition-colors">
+                <p className="font-semibold text-brand-hover group-hover:text-brand-espresso transition-colors">
                   Experience Flow <span aria-hidden="true">&rarr;</span>
                 </p>
               </div>

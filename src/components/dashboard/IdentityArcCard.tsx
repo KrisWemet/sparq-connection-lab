@@ -58,7 +58,7 @@ export function IdentityArcCard() {
       {/* Organic blur accent */}
       <div className="absolute top-0 right-0 w-28 h-28 bg-brand-primary/6 rounded-full blur-2xl pointer-events-none" />
 
-      <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-4">
+      <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-4">
         Your arc
       </p>
 
@@ -97,10 +97,10 @@ export function IdentityArcCard() {
               <span
                 className={`text-[10px] font-semibold tracking-wide transition-colors ${
                   isCurrent
-                    ? 'text-brand-primary'
+                    ? 'text-brand-hover'
                     : isPast
-                    ? 'text-brand-primary/60'
-                    : 'text-brand-primary/25'
+                    ? 'text-brand-hover'
+                    : 'text-brand-hover'
                 }`}
               >
                 {stage.label}

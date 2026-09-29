@@ -136,7 +136,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
       <div className="container max-w-md mx-auto px-4 py-8">
         <button
           onClick={onBack}
-          className="flex items-center gap-1 text-brand-primary text-sm font-semibold mb-6"
+          className="flex items-center gap-1 text-brand-hover text-sm font-semibold mb-6"
         >
           ← Back
         </button>
@@ -155,7 +155,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
         <p className="text-sm text-[#6b7280] mb-6">{displayDuration} · Beginner · Starts today</p>
 
         <div className="bg-[#fff7ed] rounded-[20px] p-5 mb-4" style={{ border: '1px solid #fdba74' }}>
-          <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
+          <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
             Solo-first path
           </p>
           <p className="text-sm text-brand-text-secondary leading-relaxed">
@@ -165,7 +165,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
 
         {/* What you'll be doing */}
         <div className="bg-white rounded-[20px] p-5 mb-4" style={{ border: '1px solid #e5e7eb' }}>
-          <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-4">
+          <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-4">
             Here&apos;s what you&apos;ll be doing
           </p>
           <div className="space-y-3">
@@ -225,7 +225,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
         {showRehearsalCta && (
           <button
             onClick={() => router.push('/rehearsal')}
-            className="w-full mt-3 text-center text-sm text-brand-primary font-medium py-2"
+            className="w-full mt-3 text-center text-sm text-brand-hover font-medium py-2"
           >
             Practice a conversation first →
           </button>

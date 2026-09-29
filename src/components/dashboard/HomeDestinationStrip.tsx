@@ -34,7 +34,7 @@ export function HomeDestinationStrip() {
     <EditorialQuietSurface className="overflow-hidden rounded-[30px] border-brand-primary/8 bg-white/55 px-4 py-4 shadow-[0_18px_42px_rgba(46,38,32,0.05)] backdrop-blur-sm">
       <div className="mb-4 flex items-end justify-between gap-3">
         <div>
-          <EditorialEyebrow className="text-brand-primary/70">Elsewhere</EditorialEyebrow>
+          <EditorialEyebrow className="text-brand-hover">Elsewhere</EditorialEyebrow>
           <p className="mt-2 max-w-[15rem] text-sm leading-relaxed text-brand-taupe">
             Quiet doors into the rest of your relationship life.
           </p>

@@ -95,7 +95,7 @@ export function DailySparkCard({ prompt, surface, onSwap }: DailySparkCardProps)
     >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="mb-2 text-xs font-semibold tracking-widest uppercase text-brand-primary/80">
+          <p className="mb-2 text-xs font-semibold tracking-widest uppercase text-brand-hover">
             Today&apos;s Spark
           </p>
           <p className="mb-2 text-sm text-brand-taupe">
@@ -106,7 +106,7 @@ export function DailySparkCard({ prompt, surface, onSwap }: DailySparkCardProps)
           </p>
         </div>
         <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[18px] border border-brand-primary/10 bg-white text-brand-primary shadow-sm">
-          <Sparkles size={16} className="text-brand-primary" />
+          <Sparkles size={16} className="text-brand-hover" />
         </div>
       </div>
 
@@ -115,10 +115,10 @@ export function DailySparkCard({ prompt, surface, onSwap }: DailySparkCardProps)
       </p>
 
       <div className="mt-3 flex flex-wrap gap-2">
-        <span className="rounded-full border border-brand-primary/10 bg-white/70 px-2.5 py-1 text-[11px] font-semibold text-brand-primary">
+        <span className="rounded-full border border-brand-primary/10 bg-white/70 px-2.5 py-1 text-[11px] font-semibold text-brand-hover">
           Under a minute
         </span>
-        <span className="rounded-full border border-brand-primary/10 bg-white/70 px-2.5 py-1 text-[11px] font-semibold text-brand-primary">
+        <span className="rounded-full border border-brand-primary/10 bg-white/70 px-2.5 py-1 text-[11px] font-semibold text-brand-hover">
           Text or say it live
         </span>
       </div>
@@ -130,20 +130,20 @@ export function DailySparkCard({ prompt, surface, onSwap }: DailySparkCardProps)
       <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-3">
         <button
           onClick={handleTry}
-          className="rounded-2xl border border-brand-primary/15 bg-white px-4 py-3 text-sm font-semibold text-brand-primary transition-colors hover:bg-brand-primary/5"
+          className="rounded-2xl border border-brand-primary/15 bg-white px-4 py-3 text-sm font-semibold text-brand-hover transition-colors hover:bg-brand-primary/5"
         >
           {tried ? 'Doing this today' : 'Try this'}
         </button>
         <button
           onClick={handleSend}
-          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-brand-primary/12 bg-transparent px-4 py-3 text-sm font-semibold text-brand-taupe transition-colors hover:bg-white/60 hover:text-brand-primary"
+          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-brand-primary/12 bg-transparent px-4 py-3 text-sm font-semibold text-brand-taupe transition-colors hover:bg-white/60 hover:text-brand-hover"
         >
           <Send size={14} />
           {shareState === 'copied' ? 'Copied to send' : shareState === 'shared' ? 'Sent' : 'Copy text'}
         </button>
         <button
           onClick={handleSwap}
-          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-brand-primary/12 bg-transparent px-4 py-3 text-sm font-semibold text-brand-taupe transition-colors hover:bg-white/60 hover:text-brand-primary"
+          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-brand-primary/12 bg-transparent px-4 py-3 text-sm font-semibold text-brand-taupe transition-colors hover:bg-white/60 hover:text-brand-hover"
         >
           <RefreshCcw size={14} />
           Another one

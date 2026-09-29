@@ -132,7 +132,7 @@ export default function NeutralObserver() {
                 <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-8 shadow-[0_20px_50px_rgba(46,38,32,0.10)]">
                   <div className="flex items-start justify-between gap-3 mb-5">
                     <div>
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-primary/60 mb-1">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-hover mb-1">
                         A quiet practice
                       </p>
                       <h1 className="font-serif text-[28px] leading-tight text-brand-espresso">
@@ -145,7 +145,7 @@ export default function NeutralObserver() {
                     <button
                       onClick={() => setShowTooltip((v) => !v)}
                       aria-label="About this study"
-                      className="mt-1 flex-shrink-0 p-1.5 rounded-full text-brand-primary/50 hover:text-brand-primary hover:bg-brand-primary/8 transition-colors"
+                      className="mt-1 flex-shrink-0 p-1.5 rounded-full text-brand-hover hover:text-brand-espresso hover:bg-brand-primary/8 transition-colors"
                     >
                       <Info size={18} />
                     </button>
@@ -235,7 +235,7 @@ export default function NeutralObserver() {
               <motion.div key="screen_1" {...slide} className="space-y-5">
                 <ProgressDots current={0} total={3} />
                 <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-7 shadow-[0_20px_50px_rgba(46,38,32,0.10)]">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-primary/60 mb-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-hover mb-4">
                     Step 1 of 3
                   </p>
                   <p className="text-sm leading-relaxed text-brand-espresso mb-5">
@@ -271,7 +271,7 @@ export default function NeutralObserver() {
               <motion.div key="screen_2" {...slide} className="space-y-5">
                 <ProgressDots current={1} total={3} />
                 <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-7 shadow-[0_20px_50px_rgba(46,38,32,0.10)]">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-primary/60 mb-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-hover mb-4">
                     Step 2 of 3
                   </p>
                   <p className="text-sm leading-relaxed text-brand-espresso mb-3">
@@ -307,7 +307,7 @@ export default function NeutralObserver() {
               <motion.div key="screen_3" {...slide} className="space-y-5">
                 <ProgressDots current={2} total={3} />
                 <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-7 shadow-[0_20px_50px_rgba(46,38,32,0.10)]">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-primary/60 mb-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-hover mb-4">
                     Step 3 of 3
                   </p>
                   <p className="text-sm leading-relaxed text-brand-espresso mb-2">

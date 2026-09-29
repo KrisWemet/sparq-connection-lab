@@ -115,7 +115,7 @@ export default function PartnerProfile() {
               <h2 className="text-2xl font-bold text-gray-900">{partnerProfile.full_name}</h2>
               {partnerProfile.anniversary_date && (
                 <div className="flex items-center gap-2 mt-2">
-                  <div className="bg-primary/10 text-primary text-sm px-3 py-1 rounded-full flex items-center gap-1">
+                  <div className="bg-primary/10 text-brand-hover text-sm px-3 py-1 rounded-full flex items-center gap-1">
                     <span>Together since {new Date(partnerProfile.anniversary_date).toLocaleDateString()}</span>
                   </div>
                 </div>

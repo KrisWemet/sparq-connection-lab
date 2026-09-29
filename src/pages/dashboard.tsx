@@ -174,7 +174,7 @@ export default function Dashboard() {
           className="flex items-center justify-between"
         >
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-brand-primary/70">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-brand-hover">
               Home
             </p>
             <span className="text-xl font-semibold tracking-tight text-brand-espresso">SPARQ</span>
@@ -218,7 +218,7 @@ export default function Dashboard() {
             className="pointer-events-none absolute right-0 top-0 h-36 w-36 rounded-full bg-brand-primary/10 blur-3xl"
           />
           <div className="relative">
-            <EditorialEyebrow className="mb-3 text-brand-primary/80">
+            <EditorialEyebrow className="mb-3 text-brand-hover">
               {activeJourney
                 ? `${activeJourney.title} — Day ${currentDay}`
                 : `Day ${currentDay}`}
