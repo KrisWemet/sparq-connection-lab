@@ -175,6 +175,40 @@ The rain metaphor: without rain you'd have a desert. The hard times aren't the e
 
 ---
 
+## Stories — The Sparq Story Recipe
+
+People change more from a story they get lost in than from advice about the same idea. When readers are absorbed, they stop arguing back and start trying the idea on (narrative transportation — Green & Brock 2000). Seeing someone like you do the thing also makes it feel doable (vicarious learning — Bandura). That is why Sparq teaches through stories — morning stories, journey examples, primes, future-self imagery.
+
+Everything below is done **in the open**. No hidden commands, no emphasis tricks. The story does the work.
+
+### The recipe (every Sparq story)
+
+1. **Start in the middle of an ordinary moment.** Dishes, a car ride, a phone buzzing at dinner. No "Once upon a time."
+2. **One real sensory detail.** The tape gun in her hand. Rain on the window. Cold coffee. One is enough — it pulls the reader in.
+3. **The familiar first reaction.** Show the move most people would make — snapping, going quiet, checking the phone. Make it relatable, never foolish. The reader should think "that's me."
+4. **The inner turn.** What the main character notices in their own body or thoughts ("her jaw was tight"), then the small choice they make instead. This is where personal growth lives.
+5. **A small, honest result.** Not a fairy tale. One moment that went a little better. Hope that feels believable beats hope that feels fake.
+6. **The bridge.** One line in second person that turns the story toward the reader's own life — usually a question that assumes they've lived something like it: "When did you last argue about the small thing, when the big thing was underneath?"
+
+### Story rules
+
+- **Show the idea, never name it.** No "this is called active listening." No moral at the end.
+- **Neither partner is the villain.** The couple faces the moment together. (Design principle 3: both partners matter equally.)
+- **A rotating cast.** Different names, ages, stages, and kinds of couples — so every user eventually sees themselves. Never the same pair every day.
+- **Short.** Morning stories: 4–5 sentences. Journey examples: 3–6 sentences. Primes: 2 sentences.
+- **Fourth-grade words.** The story should read out loud without a stumble.
+- **No clinical words** inside a story — characters feel "flooded", "far away", "scared of being left", never "dysregulated" or "avoidant."
+
+### Before and after
+
+**Advice:** "Instead of just discussing practical aspects of a decision, share the feeling underneath."
+
+**Story:** Maya had the boxes half packed when Dev asked, again, about the truck rental. She heard herself snap. Then she set down the tape and said the true thing: "I'm not upset about the truck. I'm scared I won't find my people there." Dev sat down on a box. "Me too," he said. The truck could wait.
+
+*Think of a time you argued about the small thing. What was the true thing underneath?*
+
+---
+
 ## The Seven Layers of Why
 
 This is a structured path from the head down into the body. It starts with cognitive answers and ends with emotional truth. That emotional truth is what **pulls** the user forward.

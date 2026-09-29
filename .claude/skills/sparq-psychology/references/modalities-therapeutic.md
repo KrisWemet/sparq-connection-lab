@@ -80,7 +80,7 @@ EFT views relationship distress as an **attachment crisis**. Partners aren't ene
 - **Partner Synthesis**: "You both" framing, blended reflection, cycle naming
 - **Couple's Cycle Map** (planned): Names the couple's repeating pattern as a shared system
 - **Evening Chat**: Peter explores underlying needs behind surface complaints
-- **Morning Stories**: Demonstrate cycle awareness through Alex and Sam narratives
+- **Morning Stories**: Demonstrate cycle awareness through the rotating morning-story couples
 - **Identity Arc**: "You used to chase. I've watched you learn to wait with trust."
 
 ---
@@ -195,7 +195,7 @@ Example in relationships:
 
 ### How Sparq Uses Narrative Therapy
 
-- **Morning Stories**: Alex and Sam narratives externalize relationship challenges — the couple faces the problem together, not each other
+- **Morning Stories**: Morning-story couples externalize relationship challenges — the couple faces the problem together, not each other
 - **Identity Arc Tracking** (planned): Peter narrates the user's growth trajectory: "You used to... I've watched you..."
 - **Graduation Report**: Re-authors the user's self-story based on 14 days of evidence
 - **Weekly Mirror**: "I noticed you..." language — finding unique outcomes in the user's own behavior

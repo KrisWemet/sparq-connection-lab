@@ -175,7 +175,7 @@ Most people use ~10 emotion words. NVC teaches ~100+. This precision reduces mis
 - **Translator Feature**: Rephrases user's messages using NVC structure
 - **Skill Tree → Communication**: NVC framework is the backbone of communication skill exercises
 - **Daily Actions**: "Try expressing one feeling using a specific emotion word today"
-- **Morning Stories**: Alex and Sam often demonstrate the NVC shift (reactive → NVC)
+- **Morning Stories**: The rotating morning-story couples often demonstrate the NVC shift (reactive → NVC)
 - **Peter's Prompting**: "What were you feeling underneath that? What did you need in that moment?"
 
 ---
