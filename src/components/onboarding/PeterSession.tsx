@@ -122,7 +122,7 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
                 className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
                   msg.role === 'assistant'
                     ? 'bg-white border border-[#e5e7eb] text-[#1f2937] rounded-tl-sm font-serif italic'
-                    : 'bg-[#8B5CF6] text-white rounded-tr-sm'
+                    : 'bg-brand-primary text-white rounded-tr-sm'
                 }`}
               >
                 {msg.content}
@@ -143,7 +143,7 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
                 {[0, 1, 2].map(i => (
                   <motion.div
                     key={i}
-                    className="w-2 h-2 rounded-full bg-[#8B5CF6]"
+                    className="w-2 h-2 rounded-full bg-brand-primary"
                     animate={{ y: [0, -4, 0] }}
                     transition={{ duration: 0.6, delay: i * 0.15, repeat: Infinity }}
                   />
@@ -157,7 +157,7 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
 
       {/* Input bar */}
       {messages.length > 0 && !isLoading && !isClosing && (
-        <div className="fixed bottom-0 left-0 right-0 bg-[#f5f3ff] border-t border-[#e5e7eb] px-4 py-3">
+        <div className="fixed bottom-0 left-0 right-0 bg-brand-light border-t border-[#e5e7eb] px-4 py-3">
           <div className="max-w-md mx-auto flex gap-2">
             <input
               type="text"
@@ -165,12 +165,12 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
               onChange={e => setUserInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && canSend && sendMessage(userInput)}
               placeholder="Type your response..."
-              className="flex-1 px-4 py-3 rounded-2xl border-2 border-[#8B5CF6]/20 bg-white text-[#2E1065] placeholder-[#5B4A86]/50 focus:outline-none focus:border-[#8B5CF6] text-sm"
+              className="flex-1 px-4 py-3 rounded-2xl border-2 border-brand-primary/20 bg-white text-brand-text-primary placeholder-brand-text-secondary/50 focus:outline-none focus:border-brand-primary text-sm"
             />
             <button
               onClick={() => sendMessage(userInput)}
               disabled={!canSend}
-              className="bg-[#8B5CF6] text-white rounded-2xl px-4 py-3 font-semibold text-sm disabled:opacity-40"
+              className="bg-brand-primary text-white rounded-2xl px-4 py-3 font-semibold text-sm disabled:opacity-40"
             >
               →
             </button>
@@ -179,8 +179,8 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
       )}
 
       {messages.length > 0 && isClosing && (
-        <div className="fixed bottom-0 left-0 right-0 bg-[#f5f3ff] border-t border-[#e5e7eb] px-4 py-3">
-          <div className="max-w-md mx-auto text-center text-sm text-[#5B4A86]">
+        <div className="fixed bottom-0 left-0 right-0 bg-brand-light border-t border-[#e5e7eb] px-4 py-3">
+          <div className="max-w-md mx-auto text-center text-sm text-brand-text-secondary">
             Taking you to your starting point...
           </div>
         </div>

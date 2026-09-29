@@ -19,7 +19,7 @@ function PeterAvatar({ isTyping = false }: { isTyping?: boolean }) {
       {isTyping && (
         <motion.div
           className="absolute inset-[-4px] rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.2) 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(197,107,77,0.2) 0%, transparent 70%)' }}
           animate={{ scale: [1, 1.3, 1] }}
           transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
         />
@@ -164,7 +164,7 @@ export function PeterChat({
                   }`}
                 style={msg.role === 'assistant'
                   ? { backgroundColor: '#F4EFEB', color: '#8C827A' }
-                  : { backgroundColor: '#8B5CF6', color: '#FFFFFF' }
+                  : { backgroundColor: '#C56B4D', color: '#FFFFFF' }
                 }
               >
                 {msg.role === 'assistant' ? stripMarkdown(msg.content) : msg.content}

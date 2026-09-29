@@ -45,16 +45,16 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
         </motion.div>
 
         <div className="bg-[#fff7ed] border border-[#fdba74] rounded-2xl p-4 mb-6">
-          <p className="text-xs font-semibold tracking-widest uppercase text-[#8B5CF6] mb-2">
+          <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-2">
             Solo-first start
           </p>
-          <p className="text-sm text-[#5B4A86] leading-relaxed">
+          <p className="text-sm text-brand-text-secondary leading-relaxed">
             You do not need your partner in the app to start. Pick the path that helps you stay calm, clear, and kind.
           </p>
         </div>
 
         {/* Primary recommendation */}
-        <p className="text-xs font-semibold tracking-widest uppercase text-[#8B5CF6] mb-3">
+        <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
           Your starting point
         </p>
 
@@ -75,12 +75,12 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
           >
             <div
               className="h-28 flex items-center justify-center text-5xl"
-              style={{ background: 'linear-gradient(135deg, #8B5CF6, #7c3aed)' }}
+              style={{ background: 'linear-gradient(135deg, #C56B4D, #A85539)' }}
             >
               <span className="text-4xl">{primaryJourney.id === 'attachment-healing' ? '🧡' : '✨'}</span>
             </div>
             <div className="p-4">
-              <p className="text-xs font-semibold tracking-widest uppercase text-[#8B5CF6] mb-1">
+              <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-1">
                 Recommended for you
               </p>
               <p className="text-lg font-bold text-[#1f2937] mb-2">{primaryJourney.title}</p>

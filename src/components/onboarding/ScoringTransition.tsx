@@ -141,7 +141,7 @@ export function ScoringTransition({ progress, onComplete, onError, userId }: Sco
       >
         <PeterAvatar mood="morning" size={72} />
       </motion.div>
-      <p className="text-[#5B4A86] text-sm font-serif italic text-center">
+      <p className="text-brand-text-secondary text-sm font-serif italic text-center">
         Give me just a moment...
       </p>
     </div>

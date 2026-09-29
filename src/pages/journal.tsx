@@ -37,17 +37,17 @@ export default function JournalPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.24 }}
-            className="bg-[#EDE9FE] rounded-3xl border border-brand-primary/10 shadow-sm p-6 relative overflow-hidden"
+            className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6 relative overflow-hidden"
           >
             <div className="absolute -top-12 right-0 w-32 h-32 rounded-full bg-brand-primary/10 blur-3xl pointer-events-none" />
             <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
               Journal
             </p>
-            <h1 className="text-xl font-semibold text-[#2E1065]">Journal</h1>
-            <p className="font-serif italic text-2xl leading-snug text-[#2E1065] mt-3">
+            <h1 className="text-xl font-semibold text-brand-text-primary">Journal</h1>
+            <p className="font-serif italic text-2xl leading-snug text-brand-text-primary mt-3">
               A quieter place to notice what is changing in you.
             </p>
-            <p className="text-sm text-[#5B4A86] leading-relaxed mt-3 max-w-md">
+            <p className="text-sm text-brand-text-secondary leading-relaxed mt-3 max-w-md">
               Keep your patterns, practice, and reflection history together so Home can stay focused on the next small step.
             </p>
           </motion.section>
@@ -59,7 +59,7 @@ export default function JournalPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.24, delay: 0.04 }}
-            className="bg-[#EDE9FE] rounded-3xl border border-brand-primary/10 shadow-sm p-6 space-y-4"
+            className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6 space-y-4"
           >
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-full bg-brand-primary/10 text-brand-primary flex items-center justify-center flex-shrink-0">
@@ -69,10 +69,10 @@ export default function JournalPage() {
                 <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-1">
                   Your interpretation
                 </p>
-                <h2 className="text-lg font-semibold text-[#2E1065]">
+                <h2 className="text-lg font-semibold text-brand-text-primary">
                   {archetype || 'Your journal is taking shape'}
                 </h2>
-                <p className="text-sm text-[#5B4A86] leading-relaxed mt-2">
+                <p className="text-sm text-brand-text-secondary leading-relaxed mt-2">
                   {archetypeDescription ||
                     'Keep showing up and Peter will turn your reflections into a clearer picture of how you are growing.'}
                 </p>

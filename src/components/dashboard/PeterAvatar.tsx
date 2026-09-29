@@ -117,18 +117,18 @@ function Prop({ mood }: { mood: PeterMood }) {
     return (
       <g transform="translate(32, 78)">
         {/* Journal cover */}
-        <rect x="0" y="0" width="36" height="26" rx="3" fill="#8B5CF6" />
+        <rect x="0" y="0" width="36" height="26" rx="3" fill="#C56B4D" />
         {/* Spine */}
-        <rect x="15" y="0" width="6" height="26" rx="1" fill="#7C3AED" />
+        <rect x="15" y="0" width="6" height="26" rx="1" fill="#A85539" />
         {/* Pages left */}
-        <rect x="2" y="3" width="12" height="20" rx="1" fill="#F5F3FF" />
+        <rect x="2" y="3" width="12" height="20" rx="1" fill="#FBF8F3" />
         {/* Page lines */}
         <line x1="4" y1="7" x2="12" y2="7" stroke="#D4B896" strokeWidth="1" />
         <line x1="4" y1="10" x2="12" y2="10" stroke="#D4B896" strokeWidth="1" />
         <line x1="4" y1="13" x2="12" y2="13" stroke="#D4B896" strokeWidth="1" />
         <line x1="4" y1="16" x2="12" y2="16" stroke="#D4B896" strokeWidth="1" />
         {/* Pages right */}
-        <rect x="22" y="3" width="12" height="20" rx="1" fill="#F5F3FF" />
+        <rect x="22" y="3" width="12" height="20" rx="1" fill="#FBF8F3" />
         <line x1="24" y1="7" x2="32" y2="7" stroke="#D4B896" strokeWidth="1" />
         <line x1="24" y1="10" x2="32" y2="10" stroke="#D4B896" strokeWidth="1" />
         <line x1="24" y1="13" x2="32" y2="13" stroke="#D4B896" strokeWidth="1" />
@@ -143,14 +143,14 @@ function Prop({ mood }: { mood: PeterMood }) {
         {/* Mug body */}
         <rect x="0" y="0" width="24" height="20" rx="4" fill="#D4795F" />
         {/* Handle */}
-        <path d="M 24 5 Q 32 5 32 10 Q 32 15 24 15" stroke="#7C3AED"
+        <path d="M 24 5 Q 32 5 32 10 Q 32 15 24 15" stroke="#A85539"
           strokeWidth="3" fill="none" strokeLinecap="round" />
         {/* Liquid */}
-        <rect x="2" y="2" width="20" height="6" rx="2" fill="#F9C74F" opacity="0.8" />
+        <rect x="2" y="2" width="20" height="6" rx="2" fill="#D9A441" opacity="0.8" />
         {/* Steam */}
-        <path d="M 8 -4 Q 10 -8, 8 -12" stroke="#8B5CF6" strokeWidth="1.5"
+        <path d="M 8 -4 Q 10 -8, 8 -12" stroke="#C56B4D" strokeWidth="1.5"
           fill="none" strokeLinecap="round" opacity="0.5" />
-        <path d="M 14 -4 Q 16 -8, 14 -12" stroke="#8B5CF6" strokeWidth="1.5"
+        <path d="M 14 -4 Q 16 -8, 14 -12" stroke="#C56B4D" strokeWidth="1.5"
           fill="none" strokeLinecap="round" opacity="0.5" />
       </g>
     );
@@ -160,17 +160,17 @@ function Prop({ mood }: { mood: PeterMood }) {
     // Confetti bursts
     return (
       <>
-        <circle cx="18" cy="22" r="3" fill="#F9C74F" opacity="0.8" />
-        <circle cx="82" cy="18" r="2.5" fill="#93C5FD" opacity="0.8" />
-        <circle cx="88" cy="50" r="2" fill="#8B5CF6" opacity="0.7" />
-        <circle cx="12" cy="55" r="2.5" fill="#A78BFA" opacity="0.7" />
+        <circle cx="18" cy="22" r="3" fill="#D9A441" opacity="0.8" />
+        <circle cx="82" cy="18" r="2.5" fill="#9CB5A0" opacity="0.8" />
+        <circle cx="88" cy="50" r="2" fill="#C56B4D" opacity="0.7" />
+        <circle cx="12" cy="55" r="2.5" fill="#9CB5A0" opacity="0.7" />
         <rect x="15" y="70" width="6" height="6" rx="1"
-          fill="#F9C74F" opacity="0.7" transform="rotate(30, 18, 73)" />
+          fill="#D9A441" opacity="0.7" transform="rotate(30, 18, 73)" />
         <rect x="78" y="72" width="5" height="5" rx="1"
-          fill="#93C5FD" opacity="0.7" transform="rotate(-20, 80, 74)" />
+          fill="#9CB5A0" opacity="0.7" transform="rotate(-20, 80, 74)" />
         {/* Star bursts */}
-        <text x="10" y="35" fontSize="10" fill="#F9C74F" opacity="0.8">✦</text>
-        <text x="80" y="30" fontSize="8" fill="#8B5CF6" opacity="0.7">✦</text>
+        <text x="10" y="35" fontSize="10" fill="#D9A441" opacity="0.8">✦</text>
+        <text x="80" y="30" fontSize="8" fill="#C56B4D" opacity="0.7">✦</text>
       </>
     );
   }
@@ -202,7 +202,7 @@ export function PeterAvatar({
       <motion.div
         className="absolute inset-[-12%] rounded-full"
         style={{
-          background: 'radial-gradient(circle, rgba(139,92,246,0.18) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(197,107,77,0.18) 0%, transparent 70%)',
         }}
         animate={{ scale: isTyping ? [1, 1.18, 1] : [1, 1.06, 1] }}
         transition={{ duration: isTyping ? 1.4 : 3.5, repeat: Infinity, ease: 'easeInOut' }}
