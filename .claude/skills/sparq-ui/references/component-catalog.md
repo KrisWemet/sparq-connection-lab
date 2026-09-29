@@ -110,7 +110,7 @@ Full-width button with `bg-brand-primary`, `rounded-[24px]`, warm brand shadow. 
 ### Accessibility
 - Renders as `<motion.button>` — keyboard accessible
 - `text-left` for readable content alignment
-- High contrast: white on `#C0614A` (7.2:1)
+- High contrast: white on `#C56B4D` (7.2:1)
 
 ---
 
@@ -249,7 +249,7 @@ interface StreakIndicatorProps {
 - Safe area: `pb-[calc(0.75rem+env(safe-area-inset-bottom))]`
 
 ### States
-- **Active**: `bg-brand-primary/10` pill behind icon, icon color `#C0614A`, stroke 2.5, label `#C0614A`
+- **Active**: `bg-brand-primary/10` pill behind icon, icon color `#C56B4D`, stroke 2.5, label `#C56B4D`
 - **Inactive**: icon color `#9E8A86`, stroke 1.8, label `#9E8A86`
 
 ### Hidden Pages

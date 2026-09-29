@@ -59,11 +59,11 @@ The canonical SVG Peter lives at **`src/components/dashboard/PeterAvatar.tsx`** 
 | Mouth | `#3D1A10` | Mouth strokes |
 | Mouth fill | `#C26B54` | Open smile (celebrating) |
 | Blush | `#E8907A` @ 35% | Cheek blush (celebrating) |
-| Prop accent | `#C0614A` | Journal cover, steam (brand-primary) |
-| Prop fill | `#FAF6F1` | Journal pages (brand-linen) |
+| Prop accent | `#C56B4D` | Journal cover, steam (brand-primary) |
+| Prop fill | `#F5F1EA` | Journal pages (brand-linen) |
 | Prop lines | `#D4B896` | Journal text lines |
 | Mug body | `#D4795F` | Evening mug |
-| Confetti | `#E8A857`, `#8FAF8A`, `#C0614A` | brand-sand, brand-growth, brand-primary |
+| Confetti | `#E8A857`, `#8FAF8A`, `#C56B4D` | brand-sand, brand-growth, brand-primary |
 
 ### Moods (implemented)
 

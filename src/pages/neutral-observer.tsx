@@ -129,7 +129,7 @@ export default function NeutralObserver() {
             {/* ── ENTRY SCREEN ── */}
             {phase === 'entry' && (
               <motion.div key="entry" {...slide} className="space-y-6">
-                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-8 shadow-[0_20px_50px_rgba(42,34,52,0.10)]">
+                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-8 shadow-[0_20px_50px_rgba(46,38,32,0.10)]">
                   <div className="flex items-start justify-between gap-3 mb-5">
                     <div>
                       <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-primary/60 mb-1">
@@ -208,7 +208,7 @@ export default function NeutralObserver() {
             {/* ── PRIVACY NOTICE ── */}
             {phase === 'privacy_notice' && (
               <motion.div key="privacy" {...slide} className="space-y-6">
-                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-8 shadow-[0_20px_50px_rgba(42,34,52,0.10)]">
+                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-8 shadow-[0_20px_50px_rgba(46,38,32,0.10)]">
                   <h2 className="font-serif text-[26px] leading-tight text-brand-espresso mb-4">
                     This stays with you.
                   </h2>
@@ -234,7 +234,7 @@ export default function NeutralObserver() {
             {phase === 'screen_1' && (
               <motion.div key="screen_1" {...slide} className="space-y-5">
                 <ProgressDots current={0} total={3} />
-                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-7 shadow-[0_20px_50px_rgba(42,34,52,0.10)]">
+                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-7 shadow-[0_20px_50px_rgba(46,38,32,0.10)]">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-primary/60 mb-4">
                     Step 1 of 3
                   </p>
@@ -270,7 +270,7 @@ export default function NeutralObserver() {
             {phase === 'screen_2' && (
               <motion.div key="screen_2" {...slide} className="space-y-5">
                 <ProgressDots current={1} total={3} />
-                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-7 shadow-[0_20px_50px_rgba(42,34,52,0.10)]">
+                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-7 shadow-[0_20px_50px_rgba(46,38,32,0.10)]">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-primary/60 mb-4">
                     Step 2 of 3
                   </p>
@@ -306,7 +306,7 @@ export default function NeutralObserver() {
             {phase === 'screen_3' && (
               <motion.div key="screen_3" {...slide} className="space-y-5">
                 <ProgressDots current={2} total={3} />
-                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-7 shadow-[0_20px_50px_rgba(42,34,52,0.10)]">
+                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-7 shadow-[0_20px_50px_rgba(46,38,32,0.10)]">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-primary/60 mb-4">
                     Step 3 of 3
                   </p>
@@ -347,7 +347,7 @@ export default function NeutralObserver() {
             {/* ── COMPLETION ── */}
             {phase === 'completion' && (
               <motion.div key="completion" {...slide} className="space-y-6">
-                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-8 shadow-[0_20px_50px_rgba(42,34,52,0.10)]">
+                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-8 shadow-[0_20px_50px_rgba(46,38,32,0.10)]">
                   <h2 className="font-serif text-[28px] leading-tight text-brand-espresso mb-5">
                     That&apos;s the practice.
                   </h2>

@@ -511,9 +511,10 @@ import { Button } from "../../components/ui/button";
 2. **Missing Supabase env vars crash every page.** `src/lib/supabase.ts` calls `createClient` at import time; with no `NEXT_PUBLIC_SUPABASE_URL` every route 500s. Set env vars before building.
 3. **Unused shadcn/ui primitives** remain in `src/components/ui/` by convention — harmless, leave them.
 4. **`run_dev.py` targets port 8085**, but Next.js defaults to 3000 — use `npm run dev`.
-5. **Hardcoded legacy violet hexes** (`#6E56F7`, `#8B5CF6`) linger inline in a few components — replace with `brand-*` tokens when touched.
+5. **Brand clay fails WCAG AA for small text.** `#C56B4D` on linen is 3.3:1 and white on clay is 3.8:1 (AA needs 4.5:1 for normal text). Use `brand-hover` (`#A85539`, 4.6:1) for small clay text until the palette is revisited — a design decision for Chris.
+6. **Dark theme in `globals.css` is still the old violet.** Dormant: nothing enables dark mode today. Re-derive it from Warm Clay before turning dark mode on.
 
-Resolved in the 2026-09 cleanup: Vite leftovers and the legacy Supabase client shim, the unwired `src/lib/auth/` rewrite, ~80 unreachable legacy components/hooks/services (including the Mem0 mock `src/lib/mem0.ts`), a leaked auth listener in `auth-context.tsx`, and the public `/test-page` debug route.
+Resolved in the 2026-09 cleanup: all hardcoded violet hexes, Tailwind purple/indigo classes and violet-tinted shadows (now Warm Clay tokens), made-up testimonials and social-proof stats, Vite leftovers and the legacy Supabase client shim, the unwired `src/lib/auth/` rewrite, ~80 unreachable legacy components/hooks/services (including the Mem0 mock `src/lib/mem0.ts`), a leaked auth listener in `auth-context.tsx`, and the public `/test-page` debug route.
 
 ---
 
@@ -587,6 +588,18 @@ Core language techniques used throughout the app:
 - **Shadow reframing** — honoring protective patterns and releasing them when no longer needed
 
 Full framework: `.claude/skills/sparq-psychology/references/language-framework`
+
+### Stories are the teaching layer
+
+Sparq teaches through short stories, following the **Story Recipe** in the language framework (start mid-moment, one sensory detail, the familiar first reaction, the inner turn, a small honest result, a bridge question). No hidden commands.
+
+- Morning stories: `getMorningStoryPrompt` in `src/lib/peterService.ts` (rotating 14-couple cast) + `src/data/fallbackStories.json`
+- Daily primes: `story` field in `src/data/micro-primes.ts`
+- Journeys: optional `story` on each concept, shown in place of `example` — all 13 journeys have them. Trust Rebuilding uses its own couple (Elena & Marco) so betrayal never touches the main cast.
+
+### Imagery
+
+Warm, golden-hour metaphor images only — never people (hands-only is allowed). Journey images live in `public/images/journeys/`, date images in `public/images/dates/`. No hotlinked stock photos.
 
 > Framework note (2026-06): these techniques are grounded in validated constructs — cognitive reappraisal (Gross 2002), linguistic presupposition (pragmatics), identity-based motivation (Oyserman 2009), autonomy support (Deci & Ryan 2000). The "NLP" umbrella label is retired; never use it in copy, docs, or marketing. Construct names are for internal/marketing layers only — users never see them (enjoyment-first principle).
 

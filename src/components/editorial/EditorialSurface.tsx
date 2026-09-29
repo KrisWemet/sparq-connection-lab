@@ -37,7 +37,7 @@ export function EditorialFeaturedSurface<T extends SurfaceTag = 'section'>({
   return (
     <EditorialSurfaceFrame
       className={cn(
-        'bg-brand-parchment px-6 py-6 shadow-[0_20px_50px_rgba(42,34,52,0.08)]',
+        'bg-brand-parchment px-6 py-6 shadow-[0_20px_50px_rgba(46,38,32,0.08)]',
         className,
       )}
       {...props}
@@ -52,7 +52,7 @@ export function EditorialQuietSurface<T extends SurfaceTag = 'section'>({
   return (
     <EditorialSurfaceFrame
       className={cn(
-        'bg-brand-linen/80 px-5 py-5 shadow-[0_14px_32px_rgba(42,34,52,0.05)]',
+        'bg-brand-linen/80 px-5 py-5 shadow-[0_14px_32px_rgba(46,38,32,0.05)]',
         className,
       )}
       {...props}

@@ -28,7 +28,7 @@ Every visual choice serves emotional safety: generous whitespace, rounded corner
 | Layer | Technology | Notes |
 |---|---|---|
 | Components | shadcn/ui (Radix primitives) | Base components in `src/components/ui/` — don't modify directly |
-| Styling | Tailwind CSS 3 | Config: `tailwind.config.ts` (canonical), `tailwind.config.js` (legacy) |
+| Styling | Tailwind CSS 3 | Config: `tailwind.config.ts` (the only config — a stale `.js` twin was removed) |
 | Animations | Framer Motion + CSS keyframes | Framer for interactive, CSS for entrance animations |
 | Icons | Lucide React | Consistent 22px nav, 18px inline, 16px small |
 | Toasts | Sonner | Via `toast()` from `sonner` |
@@ -58,29 +58,29 @@ The Stitch MCP is connected to Claude Code. When generating new screens or UI mo
 
 | Token | Hex | Psychology | Usage |
 |---|---|---|---|
-| `brand-primary` | `#B5604E` | Warm clay — safety, human warmth, connection | Primary buttons, active nav, CTA fills, accent borders |
-| `brand-hover` | `#9A5242` | Deeper clay | Hover state for primary elements |
-| `brand-light` | `#FDF8F6` | Softest warm tint | Very light background tints |
-| `brand-linen` | `#FAF6F1` | Warm cream — journal quality | Page backgrounds, replaces pure white |
-| `brand-parchment` | `#EDE4D8` | Layered warmth — pages in a book | Card surfaces, sits above linen background |
-| `brand-sand` | `#D4A96A` | Warm gold — value, light, optimism | Celebrations, streak indicators, milestone moments |
-| `brand-espresso` | `#2C1A14` | Deep warm near-black — trust, depth | Headings, dark UI elements, never cold |
-| `brand-growth` | `#7A9B80` | Warm sage — healing, gentle forward movement | Progress bars, success states, growth indicators |
-| `brand-text-primary` | `#1A1008` | Near-black warm | Primary readable text |
-| `brand-text-secondary` | `#6B4C3B` | Warm brown-grey | Peter's voice, captions, secondary copy |
+| `brand-primary` | `#C56B4D` | Warm clay — safety, human warmth, connection | Primary buttons, active nav, CTA fills, accent borders |
+| `brand-hover` | `#A85539` | Deeper clay | Hover state for primary elements |
+| `brand-light` | `#FBF8F3` | Softest warm tint | Very light background tints |
+| `brand-linen` | `#F5F1EA` | Warm cream — journal quality | Page backgrounds, replaces pure white |
+| `brand-parchment` | `#EFE7DC` | Layered warmth — pages in a book | Card surfaces, sits above linen background |
+| `brand-sand` | `#D9A441` | Warm gold — value, light, optimism | Celebrations, streak indicators, milestone moments |
+| `brand-espresso` | `#2E2620` | Deep warm near-black — trust, depth | Headings, dark UI elements, never cold |
+| `brand-growth` | `#9CB5A0` | Warm sage — healing, gentle forward movement | Progress bars, success states, growth indicators |
+| `brand-text-primary` | `#2E2620` | Near-black warm | Primary readable text |
+| `brand-text-secondary` | `#6B5F52` | Warm brown-grey | Peter's voice, captions, secondary copy |
 
 ### Semantic Colors (CSS variables in `globals.css`)
 
 | Token | Light | Dark | Usage |
 |---|---|---|---|
-| `primary` | `#B5604E` | `hsl(210 40% 98%)` | shadcn primary — buttons, links |
-| `primary-100` | `#FDF8F6` | — | Light primary tint |
-| `primary-200` | `#EDE4D8` | — | Medium primary tint (matches brand-parchment) |
-| `secondary` | `#EDE4D8` | `hsl(217.2 32.6% 17.5%)` | Secondary surfaces |
+| `primary` | `#C56B4D` | `hsl(210 40% 98%)` | shadcn primary — buttons, links |
+| `primary-100` | `#FBF8F3` | — | Light primary tint |
+| `primary-200` | `#EFE7DC` | — | Medium primary tint (matches brand-parchment) |
+| `secondary` | `#EFE7DC` | `hsl(217.2 32.6% 17.5%)` | Secondary surfaces |
 | `destructive` | `hsl(0 84.2% 60.2%)` | `hsl(0 62.8% 30.6%)` | Errors, destructive actions |
 | `muted` | `hsl(210 40% 96.1%)` | `hsl(217.2 32.6% 17.5%)` | Subdued text, disabled states |
-| `background` | `#FAF6F1` | `#1A0F0A` | Page background — warm linen, not pure white |
-| `card` | `#EDE4D8` | `hsl(240 3.7% 15.9%)` | Card surfaces — parchment |
+| `background` | `#F5F1EA` | `#1A0F0A` | Page background — warm linen, not pure white |
+| `card` | `#EFE7DC` | `hsl(240 3.7% 15.9%)` | Card surfaces — parchment |
 
 ### Color Usage Rules
 
@@ -93,7 +93,7 @@ The Stitch MCP is connected to Claude Code. When generating new screens or UI mo
 - **Celebration**: `brand-sand` for milestone moments, streaks, achievement indicators
 - **Growth/progress**: `brand-growth` for forward movement, completion states
 - **Dark emotional moments**: `brand-espresso` background for Couples Mode, Day 14 reveal — warm dark, never cold navy or pure black
-- **Confetti colors**: `['#B5604E', '#FAF6F1', '#D4A96A']` in `ElegantConfetti.ts`
+- **Confetti colors**: `['#C56B4D', '#F5F1EA', '#D9A441']` in `ElegantConfetti.ts`
 
 ### Supplementary Colors (used inline)
 
@@ -187,12 +187,12 @@ Peter is never reduced to a static icon or loading spinner. He is the emotional 
 
 ### Dark Screens for Peak Emotional Moments
 
-Couples Mode shared reflection and Day 14 profile reveal use a dark background — warm espresso `#2C1A14`, not cold navy or pure black. This creates intimacy and signals importance. The contrast says: *this moment is different.*
+Couples Mode shared reflection and Day 14 profile reveal use a dark background — warm espresso `#2E2620`, not cold navy or pure black. This creates intimacy and signals importance. The contrast says: *this moment is different.*
 
 ### The Linen-to-Parchment Layering
 
-Background: `brand-linen` `#FAF6F1`
-Card surfaces: `brand-parchment` `#EDE4D8`
+Background: `brand-linen` `#F5F1EA`
+Card surfaces: `brand-parchment` `#EFE7DC`
 
 The separation must be visible but never harsh. It reads like pages in a journal — layered warmth, not stark contrast. If parchment cards disappear into the linen background, increase parchment depth until the separation is clear at arm's length on a phone screen.
 
@@ -202,7 +202,7 @@ Peter is the emotional presence. Human photography of couples or people breaks t
 
 ### Button Hierarchy — Three Patterns Only
 
-- **Primary**: Full width, filled clay `#B5604E`, rounded, white text
+- **Primary**: Full width, filled clay `#C56B4D`, rounded, white text
 - **Secondary**: Full width, outlined clay, no fill, clay text
 - **Ghost**: Centered text only, no border, no background
 
@@ -253,7 +253,7 @@ min-h-screen bg-brand-linen pb-24
 - **Border radius**: `rounded-3xl` (24px) — the signature Sparq radius
 - **Card padding**: `p-5` to `p-6` (20-24px)
 - **Card background**: `bg-brand-parchment` — distinct from linen page background
-- **Card shadow**: `shadow-sm` default, `shadow-[0_8px_30px_rgb(181,96,78,0.15)]` for elevated CTA cards
+- **Card shadow**: `shadow-sm` default, `shadow-[0_8px_30px_rgb(197,107,77,0.15)]` for elevated CTA cards
 - **Card border**: `border border-brand-primary/10` for warm-tinted borders
 
 ### Container Widths
@@ -419,7 +419,7 @@ ease: [0.22, 1, 0.36, 1] // Fast start, gentle settle
 
 - `fireElegantConfetti()` — 3-second continuous confetti from both sides
 - `fireSubtleBurst()` — Single 40-particle center burst
-- Colors: `['#B5604E', '#FAF6F1', '#D4A96A']` — clay, linen, gold
+- Colors: `['#C56B4D', '#F5F1EA', '#D9A441']` — clay, linen, gold
 - Both use `disableForReducedMotion: true`
 
 ---
@@ -443,7 +443,7 @@ These create depth without heavy imagery.
 
 - **Focus visible**: All interactive elements have `focus-visible:ring-2 focus-visible:ring-offset-2`
 - **Touch targets**: Minimum 44px height on all interactive elements
-- **Color contrast**: `#B5604E` on `#FAF6F1` = 4.3:1 (passes AA). `#2C1A14` on `#FAF6F1` = 14.1:1.
+- **Color contrast** (measured 2026-09): `#2E2620` espresso on `#F5F1EA` linen = 13.2:1 ✅. `#A85539` (brand-hover) on linen = 4.6:1 ✅ AA. **`#C56B4D` brand-primary on linen = 3.3:1 and white on `#C56B4D` = 3.8:1 — these pass AA only for large text (≥18px, or ≥14px bold).** For small clay-colored text, use `brand-hover`; keep clay fills behind large or bold white text. (Open palette decision — see CLAUDE.md known debt.)
 - **Screen reader labels**: `aria-label` on icon-only buttons, `sr-only` text where needed
 - **Reduced motion**: Confetti respects `disableForReducedMotion`. CSS animations include `@media (prefers-reduced-motion: reduce)` overrides.
 - **Keyboard navigation**: All interactive elements reachable via Tab, activatable via Enter/Space
