@@ -1,7 +1,7 @@
 
 import { useState, useCallback } from "react";
-import { useAuth } from "@/lib/auth";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/lib/auth-context";
+import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 
 type QuizAnswer = Record<number, string>;
