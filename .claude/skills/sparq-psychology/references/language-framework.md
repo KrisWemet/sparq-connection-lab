@@ -179,6 +179,8 @@ The rain metaphor: without rain you'd have a desert. The hard times aren't the e
 
 People change more from a story they get lost in than from advice about the same idea. When readers are absorbed, they stop arguing back and start trying the idea on (narrative transportation — Green & Brock 2000). Seeing someone like you do the thing also makes it feel doable (vicarious learning — Bandura). That is why Sparq teaches through stories — morning stories, journey examples, primes, future-self imagery.
 
+**Where stories live in code:** morning stories (`getMorningStoryPrompt` + `src/data/fallbackStories.json`), daily primes (`story` in `src/data/micro-primes.ts`), journey concepts (optional `story` field, shown in place of `example` — Communication is the pilot).
+
 Everything below is done **in the open**. No hidden commands, no emphasis tricks. The story does the work.
 
 ### The recipe (every Sparq story)
@@ -189,6 +191,7 @@ Everything below is done **in the open**. No hidden commands, no emphasis tricks
 4. **The inner turn.** What the main character notices in their own body or thoughts ("her jaw was tight"), then the small choice they make instead. This is where personal growth lives.
 5. **A small, honest result.** Not a fairy tale. One moment that went a little better. Hope that feels believable beats hope that feels fake.
 6. **The bridge.** One line in second person that turns the story toward the reader's own life — usually a question that assumes they've lived something like it: "When did you last argue about the small thing, when the big thing was underneath?"
+   *(In journeys, the lesson's reflection questions are the bridge — journey stories end on the small result.)*
 
 ### Story rules
 

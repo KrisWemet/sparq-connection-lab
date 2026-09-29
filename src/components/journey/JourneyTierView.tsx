@@ -13,6 +13,8 @@ export interface JourneyTierConcept {
   icon: ReactNode;
   color: string;
   example: string;
+  /** Optional short story (Sparq Story Recipe). Shown in place of `example` when present. */
+  story?: string;
 }
 
 export interface JourneyTier {

@@ -32,6 +32,7 @@ export default function CommunicationJourney() {
           icon: <Ear className="w-5 h-5 text-blue-500" />,
           color: "blue",
           example: "When your partner shares a concern about work, putting away distractions, maintaining eye contact, and asking follow-up questions that show you're fully engaged with what they're saying.",
+          story: "Dev came home frustrated about a meeting that went sideways. Maya's phone buzzed on the counter. She turned it face down, looked right at him, and asked, \"What happened after your boss said that?\" Dev kept talking, and by the end his whole body had loosened.",
         },
         {
           id: "nonverbal-communication",
@@ -40,6 +41,7 @@ export default function CommunicationJourney() {
           icon: <Eye className="w-5 h-5 text-brand-primary" />,
           color: "purple",
           example: "Noticing that when your partner crosses their arms and avoids eye contact during a conversation, they might be feeling defensive or uncomfortable, even if their words suggest otherwise.",
+          story: "Ben said \"It's fine\" about his brother skipping the barbecue. But his arms were crossed, and he wouldn't look up from the grill. Rosa didn't argue with the words. She stood next to him and said, \"It doesn't look fine. I'm here if you want to talk.\" After a minute, he did.",
         },
         {
           id: "clear-expression",
@@ -48,6 +50,7 @@ export default function CommunicationJourney() {
           icon: <MessageSquare className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
           example: "Instead of saying 'You never help around here,' saying 'I'm feeling overwhelmed with household responsibilities. Could we create a more balanced system for managing chores?'",
+          story: "The sink was full again, and Aiko felt \"You never help\" rising in her throat. She caught it. \"I'm feeling buried by the housework,\" she said instead. \"Can we make a plan that feels fair to both of us?\" Daniel reached for a notepad. \"Yeah. Let's do it tonight.\"",
         },
         {
           id: "timing-and-approach",
@@ -56,6 +59,7 @@ export default function CommunicationJourney() {
           icon: <Users className="w-5 h-5 text-amber-500" />,
           color: "amber",
           example: "Rather than bringing up budget concerns when your partner just walked in from work, saying 'I'd like to talk about our finances. When would be a good time in the next couple of days?'",
+          story: "Grace had worried about money all day. When Luis walked in, tired and holding the diaper bag, she almost blurted it out. She waited. \"Can we talk about the budget this weekend? It's on my mind.\" Luis nodded. \"Saturday morning, with coffee.\" The talk went better than she'd feared.",
         },
         {
           id: "expressing-appreciation",
@@ -64,6 +68,7 @@ export default function CommunicationJourney() {
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
           example: "Instead of a generic 'thanks,' saying 'I really appreciated how you listened and supported me during my difficult conversation with my boss yesterday. It helped me feel less alone.'",
+          story: "Instead of a quick \"thanks,\" Kofi said, \"Last night when my boss called, you stayed and listened the whole time. I felt a lot less alone.\" Anna blinked. She hadn't known it mattered that much.",
         },
         {
           id: "repairing-miscommunication",
@@ -72,6 +77,7 @@ export default function CommunicationJourney() {
           icon: <CornerDownRight className="w-5 h-5 text-sky-500" />,
           color: "sky",
           example: "When you notice confusion or hurt in your partner's expression, saying 'I think I may not have expressed that clearly. Can I try again?' rather than continuing with the conversation.",
+          story: "Nia saw Omar's face fall halfway through her joke about his cooking. She stopped. \"I don't think that came out right. Can I try again?\" Omar's eyebrows went up, then softened. \"Yeah,\" he said. \"Try again.\"",
         },
         {
           id: "assertiveness",
@@ -80,6 +86,7 @@ export default function CommunicationJourney() {
           icon: <Megaphone className="w-5 h-5 text-orange-500" />,
           color: "orange",
           example: "Instead of silently resenting extra work duties, saying 'I care about supporting the team, but I need to establish some boundaries around after-hours emails to protect our family time.'",
+          story: "Leah's boss had started texting her after midnight. She kept saying yes, then felt bitter all weekend. Finally she told him, \"I care about this team. I also need my nights off to be off.\" At home, Marcus grinned. \"You look lighter already.\"",
         },
         {
           id: "vulnerability",
@@ -88,6 +95,7 @@ export default function CommunicationJourney() {
           icon: <User className="w-5 h-5 text-brand-primary/80" />,
           color: "indigo",
           example: "Instead of just discussing practical aspects of a decision, sharing 'I'm feeling anxious about this move because my last major life change triggered a period of depression.'",
+          story: "Maya had the boxes half packed when Dev asked, again, about the truck rental. She heard herself snap. Then she set down the tape and said the true thing: \"I'm not upset about the truck. I'm scared I won't find my people there.\" Dev sat down on a box. \"Me too,\" he said.",
         },
       ],
     },
@@ -103,6 +111,7 @@ export default function CommunicationJourney() {
           icon: <HandHeart className="w-5 h-5 text-rose-500" />,
           color: "rose",
           example: "When your partner says they feel overwhelmed, responding with 'That makes complete sense given everything on your plate' before jumping to solutions or advice.",
+          story: "Hannah sank into a chair. \"Three deadlines, and my mom keeps calling.\" Raj felt a list of fixes lining up in his head. He set it aside. \"That's a lot at once. No wonder you're wiped out.\" Hannah let out a long breath. \"Thank you. That's exactly it.\"",
         },
         {
           id: "soft-startup",
@@ -111,6 +120,7 @@ export default function CommunicationJourney() {
           icon: <ShieldCheck className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
           example: "Instead of 'You forgot to call the plumber again,' starting with 'I know we've both been busy — I'd love to figure out together how we can stay on top of household tasks.'",
+          story: "The plumber still hadn't been called, and the drip, drip, drip had kept Zoe up all night. \"You forgot again\" was ready to go. She started softer instead: \"We've both been slammed. Can we figure out who calls the plumber?\" Isaac winced. \"That's on me. I'll call at lunch.\"",
         },
         {
           id: "reflective-listening",
@@ -119,6 +129,7 @@ export default function CommunicationJourney() {
           icon: <Layers className="w-5 h-5 text-blue-500" />,
           color: "blue",
           example: "After your partner shares a frustration, saying 'So what I'm hearing is that you felt unsupported when I didn't check in after your meeting. Is that right?' before giving your perspective.",
+          story: "Sophie was upset that Wei hadn't texted after her big meeting. Before defending himself, Wei said, \"So what I'm hearing is you felt alone after a hard day. Is that right?\" Sophie's eyes softened. \"Yes. That's all I needed you to get.\"",
         },
         {
           id: "meta-communication",
@@ -127,6 +138,7 @@ export default function CommunicationJourney() {
           icon: <Waypoints className="w-5 h-5 text-brand-primary" />,
           color: "purple",
           example: "Pausing mid-disagreement to say 'I notice we're both getting louder and faster. Can we slow down? I want to actually hear what you're saying.'",
+          story: "Ellie and Jo were talking over each other about holiday plans, faster and louder. Jo stopped. \"Hey. We're both speeding up. Can we slow down? I really want to hear you.\" Ellie laughed, a little embarrassed. They sat down, and the talk got quieter and better.",
         },
         {
           id: "bids-for-connection",
@@ -135,6 +147,7 @@ export default function CommunicationJourney() {
           icon: <Sparkles className="w-5 h-5 text-amber-500" />,
           color: "amber",
           example: "When your partner says 'Look at this sunset,' recognizing it as a bid for shared experience and turning toward it rather than staying on your phone.",
+          story: "Clara stood at the window. \"Look at that sunset.\" Mateo was deep in the news on his phone. He almost said \"mm-hm.\" Instead he got up and stood beside her. They watched the sky turn pink without saying much at all.",
         },
         {
           id: "repair-under-pressure",
@@ -143,6 +156,7 @@ export default function CommunicationJourney() {
           icon: <CornerDownRight className="w-5 h-5 text-sky-500" />,
           color: "sky",
           example: "In the middle of a tense exchange, saying 'Wait — I don't like where this is going. You matter more to me than being right. Can we restart?'",
+          story: "The fight about the guest list was getting sharp. Jordan felt their heart pounding and heard their own voice rise. They stopped. \"Wait. I don't like where this is going. You matter more to me than being right.\" Priya's face softened into a tired smile. \"Restart?\"",
         },
         {
           id: "needs-behind-complaints",
@@ -151,6 +165,7 @@ export default function CommunicationJourney() {
           icon: <Brain className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
           example: "Hearing your partner say 'You're always on your phone' and recognizing the need underneath: 'I miss feeling like I have your full attention. I want to feel chosen.'",
+          story: "\"You're always on your phone,\" Ben said at dinner. Rosa felt the sting and got ready to defend herself. Then she heard what was under it. \"Are you missing me?\" she asked. Ben looked down at his plate. \"Yeah. I really am.\"",
         },
       ],
     },
@@ -166,6 +181,7 @@ export default function CommunicationJourney() {
           icon: <Sparkles className="w-5 h-5 text-amber-500" />,
           color: "amber",
           example: "A conversation about weekend plans evolves into discovering that you both crave more spontaneity — something neither had articulated before — and co-creating a new ritual around it.",
+          story: "Sam and Theo started planning a normal weekend: groceries, laundry, a walk with the dog. Halfway through, Theo said, \"I miss doing things we didn't plan.\" Sam lit up. He'd been feeling the same. They made a new rule on the spot: one surprise Saturday a month.",
         },
         {
           id: "holding-space",
@@ -174,6 +190,7 @@ export default function CommunicationJourney() {
           icon: <HandHeart className="w-5 h-5 text-rose-500" />,
           color: "rose",
           example: "When your partner is processing grief, sitting with them in silence, holding their hand, and resisting the urge to say 'It'll be okay' — just being present with what is.",
+          story: "When Daniel's father died, Aiko wanted badly to say the right thing. She kept almost saying, \"It'll be okay.\" Instead she sat beside him and held his hand. The quiet didn't need filling. Later he told her it was what helped most.",
         },
         {
           id: "narrative-co-creation",
@@ -182,6 +199,7 @@ export default function CommunicationJourney() {
           icon: <Mic className="w-5 h-5 text-brand-primary" />,
           color: "purple",
           example: "Regularly revisiting how you met, what you've overcome, and where you're headed — weaving a shared narrative that gives meaning to your journey together.",
+          story: "Every anniversary, Mateo and Clara tell the story of the night they met: the rain, the wrong bus, the soggy umbrella. Then they add one new chapter — what they got through this year. The story keeps growing, and so do they.",
         },
         {
           id: "communicating-across-difference",
@@ -190,6 +208,7 @@ export default function CommunicationJourney() {
           icon: <Scale className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
           example: "One partner processes externally, the other internally. Instead of clashing, saying 'I need to talk this through out loud — can you listen while I think? Then I'd love to hear what comes up for you after you've had a moment.'",
+          story: "Anna thinks out loud. Kofi thinks quietly. For years, that meant clashing. Now Anna says, \"I need to talk this out. Can you just listen?\" And later Kofi says, \"I've had time to think. Here's what came up.\" Two different ways, one team.",
         },
         {
           id: "courageous-conversations",
@@ -198,6 +217,7 @@ export default function CommunicationJourney() {
           icon: <ShieldCheck className="w-5 h-5 text-blue-500" />,
           color: "blue",
           example: "Saying 'There's something I've been wanting to talk about but I've been nervous. It's about how we handle money decisions. Can we create space for that this weekend?'",
+          story: "Luis had been nervous for weeks. Finally, over the dishes, he said, \"There's something I've wanted to bring up. It's how we make money decisions. Can we talk about it this weekend?\" Grace set down a plate. \"I'm really glad you said something.\"",
         },
         {
           id: "relational-attunement",
@@ -206,6 +226,7 @@ export default function CommunicationJourney() {
           icon: <Ear className="w-5 h-5 text-sky-500" />,
           color: "sky",
           example: "Noticing your partner seems quieter than usual after a family dinner and gently asking 'You seem like something's on your mind. Want to talk, or would you rather just be together quietly?'",
+          story: "After dinner with her family, Nia was quiet in the car. Omar noticed how she stared out the window. \"You seem far away,\" he said gently. \"Want to talk, or just be quiet together?\" \"Quiet,\" she said, and reached for his hand.",
         },
       ],
     },
