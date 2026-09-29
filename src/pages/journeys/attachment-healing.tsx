@@ -30,6 +30,7 @@ export default function AttachmentHealingJourney() {
           icon: <Brain className="w-5 h-5 text-blue-500" />,
           color: "blue",
           example: "Discovering that needing lots of reassurance isn't 'needy.' It's something you learned early, when love felt hard to count on. Seeing where it came from takes away the shame — and opens the door to change.",
+          story: "Nia always needed Omar to say \"we're okay\" after even small fights. She used to call herself needy. Then she remembered her mom — warm one day, gone quiet the next. \"I learned love could vanish,\" she told Omar. Saying it out loud took away some of the shame.",
         },
         {
           id: "your-attachment-map",
@@ -38,6 +39,7 @@ export default function AttachmentHealingJourney() {
           icon: <Compass className="w-5 h-5 text-brand-primary" />,
           color: "purple",
           example: "Noticing that you pull back when your partner gets intense, or that you push harder when they seem far away. The map isn't a label. It's a guide to where your growth is waiting.",
+          story: "Daniel noticed it after the third time: whenever Aiko got upset, he went quiet and found something to fix in the garage. And the quieter he got, the louder she got. \"I think I pull away,\" he told her. \"And I think I chase,\" Aiko said. Now they had a map.",
         },
         {
           id: "attachment-origins",
@@ -46,6 +48,7 @@ export default function AttachmentHealingJourney() {
           icon: <TreePine className="w-5 h-5 text-amber-600" />,
           color: "amber",
           example: "Realizing that your difficulty trusting your partner's love connects to a parent who was emotionally available sometimes and absent others. The child learned: 'Love is unreliable. I must work hard to keep it.' Understanding the origin is the beginning of rewriting the story.",
+          story: "Zoe could never quite believe Isaac loved her. One night she traced it back: a dad who showed up for birthdays some years and forgot them others. \"I learned I had to work hard to keep love,\" she said. Isaac held her hand. \"You don't have to work for this.\"",
         },
         {
           id: "attachment-triggers",
@@ -54,6 +57,7 @@ export default function AttachmentHealingJourney() {
           icon: <AlertTriangle className="w-5 h-5 text-red-500" />,
           color: "red",
           example: "Your partner doesn't text back for a few hours and you spiral into anxiety, checking your phone repeatedly. The trigger isn't the delayed text — it's the old fear: 'They're going to leave me.' Recognizing the trigger separates past from present.",
+          story: "Jordan hadn't texted back in three hours. Priya's stomach knotted, and she checked her phone again and again. Then she caught herself. \"This isn't about the text,\" she thought. \"It's the old fear that people leave.\" She put the phone face down and made tea.",
         },
         {
           id: "protest-behaviors",
@@ -62,6 +66,7 @@ export default function AttachmentHealingJourney() {
           icon: <Shield className="w-5 h-5 text-slate-500" />,
           color: "slate",
           example: "When you feel far apart, you might pick a fight, go quiet, keep score, or act like you don't care. These aren't flaws in who you are. They're alarm bells asking for connection.",
+          story: "When Leah feels far from Marcus, she starts keeping score: who did the dishes, who called last. One night she saw it for what it was. \"I'm not really mad about the dishes,\" she said. \"I just miss you.\" Marcus sat down right beside her.",
         },
         {
           id: "secure-base",
@@ -70,6 +75,7 @@ export default function AttachmentHealingJourney() {
           icon: <Home className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
           example: "Feeling secure doesn't mean you never fight or worry. It's the deep trust that 'When I reach for you, you'll be there.' It's feeling okay being close AND okay being apart. It's making up quickly after a hard moment.",
+          story: "Mateo and Clara still argue. Clara still worries sometimes. But when Mateo travels for work, she doesn't lie awake wondering. And when she needs him, she knows he'll come. After twenty years, that's what safe feels like.",
         },
         {
           id: "partner-attachment",
@@ -78,6 +84,7 @@ export default function AttachmentHealingJourney() {
           icon: <Users className="w-5 h-5 text-sky-500" />,
           color: "sky",
           example: "When your partner pulls away after a big talk, seeing that they aren't rejecting you. They're flooded and need a little time to settle. That shift turns frustration into care.",
+          story: "After a big talk, Wei always went for a walk alone. Sophie used to feel rejected. Then she asked him about it. \"I'm not leaving you,\" Wei said. \"I just need to settle.\" Now when he comes back, she has his favorite tea waiting.",
         },
       ],
     },
@@ -93,6 +100,7 @@ export default function AttachmentHealingJourney() {
           icon: <ShieldCheck className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
           example: "Maybe you didn't grow up feeling secure. You can still build it. Each time you reach for your partner when you're scared — and they reach back — you're teaching your heart a new lesson: this love is safe.",
+          story: "Grace didn't grow up feeling safe. The first time she reached for Luis when she was scared, her heart pounded. He reached right back. The tenth time, it felt a little easier. Her heart was learning: this love holds.",
         },
         {
           id: "interrupting-cycles",
@@ -101,6 +109,7 @@ export default function AttachmentHealingJourney() {
           icon: <Layers className="w-5 h-5 text-brand-primary" />,
           color: "purple",
           example: "One partner reaches harder ('We need to talk NOW'). The other steps back ('I need space'). That makes the first reach harder, and the second step back further. The way out: the one who reaches softens a little, and the one who steps back stays five more minutes.",
+          story: "\"We need to talk about this NOW,\" Hannah said. Raj felt himself backing toward the door. Then they both caught it — the old loop. Hannah softened her voice. Raj stayed five more minutes. It was enough to find each other again.",
         },
         {
           id: "vulnerability-practice",
@@ -109,6 +118,7 @@ export default function AttachmentHealingJourney() {
           icon: <HandHeart className="w-5 h-5 text-rose-500" />,
           color: "rose",
           example: "Instead of picking a fight when you feel far apart, saying: 'I'm feeling far from you today and it scares me. Can we spend some time together tonight?' It's one of the hardest things to say — and one of the most powerful.",
+          story: "Instead of snapping about the dishes, Rosa took a breath and said the scary thing: \"I feel far from you today, and it scares me. Can we spend time together tonight?\" Ben turned off the TV. \"Yes. Right now, if you want.\"",
         },
         {
           id: "holding-and-responding",
@@ -117,6 +127,7 @@ export default function AttachmentHealingJourney() {
           icon: <Anchor className="w-5 h-5 text-blue-500" />,
           color: "blue",
           example: "When your partner vulnerably shares a fear, resisting the urge to fix, minimize, or deflect. Instead: 'Thank you for telling me that. I'm here. You're not alone in this.' Holding creates the safety that heals.",
+          story: "Kofi told Anna he was afraid he'd never be a good dad. She felt the urge to say \"Don't be silly!\" She didn't. \"Thank you for telling me,\" she said. \"I'm here. You're not alone in this.\" Kofi exhaled like he'd been holding it for years.",
         },
         {
           id: "self-soothing",
@@ -125,6 +136,7 @@ export default function AttachmentHealingJourney() {
           icon: <Brain className="w-5 h-5 text-amber-500" />,
           color: "amber",
           example: "When the worry rises, instead of texting ten times or going cold, talking to yourself kindly: 'This feeling is old. My partner loves me. I can sit with this for a moment.'",
+          story: "When the worry rose, Priya wanted to text Jordan ten times in a row. Instead, she put a hand on her chest. \"This feeling is old,\" she told herself. \"Jordan loves me. I can sit with this for a minute.\" The wave passed.",
         },
         {
           id: "repairing-attachment-ruptures",
@@ -133,6 +145,7 @@ export default function AttachmentHealingJourney() {
           icon: <Heart className="w-5 h-5 text-sky-500" />,
           color: "sky",
           example: "After a fight where both partners felt abandoned, coming back together and saying: 'I know we scared each other. I'm here now. Are you okay?' Making up after a hard moment doesn't just put things back. It builds new trust.",
+          story: "After the fight, Dev and Maya sat on opposite ends of the couch, both scared. Finally Dev scooted over. \"I know we scared each other,\" he said. \"I'm here now. Are you okay?\" Maya leaned into him. Something new grew in that moment: trust.",
         },
       ],
     },
@@ -148,6 +161,7 @@ export default function AttachmentHealingJourney() {
           icon: <Home className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
           example: "Walking into a stressful family event and instinctively reaching for each other — not from anxiety, but from the natural confidence that you're a unit. Being a team means your first thought is 'we,' not 'me vs. you.'",
+          story: "Walking into Clara's family reunion, Mateo felt Clara's hand find his without either of them thinking. Not out of worry — just because they were a team. Whatever happened in that room, they'd face it as \"we.\"",
         },
         {
           id: "attachment-under-stress",
@@ -156,6 +170,7 @@ export default function AttachmentHealingJourney() {
           icon: <Shield className="w-5 h-5 text-blue-500" />,
           color: "blue",
           example: "During a financial crisis, instead of retreating to old patterns (anxiety or avoidance), turning to each other: 'This is scary. But we've built something strong. Let's figure this out together.' Stress used to break your bond; now it deepens it.",
+          story: "When Leah's hours got cut, the old instinct was to shut down and handle it alone. Instead she found Marcus in the kitchen. \"This is scary,\" she said. \"But we've built something strong. Let's figure this out together.\" He pulled up a chair.",
         },
         {
           id: "reparenting-together",
@@ -164,6 +179,7 @@ export default function AttachmentHealingJourney() {
           icon: <HandHeart className="w-5 h-5 text-rose-500" />,
           color: "rose",
           example: "When your partner is scared of being left — needing to hear it's okay — offering calm instead of frustration: 'I see you. I'm not going anywhere. You're safe with me.'",
+          story: "Late at night, Zoe whispered, \"Sometimes I'm scared you'll leave.\" Isaac didn't get frustrated, even though she'd asked before. He held her close. \"I see you. I'm not going anywhere. You're safe with me.\" She fell asleep holding his hand.",
         },
         {
           id: "attachment-narrative",
@@ -172,6 +188,7 @@ export default function AttachmentHealingJourney() {
           icon: <Sparkles className="w-5 h-5 text-amber-500" />,
           color: "amber",
           example: "Being able to say: 'I grew up with inconsistent love, so I learned to cling. In this relationship, I've learned that I can need someone without losing myself. My anxiety still visits, but it doesn't run the show anymore.'",
+          story: "Nia could finally tell it differently: \"I grew up with love that came and went, so I learned to hold on too tight. With Omar, I've learned I can need someone without losing myself. The old fear still visits. It just doesn't drive anymore.\"",
         },
         {
           id: "interdependence",
@@ -180,6 +197,7 @@ export default function AttachmentHealingJourney() {
           icon: <Eye className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
           example: "Being able to spend a weekend apart without worry, and also cry in your partner's arms without shame. It isn't halfway between close and apart. It's having both.",
+          story: "Jo spent a whole weekend at her sister's without once worrying about Ellie. And when she came home and cried about her sister's news, she cried in Ellie's arms without a trace of shame. Close and apart — she had both now.",
         },
         {
           id: "legacy-of-security",
@@ -188,6 +206,7 @@ export default function AttachmentHealingJourney() {
           icon: <TreePine className="w-5 h-5 text-green-600" />,
           color: "green",
           example: "Your children observe how you and your partner handle conflict, ask for help, and comfort each other. Without any lessons, they're learning what safe love looks like. A pattern that may have lasted generations can end with you.",
+          story: "Grace watched their daughter fall off her bike, then run straight to Luis for a hug before trying again. She'd never been that sure of anyone as a child. \"She knows where safe is,\" Grace thought. The old pattern was ending here.",
         },
       ],
     },
