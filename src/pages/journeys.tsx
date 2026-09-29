@@ -138,7 +138,7 @@ export default function Journeys() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.28 }}
-            className="mb-4 rounded-3xl border border-brand-primary/10 bg-[#EDE9FE] p-5 shadow-sm"
+            className="mb-4 rounded-3xl border border-brand-primary/10 bg-brand-parchment p-5 shadow-sm"
           >
             <div className="flex items-start gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-primary/10 text-brand-primary">
@@ -155,7 +155,7 @@ export default function Journeys() {
                   Stay with one lane at a time. This is where your active journey lives while Home keeps today&apos;s next step lighter.
                 </p>
                 {resumeDay && activeJourneyTotalDays && (
-                  <p className="mt-3 text-sm font-medium text-[#5B4A86]">
+                  <p className="mt-3 text-sm font-medium text-brand-text-secondary">
                     Resume Day {resumeDay} of {activeJourneyTotalDays}
                   </p>
                 )}

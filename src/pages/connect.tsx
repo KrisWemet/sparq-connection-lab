@@ -42,11 +42,11 @@ function ConnectRow({
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-3">
-              <h2 className="text-lg font-semibold text-[#2E1065]">{title}</h2>
+              <h2 className="text-lg font-semibold text-brand-text-primary">{title}</h2>
               <ArrowRight className="w-4 h-4 text-brand-primary flex-shrink-0" />
             </div>
             <p className="text-sm text-brand-espresso leading-relaxed mt-2">{purpose}</p>
-            <p className="text-xs text-[#5B4A86] leading-relaxed mt-2">{moment}</p>
+            <p className="text-xs text-brand-text-secondary leading-relaxed mt-2">{moment}</p>
           </div>
         </div>
       </Link>
@@ -81,15 +81,15 @@ export default function ConnectPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.24 }}
-            className="bg-[#EDE9FE] rounded-3xl border border-brand-primary/10 shadow-sm p-6"
+            className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6"
           >
             <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
               Connect
             </p>
-            <h1 className="font-serif italic text-2xl leading-snug text-[#2E1065]">
+            <h1 className="font-serif italic text-2xl leading-snug text-brand-text-primary">
               Open the tool that fits the real moment you are about to have.
             </h1>
-            <p className="text-sm text-[#5B4A86] leading-relaxed mt-3">
+            <p className="text-sm text-brand-text-secondary leading-relaxed mt-3">
               Start solo if you need to. Add shared tools later. This page keeps the practical connection work together without turning it into another dashboard feed.
             </p>
           </motion.section>

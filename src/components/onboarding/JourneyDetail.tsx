@@ -136,7 +136,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
       <div className="container max-w-md mx-auto px-4 py-8">
         <button
           onClick={onBack}
-          className="flex items-center gap-1 text-[#8B5CF6] text-sm font-semibold mb-6"
+          className="flex items-center gap-1 text-brand-primary text-sm font-semibold mb-6"
         >
           ← Back
         </button>
@@ -146,7 +146,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           className="h-40 rounded-[20px] flex items-center justify-center text-5xl mb-6"
-          style={{ background: 'linear-gradient(135deg, #8B5CF6, #7c3aed)' }}
+          style={{ background: 'linear-gradient(135deg, #C56B4D, #A85539)' }}
         >
           ✨
         </motion.div>
@@ -155,41 +155,41 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
         <p className="text-sm text-[#6b7280] mb-6">{displayDuration} · Beginner · Starts today</p>
 
         <div className="bg-[#fff7ed] rounded-[20px] p-5 mb-4" style={{ border: '1px solid #fdba74' }}>
-          <p className="text-xs font-semibold tracking-widest uppercase text-[#8B5CF6] mb-3">
+          <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
             Solo-first path
           </p>
-          <p className="text-sm text-[#5B4A86] leading-relaxed">
+          <p className="text-sm text-brand-text-secondary leading-relaxed">
             This journey still works if your partner never joins. You will practice what you can control: your focus, your truth, your repairs, and your follow-through.
           </p>
         </div>
 
         {/* What you'll be doing */}
         <div className="bg-white rounded-[20px] p-5 mb-4" style={{ border: '1px solid #e5e7eb' }}>
-          <p className="text-xs font-semibold tracking-widest uppercase text-[#8B5CF6] mb-4">
+          <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-4">
             Here&apos;s what you&apos;ll be doing
           </p>
           <div className="space-y-3">
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full bg-[#8B5CF6] mt-1.5 flex-shrink-0" />
+              <div className="w-2 h-2 rounded-full bg-brand-primary mt-1.5 flex-shrink-0" />
               <p className="text-sm text-[#374151] leading-relaxed">
                 <strong>Each day:</strong> one reflection question, one short insight from me, one small action to try in real life.
               </p>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full bg-[#8B5CF6] mt-1.5 flex-shrink-0" />
+              <div className="w-2 h-2 rounded-full bg-brand-primary mt-1.5 flex-shrink-0" />
               <p className="text-sm text-[#374151] leading-relaxed">
                 <strong>Takes about 5 minutes.</strong> No homework, no pressure — just one tiny move at a time.
               </p>
             </div>
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full bg-[#8B5CF6] mt-1.5 flex-shrink-0" />
+              <div className="w-2 h-2 rounded-full bg-brand-primary mt-1.5 flex-shrink-0" />
               <p className="text-sm text-[#374151] leading-relaxed">
                 <strong>Partner optional.</strong> Some prompts may fit best with your partner, but each day can still help you listen, speak, and stay steady.
               </p>
             </div>
             {day1Preview && (
               <div className="flex items-start gap-3">
-                <div className="w-2 h-2 rounded-full bg-[#8B5CF6] mt-1.5 flex-shrink-0" />
+                <div className="w-2 h-2 rounded-full bg-brand-primary mt-1.5 flex-shrink-0" />
                 <p className="text-sm text-[#374151] leading-relaxed">
                   <strong>Day 1 today:</strong> {day1Preview}
                 </p>
@@ -212,7 +212,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
         <button
           onClick={handleStart}
           disabled={isStarting}
-          className="w-full bg-[#8B5CF6] text-white rounded-2xl py-4 text-base font-semibold disabled:opacity-60 transition-colors"
+          className="w-full bg-brand-primary text-white rounded-2xl py-4 text-base font-semibold disabled:opacity-60 transition-colors"
         >
           {isStarting ? 'Starting...' : "Let's start →"}
         </button>
@@ -225,7 +225,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
         {showRehearsalCta && (
           <button
             onClick={() => router.push('/rehearsal')}
-            className="w-full mt-3 text-center text-sm text-[#8B5CF6] font-medium py-2"
+            className="w-full mt-3 text-center text-sm text-brand-primary font-medium py-2"
           >
             Practice a conversation first →
           </button>

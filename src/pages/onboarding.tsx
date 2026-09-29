@@ -231,14 +231,14 @@ export default function OnboardingPage() {
     return (
       <div className="min-h-screen bg-brand-linen flex flex-col items-center justify-center px-4 gap-4">
         <PeterAvatar mood="morning" size={64} />
-        <p className="text-[#5B4A86] text-center text-sm">{scoringError}</p>
+        <p className="text-brand-text-secondary text-center text-sm">{scoringError}</p>
         <button
           onClick={() => {
             setScoringError('');
             // If savedProgress was lost (e.g. page remounted), fall back to questions
             setPhase(savedProgress ? 'scoring_transition' : 'questions');
           }}
-          className="bg-[#8B5CF6] text-white rounded-2xl px-6 py-3 font-semibold text-sm"
+          className="bg-brand-primary text-white rounded-2xl px-6 py-3 font-semibold text-sm"
         >
           Try again
         </button>

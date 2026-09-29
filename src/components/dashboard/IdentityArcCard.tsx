@@ -112,7 +112,7 @@ export function IdentityArcCard() {
 
       {/* Current stage description */}
       {currentStageInfo && (
-        <p className="text-xs text-[#5B4A86] mt-3 leading-relaxed">
+        <p className="text-xs text-brand-text-secondary mt-3 leading-relaxed">
           {currentStageInfo.description}
         </p>
       )}

@@ -44,15 +44,15 @@ function SecondaryAccessRow({
   return (
     <Link
       href={href}
-      className="flex items-center justify-between rounded-2xl border border-brand-primary/10 bg-[#EDE9FE] px-4 py-4 transition-colors hover:bg-brand-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+      className="flex items-center justify-between rounded-2xl border border-brand-primary/10 bg-brand-parchment px-4 py-4 transition-colors hover:bg-brand-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
     >
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-primary/10 text-brand-primary">
           <Icon className="h-5 w-5" />
         </div>
         <div>
-          <p className="text-sm font-semibold text-[#2E1065]">{label}</p>
-          <p className="text-xs text-[#5B4A86]">{hint}</p>
+          <p className="text-sm font-semibold text-brand-text-primary">{label}</p>
+          <p className="text-xs text-brand-text-secondary">{hint}</p>
         </div>
       </div>
       <ChevronRight className="h-4 w-4 text-brand-primary" />
@@ -209,14 +209,14 @@ export default function ProfilePage() {
             variants={cardVariants}
             initial="hidden"
             animate="visible"
-            className="rounded-3xl border border-brand-primary/10 bg-[#EDE9FE] p-6 text-center shadow-sm"
+            className="rounded-3xl border border-brand-primary/10 bg-brand-parchment p-6 text-center shadow-sm"
           >
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand-primary text-xl font-bold text-white">
               {initials}
             </div>
 
-            <h1 className="mt-3 text-xl font-bold text-[#2E1065]">{displayName}</h1>
-            <p className="mt-1 text-sm text-[#5B4A86]">
+            <h1 className="mt-3 text-xl font-bold text-brand-text-primary">{displayName}</h1>
+            <p className="mt-1 text-sm text-brand-text-secondary">
               {user?.email || 'Manage the account details tied to your practice.'}
             </p>
 
@@ -236,7 +236,7 @@ export default function ProfilePage() {
                     value={formData.name}
                     onChange={handleInputChange}
                     placeholder="Enter your name"
-                    className="w-full rounded-xl border border-brand-primary/20 bg-brand-linen px-3 py-2 text-sm text-[#2E1065] focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                    className="w-full rounded-xl border border-brand-primary/20 bg-brand-linen px-3 py-2 text-sm text-brand-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
                   />
                 </div>
 
@@ -250,7 +250,7 @@ export default function ProfilePage() {
                     value={formData.partnerName}
                     onChange={handleInputChange}
                     placeholder="Enter your partner's name"
-                    className="w-full rounded-xl border border-brand-primary/20 bg-brand-linen px-3 py-2 text-sm text-[#2E1065] focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                    className="w-full rounded-xl border border-brand-primary/20 bg-brand-linen px-3 py-2 text-sm text-brand-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
                   />
                 </div>
 
@@ -264,7 +264,7 @@ export default function ProfilePage() {
                     onChange={handleInputChange}
                     placeholder="Add a short note about yourself"
                     rows={3}
-                    className="w-full rounded-xl border border-brand-primary/20 bg-brand-linen px-3 py-2 text-sm text-[#2E1065] focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                    className="w-full rounded-xl border border-brand-primary/20 bg-brand-linen px-3 py-2 text-sm text-brand-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
                   />
                 </div>
 
@@ -324,7 +324,7 @@ export default function ProfilePage() {
             variants={cardVariants}
             initial="hidden"
             animate="visible"
-            className="rounded-3xl border border-brand-primary/10 bg-[#EDE9FE] p-4 shadow-sm"
+            className="rounded-3xl border border-brand-primary/10 bg-brand-parchment p-4 shadow-sm"
           >
             <button
               onClick={handleLogout}
@@ -336,8 +336,8 @@ export default function ProfilePage() {
                   <LogOut className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-[#2E1065]">Logout</p>
-                  <p className="text-xs text-[#5B4A86]">Sign out and return to the login screen.</p>
+                  <p className="text-sm font-semibold text-brand-text-primary">Logout</p>
+                  <p className="text-xs text-brand-text-secondary">Sign out and return to the login screen.</p>
                 </div>
               </div>
               <ChevronRight className="h-4 w-4 text-brand-primary" />
