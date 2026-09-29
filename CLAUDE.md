@@ -383,7 +383,7 @@ const { subscription, isFeatureAvailable, upgradeToPremium } = useSubscription()
 |---|---|---|---|
 | `free` | 2 (1 morning + 1 evening) | 0 | Basic 5 question categories |
 | `premium` | 4 (2 morning + 2 evening) | 3 | All categories, date ideas, analytics |
-| `ultimate` | Unlimited | Unlimited | Everything + AI therapist |
+| `ultimate` | — | — | Legacy tier — stored values are mapped to `premium` |
 
 `SubscriptionProvider` is mounted in `_app.tsx`, so `useSubscription()` works on every page.
 
