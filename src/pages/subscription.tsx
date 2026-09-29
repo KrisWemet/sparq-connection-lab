@@ -132,7 +132,7 @@ const journeys = [
   },
   {
     id: "attachment",
-    title: "Attachment Styles",
+    title: "Feeling Safe Together",
     description: "Understand your attachment patterns and build secure connections",
     price: 4.99,
     steps: 5,

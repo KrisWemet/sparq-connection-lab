@@ -610,7 +610,7 @@ Warm, golden-hour metaphor images only — never people (hands-only is allowed).
 There are 14 predefined journeys defined in `src/data/journeys.ts` with corresponding page components in `src/pages/journeys/`:
 
 - Communication, Intimacy, Trust Rebuilding, Conflict Resolution
-- Love Languages, Emotional Intelligence, Attachment Healing
+- Love Languages, Emotional Intelligence, Feeling Safe Together (route: `attachment-healing`)
 - Relationship Renewal, Values, Mindful Sexuality, Sexual Intimacy
 - Fantasy Exploration, Power Dynamics, Long Distance
 
