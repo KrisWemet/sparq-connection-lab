@@ -37,6 +37,7 @@ export default function LoveLanguagesJourney() {
           icon: <MessageCircle className="w-5 h-5 text-rose-500" />,
           color: "rose",
           example: "Instead of a quick 'love you' on the way out, pausing to say 'I really admire how patient you were with the kids last night. You make our family feel so safe.' Specific, heartfelt words carry ten times the weight of generic ones.",
+          story: "Rosa was grabbing her keys when she stopped at the door. \"Hey. You were so patient with the kids last night. You make this house feel safe.\" Ben looked up from the dishes, a little stunned. He smiled about it for the rest of the day.",
         },
         {
           id: "quality-time",
@@ -45,6 +46,7 @@ export default function LoveLanguagesJourney() {
           icon: <Calendar className="w-5 h-5 text-blue-500" />,
           color: "blue",
           example: "Putting your phone in another room during dinner and asking 'What was the most interesting part of your day?' — then listening without checking the clock. For quality time speakers, presence without distraction is the purest form of love.",
+          story: "Hannah set both phones in the other room before dinner. \"What was the best part of your day?\" she asked Raj. He started with a small story about a coworker's dog. She didn't check the clock once. Raj talked longer than he had in weeks.",
         },
         {
           id: "acts-of-service",
@@ -53,6 +55,7 @@ export default function LoveLanguagesJourney() {
           icon: <Handshake className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
           example: "Noticing your partner has a stressful week ahead and quietly handling the grocery shopping, meal prep, and school pickups without being asked. For service speakers, actions don't just speak louder than words — they are the words.",
+          story: "Leah had three night shifts in a row coming up. Without saying a word, Marcus did the grocery run and filled the fridge with meals she could grab. When Leah opened it, she laughed and teared up at the same time.",
         },
         {
           id: "physical-touch",
@@ -61,6 +64,7 @@ export default function LoveLanguagesJourney() {
           icon: <Hand className="w-5 h-5 text-amber-500" />,
           color: "amber",
           example: "Reaching for your partner's hand while walking through a parking lot, resting your hand on their back while they cook, or pulling them into a long hug when they seem stressed. For touch speakers, these moments say 'You are not alone.'",
+          story: "Walking through the busy parking lot, Omar reached for Nia's hand without thinking. Later, while she cooked, he rested a hand on her back for a second as he passed. Small things. But Nia felt, all evening, that she wasn't alone.",
         },
         {
           id: "receiving-gifts",
@@ -69,6 +73,7 @@ export default function LoveLanguagesJourney() {
           icon: <Gift className="w-5 h-5 text-brand-primary" />,
           color: "purple",
           example: "Bringing home their favorite tea because you noticed they ran out, or keeping a small stone from a beach you visited together. For gift speakers, it's never about the price — it's the proof that someone thought of them when they didn't have to.",
+          story: "Sophie ran out of her favorite tea on Monday. On Tuesday, Wei came home with a box of it. It cost four dollars. Sophie held it like a present. \"You noticed,\" she said. That was the whole gift.",
         },
         {
           id: "discovering-your-language",
@@ -77,6 +82,7 @@ export default function LoveLanguagesJourney() {
           icon: <Compass className="w-5 h-5 text-sky-500" />,
           color: "sky",
           example: "Reflecting on what hurts most when it's missing: Do you ache when your partner doesn't say kind things (Words)? When they're distracted around you (Time)? When they don't help (Service)? When they pull away physically (Touch)? When they forget occasions (Gifts)? The deepest wound often reveals the deepest need.",
+          story: "Kofi tried to remember what hurt most when things felt off with Anna. It wasn't the lack of gifts or even time. It was when she stopped telling him he was doing a good job. \"Oh,\" he thought. \"It's the words.\"",
         },
         {
           id: "mapping-your-partner",
@@ -85,6 +91,7 @@ export default function LoveLanguagesJourney() {
           icon: <Eye className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
           example: "Noticing that your partner lights up when you leave a note in their bag (Words) but seems unmoved by the expensive gift you stressed over. Or that they keep offering to fix things around the house (Service) — that's how they're saying 'I love you' in their native tongue.",
+          story: "Priya spent weeks picking out an expensive watch for Jordan. They said thank you — politely. But when she left a sticky note in their jacket that said \"Proud of you,\" Jordan carried it around for days. Priya started paying attention.",
         },
       ],
     },
@@ -100,6 +107,7 @@ export default function LoveLanguagesJourney() {
           icon: <Repeat className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
           example: "Your language is Acts of Service, but your partner's is Words of Affirmation. You start leaving short voice memos during the day: 'Just thinking about you and how lucky I am.' It feels awkward at first — like speaking a foreign language — but you see your partner's whole demeanor shift.",
+          story: "Isaac shows love by fixing things. Zoe feels love through words. So Isaac started sending her short voice notes at lunch: \"Just thinking about you. Lucky me.\" It felt awkward at first. Then Zoe saved every single one.",
         },
         {
           id: "love-language-under-stress",
@@ -108,6 +116,7 @@ export default function LoveLanguagesJourney() {
           icon: <ShieldCheck className="w-5 h-5 text-rose-500" />,
           color: "rose",
           example: "During a high-pressure month, your Quality Time partner becomes withdrawn and irritable. Instead of taking it personally, recognizing that stress has emptied their love tank. Carving out 20 minutes of phone-free connection each evening begins to restore equilibrium.",
+          story: "During a brutal month at work, Aiko got quiet and short-tempered. Daniel's first thought was, \"What did I do?\" Then he remembered: time together is how she refills. He started a twenty-minute phone-free walk each evening. By the second week, she was laughing again.",
         },
         {
           id: "love-language-dialects",
@@ -116,6 +125,7 @@ export default function LoveLanguagesJourney() {
           icon: <Ear className="w-5 h-5 text-brand-primary" />,
           color: "purple",
           example: "Your partner's language is Physical Touch, but not all touch lands the same. You discover that a hand on their lower back in public makes them feel claimed and proud, while holding hands during a hard conversation makes them feel safe. Each dialect carries different emotional meaning.",
+          story: "Theo loves touch, but Sam learned not all touch is the same. A hand on his back at a party makes Theo stand taller. Holding hands during a hard talk makes him feel safe. A tickle during a fight? Not so much.",
         },
         {
           id: "recognizing-language-shifts",
@@ -124,6 +134,7 @@ export default function LoveLanguagesJourney() {
           icon: <Waypoints className="w-5 h-5 text-amber-500" />,
           color: "amber",
           example: "After becoming a new parent, you notice that Acts of Service suddenly matters far more than it used to. Or after a period of emotional distance, Quality Time jumps to the top. Checking in periodically — 'What makes you feel most loved right now?' — prevents you from speaking yesterday's language.",
+          story: "Before the baby, Grace wanted date nights. Now, the thing that makes her feel most loved is Luis doing the 2 a.m. feeding without being asked. One night he asked, \"What makes you feel loved right now?\" Her answer surprised them both.",
         },
         {
           id: "filling-the-tank",
@@ -132,6 +143,7 @@ export default function LoveLanguagesJourney() {
           icon: <Heart className="w-5 h-5 text-sky-500" />,
           color: "sky",
           example: "Rather than waiting until your partner feels neglected, building daily micro-deposits: a compliment at breakfast, a two-minute check-in call, a spontaneous hug in the kitchen. Small, consistent deposits prevent the kind of emotional bankruptcy that leads to resentment.",
+          story: "Ellie doesn't wait for Jo to feel neglected. A compliment at breakfast. A quick call at lunch. A hug by the sink. Tiny deposits, every day. When hard weeks come, there's something in the bank.",
         },
         {
           id: "receiving-gracefully",
@@ -140,6 +152,7 @@ export default function LoveLanguagesJourney() {
           icon: <HeartHandshake className="w-5 h-5 text-blue-500" />,
           color: "blue",
           example: "Your partner keeps buying you small gifts, and you've been dismissing them because gifts aren't your language. Recognizing that each gift is their heart saying 'I love you' — and responding with genuine gratitude rather than 'You didn't need to do that.'",
+          story: "Clara kept bringing home little gifts, and Mateo kept saying, \"You didn't need to do that.\" One day he saw her face fall. The next time, he said, \"Thank you. This made my day.\" Clara's whole face lit up.",
         },
         {
           id: "love-language-requests",
@@ -148,6 +161,7 @@ export default function LoveLanguagesJourney() {
           icon: <Lightbulb className="w-5 h-5 text-orange-500" />,
           color: "orange",
           example: "Instead of 'You never pay attention to me,' saying 'My love tank is running low. Would you be willing to put your phone away during dinner this week? That's the kind of quality time that fills me up.' Framing needs as invitations rather than indictments.",
+          story: "Instead of \"You're always on your phone,\" Sophie tried something new. \"I'm feeling a little far from you. Could we keep phones away at dinner this week?\" Wei set his phone face down right then. \"Yes. Starting now.\"",
         },
       ],
     },
@@ -163,6 +177,7 @@ export default function LoveLanguagesJourney() {
           icon: <Users className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
           example: "You've practiced so consistently that speaking your partner's language no longer feels effortful. You naturally reach for their hand (their language) while also verbalizing what you appreciate about them (your language). Love becomes a bilingual conversation that satisfies you both.",
+          story: "After months of practice, Dev doesn't have to think about it anymore. He reaches for Maya's hand — her language. And he tells her what he loves about her — his. Two ways of saying the same thing, all day long.",
         },
         {
           id: "custom-rituals",
@@ -171,6 +186,7 @@ export default function LoveLanguagesJourney() {
           icon: <Sparkles className="w-5 h-5 text-amber-500" />,
           color: "amber",
           example: "Building a Sunday morning ritual: coffee together without phones (Quality Time), reading each other one thing you appreciated that week (Words), followed by making breakfast together (Acts of Service). A single ritual can speak multiple languages simultaneously.",
+          story: "Every Sunday, Rosa and Ben make coffee with no phones in sight. They each share one thing they appreciated that week. Then they make pancakes together. One small ritual, and it speaks to both of them.",
         },
         {
           id: "navigating-conflicts",
@@ -179,6 +195,7 @@ export default function LoveLanguagesJourney() {
           icon: <Scale className="w-5 h-5 text-rose-500" />,
           color: "rose",
           example: "During a disagreement, recognizing that your partner's anger is amplified because their love tank is empty. Pausing the argument to say 'Before we solve this, I want you to know I love you and I'm on your side' (Words) while reaching for their hand (Touch). Repair in their language lands faster.",
+          story: "In the middle of a tense talk about money, Hannah stopped. \"Before we solve this — I love you, and I'm on your side,\" she said, and took Raj's hand. The problem was still there. But the fight wasn't.",
         },
         {
           id: "teaching-others",
@@ -187,6 +204,7 @@ export default function LoveLanguagesJourney() {
           icon: <BookOpen className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
           example: "Helping your child understand why their sibling needs a hug after a hard day while they need words of encouragement. Or explaining to a friend why their partner keeps 'nagging' about helping around the house — it's their way of asking to be loved.",
+          story: "Anna's daughter was annoyed that her little brother kept wanting hugs after school. \"That's how he feels safe,\" Anna explained. \"You like it when I tell you I'm proud. He likes hugs.\" The next day, her daughter gave him one — quickly, but she did.",
         },
         {
           id: "creative-expression",
@@ -195,6 +213,7 @@ export default function LoveLanguagesJourney() {
           icon: <Palette className="w-5 h-5 text-brand-primary" />,
           color: "purple",
           example: "For a Words of Affirmation partner: recording a 'reasons I love you' playlist with voice notes between songs. For a Quality Time partner: creating an annual 'adventure jar' with date ideas you draw at random. The most meaningful expressions are ones no book could have suggested.",
+          story: "For their anniversary, Jordan made Priya a playlist with little voice notes between the songs: \"This one played the night we met.\" Priya listened to it on her whole drive to work, grinning at red lights.",
         },
         {
           id: "love-language-legacy",
@@ -203,6 +222,7 @@ export default function LoveLanguagesJourney() {
           icon: <Brain className="w-5 h-5 text-sky-500" />,
           color: "sky",
           example: "Recognizing that your need for Acts of Service comes from a childhood where love was shown through sacrifice, not words. Choosing to break the pattern by both serving and speaking — giving your children a richer vocabulary of love than you received.",
+          story: "Kofi grew up in a home where love meant working hard, not saying much. He noticed he did the same. So he started doing both — packing lunches and saying \"I'm proud of you\" out loud. His kids are growing up with both.",
         },
         {
           id: "integrated-love",
@@ -211,6 +231,7 @@ export default function LoveLanguagesJourney() {
           icon: <Flame className="w-5 h-5 text-orange-500" />,
           color: "orange",
           example: "You stop thinking in categories. You simply notice what your partner needs in each moment and respond — a touch here, a word there, a quiet act of care. The five languages dissolve into one seamless practice: attentive, responsive love that adapts in real time.",
+          story: "Mateo doesn't think in categories anymore. He just notices. A touch when Clara looks tired. A kind word when she's doubting herself. Tea when she's busy. After twenty years, love has become a way of paying attention.",
         },
       ],
     },
