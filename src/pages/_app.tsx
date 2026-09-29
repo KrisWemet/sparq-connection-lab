@@ -9,6 +9,7 @@ import { BottomNav } from '../components/bottom-nav';
 import { PageTransition } from '../components/PageTransition';
 import { PeterLoading } from '../components/PeterLoading';
 import { TimeOutOverlay } from '../components/TimeOutOverlay';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { reportPrimaryPathClientError, shouldReportPrimaryPathRouteError } from '@/lib/beta/primaryPath';
 import '../styles/globals.css';
 
@@ -69,9 +70,11 @@ export default function App({ Component, pageProps }: AppProps) {
             <PeterLoading isLoading={isLoading} />
             <TimeOutOverlay />
             <div className="pb-20"> {/* Add padding for BottomNav */}
-              <PageTransition>
-                <Component {...pageProps} />
-              </PageTransition>
+              <ErrorBoundary resetKey={router.asPath}>
+                <PageTransition>
+                  <Component {...pageProps} />
+                </PageTransition>
+              </ErrorBoundary>
             </div>
             <BottomNav />
           </div>
