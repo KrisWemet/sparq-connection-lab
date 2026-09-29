@@ -9,7 +9,7 @@
 
 ## 1. Where things stand (one paragraph)
 
-The codebase was cleaned up and hardened, the whole app was moved onto the Warm Clay palette with WCAG-AA contrast, and a **transparent psychological-priming layer** was built: framework-aligned copy, a shared **Story Recipe**, stories in morning messages / daily primes / **all 13 journeys (244 stories)**, and warm people-free imagery. Fake testimonials and invented stats were removed. A new **product constitution** (`docs/CONSTITUTION.md`) was added and is now the governing product document — but three conflicts with existing docs are unresolved (see §6). Everything below was merged to `main` and is live on Vercel unless marked otherwise.
+The codebase was cleaned up and hardened, the whole app was moved onto the Warm Clay palette with WCAG-AA contrast, and a **transparent psychological-priming layer** was built: framework-aligned copy, a shared **Story Recipe**, stories in morning messages / daily primes / **all 13 journeys (244 stories)**, and warm people-free imagery. Fake testimonials and invented stats were removed. A new **product constitution** (`docs/CONSTITUTION.md`) was added and is the source of truth for everything it covers (see §6). Everything below was merged to `main` and is live on Vercel unless marked otherwise.
 
 ---
 
@@ -77,11 +77,13 @@ The codebase was cleaned up and hardened, the whole app was moved onto the Warm 
 
 ---
 
-## 6. Open decisions (need Chris)
+## 6. Constitution decisions (Chris, 2026-09-29)
 
-1. **Document precedence** — the constitution calls itself the source of truth; `CURRENT_STATE.md` ranks the Master PRD first. Which wins?
-2. **Automated tests** — constitution §13 requires tests (privacy leakage, inference certainty, memory revision); `CLAUDE.md` says no test infra unless asked.
-3. **Covert assessment** — `sparq-psychology` skill says "users don't realize they're being assessed"; constitution §2 says hypotheses-not-diagnoses and user agency. Recommended: adopt the constitution's stance and update the skill.
+1. **Precedence** — `docs/CONSTITUTION.md` is the source of truth for everything it covers; the Master PRD, `CLAUDE.md` and specs fill the gaps. (`CURRENT_STATE.md` hierarchy updated.)
+2. **Tests** — allowed, but **ask Chris before adding each test**.
+3. **Quiet assessment** — no conflict: learning quietly through daily content is fine; anything surfaced is a correctable hypothesis, never a label. (Clarifying line added to the `sparq-psychology` skill.)
+
+No open product decisions right now.
 
 ---
 

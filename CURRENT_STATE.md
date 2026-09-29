@@ -45,7 +45,7 @@
 
 **Deployment: automatic.** Vercel project `prj_NKGFCHHu6ZmjqGtRbl3cvuqqTsAt` (team `team_lHUrq8HUE80iaXl8uSjQ3U3a`) builds **every push to `main` straight to production** — there is no manual deploy step and no staging gate. Everything committed in this session is live. Production alias: `sparq-connection-lab-git-main-chris-os-projects-77292ad2.vercel.app`. **Treat every push as a production release.**
 
-**Source-of-truth hierarchy:** Master PRD (`SC-PRD-MASTER-1.0`, Chris has it at `~/Downloads/SPARQ_CONNECTION_MASTER_PRD.md`) → `CLAUDE.md` (working rules + architecture) → per-feature specs in `docs/superpowers/specs/` → this file (state only).
+**Source-of-truth hierarchy:** `docs/CONSTITUTION.md` (wins for everything it covers; Chris, 2026-09-29) → Master PRD (`SC-PRD-MASTER-1.0`, Chris has it at `~/Downloads/SPARQ_CONNECTION_MASTER_PRD.md`) → `CLAUDE.md` (working rules + architecture) → per-feature specs in `docs/superpowers/specs/` → this file (state only).
 
 ---
 

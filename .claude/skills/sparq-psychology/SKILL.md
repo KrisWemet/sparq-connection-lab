@@ -71,7 +71,7 @@ Additionally tracked but not a formal dimension:
 
 ### Progressive Discovery (NOT an Upfront Questionnaire)
 
-Assessment is **woven into daily content** — users don't realize they're being assessed. This is more accurate than self-report questionnaires because it's based on real responses to real exercises.
+Assessment is **woven into daily content** — users don't realize they're being assessed. This is more accurate than self-report questionnaires because it's based on real responses to real exercises. Whatever is learned stays a hypothesis: when a trait is surfaced to the user, it is offered tentatively and they can correct it — never presented as a label or diagnosis (constitution §2).
 
 - **Day 1**: Name, solo/partner, what brings you here, daily time preference, identity archetype selection
 - **Days 2-14**: Assessment questions embedded naturally in daily exercises. Each day's content is selected partly to reveal a personality dimension.

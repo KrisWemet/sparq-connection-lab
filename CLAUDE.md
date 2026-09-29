@@ -2,7 +2,7 @@
 
 This file provides comprehensive context for AI assistants working on this codebase. Read the product context section first — every time, without skipping.
 
-> **Product constitution:** [`docs/CONSTITUTION.md`](docs/CONSTITUTION.md) defines Sparq's governing principles — discovery before direction, hypotheses never diagnoses, Peter's conversation modes, memory discipline, and private/shared privacy boundaries. Read it before planning any feature. Its "Constitutional test" applies to every major feature. Open precedence questions are listed at the top of that file.
+> **Product constitution:** [`docs/CONSTITUTION.md`](docs/CONSTITUTION.md) defines Sparq's governing principles — discovery before direction, hypotheses never diagnoses, Peter's conversation modes, memory discipline, and private/shared privacy boundaries. Read it before planning any feature. Its "Constitutional test" applies to every major feature. It is the source of truth for everything it covers; where it is silent, the rest of this file and the Master PRD apply.
 
 ---
 
@@ -149,7 +149,7 @@ Do not relitigate these:
 - **Supabase** — auth, DB, edge functions. No alternative backend.
 - **shadcn/ui + Tailwind** — component and styling system. No new UI libraries.
 - **Framer Motion** — all animations. Do not use CSS-only animation for Peter.
-- **No automated tests** — accepted for now. Do not add test infrastructure unless asked.
+- **No automated tests by default** — tests are allowed (the constitution calls for them), but ask Chris before adding each one.
 - **No Mem0 SDK** — memory is Supabase pgvector (`src/lib/server/memory.ts`). Do not wire real Mem0 unless explicitly asked.
 - **OpenRouter → Claude Haiku 4.5** — Peter's AI backend. Do not change the model.
 

@@ -2,10 +2,10 @@
 
 > **Repo note (added 2026-09-29, not part of the spec text):** Transcribed verbatim from `SPARQ_CONSTITUTIONAL_SPEC_v1.docx`. Adopted as the governing product constitution for this repo — read it alongside `CLAUDE.md` before planning features.
 >
-> **Open questions for Chris** (flagged, not yet resolved):
-> - **Precedence.** This document calls itself the source of truth; `CURRENT_STATE.md` ranks the Master PRD first. Which wins when they disagree?
-> - **Automated tests.** §13 requires tests for privacy leakage, inference certainty and memory revision; `CLAUDE.md` currently says no test infrastructure unless asked.
-> - **Covert assessment.** The `sparq-psychology` skill's "users don't realize they're being assessed" conflicts with §2 (hypotheses, never diagnoses; user agency).
+> **Decisions (Chris, 2026-09-29):**
+> - **Precedence.** This constitution is the source of truth for everything it covers. Where it is silent, the Master PRD, `CLAUDE.md` and feature specs still apply.
+> - **Automated tests.** Tests (§13) are allowed, but ask Chris before adding each one.
+> - **Quiet assessment.** Learning about the user through daily content (the `sparq-psychology` skill) fits this document: Peter may learn quietly and know more than he says. Anything surfaced to the user is a hypothesis they can correct, never a label (§2).
 >
 > The spec's own step 1 (§14) — auditing the repo as keep / adapt / replace / missing — has not been done yet.
 
