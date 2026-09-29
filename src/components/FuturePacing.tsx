@@ -10,7 +10,7 @@ interface FuturePacingProps {
   timeframes: {
     label: string; // e.g., "1 Month", "6 Months", "1 Year"
     vision: string; // The future vision text
-    embedCommand?: string; // Optional embedded command
+    reflection?: string; // Open question the user answers for themselves
   }[];
   onComplete?: () => void;
 }
@@ -33,35 +33,6 @@ export function FuturePacing({
     if (onComplete) onComplete();
   };
   
-  // Format text with embedded commands (wrapped in *asterisks*)
-  const formatWithEmbeddedCommands = (text: string) => {
-    return text.split(/(\*[^*]+\*)/g).map((part, index) => {
-      if (part.startsWith('*') && part.endsWith('*')) {
-        // This is an embedded command - style it differently
-        const command = part.slice(1, -1);
-        return (
-          <motion.span 
-            key={index}
-            className="font-medium text-brand-primary"
-            initial={{ opacity: 0.8 }}
-            animate={{ 
-              opacity: [0.8, 1, 0.8],
-              scale: [1, 1.02, 1]
-            }}
-            transition={{ 
-              duration: 3,
-              repeat: Infinity,
-              repeatDelay: 1
-            }}
-          >
-            {command}
-          </motion.span>
-        );
-      }
-      return <span key={index}>{part}</span>;
-    });
-  };
-  
   return (
     <Card className="overflow-hidden border-none shadow-md bg-gradient-to-br from-brand-linen to-brand-parchment">
       <div className="p-5">
@@ -76,7 +47,7 @@ export function FuturePacing({
           {activeTimeframe === null ? (
             <div className="space-y-3 py-2">
               <p className="text-xs text-center text-brand-primary italic">
-                Select a timeframe to visualize your relationship&apos;s future
+                How far ahead should we look first?
               </p>
               
               <div className="grid grid-cols-3 gap-2">
@@ -123,17 +94,17 @@ export function FuturePacing({
                 
                 <div className="min-h-[120px] text-gray-700 leading-relaxed mb-4">
                   <p className="text-sm">
-                    {formatWithEmbeddedCommands(timeframes[activeTimeframe].vision)}
+                    {timeframes[activeTimeframe].vision}
                   </p>
                   
-                  {timeframes[activeTimeframe].embedCommand && (
+                  {timeframes[activeTimeframe].reflection && (
                     <motion.p
-                      className="text-sm font-medium text-brand-primary mt-3 italic"
+                      className="font-serif text-lg italic leading-snug text-brand-espresso mt-4"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 1.5 }}
                     >
-                      {timeframes[activeTimeframe].embedCommand}
+                      {timeframes[activeTimeframe].reflection}
                     </motion.p>
                   )}
                 </div>
@@ -148,7 +119,7 @@ export function FuturePacing({
                       setActiveTimeframe(nextIndex);
                     }}
                   >
-                    Next Timeframe
+                    Look further ahead
                     <ArrowRight className="h-3 w-3 ml-1" />
                   </Button>
                   
@@ -158,7 +129,7 @@ export function FuturePacing({
                     className="text-xs bg-brand-primary hover:bg-brand-hover"
                     onClick={handleComplete}
                   >
-                    {isCompleted ? "Visualization Complete" : "Complete Visualization"}
+                    {isCompleted ? "Kept close" : "Keep this picture"}
                   </Button>
                 </div>
               </motion.div>
@@ -173,7 +144,7 @@ export function FuturePacing({
               className="text-center text-sm text-brand-primary pt-2"
             >
               <p>
-                As you continue your journey together, notice how these visions naturally begin to manifest in your relationship.
+                Every small step you take this week brings this picture a little closer.
               </p>
             </motion.div>
           )}

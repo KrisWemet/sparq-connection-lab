@@ -199,7 +199,7 @@ export function PersuasiveJourneyPrompt({
                   onClick={() => setShowUpgradePrompt(true)}
                   className="rounded-xl bg-brand-sand hover:opacity-90 text-white"
                 >
-                  Unlock Premium Journey
+                  Explore this Premium journey
                   <Lock className="ml-2 h-4 w-4" />
                 </Button>
               )}

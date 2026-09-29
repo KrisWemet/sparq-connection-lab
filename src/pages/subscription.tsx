@@ -69,7 +69,7 @@ const plans = [
       { name: "Couples shared journey", included: false },
     ],
     popular: true,
-    buttonText: "Upgrade Now",
+    buttonText: "Go deeper with Premium",
     disabled: false,
     testimonial: {
       quote: "The Advanced Skill Tree exercises are on a different level. We've been doing them together and it's like couples therapy but way more fun.",

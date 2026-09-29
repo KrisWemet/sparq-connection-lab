@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { PersuasiveJourneyPrompt } from "../components/journey/PersuasiveJourneyPrompt";
 import { MetaphorAnimation } from "../components/MetaphorAnimation";
 import { FuturePacing } from "../components/FuturePacing";
-import { hypnoticStories, futurePacingTimeframes, metaphorDescriptions } from "../data/persuasiveContent";
+import { futurePacingTimeframes, metaphorDescriptions } from "../data/persuasiveContent";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
@@ -76,8 +76,6 @@ export default function JourneyStart() {
   
   const journeyType = getJourneyTypeKey();
   
-  // Get appropriate story for this journey type
-  const story = hypnoticStories.find(s => s.type === journeyType) || hypnoticStories[0];
   
   // Get appropriate future pacing for this journey type
   const futurePacing = futurePacingTimeframes.find(f => f.type === journeyType) || futurePacingTimeframes[0];
@@ -127,7 +125,7 @@ export default function JourneyStart() {
       {showFuturePacing && (
         <FuturePacing
           title="Your Relationship Future"
-          description="Envision how your consistent practice transforms your relationship over time"
+          description="Picture where a little practice each day can take the two of you."
           timeframes={futurePacing.timeframes}
           onComplete={handleFuturePacingComplete}
         />

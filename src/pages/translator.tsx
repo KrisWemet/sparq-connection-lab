@@ -5,15 +5,18 @@ import PeterTheOtter, { MascotStatus } from "../components/PeterTheOtter";
 const partnerProfiles = [
   {
     value: "Avoidant",
-    description: "Needs space, can shut down when things feel intense.",
+    label: "Needs space",
+    description: "Can go quiet or shut down when things feel intense.",
   },
   {
     value: "Anxious",
-    description: "Needs reassurance and calm, fears being rejected.",
+    label: "Needs reassurance",
+    description: "Wants calm and closeness, and worries about being pushed away.",
   },
   {
     value: "Secure",
-    description: "Feels steady and open, responds well to clarity.",
+    label: "Feels steady",
+    description: "Open and steady, and likes things said clearly.",
   },
 ];
 
@@ -125,7 +128,7 @@ export default function Translator() {
                     : "bg-white text-gray-700 border-gray-300 hover:border-brand-primary"
                 }`}
               >
-                <span>{profile.value}</span>
+                <span>{profile.label}</span>
               </button>
             ))}
           </div>

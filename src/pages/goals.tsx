@@ -447,7 +447,7 @@ export default function Goals() {
                     <Trophy className="w-12 h-12 mx-auto text-gray-400 mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No completed goals yet</h3>
                     <p className="text-gray-500 mb-6">
-                      Complete your goals to see them here. Keep up the good work!
+                      Goals you reach will rest here — each one a small win you built together.
                     </p>
                   </div>
                 ) : (
@@ -524,7 +524,7 @@ export default function Goals() {
               className="gap-2"
             >
               <Star className="w-4 h-4" />
-              Unlock Premium Goal Templates
+              Explore Premium goal templates
             </Button>
           </div>
         )}
