@@ -28,6 +28,8 @@ type ConceptItem = {
   icon: ReactNode;
   color: string;
   example: string;
+  /** Optional short story (Sparq Story Recipe). Shown in place of `example` when present. */
+  story?: string;
 };
 
 type CompletionCriteria = {
@@ -102,7 +104,8 @@ function generateDayContent(concepts: ConceptItem[], totalDays: number, tierId?:
 
 function getLearningContent(concept: ConceptItem, cycle: number, tierDepth: number, journeyTitle: string = 'your relationship'): string {
   const base = concept.description;
-  const example = concept.example;
+  // A story teaches better than an abstract example — prefer it when a journey has one.
+  const example = concept.story ?? concept.example;
   const contextLower = journeyTitle ? journeyTitle.toLowerCase() : 'your relationship';
 
   if (tierDepth === 0) {
@@ -129,14 +132,14 @@ function getWhyItMatters(concept: ConceptItem, cycle: number, tierDepth: number,
   const contextLower = journeyTitle ? journeyTitle.toLowerCase() : 'relationship';
 
   if (tierDepth === 0) {
-    if (cycle === 0) return `Research shows that couples who develop awareness of ${concept.title.toLowerCase()} report significantly greater success with ${contextLower}. This isn't about perfection — it's about showing up with intention.`;
+    if (cycle === 0) return `Noticing comes first. You can't change what you can't see — and every time you spot ${concept.title.toLowerCase()} in a real moment, you're already practicing. This isn't about getting it perfect. It's about showing up on purpose.`;
     if (cycle === 1) return `The more you notice ${concept.title.toLowerCase()} in your daily life, the more naturally it improves ${contextLower}. Awareness is the seed of change.`;
     return `You're building the foundation that ${contextLower} rests on. Without awareness of ${concept.title.toLowerCase()}, deeper practice would be guesswork.`;
   }
   if (tierDepth === 1) {
     if (cycle === 0) return `Knowledge without practice fades. The couples who transform their relationships are the ones who move from understanding ${concept.title.toLowerCase()} to deliberately practicing it — even when it's uncomfortable.`;
-    if (cycle === 1) return `You're in the messy middle — where practice feels awkward but real change is happening. Trust the process. Every repetition of ${concept.title.toLowerCase()} is rewiring how you relate.`;
-    return `Consistent, deliberate practice of ${concept.title.toLowerCase()} is building neural pathways that will eventually feel effortless. You're closer than you think.`;
+    if (cycle === 1) return `You're in the messy middle, where practice feels a little awkward. That awkward feeling is what learning feels like. Every time you choose ${concept.title.toLowerCase()}, it becomes a little more like you.`;
+    return `The more you practice ${concept.title.toLowerCase()}, the less effort it takes. One day you'll notice you did it without even thinking. You're closer than you think.`;
   }
   if (cycle === 0) return `When ${concept.title.toLowerCase()} becomes second nature, it stops being a skill you deploy and becomes part of your relational identity. That's the shift from practice to presence.`;
   if (cycle === 1) return `Integration means you don't have to think about ${concept.title.toLowerCase()} — you just live it. This is the level of mastery that creates lasting, deeply satisfying partnerships.`;

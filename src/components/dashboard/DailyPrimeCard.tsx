@@ -57,6 +57,9 @@ export function DailyPrimeCard() {
       <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-primary/60">
         Today&apos;s nudge
       </p>
+      {prime.story && (
+        <p className="mb-3 font-serif text-[17px] italic leading-relaxed text-brand-espresso">{prime.story}</p>
+      )}
       <p className="mb-4 text-sm leading-relaxed text-brand-espresso">{prime.body}</p>
       <div className="rounded-2xl border border-brand-growth/30 bg-brand-growth/10 px-4 py-3">
         <p className="text-xs leading-relaxed text-brand-espresso">
