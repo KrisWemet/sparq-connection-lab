@@ -197,8 +197,8 @@ export const journeys: Journey[] = [
   },
   {
     id: "attachment-healing",
-    title: "Attachment Healing",
-    description: "Understand and transform your attachment patterns for deeper security",
+    title: "Feeling Safe Together",
+    description: "Understand how you learned to love, and grow a steadier, safer bond",
     duration: "6 weeks",
     category: "Advanced",
     sequence: 7,
@@ -209,19 +209,19 @@ export const journeys: Journey[] = [
       "Interpersonal Neurobiology (Siegel)"
     ],
     benefits: [
-      "Understand your attachment style and its origins",
-      "Recognize attachment triggers before they escalate",
-      "Develop earned security through intentional practice",
-      "Create a more secure bond with your partner"
+      "See how you learned to love — and where it started",
+      "Catch old fears before they take over",
+      "Build a steady, safe feeling through small daily practice",
+      "Grow a bond where you both feel secure"
     ],
     icon: HeartHandshake,
     phases: [
-      { name: "Understand", days: "Days 1-10", description: "Map your attachment patterns", icon: "🗺️" },
+      { name: "Understand", days: "Days 1-10", description: "Notice how you reach and pull back", icon: "🗺️" },
       { name: "Heal", days: "Days 11-21", description: "Process origins and triggers", icon: "🌿" },
-      { name: "Rewire", days: "Days 22-35", description: "Build new neural pathways", icon: "🧠" },
-      { name: "Secure", days: "Days 36-42", description: "Establish earned security", icon: "🏠" }
+      { name: "Practice", days: "Days 22-35", description: "Try new ways of reaching for each other", icon: "🌱" },
+      { name: "Secure", days: "Days 36-42", description: "Feel safe, close, and steady together", icon: "🏠" }
     ],
-    overview: "This 42-day deep-dive journey helps you understand how early attachment experiences shape your relationship patterns, and guides you toward earned security through daily practices and partner exercises."
+    overview: "Over 42 days, you'll see how the love you grew up with shapes the way you love now — and, through small daily practices together, grow a bond where you both feel safe."
   },
   {
     id: "trust-rebuilding",
