@@ -119,7 +119,7 @@ export const journeys: Journey[] = [
     duration: "2 weeks",
     category: "Growth",
     sequence: 4,
-    image: "/images/journeys/intimacy.png",
+    image: "/images/journeys/intimacy.jpg",
     psychology: [
       "Attachment Theory (Bowlby/Johnson)",
       "Emotionally Focused Therapy",
@@ -230,7 +230,7 @@ export const journeys: Journey[] = [
     duration: "6 weeks",
     category: "Advanced",
     sequence: 8,
-    image: "/images/journeys/trust-rebuilding.png",
+    image: "/images/journeys/trust-rebuilding.jpg",
     psychology: [
       "Gottman Trust Revival Method",
       "Emotionally Focused Therapy",
@@ -286,7 +286,7 @@ export const journeys: Journey[] = [
     duration: "4 weeks",
     category: "Intimacy",
     sequence: 10,
-    image: "/images/journeys/sexual-intimacy.png",
+    image: "/images/journeys/sexual-intimacy.jpg",
     psychology: [
       "Sensate Focus (Masters & Johnson)",
       "Desire Discrepancy Research (Perel)",
@@ -342,7 +342,7 @@ export const journeys: Journey[] = [
     duration: "3 weeks",
     category: "Intimacy",
     sequence: 12,
-    image: "/images/journeys/fantasy-exploration.png",
+    image: "/images/journeys/fantasy-exploration.jpg",
     psychology: [
       "Erotic Intelligence (Perel)",
       "Attachment-Based Sex Therapy",

@@ -18,7 +18,7 @@ const journeys = [
     duration: "2 weeks",
     category: "Foundation",
     sequence: 1,
-    image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/love-languages.png",
     psychology: [
       "Love Languages Framework (Chapman)",
       "Attachment Theory",
@@ -66,7 +66,7 @@ const journeys = [
     duration: "3 weeks",
     category: "Skills",
     sequence: 2,
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/communication.png",
     psychology: [
       "Gottman Method",
       "Nonviolent Communication (Rosenberg)",
@@ -114,7 +114,7 @@ const journeys = [
     duration: "4 weeks",
     category: "Skills",
     sequence: 3,
-    image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/conflict-resolution.png",
     psychology: [
       "Gottman's Four Horsemen",
       "Fair Fighting Techniques",
@@ -162,7 +162,7 @@ const journeys = [
     duration: "5 weeks",
     category: "Connection",
     sequence: 4,
-    image: "https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/intimacy.jpg",
     psychology: [
       "Sternberg's Triangular Theory of Love",
       "Sensate Focus Techniques",
@@ -210,7 +210,7 @@ const journeys = [
     duration: "3 weeks",
     category: "Foundation",
     sequence: 5,
-    image: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/values.png",
     psychology: [
       "Acceptance and Commitment Therapy",
       "Positive Psychology",
@@ -257,7 +257,7 @@ const journeys = [
     description: "Cultivate a culture of appreciation and positivity in your relationship",
     duration: "2 weeks",
     category: "Connection",
-    image: "https://images.unsplash.com/photo-1516575334481-f85287c2c82d?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/relationship-renewal.png",
     psychology: [
       "Positive Psychology",
       "Gottman's 5:1 Ratio",
@@ -304,7 +304,7 @@ const journeys = [
     description: "Foster intimacy through a scientifically-designed question sequence",
     duration: "3 sessions",
     category: "Connection",
-    image: "https://images.unsplash.com/photo-1474552226712-ac0f0961a954?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/emotional-intelligence.png",
     psychology: [
       "Self-Disclosure Theory",
       "Interpersonal Process Model",
@@ -353,7 +353,7 @@ const journeys = [
     description: "Strengthen your bond through fun, laughter and lighthearted activities",
     duration: "2 weeks",
     category: "Fun",
-    image: "https://images.unsplash.com/photo-1488116908379-1208e281cc76?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/fantasy-exploration.jpg",
     psychology: [
       "Positive Psychology",
       "Play Therapy Concepts",
@@ -402,7 +402,7 @@ const journeys = [
     description: "Build deeper physical and emotional intimacy through mindful connection practices",
     duration: "2 weeks",
     category: "Connection",
-    image: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/mindful-sexuality.png",
     psychology: [
       "Attachment Theory",
       "Sensate Focus Techniques",
@@ -449,7 +449,7 @@ const journeys = [
     description: "Discover and communicate desires, fantasies, and preferences in a safe, supportive space",
     duration: "3 weeks",
     category: "Connection",
-    image: "https://images.unsplash.com/photo-1516585427167-9f4af9627e6c?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/sexual-intimacy.jpg",
     psychology: [
       "Erotic Intelligence Research",
       "Cognitive Flexibility",
@@ -496,7 +496,7 @@ const journeys = [
     description: "Explore advanced intimate practices with clear communication, consent, and trust",
     duration: "4 weeks",
     category: "Connection",
-    image: "https://images.unsplash.com/photo-1624523439904-d392af8c4354?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/power-dynamics.png",
     psychology: [
       "Consent Psychology",
       "Power Dynamics Research",
