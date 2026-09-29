@@ -175,7 +175,7 @@ export default function ReflectionHistory() {
             </p>
             <button
               onClick={() => router.push('/neutral-observer')}
-              className="mt-4 rounded-full bg-brand-primary px-5 py-2 text-sm font-semibold text-white hover:bg-brand-hover transition-colors"
+              className="mt-4 rounded-full bg-brand-primary px-5 py-2 text-sm font-bold text-white hover:bg-brand-hover transition-colors"
             >
               Start now
             </button>

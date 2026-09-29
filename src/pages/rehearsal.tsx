@@ -467,7 +467,7 @@ export default function RehearsalRoom() {
                     : msg.isPartner
                     ? 'bg-amber-50 border border-amber-200 text-brand-espresso rounded-tl-sm'
                     : 'bg-white border border-brand-primary/10 text-brand-espresso rounded-tl-sm font-serif italic'
-                }`}
+                } font-bold`}
               >
                 {msg.content}
               </div>
@@ -551,7 +551,7 @@ export default function RehearsalRoom() {
                     };
                     setMessages(prev => [...prev, peterMsg]);
                   }}
-                  className={`w-11 h-11 rounded-full border-2 flex items-center justify-center text-sm font-semibold transition-all ${
+                  className={`w-11 h-11 rounded-full border-2 flex items-center justify-center text-sm font-bold transition-all ${
                     confidenceBefore === n
                       ? 'bg-brand-primary border-brand-primary text-white'
                       : 'border-brand-primary/30 bg-brand-parchment text-brand-text-primary hover:border-brand-primary hover:bg-brand-primary/10'
@@ -651,7 +651,7 @@ export default function RehearsalRoom() {
                     <button
                       key={n}
                       onClick={() => setConfidenceAfter(n)}
-                      className={`w-11 h-11 rounded-full border-2 flex items-center justify-center text-sm font-semibold transition-all ${
+                      className={`w-11 h-11 rounded-full border-2 flex items-center justify-center text-sm font-bold transition-all ${
                         confidenceAfter === n
                           ? 'bg-brand-primary border-brand-primary text-white'
                           : 'border-brand-primary/30 bg-brand-parchment text-brand-text-primary hover:border-brand-primary hover:bg-brand-primary/10'
@@ -671,7 +671,7 @@ export default function RehearsalRoom() {
                 </p>
                 <button
                   onClick={completeSession}
-                  className="w-full bg-brand-primary text-white rounded-2xl py-4 text-base font-semibold"
+                  className="w-full bg-brand-primary text-white rounded-2xl py-4 text-base font-bold"
                 >
                   Done
                 </button>
@@ -689,7 +689,7 @@ export default function RehearsalRoom() {
           >
             <button
               onClick={() => router.push('/dashboard')}
-              className="w-full bg-brand-primary text-white rounded-2xl py-4 text-base font-semibold"
+              className="w-full bg-brand-primary text-white rounded-2xl py-4 text-base font-bold"
             >
               Back to home
             </button>
@@ -728,7 +728,7 @@ export default function RehearsalRoom() {
                 else if (phase === 'debrief' || phase === 'debrief_close') sendDebriefMessage(userInput);
               }}
               disabled={!userInput.trim()}
-              className="bg-brand-primary text-white rounded-2xl px-4 py-3 font-semibold text-sm disabled:opacity-40"
+              className="bg-brand-primary text-white rounded-2xl px-4 py-3 font-bold text-sm disabled:opacity-40"
             >
               →
             </button>

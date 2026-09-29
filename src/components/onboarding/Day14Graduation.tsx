@@ -252,7 +252,7 @@ export function Day14Graduation() {
 
                         {/* Recommended Track */}
                         {report.recommended_track && (
-                            <div className="rounded-2xl bg-brand-primary p-4 text-white">
+                            <div className="rounded-2xl bg-brand-primary p-4 text-white font-bold">
                                 <p className="text-xs font-bold uppercase tracking-wider mb-1 text-white/70">
                                     Recommended Skill Track
                                 </p>
@@ -266,7 +266,7 @@ export function Day14Graduation() {
 
                 <button
                     onClick={() => router.push('/journeys')}
-                    className="w-full flex items-center justify-center gap-2 bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors"
+                    className="w-full flex items-center justify-center gap-2 bg-brand-primary text-white font-bold py-4 rounded-2xl hover:bg-brand-hover transition-colors"
                 >
                     Explore Journeys
                     <ArrowRight size={18} />

@@ -43,7 +43,7 @@ export default function Home() {
               </span>
             </Link>
             <Link href="/signup">
-              <span className="px-5 py-2.5 bg-brand-primary text-white font-semibold rounded-full hover:bg-brand-hover transition-colors cursor-pointer text-sm shadow-sm">
+              <span className="px-5 py-2.5 bg-brand-primary text-white font-bold rounded-full hover:bg-brand-hover transition-colors cursor-pointer text-sm shadow-sm">
                 Get Started
               </span>
             </Link>
@@ -161,7 +161,7 @@ export default function Home() {
               Start with your own daily practice. Invite your partner later if it helps.
             </p>
             <Link href="/login">
-              <span className="px-10 py-4 bg-brand-primary text-white rounded-full hover:bg-brand-hover transition-colors font-medium shadow-xl shadow-brand-primary/20 text-base inline-block cursor-pointer">
+              <span className="px-10 py-4 bg-brand-primary text-white rounded-full hover:bg-brand-hover transition-colors font-bold shadow-xl shadow-brand-primary/20 text-base inline-block cursor-pointer">
                 Create Account
               </span>
             </Link>

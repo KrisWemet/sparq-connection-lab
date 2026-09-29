@@ -101,7 +101,7 @@ export function HabitAnchorPick({ userId, onComplete }: HabitAnchorPickProps) {
             whileTap={{ scale: 0.98 }}
             onClick={save}
             disabled={!anchor || saving}
-            className="w-full rounded-[22px] bg-brand-primary px-4 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-40"
+            className="w-full rounded-[22px] bg-brand-primary px-4 py-3.5 text-sm font-bold text-white transition-colors hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-40"
           >
             {saving ? 'Saving…' : 'That\'s my moment'}
           </motion.button>

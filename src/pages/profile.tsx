@@ -279,7 +279,7 @@ export default function ProfilePage() {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="flex-1 rounded-2xl bg-brand-primary py-3 text-sm font-medium text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
+                    className="flex-1 rounded-2xl bg-brand-primary py-3 text-sm font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
                   >
                     {isLoading ? 'Saving…' : 'Save'}
                   </button>

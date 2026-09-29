@@ -239,7 +239,7 @@ export function PeterChat({
             <button
               type="submit"
               disabled={!inputText.trim() || isLoading || isTranscribing}
-              className="w-10 h-10 rounded-full bg-brand-primary text-white flex items-center justify-center flex-shrink-0 disabled:opacity-40 hover:bg-brand-hover transition-colors shadow-sm"
+              className="w-10 h-10 rounded-full bg-brand-primary text-white flex items-center justify-center flex-shrink-0 disabled:opacity-40 hover:bg-brand-hover transition-colors shadow-sm font-bold"
             >
               <Send size={16} className={inputText.trim() ? "translate-x-[-1px] translate-y-[1px]" : ""} />
             </button>

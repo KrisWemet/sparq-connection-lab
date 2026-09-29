@@ -212,7 +212,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
         <button
           onClick={handleStart}
           disabled={isStarting}
-          className="w-full bg-brand-primary text-white rounded-2xl py-4 text-base font-semibold disabled:opacity-60 transition-colors"
+          className="w-full bg-brand-primary text-white rounded-2xl py-4 text-base font-bold disabled:opacity-60 transition-colors"
         >
           {isStarting ? 'Starting...' : "Let's start →"}
         </button>

@@ -174,7 +174,7 @@ export function PersuasiveJourneyPrompt({
               {hasAccess ? (
                 <Button
                   onClick={onContinue}
-                  className="rounded-xl bg-brand-primary hover:bg-brand-hover text-white"
+                  className="rounded-xl bg-brand-primary hover:bg-brand-hover text-white font-bold"
                 >
                   {completionPercentage > 0 ? "Continue Journey" : "Start Journey"}
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -251,7 +251,7 @@ export function PersuasiveJourneyPrompt({
                 Not Now
               </Button>
               <Button
-                className="flex-1 rounded-xl bg-brand-primary hover:bg-brand-hover text-white"
+                className="flex-1 rounded-xl bg-brand-primary hover:bg-brand-hover text-white font-bold"
                 onClick={() => router.push("/subscription")}
               >
                 Upgrade to Premium

@@ -99,7 +99,7 @@ export default function PartnerProfile() {
               <p className="text-gray-500 mb-4">{error}</p>
               <button 
                 onClick={() => router.push("/profile")}
-                className="px-4 py-2 bg-primary text-white rounded-lg"
+                className="px-4 py-2 bg-primary text-white rounded-lg font-bold"
               >
                 Go to Your Profile
               </button>
@@ -151,7 +151,7 @@ export default function PartnerProfile() {
                 </p>
                 <button 
                   onClick={() => router.push("/quiz")}
-                  className="w-full py-2 px-4 bg-primary text-white rounded-lg"
+                  className="w-full py-2 px-4 bg-primary text-white rounded-lg font-bold"
                 >
                   Go to Relationship Quiz
                 </button>

@@ -164,7 +164,7 @@ export function EveningCheckin({ sessionId, morningAction, journeyTitle, trigger
               <button
                 onClick={handleSubmitReflection}
                 disabled={!reflectionText.trim() || isSubmitting}
-                className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors disabled:opacity-50 text-base"
+                className="w-full bg-brand-primary text-white font-bold py-4 rounded-2xl hover:bg-brand-hover transition-colors disabled:opacity-50 text-base"
               >
                 {isSubmitting ? 'Peter is reading...' : 'Share with Peter'}
               </button>
@@ -197,7 +197,7 @@ export function EveningCheckin({ sessionId, morningAction, journeyTitle, trigger
                     setStep('done');
                     onComplete();
                   }}
-                  className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors text-base"
+                  className="w-full bg-brand-primary text-white font-bold py-4 rounded-2xl hover:bg-brand-hover transition-colors text-base"
                 >
                   <span className="flex items-center justify-center gap-2">
                     <CheckCircle size={18} />

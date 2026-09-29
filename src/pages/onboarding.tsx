@@ -238,7 +238,7 @@ export default function OnboardingPage() {
             // If savedProgress was lost (e.g. page remounted), fall back to questions
             setPhase(savedProgress ? 'scoring_transition' : 'questions');
           }}
-          className="bg-brand-primary text-white rounded-2xl px-6 py-3 font-semibold text-sm"
+          className="bg-brand-primary text-white rounded-2xl px-6 py-3 font-bold text-sm"
         >
           Try again
         </button>

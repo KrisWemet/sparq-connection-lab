@@ -680,7 +680,7 @@ export default function DailyGrowth() {
               <span className="text-sm text-brand-taupe">5 min morning page</span>
               <button
                 onClick={() => setShowHome(false)}
-                className="rounded-[22px] bg-brand-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+                className="rounded-[22px] bg-brand-primary px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
               >
                 Start Morning Story
               </button>
@@ -818,7 +818,7 @@ export default function DailyGrowth() {
               >
                 <button
                   onClick={handleMorningRead}
-                  className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors text-base"
+                  className="w-full bg-brand-primary text-white font-bold py-4 rounded-2xl hover:bg-brand-hover transition-colors text-base"
                 >
                   I&apos;ll do this today
                 </button>
@@ -958,7 +958,7 @@ export default function DailyGrowth() {
                       <button
                         onClick={handleCompleteDay}
                         disabled={isSaving}
-                        className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors disabled:opacity-50 text-base"
+                        className="w-full bg-brand-primary text-white font-bold py-4 rounded-2xl hover:bg-brand-hover transition-colors disabled:opacity-50 text-base"
                       >
                         {isSaving ? 'Saving...' : `Finish Day ${currentDay}`}
                       </button>
@@ -973,7 +973,7 @@ export default function DailyGrowth() {
                       <button
                         onClick={handleCompleteDay}
                         disabled={isSaving}
-                        className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors disabled:opacity-50 text-base"
+                        className="w-full bg-brand-primary text-white font-bold py-4 rounded-2xl hover:bg-brand-hover transition-colors disabled:opacity-50 text-base"
                       >
                         {isSaving ? 'Saving...' : `Finish Day ${currentDay}`}
                       </button>
@@ -1083,7 +1083,7 @@ export default function DailyGrowth() {
                   {/* Return button */}
                   <button
                     onClick={() => router.push('/dashboard')}
-                    className="w-full bg-brand-primary text-white font-semibold py-4 rounded-2xl hover:bg-brand-hover transition-colors text-base mt-6"
+                    className="w-full bg-brand-primary text-white font-bold py-4 rounded-2xl hover:bg-brand-hover transition-colors text-base mt-6"
                   >
                     Return to Dashboard
                   </button>

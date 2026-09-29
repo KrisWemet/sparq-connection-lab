@@ -99,7 +99,7 @@ export function BetaFeedbackDialog({
                     key={value}
                     type="button"
                     onClick={() => setSentiment(value)}
-                    className={`h-9 w-9 rounded-full border text-sm font-semibold transition-colors ${
+                    className={`h-9 w-9 rounded-full border text-sm font-bold transition-colors ${
                       sentiment === value
                         ? 'border-brand-primary bg-brand-primary text-white'
                         : 'border-brand-primary/20 text-brand-hover hover:bg-brand-primary/10'
