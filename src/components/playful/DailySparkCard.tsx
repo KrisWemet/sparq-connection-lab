@@ -91,7 +91,7 @@ export function DailySparkCard({ prompt, surface, onSwap }: DailySparkCardProps)
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.14 }}
-      className="rounded-[30px] border border-brand-primary/10 bg-brand-linen/90 p-5 shadow-[0_16px_36px_rgba(42,34,52,0.05)]"
+      className="rounded-[30px] border border-brand-primary/10 bg-brand-linen/90 p-5 shadow-[0_16px_36px_rgba(46,38,32,0.05)]"
     >
       <div className="flex items-start justify-between gap-3">
         <div>

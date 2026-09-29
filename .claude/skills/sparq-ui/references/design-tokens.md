@@ -10,10 +10,10 @@ All values sourced from the live codebase. Tokens marked **(proposed)** are not 
 
 | Token | Hex | HSL (approx) | Usage |
 |---|---|---|---|
-| `brand-primary` | `#C0614A` | 12° 47% 52% | Primary actions, active states, CTA fills |
+| `brand-primary` | `#C56B4D` | 12° 47% 52% | Primary actions, active states, CTA fills |
 | `brand-hover` | `#A3513D` | 12° 45% 44% | Hover state for primary elements |
-| `brand-light` | `#FDF8F6` | 20° 64% 98% | Very light warm tint backgrounds |
-| `brand-linen` | `#FAF6F1` | 33° 56% 96% | Warm cream page background, Peter cards |
+| `brand-light` | `#FBF8F3` | 20° 64% 98% | Very light warm tint backgrounds |
+| `brand-linen` | `#F5F1EA` | 33° 56% 96% | Warm cream page background, Peter cards |
 | `brand-sand` | `#E8A857` | 35° 77% 63% | Amber highlights, streak icons, celebrations |
 | `brand-taupe` | `#3D2C28` | 14° 22% 20% | Deep warm brown for grounding text |
 | `brand-growth` | `#8FAF8A` | 113° 18% 61% | Sage green for progress, success |
@@ -24,7 +24,7 @@ All values sourced from the live codebase. Tokens marked **(proposed)** are not 
 |---|---|---|
 | `primary` (DEFAULT) | `#C86A58` | shadcn primary — buttons, links |
 | `primary-foreground` | `#FFFFFF` | Text on primary |
-| `primary-100` | `#FDF8F6` | Lightest primary tint |
+| `primary-100` | `#FBF8F3` | Lightest primary tint |
 | `primary-200` | `#F4EFEB` | Medium primary tint (gradients) |
 
 ### Secondary
@@ -280,7 +280,7 @@ All values sourced from the live codebase. Tokens marked **(proposed)** are not 
 | `bg-gradient-to-r from-primary-100 to-white` | Streak card |
 | `bg-gradient-to-r from-blue-500 to-brand-primary` | Premium upgrade CTA |
 | `bg-gradient-to-r from-purple-500 to-pink-500` | Ultimate upgrade CTA |
-| `linear-gradient(145deg, #FFFFFF 0%, #FDF8F6 100%)` | Inline style for score building state |
+| `linear-gradient(145deg, #FFFFFF 0%, #FBF8F3 100%)` | Inline style for score building state |
 
 ---
 

@@ -26,7 +26,7 @@ All poses share Peter's base anatomy from `src/components/dashboard/PeterAvatar.
 
 **Mouth**: Warm open smile — `Q 50 64` (default curve, moderate opening).
 
-**Prop — Journal**: Positioned at `translate(32, 78)`. Brand-primary cover (`#C0614A`, 36×26, rx=3), darker spine (`#A3513D`, 6px wide), cream pages (`#FAF6F1`) on both sides of spine with fine line rules (`#D4B896`, 4 lines left page, 3 lines right page).
+**Prop — Journal**: Positioned at `translate(32, 78)`. Brand-primary cover (`#C56B4D`, 36×26, rx=3), darker spine (`#A3513D`, 6px wide), cream pages (`#F5F1EA`) on both sides of spine with fine line rules (`#D4B896`, 4 lines left page, 3 lines right page).
 
 **Blink**: Active — 6-second CSS cycle, blink at 93-97%.
 
@@ -70,7 +70,7 @@ All poses share Peter's base anatomy from `src/components/dashboard/PeterAvatar.
 
 **Mouth**: Small relaxed smile — shorter curve `44→56` with gentler arc (`Q 50 61`).
 
-**Prop — Mug**: Positioned at `translate(38, 82)`. Warm terracotta body (`#D4795F`, 24×20, rx=4), curved handle (`#A3513D`, 3px stroke), amber liquid top (`#E8A857`, 80% opacity), two steam wisps (`#C0614A`, 1.5px stroke, 50% opacity) curving upward.
+**Prop — Mug**: Positioned at `translate(38, 82)`. Warm terracotta body (`#D4795F`, 24×20, rx=4), curved handle (`#A3513D`, 3px stroke), amber liquid top (`#E8A857`, 80% opacity), two steam wisps (`#C56B4D`, 1.5px stroke, 50% opacity) curving upward.
 
 **Blink**: Disabled (eyes already half-closed).
 
@@ -93,9 +93,9 @@ All poses share Peter's base anatomy from `src/components/dashboard/PeterAvatar.
 **Mouth**: Big open smile with fill — `Q 50 66` (deeper curve), stroke `#3D1A10` width 2.5, fill `#C26B54` (warm coral).
 
 **Prop — Confetti**: Scattered circles and rotated rectangles in brand colors:
-- Circles: `#E8A857` (r=3 @ 18,22), `#8FAF8A` (r=2.5 @ 82,18), `#C0614A` (r=2 @ 88,50), `#D4795F` (r=2.5 @ 12,55)
+- Circles: `#E8A857` (r=3 @ 18,22), `#8FAF8A` (r=2.5 @ 82,18), `#C56B4D` (r=2 @ 88,50), `#D4795F` (r=2.5 @ 12,55)
 - Rectangles: `#E8A857` (6×6, rotated 30° @ 15,70), `#8FAF8A` (5×5, rotated -20° @ 78,72)
-- Star characters: ✦ in `#E8A857` (@ 10,35 size 10) and `#C0614A` (@ 80,30 size 8)
+- Star characters: ✦ in `#E8A857` (@ 10,35 size 10) and `#C56B4D` (@ 80,30 size 8)
 
 **Blink**: Disabled (eyes squeezed shut).
 
@@ -201,7 +201,7 @@ All poses share Peter's base anatomy from `src/components/dashboard/PeterAvatar.
 
 **Mouth**: Warm smile (default).
 
-**Prop**: Heart shape in brand-primary (`#C0614A`), centered between paws at ~(50, 78). Gentle pulse animation: scale 1→1.1→1 on 2s loop.
+**Prop**: Heart shape in brand-primary (`#C56B4D`), centered between paws at ~(50, 78). Gentle pulse animation: scale 1→1.1→1 on 2s loop.
 
 **When it triggers**: Partner sends "Thinking of you" heartbeat, partner completes their daily session, partner synthesis is available.
 

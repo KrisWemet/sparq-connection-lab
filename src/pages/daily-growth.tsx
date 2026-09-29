@@ -658,7 +658,7 @@ export default function DailyGrowth() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
-            className="relative overflow-hidden rounded-[34px] border border-brand-primary/12 bg-brand-parchment px-6 py-6 shadow-[0_24px_54px_rgba(42,34,52,0.12)]"
+            className="relative overflow-hidden rounded-[34px] border border-brand-primary/12 bg-brand-parchment px-6 py-6 shadow-[0_24px_54px_rgba(46,38,32,0.12)]"
           >
             <div
               aria-hidden="true"
@@ -704,7 +704,7 @@ export default function DailyGrowth() {
             </div>
           </motion.div>
 
-          <div className="rounded-[28px] border border-brand-primary/10 bg-white/60 p-5 shadow-[0_14px_34px_rgba(42,34,52,0.05)]">
+          <div className="rounded-[28px] border border-brand-primary/10 bg-white/60 p-5 shadow-[0_14px_34px_rgba(46,38,32,0.05)]">
             <p className="text-xs font-semibold tracking-widest uppercase text-brand-primary mb-3">
               Solo-first reminder
             </p>

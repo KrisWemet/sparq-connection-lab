@@ -73,9 +73,9 @@ export function BottomNav() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
       <div
-        className="mx-auto flex max-w-lg items-center justify-between rounded-[30px] border border-white/70 bg-brand-linen/88 px-4 py-3 shadow-[0_18px_42px_rgba(42,34,52,0.16)] backdrop-blur-2xl"
+        className="mx-auto flex max-w-lg items-center justify-between rounded-[30px] border border-white/70 bg-brand-linen/88 px-4 py-3 shadow-[0_18px_42px_rgba(46,38,32,0.16)] backdrop-blur-2xl"
         style={{
-          boxShadow: "0 18px 42px rgba(42, 34, 52, 0.16)",
+          boxShadow: "0 18px 42px rgba(46, 38, 32, 0.16)",
         }}
       >
         {navItems.map((item) => {
