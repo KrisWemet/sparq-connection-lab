@@ -117,7 +117,7 @@ const journeys = [
     description: "Master the art of truly understanding each other",
     price: 3.99,
     steps: 5,
-    image: "https://images.unsplash.com/photo-1516575334481-f85287c2c82d?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/communication.png",
     popular: true
   },
   {
@@ -126,7 +126,7 @@ const journeys = [
     description: "Strengthen your emotional and physical connection",
     price: 4.99,
     steps: 7,
-    image: "https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/intimacy.png",
     popular: false
   },
   {
@@ -135,7 +135,7 @@ const journeys = [
     description: "Create a foundation of security and reliability",
     price: 3.99,
     steps: 4,
-    image: "https://images.unsplash.com/photo-1516575334481-f85287c2c82d?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/trust-rebuilding.png",
     popular: false
   },
   {
@@ -144,7 +144,7 @@ const journeys = [
     description: "Align your visions and create shared goals",
     price: 4.99,
     steps: 6,
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/values.png",
     popular: false
   },
   {
@@ -153,7 +153,7 @@ const journeys = [
     description: "Understand your attachment patterns and build secure connections",
     price: 4.99,
     steps: 5,
-    image: "https://images.unsplash.com/photo-1516575334481-f85287c2c82d?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/attachment-healing.png",
     popular: true,
     new: true
   },
@@ -163,7 +163,7 @@ const journeys = [
     description: "Transform disagreements into opportunities for growth",
     price: 4.99,
     steps: 6,
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/conflict-resolution.png",
     popular: false,
     new: true
   },
@@ -173,7 +173,7 @@ const journeys = [
     description: "All current and future journeys at a discounted price",
     price: 14.99,
     steps: 33,
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&h=500",
+    image: "/images/journeys/relationship-renewal.png",
     popular: true,
     bestValue: true
   }
