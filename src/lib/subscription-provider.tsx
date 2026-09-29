@@ -14,7 +14,6 @@ export type SubscriptionPlan = {
     journeysIncluded: number; // Number of free journeys included
     unlimitedDateIdeas: boolean;
     darkMode: boolean;
-    aiTherapist: boolean;
     premiumCategories: boolean;
     relationshipTimeline: boolean;
     advancedAnalytics: boolean;
@@ -46,7 +45,6 @@ const defaultSubscription: SubscriptionPlan = {
     journeysIncluded: 0,
     unlimitedDateIdeas: false,
     darkMode: true,
-    aiTherapist: false,
     premiumCategories: false,
     relationshipTimeline: false,
     advancedAnalytics: false,
@@ -62,7 +60,6 @@ const premiumSubscription: SubscriptionPlan = {
     journeysIncluded: 3,
     unlimitedDateIdeas: true,
     darkMode: true,
-    aiTherapist: false,
     premiumCategories: true,
     relationshipTimeline: true,
     advancedAnalytics: true,
