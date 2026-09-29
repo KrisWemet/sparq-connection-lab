@@ -1,5 +1,5 @@
 
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 
 const JOURNEY_PROGRESS_STORAGE_KEY = "sparq_journey_progress";
 const TIER_PROGRESS_STORAGE_KEY = "sparq_tier_progress";

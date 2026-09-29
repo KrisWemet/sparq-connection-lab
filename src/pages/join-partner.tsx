@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { HeartHandshake, Loader2 } from "lucide-react";
 import { useAuth } from '@/hooks/useAuth';
 import { partnerService } from '@/services/partnerService';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 
 export default function JoinPartner() {
   const router = useRouter();
