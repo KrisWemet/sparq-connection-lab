@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase, getProfile, updateProfile, Profile as SupabaseProfile } from './supabase';
+import { supabase, getSupabaseClient, getProfile, updateProfile, Profile as SupabaseProfile } from './supabase';
 import { Session, User, AuthError } from '@supabase/supabase-js';
 
 interface AuthUser extends User {
@@ -57,6 +57,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Initial session and user fetch
   useEffect(() => {
+    // Initialization can fail in an unconfigured checkout. Expose the error
+    // through the existing auth state instead of crashing the mounted app.
+    try {
+      getSupabaseClient();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unable to initialize Supabase');
+      setLoading(false);
+      return;
+    }
+
     let cancelled = false;
     let signOutTimer: ReturnType<typeof setTimeout> | null = null;
 
