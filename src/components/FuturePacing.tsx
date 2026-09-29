@@ -63,12 +63,12 @@ export function FuturePacing({
   };
   
   return (
-    <Card className="overflow-hidden border-none shadow-md bg-gradient-to-br from-indigo-50 via-purple-50 to-blue-50">
+    <Card className="overflow-hidden border-none shadow-md bg-gradient-to-br from-brand-linen to-brand-parchment">
       <div className="p-5">
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-brand-primary/80" />
-            <h3 className="text-lg font-medium text-indigo-900">{title}</h3>
+            <h3 className="text-lg font-medium text-brand-espresso">{title}</h3>
           </div>
           
           <p className="text-sm text-brand-primary">{description}</p>
@@ -84,7 +84,7 @@ export function FuturePacing({
                   <Button
                     key={index}
                     variant="outline"
-                    className="flex flex-col items-center justify-center h-16 border-brand-primary/20 hover:border-indigo-400 hover:bg-brand-linen"
+                    className="flex flex-col items-center justify-center h-16 border-brand-primary/20 hover:border-brand-primary hover:bg-brand-linen"
                     onClick={() => handleTimeframeSelect(index)}
                   >
                     <Calendar className="h-4 w-4 mb-1 text-brand-primary/80" />
@@ -155,7 +155,7 @@ export function FuturePacing({
                   <Button
                     variant="default"
                     size="sm"
-                    className="text-xs bg-gradient-to-r from-brand-primary to-purple-500 hover:from-brand-primary hover:to-purple-600"
+                    className="text-xs bg-brand-primary hover:bg-brand-hover"
                     onClick={handleComplete}
                   >
                     {isCompleted ? "Visualization Complete" : "Complete Visualization"}

@@ -187,7 +187,7 @@ export default function JourneyStart() {
               
               <Button 
                 onClick={handleContinueJourney}
-                className="w-full bg-gradient-to-r from-brand-primary to-purple-600 hover:from-brand-primary hover:to-purple-700"
+                className="w-full bg-brand-primary hover:bg-brand-hover"
               >
                 Continue Your Journey
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -212,12 +212,12 @@ export default function JourneyStart() {
                 </div>
                 
                 <div 
-                  className="bg-purple-50 p-4 rounded-lg cursor-pointer hover:bg-purple-100 transition-colors"
+                  className="bg-brand-parchment p-4 rounded-lg cursor-pointer hover:bg-brand-primary/10 transition-colors"
                   onClick={handleShowFuturePacing}
                 >
-                  <h3 className="font-medium text-purple-700 mb-2">Future Vision Journey</h3>
+                  <h3 className="font-medium text-brand-espresso mb-2">Future Vision Journey</h3>
                   <p className="text-sm text-gray-600">Envision the future of your relationship as you apply the skills from this journey.</p>
-                  <p className="text-xs text-purple-600 mt-2 font-medium">Click to experience the future pacing</p>
+                  <p className="text-xs text-brand-primary mt-2 font-medium">Click to experience the future pacing</p>
                 </div>
               </div>
             </CardContent>

@@ -150,14 +150,14 @@ export default function TrustCenterPage() {
 
   if (authLoading || isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-brand-linen to-brand-parchment flex items-center justify-center">
         <p className="text-sm text-slate-500">Loading Trust Center...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-brand-linen to-brand-parchment">
       <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/90 backdrop-blur-sm">
         <div className="mx-auto max-w-3xl px-4 py-3 flex items-center justify-between">
           <button
@@ -332,7 +332,7 @@ function MemoryOption({
     <button
       onClick={onClick}
       className={`rounded-xl border px-3 py-3 text-left ${
-        active ? 'border-indigo-400 bg-brand-linen' : 'border-slate-200 bg-white'
+        active ? 'border-brand-primary bg-brand-linen' : 'border-slate-200 bg-white'
       }`}
     >
       <p className="text-sm font-medium text-slate-700">{title}</p>
@@ -389,7 +389,7 @@ function ScienceSection() {
         into short daily practices. The research stays back here; the practice stays simple.
       </p>
 
-      <div className="mt-3 rounded-xl border border-indigo-100 bg-brand-linen px-4 py-3">
+      <div className="mt-3 rounded-xl border border-brand-primary/10 bg-brand-linen px-4 py-3">
         <p className="text-sm font-medium text-slate-800">21 minutes. Over 2 years. Measurable results.</p>
         <p className="mt-1 text-xs text-slate-600 leading-relaxed">
           In a 2013 study in <em>Psychological Science</em>, Northwestern researchers led by Eli Finkel

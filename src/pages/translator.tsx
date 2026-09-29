@@ -77,7 +77,7 @@ export default function Translator() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 flex flex-col items-center py-12 px-4 relative">
+    <div className="min-h-screen bg-gradient-to-br from-brand-linen to-brand-parchment flex flex-col items-center py-12 px-4 relative">
       <div className="max-w-2xl w-full bg-white rounded-2xl shadow-lg p-8 z-10">
         <div className="flex items-center justify-between mb-6">
           <button
@@ -121,8 +121,8 @@ export default function Translator() {
                 onClick={() => setPartnerContext(profile.value)}
                 className={`rounded-xl border px-4 py-2 text-sm font-semibold transition-colors ${
                   partnerContext === profile.value
-                    ? "bg-brand-primary text-white border-indigo-600"
-                    : "bg-white text-gray-700 border-gray-300 hover:border-indigo-400"
+                    ? "bg-brand-primary text-white border-brand-primary"
+                    : "bg-white text-gray-700 border-gray-300 hover:border-brand-primary"
                 }`}
               >
                 <span>{profile.value}</span>
@@ -146,7 +146,7 @@ export default function Translator() {
               <span className="text-xs text-brand-primary/80 font-medium">Ready</span>
             )}
           </div>
-          <div className="min-h-[96px] rounded-xl border border-indigo-100 bg-brand-linen p-4 text-gray-700 leading-relaxed">
+          <div className="min-h-[96px] rounded-xl border border-brand-primary/10 bg-brand-linen p-4 text-gray-700 leading-relaxed">
             {suggestion ||
               "Draft your message and tap ‘Ask Peter’ to see a gentler version."}
           </div>
