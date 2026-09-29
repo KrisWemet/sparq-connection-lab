@@ -108,12 +108,9 @@ Cursor/touch tracking for eyes. Implementation approach:
 | Component | File | Type | Used For |
 |---|---|---|---|
 | **PeterAvatar (SVG)** | `src/components/dashboard/PeterAvatar.tsx` | SVG, mood-driven | Dashboard, chat, primary avatar |
-| **PeterAvatar (image)** | `src/components/PeterAvatar.tsx` | PNG image, sized | Legacy — simple image avatar |
 | **PeterTheOtter** | `src/components/PeterTheOtter.tsx` | Floating mascot | Fixed bottom-right decorative |
 | **PeterLoading** | `src/components/PeterLoading.tsx` | Full-screen overlay | **All loading states** |
 | **PeterChat** | `src/components/PeterChat.tsx` | Chat UI | Evening reflection conversation |
-| **PeterSpeechBubble** | `src/components/PeterSpeechBubble.tsx` | Avatar + bubble | Inline Peter messages |
-| **PetersInsightCard** | `src/components/dashboard/PetersInsightCard.tsx` | Speech bubble card | Dashboard insight quotes |
 
 **Prefer the SVG PeterAvatar** (`dashboard/PeterAvatar.tsx`) for new features — it supports moods, is lightweight, and matches the design system.
 
@@ -125,13 +122,13 @@ Cursor/touch tracking for eyes. Implementation approach:
 
 | Screen | Peter's Role | Mood | Component |
 |---|---|---|---|
-| **Dashboard** | Greets user, shows daily insight | morning/afternoon/evening | PeterAvatar (SVG) + PetersInsightCard |
+| **Dashboard** | Greets user, shows daily insight | morning/afternoon/evening | PeterAvatar (SVG) + PeterGreeting |
 | **Daily Growth — Morning** | Introduces today's story | morning, curious | PeterAvatar + speech bubble |
 | **Daily Growth — Evening** | Facilitates reflection chat | afternoon → empathetic | PeterChat |
 | **Onboarding** | Guides through assessment, reacts to answers | joyful → curious → celebrating | PeterAvatar + SpeechBubble |
 | **Skill Tree** | Celebrates unlocks, encourages at locked skills | celebrating / encouraging | PeterAvatar |
 | **Loading** (all pages) | Shares wisdom while user waits | — | PeterLoading (always) |
-| **Error states** | Confused Peter with helpful message | confused | PeterAvatar + error copy |
+| **Error states** | Confused Peter with helpful message | curious | `src/components/ErrorBoundary.tsx` (app-wide) |
 | **Empty states** | Waiting patiently, gentle prompt | resting / curious | PeterAvatar + empty copy |
 | **Achievement** | Full celebration | celebrating | PeterAvatar + confetti |
 | **Streak milestone** | Escalating reactions (3/7/14/30 days) | encouraging → celebrating | PeterAvatar + StreakIndicator |

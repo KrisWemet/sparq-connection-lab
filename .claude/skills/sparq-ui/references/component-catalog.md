@@ -114,7 +114,7 @@ Full-width button with `bg-brand-primary`, `rounded-[24px]`, warm brand shadow. 
 
 ---
 
-## Card: Peter Insight (PetersInsightCard)
+## Card: Peter Insight (PetersInsightCard) — removed 2026-09, pattern kept for reference
 
 **File**: `src/components/dashboard/PetersInsightCard.tsx`
 

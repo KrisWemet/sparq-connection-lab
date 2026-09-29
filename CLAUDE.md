@@ -148,7 +148,7 @@ Do not relitigate these:
 - **shadcn/ui + Tailwind** — component and styling system. No new UI libraries.
 - **Framer Motion** — all animations. Do not use CSS-only animation for Peter.
 - **No automated tests** — accepted for now. Do not add test infrastructure unless asked.
-- **Mem0 is mocked** — do not attempt to wire real Mem0 unless explicitly asked.
+- **No Mem0 SDK** — memory is Supabase pgvector (`src/lib/server/memory.ts`). Do not wire real Mem0 unless explicitly asked.
 - **OpenRouter → Claude Haiku 4.5** — Peter's AI backend. Do not change the model.
 
 ---
@@ -181,7 +181,7 @@ Do not relitigate these:
 | State | React Context (Auth, Subscription) + TanStack React Query |
 | Icons | Lucide React |
 | Toasts | Sonner |
-| AI | OpenRouter → Claude Haiku 4.5 (Peter), OpenAI API (date ideas), Mem0 (relationship memory — currently mocked) |
+| AI | OpenRouter → Claude Haiku 4.5 (Peter), OpenAI (embeddings, transcription), pgvector memory (`src/lib/server/memory.ts`) |
 | Deployment | Vercel |
 
 ---
@@ -209,17 +209,16 @@ Create a `.env.local` file at the project root:
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
-# Optional integrations
-NEXT_PUBLIC_MEM0_API_KEY=your_mem0_api_key
-
-# Legacy Vite env vars (used by src/lib/api-config.ts and src/integrations/supabase/client.ts)
-VITE_OPENAI_API_KEY=your_openai_key
-VITE_GOOGLE_API_KEY=your_google_places_key
-VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+# Server-side (API routes)
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+OPENROUTER_API_KEY=your_openrouter_key   # Peter
+OPENAI_API_KEY=your_openai_key           # embeddings, transcription
+REFLECTION_ENCRYPTION_KEY=               # openssl rand -hex 32 (Neutral Observer)
 ```
 
-> **Note:** The app has two Supabase client instances due to an incomplete migration from Vite to Next.js. The canonical client for Next.js pages is `src/lib/supabase.ts` (uses `process.env.NEXT_PUBLIC_*`). Some legacy code still references `src/integrations/supabase/client.ts` (uses `import.meta.env.VITE_*`).
+See `.env.example` for the full, commented list.
+
+> **Note:** There is one Supabase browser client: `src/lib/supabase.ts`. The legacy `src/integrations/supabase/client.ts` shim was removed (2026-09).
 
 ---
 
@@ -254,27 +253,21 @@ sparq-connection-lab/
 │   │   └── ...                 # Shared feature components
 │   │
 │   ├── lib/
-│   │   ├── auth-context.tsx    # PRIMARY AuthProvider and useAuth (used by _app.tsx)
+│   │   ├── auth-context.tsx    # THE AuthProvider and useAuth (used by _app.tsx)
 │   │   ├── supabase.ts         # Supabase client + DB helpers (Next.js env vars)
 │   │   ├── subscription-provider.tsx  # Subscription state/context
-│   │   ├── mem0.ts             # Mem0 memory client (currently mocked)
-│   │   ├── api-config.ts       # OpenAI/Google API key config (uses Vite env vars)
-│   │   ├── auth/               # Refactored auth modules (not yet wired to _app.tsx)
+│   │   ├── server/             # API-route-only modules (memory, growth engine, auth middleware…)
 │   │   └── utils.ts            # cn() utility for Tailwind class merging
 │   │
 │   ├── hooks/
-│   │   ├── useAuth.ts          # Wrapper hook (uses lib/auth-context)
-│   │   ├── useDashboardData.ts # Dashboard data fetching
-│   │   ├── useJourney.ts       # Journey state management
-│   │   ├── useMemory.ts        # Mem0 memory operations
-│   │   ├── useOnboarding.ts    # Onboarding flow state
-│   │   └── ...
+│   │   ├── useAuth.ts          # Re-export of lib/auth-context useAuth
+│   │   ├── useProfileTraits.ts # Trait labels for the current user
+│   │   └── use-mobile.tsx, use-toast.ts  # shadcn/ui support hooks
 │   │
 │   ├── services/
 │   │   ├── aiService.ts        # OpenAI date idea generation
 │   │   ├── partnerService.ts   # Partner invitation logic
 │   │   ├── journeyService.ts   # Journey CRUD operations
-│   │   ├── memoryService.ts    # Memory storage abstraction
 │   │   ├── analyticsService.ts # User activity analytics
 │   │   └── ...
 │   │
@@ -288,7 +281,6 @@ sparq-connection-lab/
 │   ├── data/
 │   │   ├── journeys.ts         # Static journey definitions
 │   │   ├── quizData.ts         # Relationship health quiz questions
-│   │   ├── relationshipContent.ts  # Static content (activities, etc.)
 │   │   └── persuasiveContent.ts    # Psychological messaging content
 │   │
 │   ├── content/journeys/       # Markdown content for journey narratives
@@ -317,7 +309,7 @@ sparq-connection-lab/
 ├── tsconfig.json
 ├── tailwind.config.ts
 ├── eslint.config.js
-└── vercel.json                 # Vercel deployment config (note: currently set to "vite" framework — may need update)
+└── vercel.json                 # Vercel deployment config (headers, install command)
 ```
 
 ---
@@ -340,9 +332,9 @@ All pages use **Next.js Pages Router**. Key routes:
 | `/join-partner` | `src/pages/JoinPartner.tsx` | Partner invite acceptance |
 | `/date-ideas` | `src/pages/DateIdeas.tsx` | AI-powered date suggestions |
 
-### Navigation warning
+### Navigation
 
-`src/components/bottom-nav.tsx` still uses `react-router-dom` (`Link`, `useLocation`). This will cause errors in Next.js pages. If you modify navigation, use `next/router` (`useRouter`) and `next/link` (`Link`) instead.
+Use `next/router` (`useRouter`) and `next/link` (`Link`). `react-router-dom` is not a dependency — never import it.
 
 ---
 
@@ -369,15 +361,9 @@ The `AuthContext` provides:
 - `logout()` — signs out
 - `updateUserProfile(data)` / `updateProfile(data)` — both update the profile (duplicated for backward compat)
 
-### Auth duplication warning
+### One auth context
 
-There are several overlapping auth implementations:
-- `src/lib/auth-context.tsx` — **active, used by `_app.tsx`**
-- `src/lib/auth/` directory — refactored modular version, **not yet connected**
-- `src/hooks/useAuth.ts` and `src/hooks/useAuth.tsx` — wrapper hooks
-- `src/components/auth/ProtectedRoute.tsx`, `src/components/ProtectedRoute.tsx`, `src/components/ui/protected-route.tsx` — duplicated
-
-When adding auth features, work in `src/lib/auth-context.tsx`.
+`src/lib/auth-context.tsx` is the only auth implementation. `src/hooks/useAuth.ts` just re-exports it. The unwired `src/lib/auth/` rewrite was removed in 2026-09 — importing it had crashed `/quiz` and `/partner-profile` ("useAuth must be used within an AuthProvider"). Route guarding lives in `src/components/ProtectedRoute.tsx`.
 
 ---
 
@@ -399,7 +385,11 @@ const { subscription, isFeatureAvailable, upgradeToPremium } = useSubscription()
 | `premium` | 4 (2 morning + 2 evening) | 3 | All categories, date ideas, analytics |
 | `ultimate` | Unlimited | Unlimited | Everything + AI therapist |
 
-**Important:** `SubscriptionProvider` is **not** currently in `_app.tsx`. Pages that use `useSubscription()` (like `DailyQuestions.tsx`) must either have the provider added to `_app.tsx` or wrap themselves.
+`SubscriptionProvider` is mounted in `_app.tsx`, so `useSubscription()` works on every page.
+
+### Error boundary
+
+`_app.tsx` wraps every page in `src/components/ErrorBoundary.tsx`. A render error shows a warm Peter fallback instead of a blank screen, reports through `reportPrimaryPathClientError('render', …)`, and resets on route change. Never show raw error text to users.
 
 ---
 
@@ -495,18 +485,12 @@ import { Button } from "../../components/ui/button";
 
 ---
 
-## Large Files to Be Aware Of
+## Larger Files
 
-These files are unusually large and may be slow to edit or navigate:
-
-| File | Size | Notes |
+| File | Lines | Notes |
 |---|---|---|
-| `src/components/MetaphorAnimation.tsx` | ~24,000 lines | Animated metaphor visualizations (bridge, flower, river) |
-| `src/services/supabaseService.ts` | ~29,000 lines | All DB operations — candidate for splitting by domain |
-| `src/data/relationshipContent.ts` | ~27,000 lines | Pre-written relationship guidance content |
-| `src/data/persuasiveContent.ts` | ~22,000 lines | Psychological messaging and persuasive copy |
-
-When working in these files, use targeted searches rather than reading the full file.
+| `src/services/supabaseService.ts` | ~1,000 | Legacy DB helpers — candidate for splitting by domain |
+| `src/components/MetaphorAnimation.tsx` | ~800 | Animated metaphor visualizations (bridge, flower, river) |
 
 ---
 
@@ -523,42 +507,13 @@ When working in these files, use targeted searches rather than reading the full 
 
 ## Known Technical Debt
 
-These issues exist in the codebase and should be kept in mind:
+1. **Supabase free tier auto-pauses** after ~7 days idle — the backend disappears while Vercel still serves the frontend. See `CURRENT_STATE.md`.
+2. **Missing Supabase env vars crash every page.** `src/lib/supabase.ts` calls `createClient` at import time; with no `NEXT_PUBLIC_SUPABASE_URL` every route 500s. Set env vars before building.
+3. **Unused shadcn/ui primitives** remain in `src/components/ui/` by convention — harmless, leave them.
+4. **`run_dev.py` targets port 8085**, but Next.js defaults to 3000 — use `npm run dev`.
+5. **Hardcoded legacy violet hexes** (`#6E56F7`, `#8B5CF6`) linger inline in a few components — replace with `brand-*` tokens when touched.
 
-1. **Incomplete Vite → Next.js migration**
-   - `vercel.json` still declares `"framework": "vite"` — this may need updating to `"nextjs"`
-   - `vite.config.ts` and `src/main.tsx` are leftover Vite files
-   - `src/integrations/supabase/client.ts` uses `import.meta.env` (Vite syntax)
-   - `src/lib/api-config.ts` uses `import.meta.env` for OpenAI/Google keys
-
-2. **Duplicate Supabase clients**
-   - `src/lib/supabase.ts` — canonical for Next.js (uses `process.env.NEXT_PUBLIC_*`)
-   - `src/integrations/supabase/client.ts` — legacy Vite version (uses `import.meta.env.VITE_*`)
-   - Prefer `src/lib/supabase.ts` for new code
-
-3. **`bottom-nav.tsx` uses React Router**
-   - Uses `react-router-dom` Link and `useLocation` — incompatible with Next.js
-   - Needs migration to `next/link` and `next/router`
-
-4. **`SubscriptionProvider` missing from `_app.tsx`**
-   - Pages using `useSubscription()` will throw at runtime unless wrapped
-
-5. **Duplicate auth implementations** — see Authentication section above
-
-6. **Mem0 is mocked**
-   - `src/lib/mem0.ts` uses an in-memory Map, not the real Mem0 API
-   - The `NEXT_PUBLIC_MEM0_API_KEY` env var exists but is unused
-
-7. **`@tanstack/react-query` is in `_app.tsx` but not in `package.json`**
-   - Check if this dependency is actually installed
-
-8. **`.env` contains hardcoded Supabase credentials**
-   - The `.env` file in the repo root has actual `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` values
-   - Never commit additional secrets to `.env`; use `.env.local` (gitignored) for local dev
-
-9. **`run_dev.py` targets port 8085**
-   - The Python dev launcher script opens `http://localhost:8085`, but Next.js dev server defaults to port 3000
-   - Use `npm run dev` directly for development
+Resolved in the 2026-09 cleanup: Vite leftovers and the legacy Supabase client shim, the unwired `src/lib/auth/` rewrite, ~80 unreachable legacy components/hooks/services (including the Mem0 mock `src/lib/mem0.ts`), a leaked auth listener in `auth-context.tsx`, and the public `/test-page` debug route.
 
 ---
 
@@ -663,9 +618,4 @@ Run: `npm run lint`
 
 ## Deployment
 
-Deployed on Vercel. The `vercel.json` configures:
-- Build command: `npm run build`
-- Output directory: `dist` (Vite leftover — Next.js outputs to `.next`)
-- Security headers: CSP, X-Frame-Options DENY, X-XSS-Protection, nosniff
-
-> **Action needed:** `vercel.json` has `"framework": "vite"` and `"outputDirectory": "dist"` which are incorrect for a Next.js project. These should be `"framework": "nextjs"` with no `outputDirectory` override.
+Deployed on Vercel — every push to `main` goes straight to production. `vercel.json` sets the build/install commands and security headers (CSP, X-Frame-Options DENY, nosniff). Next.js is auto-detected.

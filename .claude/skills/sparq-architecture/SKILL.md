@@ -17,8 +17,7 @@ Sparq Connection is an AI-powered relationship enhancement app grounded in **EFT
 
 Peter the otter appears throughout the UX as a warm, wise companion. He delivers morning stories, facilitates evening reflections, and adapts his personality based on inferred user traits (attachment style, conflict style, love language). He speaks like a caring friend — never preachy, never clinical.
 
-- Avatar component: `src/components/PeterAvatar.tsx`
-- Speech bubble: `src/components/PeterSpeechBubble.tsx`
+- Avatar component: `src/components/dashboard/PeterAvatar.tsx` (SVG, mood-driven)
 - Loading screen: `src/components/PeterLoading.tsx` (always use this for loading states)
 - Chat API: `POST /api/peter/chat`
 - Morning story API: `GET /api/peter/morning`
@@ -178,7 +177,7 @@ Unlocks after Day 14 graduation. Provides ongoing structured growth.
 | Dashboard | `src/pages/dashboard.tsx` |
 | Daily growth | `src/pages/daily-growth.tsx` |
 | Skill tree | `src/pages/skill-tree.tsx` |
-| Peter avatar | `src/components/PeterAvatar.tsx` |
+| Peter avatar | `src/components/dashboard/PeterAvatar.tsx` |
 | Peter loading | `src/components/PeterLoading.tsx` |
 
 ---
