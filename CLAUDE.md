@@ -2,6 +2,8 @@
 
 This file provides comprehensive context for AI assistants working on this codebase. Read the product context section first — every time, without skipping.
 
+> **Product constitution:** [`docs/CONSTITUTION.md`](docs/CONSTITUTION.md) defines Sparq's governing principles — discovery before direction, hypotheses never diagnoses, Peter's conversation modes, memory discipline, and private/shared privacy boundaries. Read it before planning any feature. Its "Constitutional test" applies to every major feature. Open precedence questions are listed at the top of that file.
+
 ---
 
 # SPARQ PRODUCT CONTEXT
