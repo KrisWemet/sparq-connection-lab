@@ -122,7 +122,7 @@ export default function Translator() {
               <button
                 key={profile.value}
                 onClick={() => setPartnerContext(profile.value)}
-                className={`rounded-xl border px-4 py-2 text-sm font-semibold transition-colors ${
+                className={`rounded-xl border px-4 py-2 text-sm font-bold transition-colors ${
                   partnerContext === profile.value
                     ? "bg-brand-primary text-white border-brand-primary"
                     : "bg-white text-gray-700 border-gray-300 hover:border-brand-primary"
@@ -161,7 +161,7 @@ export default function Translator() {
         <button
           onClick={handleTranslate}
           disabled={isLoading}
-          className="w-full bg-brand-primary text-white font-semibold py-3 rounded-xl hover:bg-brand-hover transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+          className="w-full bg-brand-primary text-white font-bold py-3 rounded-xl hover:bg-brand-hover transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
           {isLoading ? "Peter is thinking..." : "Ask Peter to Rephrase"}
         </button>

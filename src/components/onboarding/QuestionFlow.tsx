@@ -236,7 +236,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
             <button
               disabled={textInput.trim().length < 1}
               onClick={() => handleFreeTextSubmit(textInput, 'firstName')}
-              className="w-full bg-brand-primary text-white rounded-2xl py-3 font-semibold disabled:opacity-40"
+              className="w-full bg-brand-primary text-white rounded-2xl py-3 font-bold disabled:opacity-40"
             >
               Continue →
             </button>
@@ -301,7 +301,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
                 };
                 playBridge("Good to know. Let's keep going.", () => advanceQuestion(newProgress));
               }}
-              className="w-full bg-brand-primary text-white rounded-2xl py-3 font-semibold disabled:opacity-40"
+              className="w-full bg-brand-primary text-white rounded-2xl py-3 font-bold disabled:opacity-40"
             >
               Continue →
             </button>
@@ -355,7 +355,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
                 };
                 advanceQuestion(newProgress);
               }}
-              className="w-full bg-brand-primary text-white rounded-2xl py-3 font-semibold disabled:opacity-40"
+              className="w-full bg-brand-primary text-white rounded-2xl py-3 font-bold disabled:opacity-40"
             >
               Continue →
             </button>
@@ -385,7 +385,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
                   setGrowthGoalSubmitted(true);
                 });
               }}
-              className="w-full bg-brand-primary text-white rounded-2xl py-3 font-semibold disabled:opacity-40"
+              className="w-full bg-brand-primary text-white rounded-2xl py-3 font-bold disabled:opacity-40"
             >
               Continue →
             </button>
@@ -444,7 +444,7 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
                 <button
                   disabled={textInput === '__freetext__' || (textInput as string).trim().length < 2}
                   onClick={() => handleFreeTextSubmit(textInput)}
-                  className="w-full bg-brand-primary text-white rounded-2xl py-3 font-semibold disabled:opacity-40 text-sm"
+                  className="w-full bg-brand-primary text-white rounded-2xl py-3 font-bold disabled:opacity-40 text-sm"
                 >
                   Continue →
                 </button>

@@ -324,7 +324,7 @@ export default function SettingsPage() {
             </p>
             <button
               onClick={() => router.push("/subscription")}
-              className={`w-full rounded-2xl py-3 text-sm font-medium transition-colors ${
+              className={`w-full rounded-2xl py-3 text-sm font-bold transition-colors ${
                 subscription.tier === "free"
                   ? "bg-brand-primary text-white hover:bg-brand-hover"
                   : "border border-brand-primary text-brand-hover hover:bg-brand-primary/5"

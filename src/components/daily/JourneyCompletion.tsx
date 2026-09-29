@@ -218,7 +218,7 @@ export function JourneyCompletion({ journeyId, journeyTitle }: JourneyCompletion
             ) : (
               <button
                 onClick={() => router.push('/journeys')}
-                className="w-full bg-brand-primary text-white font-semibold rounded-2xl py-4 text-base hover:bg-brand-hover transition-colors"
+                className="w-full bg-brand-primary text-white font-bold rounded-2xl py-4 text-base hover:bg-brand-hover transition-colors"
               >
                 Browse all journeys
               </button>

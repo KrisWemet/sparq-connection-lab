@@ -197,7 +197,7 @@ export default function NeutralObserver() {
 
                   <button
                     onClick={handleBegin}
-                    className="w-full rounded-[22px] bg-brand-primary px-4 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-brand-hover"
+                    className="w-full rounded-[22px] bg-brand-primary px-4 py-3.5 text-sm font-bold text-white transition-colors hover:bg-brand-hover"
                   >
                     Begin
                   </button>
@@ -222,7 +222,7 @@ export default function NeutralObserver() {
                   </p>
                   <button
                     onClick={handlePrivacyContinue}
-                    className="w-full rounded-[22px] bg-brand-primary px-4 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-brand-hover"
+                    className="w-full rounded-[22px] bg-brand-primary px-4 py-3.5 text-sm font-bold text-white transition-colors hover:bg-brand-hover"
                   >
                     Continue
                   </button>
@@ -258,7 +258,7 @@ export default function NeutralObserver() {
                   <button
                     onClick={() => setPhase('screen_2')}
                     disabled={!answer1.trim()}
-                    className="mt-5 w-full rounded-[22px] bg-brand-primary px-4 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-brand-hover disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="mt-5 w-full rounded-[22px] bg-brand-primary px-4 py-3.5 text-sm font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     Next
                   </button>
@@ -294,7 +294,7 @@ export default function NeutralObserver() {
                   <button
                     onClick={() => setPhase('screen_3')}
                     disabled={!answer2.trim()}
-                    className="mt-5 w-full rounded-[22px] bg-brand-primary px-4 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-brand-hover disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="mt-5 w-full rounded-[22px] bg-brand-primary px-4 py-3.5 text-sm font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     Next
                   </button>
@@ -336,7 +336,7 @@ export default function NeutralObserver() {
                   <button
                     onClick={handleFinish}
                     disabled={!answer3.trim() || saving}
-                    className="mt-5 w-full rounded-[22px] bg-brand-primary px-4 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-brand-hover disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="mt-5 w-full rounded-[22px] bg-brand-primary px-4 py-3.5 text-sm font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     {saving ? 'Saving…' : 'Finish'}
                   </button>
@@ -361,7 +361,7 @@ export default function NeutralObserver() {
                   </p>
                   <button
                     onClick={() => router.push(isOnboardingHook ? '/dashboard?from=onboarding' : '/dashboard')}
-                    className="w-full rounded-[22px] bg-brand-primary px-4 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-brand-hover mb-3"
+                    className="w-full rounded-[22px] bg-brand-primary px-4 py-3.5 text-sm font-bold text-white transition-colors hover:bg-brand-hover mb-3"
                   >
                     {isOnboardingHook ? 'Take me to my practice' : 'Done'}
                   </button>

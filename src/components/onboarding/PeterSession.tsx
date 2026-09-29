@@ -123,7 +123,7 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
                   msg.role === 'assistant'
                     ? 'bg-white border border-[#e5e7eb] text-[#1f2937] rounded-tl-sm font-serif italic'
                     : 'bg-brand-primary text-white rounded-tr-sm'
-                }`}
+                } font-bold`}
               >
                 {msg.content}
               </div>
@@ -170,7 +170,7 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
             <button
               onClick={() => sendMessage(userInput)}
               disabled={!canSend}
-              className="bg-brand-primary text-white rounded-2xl px-4 py-3 font-semibold text-sm disabled:opacity-40"
+              className="bg-brand-primary text-white rounded-2xl px-4 py-3 font-bold text-sm disabled:opacity-40"
             >
               →
             </button>

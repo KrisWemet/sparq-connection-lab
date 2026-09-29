@@ -202,7 +202,7 @@ Peter is the emotional presence. Human photography of couples or people breaks t
 
 ### Button Hierarchy — Three Patterns Only
 
-- **Primary**: Full width, filled clay `#C56B4D`, rounded, white text
+- **Primary**: Full width, filled clay `#C56B4D`, rounded, white **bold** text (≥14px, for contrast)
 - **Secondary**: Full width, outlined clay, no fill, clay text
 - **Ghost**: Centered text only, no border, no background
 
@@ -443,7 +443,7 @@ These create depth without heavy imagery.
 
 - **Focus visible**: All interactive elements have `focus-visible:ring-2 focus-visible:ring-offset-2`
 - **Touch targets**: Minimum 44px height on all interactive elements
-- **Color contrast** (measured 2026-09): `#2E2620` espresso on `#F5F1EA` linen = 13.2:1 ✅. `#A85539` (brand-hover) on linen = 4.6:1 ✅ AA. **`#C56B4D` brand-primary on linen = 3.3:1 and white on `#C56B4D` = 3.8:1 — these pass AA only for large text (≥18px, or ≥14px bold).** **Rule:** small clay-colored text uses `text-brand-hover`; `text-brand-primary` only for icons, fills, and text at `text-2xl`+ (or `text-xl` bold). Hover states on `brand-hover` text go to `brand-espresso`. Keep clay-filled buttons' white text bold and ≥14px.
+- **Color contrast** (measured 2026-09): `#2E2620` espresso on `#F5F1EA` linen = 13.2:1 ✅. `#A85539` (brand-hover) on linen = 4.6:1 ✅ AA. **`#C56B4D` brand-primary on linen = 3.3:1 and white on `#C56B4D` = 3.8:1 — these pass AA only for large text (≥18px, or ≥14px bold).** **Rule:** small clay-colored text uses `text-brand-hover`; `text-brand-primary` only for icons, fills, and text at `text-2xl`+ (or `text-xl` bold). Hover states on `brand-hover` text go to `brand-espresso`. White text on clay fills is always `font-bold` and at least `text-sm` (14px) — the `Button` component's filled variants do this by default.
 - **Screen reader labels**: `aria-label` on icon-only buttons, `sr-only` text where needed
 - **Reduced motion**: Confetti respects `disableForReducedMotion`. CSS animations include `@media (prefers-reduced-motion: reduce)` overrides.
 - **Keyboard navigation**: All interactive elements reachable via Tab, activatable via Enter/Space

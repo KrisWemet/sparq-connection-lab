@@ -418,7 +418,7 @@ export function JourneyContentView({
           <p className="text-sm text-zinc-500 mt-2">We&apos;re building something special for you.</p>
           <button
             onClick={() => onBackToTiers ? onBackToTiers() : router.push('/journeys')}
-            className="mt-6 px-6 py-3 rounded-xl bg-brand-primary text-white font-semibold hover:bg-brand-hover transition-colors"
+            className="mt-6 px-6 py-3 rounded-xl bg-brand-primary text-white font-bold hover:bg-brand-hover transition-colors"
           >
             {onBackToTiers ? 'Back to Tiers' : 'Browse Journeys'}
           </button>
@@ -487,14 +487,14 @@ export function JourneyContentView({
           {nextTier && onBackToTiers ? (
             <button
               onClick={onBackToTiers}
-              className="w-full max-w-xs py-4 rounded-2xl bg-brand-primary text-white font-semibold text-base mb-3 shadow-md hover:bg-brand-hover transition-colors"
+              className="w-full max-w-xs py-4 rounded-2xl bg-brand-primary text-white font-bold text-base mb-3 shadow-md hover:bg-brand-hover transition-colors"
             >
               Continue to {nextTierName} →
             </button>
           ) : (
             <button
               onClick={() => router.push('/journeys')}
-              className="w-full max-w-xs py-4 rounded-2xl bg-brand-primary text-white font-semibold text-base mb-3 shadow-md hover:bg-brand-hover transition-colors"
+              className="w-full max-w-xs py-4 rounded-2xl bg-brand-primary text-white font-bold text-base mb-3 shadow-md hover:bg-brand-hover transition-colors"
             >
               Explore More Journeys
             </button>
@@ -594,7 +594,7 @@ export function JourneyContentView({
             </p>
             <Button
               onClick={() => router.push('/journeys')}
-              className="bg-brand-primary text-white rounded-full px-8 py-6 shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-lg font-semibold"
+              className="bg-brand-primary text-white rounded-full px-8 py-6 shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-lg font-bold"
             >
               Back to Journeys
             </Button>
@@ -733,7 +733,7 @@ export function JourneyContentView({
           </Button>
           <Button
             onClick={handleNextDay}
-            className="flex-1 rounded-2xl bg-brand-primary hover:bg-brand-hover text-white h-14 font-semibold text-base shadow-lg shadow-brand-primary/20 transition-all hover:shadow-xl hover:-translate-y-0.5"
+            className="flex-1 rounded-2xl bg-brand-primary hover:bg-brand-hover text-white h-14 font-bold text-base shadow-lg shadow-brand-primary/20 transition-all hover:shadow-xl hover:-translate-y-0.5"
           >
             {currentDay >= totalDays
               ? <>Complete <CheckCircle className="ml-1 h-5 w-5" /></>

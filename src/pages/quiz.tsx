@@ -194,7 +194,7 @@ export default function Quiz() {
             </p>
             <Link
               href="/subscription"
-              className="shrink-0 text-xs font-medium text-white bg-brand-primary hover:bg-brand-hover rounded-lg px-3 py-1.5 transition-colors"
+              className="shrink-0 text-sm font-bold text-white bg-brand-primary hover:bg-brand-hover rounded-lg px-3 py-1.5 transition-colors"
             >
               Keep it
             </Link>

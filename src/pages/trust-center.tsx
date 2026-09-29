@@ -170,7 +170,7 @@ export default function TrustCenterPage() {
           <button
             onClick={save}
             disabled={isSaving}
-            className="rounded-lg bg-brand-primary px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-hover disabled:opacity-50"
+            className="rounded-lg bg-brand-primary px-3 py-1.5 text-sm font-bold text-white hover:bg-brand-hover disabled:opacity-50"
           >
             {isSaving ? 'Saving...' : 'Save'}
           </button>

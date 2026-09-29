@@ -9,15 +9,15 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'default', size = 'default', asChild = false, ...props }, ref) => {
-    const baseStyles = "inline-flex items-center justify-center rounded-xl font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
+    const baseStyles = "inline-flex items-center justify-center rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
 
     const variants = {
-      default: "bg-primary text-primary-foreground hover:bg-primary/90",
-      outline: "border border-input hover:bg-accent hover:text-accent-foreground",
-      ghost: "hover:bg-accent hover:text-accent-foreground",
-      link: "underline-offset-4 hover:underline text-primary",
-      destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-      secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+      default: "bg-primary text-primary-foreground font-bold hover:bg-primary/90",
+      outline: "border border-input font-medium hover:bg-accent hover:text-accent-foreground",
+      ghost: "font-medium hover:bg-accent hover:text-accent-foreground",
+      link: "font-medium underline-offset-4 hover:underline text-brand-hover",
+      destructive: "bg-destructive text-destructive-foreground font-bold hover:bg-destructive/90",
+      secondary: "bg-secondary text-secondary-foreground font-medium hover:bg-secondary/80"
     };
 
     const sizes = {
@@ -45,15 +45,15 @@ export function buttonVariants({
   size = "default",
   className = ""
 }: Partial<ButtonProps>) {
-  const baseStyles = "inline-flex items-center justify-center rounded-xl font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
+  const baseStyles = "inline-flex items-center justify-center rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
 
   const variants = {
-    default: "bg-primary text-primary-foreground hover:bg-primary/90",
-    outline: "border border-input hover:bg-accent hover:text-accent-foreground",
-    ghost: "hover:bg-accent hover:text-accent-foreground",
-    link: "underline-offset-4 hover:underline text-primary",
-    destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-    secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+    default: "bg-primary text-primary-foreground font-bold hover:bg-primary/90",
+    outline: "border border-input font-medium hover:bg-accent hover:text-accent-foreground",
+    ghost: "font-medium hover:bg-accent hover:text-accent-foreground",
+    link: "font-medium underline-offset-4 hover:underline text-brand-hover",
+    destructive: "bg-destructive text-destructive-foreground font-bold hover:bg-destructive/90",
+    secondary: "bg-secondary text-secondary-foreground font-medium hover:bg-secondary/80"
   };
 
   const sizes = {

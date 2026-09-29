@@ -224,7 +224,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
                   if (form) form.requestSubmit();
                 }, 100);
               }}
-              className="flex-1 bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-hover text-sm font-medium"
+              className="flex-1 bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-hover text-sm font-bold"
             >
               I understand, create my account
             </button>
@@ -348,7 +348,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
           <button
             type="submit"
             disabled={isSubmitting || loading}
-            className="w-full bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary transition duration-200 flex items-center justify-center"
+            className="w-full bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary transition duration-200 flex items-center justify-center font-bold"
           >
             {isSubmitting || loading ? (
               <Loader className="h-5 w-5 animate-spin" />

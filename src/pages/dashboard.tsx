@@ -234,7 +234,7 @@ export default function Dashboard() {
           <div className="relative mt-6 space-y-3">
             <button
               onClick={() => router.push(primaryCtaHref)}
-              className="w-full rounded-[22px] bg-brand-primary px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-hover"
+              className="w-full rounded-[22px] bg-brand-primary px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-brand-hover"
             >
               {primaryCtaLabel}
             </button>
