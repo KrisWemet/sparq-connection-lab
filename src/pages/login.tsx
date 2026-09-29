@@ -33,28 +33,6 @@ export default function LoginPage() {
     );
   };
 
-  // Testimonials data
-  const testimonials = [
-    {
-      id: 1,
-      quote: "Sparq has transformed how my partner and I communicate. We're more connected than ever.",
-      name: "Sarah & Michael",
-      relationship: "Together 4 years"
-    },
-    {
-      id: 2,
-      quote: "The subtle metaphor exercises completely changed my perspective on our relationship dynamics.",
-      name: "David & Emma",
-      relationship: "Married 2 years"
-    },
-    {
-      id: 3,
-      quote: "I was skeptical at first, but after just two weeks I noticed profound changes in how we relate to each other.",
-      name: "Jordan & Taylor",
-      relationship: "Dating 8 months"
-    }
-  ];
-
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -109,7 +87,7 @@ export default function LoginPage() {
             </div>
           </motion.div>
 
-          {/* Right Side - Persuasive Content and Testimonials */}
+          {/* Right Side - Welcome copy */}
           <motion.div
             className="hidden lg:flex lg:w-1/2 bg-white border-l border-zinc-200 p-12 lg:p-24 flex-col justify-center relative"
             initial="hidden"
@@ -130,28 +108,6 @@ export default function LoginPage() {
                   : "Come back to your next step."
                 }
               </p>
-            </motion.div>
-
-            <motion.div
-              className="space-y-6 relative z-10"
-              variants={itemVariants}
-            >
-              <h3 className="text-sm font-semibold text-zinc-400 mb-6">What people say</h3>
-
-              <div className="grid gap-4">
-                {testimonials.map((testimonial) => (
-                  <motion.div
-                    key={testimonial.id}
-                    className="bg-brand-linen border border-zinc-100 p-6 rounded-3xl"
-                  >
-                    <p className="italic mb-6 text-zinc-600 text-sm leading-relaxed">&quot;{testimonial.quote}&quot;</p>
-                    <p className="text-sm font-semibold tracking-tight flex justify-between items-center text-black">
-                      <span>{testimonial.name}</span>
-                      <span className="text-zinc-500 text-xs font-normal">{testimonial.relationship}</span>
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
             </motion.div>
 
             <motion.div

@@ -116,21 +116,6 @@ export function PersuasiveJourneyPrompt({
     return benefits[journeyType];
   };
 
-  // Social proof based on journey type
-  const getSocialProof = () => {
-    const proofs: Record<string, string> = {
-      communication: "92% of couples report significant improvement in communication after completing this journey",
-      intimacy: "Couples report feeling 78% more connected after finishing this journey",
-      trust: "85% of couples say this journey helped them rebuild trust after challenges",
-      future: "Couples who complete this journey are 3x more likely to achieve shared goals",
-      attachment: "This journey has helped 89% of couples develop more secure attachment patterns",
-      conflict: "Couples report 73% fewer destructive arguments after completing this journey"
-    };
-
-    const journeyType = Object.keys(proofs).find(type => journeyId.includes(type)) || "communication";
-    return proofs[journeyType];
-  };
-
   return (
     <>
       <div className="rounded-3xl overflow-hidden border border-brand-primary/10 shadow-sm bg-gradient-to-br from-white to-brand-linen/30">
@@ -234,12 +219,6 @@ export function PersuasiveJourneyPrompt({
             </div>
 
             <div className="space-y-4 mb-6">
-              <div className="bg-brand-linen p-3 rounded-2xl">
-                <p className="text-sm font-medium text-brand-taupe">
-                  {getSocialProof()}
-                </p>
-              </div>
-
               <div className="space-y-2">
                 <p className="font-medium text-brand-taupe">With this journey, you&apos;ll:</p>
                 <ul className="space-y-1">
