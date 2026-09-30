@@ -8,6 +8,7 @@ import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
 import { buildAuthedHeaders } from '@/lib/api-auth';
 import { useAuth } from '@/lib/auth-context';
 import { cn } from '@/lib/utils';
+import { TONE } from '@/lib/moment-tone';
 
 type SharedItem = { id: string; author_id: string; kind: string; body: string; created_at: string };
 type Cycle = { id: string; name: string; what_helps: string | null; confirmed_by: string[]; status: string };
@@ -87,9 +88,10 @@ export default function UsPage() {
     }
   }
 
-  const card = 'bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6';
+  // The shared space is a connect moment (coral) — see lib/moment-tone.ts.
+  const card = cn(TONE.connect.card, 'rounded-3xl shadow-sm p-6');
   const input = 'w-full rounded-xl border border-brand-border bg-white/70 p-3 text-sm text-brand-espresso placeholder:text-brand-text-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary/30';
-  const primary = 'rounded-full bg-brand-primary px-5 py-2 text-sm font-bold text-white hover:opacity-90 disabled:opacity-50';
+  const primary = cn(TONE.connect.button, 'rounded-full px-5 py-2 text-sm disabled:opacity-50');
 
   return (
     <ProtectedRoute>
@@ -100,7 +102,7 @@ export default function UsPage() {
               className="w-10 h-10 rounded-full border border-brand-primary/10 bg-brand-parchment text-brand-primary flex items-center justify-center hover:bg-brand-primary/5">
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <span className="text-xs font-semibold tracking-widest uppercase text-brand-hover">Us</span>
+            <span className="text-xs font-semibold tracking-widest uppercase text-brand-coral-deep">Us</span>
             <div className="w-10 h-10" aria-hidden="true" />
           </div>
         </header>
@@ -145,7 +147,7 @@ export default function UsPage() {
               </section>
 
               <section className={cn(card, 'space-y-3')}>
-                <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover">Share something</p>
+                <p className="text-xs font-semibold tracking-widest uppercase text-brand-coral-deep">Share something</p>
                 <div className="flex flex-wrap gap-2">
                   {SHARE_KINDS.map(k => (
                     <button key={k} type="button" onClick={() => setKind(k)}
@@ -165,7 +167,7 @@ export default function UsPage() {
 
               {items.length > 0 && (
                 <section className={cn(card, 'space-y-4')}>
-                  <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover">What you&apos;ve shared</p>
+                  <p className="text-xs font-semibold tracking-widest uppercase text-brand-coral-deep">What you&apos;ve shared</p>
                   {items.map(item => (
                     <div key={item.id} className="border-b border-brand-border/60 pb-3 last:border-0 last:pb-0">
                       <p className="text-xs text-brand-text-secondary mb-1">
@@ -184,14 +186,14 @@ export default function UsPage() {
               )}
 
               <section className={cn(card, 'space-y-3')}>
-                <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover">Patterns between you</p>
+                <p className="text-xs font-semibold tracking-widest uppercase text-brand-coral-deep">Patterns between you</p>
                 <p className="text-sm text-brand-text-secondary">
                   Name a loop you both fall into, like &ldquo;one of us reaches, one of us steps back.&rdquo; The loop is the problem, never either of you. It only becomes &ldquo;ours&rdquo; when you both agree.
                 </p>
                 {cycles.map(c => {
                   const iConfirmed = c.confirmed_by.includes(me);
                   return (
-                    <div key={c.id} className="rounded-2xl bg-brand-linen p-4 border border-brand-primary/10">
+                    <div key={c.id} className={cn(TONE.connect.inset, 'rounded-2xl p-4')}>
                       <p className="font-serif text-brand-espresso">{c.name}</p>
                       {c.what_helps && <p className="text-sm text-brand-text-secondary mt-1">What helps: {c.what_helps}</p>}
                       <p className="text-xs text-brand-text-secondary mt-2">

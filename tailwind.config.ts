@@ -33,6 +33,10 @@ export default {
           "coral-deep": "#A8452F",   // coral for text/icons (5.5:1 on ivory)
           gold: "#F3B55A",           // Soft Gold — reward / insight (fill; dark-plum text on it)
           "gold-deep": "#8A5E14",    // gold for text/icons (5.3:1 on ivory)
+          // Moment tints (src/lib/moment-tone.ts) — dark-plum text ≈14:1 on each.
+          "coral-soft": "#FCEBE7",   // connect moments
+          "gold-soft": "#FDF2DF",    // grow moments
+          quiet: "#F3F0F1",          // repair / hard moments — less colour
           light: "#FFFDFA",
           linen: "#FAF7F2",          // Warm Ivory — background
           ivory: "#FAF7F2",

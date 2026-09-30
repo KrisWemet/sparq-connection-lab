@@ -4,6 +4,8 @@ import { supabase } from '@/lib/supabase';
 import { buildAuthedHeaders } from '@/lib/api-auth';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
 import { SharePrompt } from '@/components/shared/SharePrompt';
+import { TONE } from '@/lib/moment-tone';
+import { cn } from '@/lib/utils';
 
 interface WeeklyInsight {
   patterns: string[];
@@ -114,7 +116,7 @@ export function WeeklyMirrorCard() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6 relative overflow-hidden"
+      className={cn(TONE.grow.card, 'rounded-3xl shadow-sm p-6 relative overflow-hidden')}
     >
       <div className="absolute -top-10 -right-10 w-32 h-32 bg-brand-sand/20 rounded-full blur-2xl pointer-events-none" />
 

@@ -13,9 +13,9 @@ interface GrowthEntry {
 }
 
 const TYPE_CONFIG: Record<GrowthEntry['type'], { icon: typeof Sparkles; color: string; bg: string }> = {
-  milestone: { icon: Star, color: 'text-brand-gold-deep', bg: 'bg-brand-sand/15' },
-  breakthrough: { icon: Sparkles, color: 'text-brand-hover', bg: 'bg-brand-primary/10' },
-  pattern: { icon: TrendingUp, color: 'text-brand-growth', bg: 'bg-brand-growth/15' },
+  milestone: { icon: Star, color: 'text-brand-gold-deep', bg: 'bg-brand-gold/20' },   // grow = gold
+  breakthrough: { icon: Sparkles, color: 'text-brand-gold-deep', bg: 'bg-brand-gold/20' },
+  pattern: { icon: TrendingUp, color: 'text-brand-primary', bg: 'bg-brand-primary/10' },   // understand = plum
   mirror: { icon: Eye, color: 'text-brand-text-secondary', bg: 'bg-brand-parchment' },
   pinned: { icon: Pin, color: 'text-brand-hover', bg: 'bg-brand-primary/5' },
 };
