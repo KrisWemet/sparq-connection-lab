@@ -1,5 +1,5 @@
 // src/components/onboarding/QuestionFlow.tsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
 import { QUESTIONS } from '@/lib/onboarding/questions';
@@ -7,7 +7,6 @@ import { INITIAL_SCORES } from '@/lib/onboarding/types';
 import type { OnboardingProgress, RawScores, QuestionOption, OptionTraits } from '@/lib/onboarding/types';
 
 const STORAGE_KEY = 'sparq_onboarding_progress';
-const BRIDGE_DELAY_MS = 1500;
 
 function interpolate(text: string, firstName: string, partnerName: string | null): string {
   return text
@@ -70,9 +69,13 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
     return saved === 0 && knownFirstName ? 1 : saved;
   });
   const [textInput, setTextInput] = useState('');
+  // "Write my own" box on quick-reply questions.
+  const [showFreeText, setShowFreeText] = useState(false);
   const [multiPartState, setMultiPartState] = useState<{ ageRange?: string; pronouns?: string }>({});
   const [activeBridge, setActiveBridge] = useState<string | null>(null);
   const [isBridging, setIsBridging] = useState(false);
+  // What happens when the user taps Next on Peter's reply.
+  const bridgeNext = useRef<(() => void) | null>(null);
   // For Q3: partner name inline input
   const [partnerNameInput, setPartnerNameInput] = useState('');
   const [awaitingPartnerName, setAwaitingPartnerName] = useState(false);
@@ -111,14 +114,19 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
     return { ...current, ...traits };
   }
 
+  // Peter's reply stays up until the user taps Next, so nobody gets rushed.
   function playBridge(bridgeText: string, then: () => void) {
+    bridgeNext.current = then;
     setActiveBridge(bridgeText);
     setIsBridging(true);
-    setTimeout(() => {
-      setActiveBridge(null);
-      setIsBridging(false);
-      then();
-    }, BRIDGE_DELAY_MS);
+  }
+
+  function continueFromBridge() {
+    const then = bridgeNext.current;
+    bridgeNext.current = null;
+    setActiveBridge(null);
+    setIsBridging(false);
+    then?.();
   }
 
   function advanceQuestion(updatedProgress: OnboardingProgress) {
@@ -129,6 +137,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
       setCurrentIndex(nextIndex);
       setProgress(updatedProgress);
       setTextInput('');
+      setShowFreeText(false);
       setMultiPartState({});
       setPartnerNameInput('');
       setAwaitingPartnerName(false);
@@ -191,6 +200,8 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
     });
     setCurrentIndex(prevIndex);
     setTextInput('');
+    setShowFreeText(false);
+    bridgeNext.current = null;
     setActiveBridge(null);
     setIsBridging(false);
   }
@@ -245,7 +256,15 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
                 className="flex-1 bg-white rounded-2xl rounded-tl-sm p-4 text-[#1f2937] text-[14px] leading-relaxed"
                 style={{ border: '1px solid #e5e7eb' }}
               >
-                {activeBridge}
+                <p>{activeBridge}</p>
+                <button
+                  type="button"
+                  autoFocus
+                  onClick={continueFromBridge}
+                  className="mt-3 w-full bg-brand-primary text-white rounded-2xl py-2.5 font-bold text-sm"
+                >
+                  Next →
+                </button>
               </div>
             </motion.div>
           )}
@@ -356,8 +375,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
                   } else {
                     // Show bridge first, then reveal partner name input after it clears
                     setProgress(p => ({ ...p, relationshipStatus: option.sets?.value ?? '' }));
-                    setActiveBridge(option.bridge);
-                    setTimeout(() => { setActiveBridge(null); setAwaitingPartnerName(true); }, BRIDGE_DELAY_MS);
+                    playBridge(option.bridge, () => setAwaitingPartnerName(true));
                   }
                 }}
                 className="w-full p-4 rounded-2xl border-2 border-brand-primary/20 bg-brand-parchment text-brand-text-primary text-left text-sm font-medium hover:border-brand-primary"
@@ -453,7 +471,8 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
                 key={option.label}
                 onClick={() => {
                   if (option.isFreeText) {
-                    setTextInput('__freetext__');
+                    setTextInput('');
+                    setShowFreeText(true);
                   } else {
                     handleOptionSelect(option);
                   }
@@ -468,17 +487,18 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
               </button>
             ))}
             {/* Free-text input for "write my own" */}
-            {textInput === '__freetext__' && (
+            {showFreeText && (
               <div className="flex flex-col gap-2 mt-2">
                 <textarea
                   rows={2}
                   autoFocus
                   placeholder="Type your answer..."
                   className="w-full px-4 py-3 rounded-2xl border-2 border-brand-primary/20 bg-brand-parchment text-brand-text-primary placeholder-brand-text-secondary/50 focus:outline-none focus:border-brand-primary text-sm resize-none"
-                  onChange={e => setTextInput(e.target.value === '' ? '__freetext__' : e.target.value)}
+                  value={textInput}
+                  onChange={e => setTextInput(e.target.value)}
                 />
                 <button
-                  disabled={textInput === '__freetext__' || (textInput as string).trim().length < 2}
+                  disabled={textInput.trim().length < 2}
                   onClick={() => handleFreeTextSubmit(textInput)}
                   className="w-full bg-brand-primary text-white rounded-2xl py-3 font-bold disabled:opacity-40 text-sm"
                 >
