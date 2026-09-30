@@ -12,6 +12,8 @@ Admin-only, **aggregate counts only** — no user content ever leaves the databa
 | Correction rate | guesses the user rejected ÷ (confirmed + rejected). High = Peter's guesses miss; a healthy sign of agency, but a signal to review inference. |
 | Mirror usefulness | weekly mirrors the user answered ÷ mirrors generated |
 | Items shared by couples | explicit shares into `shared_items` |
+| Own reasons given | reasons users wrote in their own words (`user_reasons`) |
+| Own-reason rate | experiments that carry the user's own reason ÷ experiments created — a §10 influence-health signal (self-persuasion). Higher is healthier; it is never pushed by Peter supplying reasons. |
 | Retention (existing) | `retention_rate_30d` in the same KPI response |
 
 MDR complements, never replaces, retention and product-health metrics (§10). Avoid optimizing it directly — a user who needs Peter less over time is success (§10 "avoid designing dependence").

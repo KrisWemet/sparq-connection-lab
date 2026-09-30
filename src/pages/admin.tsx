@@ -216,6 +216,8 @@ export default function Admin() {
                       ['Correction rate', discovery.correction_rate],
                       ['Mirror usefulness', discovery.mirror_usefulness],
                       ['Items shared by couples', discovery.shared_items],
+                      ['Own reasons given', discovery.reasons_given],
+                      ['Experiments with their own reason', discovery.own_reason_rate],
                     ].map(([label, value]) => (
                       <div key={label as string} className="rounded-lg border bg-white p-4">
                         <p className="text-xs text-gray-500">{label}</p>

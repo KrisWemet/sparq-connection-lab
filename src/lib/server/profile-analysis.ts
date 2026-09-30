@@ -2,6 +2,7 @@ import { peterChat } from '@/lib/openrouter';
 import { getProfileAnalysisPrompt, PeterMessage } from '@/lib/peterService';
 import { addDistilledMemories, MEMORY_KINDS, type DistilledMemory, type MemoryKind } from '@/lib/server/memory';
 import { newTraitFields, reviseTrait, type TraitRow } from '@/lib/server/trait-revision';
+import { cleanReason, saveExperimentReason } from '@/lib/server/reasons';
 import { maybeExtractBaseline } from '@/lib/server/baseline-snapshot';
 import { loadPrivacyState } from '@/lib/server/privacy';
 import { assessReflectionQuality, getConfidenceBoost } from '@/lib/server/reflection-quality';
@@ -28,6 +29,7 @@ interface TraitAnalysis {
   memories?: Array<{ text?: unknown; kind?: unknown; importance?: unknown }> | null;
   self_discovery?: string | null;
   intention?: string | null;
+  intention_reason?: string | null;
 }
 
 // Traits that would hurt if said clumsily (docs/PERSON_MODEL.md §2).
@@ -203,13 +205,18 @@ export async function analyzeProfileTraits(
       const intention = cleanUserText(analysis.intention, 300);
       if (intention) {
         const checkIn = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-        await supabase.from('experiments').insert({
+        const { data: experiment } = await supabase.from('experiments').insert({
           user_id: userId,
           intention,
           origin: 'user',
           check_in_on: checkIn,
           session_id: sessionId ?? null,
-        });
+        }).select('id').single();
+        // Their own reason for it, only if they said one (self-persuasion).
+        const reason = cleanReason(analysis.intention_reason);
+        if (experiment?.id && reason) {
+          await saveExperimentReason(supabase, userId, experiment.id, reason, 'evening');
+        }
       }
 
       // Growth Engine — one-time baseline extraction (spec §3.2).

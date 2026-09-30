@@ -3,10 +3,10 @@
 -- three users inside one DO block and always ends with RAISE EXCEPTION, so
 -- the whole transaction rolls back and NOTHING is persisted.
 --
--- Expected result (2026-09-30):
+-- Expected result (2026-09-30, reasons added the same day):
 --   A space created=true | A forge-as-B=blocked | B sees shared=1 |
---   B sees A discoveries=0 | B sees A experiments=0 | B sees A traits=0 |
---   B sees A memories=0 | B deletes A item=0 | B same space=true |
+--   B sees A discoveries=0 | B sees A experiments=0 | B sees A reasons=0 |
+--   B sees A traits=0 | B sees A memories=0 | B deletes A item=0 | B same space=true |
 --   C space=none | C sees shared=0 | C sees spaces=0 | C insert=blocked |
 --   C create space directly=blocked
 -- Any "ALLOWED(BAD)" or a non-zero "B sees A …" is a privacy leak.
@@ -30,6 +30,7 @@ BEGIN
   EXECUTE 'SET LOCAL ROLE authenticated';
   INSERT INTO public.self_discoveries (user_id, discovery) VALUES (a, 'private to A');
   INSERT INTO public.experiments (user_id, intention) VALUES (a, 'private plan of A');
+  INSERT INTO public.user_reasons (user_id, reason_text) VALUES (a, 'private reason of A');
   space := public.ensure_couple_space();
   r := r || 'A space created=' || (space IS NOT NULL);
   INSERT INTO public.shared_items (couple_space_id, author_id, kind, body) VALUES (space, a, 'appreciation', 'shared by A');
@@ -46,6 +47,7 @@ BEGIN
   SELECT count(*) INTO n FROM public.shared_items WHERE couple_space_id = space; r := r || ' | B sees shared=' || n;
   SELECT count(*) INTO n FROM public.self_discoveries; r := r || ' | B sees A discoveries=' || n;
   SELECT count(*) INTO n FROM public.experiments; r := r || ' | B sees A experiments=' || n;
+  SELECT count(*) INTO n FROM public.user_reasons; r := r || ' | B sees A reasons=' || n;
   SELECT count(*) INTO n FROM public.profile_traits WHERE user_id = a; r := r || ' | B sees A traits=' || n;
   SELECT count(*) INTO n FROM public.memories WHERE user_id = a; r := r || ' | B sees A memories=' || n;
   DELETE FROM public.shared_items WHERE couple_space_id = space; GET DIAGNOSTICS n = ROW_COUNT; r := r || ' | B deletes A item=' || n;

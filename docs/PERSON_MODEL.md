@@ -126,6 +126,8 @@ Rolling, per-user statistics compared only with the same person over time.
 
 ### 8.3 User-owned reasons — *why it matters, in their words*
 
+> **Implemented 2026-09-30** (migration `20260930150000_user_reasons.sql`, `src/lib/server/reasons.ts`): `user_reasons` table (RLS own-row) + `experiments.reason_id`. Captured from the experiment card ("What makes it worth trying for you?", optional) and from evening chats when the user says why (`intention_reason`, never written for them). Shown back at check-in ("You said it matters because…"), given to Peter with the rule that he may reconnect them to it but never add a reason, guilt them, or push past "it doesn't matter anymore". Rewriting a reason retires the old one (`still_true = false`, `revised_at`); retired reasons are never shown or used. Deleted with memory-off and delete-all. Verified private by `supabase/tests/rls_boundaries.sql`.
+
 | Field | Meaning |
 |---|---|
 | `id`, `user_id` | owner |

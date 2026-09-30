@@ -18,6 +18,8 @@ async function deleteGrowthData(supabase: SupabaseClient, userId: string): Promi
     supabase.from('csi_pulses').delete().eq('user_id', userId),
     // Self-discoveries are memory-class (Person Model V1).
     supabase.from('self_discoveries').delete().eq('user_id', userId),
+    // User-owned reasons are memory-class too (their words about what matters).
+    supabase.from('user_reasons').delete().eq('user_id', userId),
   ]);
 }
 
