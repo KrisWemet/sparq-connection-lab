@@ -67,6 +67,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .single();
 
     if (error) return res.status(500).json({ error: error.message });
+
+    // "Not really" is a rejected guess — remembered so Peter never voices it again.
+    if (feedback === 'not_really') {
+      const { recordRejection } = await import('@/lib/server/rejected-hypotheses');
+      await recordRejection(ctx.supabase, ctx.userId, {
+        hypothesisRef: `trait:${trait_key}`,
+        offeredAs: 'insight',
+        offeredText: `${trait_key}: ${data?.inferred_value ?? ''}`,
+        userResponse: 'Not really',
+      });
+    }
     return res.status(200).json({ trait: data });
   }
 

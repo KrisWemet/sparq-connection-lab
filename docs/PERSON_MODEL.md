@@ -171,6 +171,8 @@ Any prompt block that applies an influence principle records `{ principle, targe
 
 ### 8.7 Rejected hypotheses — *what Peter got wrong* (Insight Evidence)
 
+> **Implemented 2026-09-30** (migration `20260930160000_rejected_hypotheses.sql`, `src/lib/server/rejected-hypotheses.ts`): recorded when the user pushes back in chat (the `pushback` signal; Peter's previous message + the user's words) and when they tap "Not really" on a trait. If the rejected message voiced an insight observation, that trait loses confidence and gains counter-evidence (`applyRejectionEvidence`; user-confirmed/rejected traits only gain evidence). For 90 days every chat prompt carries a "never offer these again" block, and rejected traits can't be voiced as observations. Honors memory settings; deleted with memory-off and delete-all; verified private live. Not yet built: capturing `what_peter_missed` separately (the user's reply is stored as-is).
+
 | Field | Meaning |
 |---|---|
 | `id`, `user_id` | owner |

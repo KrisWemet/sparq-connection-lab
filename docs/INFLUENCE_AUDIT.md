@@ -73,4 +73,4 @@ Severity: **High** = directly contradicts a v1.1 rule in something users see or 
 
 - **16 guidance conflicts fixed** (A1–A16).
 - **16 app findings** (B1–B16): all fixed (B1–B3, B10–B16 in the second pass; B4–B9 in the third).
-- Next: run the 14 resistance cases against live Peter (needs an OpenRouter key), then constitution §14 steps 12 and 15 (rejected-hypothesis store, Insight Profile). User-owned reasons (step 13) shipped 2026-09-30.
+- Next: run the 14 resistance cases against live Peter (needs an OpenRouter key), then constitution §14 step 15 (Insight Profile page). User-owned reasons (step 13) and the rejected-hypothesis store (step 12) shipped 2026-09-30.
