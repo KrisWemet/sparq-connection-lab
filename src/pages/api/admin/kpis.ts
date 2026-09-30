@@ -13,6 +13,8 @@ type KpiResponse = {
   avg_relationship_score: number | null;
   assessment_improvement_avg: number | null;
   memory_utilization: number | null;
+  // Constitution §10/§12 — aggregate counts only (see discovery_metrics()).
+  discovery: Record<string, number | null> | null;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -23,7 +25,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const ctx = await getAuthedContext(req);
   if (!ctx) return res.status(401).json({ error: 'Unauthorized' });
 
-  const { data: adminCheck } = await ctx.supabase.rpc('is_admin', { user_id: ctx.userId });
+  // is_admin's parameter is check_user_id — the old `user_id` key made
+  // every call fail, so this endpoint always answered 403.
+  const { data: adminCheck } = await ctx.supabase.rpc('is_admin', { check_user_id: ctx.userId });
   if (!adminCheck) {
     return res.status(403).json({ error: 'Forbidden' });
   }
@@ -134,6 +138,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     ? Number((improvements.reduce((a, b) => a + b, 0) / improvements.length).toFixed(1))
     : null;
 
+  // Meaningful Discovery Rate + experiment follow-through, correction rate,
+  // mirror usefulness. Computed in SQL (admin-only, counts only).
+  const windowDays = Math.min(365, Math.max(1, Number(req.query.window_days) || 28));
+  const { data: discovery } = await ctx.supabase.rpc('discovery_metrics', { window_days: windowDays });
+
   const response: KpiResponse = {
     date_utc: today.toISOString(),
     activation_day3_users: activationUsers.size,
@@ -147,6 +156,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     avg_relationship_score: avgRelationshipScore,
     assessment_improvement_avg: assessmentImprovementAvg,
     memory_utilization: memoryCount.count ?? null,
+    discovery: (discovery as Record<string, number | null> | null) ?? null,
   };
 
   return res.status(200).json(response);
