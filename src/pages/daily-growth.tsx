@@ -25,6 +25,8 @@ import { fetchPlayfulConnectionToday } from '@/lib/playfulConnection';
 import type { PlayfulPrompt } from '@/data/playful-prompts';
 import { FavoriteUsCard } from '@/components/playful/FavoriteUsCard';
 import { EditorialEyebrow } from '@/components/editorial/EditorialSurface';
+import { TONE } from '@/lib/moment-tone';
+import { cn } from '@/lib/utils';
 
 type Phase = 'loading' | 'morning' | 'evening' | 'evening-checkin' | 'journey-complete' | 'complete';
 type PracticeMode = 'solo' | 'partner_optional' | 'partner_joint';
@@ -1056,7 +1058,7 @@ export default function DailyGrowth() {
                       Track 2 (only when alive): the gold dopamine beat for a live
                       consecutive run. When a run is broken it simply isn't shown —
                       no guilt copy, and the practice-days count is untouched. */}
-                  <div className="mt-6 w-full max-w-xs rounded-3xl border border-brand-primary/10 bg-brand-parchment p-5 text-center shadow-sm">
+                  <div className={cn(TONE.grow.card, 'mt-6 w-full max-w-xs rounded-3xl p-5 text-center shadow-sm')}>
                     <Flame size={28} className="text-brand-gold-deep mx-auto mb-2" />
                     <p className="text-brand-gold-deep font-bold text-2xl">{practiceDays || currentDay - 1} days</p>
                     <p className="mt-1 text-sm text-brand-taupe">Days you&apos;ve shown up.</p>

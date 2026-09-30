@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { buildAuthedHeaders } from '@/lib/api-auth';
+import { TONE } from '@/lib/moment-tone';
+import { cn } from '@/lib/utils';
 
 type Step = 'offer' | 'drafting' | 'editing' | 'kept' | 'shared';
 
@@ -64,7 +66,7 @@ export function SharePrompt({ text, kind = 'discovery' }: { text: string; kind?:
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0 }}
-        className="mt-3 rounded-2xl border border-brand-primary/10 bg-white/60 p-4 space-y-3"
+        className={cn('mt-3 rounded-2xl p-4 space-y-3', step === 'offer' || step === 'kept' ? 'border border-brand-primary/10 bg-white/60' : TONE.connect.card)}
       >
         {step === 'offer' && (
           <>
@@ -75,7 +77,7 @@ export function SharePrompt({ text, kind = 'discovery' }: { text: string; kind?:
                 Keep it private
               </button>
               <button type="button" onClick={helpMeShare}
-                className="rounded-full bg-brand-primary px-4 py-1.5 text-sm font-bold text-white hover:opacity-90">
+                className={cn(TONE.connect.button, 'rounded-full px-4 py-1.5 text-sm')}>
                 Help me share it
               </button>
             </div>
@@ -91,7 +93,7 @@ export function SharePrompt({ text, kind = 'discovery' }: { text: string; kind?:
             {error && <p className="text-xs text-brand-hover">{error}</p>}
             <div className="flex flex-wrap gap-2">
               <button type="button" onClick={share} disabled={!draft.trim()}
-                className="rounded-full bg-brand-primary px-4 py-1.5 text-sm font-bold text-white hover:opacity-90 disabled:opacity-50">
+                className={cn(TONE.connect.button, 'rounded-full px-4 py-1.5 text-sm disabled:opacity-50')}>
                 Share
               </button>
               <button type="button" onClick={() => setStep('kept')}

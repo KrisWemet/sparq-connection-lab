@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { buildAuthedHeaders } from '@/lib/api-auth';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
 import { SharePrompt } from '@/components/shared/SharePrompt';
+import { TONE } from '@/lib/moment-tone';
+import { cn } from '@/lib/utils';
 
 type MirrorData = {
   eligible: boolean;
@@ -88,7 +90,7 @@ export function ThirtyDayMirrorCard({ compact = false }: { compact?: boolean }) 
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6 space-y-4"
+      className={cn(TONE.grow.card, 'rounded-3xl shadow-sm p-6 space-y-4')}
     >
       <div className="flex items-center gap-3">
         <PeterAvatar mood="afternoon" size={32} />

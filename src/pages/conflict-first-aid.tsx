@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/lib/auth-context';
 import { supabase } from '@/lib/supabase';
 
+// Repair moment: quieter, less colour (lib/moment-tone.ts "repair").
 const RESET_PROTOCOL = [
   'Pause. Put both feet on the floor. Inhale for 4, exhale for 6, five times.',
   'Use this line: "I care about us, and I need 20 minutes to calm down so I can talk with care."',
@@ -206,7 +207,7 @@ export default function ConflictFirstAidPage() {
 
   if (phase === 'somatic') {
     return (
-      <div className="min-h-screen bg-brand-linen flex flex-col items-center justify-center text-black transition-colors duration-1000">
+      <div className="min-h-screen bg-brand-quiet flex flex-col items-center justify-center text-brand-espresso transition-colors duration-1000">
         <div className="absolute top-6 left-6">
           <button
             onClick={() => router.back()}
@@ -223,11 +224,11 @@ export default function ConflictFirstAidPage() {
 
           <div className="relative flex items-center justify-center h-48">
             <div
-              className={`absolute rounded-full bg-brand-primary/20 mix-blend-multiply blur-xl transition-all ease-in-out ${breathState === 'inhale' ? 'w-48 h-48 duration-[4000ms]' : 'w-24 h-24 duration-[6000ms]'
+              className={`absolute rounded-full bg-brand-mauve/20 mix-blend-multiply blur-xl transition-all ease-in-out ${breathState === 'inhale' ? 'w-48 h-48 duration-[4000ms]' : 'w-24 h-24 duration-[6000ms]'
                 }`}
             />
             <div
-              className={`absolute rounded-full bg-emerald-500/20 mix-blend-multiply blur-lg transition-all ease-in-out delay-75 ${breathState === 'inhale' ? 'w-40 h-40 duration-[4000ms]' : 'w-16 h-16 duration-[6000ms]'
+              className={`absolute rounded-full bg-brand-growth/30 mix-blend-multiply blur-lg transition-all ease-in-out delay-75 ${breathState === 'inhale' ? 'w-40 h-40 duration-[4000ms]' : 'w-16 h-16 duration-[6000ms]'
                 }`}
             />
             <p className="z-10 text-[10px] font-bold tracking-[0.3em] uppercase text-zinc-600">
@@ -262,12 +263,12 @@ export default function ConflictFirstAidPage() {
     : REPAIR_STARTERS;
 
   return (
-    <div className="min-h-screen bg-brand-linen animate-in fade-in duration-1000 font-sans">
+    <div className="min-h-screen bg-brand-quiet animate-in fade-in duration-1000 font-sans">
       <header className="sticky top-0 z-10 border-b border-zinc-200 bg-white/70 backdrop-blur-xl">
         <div className="mx-auto max-w-3xl px-4 py-4 flex items-center justify-between">
           <button
             onClick={() => router.back()}
-            className="rounded-xl px-4 py-2 text-sm text-brand-hover hover:bg-brand-linen transition-colors font-medium -ml-4"
+            className="rounded-xl px-4 py-2 text-sm text-brand-text-secondary hover:bg-white/60 transition-colors font-medium -ml-4"
           >
             ← Retreat
           </button>
@@ -289,12 +290,12 @@ export default function ConflictFirstAidPage() {
           </p>
         </section>
 
-        <section className="rounded-3xl border border-zinc-100 bg-white p-6 shadow-sm">
+        <section className="rounded-3xl border border-brand-border bg-white/70 p-6">
           <h2 className="text-[11px] font-bold uppercase tracking-wider text-brand-text-secondary mb-4">2-10 Minute Reset Protocol</h2>
           <ol className="mt-3 space-y-3 text-base text-black">
             {RESET_PROTOCOL.map((step, idx) => (
-              <li key={step} className="rounded-2xl bg-brand-linen px-5 py-4 leading-relaxed flex items-start">
-                <span className="font-bold text-brand-hover mr-3 mt-0.5">{idx + 1}.</span>
+              <li key={step} className="rounded-2xl bg-brand-quiet px-5 py-4 leading-relaxed flex items-start">
+                <span className="font-bold text-brand-text-secondary mr-3 mt-0.5">{idx + 1}.</span>
                 <span>{step}</span>
               </li>
             ))}
@@ -303,17 +304,17 @@ export default function ConflictFirstAidPage() {
 
         {/* Personalized dynamic section */}
         {personalizedGuidance && (
-          <section className="rounded-3xl border border-amber-200 bg-amber-50 p-6 shadow-sm">
-            <h2 className="text-[11px] font-bold uppercase tracking-wider text-amber-700 mb-3">Your Dynamic Right Now</h2>
-            <p className="text-base text-gray-800 leading-relaxed">{personalizedGuidance.dynamic}</p>
+          <section className="rounded-3xl border border-brand-border bg-white/70 p-6">
+            <h2 className="text-[11px] font-bold uppercase tracking-wider text-brand-text-secondary mb-3">Your Dynamic Right Now</h2>
+            <p className="text-base text-brand-espresso leading-relaxed">{personalizedGuidance.dynamic}</p>
           </section>
         )}
 
-        <section className="rounded-3xl border border-zinc-100 bg-white p-6 shadow-sm">
+        <section className="rounded-3xl border border-brand-border bg-white/70 p-6">
           <h2 className="text-[11px] font-bold uppercase tracking-wider text-brand-text-secondary mb-4">Repair Starters</h2>
           <div className="mt-3 space-y-3">
             {allRepairStarters.map((starter, i) => (
-              <p key={i} className="rounded-2xl bg-brand-linen px-5 py-4 text-base text-black italic">
+              <p key={i} className="rounded-2xl bg-brand-quiet px-5 py-4 text-base text-brand-espresso italic">
                 &quot;{starter}&quot;
               </p>
             ))}
@@ -325,7 +326,7 @@ export default function ConflictFirstAidPage() {
             Purely additive: router.push fires the auto-resolve-on-leave
             handlers naturally (episode resolves, then the reflection opens). */}
         <div>
-          <div className="rounded-2xl border border-brand-primary/10 bg-brand-parchment p-5">
+          <div className="rounded-2xl border border-brand-border bg-brand-quiet p-5">
             <p className="text-sm leading-relaxed text-brand-espresso mb-1 font-medium">
               When you&apos;re ready
             </p>

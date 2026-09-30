@@ -72,6 +72,19 @@ The Stitch MCP is connected to Claude Code. When generating new screens or UI mo
 | `brand-growth` | `#9CB5A0` | Sage — calm | Quiet/repair moments, progress (fills, not text) |
 | `brand-border` | `#DED5CF` | Stone edge | Borders |
 
+### Moment tones — colour that follows the emotion (`src/lib/moment-tone.ts`)
+
+Use `TONE[tone].card / eyebrow / icon / button / outline / inset` instead of hand-picking colours for a moment.
+
+| Tone | Colour | Where it's used now | Also use it for |
+|---|---|---|---|
+| `understand` | Plum on ivory/stone | Default: daily questions, learning, most screens | Anything not listed below |
+| `connect` | Coral (`coral-soft` card, coral button with dark text) | `/us` shared space, SharePrompt once they choose to share, `/join-partner` | Partner answer reveal (not built yet), partner invites |
+| `grow` | Gold (`gold-soft` card, gold button with dark text) | Journey completion synthesis, practice-days card, 30-day and weekly mirrors, GrowthThread milestones/breakthroughs | Self-discoveries, insight moments |
+| `repair` | Quiet (`quiet` surface, mauve button, sage/mauve accents) | `/conflict-first-aid` | Heavy check-ins, Peter comforting |
+
+Keep coral and gold rare: they mean something only because most of the app is plum. Safety content (danger banners) keeps its own rose colours.
+
 ### Semantic Colors (CSS variables in `globals.css`)
 
 | Token | Light | Dark | Usage |

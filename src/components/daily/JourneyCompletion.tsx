@@ -5,6 +5,8 @@ import { Sparkles } from 'lucide-react';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
 import { supabase } from '@/lib/supabase';
 import { buildAuthedHeaders } from '@/lib/api-auth';
+import { TONE } from '@/lib/moment-tone';
+import { cn } from '@/lib/utils';
 
 interface JourneyRec {
   journeyId: string;
@@ -129,7 +131,7 @@ export function JourneyCompletion({ journeyId, journeyTitle }: JourneyCompletion
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
-            className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6"
+            className={cn(TONE.grow.card, 'rounded-3xl shadow-sm p-6')}
           >
             {loading ? (
               <div className="space-y-2 animate-pulse">
