@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { buildAuthedHeaders } from '@/lib/api-auth';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
+import { SharePrompt } from '@/components/shared/SharePrompt';
 
 type MirrorData = {
   eligible: boolean;
@@ -35,6 +36,7 @@ export function ThirtyDayMirrorCard({ compact = false }: { compact?: boolean }) 
   const [answer, setAnswer] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [justSaved, setJustSaved] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -57,6 +59,7 @@ export function ThirtyDayMirrorCard({ compact = false }: { compact?: boolean }) 
       const res = await fetch('/api/me/thirty-day-mirror', { method: 'POST', headers, body: JSON.stringify({ conclusion: answer }) });
       if (!res.ok) throw new Error('save failed');
       setData(d => (d ? { ...d, conclusion: answer.trim() } : d));
+      setJustSaved(true);
     } catch {
       setError("That didn't save. Try again in a moment.");
     } finally {
@@ -136,7 +139,10 @@ export function ThirtyDayMirrorCard({ compact = false }: { compact?: boolean }) 
           Looking at all of this, what would you say about who you are becoming?
         </p>
         {data.conclusion ? (
-          <p className="text-sm text-brand-espresso leading-relaxed whitespace-pre-wrap">{data.conclusion}</p>
+          <>
+            <p className="text-sm text-brand-espresso leading-relaxed whitespace-pre-wrap">{data.conclusion}</p>
+            {justSaved && <SharePrompt text={data.conclusion} />}
+          </>
         ) : (
           <>
             <textarea

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { buildAuthedHeaders } from '@/lib/api-auth';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
+import { SharePrompt } from '@/components/shared/SharePrompt';
 
 interface WeeklyInsight {
   patterns: string[];
@@ -30,6 +31,7 @@ export function WeeklyMirrorCard() {
   const [answer, setAnswer] = useState('');
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
+  const [justSaved, setJustSaved] = useState(false);
 
   async function saveReflection() {
     if (!mirror || !answer.trim() || saving) return;
@@ -44,6 +46,7 @@ export function WeeklyMirrorCard() {
       });
       if (!res.ok) throw new Error('save failed');
       setMirror({ ...mirror, user_reflection: answer.trim() });
+      setJustSaved(true);
     } catch {
       setSaveError("That didn't save. Try again in a moment.");
     } finally {
@@ -143,6 +146,7 @@ export function WeeklyMirrorCard() {
                 <>
                   <p className="text-sm text-brand-espresso leading-relaxed whitespace-pre-wrap">{mirror.user_reflection}</p>
                   <p className="text-xs text-brand-text-secondary mt-2">That one&apos;s yours to keep. 🦦</p>
+                  {justSaved && <SharePrompt text={mirror.user_reflection} />}
                 </>
               ) : (
                 <>
