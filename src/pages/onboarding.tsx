@@ -103,9 +103,12 @@ export default function OnboardingPage() {
           }
 
           if (profileData && !profileData.isonboarded && profileData.psychological_profile) {
-            // User completed scoring but never confirmed a journey — resume from journey_rec
-            setProfile(profileData.psychological_profile as DerivedProfile);
-            setPhase('journey_rec');
+            // User completed scoring but never confirmed a journey. If they
+            // never finished the Peter chat (no closing line yet), resume
+            // there; otherwise go straight to the journey pick.
+            const saved = profileData.psychological_profile as DerivedProfile;
+            setProfile(saved);
+            setPhase(saved.peterClosingSentence?.trim() ? 'journey_rec' : 'peter_session');
           } else {
             // Restore partial question progress from localStorage
             const stored = localStorage.getItem(STORAGE_KEY);
