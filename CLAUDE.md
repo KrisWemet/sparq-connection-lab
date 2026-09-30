@@ -496,7 +496,6 @@ import { Button } from "../../components/ui/button";
 
 | File | Lines | Notes |
 |---|---|---|
-| `src/services/supabaseService.ts` | ~1,000 | Legacy DB helpers — candidate for splitting by domain |
 | `src/components/MetaphorAnimation.tsx` | ~800 | Animated metaphor visualizations (bridge, flower, river) |
 
 ---
