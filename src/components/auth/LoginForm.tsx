@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { useAuth } from '../../lib/auth-context';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Lock, Mail, ArrowRight, Loader } from 'lucide-react';
@@ -337,10 +338,16 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
               {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
             </button>
           </div>
-          {isRegisterMode && (
+          {isRegisterMode ? (
             <p className="mt-1 text-xs text-gray-500">
               Password must be at least 8 characters long
             </p>
+          ) : (
+            <div className="mt-2 text-right">
+              <Link href="/forgot-password" className="text-sm font-semibold text-brand-hover hover:text-brand-espresso">
+                Forgot your password?
+              </Link>
+            </div>
           )}
         </motion.div>
 

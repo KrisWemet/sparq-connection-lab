@@ -208,9 +208,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     try {
       // Sign up with Supabase
+      // Names travel with the sign-up itself, so the database trigger stores
+      // them even when email confirmation means there is no session yet
+      // (the profile write below can't run without one).
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
-        password
+        password,
+        options: {
+          data: {
+            full_name: userData.name?.trim() || undefined,
+            partner_name: userData.partner_name?.trim() || undefined,
+          },
+        },
       });
       
       if (signUpError) {

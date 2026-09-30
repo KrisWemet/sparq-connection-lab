@@ -29,6 +29,8 @@ function getPeterText(
 interface QuestionFlowProps {
   initialProgress?: OnboardingProgress | null;
   onComplete: (progress: OnboardingProgress) => void;
+  /** Names the user already gave at signup — never asked again. */
+  knownNames?: { firstName?: string | null; partnerName?: string | null };
 }
 
 const EMPTY_PROGRESS: OnboardingProgress = {
@@ -51,9 +53,22 @@ const EMPTY_PROGRESS: OnboardingProgress = {
   growthGoal: '',
 };
 
-export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps) {
-  const [progress, setProgress] = useState<OnboardingProgress>(initialProgress ?? EMPTY_PROGRESS);
-  const [currentIndex, setCurrentIndex] = useState(initialProgress?.lastQuestionIndex ?? 0);
+export function QuestionFlow({ initialProgress, onComplete, knownNames }: QuestionFlowProps) {
+  const knownFirstName = knownNames?.firstName?.trim() || '';
+  const knownPartnerName = knownNames?.partnerName?.trim() || '';
+  const [progress, setProgress] = useState<OnboardingProgress>(() => {
+    const base = initialProgress ?? EMPTY_PROGRESS;
+    return {
+      ...base,
+      firstName: base.firstName || knownFirstName,
+      partnerName: base.partnerName ?? (knownPartnerName || null),
+    };
+  });
+  // Skip the name question when signup already gave us their name.
+  const [currentIndex, setCurrentIndex] = useState(() => {
+    const saved = initialProgress?.lastQuestionIndex ?? 0;
+    return saved === 0 && knownFirstName ? 1 : saved;
+  });
   const [textInput, setTextInput] = useState('');
   const [multiPartState, setMultiPartState] = useState<{ ageRange?: string; pronouns?: string }>({});
   const [activeBridge, setActiveBridge] = useState<string | null>(null);
@@ -63,6 +78,17 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
   const [awaitingPartnerName, setAwaitingPartnerName] = useState(false);
   // For Q14: awaiting frequency after growth goal
   const [growthGoalSubmitted, setGrowthGoalSubmitted] = useState(false);
+
+  // Names may arrive just after mount — apply them if nothing has been answered yet.
+  useEffect(() => {
+    if (!knownFirstName && !knownPartnerName) return;
+    setProgress(p => ({
+      ...p,
+      firstName: p.firstName || knownFirstName,
+      partnerName: p.partnerName ?? (knownPartnerName || null),
+    }));
+    if (knownFirstName) setCurrentIndex(i => (i === 0 ? 1 : i));
+  }, [knownFirstName, knownPartnerName]);
 
   const question = QUESTIONS[currentIndex];
 
@@ -169,7 +195,11 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
     setIsBridging(false);
   }
 
-  const peterText = getPeterText(question, progress.firstName, progress.partnerName);
+  // When the name question was skipped, Peter still introduces himself.
+  const skippedNameIntro = currentIndex === 1 && Boolean(knownFirstName) && !progress.answers[0];
+  const peterText = skippedNameIntro
+    ? `Hi ${progress.firstName} — I'm Peter. I'm going to be with you every step of the way. Couple of quick ones first—`
+    : getPeterText(question, progress.firstName, progress.partnerName);
   const showBack = currentIndex > 0 && !isBridging;
 
   return (
@@ -317,6 +347,12 @@ export function QuestionFlow({ initialProgress, onComplete }: QuestionFlowProps)
                 onClick={() => {
                   if (option.sets?.value === 'complicated') {
                     handleOptionSelect(option, { partnerName: null, relationshipLength: null, partnerUsing: null });
+                  } else if (knownPartnerName) {
+                    // Signup already told us their partner's name — don't ask again.
+                    handleOptionSelect(option, {
+                      partnerName: knownPartnerName,
+                      answers: { ...progress.answers, [2]: `${option.sets?.value ?? ''} / ${knownPartnerName}` },
+                    });
                   } else {
                     // Show bridge first, then reveal partner name input after it clears
                     setProgress(p => ({ ...p, relationshipStatus: option.sets?.value ?? '' }));
