@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChevronLeft, Users, Database, Settings, Activity, Search, FlaskConical } from "lucide-react";
+import { ChevronLeft, Users, Database, Settings, Activity, Search, FlaskConical, Sparkles } from "lucide-react";
 import { isAdmin } from "@/lib/auth-utils";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
@@ -33,6 +33,7 @@ export default function Admin() {
   const [activeTab, setActiveTab] = useState("users");
   const [betaTesters, setBetaTesters] = useState<BetaTester[]>([]);
   const [betaLoading, setBetaLoading] = useState(false);
+  const [discovery, setDiscovery] = useState<Record<string, number | null> | null>(null);
   const [modifiedSettings, setModifiedSettings] = useState({
     enablePremiumFeatures: true,
     enableUserRegistration: true,
@@ -96,6 +97,17 @@ export default function Admin() {
         
         setAuthorized(true);
         fetchBetaTesters();
+        // Constitution §10/§12 metrics — aggregate counts only.
+        (async () => {
+          try {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session?.access_token) return;
+            const res = await fetch('/api/admin/kpis', { headers: { Authorization: `Bearer ${session.access_token}` } });
+            if (res.ok) setDiscovery((await res.json()).discovery ?? null);
+          } catch {
+            // metrics are optional on this page
+          }
+        })();
       } catch (error) {
         console.error("Error checking admin status:", error);
         toast.error("Authentication error");
@@ -153,7 +165,11 @@ export default function Admin() {
 
       <main className="container max-w-6xl mx-auto px-4 py-6">
         <Tabs defaultValue="users" className="mb-8" onValueChange={setActiveTab}>
-          <TabsList className="mb-6 grid grid-cols-4">
+          <TabsList className="mb-6 grid grid-cols-5">
+            <TabsTrigger value="discovery">
+              <Sparkles className="w-4 h-4 mr-2" />
+              Discovery
+            </TabsTrigger>
             <TabsTrigger value="beta">
               <FlaskConical className="w-4 h-4 mr-2" />
               Beta Testers
@@ -172,6 +188,46 @@ export default function Admin() {
             </TabsTrigger>
           </TabsList>
           
+          <TabsContent value="discovery" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Meaningful Discovery Rate — last {discovery?.window_days ?? 28} days</CardTitle>
+                <CardDescription>
+                  Insights, self-chosen experiments and recognized growth per active user-week (constitution §10).
+                  Counts only — no content is ever shown here.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {!discovery ? (
+                  <p className="text-sm text-gray-500">No metrics yet.</p>
+                ) : (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {[
+                      ['Meaningful Discovery Rate', discovery.meaningful_discovery_rate],
+                      ['Active user-weeks', discovery.active_user_weeks],
+                      ['Self-discoveries', discovery.self_discoveries],
+                      ['Mirror answers', discovery.mirror_discoveries],
+                      ['Experiments created', discovery.experiments_created],
+                      ['Experiments tried', discovery.experiments_tried],
+                      ['Experiment follow-through', discovery.experiment_follow_through],
+                      ['Growth recognized', discovery.growth_recognized],
+                      ['Guesses confirmed', discovery.traits_confirmed],
+                      ['Guesses corrected', discovery.traits_rejected],
+                      ['Correction rate', discovery.correction_rate],
+                      ['Mirror usefulness', discovery.mirror_usefulness],
+                      ['Items shared by couples', discovery.shared_items],
+                    ].map(([label, value]) => (
+                      <div key={label as string} className="rounded-lg border bg-white p-4">
+                        <p className="text-xs text-gray-500">{label}</p>
+                        <p className="text-2xl font-semibold text-gray-900">{value ?? '—'}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           <TabsContent value="beta" className="space-y-6">
             <Card>
               <CardHeader>
