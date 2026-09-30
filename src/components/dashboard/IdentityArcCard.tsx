@@ -6,15 +6,18 @@ const ARC_STAGES = [
   { label: 'Noticing', description: 'Seeing the pattern' },
   { label: 'Pausing', description: 'Creating space before reacting' },
   { label: 'Responding', description: 'Choosing differently' },
-  { label: 'Integrating', description: 'This is just who I am now' },
+  { label: 'Integrating', description: 'Practicing until it feels natural' },
 ];
 
-const DEFAULT_STATEMENTS: Record<number, string> = {
-  1: "I'm becoming someone who notices the patterns in how I show up.",
-  2: "I'm becoming someone who creates space before reacting.",
-  3: "I'm becoming someone who chooses how to respond.",
-  4: "I'm becoming someone who shows up with presence without even trying.",
-};
+// Identity words must be the user's own (constitution v1.1 §5A). These are
+// the statements Peter used to assign automatically; rows that still hold
+// one are treated as "no statement yet", never shown as the user's identity.
+const LEGACY_ASSIGNED_STATEMENTS = new Set([
+  "I'm becoming someone who notices the patterns in how I show up.",
+  "I'm becoming someone who creates space before reacting.",
+  "I'm becoming someone who chooses how to respond.",
+  "I'm becoming someone who shows up with presence without even trying.",
+]);
 
 export function IdentityArcCard() {
   const [arcStage, setArcStage] = useState(1);
@@ -27,17 +30,30 @@ export function IdentityArcCard() {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        const { data } = await supabase
-          .from('user_insights')
-          .select('arc_stage, arc_statement')
-          .eq('user_id', user.id)
-          .maybeSingle();
+        const [{ data }, { data: northStar }] = await Promise.all([
+          supabase
+            .from('user_insights')
+            .select('arc_stage, arc_statement')
+            .eq('user_id', user.id)
+            .maybeSingle(),
+          supabase
+            .from('north_stars')
+            .select('line')
+            .eq('user_id', user.id)
+            .eq('status', 'active')
+            .not('line', 'is', null)
+            .order('confirmed_at', { ascending: false })
+            .limit(1)
+            .maybeSingle(),
+        ]);
 
         const stage = Math.max(1, Math.min(4, data?.arc_stage ?? 1));
         setArcStage(stage);
-        setArcStatement(data?.arc_statement || DEFAULT_STATEMENTS[stage] || DEFAULT_STATEMENTS[1]);
+        const ownStatement =
+          data?.arc_statement && !LEGACY_ASSIGNED_STATEMENTS.has(data.arc_statement) ? data.arc_statement : '';
+        setArcStatement(northStar?.line || ownStatement);
       } catch {
-        setArcStatement(DEFAULT_STATEMENTS[1]);
+        setArcStatement('');
       } finally {
         setLoading(false);
       }
@@ -62,10 +78,16 @@ export function IdentityArcCard() {
         Your arc
       </p>
 
-      {/* Statement — most important, most visual weight */}
-      <p className="font-serif italic text-brand-espresso text-xl leading-snug mb-5">
-        {arcStatement}
-      </p>
+      {/* The user's own words, or an open invitation — never assigned. */}
+      {arcStatement ? (
+        <p className="font-serif italic text-brand-espresso text-xl leading-snug mb-5">
+          {arcStatement}
+        </p>
+      ) : (
+        <p className="font-serif text-brand-espresso text-lg leading-snug mb-5">
+          Who do you want to be in the hard moments? When you find your words, they&apos;ll live here.
+        </p>
+      )}
 
       {/* Stage dots */}
       <div className="flex items-center gap-3">

@@ -238,12 +238,10 @@ Output ONLY valid JSON. No text outside the JSON object.`;
   }
 }
 
-const ARC_DEFAULT_STATEMENTS: Record<number, string> = {
-  1: "I'm becoming someone who notices the patterns in how I show up.",
-  2: "I'm becoming someone who creates space before reacting.",
-  3: "I'm becoming someone who chooses how to respond.",
-  4: "I'm becoming someone who shows up with presence without even trying.",
-};
+// The arc stage is a practice marker (Noticing → Integrating). It never
+// assigns identity words: "I'm becoming someone who…" statements come only
+// from the user (constitution v1.1 §5A — identity only for identities the
+// user named). IdentityArcCard shows the user's own North Star words instead.
 
 async function advanceArcStage(
   ctx: { supabase: any; userId: string },
@@ -267,7 +265,6 @@ async function advanceArcStage(
         {
           user_id: ctx.userId,
           arc_stage: nextStage,
-          arc_statement: ARC_DEFAULT_STATEMENTS[nextStage],
         },
         { onConflict: 'user_id' }
       );

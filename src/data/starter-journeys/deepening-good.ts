@@ -114,7 +114,7 @@ export const deepeningGood: StarterJourney = {
           'That\'s what turning toward each other actually looks like. ' +
           'It\'s not waiting for the big moment. It\'s making the small ones count.',
         keyInsight:
-          'The couples who last aren\'t the ones with the best stories — they\'re the ones who care about each other\'s boring ones.',
+          'Closeness isn\'t built on the best stories — it\'s built on caring about each other\'s boring ones.',
       },
       action: {
         prompt:

@@ -223,13 +223,14 @@ export function Day14Graduation() {
                                 What Peter Noticed
                             </p>
                             <p className="text-sm text-gray-700 leading-relaxed">{report.what_i_learned}</p>
+                            <p className="text-xs text-brand-text-secondary mt-2">These are Peter&apos;s guesses. You&apos;re the judge of what fits.</p>
                         </div>
 
                         {/* Biggest Growth */}
                         <div className="rounded-2xl bg-emerald-50 border border-emerald-100 p-4">
                             <p className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                                 <TrendingUp size={12} />
-                                Your Biggest Growth
+                                A Change Peter Saw
                             </p>
                             <p className="text-sm text-gray-700 leading-relaxed">{report.biggest_growth}</p>
                         </div>
@@ -237,7 +238,7 @@ export function Day14Graduation() {
                         {/* Superpower */}
                         <div className="rounded-2xl bg-amber-50 border border-amber-100 p-4">
                             <p className="text-xs font-bold text-amber-600 uppercase tracking-wider mb-2">
-                                ✨ Your Superpower
+                                ✨ One Strength Peter Saw
                             </p>
                             <p className="text-sm text-gray-700 leading-relaxed">{report.relationship_superpower}</p>
                         </div>
@@ -245,7 +246,7 @@ export function Day14Graduation() {
                         {/* Next Focus */}
                         <div className="rounded-2xl bg-slate-50 border border-slate-100 p-4">
                             <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                                Your Next Focus
+                                Something You Might Explore Next
                             </p>
                             <p className="text-sm text-gray-700 leading-relaxed">{report.focus_next}</p>
                         </div>

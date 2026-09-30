@@ -27,7 +27,7 @@ export default function FantasyExplorationJourney() {
           description: "Understanding that having fantasies is a universal, healthy part of human sexuality",
           icon: <Brain className="w-5 h-5 text-brand-primary" />,
           color: "purple",
-          example: "Research shows that 97% of adults have sexual fantasies. Many people carry shame about theirs. The first step is understanding: having a fantasy doesn't mean you need to act on it, and it doesn't say anything negative about your relationship or your character.",
+          example: "In one large survey (Lehmiller, 2018), 97% of adults said they have sexual fantasies. Many people carry shame about theirs. The first step is understanding: having a fantasy doesn't mean you need to act on it, and it doesn't say anything negative about your relationship or your character.",
           story: "Wei had carried quiet shame about a daydream for years. One night he read that almost everyone has fantasies, and that having one says nothing bad about you. He let out a breath he didn't know he'd been holding.",
         },
         {
