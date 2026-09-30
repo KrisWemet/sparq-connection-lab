@@ -28,12 +28,44 @@ export async function addMemory(
   messages: Message[],
   metadata?: Record<string, any>,
 ): Promise<SearchResult> {
-  const client = getServiceClient();
-
   const memoryText = messages
     .map(m => `${m.role}: ${m.content}`)
     .join('\n');
+  return insertMemory(userId, memoryText, metadata);
+}
 
+// Person Model V1 memory kinds (docs/PERSON_MODEL.md §5).
+export type MemoryKind = 'fact' | 'context' | 'pattern' | 'discovery' | 'intention' | 'growth';
+export const MEMORY_KINDS: readonly MemoryKind[] = ['fact', 'context', 'pattern', 'discovery', 'intention', 'growth'];
+
+export type DistilledMemory = { text: string; kind: MemoryKind; importance: number };
+
+/**
+ * Store only what is worth remembering (constitution §2, §4): short distilled
+ * sentences with a kind and importance. An empty list stores nothing — a
+ * normal, valid outcome.
+ */
+export async function addDistilledMemories(
+  userId: string,
+  items: DistilledMemory[],
+  metadata?: Record<string, any>,
+): Promise<number> {
+  let stored = 0;
+  for (const item of items) {
+    const result = await insertMemory(userId, item.text, metadata, item.kind, item.importance);
+    if (result.results.length > 0) stored++;
+  }
+  return stored;
+}
+
+async function insertMemory(
+  userId: string,
+  memoryText: string,
+  metadata?: Record<string, any>,
+  kind: MemoryKind = 'context',
+  importance = 0.5,
+): Promise<SearchResult> {
+  const client = getServiceClient();
   const embedding = await embed(memoryText);
 
   const expiresAt = metadata?.expires_at || null;
@@ -48,6 +80,8 @@ export async function addMemory(
       metadata: cleanMeta,
       embedding: embedding ? `[${embedding.join(',')}]` : null,
       expires_at: expiresAt,
+      kind,
+      importance: Math.min(1, Math.max(0, importance)),
     })
     .select('id, memory, metadata')
     .single();
@@ -73,20 +107,26 @@ export async function searchMemories(
   const queryEmbedding = await embed(query);
 
   if (queryEmbedding) {
-    // Vector similarity search using cosine distance
-    const { data, error } = await client.rpc('match_memories', {
+    // Ranked retrieval (similarity × importance, discoveries lifted, old
+    // context decayed — docs/PERSON_MODEL.md §6); plain cosine as fallback.
+    const args = {
       query_embedding: `[${queryEmbedding.join(',')}]`,
       match_user_id: userId,
       match_count: limit,
-    });
+    };
+    let { data, error } = await client.rpc('match_memories_ranked', args);
+    if (error) {
+      ({ data, error } = await client.rpc('match_memories', { ...args, match_count: limit * 2 }));
+    }
+    const rows = (data || []).filter((row: any) => !isTrace(row.metadata)).slice(0, limit);
 
-    if (!error && data && data.length > 0) {
+    if (!error && rows.length > 0) {
       return {
-        results: data.map((row: any) => ({
+        results: rows.map((row: any) => ({
           id: row.id,
           memory: row.memory,
-          metadata: row.metadata,
-          score: row.similarity,
+          metadata: { ...(row.metadata || {}), ...(row.kind ? { kind: row.kind } : {}) },
+          score: row.score ?? row.similarity,
         })),
       };
     }
@@ -135,8 +175,14 @@ export async function searchMemoriesBefore(
   };
 }
 
+/** Growth traces are the user's raw past words, kept only for the growth engine. */
+function isTrace(metadata: unknown): boolean {
+  return Boolean(metadata && typeof metadata === 'object' && (metadata as Record<string, unknown>).trace);
+}
+
 /**
- * Get all memories for a user (sorted by recency), filtering out expired ones.
+ * Most recent memories for Peter's context, filtering out expired ones and
+ * growth traces.
  */
 export async function getRecentMemories(
   userId: string,
@@ -149,6 +195,7 @@ export async function getRecentMemories(
     .select('id, memory, metadata')
     .eq('user_id', userId)
     .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`)
+    .or('metadata->>trace.is.null,metadata->>trace.neq.true')
     .order('created_at', { ascending: false })
     .limit(limit);
 

@@ -9,6 +9,7 @@ import { trackEvent } from '@/lib/server/analytics';
 import { trackPrimaryPathServerError } from '@/lib/server/beta-ops';
 import { computeTraitGaps, getSteeringHint, getSteeredTrait } from '@/lib/server/trait-gaps';
 import { PracticeMode, resolveJourneyContent } from '@/lib/server/journey-content';
+import { buildLegacyTraits } from '@/lib/server/attachment-context';
 
 const dailySessionColumnCache: Record<string, boolean | undefined> = {};
 
@@ -197,10 +198,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       );
   }
 
+  // Trait truth lives in profile_traits (Person Model V1) — the matching
+  // user_insights columns are deprecated and were never updated by analysis.
+  const legacyTraits = await buildLegacyTraits(ctx.supabase, ctx.userId);
+  const legacyValue = (key: string) =>
+    legacyTraits.find(t => t.trait_key === key && (t.confidence ?? 0) >= 0.4)?.inferred_value as any;
   const insights: Partial<UserInsights> = {
-    attachment_style: insightsRow?.attachment_style,
-    love_language: insightsRow?.love_language,
-    conflict_style: insightsRow?.conflict_style,
+    love_language: legacyValue('love_language') ?? null,
+    conflict_style: legacyValue('conflict_style') ?? null,
     emotional_state: insightsRow?.emotional_state ?? 'neutral',
     onboarding_day: dayIndex,
   };

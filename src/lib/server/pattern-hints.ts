@@ -24,6 +24,7 @@
  *     (D-12 forbids extending the type), so this is a documented approximation.
  */
 
+import type { KnowledgeLevel } from '@/lib/server/trait-revision';
 import {
   PATTERN_KEYS,
   type PatternContext,
@@ -246,6 +247,7 @@ function wrapInsightLine(skeleton: string): string {
 export function getPatternHints(
   ctx: PatternContext,
   surface: HintSurface,
+  levels?: Partial<Record<string, KnowledgeLevel>>,
 ): PatternHints {
   const morningHints: string[] = [];
   const chatToneHints: string[] = [];
@@ -265,8 +267,12 @@ export function getPatternHints(
         const tone = CHAT_TONE_VARIANTS[key]?.[value];
         if (tone && tone.length > 0) chatToneHints.push(tone);
       }
+      // Constitution §5: only patterns with real evidence (or that the user
+      // confirmed) may be offered as an observation — and only tentatively.
+      const level = levels?.[key];
+      const voiceable = !levels || level === 'evidence' || level === 'told';
       const skeleton = INSIGHT_SKELETONS[key]?.[value];
-      if (skeleton && skeleton.length > 0) {
+      if (voiceable && skeleton && skeleton.length > 0) {
         insightLines.push(wrapInsightLine(skeleton));
       }
     }

@@ -234,7 +234,8 @@ export async function runGrowthDetection(
     // moment_pair (soft #5): a >21-day-old memory semantically similar to the
     // latest reflection. MUST use the age-aware search — every evening reflection
     // is itself stored as a memory, so an unfiltered search self-matches today's
-    // reflection at similarity ≈ 1.0 and fabricates growth.
+    // reflection at similarity ≈ 1.0 and fabricates growth. (Since Person
+    // Model V1 the reflection is stored as a `trace` growth memory.)
     if (afterQuote) {
       const { searchMemoriesBefore } = await import('@/lib/server/memory');
       const cutoff = new Date(Date.now() - 21 * 86400000).toISOString();

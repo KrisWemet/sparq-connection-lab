@@ -59,6 +59,10 @@ Every piece of knowledge carries exactly one level, and Peter's wording must mat
 
 Instead of storing every evening conversation raw, the analysis step returns zero or more **distilled memories**, each one short sentence with a kind and importance. Only these are stored. An empty list is a normal, valid outcome. Self-discoveries and intentions are also written to their first-class tables.
 
+**Growth traces.** The growth engine pairs "then vs now" moments by finding an older reflection similar to today's. For that one purpose the user's own words (never Peter's) are kept as a `growth` memory with `importance 0.1` and `metadata.trace = true`. Traces are **excluded from every retrieval that feeds Peter** (`match_memories_ranked`, `getRecentMemories`) and follow the same memory window and delete paths.
+
+**Feedback.** `/api/profile/traits` PATCH maps the user's "does this fit?" answer onto `status`: yes → `confirmed`, not really → `rejected`, unsure → `hypothesis`.
+
 ## 6. Retrieval (§12 "retrieve selectively")
 
 `match_memories_ranked` returns the top N by `similarity × importance weight`, with a small lift for discoveries and facts and a decay for month-old context. Callers ask for 5 by default; the full history is never sent to the model.

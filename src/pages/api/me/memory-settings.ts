@@ -16,6 +16,8 @@ async function deleteGrowthData(supabase: SupabaseClient, userId: string): Promi
     supabase.from('growth_moments').delete().eq('user_id', userId),
     supabase.from('pattern_snapshots').delete().eq('user_id', userId),
     supabase.from('csi_pulses').delete().eq('user_id', userId),
+    // Self-discoveries are memory-class (Person Model V1).
+    supabase.from('self_discoveries').delete().eq('user_id', userId),
   ]);
 }
 
@@ -82,6 +84,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Reflections are deliberate private journaling — wiped on delete-all,
       // NOT on memory=none (their privacy contract is the encryption).
       await ctx.supabase.from('reflections').delete().eq('user_id', ctx.userId);
+      // Experiments (the user's own plans) go on delete-all, like reflections.
+      await ctx.supabase.from('experiments').delete().eq('user_id', ctx.userId);
       return res.status(200).json({ deleted: true });
     } catch (err) {
       console.error('Failed to delete user memories:', err);

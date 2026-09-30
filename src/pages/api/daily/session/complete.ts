@@ -337,6 +337,7 @@ Output ONLY the synthesis text. No JSON, no formatting.`;
           ctx.userId,
           updatedSession.evening_reflection,
           updatedSession.evening_peter_response,
+          updatedSession.id ?? null,
         );
       } catch (err) {
         console.error('Profile analysis background error:', err);
