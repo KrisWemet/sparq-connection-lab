@@ -149,3 +149,20 @@ export function knowledgeLevel(
   if (trait.source === 'user_stated' && (trait.confidence ?? 0) >= 0.6) return 'told';
   return (trait.confidence ?? 0) >= 0.6 ? 'evidence' : 'wondering';
 }
+
+const REJECTION_PENALTY = 0.15;
+
+/**
+ * The user pushed back when Peter voiced this trait as an observation
+ * (constitution v1.1 §6A). Lowers confidence and records counter-evidence.
+ * Confirmed/rejected traits stay the user's call — only evidence is added;
+ * they change them on their own (Journal "does this fit?").
+ */
+export function applyRejectionEvidence(existing: TraitRow, note: string, at: string = new Date().toISOString()): Record<string, unknown> {
+  const entry: EvidenceEntry = { at, source: 'chat_pushback', value: existing.inferred_value, note: note.slice(0, 200) };
+  const counter = push(list(existing.counter_evidence), entry);
+  const base = { counter_evidence: counter, last_evidence_at: at, updated_at: at };
+  if (existing.status === 'confirmed' || existing.status === 'rejected') return base;
+  const confidence = existing.confidence ?? INITIAL_CONFIDENCE;
+  return { ...base, confidence: round(Math.max(MIN_CONFIDENCE, confidence - REJECTION_PENALTY)) };
+}

@@ -10,6 +10,8 @@ import { loadPrivacyState } from '@/lib/server/privacy';
 import { assessReflectionQuality } from '@/lib/server/reflection-quality';
 import { stripMarkdown } from '@/lib/strip-markdown';
 import { decideMode } from '@/lib/server/conversation-mode';
+import { buildDoNotRepushBlock, detectVoicedInsight, loadRecentRejections, recordRejection, rejectedTraitKeys } from '@/lib/server/rejected-hypotheses';
+import { applyRejectionEvidence, type TraitRow } from '@/lib/server/trait-revision';
 import { buildPatternContext, buildLegacyTraits, buildPatternLevels, patternContextToTraits } from '@/lib/server/attachment-context';
 import { getPatternHints } from '@/lib/server/pattern-hints';
 import { logFinalPrompt } from '@/lib/server/dev-prompt-log';
@@ -143,9 +145,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             surface: eveningContext ? 'evening' : 'chat',
           });
 
-          // Self-discoveries + chosen experiments (Person Model V1).
+          // Self-discoveries + chosen experiments (Person Model V1), and the
+          // guesses they told Peter don't fit — never re-pushed (v1.1 §6A).
           if (privacy.can_store_memories) {
             systemPrompt += await buildOwnWordsBlock(authed.supabase, authed.userId);
+            const rejections = await loadRecentRejections(authed.supabase, authed.userId);
+            systemPrompt += buildDoNotRepushBlock(rejections);
+            for (const key of rejectedTraitKeys(rejections)) patternLevels[key] = 'excluded';
           }
 
           // Phase 23: append chat tone hints (D-03). Tone always applies.
@@ -240,6 +246,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!systemOverride && !ladderState && !isClosingTurn) {
       const decision = decideMode(latestUserMessage);
       if (decision.instruction) systemPrompt += decision.instruction;
+
+      // Resistance is information (v1.1 §6A): remember what Peter got wrong so
+      // it is never offered again. Fire-and-forget; honors memory settings.
+      if (decision.signal === 'pushback' && authed && privacyCanStoreMemories) {
+        const lastUserIndex = messages.map(m => m.role).lastIndexOf('user');
+        const previousPeter = [...messages.slice(0, Math.max(0, lastUserIndex))].reverse().find(m => m.role === 'assistant')?.content || '';
+        if (previousPeter) {
+          const voicedKey = detectVoicedInsight(previousPeter);
+          void (async () => {
+            await recordRejection(authed.supabase, authed.userId, {
+              hypothesisRef: voicedKey ? `trait:${voicedKey}` : null,
+              offeredAs: voicedKey ? 'insight' : 'reflection',
+              offeredText: previousPeter,
+              userResponse: latestUserMessage,
+            });
+            if (voicedKey) {
+              const { data: trait } = await authed.supabase
+                .from('profile_traits')
+                .select('id, inferred_value, confidence, status, evidence, counter_evidence, candidate_value, candidate_confidence')
+                .eq('user_id', authed.userId)
+                .eq('trait_key', voicedKey)
+                .maybeSingle();
+              if (trait) {
+                await authed.supabase
+                  .from('profile_traits')
+                  .update(applyRejectionEvidence(trait as TraitRow, `They said it didn't fit: ${latestUserMessage}`))
+                  .eq('id', trait.id);
+              }
+            }
+          })().catch(() => {});
+        }
+      }
     }
 
     logFinalPrompt('peter/chat', systemPrompt);

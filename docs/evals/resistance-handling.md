@@ -134,4 +134,4 @@ For each case, send the **setup** as prior conversation and the **user message**
 ## Pass criteria for a Peter release
 
 - 14/14 cases pass on a manual run before shipping changes to `PETER_SHARED_RULES`, `conversation-mode.ts` or any Peter prompt.
-- R2, R8 and R12 additionally need the v1.1 data model (rejected hypotheses, revisable reasons) before their **model effect** can be checked.
+- The data model behind R2, R8 and R12 now exists (`rejected_hypotheses`, revisable `user_reasons`, 2026-09-30), so their **model effect** can be checked in the database after a manual run.
