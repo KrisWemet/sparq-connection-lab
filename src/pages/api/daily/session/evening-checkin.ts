@@ -124,6 +124,8 @@ ${practiceNote}${triggerCtx}
 This is a brief evening check-in (NOT a full session). Keep your response to 3-4 sentences max.
 Reflect back what you heard warmly. Celebrate effort, not outcome.
 If they share something meaningful, acknowledge the depth.
+If they saw something true about themselves, honor it in their own words and do not add your interpretation.
+Never state a guess about who they are as a fact.
 End with a warm closing that connects to tomorrow.
 Do NOT ask follow-up questions — this is a single-turn check-in.
 
