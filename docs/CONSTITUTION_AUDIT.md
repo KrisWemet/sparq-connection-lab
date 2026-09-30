@@ -114,7 +114,7 @@ None exist. Chris decided (2026-09-29): tests are allowed but ask before adding 
 | 6 | Mirrors + experiment follow-up | [KrisWemet/sparq-connection-lab#32](https://github.com/KrisWemet/sparq-connection-lab/pull/32) | `/api/experiments`, `ExperimentsCard`, Day-30 mirror |
 | 7 | Relationship model + access controls | [KrisWemet/sparq-connection-lab#33](https://github.com/KrisWemet/sparq-connection-lab/pull/33) | `docs/RELATIONSHIP_MODEL.md`, `supabase/tests/rls_boundaries.sql` |
 | 8 | Shared Peter | [KrisWemet/sparq-connection-lab#34](https://github.com/KrisWemet/sparq-connection-lab/pull/34) | `SharePrompt`, `/us`, `/api/peter/shared-reflect` |
-| 9 | Metrics | step-9 PR | `docs/METRICS.md`, Admin → Discovery |
+| 9 | Metrics | [KrisWemet/sparq-connection-lab#35](https://github.com/KrisWemet/sparq-connection-lab/pull/35) | `docs/METRICS.md`, Admin → Discovery |
 | 10 | User testing | plan ready — **Chris runs it** | `docs/USER_TESTING_PLAN.md` |
 
 ## §13 Definition of Done — status
