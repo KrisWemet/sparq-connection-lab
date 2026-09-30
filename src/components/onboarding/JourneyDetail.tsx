@@ -146,7 +146,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           className="h-40 rounded-[20px] flex items-center justify-center text-5xl mb-6"
-          style={{ background: 'linear-gradient(135deg, #C56B4D, #A85539)' }}
+          style={{ background: 'linear-gradient(135deg, #4B2E57, #3A2244)' }}
         >
           ✨
         </motion.div>

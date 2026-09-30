@@ -40,7 +40,7 @@ export function DailyTimeline({ phase, actionVerified = false }: DailyTimelinePr
     <div className="w-full border-b px-6 py-4"
       style={{
         background: "rgba(251,248,243,0.92)",
-        borderColor: "rgba(197,107,77,0.1)",
+        borderColor: "rgba(75,46,87,0.1)",
       }}
     >
       <div className="max-w-md mx-auto flex items-center justify-between relative">
@@ -68,9 +68,9 @@ export function DailyTimeline({ phase, actionVerified = false }: DailyTimelinePr
               <motion.div
                 initial={false}
                 animate={{
-                  backgroundColor: status === 'completed' ? '#C56B4D' : status === 'active' ? '#FFFFFF' : '#FBF8F3',
-                  borderColor: status === 'active' ? '#C56B4D' : 'rgba(197,107,77,0)',
-                  color: status === 'completed' ? '#FFFFFF' : status === 'active' ? '#C56B4D' : '#9E8A86',
+                  backgroundColor: status === 'completed' ? '#4B2E57' : status === 'active' ? '#FFFFFF' : '#FFFDFA',
+                  borderColor: status === 'active' ? '#4B2E57' : 'rgba(75,46,87,0)',
+                  color: status === 'completed' ? '#FFFFFF' : status === 'active' ? '#4B2E57' : '#9E8A86',
                   scale: status === 'active' ? 1.1 : 1,
                 }}
                 className="w-10 h-10 rounded-full border-2 flex items-center justify-center shadow-sm transition-colors duration-300"

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../lib/auth-context';
 import { MetaphorAnimation } from '../components/MetaphorAnimation';
 import { useState } from 'react';
+import { SparqLogo } from '@/components/brand/SparqMark';
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -32,9 +33,8 @@ export default function Home() {
 
       <header className="fixed top-0 inset-x-0 z-50 bg-white/70 backdrop-blur-xl border-b border-zinc-200/80">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold tracking-tight text-black flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-brand-primary" />
-            Sparq
+          <h1 className="flex items-center w-fit">
+            <SparqLogo />
           </h1>
           <div className="flex items-center gap-4">
             <Link href="/login">

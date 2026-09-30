@@ -13,7 +13,7 @@ interface GrowthEntry {
 }
 
 const TYPE_CONFIG: Record<GrowthEntry['type'], { icon: typeof Sparkles; color: string; bg: string }> = {
-  milestone: { icon: Star, color: 'text-brand-sand', bg: 'bg-brand-sand/15' },
+  milestone: { icon: Star, color: 'text-brand-gold-deep', bg: 'bg-brand-sand/15' },
   breakthrough: { icon: Sparkles, color: 'text-brand-hover', bg: 'bg-brand-primary/10' },
   pattern: { icon: TrendingUp, color: 'text-brand-growth', bg: 'bg-brand-growth/15' },
   mirror: { icon: Eye, color: 'text-brand-text-secondary', bg: 'bg-brand-parchment' },

@@ -4,6 +4,7 @@ import { useAuth } from '../lib/auth-context';
 import { LoginForm } from '../components/auth/LoginForm';
 import { motion } from 'framer-motion';
 import Head from 'next/head';
+import { SparqLogo } from '@/components/brand/SparqMark';
 
 export default function LoginPage() {
   const [isRegisterMode, setIsRegisterMode] = useState(false);
@@ -64,9 +65,8 @@ export default function LoginPage() {
       <div className="min-h-screen bg-brand-linen flex flex-col font-sans selection:bg-brand-primary/30">
         <header className="bg-transparent absolute top-0 inset-x-0 z-50">
           <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4">
-            <h1 className="text-xl font-bold tracking-tight text-black flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-brand-primary" />
-              Sparq
+            <h1 className="flex items-center w-fit">
+              <SparqLogo />
             </h1>
           </div>
         </header>

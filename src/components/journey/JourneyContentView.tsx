@@ -479,7 +479,7 @@ export function JourneyContentView({
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.4 + delay, type: "spring" }}
               >
-                <Star className="w-8 h-8 fill-brand-sand text-brand-sand" />
+                <Star className="w-8 h-8 fill-brand-gold text-brand-gold-deep" />
               </motion.div>
             ))}
           </div>
@@ -628,9 +628,9 @@ export function JourneyContentView({
             >
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 rounded-full bg-brand-sand/10 flex items-center justify-center">
-                  <Lightbulb className="w-4 h-4 text-brand-sand" />
+                  <Lightbulb className="w-4 h-4 text-brand-gold-deep" />
                 </div>
-                <p className="text-xs font-bold text-brand-sand uppercase tracking-[0.2em]">Today&apos;s Learning</p>
+                <p className="text-xs font-bold text-brand-gold-deep uppercase tracking-[0.2em]">Today&apos;s Learning</p>
               </div>
               <div className="text-sm text-zinc-700 leading-relaxed space-y-3">
                 {currentDayContent.learning.split('\n\n').map((p, i) => (

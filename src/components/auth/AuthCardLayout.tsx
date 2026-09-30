@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
+import { SparqLogo } from '@/components/brand/SparqMark';
 
 /** Simple centered card used by the forgot / reset password pages. */
 export function AuthCardLayout({ title, heading, intro, children }: {
@@ -18,9 +19,8 @@ export function AuthCardLayout({ title, heading, intro, children }: {
       </Head>
       <div className="min-h-screen bg-brand-linen flex flex-col font-sans">
         <header className="max-w-7xl w-full mx-auto px-6 lg:px-8 py-4">
-          <Link href="/login" className="text-xl font-bold tracking-tight text-black flex items-center gap-2 w-fit">
-            <span className="w-2 h-2 rounded-full bg-brand-primary" />
-            Sparq
+          <Link href="/login" className="flex items-center w-fit">
+            <SparqLogo />
           </Link>
         </header>
         <main className="flex-grow flex items-center justify-center p-6">

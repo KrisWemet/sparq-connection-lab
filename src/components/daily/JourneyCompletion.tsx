@@ -105,11 +105,11 @@ export function JourneyCompletion({ journeyId, journeyTitle }: JourneyCompletion
         >
           <PeterAvatar mood="celebrating" size={80} />
           <div className="flex items-center gap-2">
-            <Sparkles size={18} className="text-brand-sand" />
-            <p className="text-xs font-semibold tracking-widest uppercase text-brand-sand">
+            <Sparkles size={18} className="text-brand-gold-deep" />
+            <p className="text-xs font-semibold tracking-widest uppercase text-brand-gold-deep">
               Journey Complete
             </p>
-            <Sparkles size={18} className="text-brand-sand" />
+            <Sparkles size={18} className="text-brand-gold-deep" />
           </div>
         </motion.div>
 

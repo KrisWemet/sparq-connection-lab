@@ -99,7 +99,7 @@ export function PersuasiveJourneyPrompt({
               <h3 className="text-lg font-bold text-brand-taupe">{journeyTitle}</h3>
 
               {isPremiumJourney && !isPremium && (
-                <div className="ml-auto flex items-center gap-1 text-xs font-semibold text-brand-sand">
+                <div className="ml-auto flex items-center gap-1 text-xs font-semibold text-brand-gold-deep">
                   <Lock className="h-3 w-3" />
                   Premium
                 </div>
@@ -203,7 +203,7 @@ export function PersuasiveJourneyPrompt({
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
                     >
-                      <Sparkles className="h-4 w-4 text-brand-sand mr-2 flex-shrink-0 mt-0.5" />
+                      <Sparkles className="h-4 w-4 text-brand-gold-deep mr-2 flex-shrink-0 mt-0.5" />
                       <span>{benefit}</span>
                     </motion.li>
                   ))}
