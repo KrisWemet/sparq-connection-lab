@@ -7,6 +7,11 @@ import { buildAuthedHeaders } from '@/lib/api-auth';
 import { deriveProfile } from '@/lib/onboarding/deriveProfile';
 import type { DerivedProfile, OnboardingProgress, RawScores } from '@/lib/onboarding/types';
 
+// The free-text scoring call is optional polish; never let it hold the user.
+const FREETEXT_TIMEOUT_MS = 12_000;
+// Whole step: if anything hangs past this, show "Try again" instead of spinning forever.
+const OVERALL_TIMEOUT_MS = 30_000;
+
 interface ScoringTransitionProps {
   progress: OnboardingProgress;
   onComplete: (profile: DerivedProfile) => void;
@@ -16,11 +21,17 @@ interface ScoringTransitionProps {
 
 export function ScoringTransition({ progress, onComplete, onError, userId }: ScoringTransitionProps) {
   const hasRun = useRef(false);
+  const finished = useRef(false);
 
   useEffect(() => {
     if (hasRun.current) return;
     hasRun.current = true;
-    run();
+    const watchdog = setTimeout(() => {
+      if (finished.current) return;
+      finished.current = true;
+      onError('That took longer than it should. Your answers are saved — tap Try again.');
+    }, OVERALL_TIMEOUT_MS);
+    run().finally(() => clearTimeout(watchdog));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -37,6 +48,7 @@ export function ScoringTransition({ progress, onComplete, onError, userId }: Sco
           const resp = await fetch('/api/onboarding/score-freetext', {
             method: 'POST',
             headers,
+            signal: AbortSignal.timeout(FREETEXT_TIMEOUT_MS),
             body: JSON.stringify({
               freeTextAnswers: progress.freeTextAnswers,
               currentScores: progress.scores,
@@ -59,7 +71,7 @@ export function ScoringTransition({ progress, onComplete, onError, userId }: Sco
 
       // Step 3: Write to DB
       // 3a: Update profiles columns
-      await supabase
+      const { error: profileError } = await supabase
         .from('profiles')
         .update({
           name: profile.firstName,
@@ -70,6 +82,7 @@ export function ScoringTransition({ progress, onComplete, onError, userId }: Sco
           isonboarded: false, // set to true after journey confirmed
         })
         .eq('id', userId);
+      if (profileError) throw profileError;
 
       // 3b: Upsert profile_traits for the 3 derived traits + Phase 22 onboarding-captured pattern dimensions.
       // attachment_style values from deriveProfile are still legacy clinical labels — map to Phase 21 behavioral vocab before write.
@@ -132,9 +145,13 @@ export function ScoringTransition({ progress, onComplete, onError, userId }: Sco
           .upsert(traitUpserts, { onConflict: 'user_id,trait_key' });
       }
 
+      if (finished.current) return;
+      finished.current = true;
       onComplete(profile);
     } catch (err) {
       console.error('ScoringTransition error:', err);
+      if (finished.current) return;
+      finished.current = true;
       onError('Something went wrong building your profile. Please try again.');
     }
   }

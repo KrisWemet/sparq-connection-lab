@@ -21,6 +21,9 @@ const STORAGE_KEY = 'sparq_onboarding_progress';
 export default function OnboardingPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
+  // The auth context hands out a new user object on every token refresh.
+  // Key the setup effects on the id so a refresh never restarts onboarding.
+  const userId = user?.id ?? null;
 
   const [phase, setPhase] = useState<OnboardingPhase>('consent');
   const [hasConsent, setHasConsent] = useState(false);
@@ -65,7 +68,8 @@ export default function OnboardingPage() {
       });
     })();
     return () => { cancelled = true; };
-  }, [user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   // Load consent + check for dropout recovery
   useEffect(() => {
@@ -119,7 +123,8 @@ export default function OnboardingPage() {
     })();
 
     return () => { cancelled = true; };
-  }, [router, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   async function handleConsentAgree() {
     if (!user || consentSaving) return;
@@ -187,6 +192,26 @@ export default function OnboardingPage() {
     );
   }
 
+  // Scoring error fallback — checked before the scoring phase so it can show
+  if (scoringError) {
+    return (
+      <div className="min-h-screen bg-brand-linen flex flex-col items-center justify-center px-4 gap-4">
+        <PeterAvatar mood="morning" size={64} />
+        <p className="text-brand-text-secondary text-center text-sm">{scoringError}</p>
+        <button
+          onClick={() => {
+            setScoringError('');
+            // If savedProgress was lost (e.g. page remounted), fall back to questions
+            setPhase(savedProgress ? 'scoring_transition' : 'questions');
+          }}
+          className="bg-brand-primary text-white rounded-2xl px-6 py-3 font-bold text-sm"
+        >
+          Try again
+        </button>
+      </div>
+    );
+  }
+
   if (phase === 'scoring_transition' && savedProgress && user) {
     return (
       <ScoringTransition
@@ -251,26 +276,6 @@ export default function OnboardingPage() {
         userId={user.id}
         onComplete={() => router.push('/neutral-observer?trigger=hook')}
       />
-    );
-  }
-
-  // Scoring error fallback
-  if (scoringError) {
-    return (
-      <div className="min-h-screen bg-brand-linen flex flex-col items-center justify-center px-4 gap-4">
-        <PeterAvatar mood="morning" size={64} />
-        <p className="text-brand-text-secondary text-center text-sm">{scoringError}</p>
-        <button
-          onClick={() => {
-            setScoringError('');
-            // If savedProgress was lost (e.g. page remounted), fall back to questions
-            setPhase(savedProgress ? 'scoring_transition' : 'questions');
-          }}
-          className="bg-brand-primary text-white rounded-2xl px-6 py-3 font-bold text-sm"
-        >
-          Try again
-        </button>
-      </div>
     );
   }
 
