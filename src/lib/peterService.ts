@@ -421,8 +421,18 @@ Return a JSON object with your estimates.
   "love_language":        "words" | "acts" | "gifts" | "time" | "touch" | null,
   "conflict_style":       "avoidant" | "volatile" | "validating" | null,
   "emotional_state":      "struggling" | "neutral" | "thriving",
-  "reasoning":            "1-2 sentences explaining your main signal (or why you chose null)"
+  "reasoning":            "1-2 sentences explaining your main signal (or why you chose null)",
+  "memories":             [{ "text": string, "kind": "fact" | "context" | "pattern" | "discovery" | "intention" | "growth", "importance": number }],
+  "self_discovery":       string | null,
+  "intention":            string | null
 }
+
+Memory rules (most conversations have nothing worth remembering — an empty list is the normal answer):
+- "memories": 0 to 3 short third-person sentences worth remembering weeks from now. Examples: "Their mom is visiting for two weeks" (context), "They have two kids, Mia and Leo" (fact), "They noticed they go quiet when they feel criticized" (discovery).
+- Never store small talk, generic feelings, or anything Peter said. Paraphrase, never quote. Leave out sexual details.
+- "importance": 0.2 minor, 0.5 useful, 0.8 central to who they are or what they want.
+- "self_discovery": ONLY a realization the USER stated in their own words (for example "I think I shut down because I'm scared of letting her down"). Keep their wording, under 30 words. Peter's interpretations never count. Otherwise null.
+- "intention": ONLY something the USER chose to try, in their words (for example "Tomorrow I'll ask before I assume"). A plan Peter suggested counts only if the user clearly took it on. Otherwise null.
 
 Field meanings (use these to interpret what to infer — do NOT use these labels in your response):
 - attachment_style: how the user seeks or creates distance when uncertain

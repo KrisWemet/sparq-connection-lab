@@ -9,7 +9,7 @@ import { searchMemories } from '@/lib/server/memory';
 import { loadPrivacyState } from '@/lib/server/privacy';
 import { assessReflectionQuality } from '@/lib/server/reflection-quality';
 import { stripMarkdown } from '@/lib/strip-markdown';
-import { buildPatternContext, buildLegacyTraits, patternContextToTraits } from '@/lib/server/attachment-context';
+import { buildPatternContext, buildLegacyTraits, buildPatternLevels, patternContextToTraits } from '@/lib/server/attachment-context';
 import { getPatternHints } from '@/lib/server/pattern-hints';
 import { logFinalPrompt } from '@/lib/server/dev-prompt-log';
 import { getActiveGrowthMomentForChat, markMomentSurfaced, buildGrowthMomentBlock } from '@/lib/server/growth-moments';
@@ -106,8 +106,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             const st = await getNorthStarState(authed.supabase, authed.userId, eveningContext.day);
             if (st.shouldLadderTonight) ladderState = st;
           }
-          const [patternContext, legacyTraits, memResult, profileResult, insightsResult] = await Promise.all([
+          const [patternContext, patternLevels, legacyTraits, memResult, profileResult, insightsResult] = await Promise.all([
             buildPatternContext(authed.supabase, authed.userId),
+            buildPatternLevels(authed.supabase, authed.userId),
             buildLegacyTraits(authed.supabase, authed.userId),
             privacy.can_store_memories
               ? searchMemories(authed.userId, latestUserMessage, 5).catch(() => ({ results: [] }))
@@ -142,7 +143,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           });
 
           // Phase 23: append chat tone hints (D-03). Tone always applies.
-          const { chatToneHints, insightLines } = getPatternHints(patternContext, 'chat');
+          const { chatToneHints, insightLines } = getPatternHints(patternContext, 'chat', patternLevels);
           if (chatToneHints.length > 0) {
             systemPrompt += '\n\nTone guidance for this conversation:\n- ' + chatToneHints.join('\n- ');
           }

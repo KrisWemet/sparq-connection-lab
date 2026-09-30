@@ -56,14 +56,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       not_really: 0.25,
     };
 
-    const effectiveWeight = weightMap[feedback] ?? 1.0;
+    if (!(feedback in weightMap)) {
+      return res.status(400).json({ error: 'Invalid feedback value' });
+    }
+    const effectiveWeight = weightMap[feedback];
+
+    // The user is the authority on themselves (constitution §2): "yes" turns
+    // the hypothesis into a confirmed fact, "not really" retires it, and
+    // "unsure" leaves it an open hypothesis. Inference never overrides these.
+    const now = new Date().toISOString();
+    const statusFields =
+      feedback === 'yes'
+        ? { status: 'confirmed', source: 'user_confirmed', confirmed_at: now }
+        : feedback === 'not_really'
+          ? { status: 'rejected', confirmed_at: now }
+          : { status: 'hypothesis', confirmed_at: null };
 
     const { data, error } = await ctx.supabase
       .from('profile_traits')
       .update({
         user_feedback: feedback,
         effective_weight: effectiveWeight,
-        updated_at: new Date().toISOString(),
+        ...statusFields,
+        updated_at: now,
       })
       .eq('user_id', ctx.userId)
       .eq('trait_key', trait_key)

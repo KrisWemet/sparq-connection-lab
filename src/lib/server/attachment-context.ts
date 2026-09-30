@@ -13,6 +13,7 @@
 
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { ProfileTrait } from '@/lib/peterService';
+import { knowledgeLevel, type KnowledgeLevel } from '@/lib/server/trait-revision';
 
 // ─── Pattern Dimension Keys ───────────────────────────────────────────────────
 
@@ -197,4 +198,31 @@ export function patternContextToTraits(ctx: PatternContext): ProfileTrait[] {
     }
   }
   return traits;
+}
+
+
+/**
+ * Knowledge level per trait key (docs/PERSON_MODEL.md §3) — decides how, and
+ * whether, Peter may voice a pattern. Sensitive traits stay unspoken unless
+ * the user confirmed them. NEVER throws — returns {} on any error.
+ */
+export async function buildPatternLevels(
+  supabase: SupabaseClient,
+  userId: string,
+): Promise<Partial<Record<string, KnowledgeLevel>>> {
+  const levels: Partial<Record<string, KnowledgeLevel>> = {};
+  try {
+    const { data } = await supabase
+      .from('profile_traits')
+      .select('trait_key, status, source, confidence, sensitivity, last_evidence_at, updated_at')
+      .eq('user_id', userId);
+    for (const row of data || []) {
+      let level = knowledgeLevel(row);
+      if (row.sensitivity === 'sensitive' && level !== 'told' && level !== 'excluded') level = 'wondering';
+      levels[row.trait_key] = level;
+    }
+  } catch {
+    // fail-soft: no levels means nothing is voiced as an observation
+  }
+  return levels;
 }

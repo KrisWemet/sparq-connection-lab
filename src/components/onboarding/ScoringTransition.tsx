@@ -90,6 +90,8 @@ export function ScoringTransition({ progress, onComplete, onError, userId }: Sco
           inferred_value: mappedAttachmentStyle,
           confidence: 0.7,
           effective_weight: 1.0,
+          // Self-report from onboarding answers (docs/PERSON_MODEL.md §3)
+          source: 'user_stated',
         },
         profile.loveLanguage && {
           user_id: userId,
@@ -97,6 +99,8 @@ export function ScoringTransition({ progress, onComplete, onError, userId }: Sco
           inferred_value: profile.loveLanguage,
           confidence: 0.7,
           effective_weight: 1.0,
+          // Self-report from onboarding answers (docs/PERSON_MODEL.md §3)
+          source: 'user_stated',
         },
         profile.conflictStyle && {
           user_id: userId,
@@ -104,6 +108,8 @@ export function ScoringTransition({ progress, onComplete, onError, userId }: Sco
           inferred_value: profile.conflictStyle,
           confidence: 0.7,
           effective_weight: 1.0,
+          // Self-report from onboarding answers (docs/PERSON_MODEL.md §3)
+          source: 'user_stated',
         },
       ].filter(Boolean);
 
@@ -115,6 +121,7 @@ export function ScoringTransition({ progress, onComplete, onError, userId }: Sco
           inferred_value,
           confidence: 0.7,
           effective_weight: 1.0,
+          source: 'user_stated',
         }));
 
       const traitUpserts = [...baseUpserts, ...optionTraitUpserts];
