@@ -8,7 +8,6 @@ import { ExperimentsCard } from '@/components/dashboard/ExperimentsCard';
 import { ThirtyDayMirrorCard } from '@/components/dashboard/ThirtyDayMirrorCard';
 import { IdentityArcCard } from '@/components/dashboard/IdentityArcCard';
 import { GrowthThread } from '@/components/dashboard/GrowthThread';
-import { TraitCard } from '@/components/profile/TraitCard';
 import { useProfileTraits } from '@/hooks/useProfileTraits';
 
 export default function JournalPage() {
@@ -83,11 +82,14 @@ export default function JournalPage() {
               </div>
             </div>
 
-            <TraitCard
-              traits={traits}
-              accessToken={accessToken}
-              onUpdated={refreshTraits}
-            />
+            {/* Peter's guesses now live on one page the user controls (Insight Profile). */}
+            <Link
+              href="/insight-profile"
+              className="block rounded-2xl bg-brand-linen border border-brand-primary/10 p-4 hover:bg-white/60 transition-colors"
+            >
+              <p className="text-sm font-semibold text-brand-espresso">See everything Peter guesses about you</p>
+              <p className="text-xs text-brand-text-secondary mt-1">Keep what fits, fix what doesn&apos;t, and tell Peter how you like to talk.</p>
+            </Link>
           </motion.section>
 
           <motion.section

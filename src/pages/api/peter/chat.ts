@@ -12,6 +12,7 @@ import { stripMarkdown } from '@/lib/strip-markdown';
 import { decideMode } from '@/lib/server/conversation-mode';
 import { buildDoNotRepushBlock, detectVoicedInsight, loadRecentRejections, recordRejection, rejectedTraitKeys } from '@/lib/server/rejected-hypotheses';
 import { applyRejectionEvidence, type TraitRow } from '@/lib/server/trait-revision';
+import { buildConversationPrefsBlock, cleanPrefs } from '@/lib/server/insight-profile';
 import { buildPatternContext, buildLegacyTraits, buildPatternLevels, patternContextToTraits } from '@/lib/server/attachment-context';
 import { getPatternHints } from '@/lib/server/pattern-hints';
 import { logFinalPrompt } from '@/lib/server/dev-prompt-log';
@@ -153,6 +154,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             systemPrompt += buildDoNotRepushBlock(rejections);
             for (const key of rejectedTraitKeys(rejections)) patternLevels[key] = 'excluded';
           }
+
+          // How the user asked Peter to talk with them (Insight Profile, their
+          // own settings — v1.1 §3, §5A Liking). These outrank inferred tone hints.
+          const { data: prefsRow } = await authed.supabase
+            .from('user_preferences')
+            .select('conversation_prefs')
+            .eq('user_id', authed.userId)
+            .maybeSingle();
+          systemPrompt += buildConversationPrefsBlock(cleanPrefs(prefsRow?.conversation_prefs));
 
           // Phase 23: append chat tone hints (D-03). Tone always applies.
           const { chatToneHints, insightLines } = getPatternHints(patternContext, 'chat', patternLevels);

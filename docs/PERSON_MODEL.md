@@ -89,6 +89,8 @@ Design rules that apply to every entity below:
 
 ### 8.1 Insight Profile — *how this person reaches their own realizations*
 
+> **Partly implemented 2026-09-30** (`/insight-profile`, `src/lib/server/insight-profile.ts`, `/api/me/insight-profile`, migration `20260930170000_conversation_prefs.sql`): the user-visible page shows (1) **their own settings** for how Peter talks — reply length, question style, gentle vs. direct — stored in `user_preferences.conversation_prefs` and followed by Peter in chat; (2) **Peter's guesses** about their patterns in plain words ("You may tend to…"), each with "That's me / Not really / Not sure"; (3) **things they said don't fit**, with "Bring this back"; (4) **their own reasons**, with "Not true anymore". Not yet built: *inferred* facets (processing, challenge tolerance, pacing, drivers, triggers, helped/didn't help) learned from Insight Evidence — they need enough real usage data first, and will appear on the same page when they exist.
+
 One conceptual record per user, made of independent **facets**. Each facet is a small hypothesis with its own metadata, so one facet can be confirmed while another is still a guess.
 
 | Facet | Example values (probabilistic, never labels) | Learned from |
