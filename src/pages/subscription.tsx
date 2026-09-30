@@ -341,9 +341,9 @@ export default function Subscription() {
                         {feature.included ? (
                           <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
                         ) : (
-                          <X className="h-5 w-5 text-gray-300 mr-2 flex-shrink-0" />
+                          <X className="h-5 w-5 text-brand-text-secondary mr-2 flex-shrink-0" />
                         )}
-                        <span className={feature.included ? "text-gray-700" : "text-gray-400"}>
+                        <span className={feature.included ? "text-gray-700" : "text-brand-text-secondary"}>
                           {feature.name}
                           {'new' in feature && feature.new && (
                             <Badge className="ml-2 bg-amber-100 text-amber-800 border-amber-200">

@@ -210,7 +210,7 @@ export default function ConflictFirstAidPage() {
         <div className="absolute top-6 left-6">
           <button
             onClick={() => router.back()}
-            className="text-zinc-500 hover:text-zinc-800 text-sm font-medium transition-colors"
+            className="text-brand-text-secondary hover:text-zinc-800 text-sm font-medium transition-colors"
           >
             ← Retreat
           </button>
@@ -290,7 +290,7 @@ export default function ConflictFirstAidPage() {
         </section>
 
         <section className="rounded-3xl border border-zinc-100 bg-white p-6 shadow-sm">
-          <h2 className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 mb-4">2-10 Minute Reset Protocol</h2>
+          <h2 className="text-[11px] font-bold uppercase tracking-wider text-brand-text-secondary mb-4">2-10 Minute Reset Protocol</h2>
           <ol className="mt-3 space-y-3 text-base text-black">
             {RESET_PROTOCOL.map((step, idx) => (
               <li key={step} className="rounded-2xl bg-brand-linen px-5 py-4 leading-relaxed flex items-start">
@@ -310,7 +310,7 @@ export default function ConflictFirstAidPage() {
         )}
 
         <section className="rounded-3xl border border-zinc-100 bg-white p-6 shadow-sm">
-          <h2 className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 mb-4">Repair Starters</h2>
+          <h2 className="text-[11px] font-bold uppercase tracking-wider text-brand-text-secondary mb-4">Repair Starters</h2>
           <div className="mt-3 space-y-3">
             {allRepairStarters.map((starter, i) => (
               <p key={i} className="rounded-2xl bg-brand-linen px-5 py-4 text-base text-black italic">

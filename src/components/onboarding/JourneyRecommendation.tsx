@@ -85,7 +85,7 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
                 Recommended for you
               </p>
               <p className="text-lg font-bold text-[#1f2937] mb-2">{primaryJourney.title}</p>
-              <p className="text-sm text-[#6b7280] leading-relaxed italic">
+              <p className="text-sm text-brand-text-secondary leading-relaxed italic">
                 &quot;I think this one fits you best — {recommendation.primary.reason} Start here for yourself. Invite your partner later if it helps.&quot;
               </p>
             </div>
@@ -95,7 +95,7 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
         {/* Alternatives */}
         {alternativeJourneys.length > 0 && (
           <>
-            <p className="text-xs font-semibold tracking-widest uppercase text-[#9ca3af] mb-3">
+            <p className="text-xs font-semibold tracking-widest uppercase text-brand-text-secondary mb-3">
               Other paths that fit you
             </p>
             <div className="flex flex-col gap-2">
@@ -120,7 +120,7 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-[#1f2937]">{alt.journey?.title}</p>
-                    <p className="text-xs text-[#9ca3af] mt-0.5">{alt.journey?.duration}</p>
+                    <p className="text-xs text-brand-text-secondary mt-0.5">{alt.journey?.duration}</p>
                   </div>
                 </motion.button>
               ))}

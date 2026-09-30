@@ -182,7 +182,7 @@ export function PeterChat({
             {isTranscribing ? (
               <div className="flex items-end gap-3 flex-row-reverse">
                 <div className="bg-[#E9E9EB] text-zinc-600 rounded-[20px] rounded-br-[4px] px-4 py-2.5 text-[15px] flex items-center gap-2">
-                  <Loader2 size={16} className="animate-spin text-zinc-400" /> Turning your voice into words...
+                  <Loader2 size={16} className="animate-spin text-brand-text-secondary" /> Turning your voice into words...
                 </div>
               </div>
             ) : (
@@ -229,7 +229,7 @@ export function PeterChat({
             disabled={isLoading || isTranscribing}
             className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 disabled:opacity-40 transition-colors shadow-sm ${isRecording
               ? 'bg-red-500 text-white hover:bg-red-600'
-              : 'bg-white text-zinc-500 hover:bg-zinc-50 hover:text-black border border-zinc-200'
+              : 'bg-white text-brand-text-secondary hover:bg-zinc-50 hover:text-black border border-zinc-200'
               }`}
           >
             {isRecording ? <Square size={16} fill="white" /> : <Mic size={18} strokeWidth={2.5} />}

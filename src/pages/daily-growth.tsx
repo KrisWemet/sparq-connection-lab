@@ -911,13 +911,13 @@ export default function DailyGrowth() {
                       {process.env.NODE_ENV === 'development' && (
                         <button
                           onClick={() => setActionVerified(true)}
-                          className="mt-4 block w-full text-center text-[10px] font-semibold uppercase text-brand-taupe/40 hover:text-brand-taupe/70"
+                          className="mt-4 block w-full text-center text-[10px] font-semibold uppercase text-brand-taupe hover:text-brand-taupe/70"
                         >
                           Skip Hold (Dev)
                         </button>
                       )}
 
-                      <p className="mt-3 text-center text-xs leading-relaxed text-brand-taupe/80">
+                      <p className="mt-3 text-center text-xs leading-relaxed text-brand-taupe">
                         {practiceCopy.reminder}
                       </p>
                     </div>

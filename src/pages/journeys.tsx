@@ -172,7 +172,7 @@ export default function Journeys() {
         )}
 
         <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-text-secondary" />
           <input
             type="text"
             placeholder="Search journeys..."
@@ -257,7 +257,7 @@ export default function Journeys() {
                       <h3 className="font-bold text-brand-taupe text-base leading-tight line-clamp-2 mix-blend-hard-light">
                         {journey.title}
                       </h3>
-                      <p className="text-xs text-zinc-500 mt-2.5 font-medium flex items-center gap-1.5 opacity-80">
+                      <p className="text-xs text-brand-text-secondary mt-2.5 font-medium flex items-center gap-1.5 opacity-80">
                         <span>{journey.duration}</span>
                         <span className="w-1 h-1 rounded-full bg-zinc-300" />
                         <span>{journey.phases?.length ?? 4} phases</span>
@@ -273,7 +273,7 @@ export default function Journeys() {
         {filtered.length === 0 && (
           <div className="text-center py-16">
             <p className="text-lg font-serif text-brand-taupe">No journeys found</p>
-            <p className="text-sm mt-1 text-zinc-500">Try a different search or category</p>
+            <p className="text-sm mt-1 text-brand-text-secondary">Try a different search or category</p>
           </div>
         )}
       </main>

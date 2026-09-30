@@ -124,7 +124,7 @@ export function Day14Graduation() {
                 </div>
 
                 <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center">You Did It.</h1>
-                <p className="text-gray-500 mb-6 text-center">14 days of showing up.</p>
+                <p className="text-brand-text-secondary mb-6 text-center">14 days of showing up.</p>
 
                 <div className="bg-gradient-to-br from-teal-50 to-blue-50 rounded-2xl p-5 mb-6 text-left space-y-4">
                     <div className="flex items-start gap-3">
@@ -168,15 +168,15 @@ export function Day14Graduation() {
                                     Something I kept for you
                                 </p>
                                 {report.reveal.verified && report.reveal.before_quote && (
-                                    <blockquote className="mb-2 border-l-2 border-teal-200 pl-3 text-sm italic text-gray-500">
+                                    <blockquote className="mb-2 border-l-2 border-teal-200 pl-3 text-sm italic text-brand-text-secondary">
                                         &ldquo;{report.reveal.before_quote}&rdquo;
-                                        <span className="mt-1 block not-italic text-xs text-gray-400">— you, when we started</span>
+                                        <span className="mt-1 block not-italic text-xs text-brand-text-secondary">— you, when we started</span>
                                     </blockquote>
                                 )}
                                 {report.reveal.verified && report.reveal.after_quote && (
                                     <blockquote className="mb-3 border-l-2 border-teal-500 pl-3 text-sm italic text-gray-700">
                                         &ldquo;{report.reveal.after_quote}&rdquo;
-                                        <span className="mt-1 block not-italic text-xs text-gray-400">— you, this week</span>
+                                        <span className="mt-1 block not-italic text-xs text-brand-text-secondary">— you, this week</span>
                                     </blockquote>
                                 )}
                                 <p className="text-sm text-gray-700 leading-relaxed">{report.reveal.narrative}</p>
@@ -196,7 +196,7 @@ export function Day14Graduation() {
                                 </p>
                                 <p className="text-sm italic text-gray-800 mb-3">&ldquo;{northStar}&rdquo;</p>
                                 {boundaryDone ? (
-                                    <p className="text-xs text-gray-500">Thank you. I&apos;ll keep that close. 🦦</p>
+                                    <p className="text-xs text-brand-text-secondary">Thank you. I&apos;ll keep that close. 🦦</p>
                                 ) : (
                                     <div className="flex gap-2">
                                         <button

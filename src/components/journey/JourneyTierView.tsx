@@ -135,7 +135,7 @@ export function JourneyTierView({
           initial={{ opacity: 0, x: -8 }}
           animate={{ opacity: 1, x: 0 }}
           onClick={() => router.push('/journeys')}
-          className="flex items-center gap-1.5 text-sm font-medium text-zinc-500 hover:text-brand-taupe transition-colors mb-6"
+          className="flex items-center gap-1.5 text-sm font-medium text-brand-text-secondary hover:text-brand-taupe transition-colors mb-6"
         >
           <ChevronLeft className="w-4 h-4" />
           All Journeys
@@ -149,7 +149,7 @@ export function JourneyTierView({
           className="mb-8"
         >
           <h1 className="text-3xl font-serif font-bold text-brand-taupe tracking-tight mb-2">{title}</h1>
-          <p className="text-zinc-500 leading-relaxed">{description}</p>
+          <p className="text-brand-text-secondary leading-relaxed">{description}</p>
           <div className="mt-4 rounded-[1.5rem] bg-white/80 border border-brand-primary/10 p-5 shadow-sm">
             <p className="text-xs font-bold text-brand-hover uppercase tracking-[0.2em] mb-2">Before You Start</p>
             <p className="text-sm text-brand-taupe leading-relaxed mb-3">
@@ -158,14 +158,14 @@ export function JourneyTierView({
             <p className="text-sm text-zinc-600 leading-relaxed mb-3">
               {bestFitCopy}
             </p>
-            <div className="flex flex-wrap gap-2 text-xs text-zinc-500 mb-3">
+            <div className="flex flex-wrap gap-2 text-xs text-brand-text-secondary mb-3">
               {category && <span className="rounded-full bg-brand-linen px-3 py-1">{category}</span>}
               {duration && <span className="rounded-full bg-brand-linen px-3 py-1">{duration}</span>}
               <span className="rounded-full bg-brand-linen px-3 py-1">{tiers.length} stages</span>
             </div>
             {benefits && benefits.length > 0 && (
               <div className="space-y-1.5">
-                <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">What You Will Practice</p>
+                <p className="text-xs font-semibold uppercase tracking-widest text-brand-text-secondary">What You Will Practice</p>
                 {benefits.slice(0, 3).map((benefit) => (
                   <p key={benefit} className="text-sm text-zinc-600 leading-relaxed">
                     {benefit}
@@ -174,7 +174,7 @@ export function JourneyTierView({
               </div>
             )}
             {psychology && psychology.length > 0 && (
-              <p className="text-xs text-zinc-400 mt-3">
+              <p className="text-xs text-brand-text-secondary mt-3">
                 Built from: {psychology.slice(0, 3).join(' • ')}
               </p>
             )}
@@ -221,14 +221,14 @@ export function JourneyTierView({
                         ) : unlocked ? (
                           icon
                         ) : (
-                          <Lock className="w-5 h-5 text-zinc-400" />
+                          <Lock className="w-5 h-5 text-brand-text-secondary" />
                         )}
                       </div>
 
                       {/* Tier info */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className={`text-lg font-bold ${unlocked ? meta.color : 'text-zinc-400'}`}>
+                          <h3 className={`text-lg font-bold ${unlocked ? meta.color : 'text-brand-text-secondary'}`}>
                             {meta.name}
                           </h3>
                           {isComplete && (
@@ -242,10 +242,10 @@ export function JourneyTierView({
                             </span>
                           )}
                         </div>
-                        <p className={`text-sm mb-2 ${unlocked ? 'text-zinc-600' : 'text-zinc-400'}`}>
+                        <p className={`text-sm mb-2 ${unlocked ? 'text-zinc-600' : 'text-brand-text-secondary'}`}>
                           {meta.tagline}
                         </p>
-                        <div className="flex items-center gap-3 text-xs text-zinc-400">
+                        <div className="flex items-center gap-3 text-xs text-brand-text-secondary">
                           <span>{tier.totalDays} days</span>
                           <span className="w-1 h-1 rounded-full bg-zinc-300" />
                           <span>{tier.concepts.length} concepts</span>
@@ -272,7 +272,7 @@ export function JourneyTierView({
 
                     {/* Lock message */}
                     {!unlocked && (
-                      <p className="text-xs text-zinc-400 mt-2 ml-20">
+                      <p className="text-xs text-brand-text-secondary mt-2 ml-20">
                         Complete {TIER_META[idx === 1 ? 'roots' : 'growth'].name} to unlock
                       </p>
                     )}

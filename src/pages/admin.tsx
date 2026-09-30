@@ -199,7 +199,7 @@ export default function Admin() {
               </CardHeader>
               <CardContent>
                 {!discovery ? (
-                  <p className="text-sm text-gray-500">No metrics yet.</p>
+                  <p className="text-sm text-brand-text-secondary">No metrics yet.</p>
                 ) : (
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {[
@@ -220,7 +220,7 @@ export default function Admin() {
                       ['Experiments with their own reason', discovery.own_reason_rate],
                     ].map(([label, value]) => (
                       <div key={label as string} className="rounded-lg border bg-white p-4">
-                        <p className="text-xs text-gray-500">{label}</p>
+                        <p className="text-xs text-brand-text-secondary">{label}</p>
                         <p className="text-2xl font-semibold text-gray-900">{value ?? '—'}</p>
                       </div>
                     ))}
@@ -240,9 +240,9 @@ export default function Admin() {
               </CardHeader>
               <CardContent>
                 {betaLoading ? (
-                  <p className="text-center py-6 text-gray-500">Loading...</p>
+                  <p className="text-center py-6 text-brand-text-secondary">Loading...</p>
                 ) : betaTesters.length === 0 ? (
-                  <p className="text-center py-6 text-gray-500">No users yet</p>
+                  <p className="text-center py-6 text-brand-text-secondary">No users yet</p>
                 ) : (
                   <div className="rounded-md border overflow-x-auto">
                     <table className="w-full text-sm">
@@ -269,12 +269,12 @@ export default function Admin() {
                             </td>
                             <td className="p-3 text-center">{t.traits_count}</td>
                             <td className="p-3 text-center">{t.session_count}</td>
-                            <td className="p-3 text-xs text-gray-500">{t.last_active || '—'}</td>
+                            <td className="p-3 text-xs text-brand-text-secondary">{t.last_active || '—'}</td>
                             <td className="p-3 text-xs">
                               {t.consent_given_at ? (
                                 <span className="text-green-600">Yes</span>
                               ) : (
-                                <span className="text-gray-400">No</span>
+                                <span className="text-brand-text-secondary">No</span>
                               )}
                             </td>
                           </tr>
@@ -295,7 +295,7 @@ export default function Admin() {
                   View and manage all users in the system
                 </CardDescription>
                 <div className="mt-4 relative">
-                  <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-brand-text-secondary" />
                   <Input
                     placeholder="Search users by name or email"
                     value={searchTerm}
@@ -326,7 +326,7 @@ export default function Admin() {
                       </div>
                     ))
                   ) : (
-                    <div className="p-6 text-center text-gray-500">
+                    <div className="p-6 text-center text-brand-text-secondary">
                       No users found matching your search criteria
                     </div>
                   )}
@@ -351,7 +351,7 @@ export default function Admin() {
                   <CardContent className="pt-6">
                     <div className="text-center">
                       <div className="text-2xl font-bold">{sampleAnalytics.totalUsers}</div>
-                      <div className="text-sm text-gray-500 mt-1">Total Users</div>
+                      <div className="text-sm text-brand-text-secondary mt-1">Total Users</div>
                     </div>
                   </CardContent>
                 </Card>
@@ -359,7 +359,7 @@ export default function Admin() {
                   <CardContent className="pt-6">
                     <div className="text-center">
                       <div className="text-2xl font-bold">{sampleAnalytics.activeUsers}</div>
-                      <div className="text-sm text-gray-500 mt-1">Active Users</div>
+                      <div className="text-sm text-brand-text-secondary mt-1">Active Users</div>
                     </div>
                   </CardContent>
                 </Card>
@@ -367,7 +367,7 @@ export default function Admin() {
                   <CardContent className="pt-6">
                     <div className="text-center">
                       <div className="text-2xl font-bold">{sampleAnalytics.premiumUsers}</div>
-                      <div className="text-sm text-gray-500 mt-1">Premium Users</div>
+                      <div className="text-sm text-brand-text-secondary mt-1">Premium Users</div>
                     </div>
                   </CardContent>
                 </Card>
@@ -413,7 +413,7 @@ export default function Admin() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label htmlFor="premium-features">Enable Premium Features</Label>
-                    <p className="text-sm text-gray-500">Allow access to premium features for subscribers</p>
+                    <p className="text-sm text-brand-text-secondary">Allow access to premium features for subscribers</p>
                   </div>
                   <Switch 
                     id="premium-features" 
@@ -425,7 +425,7 @@ export default function Admin() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label htmlFor="user-registration">Enable User Registration</Label>
-                    <p className="text-sm text-gray-500">Allow new users to register</p>
+                    <p className="text-sm text-brand-text-secondary">Allow new users to register</p>
                   </div>
                   <Switch 
                     id="user-registration" 
@@ -437,7 +437,7 @@ export default function Admin() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label htmlFor="partner-invites">Enable Partner Invites</Label>
-                    <p className="text-sm text-gray-500">Allow users to invite partners</p>
+                    <p className="text-sm text-brand-text-secondary">Allow users to invite partners</p>
                   </div>
                   <Switch 
                     id="partner-invites" 
@@ -449,7 +449,7 @@ export default function Admin() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label htmlFor="maintenance-mode">Maintenance Mode</Label>
-                    <p className="text-sm text-gray-500">Put the application in maintenance mode</p>
+                    <p className="text-sm text-brand-text-secondary">Put the application in maintenance mode</p>
                   </div>
                   <Switch 
                     id="maintenance-mode" 
@@ -461,7 +461,7 @@ export default function Admin() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label htmlFor="debug-mode">Debug Mode</Label>
-                    <p className="text-sm text-gray-500">Enable detailed error logging</p>
+                    <p className="text-sm text-brand-text-secondary">Enable detailed error logging</p>
                   </div>
                   <Switch 
                     id="debug-mode" 

@@ -152,7 +152,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
         </motion.div>
 
         <h1 className="text-2xl font-bold text-[#1f2937] mb-1">{displayTitle}</h1>
-        <p className="text-sm text-[#6b7280] mb-6">{displayDuration} · Beginner · Starts today</p>
+        <p className="text-sm text-brand-text-secondary mb-6">{displayDuration} · Beginner · Starts today</p>
 
         <div className="bg-[#fff7ed] rounded-[20px] p-5 mb-4" style={{ border: '1px solid #fdba74' }}>
           <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">

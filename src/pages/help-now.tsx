@@ -77,7 +77,7 @@ export default function HelpNowPage({ resources }: HelpNowProps) {
           ))}
         </div>
 
-        <p className="text-xs leading-relaxed text-brand-taupe/80 mb-8">
+        <p className="text-xs leading-relaxed text-brand-taupe mb-8">
           If there is immediate danger, contact your local emergency services first.
           For urgent safety, please talk to a person — not an app.
         </p>

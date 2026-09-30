@@ -28,18 +28,18 @@ export default {
         // whole warm intent. Gold is rationed: milestones/streak only.
         brand: {
           primary: "#C56B4D",        // Warm Clay — CTA/action
-          hover: "#A85539",          // Clay, pressed
+          hover: "#93472F",          // Clay, pressed — also small clay text (5.4:1 on parchment)
           light: "#FBF8F3",
           linen: "#F5F1EA",          // warm canvas
           parchment: "#EFE7DC",      // warm raised surface
           card: "#EFE7DC",
           espresso: "#2E2620",       // warm dark anchor (never cold black)
-          taupe: "#6B5F52",          // warm secondary text
+          taupe: "#52473C",          // warm secondary text
           growth: "#9CB5A0",         // Sage — calm/grounding, growth metaphor
           sand: "#D9A441",           // Rationed Gold — milestones only
           border: "#E2D9CC",
           "text-primary": "#2E2620",
-          "text-secondary": "#6B5F52",
+          "text-secondary": "#52473C",
           "warm-highlight": "#D9A441",
           destructive: "#C95B6A",
         },

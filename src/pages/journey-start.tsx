@@ -241,13 +241,13 @@ export default function JourneyStart() {
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${
                         activity.completed 
                           ? 'bg-green-500 text-white' 
-                          : 'bg-gray-200 text-gray-500'
+                          : 'bg-gray-200 text-brand-text-secondary'
                       }`}>
                         {index + 1}
                       </div>
                       <div>
                         <h3 className="font-medium">{activity.title}</h3>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-brand-text-secondary">
                           {activity.completed ? 'Completed' : 'Not started'}
                         </p>
                       </div>

@@ -260,7 +260,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
                 className="w-full px-4 py-2 pl-10 border rounded-md focus:ring-brand-primary focus:border-brand-primary"
                 placeholder="Enter your name"
               />
-              <div className="absolute left-3 top-2.5 text-gray-400">
+              <div className="absolute left-3 top-2.5 text-brand-text-secondary">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
@@ -284,7 +284,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
                 className="w-full px-4 py-2 pl-10 border rounded-md focus:ring-brand-primary focus:border-brand-primary"
                 placeholder="Enter your partner's name"
               />
-              <div className="absolute left-3 top-2.5 text-gray-400">
+              <div className="absolute left-3 top-2.5 text-brand-text-secondary">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
@@ -307,7 +307,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
               className="w-full px-4 py-2 pl-10 border rounded-md focus:ring-brand-primary focus:border-brand-primary"
               placeholder="Enter your email"
             />
-            <div className="absolute left-3 top-2.5 text-gray-400">
+            <div className="absolute left-3 top-2.5 text-brand-text-secondary">
               <Mail className="h-5 w-5" />
             </div>
           </div>
@@ -327,19 +327,19 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
               className="w-full px-4 py-2 pl-10 pr-10 border rounded-md focus:ring-brand-primary focus:border-brand-primary"
               placeholder={isRegisterMode ? "Create a password" : "Enter your password"}
             />
-            <div className="absolute left-3 top-2.5 text-gray-400">
+            <div className="absolute left-3 top-2.5 text-brand-text-secondary">
               <Lock className="h-5 w-5" />
             </div>
             <button
               type="button"
-              className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-2.5 text-brand-text-secondary hover:text-gray-600"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
             </button>
           </div>
           {isRegisterMode ? (
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-brand-text-secondary">
               Password must be at least 8 characters long
             </p>
           ) : (
@@ -388,7 +388,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
       </motion.div>
       
       <motion.div 
-        className="mt-8 text-center text-xs text-gray-500"
+        className="mt-8 text-center text-xs text-brand-text-secondary"
         variants={itemVariants}
       >
         <p>

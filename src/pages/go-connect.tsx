@@ -64,14 +64,14 @@ export default function GoConnect() {
 
         {/* Timer */}
         <div className="bg-zinc-900/50 p-6 rounded-3xl border border-zinc-800 w-full backdrop-blur-md">
-          <div className="flex items-center justify-center gap-3 mb-3 text-zinc-400">
+          <div className="flex items-center justify-center gap-3 mb-3 text-brand-text-secondary">
             <Lock size={16} />
             <span className="text-sm font-medium uppercase tracking-wider">App Paused</span>
           </div>
           <div className="text-5xl font-mono tracking-widest text-white/90">
             {formatTime(timeLeft)}
           </div>
-          <p className="text-xs text-zinc-500 mt-4">
+          <p className="text-xs text-brand-text-secondary mt-4">
             Take this time to put your phone down and connect.
           </p>
         </div>

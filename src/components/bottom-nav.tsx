@@ -96,10 +96,10 @@ export function BottomNav() {
                 <item.icon
                   size={22}
                   strokeWidth={isActive ? 2.5 : 1.8}
-                  className={isActive ? "text-brand-hover" : "text-brand-taupe/70"}
+                  className={isActive ? "text-brand-hover" : "text-brand-taupe"}
                 />
               </div>
-              <span className={`text-[10px] font-semibold ${isActive ? "text-brand-hover" : "text-brand-taupe/70"}`}>
+              <span className={`text-[10px] font-semibold ${isActive ? "text-brand-hover" : "text-brand-taupe"}`}>
                 {item.label}
               </span>
             </Link>

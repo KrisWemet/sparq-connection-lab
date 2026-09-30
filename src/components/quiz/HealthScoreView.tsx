@@ -29,7 +29,7 @@ export function HealthScoreView({
           {relationshipScore !== null ? (
             <div className="mb-4">
               <div className="flex justify-between mb-2">
-                <span className="text-sm text-gray-500">Your score</span>
+                <span className="text-sm text-brand-text-secondary">Your score</span>
                 <span className="text-sm font-medium">{relationshipScore}%</span>
               </div>
               <div className="h-2 bg-gray-200 rounded-full overflow-hidden">

@@ -112,7 +112,7 @@ export function PersuasiveJourneyPrompt({
             {hasAccess && completionPercentage > 0 && (
               <div className="space-y-2">
                 <div className="flex justify-between text-xs">
-                  <span className="text-zinc-500">Progress</span>
+                  <span className="text-brand-text-secondary">Progress</span>
                   <span className="font-medium text-brand-taupe">{Math.round(completionPercentage)}%</span>
                 </div>
                 <div className="relative h-2 bg-brand-primary/10 rounded-full overflow-hidden">
@@ -186,7 +186,7 @@ export function PersuasiveJourneyPrompt({
                 <Heart className="h-7 w-7 text-brand-primary" />
               </div>
               <h3 className="text-xl font-serif font-bold text-brand-taupe mb-2">This journey is part of Premium</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed">
+              <p className="text-brand-text-secondary text-sm leading-relaxed">
                 Here&apos;s what {journeyTitle} explores. Take it if it fits you — there&apos;s plenty to do on the free plan too.
               </p>
             </div>

@@ -110,7 +110,7 @@ export function HabitAnchorPick({ userId, onComplete }: HabitAnchorPickProps) {
             <button
               onClick={onComplete}
               disabled={saving}
-              className="text-xs text-brand-taupe/70 underline underline-offset-2 hover:text-brand-taupe disabled:opacity-50"
+              className="text-xs text-brand-taupe underline underline-offset-2 hover:text-brand-taupe disabled:opacity-50"
             >
               I&apos;ll decide later
             </button>

@@ -39,7 +39,7 @@ export function QuestionView({
             <h1 className="text-xl font-semibold text-gray-900">
               Daily Quiz
             </h1>
-            <p className="text-sm text-gray-500">{currentQuestion.category}</p>
+            <p className="text-sm text-brand-text-secondary">{currentQuestion.category}</p>
           </div>
         </div>
         <Button

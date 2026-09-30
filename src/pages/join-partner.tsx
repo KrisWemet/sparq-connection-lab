@@ -120,7 +120,7 @@ export default function JoinPartner() {
           
           {!user ? (
             <div className="space-y-4">
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-brand-text-secondary dark:text-gray-400">
                 Please sign in or create an account to accept this invitation. You can still use Sparq solo if you want to start there first.
               </p>
               <div className="flex flex-col gap-2">

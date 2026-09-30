@@ -96,7 +96,7 @@ export default function PartnerProfile() {
                 </svg>
               </div>
               <h3 className="text-lg font-semibold mb-2">Partner Information Not Available</h3>
-              <p className="text-gray-500 mb-4">{error}</p>
+              <p className="text-brand-text-secondary mb-4">{error}</p>
               <button 
                 onClick={() => router.push("/profile")}
                 className="px-4 py-2 bg-primary text-white rounded-lg font-bold"
@@ -128,13 +128,13 @@ export default function PartnerProfile() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500">Email</h3>
+                  <h3 className="text-sm font-medium text-brand-text-secondary">Email</h3>
                   <p className="text-gray-900">{partnerProfile.email}</p>
                 </div>
                 
                 {partnerProfile.anniversary_date && (
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Anniversary</h3>
+                    <h3 className="text-sm font-medium text-brand-text-secondary">Anniversary</h3>
                     <p className="text-gray-900">{new Date(partnerProfile.anniversary_date).toLocaleDateString()}</p>
                   </div>
                 )}
@@ -146,7 +146,7 @@ export default function PartnerProfile() {
                 <CardTitle className="text-lg">Relationship Stats</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-500 mb-4">
+                <p className="text-sm text-brand-text-secondary mb-4">
                   Take the relationship health quiz together to see your compatibility and areas for growth.
                 </p>
                 <button 

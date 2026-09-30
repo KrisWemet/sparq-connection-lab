@@ -415,7 +415,7 @@ export function JourneyContentView({
       <div className="min-h-screen bg-brand-linen flex items-center justify-center px-4">
         <div className="text-center">
           <p className="text-lg font-serif text-brand-taupe">This journey is coming soon.</p>
-          <p className="text-sm text-zinc-500 mt-2">We&apos;re building something special for you.</p>
+          <p className="text-sm text-brand-text-secondary mt-2">We&apos;re building something special for you.</p>
           <button
             onClick={() => onBackToTiers ? onBackToTiers() : router.push('/journeys')}
             className="mt-6 px-6 py-3 rounded-xl bg-brand-primary text-white font-bold hover:bg-brand-hover transition-colors"
@@ -464,7 +464,7 @@ export function JourneyContentView({
           <h1 className="text-2xl font-serif font-bold text-brand-taupe mb-3">
             {tierName ? `${tierName} Complete!` : `You've completed ${title || 'this journey'}!`}
           </h1>
-          <p className="text-zinc-500 text-sm leading-relaxed max-w-xs mb-8 mx-auto">
+          <p className="text-brand-text-secondary text-sm leading-relaxed max-w-xs mb-8 mx-auto">
             {tierId === 'roots' && "You've built a strong foundation of awareness. You're ready to take these insights into active practice."}
             {tierId === 'growth' && "You've moved from understanding to real skill. The concepts are becoming part of how you naturally relate."}
             {tierId === 'bloom' && "You've fully integrated these skills into who you are as a partner. This is lasting, meaningful growth."}
@@ -503,7 +503,7 @@ export function JourneyContentView({
           {onBackToTiers && (
             <button
               onClick={onBackToTiers}
-              className="w-full max-w-xs py-3 rounded-2xl text-zinc-500 font-medium text-sm hover:text-brand-taupe transition-colors"
+              className="w-full max-w-xs py-3 rounded-2xl text-brand-text-secondary font-medium text-sm hover:text-brand-taupe transition-colors"
             >
               Back to Journey Overview
             </button>
@@ -526,7 +526,7 @@ export function JourneyContentView({
             initial={{ opacity: 0, x: -8 }}
             animate={{ opacity: 1, x: 0 }}
             onClick={onBackToTiers}
-            className="flex items-center gap-1.5 text-sm font-medium text-zinc-500 hover:text-brand-taupe transition-colors mb-4"
+            className="flex items-center gap-1.5 text-sm font-medium text-brand-text-secondary hover:text-brand-taupe transition-colors mb-4"
           >
             <ChevronLeft className="w-4 h-4" />
             Journey Overview
@@ -545,7 +545,7 @@ export function JourneyContentView({
 
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <button className="text-sm font-medium text-zinc-500 hover:text-brand-hover transition-colors whitespace-nowrap">
+                <button className="text-sm font-medium text-brand-text-secondary hover:text-brand-hover transition-colors whitespace-nowrap">
                   Leave Journey
                 </button>
               </AlertDialogTrigger>
