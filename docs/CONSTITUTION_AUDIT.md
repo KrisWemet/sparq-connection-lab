@@ -102,19 +102,51 @@ None exist. Chris decided (2026-09-29): tests are allowed but ask before adding 
 
 ---
 
-## Build plan (constitution §14, sliced)
+## Build status (constitution §14) — all 10 steps shipped 2026-09-30
 
-Each slice ships as its own PR.
+| # | §14 step | Shipped | Where |
+|---|---|---|---|
+| 1 | Audit | [KrisWemet/sparq-connection-lab#27](https://github.com/KrisWemet/sparq-connection-lab/pull/27) | this document |
+| 2 | Person Model + memory schema | [KrisWemet/sparq-connection-lab#28](https://github.com/KrisWemet/sparq-connection-lab/pull/28) | `docs/PERSON_MODEL.md`, migration `…_person_model_v1.sql` |
+| 3 | Retrieval, confidence, revision, discovery capture | [KrisWemet/sparq-connection-lab#29](https://github.com/KrisWemet/sparq-connection-lab/pull/29) | `trait-revision.ts`, `profile-analysis.ts`, `memory.ts` |
+| 4 | Peter's decision layer + tests | [KrisWemet/sparq-connection-lab#30](https://github.com/KrisWemet/sparq-connection-lab/pull/30) | `PETER_SHARED_RULES`, `conversation-mode.ts`, `tests/` |
+| 5 | Onboarding + first 7 days | [KrisWemet/sparq-connection-lab#31](https://github.com/KrisWemet/sparq-connection-lab/pull/31) | onboarding questions/Peter, weekly mirror (First Mirror) |
+| 6 | Mirrors + experiment follow-up | [KrisWemet/sparq-connection-lab#32](https://github.com/KrisWemet/sparq-connection-lab/pull/32) | `/api/experiments`, `ExperimentsCard`, Day-30 mirror |
+| 7 | Relationship model + access controls | [KrisWemet/sparq-connection-lab#33](https://github.com/KrisWemet/sparq-connection-lab/pull/33) | `docs/RELATIONSHIP_MODEL.md`, `supabase/tests/rls_boundaries.sql` |
+| 8 | Shared Peter | [KrisWemet/sparq-connection-lab#34](https://github.com/KrisWemet/sparq-connection-lab/pull/34) | `SharePrompt`, `/us`, `/api/peter/shared-reflect` |
+| 9 | Metrics | step-9 PR | `docs/METRICS.md`, Admin → Discovery |
+| 10 | User testing | plan ready — **Chris runs it** | `docs/USER_TESTING_PLAN.md` |
 
-| # | §14 step | Slice |
-|---|---|---|
-| 1 | Audit | This document. |
-| 2 | Person Model + memory schema | `docs/PERSON_MODEL.md` spec + migration: hypothesis metadata on `profile_traits`, memory `kind`s, `self_discoveries`, `experiments`, retire dead tables. |
-| 3 | Retrieval, confidence, revision, discovery capture | Evidence-based revision (contradictions weaken, never flip on one reflection); "worth remembering" gate; Peter marks self-discoveries and experiments; retrieval respects kinds. |
-| 4 | Peter decision layer | Modes + smallest-useful-action rules in `PETER_SHARED_RULES`; tentative insight lines; hypothesis framing. |
-| 5 | Onboarding / first 7 days | Lighter start, first useful interaction, Day-7 first mirror. |
-| 6 | Mirrors + experiment follow-up | Weekly mirror reshaped; experiment check-ins; Day-30 mirror. |
-| 7 | Relationship model + access controls | Schema for Us / cycles / repair; partner synthesis opt-in by both partners. |
-| 8 | Shared Peter | Private-discovery → "keep private / help me share" flow. |
-| 9 | Metrics | Meaningful Discovery Rate + supporting events. |
-| 10 | User testing | Structured test plan (needs real users — Chris runs it). |
+## §13 Definition of Done — status
+
+| Item | Status |
+|---|---|
+| Person Model V1 schema and migration plan exist | ✅ `docs/PERSON_MODEL.md` + migration |
+| Memory types and confidence/revision rules are specified | ✅ `docs/PERSON_MODEL.md` §3–5, `trait-revision.ts` |
+| Peter's modes and next-action decision logic are implemented and testable | ✅ `PETER_SHARED_RULES`, `conversation-mode.ts`, `tests/conversation-mode.test.ts` |
+| Self-discoveries and user-created experiments are first-class records | ✅ `self_discoveries`, `experiments` |
+| Relationship Model schema separates individual, shared and interaction-cycle knowledge | ✅ `couple_spaces`, `shared_items`, `interaction_cycles` |
+| Private Peter and Shared Peter have enforceable access boundaries | ✅ RLS, verified live by `supabase/tests/rls_boundaries.sql` |
+| First 30-day experience is mapped to concrete product flows | ✅ see table below |
+| Growth mirrors use historical evidence and guided reflection | ✅ weekly First Mirror + Day-30 mirror (user writes the ending) |
+| Existing repo capabilities are mapped before major replacement work | ✅ this audit (nothing working was rebuilt) |
+| Automated tests cover privacy leakage, inference certainty, memory revision and shared-space access | ✅ unit tests in `tests/` (32) + live RLS script. Shared-space DB access is checked by the SQL script, not in CI (no test database). |
+
+### First 30 days → product flows (§9)
+
+| Band | Flow |
+|---|---|
+| Days 0–3 useful before complete | Onboarding with skippable deep questions → Peter's first guess ("tell me if I'm off") → journey → Neutral Observer hook |
+| Days 4–7 visible memory | Distilled memories + self-discoveries in Peter's context; North Star ladder nights |
+| Day 7 First Mirror | Weekly mirror: strength, maybe-pattern, question → user answers → self-discovery, optional share |
+| Days 8–14 experiments | Evening intentions + user-written experiments → check-in after 2 days → outcome as growth evidence |
+| Day 14 growth reveal | Existing Day-14 graduation, CSI delta, growth engine |
+| Days 15–21 Understand Us | `/us`: shared items, interaction cycles both confirm, Shared Peter question |
+| Days 22–29 agency | Peter's Listen/distance rules + user's own discoveries outranking guesses |
+| Day 30 The Mirror | Day-30 mirror from their own words and verified growth; user writes the conclusion |
+
+## Still open (not constitution blockers)
+
+- Drop the deprecated tables (`personality_signals`, `personality_profiles`, `mirror_narratives`, `memory_storage`, `conversation_memories`, `if_then_checkins`, `partner_syntheses`, and the `user_insights` trait columns) — all empty or unused; waiting for Chris's OK.
+- Logged-in walkthrough of the new UI (Journal experiments, mirrors, `/us`) — no test account in the cloud environment.
+- A CI-run database test for shared-space access needs a test database or Supabase branch.

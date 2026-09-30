@@ -2,7 +2,7 @@
 
 This file provides comprehensive context for AI assistants working on this codebase. Read the product context section first — every time, without skipping.
 
-> **Product constitution:** [`docs/CONSTITUTION.md`](docs/CONSTITUTION.md) defines Sparq's governing principles — discovery before direction, hypotheses never diagnoses, Peter's conversation modes, memory discipline, and private/shared privacy boundaries. Read it before planning any feature. Its "Constitutional test" applies to every major feature. It is the source of truth for everything it covers; where it is silent, the rest of this file and the Master PRD apply.
+> **Product constitution:** [`docs/CONSTITUTION.md`](docs/CONSTITUTION.md) defines Sparq's governing principles — discovery before direction, hypotheses never diagnoses, Peter's conversation modes, memory discipline, and private/shared privacy boundaries. Read it before planning any feature. Its "Constitutional test" applies to every major feature. Implementation map: `docs/CONSTITUTION_AUDIT.md` (status + §13 checklist), `docs/PERSON_MODEL.md`, `docs/RELATIONSHIP_MODEL.md`, `docs/METRICS.md`. It is the source of truth for everything it covers; where it is silent, the rest of this file and the Master PRD apply.
 
 ---
 
@@ -417,6 +417,10 @@ Managed via Supabase. Schema defined in `supabase/schema.sql`.
 | `date_ideas` + `user_date_ideas` | Date idea catalog + user saved/completed |
 | `user_activities` | Analytics event log |
 | `system_settings` | Admin-configurable key-value settings |
+| `profile_traits` | Person Model hypothesis layer — guesses with evidence, `status` hypothesis/confirmed/rejected |
+| `memories` | Distilled memories with `kind` + `importance` (pgvector); `metadata.trace` rows are growth-engine only |
+| `self_discoveries` / `experiments` | The user's own conclusions and self-chosen experiments (private) |
+| `couple_spaces` / `shared_items` / `interaction_cycles` | "Us" — only what a partner explicitly shared (RLS-enforced; see `docs/RELATIONSHIP_MODEL.md`) |
 
 ### Row Level Security
 

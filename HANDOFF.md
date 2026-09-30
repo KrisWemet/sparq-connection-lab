@@ -1,6 +1,6 @@
 # Sparq Connection — Session Handoff
 
-**Last updated:** 2026-09-29 (end of a long refactor + priming session)
+**Last updated:** 2026-09-30 (constitution build: all 10 §14 steps shipped)
 **Read this first in a new chat**, then `CLAUDE.md`, then `docs/CONSTITUTION.md`.
 
 > This is a snapshot of *where the build is*, not a spec. Specs/principles live in `docs/CONSTITUTION.md` and `CLAUDE.md`; deeper history lives in `CURRENT_STATE.md`.
@@ -10,6 +10,8 @@
 ## 1. Where things stand (one paragraph)
 
 The codebase was cleaned up and hardened, the whole app was moved onto the Warm Clay palette with WCAG-AA contrast, and a **transparent psychological-priming layer** was built: framework-aligned copy, a shared **Story Recipe**, stories in morning messages / daily primes / **all 13 journeys (244 stories)**, and warm people-free imagery. Fake testimonials and invented stats were removed. A new **product constitution** (`docs/CONSTITUTION.md`) was added and is the source of truth for everything it covers (see §6). Everything below was merged to `main` and is live on Vercel unless marked otherwise.
+
+**2026-09-30 — constitution build.** All ten steps of the constitution's build sequence (§14) shipped as PRs #27–#35: audit, Person Model + memory schema, evidence-based revision + a worth-remembering filter, Peter's conversation engine (modes, distance rule), onboarding + First Mirror, experiments + Day-30 mirror, relationship model with RLS-enforced private/shared boundary, Shared Peter (`/us`), and discovery metrics. User testing (step 10) is a ready plan Chris runs. Status + §13 checklist: `docs/CONSTITUTION_AUDIT.md`.
 
 ---
 
@@ -43,6 +45,15 @@ The codebase was cleaned up and hardened, the whole app was moved onto the Warm 
 | #24 | Renamed "Attachment Healing" → **"Feeling Safe Together"** (route `/journeys/attachment-healing` unchanged) |
 | #25 | Missing Supabase env no longer 500s every page (placeholder host + `isSupabaseConfigured`) |
 | #26 | `docs/CONSTITUTION.md` (verbatim product constitution) + pointer in `CLAUDE.md` + this handoff |
+| #27 | Constitution audit (`docs/CONSTITUTION_AUDIT.md`) |
+| #28 | Person Model V1 + memory schema (`docs/PERSON_MODEL.md`) — hypothesis metadata on `profile_traits`, memory kinds, `self_discoveries`, `experiments` |
+| #29 | Evidence-based trait revision (`trait-revision.ts`), distilled memories instead of raw transcripts, ranked retrieval, working trait feedback |
+| #30 | Peter conversation engine (modes, smallest useful move, distance rule) + Vitest unit tests (`npm test`) |
+| #31 | Skippable deep onboarding questions, tentative Peter openings, First Mirror (strength / maybe-pattern / question → user answers) |
+| #32 | Self-chosen experiments with check-ins; Day-30 mirror; Peter sees the user's own discoveries |
+| #33 | Relationship model (`couple_spaces`, `shared_items`, `interaction_cycles`) + removed auto partner synthesis and partner-trait exposure; live RLS check script |
+| #34 | Shared Peter: "keep private / help me share", `/us` shared space, Shared Peter question |
+| #35 | Discovery metrics (MDR etc., Admin → Discovery), user testing plan, docs |
 
 ---
 
@@ -60,6 +71,13 @@ The codebase was cleaned up and hardened, the whole app was moved onto the Warm 
 - Tokens: `tailwind.config.ts` (Warm Clay: primary `#C56B4D`, hover `#A85539`, linen `#F5F1EA`, parchment `#EFE7DC`, espresso `#2E2620`, sage `#9CB5A0`, gold `#D9A441`).
 - **Contrast rule:** clay text only at `text-2xl`+ / `text-xl` bold / icons; small clay text uses `text-brand-hover`; white on clay is always bold ≥14px.
 - **Imagery rule:** warm metaphor images, never people (hands-only OK). `public/images/journeys/`, `public/images/dates/`.
+
+**Constitutional layer (2026-09-30)**
+- Person Model & memory: `docs/PERSON_MODEL.md`. Trait guesses revise with evidence (`src/lib/server/trait-revision.ts`); evening analysis stores 0–3 distilled memories + self-discoveries + intentions (`profile-analysis.ts`); growth traces keep the user's raw words for the growth engine only.
+- Peter: modes + rules in `PETER_SHARED_RULES`; `src/lib/server/conversation-mode.ts` suggests the next move; insight lines only for evidence-backed/confirmed traits and always as a maybe.
+- Experiments: `/api/experiments` + `ExperimentsCard` (Home when due, Journal full). Mirrors: weekly (`/api/weekly-mirror/*`) and Day-30 (`/api/me/thirty-day-mirror`).
+- Relationship & sharing: `docs/RELATIONSHIP_MODEL.md`, `/api/couple*`, `/us`, `SharePrompt`, `/api/peter/share-draft`, `/api/peter/shared-reflect`. Boundary check: `supabase/tests/rls_boundaries.sql`.
+- Metrics: `docs/METRICS.md`. Tests: `tests/` (32, `npm test`) — ask Chris before adding new ones.
 
 **Reliability**
 - One auth context: `src/lib/auth-context.tsx`. `ErrorBoundary` in `_app.tsx`. `src/lib/supabase.ts` survives missing env.
@@ -89,21 +107,19 @@ No open product decisions right now.
 
 ## 7. What still needs to be done
 
-**Recommended next (from the constitution review):**
-1. **Constitution audit** (its §14 step 1): map every section to keep / adapt / replace / missing. Already exists: trait confidence + revision (`profile-analysis.ts`), North Star, growth engine + trust bar, Day-14 Compound Reveal, CSI-4, weekly mirror, partner synthesis (blended, no attribution), encrypted reflections, forgiving streak, `/help-now` safety routing, `if_then_checkins`.
-2. **Peter conversation engine** (prompt-only, low risk): add Listen / Explore / Reflect / Challenge / Act / Celebrate / Safety modes, "smallest useful action", the distance rule ("don't steal the realization"), hypothesis-only wording, "sometimes remember instead of coaching" → `PETER_SHARED_RULES` in `src/lib/peterService.ts`.
-3. **Memory discipline:** every evening chat is currently stored via `addMemory` in `src/lib/server/profile-analysis.ts`; gate it so only meaningful items (discoveries, intentions, facts, growth evidence) are stored.
-4. **Bigger constitution gaps:** self-discoveries as first-class records; user-created experiments with outcomes; one authoritative Person Model; Relationship Model + interaction cycles; Shared Peter with data-level private/shared boundaries; Meaningful Discovery Rate metric.
+**Needs Chris:**
+- **Run the user testing plan** (`docs/USER_TESTING_PLAN.md`) — constitution step 10. Don't broaden features until wave 1 findings are in.
+- **OK to drop deprecated tables** (all empty/unused): `personality_signals`, `personality_profiles`, `mirror_narratives`, `memory_storage`, `conversation_memories`, `if_then_checkins`, `partner_syntheses`, and `user_insights.attachment_style / love_language / conflict_style`.
+- **Logged-in walkthrough** of the live site — nothing since the auth fix has been verified signed in, including the new Journal experiments, mirrors and `/us`.
+- **GitHub reports 58 Dependabot alerts** on `main` (5 critical) — worth a dedicated slice.
 
 **Other open items:**
-- **Logged-in walkthrough** of the live site (signup → onboarding → dashboard → daily loop → journeys) — nothing since the auth fix has been verified logged in.
-- **Read 2–3 live morning stories** on production to confirm Haiku follows the Story Recipe well.
-- **Dark theme** in `globals.css` is still the old violet (dormant; re-derive from Warm Clay before enabling dark mode).
-- **`src/content/journeys/attachment-healing.md`** still says "Attachment Healing" — unused by the app (content is fetched from `public/Path to Together/`).
-- **Delete the Canva design** "Warm linen photo container" (optional cleanup).
-- `CURRENT_STATE.md` predates today's work; this file supersedes its §7 for current status.
-
----
+- Read 2–3 live morning stories and a few Peter chats on production to confirm Haiku follows the Story Recipe and the new conversation modes.
+- A CI database test for shared-space access (needs a Supabase branch/test DB); today it's the SQL script.
+- Dark theme in `globals.css` is still the old violet (dormant).
+- `src/content/journeys/attachment-healing.md` still says "Attachment Healing" (unused).
+- Delete the Canva design "Warm linen photo container" (optional).
+- `CURRENT_STATE.md` predates this work; this file supersedes its §7.
 
 ## 8. Environment facts
 
