@@ -1,7 +1,7 @@
-## Day 1: Understanding Your Attachment Style
+## Day 1: Feeling Safe Together
 
 ### Today's Learning
-Welcome to Day 1 of your Attachment Healing journey. Today, we'll begin exploring how early experiences shape our adult relationships.
+Welcome to Day 1 of your Feeling Safe Together journey. Today, we'll begin exploring how early experiences shape our adult relationships.
 
 Have you ever noticed patterns in how you respond to relationship stress? Some people tend to pull away, while others become more clingy. These patterns often stem from our earliest relationships.
 

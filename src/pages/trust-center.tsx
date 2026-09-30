@@ -206,6 +206,9 @@ export default function TrustCenterPage() {
           <p className="text-xs text-slate-500 mt-1">
             Journals stay private by default. These settings change how Peter learns from you.
           </p>
+          <p className="text-xs text-slate-500 mt-1">
+            Peter changes morning stories to learn what helps you, and any guess he makes about you is one you can see and fix.
+          </p>
 
           <div className="mt-4 space-y-3">
             <ToggleRow
