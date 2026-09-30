@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
-import { ChevronLeft, Compass, NotebookPen } from 'lucide-react';
+import { ChevronLeft, Compass, HeartHandshake, NotebookPen } from 'lucide-react';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { WeeklyMirrorCard } from '@/components/dashboard/WeeklyMirrorCard';
 import { ExperimentsCard } from '@/components/dashboard/ExperimentsCard';
@@ -116,6 +116,21 @@ export default function JournalPage() {
               </Link>
             </div>
           </motion.section>
+
+          <Link
+            href="/us"
+            className="flex items-center gap-3 bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-5 hover:bg-brand-parchment/80 transition-colors"
+          >
+            <div className="w-10 h-10 rounded-full bg-brand-primary/10 text-brand-primary flex items-center justify-center flex-shrink-0">
+              <HeartHandshake className="w-5 h-5" />
+            </div>
+            <div className="flex-1">
+              <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-1">Your shared space</p>
+              <p className="text-sm text-brand-text-secondary leading-relaxed">
+                Only what you choose to share with your partner lives there.
+              </p>
+            </div>
+          </Link>
 
           <GrowthThread />
         </main>

@@ -32,3 +32,10 @@ Core question (§7): *what happens between these two people, and where does each
 
 - `GET/POST/DELETE /api/couple` — shared space and items (kinds: discovery, appreciation, need, value, ritual, agreement, memory, repair).
 - `POST/PATCH /api/couple/cycles` — propose a cycle; confirm or retire it.
+
+## Shared Peter (constitution step 8)
+
+- **"Keep it private, or help me put it into words"** — after a user writes a private discovery (weekly mirror answer, Day-30 conclusion), `SharePrompt` offers two choices. Private is the default. "Help me share it" calls `/api/peter/share-draft`, which drafts a first-person message from *their own words* and stores nothing. The user edits it and only then taps Share (`POST /api/couple`). Renders only for linked couples.
+- **`/us` — your shared space:** what each partner shared (labeled You / partner name), share an appreciation / need / something I noticed, un-share your own items, and name interaction cycles that become "ours" only when both agree.
+- **Shared Peter question** (`/api/peter/shared-reflect`): one question for the couple to talk about, built only from `shared_items` + cycles. Authors are passed to the model as Partner 1 / Partner 2 so neither account is ranked; the prompt forbids taking sides or guessing beyond what was shared.
+- Tests: `tests/shared-peter.test.ts` asserts Shared Peter reads only `shared_items`/`interaction_cycles` (select only) and share drafts write nothing.
