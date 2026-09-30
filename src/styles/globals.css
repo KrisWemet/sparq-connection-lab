@@ -56,33 +56,45 @@
   }
 
   .dark {
-    --background: 266 18% 13%;
-    --foreground: 28 27% 95%;
-    --card: 266 16% 18%;
-    --card-foreground: 28 27% 95%;
-    --popover: 266 16% 16%;
-    --popover-foreground: 28 27% 95%;
-    --primary: 250 91% 65%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 266 16% 18%;
-    --secondary-foreground: 28 27% 95%;
-    --muted: 266 16% 18%;
-    --muted-foreground: 259 12% 75%;
-    --accent: 266 16% 18%;
-    --accent-foreground: 28 27% 95%;
-    --destructive: 351 50% 57%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 265 13% 28%;
-    --input: 265 13% 28%;
-    --ring: 250 91% 65%;
-    --sidebar-background: 266 18% 11%;
-    --sidebar-foreground: 28 27% 95%;
-    --sidebar-primary: 250 91% 65%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 266 16% 18%;
-    --sidebar-accent-foreground: 28 27% 95%;
-    --sidebar-border: 265 13% 28%;
-    --sidebar-ring: 250 91% 65%;
+    /* Dormant Warm Clay theme: espresso surfaces, linen text, and clay accents. */
+    /* Clay is lightened for readable small text; taupe/border are lifted for dark surfaces. */
+    --brand-canvas: #1A1512;
+    --brand-featured-surface: #2E2620;
+    --brand-accent: #D58A70;
+    --brand-text-primary: #F5F1EA;
+    --brand-text-secondary: #C4B6A6;
+    --brand-border: #9B8873;
+    --brand-highlight: #D9A441;
+    --brand-destructive: #A85539;
+    --peter-caption: #C4B6A6;
+
+    --background: 22.50 18.18% 8.63%;
+    --foreground: 38.18 35.48% 93.92%;
+    --card: 25.71 17.95% 15.29%;
+    --card-foreground: 38.18 35.48% 93.92%;
+    --popover: 25.71 17.95% 15.29%;
+    --popover-foreground: 38.18 35.48% 93.92%;
+    --primary: 15.45 54.59% 63.73%;
+    --primary-foreground: 22.50 18.18% 8.63%;
+    --secondary: 26.25 17.39% 18.04%;
+    --secondary-foreground: 34.74 37.25% 90.00%;
+    --muted: 26.25 17.39% 18.04%;
+    --muted-foreground: 32.00 20.27% 70.98%;
+    --accent: 16.67 32.14% 21.96%;
+    --accent-foreground: 38.18 35.48% 93.92%;
+    --destructive: 15.14 49.33% 44.12%;
+    --destructive-foreground: 38.18 35.48% 93.92%;
+    --border: 31.50 16.67% 52.94%;
+    --input: 31.50 16.67% 52.94%;
+    --ring: 15.45 54.59% 63.73%;
+    --sidebar-background: 22.50 18.18% 8.63%;
+    --sidebar-foreground: 38.18 35.48% 93.92%;
+    --sidebar-primary: 15.45 54.59% 63.73%;
+    --sidebar-primary-foreground: 22.50 18.18% 8.63%;
+    --sidebar-accent: 16.67 32.14% 21.96%;
+    --sidebar-accent-foreground: 38.18 35.48% 93.92%;
+    --sidebar-border: 31.50 16.67% 52.94%;
+    --sidebar-ring: 129.60 14.45% 66.08%;
   }
 }
 
