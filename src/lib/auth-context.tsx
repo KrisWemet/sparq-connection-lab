@@ -78,7 +78,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         if (newSession?.user) {
-          await fetchUserData(newSession.user);
+          // Never await Supabase calls inside this callback: supabase-js runs it
+          // while holding its auth lock, so a query here waits on the lock and
+          // the lock waits on this callback — every later Supabase call in the
+          // tab hangs (seen after the hourly token refresh). Defer instead.
+          const authUser = newSession.user;
+          setTimeout(() => {
+            if (!cancelled) fetchUserData(authUser);
+          }, 0);
         }
       } else if (event === 'SIGNED_OUT') {
         // Debounce: Supabase fires SIGNED_OUT → SIGNED_IN during token
