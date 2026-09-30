@@ -33,6 +33,8 @@ export default function OnboardingPage() {
   const [selectedJourneyId, setSelectedJourneyId] = useState<string | null>(null);
   const [selectedPeterNote, setSelectedPeterNote] = useState<string>('');
   const [scoringError, setScoringError] = useState('');
+  // Names given at signup — onboarding never asks for them again.
+  const [knownNames, setKnownNames] = useState<{ firstName: string | null; partnerName: string | null }>({ firstName: null, partnerName: null });
 
   // Auth redirect
   useEffect(() => {
@@ -40,6 +42,30 @@ export default function OnboardingPage() {
       router.replace('/login');
     }
   }, [authLoading, router, user]);
+
+  // Names given at signup. Prefer auth metadata (what they typed); the
+  // profile name falls back to the email prefix when no name was given, so
+  // ignore it in that case rather than greeting them by their email.
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from('profiles')
+        .select('name, partner_name')
+        .eq('id', user.id)
+        .maybeSingle();
+      if (cancelled) return;
+      const meta = (user.user_metadata || {}) as { full_name?: string; partner_name?: string };
+      const emailPrefix = (user.email || '').split('@')[0];
+      const profileName = data?.name && data.name !== emailPrefix ? data.name : '';
+      setKnownNames({
+        firstName: (meta.full_name || profileName || '').trim() || null,
+        partnerName: (meta.partner_name || data?.partner_name || '').trim() || null,
+      });
+    })();
+    return () => { cancelled = true; };
+  }, [user]);
 
   // Load consent + check for dropout recovery
   useEffect(() => {
@@ -65,6 +91,7 @@ export default function OnboardingPage() {
             .select('isonboarded, psychological_profile')
             .eq('id', user.id)
             .single();
+
 
           if (profileData?.isonboarded) {
             router.replace('/dashboard');
@@ -151,6 +178,7 @@ export default function OnboardingPage() {
     return (
       <QuestionFlow
         initialProgress={savedProgress}
+        knownNames={knownNames}
         onComplete={(completedProgress) => {
           setSavedProgress(completedProgress);
           setPhase('scoring_transition');
