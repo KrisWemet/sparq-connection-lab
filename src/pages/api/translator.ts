@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { PETER_MODELS } from "@/lib/openrouter";
 
 type TranslatorResponse =
   | { suggestion: string }
@@ -49,7 +50,9 @@ export default async function handler(
         "X-Title": "Sparq Connection Lab",
       },
       body: JSON.stringify({
-        model: "anthropic/claude-3-haiku",
+        models: PETER_MODELS,
+        route: "fallback",
+        reasoning: { enabled: false },
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
