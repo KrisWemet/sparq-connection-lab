@@ -152,6 +152,7 @@ Do not relitigate these:
 - **Tests only with Chris's OK** — Vitest unit tests for constitution guarantees live in `tests/` (`npm test`). Ask Chris before adding any new test.
 - **No Mem0 SDK** — memory is Supabase pgvector (`src/lib/server/memory.ts`). Do not wire real Mem0 unless explicitly asked.
 - **OpenRouter → Claude Haiku 4.5** — Peter's AI backend. Do not change the model.
+  - *Temporary (2026-09-30, Chris's call):* while Chris tests without OpenRouter credits, `PETER_MODELS` in `src/lib/openrouter.ts` is the free `google/gemma-4-31b-it:free` → `qwen/qwen3.8-27b:free`. Free tier is 50 req/day and free providers may log prompts, so switch back to Haiku before real users.
 
 ---
 
