@@ -88,20 +88,19 @@ Sessions completed: ${practiceCount}
 Practices attempted: ${practicesAttempted}
 ${growthLines.length > 0 ? `\nVERIFIED growth this week (you may reference ONLY these growth moments; do not infer or invent others):\n${growthLines.map(l => `- ${l}`).join('\n')}` : '\nNo verified growth moments this week — do NOT claim any specific change; reflect honestly on the practice itself.'}
 
-Write a 2-3 sentence narrative synthesis of their week. Focus on:
-- What PATTERN you notice across sessions (not a summary of each day)
-- What is SHIFTING for them (awareness, behavior, or emotional capacity)
-- A warm, forward-looking observation
+This is a mirror, not a report card. Give them exactly three things, then let THEM decide what it means:
+1. "strength": one real strength you saw this week, tied to something specific they did or said. One or two sentences.
+2. "emerging_pattern": one pattern that MIGHT be forming, said as a maybe ("I'm wondering if..."). Never a verdict or a label. One sentence.
+3. "question": one open question that lets them interpret their own week. No yes/no questions. Do not answer it for them.
 
-Do NOT list days. Do NOT use clinical terms. Write as Peter — warm, wise, specific.
-Use present tense. Use identity language when possible ("You are becoming someone who...")
+Rules: plain everyday words, no clinical terms, no advice, do not list days, do not tell them who they are.
 
-Example: "You are noticing defensiveness before it takes over. That is the shift — awareness before reaction. The practice is landing deeper than you think."
-
-Also return a JSON object with:
+Return a JSON object:
 {
-  "narrative": "your 2-3 sentence synthesis",
-  "key_patterns": ["pattern1", "pattern2"],
+  "strength": "...",
+  "emerging_pattern": "...",
+  "question": "...",
+  "key_patterns": ["short pattern label", "short pattern label"],
   "practices_felt_natural": <number of sessions where the practice seemed comfortable based on reflection tone>
 }
 
@@ -112,20 +111,28 @@ Output ONLY valid JSON. No text outside the JSON object.`;
   try {
     const raw = await peterChat({
       messages: [
-        { role: 'system', content: 'You are Peter, a wise otter companion who notices growth patterns.' },
+        { role: 'system', content: 'You are Peter, a warm otter companion. You hold up a mirror; the user decides what it means. Return only valid JSON.' },
         { role: 'user', content: prompt },
       ],
       maxTokens: 512,
     });
 
     let narrative = '';
+    let strength: string | null = null;
+    let emergingPattern: string | null = null;
+    let question: string | null = null;
     let keyPatterns: string[] = [];
     let feltNatural = 0;
 
+    const text = (v: unknown) => (typeof v === 'string' && v.trim() ? stripMarkdown(v.trim()) : null);
     try {
-      const parsed = JSON.parse(raw);
-      narrative = stripMarkdown(parsed.narrative || raw);
-      keyPatterns = parsed.key_patterns || [];
+      const jsonMatch = raw.match(/\{[\s\S]*\}/);
+      const parsed = JSON.parse(jsonMatch ? jsonMatch[0] : raw);
+      strength = text(parsed.strength);
+      emergingPattern = text(parsed.emerging_pattern);
+      question = text(parsed.question);
+      narrative = [strength, emergingPattern].filter(Boolean).join(' ') || stripMarkdown(parsed.narrative || '');
+      keyPatterns = Array.isArray(parsed.key_patterns) ? parsed.key_patterns : [];
       feltNatural = parsed.practices_felt_natural || 0;
     } catch {
       narrative = stripMarkdown(raw);
@@ -139,6 +146,9 @@ Output ONLY valid JSON. No text outside the JSON object.`;
           user_id: ctx.userId,
           week_start: weekStart,
           narrative_text: narrative,
+          strength,
+          emerging_pattern: emergingPattern,
+          mirror_question: question,
           practice_count: practiceCount,
           practices_felt_natural: feltNatural,
           key_patterns: keyPatterns,

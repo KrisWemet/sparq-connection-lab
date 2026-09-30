@@ -7,6 +7,13 @@ const WRITE_MY_OWN: QuestionOption = {
   bridge: "I appreciate you putting that into your own words.",
 };
 
+// The deepest questions can wait (constitution §9 "useful before complete"):
+// Peter keeps learning quietly, so skipping costs nothing.
+const NOT_YET: QuestionOption = {
+  label: "I'd rather not say yet",
+  bridge: "That's okay. We can come back to it whenever you like.",
+};
+
 export const QUESTIONS: Question[] = [
   // ── Q1: Name ────────────────────────────────────────────────────────────────
   {
@@ -132,6 +139,7 @@ export const QUESTIONS: Question[] = [
       { label: "I'd figure they're busy or tired",                    scoreDeltas: { secure: 2 },                  traits: { reassurance_need: 'figures_it_out' },     bridge: "That kind of trust is a quiet strength." },
       { label: "Honestly, I'd enjoy the space",                      scoreDeltas: { avoidant: 3 },                traits: { reassurance_need: 'figures_it_out' },     bridge: "Nothing wrong with needing room to breathe." },
       { label: "I'd notice it, but try not to make it mean something", scoreDeltas: { abandonment: 1, anxious: 1 }, bridge: "That awareness is already a step most people skip." },
+      NOT_YET,
       WRITE_MY_OWN,
     ],
   },
@@ -148,6 +156,7 @@ export const QUESTIONS: Question[] = [
       { label: "It says we're both human and we'll figure it out", scoreDeltas: {},                           bridge: "That's a grounded place to come from. I like that." },
       { label: "It wonders if they're losing interest in me",   scoreDeltas: { selfWorth: 2, abandonment: 2 }, bridge: "That fear makes sense. It doesn't make it true." },
       { label: "It gets pretty loud and hard to quiet",         scoreDeltas: { selfWorth: 2, dysregulation: 1 }, bridge: "When the volume goes up like that, it's hard to hear anything else. I get it." },
+      NOT_YET,
       WRITE_MY_OWN,
     ],
   },
@@ -164,6 +173,7 @@ export const QUESTIONS: Question[] = [
       { label: "It had its moments, but mostly okay", scoreDeltas: { trauma: 1 },            bridge: "Honest answer. Most people's childhoods had some of both." },
       { label: "It was complicated",            scoreDeltas: { trauma: 3 },                  bridge: "Thank you for trusting me with that. It helps me understand you better." },
       { label: "Not really — it was hard",      scoreDeltas: { trauma: 5, disorganized: 2 }, bridge: "That took courage to say. I'm glad you told me. We'll go gently." },
+      NOT_YET,
       WRITE_MY_OWN,
     ],
   },
