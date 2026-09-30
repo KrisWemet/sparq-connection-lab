@@ -68,6 +68,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (error) return res.status(500).json({ error: error.message });
 
+    // Changing their mind back ("That's me" / "Not sure") clears an earlier rejection.
+    if (feedback !== 'not_really') {
+      await ctx.supabase.from('rejected_hypotheses').delete()
+        .eq('user_id', ctx.userId).eq('hypothesis_ref', `trait:${trait_key}`);
+    }
+
     // "Not really" is a rejected guess — remembered so Peter never voices it again.
     if (feedback === 'not_really') {
       const { recordRejection } = await import('@/lib/server/rejected-hypotheses');
