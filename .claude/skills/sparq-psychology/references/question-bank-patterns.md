@@ -153,7 +153,7 @@ Expected Outcome:  What the user should walk away with
 **Q**: "What's one thing that went well in your relationship this week — even something small? What did you or your partner do to make it happen?"
 - **Intent**: Gratitude + attribution of agency
 - **Stage**: All
-- **Why this matters**: Couples who regularly reflect on what's going well show 25% higher satisfaction. And noticing what you DID (not just what happened) reminds you that you're an active builder of your relationship.
+- **Why this matters**: Noticing what's going well is linked with feeling more satisfied together (positive-psychology research on capitalization and gratitude). And noticing what you DID (not just what happened) reminds you that you're an active builder of your relationship.
 - **Expected outcome**: User identifies a positive moment and their role in creating it
 
 ---
@@ -213,7 +213,7 @@ Expected Outcome:  What the user should walk away with
 
 ### Beginner
 **Q**: "What's one small relationship commitment you're willing to make this week — something specific and doable? Write it down or say it out loud."
-- **Intent**: Commitment/consistency — public microcommitment
+- **Intent**: Commitment/consistency — a small commitment the user originates, plus their own reason for it (self-persuasion)
 - **Stage**: All
-- **Why this matters**: When we state a commitment out loud or in writing, we're significantly more likely to follow through. Not because of willpower — because our brain naturally wants to act consistently with who we've said we are.
-- **Expected outcome**: User makes a concrete, small commitment that leverages consistency bias
+- **Why this matters**: Saying a commitment out loud, in your own words, makes it easier to follow through — you're acting in line with what you said matters to you. It's revisable anytime.
+- **Expected outcome**: User names a small commitment and why it matters to them; Peter later reconnects them to their reason — never uses it to corner them (constitution v1.1 §5A)

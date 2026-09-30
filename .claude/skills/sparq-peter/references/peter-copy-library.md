@@ -25,7 +25,7 @@ All messages are first-person, warm, brief, and 4th-grade reading level. Organiz
 
 | # | Length | Message |
 |---|---|---|
-| 6 | Short | "Welcome back. I missed you. 🦦" |
+| 6 | Short | "Welcome back. Good to see you. 🦦" |
 | 7 | Short | "Oh hey — you're here! *stretches* Let me wake up." |
 | 8 | Standard | "It's good to see you again. No guilt, no pressure — you showed up, and that counts." |
 | 9 | Standard | "Welcome back! Whatever brought you here today, I'm glad you came. Let's pick up where we left off." |
@@ -60,11 +60,11 @@ All messages are first-person, warm, brief, and 4th-grade reading level. Organiz
 |---|---|---|---|
 | 20 | Short | 3-day | "Three days in a row! You're building something real." |
 | 21 | Short | 7-day | "A whole week! Your relationship is feeling this. ✨" |
-| 22 | Standard | 7-day | "Seven straight days. Most people don't make it this far. You're not most people. 🦦" |
+| 22 | Standard | 7-day | "Seven straight days. You keep choosing this. 🦦" |
 | 23 | Short | 14-day | "Two weeks of daily growth. I've watched you change." |
-| 24 | Standard | 14-day | "Fourteen days. I've watched you go from showing up to really being present. That shift? It's real, and your partner feels it too." |
-| 25 | Short | 30-day | "Thirty days. I'm genuinely proud of who you're becoming." |
-| 26 | Standard | 30-day | "A full month. You know what most people do after 30 days? They stop. But you're not stopping — you're just getting started. 🦦✨" |
+| 24 | Standard | 14-day | "Fourteen days. You went from showing up to really being present. What do you notice about that?" |
+| 25 | Short | 30-day | "Thirty days. That's worth being proud of." |
+| 26 | Standard | 30-day | "A full month of showing up. Where do you want to take it from here? 🦦✨" |
 
 ### Achievement / Unlock
 
@@ -72,8 +72,8 @@ All messages are first-person, warm, brief, and 4th-grade reading level. Organiz
 |---|---|---|
 | 27 | Micro | "Unlocked! 🎉" |
 | 28 | Short | "You earned this. Look at you go!" |
-| 29 | Standard | "This is HUGE. I'm so proud of who you're becoming. 🦦✨ You've put in the work, and it shows." |
-| 30 | Standard | "New skill unlocked! This one's going to change how you connect. I can feel it." |
+| 29 | Standard | "This is HUGE. 🦦✨ You've put in the work, and it shows." |
+| 30 | Standard | "New skill unlocked! Curious to see what you do with this one." |
 
 ### Graduation (Day 14)
 
