@@ -55,8 +55,8 @@ export function TraitCard({ traits, accessToken, onUpdated }: TraitCardProps) {
     return (
       <Card className="dark:bg-gray-800 dark:border-gray-700">
         <CardContent className="p-4 text-center">
-          <Brain className="w-8 h-8 mx-auto text-gray-400 mb-2" />
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <Brain className="w-8 h-8 mx-auto text-brand-text-secondary mb-2" />
+          <p className="text-sm text-brand-text-secondary dark:text-gray-400">
             Peter is still getting to know you. Complete a few daily sessions and your insights will appear here.
           </p>
         </CardContent>
@@ -116,7 +116,7 @@ export function TraitCard({ traits, accessToken, onUpdated }: TraitCardProps) {
                         ? 'text-green-600 border-green-300'
                         : confidence === 'Possible'
                         ? 'text-yellow-600 border-yellow-300'
-                        : 'text-gray-400 border-gray-300'
+                        : 'text-brand-text-secondary border-gray-300'
                     }
                   >
                     {confidence}
@@ -124,7 +124,7 @@ export function TraitCard({ traits, accessToken, onUpdated }: TraitCardProps) {
                 </div>
 
                 <div className="flex items-center gap-2 mt-3">
-                  <span className="text-xs text-gray-500 dark:text-gray-500 mr-1">
+                  <span className="text-xs text-brand-text-secondary dark:text-gray-500 mr-1">
                     Does this sound right?
                   </span>
                   <Button

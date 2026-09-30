@@ -154,13 +154,13 @@ export default function ResetPasswordPage() {
               className="w-full px-4 py-2 pl-10 pr-10 border rounded-md focus:ring-brand-primary focus:border-brand-primary"
               placeholder="At least 8 characters"
             />
-            <div className="absolute left-3 top-2.5 text-gray-400">
+            <div className="absolute left-3 top-2.5 text-brand-text-secondary">
               <Lock className="h-5 w-5" />
             </div>
             <button
               type="button"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
-              className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-2.5 text-brand-text-secondary hover:text-gray-600"
               onClick={() => setShowPassword(s => !s)}
             >
               {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -179,7 +179,7 @@ export default function ResetPasswordPage() {
               className="w-full px-4 py-2 pl-10 border rounded-md focus:ring-brand-primary focus:border-brand-primary"
               placeholder="Same password again"
             />
-            <div className="absolute left-3 top-2.5 text-gray-400">
+            <div className="absolute left-3 top-2.5 text-brand-text-secondary">
               <Lock className="h-5 w-5" />
             </div>
           </div>

@@ -307,7 +307,7 @@ export default function Dashboard() {
         <div className="pb-2 text-center">
           <button
             onClick={() => router.push('/help-now')}
-            className="text-xs text-brand-taupe/70 underline underline-offset-2 transition-colors hover:text-brand-taupe"
+            className="text-xs text-brand-taupe underline underline-offset-2 transition-colors hover:text-brand-taupe"
           >
             Need help now?
           </button>

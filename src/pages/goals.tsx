@@ -348,9 +348,9 @@ export default function Goals() {
               <TabsContent value="current" className="mt-6">
                 {goals.filter(goal => goal.progress < 100).length === 0 ? (
                   <div className="text-center py-12">
-                    <Target className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                    <Target className="w-12 h-12 mx-auto text-brand-text-secondary mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No active goals</h3>
-                    <p className="text-gray-500 mb-6">
+                    <p className="text-brand-text-secondary mb-6">
                       Create your first relationship goal to start tracking your progress together.
                     </p>
                     <Button onClick={() => setShowNewGoalForm(true)}>
@@ -400,14 +400,14 @@ export default function Goals() {
                                       className={`w-5 h-5 ${
                                         milestone.completed 
                                           ? "text-green-500 fill-green-500" 
-                                          : "text-gray-300"
+                                          : "text-brand-text-secondary"
                                       }`} 
                                     />
                                   </div>
                                   <span 
                                     className={`ml-2 text-sm ${
                                       milestone.completed 
-                                        ? "text-gray-500 line-through" 
+                                        ? "text-brand-text-secondary line-through" 
                                         : "text-gray-700"
                                     }`}
                                   >
@@ -417,7 +417,7 @@ export default function Goals() {
                               ))}
                             </div>
                             
-                            <div className="flex items-center mt-4 text-sm text-gray-500">
+                            <div className="flex items-center mt-4 text-sm text-brand-text-secondary">
                               <Clock className="w-4 h-4 mr-1" />
                               <span>Due: {new Date(goal.dueDate).toLocaleDateString()}</span>
                             </div>
@@ -444,9 +444,9 @@ export default function Goals() {
               <TabsContent value="completed" className="mt-6">
                 {goals.filter(goal => goal.progress === 100).length === 0 ? (
                   <div className="text-center py-12">
-                    <Trophy className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                    <Trophy className="w-12 h-12 mx-auto text-brand-text-secondary mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No completed goals yet</h3>
-                    <p className="text-gray-500 mb-6">
+                    <p className="text-brand-text-secondary mb-6">
                       Goals you reach will rest here — each one a small win you built together.
                     </p>
                   </div>
@@ -466,7 +466,7 @@ export default function Goals() {
                             <CardDescription>{goal.description}</CardDescription>
                           </CardHeader>
                           <CardContent>
-                            <div className="flex items-center text-sm text-gray-500">
+                            <div className="flex items-center text-sm text-brand-text-secondary">
                               <CheckCircle2 className="w-4 h-4 mr-1 text-green-500" />
                               <span>Completed on {new Date().toLocaleDateString()}</span>
                             </div>

@@ -102,7 +102,7 @@ export default function LoginPage() {
                 }
               </h2>
 
-              <p className="text-lg mb-12 text-zinc-500 leading-relaxed max-w-lg">
+              <p className="text-lg mb-12 text-brand-text-secondary leading-relaxed max-w-lg">
                 {isRegisterMode
                   ? "Start with one small step. Build calmer talks and stronger habits over time."
                   : "Come back to your next step."
@@ -114,7 +114,7 @@ export default function LoginPage() {
               className="mt-16 border-t border-zinc-200 pt-8 relative z-10"
               variants={itemVariants}
             >
-              <h3 className="text-sm font-semibold text-zinc-400 mb-5">How Sparq helps</h3>
+              <h3 className="text-sm font-semibold text-brand-text-secondary mb-5">How Sparq helps</h3>
               <ul className="space-y-4 text-sm text-zinc-600">
                 <li className="flex items-center">
                   <div className="w-1.5 h-1.5 rounded-full bg-brand-primary mr-4" />
@@ -133,7 +133,7 @@ export default function LoginPage() {
           </motion.div>
         </main>
 
-        <footer className="bg-transparent py-8 text-center text-zinc-400 text-xs">
+        <footer className="bg-transparent py-8 text-center text-brand-text-secondary text-xs">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <p>© {new Date().getFullYear()} Sparq</p>
           </div>

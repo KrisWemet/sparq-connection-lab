@@ -59,7 +59,7 @@ The Stitch MCP is connected to Claude Code. When generating new screens or UI mo
 | Token | Hex | Psychology | Usage |
 |---|---|---|---|
 | `brand-primary` | `#C56B4D` | Warm clay — safety, human warmth, connection | Primary buttons, active nav, CTA fills, accent borders |
-| `brand-hover` | `#A85539` | Deeper clay | Hover state for primary elements |
+| `brand-hover` | `#93472F` | Deeper clay | Hover state for primary elements |
 | `brand-light` | `#FBF8F3` | Softest warm tint | Very light background tints |
 | `brand-linen` | `#F5F1EA` | Warm cream — journal quality | Page backgrounds, replaces pure white |
 | `brand-parchment` | `#EFE7DC` | Layered warmth — pages in a book | Card surfaces, sits above linen background |
@@ -67,7 +67,7 @@ The Stitch MCP is connected to Claude Code. When generating new screens or UI mo
 | `brand-espresso` | `#2E2620` | Deep warm near-black — trust, depth | Headings, dark UI elements, never cold |
 | `brand-growth` | `#9CB5A0` | Warm sage — healing, gentle forward movement | Progress bars, success states, growth indicators |
 | `brand-text-primary` | `#2E2620` | Near-black warm | Primary readable text |
-| `brand-text-secondary` | `#6B5F52` | Warm brown-grey | Peter's voice, captions, secondary copy |
+| `brand-text-secondary` | `#52473C` | Warm brown-grey | Peter's voice, captions, secondary copy |
 
 ### Semantic Colors (CSS variables in `globals.css`)
 
@@ -443,7 +443,7 @@ These create depth without heavy imagery.
 
 - **Focus visible**: All interactive elements have `focus-visible:ring-2 focus-visible:ring-offset-2`
 - **Touch targets**: Minimum 44px height on all interactive elements
-- **Color contrast** (measured 2026-09): `#2E2620` espresso on `#F5F1EA` linen = 13.2:1 ✅. `#A85539` (brand-hover) on linen = 4.6:1 ✅ AA. **`#C56B4D` brand-primary on linen = 3.3:1 and white on `#C56B4D` = 3.8:1 — these pass AA only for large text (≥18px, or ≥14px bold).** **Rule:** small clay-colored text uses `text-brand-hover`; `text-brand-primary` only for icons, fills, and text at `text-2xl`+ (or `text-xl` bold). Hover states on `brand-hover` text go to `brand-espresso`. White text on clay fills is always `font-bold` and at least `text-sm` (14px) — the `Button` component's filled variants do this by default.
+- **Color contrast** (measured 2026-09): `#2E2620` espresso on `#F5F1EA` linen = 13.2:1 ✅. `#93472F` (brand-hover) on linen = 5.9:1, on parchment = 5.4:1 ✅ AA. `#52473C` (text-secondary) on parchment = 7.4:1 ✅. (Both darkened 2026-09-30; the old `#A85539`/`#6B5F52` read too faint on parchment cards.) **`#C56B4D` brand-primary on linen = 3.3:1 and white on `#C56B4D` = 3.8:1 — these pass AA only for large text (≥18px, or ≥14px bold).** **Rule:** small clay-colored text uses `text-brand-hover`; `text-brand-primary` only for icons, fills, and text at `text-2xl`+ (or `text-xl` bold). Hover states on `brand-hover` text go to `brand-espresso`. White text on clay fills is always `font-bold` and at least `text-sm` (14px) — the `Button` component's filled variants do this by default.
 - **Screen reader labels**: `aria-label` on icon-only buttons, `sr-only` text where needed
 - **Reduced motion**: Confetti respects `disableForReducedMotion`. CSS animations include `@media (prefers-reduced-motion: reduce)` overrides.
 - **Keyboard navigation**: All interactive elements reachable via Tab, activatable via Enter/Space

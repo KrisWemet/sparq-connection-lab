@@ -32,7 +32,7 @@ export function WeekendActivities({ activities }: WeekendActivitiesProps) {
               </div>
               <p className="text-gray-600 mb-2">{activity.description}</p>
               {activity.explanation && (
-                <p className="text-sm text-gray-500 italic mb-4">{activity.explanation}</p>
+                <p className="text-sm text-brand-text-secondary italic mb-4">{activity.explanation}</p>
               )}
               <Button className="w-full">Plan This Activity</Button>
             </div>

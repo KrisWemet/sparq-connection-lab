@@ -353,7 +353,7 @@ export default function SettingsPage() {
           </div>
         </motion.div>
 
-        <p className="text-center text-xs text-brand-text-secondary/50 py-2 pb-6">
+        <p className="text-center text-xs text-brand-text-secondary py-2 pb-6">
           Sparq v1.0.0 · © 2026 Sparq Connection Lab
         </p>
       </main>

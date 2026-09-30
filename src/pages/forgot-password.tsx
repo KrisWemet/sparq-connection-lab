@@ -85,7 +85,7 @@ export default function ForgotPasswordPage() {
               className="w-full px-4 py-2 pl-10 border rounded-md focus:ring-brand-primary focus:border-brand-primary"
               placeholder="Enter your email"
             />
-            <div className="absolute left-3 top-2.5 text-gray-400">
+            <div className="absolute left-3 top-2.5 text-brand-text-secondary">
               <Mail className="h-5 w-5" />
             </div>
           </div>

@@ -159,18 +159,18 @@ export function CsiTrajectoryCard() {
               <>
                 <div className="mb-4 flex items-end gap-4">
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.18em] text-brand-taupe/70">Day one</p>
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-brand-taupe">Day one</p>
                     <p className="font-serif text-2xl text-brand-taupe">{view.baseline}</p>
                   </div>
-                  <div className="pb-2 text-brand-taupe/40">→</div>
+                  <div className="pb-2 text-brand-taupe">→</div>
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.18em] text-brand-taupe/70">Today</p>
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-brand-taupe">Today</p>
                     <p className="font-serif text-2xl text-brand-espresso">{view.latest}</p>
                   </div>
                 </div>
                 <p className="mb-1.5 text-sm font-semibold text-brand-espresso">{result.headline}</p>
                 <p className="text-sm leading-relaxed text-brand-text-secondary">{result.body}</p>
-                <p className="mt-3 text-[11px] leading-relaxed text-brand-taupe/70">
+                <p className="mt-3 text-[11px] leading-relaxed text-brand-taupe">
                   Measured with the CSI-4, a short standard relationship-satisfaction
                   scale. Two weeks is a small window — this is a first data point, not a verdict.
                 </p>

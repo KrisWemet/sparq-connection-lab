@@ -63,7 +63,7 @@ export default function Home() {
             <h1 className="text-5xl md:text-6xl font-serif text-zinc-900 mb-6 tracking-tight leading-tight">
               Become a <span className="text-brand-hover italic">steadier partner</span>, one small day at a time.
             </h1>
-            <p className="text-lg md:text-xl text-zinc-500 mb-12 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-brand-text-secondary mb-12 max-w-2xl mx-auto leading-relaxed">
               Sparq starts with you. Build calm habits. Say the true thing. Show up better at home. Invite your partner later if that helps.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -79,7 +79,7 @@ export default function Home() {
                 Experience a Demo
               </button>
             </div>
-            <p className="mt-8 text-sm text-zinc-400 font-medium tracking-wide uppercase">
+            <p className="mt-8 text-sm text-brand-text-secondary font-medium tracking-wide uppercase">
               No judgment. No pressure. Just one honest rep at a time.
             </p>
           </div>
@@ -90,7 +90,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
             <div className="text-center mb-20">
               <h2 className="text-3xl md:text-4xl font-serif text-black mb-4 tracking-tight">How Sparq Guides You</h2>
-              <p className="text-lg text-zinc-500 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-lg text-brand-text-secondary max-w-2xl mx-auto leading-relaxed">
                 Sparq helps one person make real change first, then bring that change into the relationship.
               </p>
             </div>
@@ -106,7 +106,7 @@ export default function Home() {
                 <h3 className="text-xl font-bold text-black mb-3 tracking-tight">
                   Change the part you control
                 </h3>
-                <p className="text-zinc-500 mb-8 leading-relaxed">
+                <p className="text-brand-text-secondary mb-8 leading-relaxed">
                   Stop doing the same hurtful loop. Learn to slow down, listen, and say what is true.
                 </p>
                 <p className="font-semibold text-brand-hover group-hover:text-brand-espresso transition-colors">
@@ -124,7 +124,7 @@ export default function Home() {
                 <h3 className="text-xl font-bold text-black mb-3 tracking-tight">
                   Practice closeness in small moments
                 </h3>
-                <p className="text-zinc-500 mb-8 leading-relaxed">
+                <p className="text-brand-text-secondary mb-8 leading-relaxed">
                   Closeness grows in small safe moments. Sparq helps you build those moments, even if your partner is not here yet.
                 </p>
                 <p className="font-semibold text-brand-hover group-hover:text-brand-espresso transition-colors">
@@ -142,7 +142,7 @@ export default function Home() {
                 <h3 className="text-xl font-bold text-black mb-3 tracking-tight">
                   Bring a calmer self into conflict
                 </h3>
-                <p className="text-zinc-500 mb-8 leading-relaxed">
+                <p className="text-brand-text-secondary mb-8 leading-relaxed">
                   Fights happen. Learn to pause, repair, and come back kinder.
                 </p>
                 <p className="font-semibold text-brand-hover group-hover:text-brand-espresso transition-colors">
@@ -157,7 +157,7 @@ export default function Home() {
         <section className="py-24 bg-white border-y border-zinc-100">
           <div className="max-w-4xl mx-auto text-center px-6 relative z-10">
             <h2 className="text-4xl md:text-5xl font-serif text-black mb-6 tracking-tight">Begin Your Experience</h2>
-            <p className="text-lg text-zinc-500 mb-10 max-w-lg mx-auto leading-relaxed">
+            <p className="text-lg text-brand-text-secondary mb-10 max-w-lg mx-auto leading-relaxed">
               Start with your own daily practice. Invite your partner later if it helps.
             </p>
             <Link href="/login">
@@ -169,7 +169,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="bg-white text-zinc-500 border-t border-zinc-200 py-12">
+      <footer className="bg-white text-brand-text-secondary border-t border-zinc-200 py-12">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="text-center md:text-left">
@@ -177,7 +177,7 @@ export default function Home() {
               <p className="text-sm">Identity-level change through clinical design.</p>
               <p className="text-sm mt-1">Solo-first growth for healthier relationships.</p>
             </div>
-            <div className="flex flex-wrap justify-center gap-6 text-sm font-medium text-zinc-500">
+            <div className="flex flex-wrap justify-center gap-6 text-sm font-medium text-brand-text-secondary">
               <Link href="/about">
                 <span className="hover:text-black transition-colors cursor-pointer">About</span>
               </Link>
@@ -189,7 +189,7 @@ export default function Home() {
               </Link>
             </div>
           </div>
-          <div className="mt-12 text-center text-xs text-zinc-400">
+          <div className="mt-12 text-center text-xs text-brand-text-secondary">
             &copy; {new Date().getFullYear()} Sparq Connection Lab
           </div>
         </div>

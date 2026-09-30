@@ -191,7 +191,7 @@ export default function NeutralObserver() {
                   <p className="text-sm leading-relaxed text-brand-espresso font-medium mb-2">
                     It&apos;s your turn.
                   </p>
-                  <p className="text-[11px] text-brand-taupe/70 mb-7">
+                  <p className="text-[11px] text-brand-taupe mb-7">
                     Backed by Northwestern research.
                   </p>
 
@@ -322,7 +322,7 @@ export default function NeutralObserver() {
                       What&apos;s one small thing you could try next time to help yourself get there?
                     </li>
                   </ol>
-                  <p className="text-xs text-brand-taupe/70 mb-4">
+                  <p className="text-xs text-brand-taupe mb-4">
                     There&apos;s no wrong answer. You&apos;re the only one who will see this.
                   </p>
                   <textarea
@@ -384,7 +384,7 @@ export default function NeutralObserver() {
           <div className="mt-8 text-center">
             <button
               onClick={() => router.push('/help-now')}
-              className="text-xs text-brand-taupe/70 underline underline-offset-2 transition-colors hover:text-brand-taupe"
+              className="text-xs text-brand-taupe underline underline-offset-2 transition-colors hover:text-brand-taupe"
             >
               Need help now?
             </button>

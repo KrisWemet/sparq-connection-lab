@@ -82,7 +82,7 @@ export default function Messaging() {
           </button>
           <div className="mx-auto text-center">
             <h1 className="text-lg font-semibold text-gray-900">Talk Practice</h1>
-            <p className="text-xs text-gray-500">Solo-first help for real life</p>
+            <p className="text-xs text-brand-text-secondary">Solo-first help for real life</p>
           </div>
         </div>
       </header>

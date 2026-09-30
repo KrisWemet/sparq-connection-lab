@@ -132,7 +132,7 @@ export default function Translator() {
               </button>
             ))}
           </div>
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-brand-text-secondary mt-2">
             Mocked for now — we’ll personalize this later.
           </p>
           <div className="mt-3 text-xs text-gray-600">
