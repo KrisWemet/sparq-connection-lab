@@ -47,7 +47,7 @@ The app works at levels 1-2, not just level 4. Peter narrates identity arcs ("Yo
 | 9 | **Mindfulness** | Present-moment awareness; non-judgmental observation | Emotional regulation, mindful listening | Somatic phase in Conflict First Aid, daily actions |
 | 10 | **NVC** | Observation → Feelings → Needs → Requests | Communication skill building | Translator, Communication skill track |
 | 11 | **Somatic Approaches** | Body awareness; nervous system regulation (window of tolerance) | Grounding, co-regulation, trauma-informed pacing | Conflict First Aid somatic phase, breathing exercises |
-| 12 | **Influence Psychology** | Ethical reciprocity, commitment/consistency, social proof | Engagement design, habit formation | Streak mechanics, partner accountability, onboarding |
+| 12 | **Ethical Influence** | Self-persuasion, commitment to the user's own choices, unity, freely chosen generosity (constitution v1.1 §5A) | Follow-through on self-chosen goals | Experiments + the user's own reasons, forgiving streaks, grounded normalization |
 
 > **Deep reference**: `references/modalities-therapeutic.md` (modalities 1-6), `references/modalities-applied.md` (modalities 7-12)
 
@@ -138,21 +138,23 @@ Archetypes work **WITH** attachment style, not instead of it. Archetype affects 
 
 | Style | Frequency | Tone | Example |
 |---|---|---|---|
-| **Anxious** | More frequent, predictable timing | Warm, reassuring, "I'm here" | "Your daily growth moment is ready — I've been thinking about you" |
+| **Anxious** | More frequent, predictable timing | Warm, reassuring, "I'm here" | "Your daily growth moment is ready whenever you are" *(never claim Peter thinks about or misses them)* |
 | **Avoidant** | Less frequent, user-controlled | Respectful, non-intrusive, choice-emphasizing | "New practice available when you're ready" |
 | **Secure** | Standard frequency | Balanced, collaborative | "Today's practice is ready for you" |
 | **Disorganized** | Predictable timing, gentle | Extra safe, permission-giving | "Something gentle is waiting for you — no pressure" |
 
-### The Covert Growth Principle
+### The Transparent Growth Principle
 
-Sparq helps users change **without feeling like they're being changed**. This is a core design philosophy:
+*(Replaces the former "Covert Growth Principle" — constitution v1.1: discovery before direction, agency before influence. If a technique would stop working once the user understood it, it isn't used.)*
 
-- Assessment is woven into content, not presented as a test
+Sparq helps users change **by helping them see themselves clearly and choose for themselves** — not by changing them without their noticing:
+
+- Learning is woven into content rather than presented as a test — and anything Sparq infers is a hypothesis the user can see and correct
 - Psychological frameworks are demonstrated through stories and exercises, never lectured
-- Users experience "aha moments" that feel like their own discovery, not the app telling them something
-- Identity reinforcement through archetypes ("As a Growth Seeker, you...") uses identity-based motivation (Oyserman 2009; self-perception theory) — no embedded commands
-- Peter references traits naturally ("I've noticed you tend to..."), never clinically ("Your profile shows...")
-- The 14-day structure creates progressive depth without the user noticing the scaffolding
+- "Aha moments" are the user's own discoveries — Peter asks the smallest useful question and doesn't steal the realization
+- Identity reinforcement uses only identities the user named (identity statement, North Star) — no assigned archetype identities, no embedded commands
+- Peter offers observations tentatively and with permission ("I have a thought about what might be happening — want to hear it?"), never clinically and never as fact
+- The 14-day structure creates progressive depth; if a user asks why Peter is doing something, he explains honestly
 
 > **Deep reference**: `references/personality-adaptation-guide.md` — full adaptation matrix with worked examples
 

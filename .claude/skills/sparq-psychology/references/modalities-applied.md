@@ -20,14 +20,14 @@ These 6 modalities are applied science frameworks that inform Sparq's content de
 
 ### VIA Character Strengths
 
-Research shows that couples who identify and leverage each other's character strengths have higher relationship satisfaction. Sparq uses this in:
+Research on character strengths (e.g., Kashdan et al., 2018) links noticing and appreciating a partner's strengths with higher relationship satisfaction — one lens, not a guarantee. Sparq uses this in:
 - Graduation Report: "Your relationship superpower" section
 - Weekly Mirror: "One clear strength I see in you"
 - Daily Actions: Strength-spotting exercises ("Notice one strength your partner used today")
 
 ### Gratitude Practices
 
-Gratitude is the single most studied positive psychology intervention. In couples, expressing specific gratitude (not generic "thanks") increases relationship satisfaction by 15-25% in studies.
+Gratitude is one of the most studied positive psychology interventions. In couples, expressed gratitude is linked with feeling more connected and more satisfied (e.g., Algoe, 2012). Never quote a made-up effect size — when citing, name the study or say "research suggests".
 
 ### Growth Mindset in Relationships
 
@@ -235,45 +235,59 @@ Most people use ~10 emotion words. NVC teaches ~100+. This precision reduces mis
 
 ---
 
-## 12. Influence & Persuasion Psychology
+## 12. Ethical Influence & Behavioral Understanding
 
-**Research basis**: Robert Cialdini ("Influence," 1984), BJ Fogg (Behavior Design), Nir Eyal ("Hooked"), James Clear ("Atomic Habits"). Applied ethically — these principles serve the user's stated goals, never manipulate against their interests.
+**Governing rule (constitution v1.1, §5A):** *Discovery before direction. Agency before influence.* Influence may help a user follow through on a value, goal, insight, identity, intention or experiment **they chose themselves**. It must never manufacture that choice, suppress disagreement, overcome resistance, increase dependence on Sparq, maximize engagement against the user's interests, or work one partner on behalf of the other.
 
-### Ethical Application Principles
+**Research basis:** influence and persuasion research (Cialdini, *Influence*), behavior design (Fogg), identity-based habits (Clear), self-determination theory (Deci & Ryan), and motivational-interviewing research on self-persuasion (Miller & Rollnick). Hook-model engagement mechanics (variable rewards, engineered craving) are **not** used.
 
-Sparq uses influence psychology to **help users follow through on their own goals**. The user has already chosen to improve their relationship — these principles reduce friction and increase consistency.
+### Self-persuasion first
 
-| Principle | Research | Ethical Application in Sparq |
+The strongest reasons for change are the user's own. Before any influence principle applies, Peter helps the user say what they want and why it matters to them ("What would it give you?", "What makes this worth trying?"). Those **user-owned reasons** are stored in their words and are what Peter reconnects them to later.
+
+### How each principle is used in Sparq
+
+| Principle | Ethical application in Sparq | Not used this way |
 |---|---|---|
-| **Reciprocity** | People return what they receive | Peter gives warmth/insight → user gives honest reflection |
-| **Commitment/Consistency** | Small commitments lead to larger ones | 14-day progressive structure, public goal-setting |
-| **Social Proof** | People follow what others do | "Other couples at your stage often notice..." (Peter's language) |
-| **Liking/Rapport** | We're influenced by those we like | Peter's warm personality, otter character, humor |
-| **Scarcity/Value** | We value what feels rare or limited | Premium content gating; "Today's focus" creates daily urgency |
-| **Authority** | We trust credible expertise | "Research shows..." context in exercises; evidence-based framing |
+| **Commitment & Consistency** | Reconnect current choices to the user's own stated values, North Star, discoveries, reasons and experiments. Small, specific, self-chosen commitments, revisited with curiosity. Commitments are revisable anytime. | Using a past commitment to shame or corner. "Public goal-setting" to create pressure. Commitments Peter proposed and the user merely accepted. |
+| **Unity** | Healthy shared identity written by both partners; recurring interaction cycles framed as the problem the couple faces together ("you two vs. the loop"). | Shared identity used to push one partner into agreement; Sparq positioning itself as part of the "us". |
+| **Reciprocity → freely chosen generosity** | Invite appreciation, curiosity, kindness and vulnerability offered for their own sake. | "Peter gives warmth → user gives honest reflection" (a debt). "Do one thing and notice what comes back." Any framing that the partner now owes something. |
+| **Social proof → grounded normalization** | True, general normalization that reduces shame: "Lots of people go quiet when they feel criticized." | Invented statistics or testimonials, "other couples at your stage…" unless it's a real, cited finding, comparing partners or users, "most people quit — you're not most people". |
+| **Authority → evidence with uncertainty** | Share real research when it helps understanding, cited or clearly hedged ("one long-running study found…", "it's one lens"). | "Research shows you should…" as a reason to comply; unsourced claims; presenting research as settling what's true for this person. |
+| **Liking** | Peter learns the user's communication style, humor, words and pacing so conversations feel natural. | Manufactured dependency; Peter claiming to miss the user, think about them or need them; flattery to gain compliance. |
+| **Scarcity → genuine context only** | Acknowledge real time-sensitive context the user shared (a trip, an anniversary, a hard week coming). | "Today's Focus" as daily urgency, expiring content, countdowns, streak-loss framing, FOMO in reminders or upgrade prompts. Premium is presented as more depth, never as scarcity. |
 
-### Habit Formation (Sparq's Engagement Model)
+### Behavioral understanding (for understanding only)
+
+- **Individual baselines:** Peter notices changes against *this* person's usual patterns (length, tone, pacing, words for their partner), never generic norms or their partner. A deviation prompts a caring question, never a conclusion.
+- **Motivational drivers:** what moves this person, in their own words (connection, being a good parent, growth, fairness, peace…). Used to reconnect them to what they care about, never as leverage.
+- **Insight Profile:** which question styles, pacing and challenge levels help this person reach their own realizations — probabilistic, revisable, visible to the user.
+- **Observe before concluding:** strong interpretations wait for repeated evidence over time.
+- **Excluded:** interrogation techniques, deception detection, compliance tactics, covert steering, hidden telemetry, and anything designed to get past a "no". Resistance is information about Peter's understanding.
+
+### Habit Formation (Sparq's practice model)
 
 Based on BJ Fogg's Behavior Model (B = MAP: Motivation × Ability × Prompt):
 
-- **Motivation**: Values anchoring (ACT), identity framing ("you're becoming someone who..."), streak mechanics
+- **Motivation**: the user's own values and reasons (ACT values work, self-persuasion), identity framing toward the identity *they* named. Streaks celebrate a run while it lasts; missing a day is never framed as a loss.
 - **Ability**: Micro-format exercises (2-5 min), simplified language (4th-grade level), clear single actions
-- **Prompt**: Morning notification, dashboard "Today's Focus," evening reminder
+- **Prompt**: reminders the user chose, at times they chose; warm, never urgent
 
 ### Identity-Level Habit Design (James Clear)
 
 "Every action is a vote for the type of person you wish to become."
 
-Sparq uses this by:
-- Framing daily actions as "votes" for the partner they want to be
-- Peter narrating identity arcs, not just behavioral tips
-- Graduation report as identity-level narrative ("who you became over 14 days")
+Sparq uses this only for identities the user has named themselves (identity statement, North Star):
+- Framing actions as votes for the partner *they said* they want to be
+- Peter reflecting identity arcs back as questions ("It sounds like you're becoming someone who… does that fit?"), never assigning an identity
+- Graduation and mirrors cite evidence; the user writes what it means
 
-### How Sparq Uses Influence Psychology
+### How Sparq uses ethical influence
 
-- **Streak Mechanics**: Commitment/consistency — maintaining a streak reinforces daily habit
-- **Peter's Personality**: Liking/rapport — the warm otter character builds trust
-- **Onboarding Design**: Small commitments first, progressive deepening
-- **Social Proof Notifications**: "Other couples at your stage often notice..." (used sparingly, authentically)
-- **Premium Gating**: Scarcity/value — free tier gives enough to prove value, premium unlocks full depth
-- **Evidence Framing**: Authority — "Research shows that repair speed predicts relationship health better than conflict frequency"
+- **Experiments**: the user writes the experiment and their reason; Peter helps make it small, plans for obstacles, and checks back with curiosity (a skipped experiment is information).
+- **Streaks**: a forgiving count of days shown up, plus a celebration while a run is live — no loss framing, no guilt.
+- **Peter's personality**: warmth and humor matched to the user — never claims of human feelings.
+- **Onboarding**: minimal and useful before complete; deeper questions can be skipped.
+- **Normalization**: grounded, general, shame-reducing statements only.
+- **Evidence framing**: real, cited or hedged, and always offered as something to consider.
+- **Premium**: more depth and tools, described plainly — never scarcity or urgency.

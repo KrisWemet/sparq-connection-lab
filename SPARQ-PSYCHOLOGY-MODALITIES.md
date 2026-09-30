@@ -397,17 +397,17 @@ User profile fields: primary_attachment_style, secondary_attachment_style, attac
 **Research Foundation**: Robert Cialdini (Influence: The Psychology of Persuasion).
 
 **Ethical Application for Positive Relationship Dynamics**:
-- **Reciprocity**: Balanced giving and receiving — exercises that create positive exchange cycles
+- **Reciprocity → freely chosen generosity**: kindness, appreciation and vulnerability offered for their own sake — never framed as creating an obligation (constitution v1.1 §5A)
 - **Consistency & Commitment**: Aligning daily actions with stated relationship values. Streak mechanics. Public commitment to growth.
-- **Social Proof**: Learning from successful couples, community features, "other couples who did this exercise reported..."
+- **Social proof → grounded normalization**: true, general statements that reduce shame ("lots of people go quiet when they feel criticized") — no invented statistics or "other couples" claims
 - **Liking & Rapport**: Building genuine connection and affinity through shared positive experiences
-- **Scarcity & Value**: Appreciating what's precious and unique about the relationship
+- **Scarcity → genuine context only**: appreciating what's precious is fine; no artificial urgency, countdowns or loss framing
 - **Authority & Expertise**: Research citations, therapist endorsements, evidence-based positioning
 
 **Sparq Implementation (also drives app engagement design)**:
-- Reciprocity-based exercises ("Do one thing for your partner today. Notice what comes back.")
+- Generosity exercises ("Do one small kind thing for your partner today, just because. Notice how it feels to you.")
 - Commitment devices (streaks, goals, identity archetypes)
-- Social proof elements in UI ("92% of couples who completed this exercise reported feeling closer")
+- Normalizing lines in UI ("Lots of couples find this one awkward at first.") — never fabricated percentages
 - Value appreciation prompts
 - The app itself uses these principles ethically to form healthy habits
 
@@ -461,7 +461,7 @@ These archetypes work WITH attachment style, not instead of it. Archetype affect
 - Day 1: Name, solo/partner, what brings you here, daily time preference, identity archetype
 - Days 2-14: Assessment questions woven naturally into daily exercises
 - By Day 14: Full personality profile built from actual answers and behaviors
-- Users don't realize they're being assessed — it feels like engaging content
+- Learning is woven into engaging content; anything inferred is a hypothesis the user can see and correct (constitution §2)
 - More accurate than self-report questionnaires because it's based on real responses
 
 ---

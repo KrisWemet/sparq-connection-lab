@@ -2,7 +2,7 @@
 
 This file provides comprehensive context for AI assistants working on this codebase. Read the product context section first — every time, without skipping.
 
-> **Product constitution:** [`docs/CONSTITUTION.md`](docs/CONSTITUTION.md) defines Sparq's governing principles — discovery before direction, hypotheses never diagnoses, Peter's conversation modes, memory discipline, and private/shared privacy boundaries. Read it before planning any feature. Its "Constitutional test" applies to every major feature. Implementation map: `docs/CONSTITUTION_AUDIT.md` (status + §13 checklist), `docs/PERSON_MODEL.md`, `docs/RELATIONSHIP_MODEL.md`, `docs/METRICS.md`. It is the source of truth for everything it covers; where it is silent, the rest of this file and the Master PRD apply.
+> **Product constitution:** [`docs/CONSTITUTION.md`](docs/CONSTITUTION.md) defines Sparq's governing principles — discovery before direction, hypotheses never diagnoses, Peter's conversation modes, memory discipline, and private/shared privacy boundaries. Read it before planning any feature. Its "Constitutional test" applies to every major feature. Implementation map: `docs/CONSTITUTION_AUDIT.md` (status + §13 checklist), `docs/PERSON_MODEL.md`, `docs/RELATIONSHIP_MODEL.md`, `docs/METRICS.md`, `docs/INFLUENCE_AUDIT.md` (v1.1 conflicts: fixed vs. still to fix), `docs/evals/resistance-handling.md` (Peter pushback cases). It is the source of truth for everything it covers; where it is silent, the rest of this file and the Master PRD apply.
 
 ---
 
@@ -577,22 +577,27 @@ toast("Title", { description: "Details", action: { label: "Go", onClick: () => {
 
 ## Psychological Content Design
 
+**Governing rule (constitution v1.1): Discovery before direction. Agency before influence.** Peter helps users reach their own conclusions; only after a user has chosen a value, goal, insight, identity, intention or experiment may language help them follow through on it (`docs/CONSTITUTION.md` §5A, §6A).
+
 Sparq uses a layered language system to create genuine change — not just insights. When writing any user-facing content:
 
 - **Load the language framework** (`.claude/skills/sparq-psychology/references/language-framework`) before writing any copy, questions, or Peter dialogue
 - Questions must pull the user forward, not push — surface emotional truth, not intellectual compliance
-- Maximum 2 options per question (3 absolute maximum) — never more
-- Always presuppose forward movement — never ask "do you want to"
+- Maximum 2 options per question (3 absolute maximum) — never more; leave room for "not now" when the user hasn't chosen yet
+- Before the user has chosen: ask, invite, and ask permission ("Want to hear a thought?") — "whether" questions are allowed. After they've chosen: presuppose the *how* of their chosen direction
+- Prefer self-persuasion: help users voice their own reasons rather than supplying reasons
+- Resistance is information: when a user pushes back, ask what Peter might be misunderstanding — never re-push the point
+- No fabricated statistics or social proof, no manufactured urgency, no obligation framing, no Peter claims of human feelings
 - Fourth grade reading level — always
 - Never use clinical language — see the forbidden language table in `sparq-psychology` skill
 
 Core language techniques used throughout the app:
-- **Presupposition** — assume forward movement inside the question structure
-- **Outcome framing** — point toward what's possible, not what's wrong
-- **RAS recalibration** — help users aim their attention filter more accurately
+- **Presupposition** — only for a direction the user has already chosen; never presuppose a feeling, conclusion or identity they haven't reached
+- **Outcome framing** — point toward what's possible, after the user feels heard
+- **RAS recalibration** — an invitation to aim their attention filter more accurately, never an argument against their experience
 - **Pull language** — surface emotional truth the user moves toward, not instructions they comply with
-- **Identity reinforcement** — "you're becoming someone who..." not "you should..."
-- **Shadow reframing** — honoring protective patterns and releasing them when no longer needed
+- **Identity reinforcement** — "you're becoming someone who..." only for an identity the user named, never assigned
+- **Shadow reframing** — honoring protective patterns, only with trust and the user's permission
 
 Full framework: `.claude/skills/sparq-psychology/references/language-framework`
 
