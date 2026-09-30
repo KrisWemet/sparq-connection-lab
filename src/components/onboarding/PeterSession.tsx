@@ -19,6 +19,8 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
   const [isLoading, setIsLoading] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [exchangeCount, setExchangeCount] = useState(0);
+  // Set once the closing message is saved; the user taps Next when they've read it.
+  const [closingProfile, setClosingProfile] = useState<DerivedProfile | null>(null);
   const hasInitialized = useRef(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -88,8 +90,8 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
           console.error('PeterSession profile save error:', updateError);
         }
 
-        // Pause briefly so user reads the closing message before transition
-        setTimeout(() => onComplete(updatedProfile), 1200);
+        // Wait for the user to tap Next so they can read Peter's closing message.
+        setClosingProfile(updatedProfile);
       }
     } catch (err) {
       console.error('PeterSession error:', err);
@@ -180,8 +182,19 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
 
       {messages.length > 0 && isClosing && (
         <div className="fixed bottom-0 left-0 right-0 bg-brand-light border-t border-[#e5e7eb] px-4 py-3">
-          <div className="max-w-md mx-auto text-center text-sm text-brand-text-secondary">
-            Taking you to your starting point...
+          <div className="max-w-md mx-auto">
+            {closingProfile ? (
+              <button
+                type="button"
+                autoFocus
+                onClick={() => onComplete(closingProfile)}
+                className="w-full bg-brand-primary text-white rounded-2xl py-3 font-bold"
+              >
+                Next →
+              </button>
+            ) : (
+              <p className="text-center text-sm text-brand-text-secondary">One moment…</p>
+            )}
           </div>
         </div>
       )}
