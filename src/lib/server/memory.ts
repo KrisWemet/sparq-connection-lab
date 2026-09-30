@@ -247,19 +247,30 @@ export async function buildOwnWordsBlock(
     const [discoveries, experiments] = await Promise.all([
       supabase.from('self_discoveries').select('discovery').eq('user_id', userId).eq('still_true', true)
         .order('created_at', { ascending: false }).limit(3),
-      supabase.from('experiments').select('intention').eq('user_id', userId).eq('status', 'planned')
+      supabase.from('experiments').select('intention, reason:user_reasons(reason_text, still_true)')
+        .eq('user_id', userId).eq('status', 'planned')
         .order('created_at', { ascending: false }).limit(2),
     ]);
     const lines: string[] = [];
     const d = (discoveries?.data || []) as Array<{ discovery: string }>;
-    const e = (experiments?.data || []) as Array<{ intention: string }>;
+    const e = (experiments?.data || []) as Array<{ intention: string; reason?: unknown }>;
+    const reasonOf = (row: { reason?: unknown }): string | null => {
+      const r = (Array.isArray(row.reason) ? row.reason[0] : row.reason) as { reason_text?: string; still_true?: boolean } | null;
+      return r?.still_true && r.reason_text ? r.reason_text : null;
+    };
     if (d.length > 0) {
       lines.push('Things they discovered themselves (their words — these outrank any guess of yours; echo them only when it truly fits):');
       d.forEach(row => lines.push(`- "${row.discovery}"`));
     }
     if (e.length > 0) {
       lines.push('Small experiments they chose to try (you may ask how it is going, once, if it fits):');
-      e.forEach(row => lines.push(`- "${row.intention}"`));
+      e.forEach(row => {
+        const reason = reasonOf(row);
+        lines.push(reason ? `- "${row.intention}" — their own reason: "${reason}"` : `- "${row.intention}"`);
+      });
+      if (e.some(row => reasonOf(row))) {
+        lines.push('If follow-through gets hard, you may gently reconnect them to THEIR reason in their words. Never add a reason of your own, never use it to guilt them, and accept "it doesn\'t matter to me anymore" as a real answer.');
+      }
     }
     return lines.length > 0 ? `\n\n${lines.join('\n')}` : '';
   } catch {

@@ -10,6 +10,7 @@ type Experiment = {
   status: string;
   outcome?: string | null;
   outcome_note?: string | null;
+  reason?: string | null; // the user's own words for why it matters
 };
 
 type Outcome = 'helped' | 'mixed' | 'didnt_help';
@@ -34,6 +35,7 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [note, setNote] = useState('');
   const [draft, setDraft] = useState('');
+  const [draftReason, setDraftReason] = useState('');
   const [busy, setBusy] = useState(false);
   const [thanks, setThanks] = useState('');
 
@@ -77,9 +79,10 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
     setBusy(true);
     try {
       const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
-      const res = await fetch('/api/experiments', { method: 'POST', headers, body: JSON.stringify({ intention: draft }) });
+      const res = await fetch('/api/experiments', { method: 'POST', headers, body: JSON.stringify({ intention: draft, reason: draftReason }) });
       if (res.ok) {
         setDraft('');
+        setDraftReason('');
         setThanks("Saved. I'll check in with you in a couple of days. 🦦");
         await load();
       }
@@ -115,6 +118,12 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
             <p className="font-serif text-brand-espresso text-[15px] leading-relaxed">
               A few days ago you said you&apos;d try: <span className="italic">&ldquo;{current.intention}&rdquo;</span>
             </p>
+            {/* Their own reason, never a new one from Peter (constitution v1.1 §5A). */}
+            {current.reason && (
+              <p className="text-sm text-brand-text-secondary leading-relaxed">
+                You said it matters because: <span className="italic text-brand-espresso">&ldquo;{current.reason}&rdquo;</span>
+              </p>
+            )}
 
             {step === 'ask' && (
               <>
@@ -201,6 +210,11 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
             <textarea value={draft} onChange={e => setDraft(e.target.value)} rows={2} maxLength={300}
               placeholder="When ___ happens, I'll try ___" aria-label="Something small you want to try"
               className="w-full rounded-xl border border-brand-border bg-white/70 p-3 text-sm text-brand-espresso placeholder:text-brand-text-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary/30" />
+            {draft.trim() && (
+              <textarea value={draftReason} onChange={e => setDraftReason(e.target.value)} rows={2} maxLength={500}
+                placeholder="What makes it worth trying for you? (optional)" aria-label="What makes it worth trying for you?"
+                className="w-full rounded-xl border border-brand-border bg-white/70 p-3 text-sm text-brand-espresso placeholder:text-brand-text-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary/30" />
+            )}
             <button type="button" disabled={!draft.trim() || busy} onClick={addExperiment}
               className="rounded-full bg-brand-primary px-5 py-2 text-sm font-bold text-white hover:opacity-90 disabled:opacity-50">
               Save my experiment

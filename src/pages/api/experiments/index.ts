@@ -3,6 +3,7 @@ import { getAuthedContext } from '@/lib/server/supabase-auth';
 import { loadPrivacyState } from '@/lib/server/privacy';
 import { addDistilledMemories } from '@/lib/server/memory';
 import { trackEvent } from '@/lib/server/analytics';
+import { cleanReason, saveExperimentReason } from '@/lib/server/reasons';
 
 /**
  * Self-chosen experiments (constitution §5 "prefer user-created experiments",
@@ -25,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const [{ data: open }, { data: recent }] = await Promise.all([
       ctx.supabase
         .from('experiments')
-        .select('id, intention, origin, status, check_in_on, created_at')
+        .select('id, intention, origin, status, check_in_on, created_at, reason:user_reasons(id, reason_text, still_true)')
         .eq('user_id', ctx.userId)
         .eq('status', 'planned')
         .order('created_at', { ascending: false })
@@ -38,27 +39,52 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .order('resolved_at', { ascending: false })
         .limit(10),
     ]);
-    const due = (open || []).filter(e => !e.check_in_on || e.check_in_on <= today);
-    return res.status(200).json({ due, open: open || [], recent: recent || [] });
+    // Only a still-true reason is shown back to the user (retired ones are theirs to drop).
+    const withReason = (open || []).map((e: any) => {
+      const reason = Array.isArray(e.reason) ? e.reason[0] : e.reason;
+      return { ...e, reason: reason?.still_true ? reason.reason_text : null, reason_id: reason?.still_true ? reason.id : null };
+    });
+    const due = withReason.filter(e => !e.check_in_on || e.check_in_on <= today);
+    return res.status(200).json({ due, open: withReason, recent: recent || [] });
   }
 
   if (req.method === 'POST') {
     const intention = typeof req.body?.intention === 'string' ? req.body.intention.trim().slice(0, 300) : '';
     if (!intention) return res.status(400).json({ error: 'intention is required' });
+    const reason = cleanReason(req.body?.reason);
     const { data, error } = await ctx.supabase
       .from('experiments')
       .insert({ user_id: ctx.userId, intention, origin: 'user', check_in_on: isoDatePlus(2) })
       .select('id, intention, status, check_in_on')
       .single();
     if (error) return res.status(500).json({ error: 'Could not save your experiment' });
-    trackEvent(ctx.supabase, ctx.userId, 'experiment_created', { origin: 'user' });
-    return res.status(200).json({ experiment: data });
+    // Self-persuasion (constitution v1.1): the user's own reason, in their words.
+    const reasonId = reason ? await saveExperimentReason(ctx.supabase, ctx.userId, data.id, reason, 'experiment_card') : null;
+    trackEvent(ctx.supabase, ctx.userId, 'experiment_created', { origin: 'user', has_reason: Boolean(reasonId) });
+    return res.status(200).json({ experiment: { ...data, reason: reasonId ? reason : null } });
   }
 
   if (req.method === 'PATCH') {
-    const { id, status, outcome, outcome_note, snooze_days } = (req.body || {}) as {
-      id?: string; status?: string; outcome?: string; outcome_note?: string; snooze_days?: number;
+    const { id, status, outcome, outcome_note, snooze_days, reason } = (req.body || {}) as {
+      id?: string; status?: string; outcome?: string; outcome_note?: string; snooze_days?: number; reason?: string;
     };
+
+    // Add or rewrite the user's own reason without touching the experiment's status.
+    if (id && reason !== undefined && status === undefined) {
+      const text = cleanReason(reason);
+      const { data: exp } = await ctx.supabase
+        .from('experiments').select('id, reason_id').eq('id', id).eq('user_id', ctx.userId).maybeSingle();
+      if (!exp) return res.status(404).json({ error: 'Experiment not found' });
+      if (exp.reason_id) {
+        // Rewriting retires the old reason and keeps a history (revised_at).
+        await ctx.supabase.from('user_reasons')
+          .update({ still_true: false, revised_at: new Date().toISOString() })
+          .eq('id', exp.reason_id).eq('user_id', ctx.userId);
+        await ctx.supabase.from('experiments').update({ reason_id: null }).eq('id', id).eq('user_id', ctx.userId);
+      }
+      const reasonId = text ? await saveExperimentReason(ctx.supabase, ctx.userId, id, text, 'experiment_card') : null;
+      return res.status(200).json({ experiment: { id, reason: reasonId ? text : null } });
+    }
     if (!id || !STATUSES.includes(status as typeof STATUSES[number])) {
       return res.status(400).json({ error: 'id and a valid status are required' });
     }
