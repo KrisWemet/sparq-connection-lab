@@ -149,7 +149,7 @@ Do not relitigate these:
 - **Supabase** — auth, DB, edge functions. No alternative backend.
 - **shadcn/ui + Tailwind** — component and styling system. No new UI libraries.
 - **Framer Motion** — all animations. Do not use CSS-only animation for Peter.
-- **No automated tests by default** — tests are allowed (the constitution calls for them), but ask Chris before adding each one.
+- **Tests only with Chris's OK** — Vitest unit tests for constitution guarantees live in `tests/` (`npm test`). Ask Chris before adding any new test.
 - **No Mem0 SDK** — memory is Supabase pgvector (`src/lib/server/memory.ts`). Do not wire real Mem0 unless explicitly asked.
 - **OpenRouter → Claude Haiku 4.5** — Peter's AI backend. Do not change the model.
 
@@ -196,9 +196,10 @@ npm run dev          # Start dev server at http://localhost:3000
 npm run build        # Production build
 npm start            # Start production server
 npm run lint         # Run ESLint (next lint)
+npm test             # Vitest unit tests (constitution guarantees, tests/)
 ```
 
-There are **no automated tests** in this project.
+Unit tests (Vitest, `tests/`) cover the constitution guarantees Chris approved (2026-09-30): guess revision, Peter's mode picker, and privacy boundaries. They are pure logic — no network or database. Ask Chris before adding new tests. Playwright e2e scripts live in `e2e/`.
 
 ---
 
