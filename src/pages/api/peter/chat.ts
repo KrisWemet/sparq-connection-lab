@@ -9,6 +9,7 @@ import { searchMemories } from '@/lib/server/memory';
 import { loadPrivacyState } from '@/lib/server/privacy';
 import { assessReflectionQuality } from '@/lib/server/reflection-quality';
 import { stripMarkdown } from '@/lib/strip-markdown';
+import { decideMode } from '@/lib/server/conversation-mode';
 import { buildPatternContext, buildLegacyTraits, buildPatternLevels, patternContextToTraits } from '@/lib/server/attachment-context';
 import { getPatternHints } from '@/lib/server/pattern-hints';
 import { logFinalPrompt } from '@/lib/server/dev-prompt-log';
@@ -225,6 +226,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           systemPrompt += `\n\nThe user shared something meaningful. Acknowledge the depth and specificity. Celebrate their openness. Don't push for more — honor what they gave you.`;
         }
       }
+    }
+
+    // Constitution §6: suggest the smallest useful move for this reply.
+    // Skipped on ladder nights (the ladder owns the turn), on the evening
+    // closing turn (no questions), and for custom system overrides.
+    const isClosingTurn = Boolean(eveningContext && eveningContext.turnNumber >= 3);
+    if (!systemOverride && !ladderState && !isClosingTurn) {
+      const decision = decideMode(latestUserMessage);
+      if (decision.instruction) systemPrompt += decision.instruction;
     }
 
     logFinalPrompt('peter/chat', systemPrompt);

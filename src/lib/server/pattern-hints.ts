@@ -219,8 +219,9 @@ export const INSIGHT_SKELETONS: Record<PatternKey, Partial<Record<string, string
  */
 function wrapInsightLine(skeleton: string): string {
   return (
-    `If it fits this moment naturally, you may quietly observe: "${skeleton}". ` +
-    `Use sparingly — at most once per conversation. Never force it.`
+    `If it fits this moment naturally, you may offer this as a tentative reflection: "${skeleton}" — ` +
+    `say it as a maybe ("I might be off, but…") and ask whether it fits. It is a guess, not a fact; ` +
+    `if they say no, drop it warmly. Use sparingly — at most once per conversation. Never force it.`
   );
 }
 
