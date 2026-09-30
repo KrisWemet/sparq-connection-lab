@@ -6,6 +6,7 @@
 export type ConversationMode = 'listen' | 'explore' | 'reflect' | 'challenge' | 'act' | 'celebrate';
 
 export type MomentSignal =
+  | 'pushback'
   | 'self_discovery'
   | 'intention'
   | 'asks_for_help'
@@ -20,6 +21,10 @@ export type ModeDecision = {
   instruction: string | null;
 };
 
+// Resistance is information (constitution v1.1 §2, §6A): the user rejecting
+// Peter's reflection or suggestion. Checked first — it overrides everything.
+const PUSHBACK =
+  /^\s*(no|nope|nah|not really|not quite|i don'?t think so|that'?s not (it|true|right|what i meant)|you'?re wrong|stop|don'?t do that)\b|\b(that'?s not (it|true|right|what i meant)|you don'?t (get|understand)( it| me)?|not what i (meant|said)|you'?re not listening|i didn'?t say that)\b/i;
 const SELF_DISCOVERY =
   /\b(i (just )?reali[sz]e|it (just )?hit me|i never noticed|now i see|i see now|that'?s why i|i think i (get|see|understand) (it|now|why)|i guess i('m| am| do| always)|maybe i('m| am) (the one|scared|afraid|worried)|i noticed (that )?i)\b/i;
 const INTENTION =
@@ -39,6 +44,7 @@ function wordCount(text: string): number {
 export function classifyMoment(message: string): MomentSignal {
   const text = message.trim();
   if (!text) return 'none';
+  if (PUSHBACK.test(text)) return 'pushback';
   if (SELF_DISCOVERY.test(text)) return 'self_discovery';
   if (ASKS_FOR_HELP.test(text)) return 'asks_for_help';
   if (INTENTION.test(text)) return 'intention';
@@ -49,13 +55,17 @@ export function classifyMoment(message: string): MomentSignal {
 }
 
 const INSTRUCTIONS: Record<Exclude<MomentSignal, 'none'>, { mode: ConversationMode; line: string }> = {
+  pushback: {
+    mode: 'listen',
+    line: 'They pushed back on something you said. Thank them plainly, ask what you might be misunderstanding (or follow the correction they gave), and reflect their version in their words. Drop your earlier idea completely — do not rephrase it, hint at it, or bring it back later.',
+  },
   self_discovery: {
     mode: 'listen',
     line: 'They just saw something true about themselves. Honor it in their own words. Do not add your interpretation or dig deeper. It is fine to end without a question.',
   },
   intention: {
     mode: 'act',
-    line: 'They chose something to try. Help them make it small and specific (when, and what exactly), in their words. Do not add a second task.',
+    line: 'They chose something to try. Help them make it small and specific (when, and what exactly), in their words. If they have not said why it matters to them, ask once what makes it worth trying. Do not add a second task.',
   },
   asks_for_help: {
     mode: 'act',

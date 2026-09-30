@@ -12,6 +12,10 @@ describe('decideMode', () => {
     ["I'm so exhausted and lonely lately, it feels like we're roommates", 'heavy_feeling', 'listen'],
     ['He never listens to me, every time I bring it up he walks away', 'absolute_about_partner', 'challenge'],
     ['fine', 'brief', 'explore'],
+    ["No. I go quiet because I'm exhausted by 9pm.", 'pushback', 'listen'],
+    ["That's not it at all", 'pushback', 'listen'],
+    ['You don\'t get it', 'pushback', 'listen'],
+    ["Not really. I don't want to be fair right now", 'pushback', 'listen'],
   ])('%s → %s', (message, signal, mode) => {
     const decision = decideMode(message);
     expect(decision.signal).toBe(signal);
@@ -36,7 +40,21 @@ describe('decideMode', () => {
     expect(decideMode('Any ideas for how to start the conversation?').instruction).toMatch(/let them choose/);
   });
 
-  it('treats empty input as nothing to act on', () => {
+  it('tells Peter to drop a rejected idea instead of re-pushing it', () => {
+    const line = decideMode("That's not what I meant").instruction ?? '';
+    expect(line).toMatch(/misunderstanding/);
+    expect(line).toMatch(/Drop your earlier idea completely/);
+  });
+
+  it('does not mistake an ordinary "no" inside a sentence for pushback', () => {
+    expect(classifyMoment('We had no time to talk tonight because the kids were sick all evening')).not.toBe('pushback');
+  });
+
+  it('asks for the user\'s own reason when they choose something', () => {
+    expect(decideMode("Tomorrow I'll put my phone away at dinner").instruction).toMatch(/what makes it worth trying/);
+  });
+
+    it('treats empty input as nothing to act on', () => {
     expect(classifyMoment('   ')).toBe('none');
   });
 });
