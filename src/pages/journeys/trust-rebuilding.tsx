@@ -169,7 +169,7 @@ export default function TrustRebuildingJourney() {
           description: "Discovering that the painful process of rebuilding has created strengths that didn't exist before",
           icon: <Sparkles className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
-          example: "Couples who successfully rebuild trust often report: 'We communicate better now than we ever did before. We don't take each other for granted. We know we can survive hard things.' The growth doesn't justify the pain — but it's real.",
+          example: "Some couples who rebuild trust describe it this way: 'We communicate better now than we ever did before. We don't take each other for granted. We know we can survive hard things.' That isn't everyone's path, and the growth doesn't justify the pain — but it can be real.",
           story: "A year later, a friend asked how they were doing. Elena thought about it. \"Honestly? We talk better than we ever have. We don't take each other for granted anymore.\" She squeezed Marco's hand. \"I wouldn't wish it on anyone. But we grew.\"",
         },
         {

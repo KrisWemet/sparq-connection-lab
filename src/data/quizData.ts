@@ -20,7 +20,7 @@ const freeQuestions: Question[] = [
     intimacyLevel: 1,
     modality: "Positive Psychology",
     therapeuticIntent: "Gratitude + attribution of agency — noticing the positive and owning a role in it",
-    explanation: "Couples who regularly notice what's going well show 25% higher satisfaction than those who only focus on what needs to improve.",
+    explanation: "Noticing what's going well — not only what needs fixing — is linked with feeling more satisfied together. Naming the good helps you see more of it.",
   },
   {
     id: 102,
@@ -98,7 +98,7 @@ const freeQuestions: Question[] = [
     intimacyLevel: 2,
     modality: "Positive Psychology",
     therapeuticIntent: "Gratitude expression — converting private appreciation into relational fuel",
-    explanation: "Unexpressed appreciation quietly disappears. Research shows couples who say it out loud — even imperfectly — feel closer within 24 hours.",
+    explanation: "Unexpressed appreciation quietly disappears. Research on gratitude in couples (Algoe, 2012) suggests saying it out loud — even imperfectly — helps you both feel closer.",
   },
   {
     id: 108,
@@ -161,7 +161,7 @@ const premiumQuestions: Question[] = [
     intimacyLevel: 2,
     modality: "Gottman Method",
     therapeuticIntent: "Bid recognition — building awareness of daily micro-moments of connection and how you respond to them",
-    explanation: "Gottman research found that couples who turn toward each other's bids 86% of the time are still together after 6 years. Couples who turn toward only 33% of the time are not. Learning to notice bids is where it starts.",
+    explanation: "In Gottman's newlywed research (described in The Relationship Cure, 2001), couples who turned toward each other's bids about 86% of the time were still together six years later. Couples who turn toward only 33% of the time are not. Learning to notice bids is where it starts.",
   },
   {
     id: 202,
@@ -239,7 +239,7 @@ const premiumQuestions: Question[] = [
     intimacyLevel: 4,
     modality: "Gottman Method",
     therapeuticIntent: "Repair attempt recognition — building awareness of de-escalation bids during conflict",
-    explanation: "The ability to repair after conflict is the #1 predictor of relationship health — more important than how often you fight or what you fight about. Most couples already make repair attempts. Learning to notice them is the skill.",
+    explanation: "Gottman's research suggests repairing after conflict matters more than how often you fight or what you fight about. Most couples already make repair attempts. Learning to notice them is the skill.",
   },
   {
     id: 208,
@@ -305,7 +305,7 @@ export const weekendActivities: WeekendActivity[] = [
     category: "Connection",
     modality: "Positive Psychology",
     explanation:
-      "Unexpressed appreciation quietly disappears from relationships. This exercise creates a safe space to say the things that usually stay internal — and research shows even one session like this increases felt closeness for days.",
+      "Unexpressed appreciation quietly disappears from relationships. This exercise creates a safe space to say the things that usually stay internal — and saying appreciation out loud is one of the simplest ways couples report feeling closer.",
   },
   {
     id: 2,

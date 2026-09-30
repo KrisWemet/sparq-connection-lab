@@ -35,6 +35,7 @@ const plans = [
       { name: "Skill Tree: Basic levels (all 3 tracks)", included: true },
       { name: "Partner linking (optional)", included: true },
       { name: "Daily connection questions", included: true },
+      { name: "Conflict First Aid, always free", included: true },
       { name: "Skill Tree: Advanced levels", included: false },
       { name: "Skill Tree: Expert levels", included: false },
       { name: "The Translator (unlimited)", included: false },
@@ -80,7 +81,6 @@ const plans = [
       { name: "Peter remembers your full story", included: true, new: true },
       { name: "Talk to Peter anytime", included: true, new: true },
       { name: "Weekly check-in from Peter", included: true, new: true },
-      { name: "Conflict First Aid when things get hard", included: true },
       { name: "Shared fit view when both join", included: true },
       { name: "Repeat the 14-day journey with a better fit", included: true },
       { name: "Milestone celebrations from Peter", included: true },
@@ -377,33 +377,7 @@ export default function Subscription() {
         })}
       </div>
       
-      {/* Social proof section */}
-      <div className="mt-12 bg-gray-50 p-6 rounded-lg">
-        <h2 className="text-xl font-bold mb-4 text-center">What Our Users Are Saying</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <p className="italic text-gray-700 mb-2">
-              &quot;Premium helped us have conversations we&apos;d been avoiding for years. Now we talk about everything!&quot;
-            </p>
-            <p className="text-sm font-medium">- Chris & Pat, Together 7 years</p>
-            <p className="text-xs text-primary-600 mt-1">Upgraded to Premium 3 months ago</p>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <p className="italic text-gray-700 mb-2">
-              &quot;We had a rough week and used Conflict First Aid at 11pm. Peter walked us through it in 15 minutes and we went to bed on the same page. That alone is worth it.&quot;
-            </p>
-            <p className="text-sm font-medium">- Morgan & Jamie, Engaged</p>
-            <p className="text-xs text-primary-600 mt-1">Ultimate users for 4 months</p>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <p className="italic text-gray-700 mb-2">
-              &quot;We started with Free, then quickly upgraded to Premium. The difference was night and day. Worth every penny!&quot;
-            </p>
-            <p className="text-sm font-medium">- Alex & Jordan, Dating 1 year</p>
-            <p className="text-xs text-primary-600 mt-1">Upgraded from Free to Premium</p>
-          </div>
-        </div>
-      </div>
+      {/* Made-up testimonials removed — Sparq has no real user quotes yet (constitution §5A: no fabricated social proof). */}
       
       {/* Statistics section */}
       <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">

@@ -30,86 +30,59 @@ export function PersuasiveJourneyPrompt({
   const isPremium = subscription?.tier === "premium";
   const hasAccess = !isPremiumJourney || isPremium;
 
-  // Motivational messages with embedded commands
-  const motivationalMessages = [
-    "As you continue this journey, *notice how your connection naturally deepens* with each activity you complete together.",
-    "With each step forward, *feel the growing sense of understanding* between you and your partner.",
-    "As you progress through this journey, *experience how much easier communication becomes* when you practice these techniques.",
-    "Moving through these activities together, *discover new dimensions of your relationship* that were always there waiting to be explored."
+  // Open reflection prompts (constitution v1.1 §5A): questions the user
+  // answers for themselves — no embedded commands, no pulsing emphasis.
+  const reflectionPrompts = [
+    "What have you noticed about the two of you since you started?",
+    "Which part of this journey has felt most useful so far — if any?",
+    "Is there one small thing from this journey you want to keep doing?",
   ];
 
-  // Rotate through motivational messages
+  // Rotate slowly through the prompts
   useEffect(() => {
     if (hasAccess && completionPercentage > 0) {
       const interval = setInterval(() => {
-        setMotivationalIndex((prev) => (prev + 1) % motivationalMessages.length);
-      }, 8000);
+        setMotivationalIndex((prev) => (prev + 1) % reflectionPrompts.length);
+      }, 12000);
 
       return () => clearInterval(interval);
     }
-  }, [hasAccess, completionPercentage, motivationalMessages.length]);
-
-  // Format text with embedded commands (wrapped in *asterisks*)
-  const formatWithEmbeddedCommands = (text: string) => {
-    return text.split(/(\*[^*]+\*)/g).map((part, index) => {
-      if (part.startsWith('*') && part.endsWith('*')) {
-        const command = part.slice(1, -1);
-        return (
-          <motion.span
-            key={index}
-            className="font-medium text-brand-hover"
-            initial={{ opacity: 0.8 }}
-            animate={{
-              opacity: [0.8, 1, 0.8],
-              scale: [1, 1.02, 1]
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              repeatDelay: 1
-            }}
-          >
-            {command}
-          </motion.span>
-        );
-      }
-      return <span key={index}>{part}</span>;
-    });
-  };
+  }, [hasAccess, completionPercentage, reflectionPrompts.length]);
 
   // Benefits based on journey type
   const getJourneyBenefits = () => {
+    // Plain descriptions of what the journey covers — no invented results.
     const benefits: Record<string, string[]> = {
       communication: [
-        "Resolve misunderstandings 3x faster",
-        "Develop a unique language of understanding",
-        "Create a safe space for difficult conversations"
+        "Practice listening without planning your reply",
+        "Find words for what's underneath the small stuff",
+        "Try small experiments for hard conversations",
       ],
       intimacy: [
-        "Deepen your emotional and physical connection",
-        "Discover new dimensions of closeness",
-        "Build a foundation of trust and vulnerability"
+        "Explore what closeness means for each of you",
+        "Practice sharing something tender, at your own pace",
+        "Try small ways to feel close in everyday moments",
       ],
       trust: [
-        "Establish unshakable trust that withstands challenges",
-        "Create a relationship where authenticity is celebrated",
-        "Develop confidence in your partner's reliability"
+        "Notice what helps each of you feel safe",
+        "Practice keeping small promises and naming them",
+        "Talk about trust without blame",
       ],
       future: [
-        "Create a shared vision that excites you both",
-        "Align your goals and dreams for maximum fulfillment",
-        "Navigate life transitions with grace and unity"
+        "Talk about what you each hope for",
+        "Find the places your hopes overlap",
+        "Plan one small step toward a shared idea",
       ],
       attachment: [
-        "Transform insecure attachment patterns",
-        "Build a secure emotional foundation",
-        "Respond to each other's needs with greater sensitivity"
+        "Notice what you each need when things feel shaky",
+        "Practice asking for reassurance in a clear way",
+        "Try small ways to respond to each other's needs",
       ],
       conflict: [
-        "Turn disagreements into opportunities for growth",
-        "Develop a conflict resolution style that works for both of you",
-        "Maintain connection even during challenging conversations"
-      ]
+        "Notice the loop you two fall into — without blame",
+        "Practice pausing before a hard moment gets hot",
+        "Try small repair moves after a disagreement",
+      ],
     };
 
     const journeyType = Object.keys(benefits).find(type => journeyId.includes(type)) || "communication";
@@ -164,7 +137,7 @@ export function PersuasiveJourneyPrompt({
                 className="bg-brand-linen p-3 rounded-2xl"
               >
                 <p className="text-sm text-zinc-700 font-serif italic leading-relaxed">
-                  {formatWithEmbeddedCommands(motivationalMessages[motivationalIndex])}
+                  {reflectionPrompts[motivationalIndex]}
                 </p>
               </motion.div>
             )}
@@ -182,7 +155,7 @@ export function PersuasiveJourneyPrompt({
               ) : (
                 <Button
                   onClick={() => setShowUpgradePrompt(true)}
-                  className="rounded-xl bg-brand-sand hover:opacity-90 text-white"
+                  className="rounded-xl bg-brand-sand hover:opacity-90 text-white font-bold"
                 >
                   Explore this Premium journey
                   <Lock className="ml-2 h-4 w-4" />
@@ -212,15 +185,15 @@ export function PersuasiveJourneyPrompt({
               <div className="w-14 h-14 rounded-full bg-brand-primary/10 flex items-center justify-center mx-auto mb-3">
                 <Heart className="h-7 w-7 text-brand-primary" />
               </div>
-              <h3 className="text-xl font-serif font-bold text-brand-taupe mb-2">Unlock Your Relationship Potential</h3>
+              <h3 className="text-xl font-serif font-bold text-brand-taupe mb-2">This journey is part of Premium</h3>
               <p className="text-zinc-500 text-sm leading-relaxed">
-                This premium journey will help you and your partner {journeyTitle.toLowerCase()}.
+                Here&apos;s what {journeyTitle} explores. Take it if it fits you — there&apos;s plenty to do on the free plan too.
               </p>
             </div>
 
             <div className="space-y-4 mb-6">
               <div className="space-y-2">
-                <p className="font-medium text-brand-taupe">With this journey, you&apos;ll:</p>
+                <p className="font-medium text-brand-taupe">In this journey you&apos;ll:</p>
                 <ul className="space-y-1">
                   {getJourneyBenefits().map((benefit, index) => (
                     <motion.li
@@ -237,9 +210,7 @@ export function PersuasiveJourneyPrompt({
                 </ul>
               </div>
 
-              <p className="text-sm text-center font-serif italic text-zinc-500">
-                &quot;This journey transformed how we understand each other. We&apos;re closer than ever.&quot; - Jamie &amp; Alex
-              </p>
+{/* Made-up testimonial removed (no real users yet; constitution §5A). */}
             </div>
 
             <div className="flex gap-3">
@@ -254,7 +225,7 @@ export function PersuasiveJourneyPrompt({
                 className="flex-1 rounded-xl bg-brand-primary hover:bg-brand-hover text-white font-bold"
                 onClick={() => router.push("/subscription")}
               >
-                Upgrade to Premium
+                See Premium
               </Button>
             </div>
           </motion.div>

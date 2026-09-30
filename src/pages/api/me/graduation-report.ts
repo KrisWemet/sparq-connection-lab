@@ -48,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const { data: traitsData } = await ctx.supabase
     .from('profile_traits')
-    .select('trait_key, inferred_value, confidence')
+    .select('trait_key, inferred_value, confidence, status')
     .eq('user_id', ctx.userId)
     .gte('confidence', 0.4);
 
@@ -79,7 +79,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .map(s => `Day ${s.day_index}: "${s.evening_reflection}"`)
     .join('\n');
 
-  const traitSummary = traits.map(t => `${t.trait_key}: ${t.inferred_value}`).join(', ');
+  // Only traits the user confirmed reach the model as things "known" about
+  // them — inferred guesses are never turned into a verdict (constitution §2).
+  // All traits still inform the track recommendation above.
+  const traitSummary = traits
+    .filter(t => t.status === 'confirmed')
+    .map(t => `${t.trait_key}: ${t.inferred_value}`)
+    .join(', ');
 
   const prompt = `${PETER_SYSTEM_PROMPT}
 
@@ -88,7 +94,7 @@ ${userName} just completed 14 days of their relationship growth journey. Based o
 Their 14 days of reflections:
 ${reflectionSummary || '(reflections not available)'}
 
-What you know about them: ${traitSummary || 'still getting to know them'}
+Things they have confirmed about themselves: ${traitSummary || 'none yet — rely only on their own words above'}
 
 Verified evidence for the reveal (use ONLY this — never invent):
 ${beforeQuote ? `What they said when they started: "${beforeQuote}"` : '(no baseline quote on record)'}
@@ -98,15 +104,16 @@ Days they showed up: ${daysShowedUp} of 14
 
 Generate JSON with exactly this shape:
 {
-  "what_i_learned": "<2-3 sentences about what you observed about this person over 14 days — warm, specific, personal>",
-  "biggest_growth": "<1-2 sentences about the most meaningful growth you witnessed>",
-  "relationship_superpower": "<1 sentence identifying their clearest strength in relationships>",
-  "focus_next": "<1-2 sentences about the next area to explore — hopeful, not prescriptive>",
+  "what_i_learned": "<2-3 sentences: what you noticed across their reflections, tied to things they actually said, offered as your guess (e.g. 'Here's what I noticed — tell me if it fits'). Never state who they are.>",
+  "biggest_growth": "<1-2 sentences: one change you saw in their own words or actions. If you are not sure, name their effort instead. End by asking what they make of it.>",
+  "relationship_superpower": "<1 sentence: one strength you saw, pointing to a specific thing they did ('One strength I saw: ...'). No labels, no superlatives.>",
+  "focus_next": "<1-2 sentences: an open question about what they might want to explore next, drawn from what they said matters to them. Their choice, not your assignment.>",
   "reveal_narrative": "<2-3 sentences. ${strongMoment && beforeQuote ? 'A verified change happened — name it plainly using ONLY the evidence provided, then hand ownership back with a light question.' : `NO verified change is on record — honor effort with the real number: they showed up ${daysShowedUp} of 14 days. Never claim a change that is not in the evidence.`}>"
 }
 
 Rules:
 - Use "I" (Peter speaking to them) and "you" language
+- Everything you say about them is a guess they can correct — they write what it means (constitution: discovery before direction)
 - Be specific to their actual reflections — not generic
 - No clinical terms
 - Return ONLY the JSON object`;

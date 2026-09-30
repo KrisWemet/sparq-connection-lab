@@ -240,7 +240,7 @@ The user should leave feeling: "I can do this. This is becoming like me."`;
   }
 
   if (steeringHint) {
-    prompt += `\n\nSubtle note for this story: ${steeringHint}. Weave this in naturally — don't make it obvious or forced.`;
+    prompt += `\n\nStory idea: ${steeringHint}. Keep it natural — it's still an ordinary story, not a test.`;
   }
 
   return prompt;

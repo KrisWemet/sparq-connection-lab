@@ -137,13 +137,13 @@ function getWhyItMatters(concept: ConceptItem, cycle: number, tierDepth: number,
     return `You're building the foundation that ${contextLower} rests on. Without awareness of ${concept.title.toLowerCase()}, deeper practice would be guesswork.`;
   }
   if (tierDepth === 1) {
-    if (cycle === 0) return `Knowledge without practice fades. The couples who transform their relationships are the ones who move from understanding ${concept.title.toLowerCase()} to deliberately practicing it — even when it's uncomfortable.`;
+    if (cycle === 0) return `Knowledge without practice fades. Practice is where understanding ${concept.title.toLowerCase()} becomes yours — even when it feels a little uncomfortable.`;
     if (cycle === 1) return `You're in the messy middle, where practice feels a little awkward. That awkward feeling is what learning feels like. Every time you choose ${concept.title.toLowerCase()}, it becomes a little more like you.`;
     return `The more you practice ${concept.title.toLowerCase()}, the less effort it takes. One day you'll notice you did it without even thinking. You're closer than you think.`;
   }
   if (cycle === 0) return `When ${concept.title.toLowerCase()} becomes second nature, it stops being a skill you deploy and becomes part of your relational identity. That's the shift from practice to presence.`;
   if (cycle === 1) return `Integration means you don't have to think about ${concept.title.toLowerCase()} — you just live it. This is the level of mastery that creates lasting, deeply satisfying partnerships.`;
-  return `You're at the level where ${concept.title.toLowerCase()} is woven into everything. This kind of relational fluency is rare — and it ripples into every meaningful relationship in your life.`;
+  return `You're at the level where ${concept.title.toLowerCase()} is woven into everything. And it often ripples into other relationships in your life, too.`;
 }
 
 function getActivityTitle(concept: ConceptItem, cycle: number, tierDepth: number): string {
