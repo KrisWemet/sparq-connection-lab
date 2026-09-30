@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { ChevronLeft, Compass, NotebookPen } from 'lucide-react';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { WeeklyMirrorCard } from '@/components/dashboard/WeeklyMirrorCard';
+import { ExperimentsCard } from '@/components/dashboard/ExperimentsCard';
+import { ThirtyDayMirrorCard } from '@/components/dashboard/ThirtyDayMirrorCard';
 import { IdentityArcCard } from '@/components/dashboard/IdentityArcCard';
 import { GrowthThread } from '@/components/dashboard/GrowthThread';
 import { TraitCard } from '@/components/profile/TraitCard';
@@ -52,7 +54,9 @@ export default function JournalPage() {
             </p>
           </motion.section>
 
+          <ThirtyDayMirrorCard />
           <WeeklyMirrorCard />
+          <ExperimentsCard />
           <IdentityArcCard />
 
           <motion.section

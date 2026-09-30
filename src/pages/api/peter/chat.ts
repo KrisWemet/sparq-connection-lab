@@ -5,7 +5,7 @@ import { buildCrisisResponse, detectCrisisIntent, resolveCountryCode } from '@/l
 import { getAuthedContext } from '@/lib/server/supabase-auth';
 import { resolveEntitlements } from '@/lib/server/entitlements';
 import { trackEvent } from '@/lib/server/analytics';
-import { searchMemories } from '@/lib/server/memory';
+import { searchMemories, buildOwnWordsBlock } from '@/lib/server/memory';
 import { loadPrivacyState } from '@/lib/server/privacy';
 import { assessReflectionQuality } from '@/lib/server/reflection-quality';
 import { stripMarkdown } from '@/lib/strip-markdown';
@@ -142,6 +142,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             emotionalState: insightsResult.data?.emotional_state ?? null,
             surface: eveningContext ? 'evening' : 'chat',
           });
+
+          // Self-discoveries + chosen experiments (Person Model V1).
+          if (privacy.can_store_memories) {
+            systemPrompt += await buildOwnWordsBlock(authed.supabase, authed.userId);
+          }
 
           // Phase 23: append chat tone hints (D-03). Tone always applies.
           const { chatToneHints, insightLines } = getPatternHints(patternContext, 'chat', patternLevels);

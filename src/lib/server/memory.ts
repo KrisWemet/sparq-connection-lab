@@ -233,3 +233,36 @@ export async function deleteUserMemories(userId: string): Promise<void> {
   const client = getServiceClient();
   await client.from('memories').delete().eq('user_id', userId);
 }
+
+/**
+ * The user's own conclusions and chosen experiments, for Peter's context
+ * (constitution §5 "use the user's own language and prior self-discoveries").
+ * Uses the caller's RLS-scoped client. Never throws.
+ */
+export async function buildOwnWordsBlock(
+  supabase: { from: (table: string) => any },
+  userId: string,
+): Promise<string> {
+  try {
+    const [discoveries, experiments] = await Promise.all([
+      supabase.from('self_discoveries').select('discovery').eq('user_id', userId).eq('still_true', true)
+        .order('created_at', { ascending: false }).limit(3),
+      supabase.from('experiments').select('intention').eq('user_id', userId).eq('status', 'planned')
+        .order('created_at', { ascending: false }).limit(2),
+    ]);
+    const lines: string[] = [];
+    const d = (discoveries?.data || []) as Array<{ discovery: string }>;
+    const e = (experiments?.data || []) as Array<{ intention: string }>;
+    if (d.length > 0) {
+      lines.push('Things they discovered themselves (their words — these outrank any guess of yours; echo them only when it truly fits):');
+      d.forEach(row => lines.push(`- "${row.discovery}"`));
+    }
+    if (e.length > 0) {
+      lines.push('Small experiments they chose to try (you may ask how it is going, once, if it fits):');
+      e.forEach(row => lines.push(`- "${row.intention}"`));
+    }
+    return lines.length > 0 ? `\n\n${lines.join('\n')}` : '';
+  } catch {
+    return '';
+  }
+}

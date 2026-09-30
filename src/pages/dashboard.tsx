@@ -19,6 +19,8 @@ import type { PlayfulPrompt } from '@/data/playful-prompts';
 import { DailySparkCard } from '@/components/playful/DailySparkCard';
 import { CsiPulseCard } from '@/components/dashboard/CsiPulseCard';
 import { NorthStarCard } from '@/components/dashboard/NorthStarCard';
+import { ExperimentsCard } from '@/components/dashboard/ExperimentsCard';
+import { ThirtyDayMirrorCard } from '@/components/dashboard/ThirtyDayMirrorCard';
 import { WelcomeBackCard } from '@/components/dashboard/WelcomeBackCard';
 import { NeutralObserverCard } from '@/components/dashboard/NeutralObserverCard';
 import { DailyPrimeCard } from '@/components/dashboard/DailyPrimeCard';
@@ -205,6 +207,12 @@ export default function Dashboard() {
 
         {/* ── NORTH STAR — who you're becoming (renders only once captured) ── */}
         <NorthStarCard />
+
+        {/* Renders only when a self-chosen experiment is due for a check-in. */}
+        <ExperimentsCard compact />
+
+        {/* Day-30 mirror teaser — only once eligible and not yet written. */}
+        <ThirtyDayMirrorCard compact />
 
         {/* ── 2. TODAY'S PRACTICE CTA ── */}
         <motion.div
