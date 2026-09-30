@@ -40,7 +40,8 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
             className="flex-1 bg-white rounded-2xl rounded-tl-sm p-4 text-[#1f2937] text-[15px] leading-relaxed font-serif italic"
             style={{ border: '1px solid #e5e7eb' }}
           >
-            {profile.peterClosingSentence}
+            {profile.peterClosingSentence?.trim() ||
+              `${profile.firstName ? `Thanks, ${profile.firstName}. ` : ''}Here's where I think we could start. It's just a first guess, so pick whatever feels right to you.`}
           </div>
         </motion.div>
 
