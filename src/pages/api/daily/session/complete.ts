@@ -344,41 +344,9 @@ Output ONLY the synthesis text. No JSON, no formatting.`;
       }
     })();
 
-    // Fire-and-forget: generate partner synthesis if partner completed the same day
-    (async () => {
-      try {
-        const { data: profileRow } = await ctx.supabase
-          .from('profiles')
-          .select('partner_id')
-          .eq('id', ctx.userId)
-          .maybeSingle();
-
-        const partnerId = profileRow?.partner_id;
-        if (!partnerId) return;
-
-        const { data: partnerSession } = await ctx.supabase
-          .from('daily_sessions')
-          .select('evening_reflection')
-          .eq('user_id', partnerId)
-          .eq('day_index', updatedSession.day_index)
-          .eq('status', 'completed')
-          .maybeSingle();
-
-        if (!partnerSession?.evening_reflection) return;
-
-        const { generatePartnerSynthesis } = await import('@/lib/server/partner-synthesis');
-        await generatePartnerSynthesis(
-          ctx.supabase,
-          ctx.userId,
-          partnerId,
-          updatedSession.day_index,
-          updatedSession.evening_reflection,
-          partnerSession.evening_reflection,
-        );
-      } catch (err) {
-        console.error('Partner synthesis background error:', err);
-      }
-    })();
+    // (Partner synthesis removed: it blended both partners' private evening
+    // reflections with no explicit sharing — constitution §8. Partners now
+    // share deliberately through shared_items / Shared Peter.)
 
     // Fire-and-forget: generate Peter's greeting for next dashboard visit
     (async () => {

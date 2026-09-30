@@ -83,7 +83,7 @@ export default function ConflictFirstAidPage() {
         const { data: { session } } = await supabase.auth.getSession();
         if (!session?.access_token) return;
 
-        const res = await fetch('/api/profile/traits?include_partner=true', {
+        const res = await fetch('/api/profile/traits', {
           headers: { Authorization: `Bearer ${session.access_token}` },
         });
         if (!res.ok) return;

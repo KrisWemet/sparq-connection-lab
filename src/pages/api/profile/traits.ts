@@ -14,29 +14,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (error) return res.status(500).json({ error: error.message });
 
-    if (req.query.include_partner !== 'true') {
-      return res.status(200).json({ traits: data || [] });
-    }
-
-    // Fetch partner's conflict_style and love_language for personalized conflict guidance
-    const { data: profileRow } = await ctx.supabase
-      .from('profiles')
-      .select('partner_id')
-      .eq('user_id', ctx.userId)
-      .maybeSingle();
-
-    if (!profileRow?.partner_id) {
-      return res.status(200).json({ traits: data || [], partner_traits: [] });
-    }
-
-    const { data: partnerTraits } = await ctx.supabase
-      .from('profile_traits')
-      .select('trait_key, inferred_value, confidence')
-      .eq('user_id', profileRow.partner_id)
-      .in('trait_key', ['conflict_style', 'love_language'])
-      .order('confidence', { ascending: false });
-
-    return res.status(200).json({ traits: data || [], partner_traits: partnerTraits || [] });
+    // Partner traits are never returned: a partner's private hypotheses must
+    // not become information shown to the other partner (constitution §8).
+    // `partner_traits` stays in the response shape for older clients.
+    return res.status(200).json({ traits: data || [], partner_traits: [] });
   }
 
   if (req.method === 'PATCH') {
