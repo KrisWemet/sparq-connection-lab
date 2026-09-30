@@ -14,6 +14,10 @@ interface WeeklyInsight {
 
 interface WeeklyMirror {
   narrative_text: string;
+  strength?: string | null;
+  emerging_pattern?: string | null;
+  mirror_question?: string | null;
+  user_reflection?: string | null;
   practice_count: number;
   practices_felt_natural: number;
   week_start: string;
@@ -23,6 +27,29 @@ export function WeeklyMirrorCard() {
   const [data, setData] = useState<WeeklyInsight | null>(null);
   const [mirror, setMirror] = useState<WeeklyMirror | null>(null);
   const [loading, setLoading] = useState(true);
+  const [answer, setAnswer] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState('');
+
+  async function saveReflection() {
+    if (!mirror || !answer.trim() || saving) return;
+    setSaving(true);
+    setSaveError('');
+    try {
+      const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
+      const res = await fetch('/api/weekly-mirror/reflect', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ week_start: mirror.week_start, reflection: answer }),
+      });
+      if (!res.ok) throw new Error('save failed');
+      setMirror({ ...mirror, user_reflection: answer.trim() });
+    } catch {
+      setSaveError("That didn't save. Try again in a moment.");
+    } finally {
+      setSaving(false);
+    }
+  }
 
   useEffect(() => {
     (async () => {
@@ -93,8 +120,56 @@ export function WeeklyMirrorCard() {
         <p className="text-lg font-serif text-brand-espresso tracking-tight">Weekly Mirror</p>
       </div>
 
-      {/* Narrative synthesis — the primary content */}
-      {hasNarrative && (
+      {/* The mirror: one strength, one maybe-pattern, one question — the
+          user writes what it means (constitution §9). Older mirrors only
+          have the narrative. */}
+      {mirror?.strength ? (
+        <div className="space-y-4 mb-4 relative z-10">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-brand-hover mb-1">Something you did well</p>
+            <p className="font-serif text-brand-espresso text-[15px] leading-relaxed">{mirror.strength}</p>
+          </div>
+          {mirror.emerging_pattern && (
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-brand-hover mb-1">Something I&apos;m wondering about</p>
+              <p className="font-serif italic text-brand-espresso text-[15px] leading-relaxed">{mirror.emerging_pattern}</p>
+            </div>
+          )}
+          {mirror.mirror_question && (
+            <div className="bg-brand-linen rounded-2xl p-4 border border-brand-primary/10">
+              <p className="text-xs font-semibold uppercase tracking-wide text-brand-hover mb-1">Your turn</p>
+              <p className="font-serif text-brand-espresso text-[15px] leading-relaxed mb-3">{mirror.mirror_question}</p>
+              {mirror.user_reflection ? (
+                <>
+                  <p className="text-sm text-brand-espresso leading-relaxed whitespace-pre-wrap">{mirror.user_reflection}</p>
+                  <p className="text-xs text-brand-text-secondary mt-2">That one&apos;s yours to keep. 🦦</p>
+                </>
+              ) : (
+                <>
+                  <textarea
+                    value={answer}
+                    onChange={e => setAnswer(e.target.value)}
+                    rows={3}
+                    maxLength={1000}
+                    placeholder="What do you make of your week?"
+                    aria-label={mirror.mirror_question}
+                    className="w-full rounded-xl border border-brand-border bg-white/70 p-3 text-sm text-brand-espresso placeholder:text-brand-text-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                  />
+                  {saveError && <p className="text-xs text-brand-hover mt-1">{saveError}</p>}
+                  <button
+                    type="button"
+                    onClick={saveReflection}
+                    disabled={!answer.trim() || saving}
+                    className="mt-2 rounded-full bg-brand-primary px-5 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                  >
+                    {saving ? 'Saving…' : 'Keep this'}
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      ) : hasNarrative && (
         <p className="font-serif italic text-brand-espresso text-[15px] leading-relaxed mb-4 relative z-10">
           {mirror.narrative_text}
         </p>
