@@ -20,27 +20,34 @@ export default {
     },
     extend: {
       colors: {
-        // Warm Clay system (Master PRD §6 + color-theory reconciliation).
-        // Warm analogous core (clay → gold) + one cool counterweight (sage),
-        // anchored by warm espresso. Replaces the violet direction that had
-        // drifted in as a third, unreconciled palette — note the old
-        // "parchment" was #EEE7F8, a LAVENDER, which silently broke the
-        // whole warm intent. Gold is rationed: milestones/streak only.
+        // Plum / Coral / Gold system (2026-09-30, Chris). Colour carries meaning:
+        //   plum = understand (everyday brand, buttons), coral = connect,
+        //   gold = grow (insight, milestones). Coral and gold are fills and
+        //   accents only — for text use coral-deep / gold-deep (AA on ivory
+        //   and stone). White text never sits on coral or gold.
         brand: {
-          primary: "#C56B4D",        // Warm Clay — CTA/action
-          hover: "#93472F",          // Clay, pressed — also small clay text (5.4:1 on parchment)
-          light: "#FBF8F3",
-          linen: "#F5F1EA",          // warm canvas
-          parchment: "#EFE7DC",      // warm raised surface
-          card: "#EFE7DC",
-          espresso: "#2E2620",       // warm dark anchor (never cold black)
-          taupe: "#52473C",          // warm secondary text
-          growth: "#9CB5A0",         // Sage — calm/grounding, growth metaphor
-          sand: "#D9A441",           // Rationed Gold — milestones only
-          border: "#E2D9CC",
-          "text-primary": "#2E2620",
-          "text-secondary": "#52473C",
-          "warm-highlight": "#D9A441",
+          primary: "#4B2E57",        // Deep Plum — primary brand, buttons (white text 11.5:1)
+          hover: "#3A2244",          // Plum, pressed — also small accent text
+          plum: "#4B2E57",
+          coral: "#E97868",          // Warm Coral — connection moments (fill; dark-plum text on it)
+          "coral-deep": "#A8452F",   // coral for text/icons (5.5:1 on ivory)
+          gold: "#F3B55A",           // Soft Gold — reward / insight (fill; dark-plum text on it)
+          "gold-deep": "#8A5E14",    // gold for text/icons (5.3:1 on ivory)
+          light: "#FFFDFA",
+          linen: "#FAF7F2",          // Warm Ivory — background
+          ivory: "#FAF7F2",
+          parchment: "#EEE8E3",      // Soft Stone — cards / surfaces
+          stone: "#EEE8E3",
+          card: "#EEE8E3",
+          espresso: "#241D27",       // Dark Plum — main text
+          taupe: "#685C6A",          // Muted Mauve — secondary text (5.2:1 on stone)
+          mauve: "#685C6A",
+          growth: "#9CB5A0",         // Sage — calm/grounding (repair, quiet moments)
+          sand: "#F3B55A",           // legacy name for gold
+          border: "#DED5CF",
+          "text-primary": "#241D27",
+          "text-secondary": "#685C6A",
+          "warm-highlight": "#F3B55A",
           destructive: "#C95B6A",
         },
         border: "hsl(var(--border))",
@@ -49,14 +56,14 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#C56B4D",
+          DEFAULT: "#4B2E57",
           foreground: "#FFFFFF",
-          100: "#F5F1EA",
-          200: "#EFE7DC",
+          100: "#FAF7F2",
+          200: "#EEE8E3",
         },
         secondary: {
-          DEFAULT: "#EFE7DC",
-          foreground: "#2E2620",
+          DEFAULT: "#EEE8E3",
+          foreground: "#241D27",
         },
         destructive: {
           DEFAULT: "#C95B6A",

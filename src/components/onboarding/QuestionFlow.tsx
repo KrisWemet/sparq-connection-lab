@@ -218,10 +218,10 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
       <div className="container max-w-md mx-auto px-4 py-8">
         {/* Progress bar */}
         <div className="w-full mb-6">
-          <div className="h-1 w-full rounded-full" style={{ backgroundColor: '#EFE7DC' }}>
+          <div className="h-1 w-full rounded-full" style={{ backgroundColor: '#EEE8E3' }}>
             <motion.div
               className="h-1 rounded-full"
-              style={{ backgroundColor: '#C56B4D' }}
+              style={{ backgroundColor: '#4B2E57' }}
               animate={{ width: `${((currentIndex) / QUESTIONS.length) * 100}%` }}
               transition={{ duration: 0.4, ease: 'easeInOut' }}
             />

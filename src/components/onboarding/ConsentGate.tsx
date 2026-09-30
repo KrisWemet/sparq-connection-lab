@@ -17,7 +17,7 @@ export function ConsentGate({ onAgree, onReviewTrust, isSaving, error }: Consent
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.35 }}
         className="w-full max-w-md rounded-[28px] p-7"
-        style={{ backgroundColor: '#EFE7DC' }}
+        style={{ backgroundColor: '#EEE8E3' }}
       >
         <div className="flex justify-center mb-4">
           <PeterAvatar mood="morning" size={72} />
@@ -32,7 +32,7 @@ export function ConsentGate({ onAgree, onReviewTrust, isSaving, error }: Consent
 
         <div
           className="rounded-2xl p-4 mb-5 text-sm space-y-2.5"
-          style={{ backgroundColor: 'rgba(197,107,77,0.06)' }}
+          style={{ backgroundColor: 'rgba(75,46,87,0.06)' }}
         >
           <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover">
             What you&apos;re agreeing to
@@ -59,7 +59,7 @@ export function ConsentGate({ onAgree, onReviewTrust, isSaving, error }: Consent
           onClick={onAgree}
           disabled={isSaving}
           className="w-full rounded-2xl py-3.5 text-base font-semibold text-white transition-colors disabled:opacity-60"
-          style={{ backgroundColor: '#C56B4D' }}
+          style={{ backgroundColor: '#4B2E57' }}
         >
           {isSaving ? 'Saving...' : "I agree, let's start"}
         </button>

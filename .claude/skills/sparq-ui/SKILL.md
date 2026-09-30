@@ -52,22 +52,25 @@ The Stitch MCP is connected to Claude Code. When generating new screens or UI mo
 
 ## 3. Color System
 
-**The palette principle**: Every color in this system is warm-toned. There are no cool or cold colors anywhere. The warmth is felt subconsciously before anything is read.
+**The palette principle (2026-09-30, Chris): colour carries meaning.** Plum = understand, Coral = connect, Gold = grow. Most screens live in ivory and plum; coral arrives for connection moments, gold for insight and milestones, and repair/hard moments go quieter (mauve, sage). The Sparq mark (`src/components/brand/SparqMark.tsx`, `public/favicon.svg`) is deep plum with a coral-to-gold spark — the brightest thing in the identity.
 
 ### Brand Palette (implement in `tailwind.config.ts`)
 
-| Token | Hex | Psychology | Usage |
+| Token | Hex | Meaning | Usage |
 |---|---|---|---|
-| `brand-primary` | `#C56B4D` | Warm clay — safety, human warmth, connection | Primary buttons, active nav, CTA fills, accent borders |
-| `brand-hover` | `#93472F` | Deeper clay | Hover state for primary elements |
-| `brand-light` | `#FBF8F3` | Softest warm tint | Very light background tints |
-| `brand-linen` | `#F5F1EA` | Warm cream — journal quality | Page backgrounds, replaces pure white |
-| `brand-parchment` | `#EFE7DC` | Layered warmth — pages in a book | Card surfaces, sits above linen background |
-| `brand-sand` | `#D9A441` | Warm gold — value, light, optimism | Celebrations, streak indicators, milestone moments |
-| `brand-espresso` | `#2E2620` | Deep warm near-black — trust, depth | Headings, dark UI elements, never cold |
-| `brand-growth` | `#9CB5A0` | Warm sage — healing, gentle forward movement | Progress bars, success states, growth indicators |
-| `brand-text-primary` | `#2E2620` | Near-black warm | Primary readable text |
-| `brand-text-secondary` | `#52473C` | Warm brown-grey | Peter's voice, captions, secondary copy |
+| `brand-primary` / `brand-plum` | `#4B2E57` | Deep Plum — understand | Primary buttons (white text, 11.5:1), active nav, headings accents, the everyday brand |
+| `brand-hover` | `#3A2244` | Plum, pressed | Hover/pressed; small accent text |
+| `brand-coral` | `#E97868` | Warm Coral — connect | Fills and accents for connection moments (partner reveal, shared items). Text on it: `text-brand-espresso` (5.7:1). **Never white text on coral (2.9:1).** |
+| `brand-coral-deep` | `#A8452F` | Coral for text | Coral-coloured words/icons (5.5:1 on ivory) |
+| `brand-gold` (legacy `brand-sand`) | `#F3B55A` | Soft Gold — grow | Fills/accents for insights, milestones, streaks. Dark-plum text on it. Never as text colour (1.7:1). |
+| `brand-gold-deep` | `#8A5E14` | Gold for text | Gold-coloured words/icons (5.3:1 on ivory) |
+| `brand-linen` / `brand-ivory` | `#FAF7F2` | Warm Ivory | Page backgrounds |
+| `brand-parchment` / `brand-stone` | `#EEE8E3` | Soft Stone | Card surfaces |
+| `brand-light` | `#FFFDFA` | Brightest tint | Very light tints |
+| `brand-espresso` / `brand-text-primary` | `#241D27` | Dark Plum | Main text (13.5:1 on stone) |
+| `brand-taupe` / `brand-text-secondary` / `brand-mauve` | `#685C6A` | Muted Mauve | Secondary text, Peter captions (5.2:1 on stone — deepened from the spec's `#776B78`, which was 4.2:1) |
+| `brand-growth` | `#9CB5A0` | Sage — calm | Quiet/repair moments, progress (fills, not text) |
+| `brand-border` | `#DED5CF` | Stone edge | Borders |
 
 ### Semantic Colors (CSS variables in `globals.css`)
 
@@ -202,8 +205,8 @@ Peter is the emotional presence. Human photography of couples or people breaks t
 
 ### Button Hierarchy — Three Patterns Only
 
-- **Primary**: Full width, filled clay `#C56B4D`, rounded, white **bold** text (≥14px, for contrast)
-- **Secondary**: Full width, outlined clay, no fill, clay text
+- **Primary**: Full width, filled plum `#4B2E57`, rounded, white **bold** text
+- **Secondary**: Full width, outlined plum, no fill, plum text
 - **Ghost**: Centered text only, no border, no background
 
 No variations. No gradient buttons unless explicitly authorized. No icon-only primary CTAs.
@@ -307,7 +310,7 @@ All cards use `rounded-3xl`. Key variants:
 
 Three patterns only — no variations:
 
-- **Primary**: Full width, `bg-brand-primary text-white rounded-2xl` — filled clay
+- **Primary**: Full width, `bg-brand-primary text-white rounded-2xl` — filled plum
 - **Secondary**: Full width, `border border-brand-primary text-brand-primary rounded-2xl` — outlined
 - **Ghost**: `text-brand-primary` centered, no border, no background
 
@@ -419,7 +422,7 @@ ease: [0.22, 1, 0.36, 1] // Fast start, gentle settle
 
 - `fireElegantConfetti()` — 3-second continuous confetti from both sides
 - `fireSubtleBurst()` — Single 40-particle center burst
-- Colors: `['#C56B4D', '#F5F1EA', '#D9A441']` — clay, linen, gold
+- Colors: `['#E97868', '#F3B55A', '#4B2E57']` — coral, gold, plum
 - Both use `disableForReducedMotion: true`
 
 ---
@@ -443,7 +446,7 @@ These create depth without heavy imagery.
 
 - **Focus visible**: All interactive elements have `focus-visible:ring-2 focus-visible:ring-offset-2`
 - **Touch targets**: Minimum 44px height on all interactive elements
-- **Color contrast** (measured 2026-09): `#2E2620` espresso on `#F5F1EA` linen = 13.2:1 ✅. `#93472F` (brand-hover) on linen = 5.9:1, on parchment = 5.4:1 ✅ AA. `#52473C` (text-secondary) on parchment = 7.4:1 ✅. (Both darkened 2026-09-30; the old `#A85539`/`#6B5F52` read too faint on parchment cards.) **`#C56B4D` brand-primary on linen = 3.3:1 and white on `#C56B4D` = 3.8:1 — these pass AA only for large text (≥18px, or ≥14px bold).** **Rule:** small clay-colored text uses `text-brand-hover`; `text-brand-primary` only for icons, fills, and text at `text-2xl`+ (or `text-xl` bold). Hover states on `brand-hover` text go to `brand-espresso`. White text on clay fills is always `font-bold` and at least `text-sm` (14px) — the `Button` component's filled variants do this by default.
+- **Color contrast** (measured 2026-09-30, Plum/Coral/Gold): Dark Plum `#241D27` on ivory 15.4:1, on stone 13.5:1 ✅. White on Deep Plum `#4B2E57` 11.5:1 ✅. Mauve `#685C6A` on stone 5.2:1 ✅. **Coral `#E97868` and gold `#F3B55A` fail as text and under white text** (white on coral 2.9:1) — use them as fills with dark-plum text, and `brand-coral-deep` / `brand-gold-deep` when the words themselves must be coral or gold.
 - **Screen reader labels**: `aria-label` on icon-only buttons, `sr-only` text where needed
 - **Reduced motion**: Confetti respects `disableForReducedMotion`. CSS animations include `@media (prefers-reduced-motion: reduce)` overrides.
 - **Keyboard navigation**: All interactive elements reachable via Tab, activatable via Enter/Space

@@ -1057,8 +1057,8 @@ export default function DailyGrowth() {
                       consecutive run. When a run is broken it simply isn't shown —
                       no guilt copy, and the practice-days count is untouched. */}
                   <div className="mt-6 w-full max-w-xs rounded-3xl border border-brand-primary/10 bg-brand-parchment p-5 text-center shadow-sm">
-                    <Flame size={28} className="text-brand-sand mx-auto mb-2" />
-                    <p className="text-brand-sand font-bold text-2xl">{practiceDays || currentDay - 1} days</p>
+                    <Flame size={28} className="text-brand-gold-deep mx-auto mb-2" />
+                    <p className="text-brand-gold-deep font-bold text-2xl">{practiceDays || currentDay - 1} days</p>
                     <p className="mt-1 text-sm text-brand-taupe">Days you&apos;ve shown up.</p>
 
                     {consecutiveStreak >= 2 && (

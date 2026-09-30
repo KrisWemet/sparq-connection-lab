@@ -76,7 +76,7 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
           >
             <div
               className="h-28 flex items-center justify-center text-5xl"
-              style={{ background: 'linear-gradient(135deg, #C56B4D, #A85539)' }}
+              style={{ background: 'linear-gradient(135deg, #4B2E57, #3A2244)' }}
             >
               <span className="text-4xl">{primaryJourney.id === 'attachment-healing' ? '🧡' : '✨'}</span>
             </div>
