@@ -109,7 +109,7 @@ export function CsiBaseline({ onComplete }: CsiBaselineProps) {
                     key={label}
                     disabled={saving}
                     onClick={() => answer(i)}
-                    className="rounded-full border border-brand-primary/20 px-3.5 py-2 text-xs text-brand-espresso transition-colors hover:bg-brand-primary/10 disabled:opacity-50"
+                    className="press rounded-full border border-brand-primary/20 px-3.5 py-2 text-xs text-brand-espresso hover:bg-brand-primary/10 disabled:opacity-50"
                   >
                     {label}
                   </button>
@@ -132,7 +132,7 @@ export function CsiBaseline({ onComplete }: CsiBaselineProps) {
             <button
               onClick={onComplete}
               disabled={saving}
-              className="text-xs text-brand-taupe underline underline-offset-2 hover:text-brand-taupe disabled:opacity-50"
+              className="press text-xs text-brand-taupe underline underline-offset-2 hover:text-brand-taupe disabled:opacity-50"
             >
               Skip for now
             </button>

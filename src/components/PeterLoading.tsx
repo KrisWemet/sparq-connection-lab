@@ -30,14 +30,14 @@ export function PeterLoading({ isLoading }: PeterLoadingProps) {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
+          exit={{ opacity: 0, transition: { duration: 0.15, ease: [0.23, 1, 0.32, 1] } }}
+          transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
           className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-brand-linen backdrop-blur-md"
         >
           <motion.div
             initial={{ scale: 0.95, y: 10, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
             className="flex flex-col items-center max-w-sm px-6 text-center"
           >
             {/* Elegant Loading Spinner */}

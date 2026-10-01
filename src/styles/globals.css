@@ -449,3 +449,15 @@ button,
     scroll-behavior: auto !important;
   }
 }
+
+/* Press feedback (emil-design-eng): touch screens have no hover, so a tap
+   needs a response the instant the finger lands. Add `press` to anything
+   tappable. 160ms strong ease-out; colours keep their usual fade. */
+.press {
+  transition-property: transform, color, background-color, border-color, opacity, box-shadow;
+  transition-duration: 160ms, 150ms, 150ms, 150ms, 150ms, 150ms;
+  transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+.press:active:not(:disabled) {
+  transform: scale(0.97);
+}

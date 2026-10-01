@@ -79,7 +79,7 @@ export function HabitAnchorPick({ userId, onComplete }: HabitAnchorPickProps) {
               <button
                 key={a}
                 onClick={() => { setSelected(a); setCustom(''); }}
-                className={`rounded-full border px-3.5 py-2 text-xs transition-colors ${
+                className={`press rounded-full border px-3.5 py-2 text-xs ${
                   selected === a && !custom
                     ? 'border-brand-primary bg-brand-primary/15 text-brand-espresso'
                     : 'border-brand-primary/20 text-brand-espresso hover:bg-brand-primary/10'
@@ -110,7 +110,7 @@ export function HabitAnchorPick({ userId, onComplete }: HabitAnchorPickProps) {
             <button
               onClick={onComplete}
               disabled={saving}
-              className="text-xs text-brand-taupe underline underline-offset-2 hover:text-brand-taupe disabled:opacity-50"
+              className="press text-xs text-brand-taupe underline underline-offset-2 hover:text-brand-taupe disabled:opacity-50"
             >
               I&apos;ll decide later
             </button>

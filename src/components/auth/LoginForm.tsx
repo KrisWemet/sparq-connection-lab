@@ -225,14 +225,14 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
                   if (form) form.requestSubmit();
                 }, 100);
               }}
-              className="flex-1 bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-hover text-sm font-bold"
+              className="press flex-1 bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-hover text-sm font-bold"
             >
               I understand, create my account
             </button>
             <button
               type="button"
               onClick={() => setShowConsent(false)}
-              className="px-4 py-2 text-sm text-brand-hover hover:text-brand-espresso"
+              className="press px-4 py-2 text-sm text-brand-hover hover:text-brand-espresso"
             >
               Back
             </button>
@@ -332,7 +332,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
             </div>
             <button
               type="button"
-              className="absolute right-3 top-2.5 text-brand-text-secondary hover:text-gray-600"
+              className="press absolute right-3 top-2.5 text-brand-text-secondary hover:text-gray-600"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -355,7 +355,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
           <button
             type="submit"
             disabled={isSubmitting || loading}
-            className="w-full bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary transition duration-200 flex items-center justify-center font-bold"
+            className="press w-full bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary transition duration-200 flex items-center justify-center font-bold"
           >
             {isSubmitting || loading ? (
               <Loader className="h-5 w-5 animate-spin" />
@@ -380,7 +380,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
           <button
             type="button"
             onClick={onToggleMode}
-            className="ml-1 text-brand-hover hover:text-brand-espresso font-medium"
+            className="press ml-1 text-brand-hover hover:text-brand-espresso font-medium"
           >
             {isRegisterMode ? 'Sign In' : 'Create Account'}
           </button>

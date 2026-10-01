@@ -48,7 +48,7 @@ export default function ForgotPasswordPage() {
           <button
             type="button"
             onClick={() => setSent(false)}
-            className="text-sm font-semibold text-brand-hover hover:text-brand-espresso w-fit"
+            className="press text-sm font-semibold text-brand-hover hover:text-brand-espresso w-fit"
           >
             Use a different email
           </button>
@@ -93,7 +93,7 @@ export default function ForgotPasswordPage() {
         <button
           type="submit"
           disabled={sending}
-          className="w-full bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary transition duration-200 flex items-center justify-center font-bold disabled:opacity-70"
+          className="press w-full bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary transition duration-200 flex items-center justify-center font-bold disabled:opacity-70"
         >
           {sending ? <Loader className="h-5 w-5 animate-spin" /> : 'Send me a link'}
         </button>

@@ -160,7 +160,7 @@ export default function ResetPasswordPage() {
             <button
               type="button"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
-              className="absolute right-3 top-2.5 text-brand-text-secondary hover:text-gray-600"
+              className="press absolute right-3 top-2.5 text-brand-text-secondary hover:text-gray-600"
               onClick={() => setShowPassword(s => !s)}
             >
               {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -187,7 +187,7 @@ export default function ResetPasswordPage() {
         <button
           type="submit"
           disabled={saving}
-          className="w-full bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary transition duration-200 flex items-center justify-center font-bold disabled:opacity-70"
+          className="press w-full bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary transition duration-200 flex items-center justify-center font-bold disabled:opacity-70"
         >
           {saving ? <Loader className="h-5 w-5 animate-spin" /> : 'Save my new password'}
         </button>

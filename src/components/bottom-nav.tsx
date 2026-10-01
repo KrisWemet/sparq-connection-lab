@@ -86,10 +86,10 @@ export function BottomNav() {
               key={item.label}
               href={item.path}
               aria-current={isActive ? "page" : undefined}
-              className="flex min-h-11 w-[4.5rem] flex-col items-center justify-center gap-1 rounded-[22px] transition-all hover:bg-white/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+              className="press flex min-h-11 w-[4.5rem] flex-col items-center justify-center gap-1 rounded-[22px] hover:bg-white/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
             >
               <div
-                className={`flex h-9 w-11 items-center justify-center rounded-full border transition-all ${
+                className={`flex h-9 w-11 items-center justify-center rounded-full border transition-colors duration-150 ${
                   isActive ? "border-brand-primary/12 bg-brand-primary/12 shadow-inner" : "border-transparent bg-transparent"
                 }`}
               >

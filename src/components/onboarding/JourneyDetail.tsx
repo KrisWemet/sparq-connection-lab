@@ -136,7 +136,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
       <div className="container max-w-md mx-auto px-4 py-8">
         <button
           onClick={onBack}
-          className="flex items-center gap-1 text-brand-hover text-sm font-semibold mb-6"
+          className="press flex items-center gap-1 text-brand-hover text-sm font-semibold mb-6"
         >
           ← Back
         </button>
@@ -212,7 +212,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
         <button
           onClick={handleStart}
           disabled={isStarting}
-          className="w-full bg-brand-primary text-white rounded-2xl py-4 text-base font-bold disabled:opacity-60 transition-colors"
+          className="press w-full bg-brand-primary text-white rounded-2xl py-4 text-base font-bold disabled:opacity-60"
         >
           {isStarting ? 'Starting...' : "Let's start →"}
         </button>
@@ -225,7 +225,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
         {showRehearsalCta && (
           <button
             onClick={() => router.push('/rehearsal')}
-            className="w-full mt-3 text-center text-sm text-brand-hover font-medium py-2"
+            className="press w-full mt-3 text-center text-sm text-brand-hover font-medium py-2"
           >
             Practice a conversation first →
           </button>

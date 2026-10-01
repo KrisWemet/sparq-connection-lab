@@ -58,14 +58,14 @@ export function ConsentGate({ onAgree, onReviewTrust, isSaving, error }: Consent
         <button
           onClick={onAgree}
           disabled={isSaving}
-          className="w-full rounded-2xl py-3.5 text-base font-semibold text-white transition-colors disabled:opacity-60"
+          className="press w-full rounded-2xl py-3.5 text-base font-semibold text-white disabled:opacity-60"
           style={{ backgroundColor: '#4B2E57' }}
         >
           {isSaving ? 'Saving...' : "I agree, let's start"}
         </button>
         <button
           onClick={onReviewTrust}
-          className="mt-3 w-full rounded-2xl border-2 border-brand-primary/20 py-3 text-sm font-medium text-brand-text-secondary transition-colors hover:bg-brand-primary/5"
+          className="press mt-3 w-full rounded-2xl border-2 border-brand-primary/20 py-3 text-sm font-medium text-brand-text-secondary hover:bg-brand-primary/5"
         >
           Review trust settings first
         </button>

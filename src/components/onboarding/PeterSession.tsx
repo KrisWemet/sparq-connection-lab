@@ -172,7 +172,7 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
             <button
               onClick={() => sendMessage(userInput)}
               disabled={!canSend}
-              className="bg-brand-primary text-white rounded-2xl px-4 py-3 font-bold text-sm disabled:opacity-40"
+              className="press bg-brand-primary text-white rounded-2xl px-4 py-3 font-bold text-sm disabled:opacity-40"
             >
               →
             </button>
@@ -188,7 +188,7 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
                 type="button"
                 autoFocus
                 onClick={() => onComplete(closingProfile)}
-                className="w-full bg-brand-primary text-white rounded-2xl py-3 font-bold"
+                className="press w-full bg-brand-primary text-white rounded-2xl py-3 font-bold"
               >
                 Next →
               </button>
