@@ -66,7 +66,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'GET') {
     const today = isoDatePlus(0);
     const declined = typeof req.query.declined === 'string' ? req.query.declined.split(',').filter(Boolean) : [];
-    const [openRes, recentRes, historyRes, northStarLine, reasonRes] = await Promise.all([
+    const [openRes, recentRes, historyRes, northStarLine, reasonRes, prefsRes] = await Promise.all([
       withSchemaFallback<any[]>(
         () => db.from('experiments').select(V12_OPEN).eq('user_id', ctx.userId).eq('status', 'planned')
           .order('created_at', { ascending: false }).limit(10),
@@ -85,7 +85,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       getActiveNorthStar(db, ctx.userId),
       db.from('user_reasons').select('reason_text').eq('user_id', ctx.userId).eq('still_true', true)
         .order('created_at', { ascending: false }).limit(1).maybeSingle(),
+      db.from('user_preferences').select('conversation_prefs').eq('user_id', ctx.userId).maybeSingle(),
     ]);
+    // The user can turn mission ideas off ("Only when I ask") on their Insight Profile.
+    const ideasOff = (prefsRes as any)?.data?.conversation_prefs?.ideas === 'ask_first';
 
     // Only a still-true reason is shown back to the user (retired ones are theirs to drop).
     const withReason = (openRes.data || []).map((e: any) => {
@@ -95,7 +98,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const due = withReason.filter(e => !e.check_in_on || e.check_in_on <= today);
     // The history query needs the v1.2 columns; before the migration there is no history.
     const history = ((historyRes as any).error ? [] : (historyRes as any).data || []) as MissionHistoryRow[];
-    const suggestion = suggestMission({
+    const suggestion = ideasOff ? null : suggestMission({
       northStarLine,
       ownReason: (reasonRes as any)?.data?.reason_text ?? null,
       openCount: withReason.length,

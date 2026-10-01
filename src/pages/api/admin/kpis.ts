@@ -15,6 +15,8 @@ type KpiResponse = {
   memory_utilization: number | null;
   // Constitution §10/§12 — aggregate counts only (see discovery_metrics()).
   discovery: Record<string, number | null> | null;
+  // Constitution v1.2 §10 — lived change (see transformation_metrics()).
+  transformation: Record<string, number | null> | null;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -141,7 +143,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Meaningful Discovery Rate + experiment follow-through, correction rate,
   // mirror usefulness. Computed in SQL (admin-only, counts only).
   const windowDays = Math.min(365, Math.max(1, Number(req.query.window_days) || 28));
-  const { data: discovery } = await ctx.supabase.rpc('discovery_metrics', { window_days: windowDays });
+  const [{ data: discovery }, { data: transformation }] = await Promise.all([
+    ctx.supabase.rpc('discovery_metrics', { window_days: windowDays }),
+    // Null until 20261001100000_transformation_engine.sql has run.
+    ctx.supabase.rpc('transformation_metrics', { window_days: windowDays }),
+  ]);
 
   const response: KpiResponse = {
     date_utc: today.toISOString(),
@@ -157,6 +163,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     assessment_improvement_avg: assessmentImprovementAvg,
     memory_utilization: memoryCount.count ?? null,
     discovery: (discovery as Record<string, number | null> | null) ?? null,
+    transformation: (transformation as Record<string, number | null> | null) ?? null,
   };
 
   return res.status(200).json(response);

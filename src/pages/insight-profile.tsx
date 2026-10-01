@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ChevronLeft } from 'lucide-react';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -32,6 +33,14 @@ const PREFS: Array<{ key: string; label: string; options: Array<{ value: string;
   { key: 'directness', label: 'When you’re stuck', options: [
     { value: 'gentle', label: 'Go gently' },
     { value: 'direct', label: 'Be direct with me' },
+  ] },
+  { key: 'hard_days', label: 'On hard days', options: [
+    { value: 'comfort', label: 'Just be with me' },
+    { value: 'nudge', label: 'Still nudge me, gently' },
+  ] },
+  { key: 'ideas', label: 'Ideas for things to try', options: [
+    { value: 'welcome', label: 'Offer me ideas' },
+    { value: 'ask_first', label: 'Only when I ask' },
   ] },
 ];
 
@@ -128,7 +137,9 @@ export default function InsightProfilePage() {
                 </div>
               </div>
             ))}
-            <p className="text-xs text-brand-text-secondary">Tap again to clear. Peter follows these.</p>
+            <p className="text-xs text-brand-text-secondary">
+              Tap again to clear. Peter follows these. <Link href="/how-sparq-works" className="font-semibold text-brand-hover hover:underline">How Sparq is designed to help you</Link>
+            </p>
           </section>
 
           {/* 2. Peter's guesses */}
