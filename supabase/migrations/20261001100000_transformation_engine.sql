@@ -81,6 +81,7 @@ CREATE TABLE IF NOT EXISTS public.growth_arcs (
   now_believe text,
   carry_forward text,
   ready_next text,
+  who_benefits text,                           -- contribution (§11D), only if they choose to answer
   completed_at timestamptz NOT NULL DEFAULT now(),
   created_at timestamptz NOT NULL DEFAULT now(),
   UNIQUE (user_id, arc_key)

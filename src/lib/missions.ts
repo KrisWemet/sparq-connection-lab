@@ -105,6 +105,7 @@ export type SkillCapacity = {
   setbacksAtLevel: number;  // skipped / let go / too much at that level
   readyForNext: boolean;    // offer the next step (the user decides)
   suggestStepBack: boolean; // offer a smaller step, without comment
+  completed: boolean;       // tried the top step — a whole arc walked (§11C)
 };
 
 const EASY_TRIES_FOR_NEXT = 2;
@@ -136,6 +137,7 @@ export function capacityFromHistory(rows: MissionHistoryRow[]): SkillCapacity[] 
       setbacksAtLevel: setbacks.length,
       readyForNext: level < maxLevel && easy.length >= EASY_TRIES_FOR_NEXT,
       suggestStepBack: level > 1 && setbacks.length >= SETBACKS_FOR_STEP_BACK && easy.length === 0,
+      completed: level === maxLevel && tried.length > 0,
     });
   }
   return out;

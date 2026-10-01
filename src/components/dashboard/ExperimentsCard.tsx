@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FlaskConical } from 'lucide-react';
 import { buildAuthedHeaders } from '@/lib/api-auth';
 import { cn } from '@/lib/utils';
+import { RiteOfPassage } from '@/components/shared/RiteOfPassage';
 import {
   FELT_LABELS,
   GOT_IN_THE_WAY_LABELS,
@@ -118,6 +119,7 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
   const [fromSuggestion, setFromSuggestion] = useState<MissionSuggestion | null>(null);
   const [busy, setBusy] = useState(false);
   const [thanks, setThanks] = useState('');
+  const [markedArcs, setMarkedArcs] = useState<string[] | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -133,6 +135,11 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
       setCapacity(data.capacity || []);
       setSuggestion(data.suggestion || null);
       setIdentityLine(data.identity_line || null);
+      // A whole skill path walked → offer a rite of passage (§11C).
+      if ((data.capacity || []).some((c: SkillCapacity) => c.completed)) {
+        const arcs = await fetch('/api/me/growth-arc', { headers });
+        if (arcs.ok) setMarkedArcs((await arcs.json()).arcs || []);
+      }
     } catch {
       // fail-soft: the card just stays quiet
     } finally {
@@ -253,6 +260,7 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
   const others = open.filter(e => e.id !== current?.id);
   const learned = recent.filter(e => e.status === 'tried' || e.learning?.what_got_in_way).slice(0, 5);
   const growing = capacity.filter(c => c.easyAtLevel > 0 || c.triedAtLevel > 0);
+  const toMark = markedArcs ? capacity.find(c => c.completed && !markedArcs.includes(`skill:${c.skill}`)) : undefined;
 
   return (
     <motion.section
@@ -412,6 +420,17 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
                   {c.label} <span className="text-brand-text-secondary">· step {c.level} · tried {c.triedAtLevel}×</span>
                 </p>
               ))}
+            </div>
+          )}
+
+          {toMark && (
+            <div className="rounded-2xl border border-brand-gold/40 bg-brand-gold-soft p-4">
+              <RiteOfPassage
+                arcKey={`skill:${toMark.skill}`}
+                intro={`You've walked the whole path of "${toMark.label.toLowerCase()}". Want to mark it?`}
+                fields={['used_to', 'changed', 'still_struggle', 'carry_forward', 'ready_next', 'who_benefits']}
+                onDone={() => setMarkedArcs(prev => [...(prev || []), `skill:${toMark.skill}`])}
+              />
             </div>
           )}
 

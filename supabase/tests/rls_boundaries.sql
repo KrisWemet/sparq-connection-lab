@@ -6,6 +6,7 @@
 -- Expected result (2026-09-30, reasons added the same day):
 --   A space created=true | A forge-as-B=blocked | B sees shared=1 |
 --   B sees A discoveries=0 | B sees A experiments=0 | B sees A reasons=0 | B sees A rejections=0 |
+--   B sees A identity evidence=0 | B sees A growth arcs=0 |   (v1.2, after 20261001100000)
 --   B sees A traits=0 | B sees A memories=0 | B deletes A item=0 | B same space=true |
 --   C space=none | C sees shared=0 | C sees spaces=0 | C insert=blocked |
 --   C create space directly=blocked
@@ -32,6 +33,9 @@ BEGIN
   INSERT INTO public.experiments (user_id, intention) VALUES (a, 'private plan of A');
   INSERT INTO public.user_reasons (user_id, reason_text) VALUES (a, 'private reason of A');
   INSERT INTO public.rejected_hypotheses (user_id, offered_text) VALUES (a, 'a guess A rejected');
+  -- v1.2 (needs 20261001100000_transformation_engine.sql)
+  INSERT INTO public.identity_evidence (user_id, identity_line, evidence_type, note) VALUES (a, 'someone who stays', 'experiment', 'private step of A');
+  INSERT INTO public.growth_arcs (user_id, arc_key, carry_forward) VALUES (a, 'day_30', 'private arc of A');
   space := public.ensure_couple_space();
   r := r || 'A space created=' || (space IS NOT NULL);
   INSERT INTO public.shared_items (couple_space_id, author_id, kind, body) VALUES (space, a, 'appreciation', 'shared by A');
@@ -50,6 +54,8 @@ BEGIN
   SELECT count(*) INTO n FROM public.experiments; r := r || ' | B sees A experiments=' || n;
   SELECT count(*) INTO n FROM public.user_reasons; r := r || ' | B sees A reasons=' || n;
   SELECT count(*) INTO n FROM public.rejected_hypotheses; r := r || ' | B sees A rejections=' || n;
+  SELECT count(*) INTO n FROM public.identity_evidence; r := r || ' | B sees A identity evidence=' || n;
+  SELECT count(*) INTO n FROM public.growth_arcs; r := r || ' | B sees A growth arcs=' || n;
   SELECT count(*) INTO n FROM public.profile_traits WHERE user_id = a; r := r || ' | B sees A traits=' || n;
   SELECT count(*) INTO n FROM public.memories WHERE user_id = a; r := r || ' | B sees A memories=' || n;
   DELETE FROM public.shared_items WHERE couple_space_id = space; GET DIAGNOSTICS n = ROW_COUNT; r := r || ' | B deletes A item=' || n;
