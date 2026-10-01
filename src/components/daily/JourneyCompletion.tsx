@@ -95,7 +95,7 @@ export function JourneyCompletion({ journeyId, journeyTitle }: JourneyCompletion
   const displayTitle = journeyTitle || journeyId.replace(/-/g, ' ');
 
   return (
-    <div className="min-h-screen bg-brand-linen pb-24">
+    <div className="min-h-dvh bg-brand-linen pb-24">
       <div className="max-w-lg mx-auto px-4 pt-10 space-y-6">
 
         {/* Peter celebrating */}

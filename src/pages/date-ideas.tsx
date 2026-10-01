@@ -221,7 +221,7 @@ export default function DateIdeas() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-24">
+    <div className="min-h-dvh bg-gray-50 dark:bg-gray-900 pb-24">
       <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b dark:border-gray-700">
         <div className="container max-w-lg mx-auto px-4 py-3 flex items-center">
           <button 

@@ -62,7 +62,7 @@ export default function LoginPage() {
         />
       </Head>
 
-      <div className="min-h-screen bg-brand-linen flex flex-col font-sans selection:bg-brand-primary/30">
+      <div className="min-h-dvh bg-brand-linen flex flex-col font-sans selection:bg-brand-primary/30">
         <header className="bg-transparent absolute top-0 inset-x-0 z-50">
           <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4">
             <h1 className="flex items-center w-fit">

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import type { AppProps } from 'next/app';
 import { Cormorant_Garamond, Inter } from 'next/font/google';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
+import { MotionConfig } from 'framer-motion';
 import { AuthProvider } from '../lib/auth-context';
 import { SubscriptionProvider } from '../lib/subscription-provider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -62,10 +64,20 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <Head>
+        {/* viewport-fit=cover lets safe-area insets work (bottom nav, notch);
+            resizes-content makes the Android keyboard shrink the layout like iOS.
+            Zoom stays allowed — never disable it. */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+        <meta name="theme-color" content="#FAF7F2" />
+      </Head>
+      {/* reducedMotion="user": people who turn on "reduce motion" get fades
+          instead of movement, across every Framer Motion animation. */}
+      <MotionConfig reducedMotion="user">
       <AuthProvider>
         <SubscriptionProvider>
           <div
-            className={`${sans.variable} ${editorialSerif.variable} texture-bg min-h-screen bg-brand-linen font-sans text-brand-text-primary selection:bg-brand-primary/20 selection:text-white`}
+            className={`${sans.variable} ${editorialSerif.variable} texture-bg min-h-dvh bg-brand-linen font-sans text-brand-text-primary selection:bg-brand-primary/20 selection:text-brand-espresso`}
           >
             <PeterLoading isLoading={isLoading} />
             <TimeOutOverlay />
@@ -80,6 +92,7 @@ export default function App({ Component, pageProps }: AppProps) {
           </div>
         </SubscriptionProvider>
       </AuthProvider>
+      </MotionConfig>
     </QueryClientProvider>
   );
 }

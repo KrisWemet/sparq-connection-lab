@@ -17,7 +17,7 @@ export function AuthCardLayout({ title, heading, intro, children }: {
       <Head>
         <title>{title} - Sparq</title>
       </Head>
-      <div className="min-h-screen bg-brand-linen flex flex-col font-sans">
+      <div className="min-h-dvh bg-brand-linen flex flex-col font-sans">
         <header className="max-w-7xl w-full mx-auto px-6 lg:px-8 py-4">
           <Link href="/login" className="flex items-center w-fit">
             <SparqLogo />

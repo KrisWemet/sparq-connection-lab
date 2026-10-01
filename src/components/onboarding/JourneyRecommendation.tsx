@@ -26,7 +26,7 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
     .filter(a => a.journey);
 
   return (
-    <div className="min-h-screen bg-brand-linen">
+    <div className="min-h-dvh bg-brand-linen">
       <div className="container max-w-md mx-auto px-4 py-8">
         {/* Peter's closing sentence */}
         <motion.div

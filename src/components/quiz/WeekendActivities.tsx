@@ -10,7 +10,7 @@ interface WeekendActivitiesProps {
 
 export function WeekendActivities({ activities }: WeekendActivitiesProps) {
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-dvh bg-gray-50 pb-24">
       <main className="container max-w-lg mx-auto px-4 pt-8 animate-slide-up">
         <header className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">

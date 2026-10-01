@@ -150,14 +150,14 @@ export default function TrustCenterPage() {
 
   if (authLoading || isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-brand-linen to-brand-parchment flex items-center justify-center">
+      <div className="min-h-dvh bg-gradient-to-br from-brand-linen to-brand-parchment flex items-center justify-center">
         <p className="text-sm text-slate-500">Loading Trust Center...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-linen to-brand-parchment">
+    <div className="min-h-dvh bg-gradient-to-br from-brand-linen to-brand-parchment">
       <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/90 backdrop-blur-sm">
         <div className="mx-auto max-w-3xl px-4 py-3 flex items-center justify-between">
           <button

@@ -132,7 +132,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
   if (!journey && !starterJourney) return null;
 
   return (
-    <div className="min-h-screen bg-brand-linen">
+    <div className="min-h-dvh bg-brand-linen">
       <div className="container max-w-md mx-auto px-4 py-8">
         <button
           onClick={onBack}

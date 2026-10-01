@@ -214,7 +214,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
   const showBack = currentIndex > 0 && !isBridging;
 
   return (
-    <div className="min-h-screen bg-brand-linen">
+    <div className="min-h-dvh bg-brand-linen">
       <div className="container max-w-md mx-auto px-4 py-8">
         {/* Progress bar */}
         <div className="w-full mb-6">

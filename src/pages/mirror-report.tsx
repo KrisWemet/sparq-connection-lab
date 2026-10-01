@@ -43,7 +43,7 @@ export default function MirrorReport() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] flex flex-col items-center py-12 px-4 relative font-sans">
+    <div className="min-h-dvh bg-[#050505] flex flex-col items-center py-12 px-4 relative font-sans">
       <div className="max-w-2xl w-full z-10">
         <h1 className="text-4xl font-serif text-zinc-100 mb-8 text-center tracking-wide">Your Mirror Report</h1>
 

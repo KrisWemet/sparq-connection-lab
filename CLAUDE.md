@@ -24,6 +24,9 @@ Before working in any of these domains, read the corresponding skill file:
 | UI components, design tokens, layout | `.claude/skills/sparq-ui` |
 | Architecture decisions, API patterns | `.claude/skills/sparq-architecture` |
 | Frontend design quality | `.claude/skills/frontend-design` |
+| Phone feel (tap, hover, viewport, inputs, safe areas) | `.claude/skills/mobile-native` |
+| Animation decisions, audits, reviews, where to add motion | `.claude/skills/emil-design-eng`, `improve-animations`, `review-animations`, `find-animation-opportunities` (Framer Motion still required) |
+| Toasts (Sonner) | `.claude/skills/ask-sonner` |
 
 If you're not sure which skill applies — load `sparq-psychology` and `sparq-architecture` as defaults. If you are writing any user-facing copy — also load the language framework.
 
@@ -521,6 +524,7 @@ import { Button } from "../../components/ui/button";
 4. **`run_dev.py` targets port 8085**, but Next.js defaults to 3000 — use `npm run dev`.
 5. **Palette: Plum / Coral / Gold (2026-09-30, Chris).** Plum = understand (buttons: white on `#4B2E57`, 11.5:1), coral = connect, gold = grow. Coral `#E97868` and gold `#F3B55A` are fills/accents only — white text on coral is 2.9:1, so text on them is dark plum; coral/gold-coloured words use `brand-coral-deep` / `brand-gold-deep`. Secondary text is mauve `#685C6A` (5.2:1 on stone). Full table: `sparq-ui` skill §3. The mark is `src/components/brand/SparqMark.tsx` + `public/favicon.svg`.
 6. Don't use Tailwind `gray-`/`zinc-` 300–500 for text on the warm surfaces — use `text-brand-text-secondary`. Placeholders are the exception.
+   **Phone baseline (2026-10-01, `mobile-native` skill):** use `min-h-dvh`/`h-dvh`, never `min-h-screen` (cut off under the browser bar); `hover:` only fires on hover-capable devices (`hoverOnlyWhenSupported`), so give touch users `active:` feedback; touch-screen inputs are forced to ≥16px (iOS zoom); never disable zoom. The CSS lives at the end of `globals.css`; viewport/theme-color meta and `MotionConfig reducedMotion="user"` are in `_app.tsx`.
 7. **Dark theme in `globals.css` is still the old violet.** Dormant: nothing enables dark mode today. Re-derive it from Plum/Coral/Gold before turning dark mode on.
 
 Resolved in the 2026-09 cleanup: all hardcoded violet hexes, Tailwind purple/indigo classes and violet-tinted shadows (now Warm Clay tokens), made-up testimonials and social-proof stats, Vite leftovers and the legacy Supabase client shim, the unwired `src/lib/auth/` rewrite, ~80 unreachable legacy components/hooks/services (including the Mem0 mock `src/lib/mem0.ts`), a leaked auth listener in `auth-context.tsx`, and the public `/test-page` debug route.

@@ -373,7 +373,7 @@ export default function RehearsalRoom() {
 
   if (loading || phase === 'init') {
     return (
-      <div className="min-h-screen bg-brand-linen flex items-center justify-center">
+      <div className="min-h-dvh bg-brand-linen flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <PeterAvatar mood="curious" size={64} />
           <p className="text-brand-text-secondary text-sm font-serif italic">Getting ready...</p>
@@ -383,7 +383,7 @@ export default function RehearsalRoom() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-linen flex flex-col">
+    <div className="min-h-dvh bg-brand-linen flex flex-col">
       {/* Rehearsal banner — only during rehearsal phase */}
       <AnimatePresence>
         {phase === 'rehearsal' && (

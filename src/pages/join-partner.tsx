@@ -74,7 +74,7 @@ export default function JoinPartner() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-brand-linen">
+      <div className="min-h-dvh flex items-center justify-center bg-brand-linen">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
           <p className="mt-4 text-gray-600 dark:text-gray-400">Loading invitation...</p>
@@ -85,7 +85,7 @@ export default function JoinPartner() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-brand-linen">
+      <div className="min-h-dvh flex items-center justify-center bg-brand-linen">
         <Card className="max-w-md w-full mx-4 p-6">
           <div className="text-center">
             <div className="bg-red-100 dark:bg-red-900/20 p-3 rounded-full w-fit mx-auto mb-4">
@@ -105,7 +105,7 @@ export default function JoinPartner() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-brand-linen">
+    <div className="min-h-dvh flex items-center justify-center bg-brand-linen">
       <Card className="max-w-md w-full mx-4 p-6">
         <div className="text-center">
           {/* Joining a partner is a connect moment (coral). */}

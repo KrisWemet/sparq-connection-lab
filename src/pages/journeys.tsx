@@ -115,7 +115,7 @@ export default function Journeys() {
     : null;
 
   return (
-    <div className="min-h-screen bg-brand-linen pb-28 relative overflow-hidden">
+    <div className="min-h-dvh bg-brand-linen pb-28 relative overflow-hidden">
       {/* Ambient backgrounds */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-primary/5 blur-[120px] rounded-full pointer-events-none -translate-y-1/2 mix-blend-multiply" />
       <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-brand-sand/10 blur-[100px] rounded-full pointer-events-none translate-x-1/3 mix-blend-multiply" />

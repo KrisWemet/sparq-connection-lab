@@ -399,3 +399,53 @@
     max-width: 100%;
   }
 }
+
+/* Phone feel (mobile-native skill). Each line fixes something you only see on
+   a real phone. */
+html {
+  -webkit-tap-highlight-color: transparent; /* no grey flash on tap */
+  -webkit-text-size-adjust: 100%;          /* no text inflation in landscape */
+  overscroll-behavior: none;               /* no pull-to-refresh / page bounce in the app */
+}
+
+body {
+  /* Keep content clear of the notch in landscape (needs viewport-fit=cover). */
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+button,
+a,
+[role="button"] {
+  touch-action: manipulation; /* fire taps right away, no double-tap-zoom wait */
+}
+
+button,
+[role="button"] {
+  -webkit-user-select: none; /* long-press shouldn't select button labels */
+  user-select: none;
+}
+
+/* iOS zooms the page when an input's text is under 16px and never zooms back.
+   On touch screens, inputs are always at least 16px. */
+@media (pointer: coarse) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  textarea,
+  select {
+    font-size: max(16px, 1em) !important;
+  }
+}
+
+/* Respect "reduce motion": CSS animations and transitions become instant
+   (Framer Motion is handled by MotionConfig in _app.tsx). Loading spinners
+   keep turning so people can still see something is happening. */
+@media (prefers-reduced-motion: reduce) {
+  *:not(.animate-spin),
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -11,7 +11,7 @@ interface ConsentGateProps {
 
 export function ConsentGate({ onAgree, onReviewTrust, isSaving, error }: ConsentGateProps) {
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 py-10 bg-brand-linen">
+    <div className="flex min-h-dvh items-center justify-center px-4 py-10 bg-brand-linen">
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}

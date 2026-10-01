@@ -36,7 +36,7 @@ export default function GoConnect() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6 fixed inset-0 z-[100] font-sans">
+    <div className="min-h-dvh bg-black text-white flex flex-col items-center justify-center p-6 fixed inset-0 z-[100] font-sans">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}

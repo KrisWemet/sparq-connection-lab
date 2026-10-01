@@ -57,7 +57,7 @@ export function EveningCheckin({ sessionId, morningAction, journeyTitle, trigger
   };
 
   return (
-    <div className="min-h-screen bg-brand-linen pb-24">
+    <div className="min-h-dvh bg-brand-linen pb-24">
       <div className="max-w-lg mx-auto px-4 pt-8 space-y-6">
 
         {/* Header */}

@@ -156,7 +156,7 @@ export default function OnboardingPage() {
 
   if (authLoading || (user && !consentChecked)) {
     return (
-      <div className="min-h-screen bg-brand-linen flex items-center justify-center">
+      <div className="min-h-dvh bg-brand-linen flex items-center justify-center">
         <motion.div
           animate={{ scale: [1, 1.08, 1] }}
           transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
@@ -198,7 +198,7 @@ export default function OnboardingPage() {
   // Scoring error fallback — checked before the scoring phase so it can show
   if (scoringError) {
     return (
-      <div className="min-h-screen bg-brand-linen flex flex-col items-center justify-center px-4 gap-4">
+      <div className="min-h-dvh bg-brand-linen flex flex-col items-center justify-center px-4 gap-4">
         <PeterAvatar mood="morning" size={64} />
         <p className="text-brand-text-secondary text-center text-sm">{scoringError}</p>
         <button

@@ -10,6 +10,9 @@ export default {
     "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
+  // hover: styles only apply on devices that can hover, so they never
+  // stick after a tap on phones (mobile-native skill §1).
+  future: { hoverOnlyWhenSupported: true },
   theme: {
     container: {
       center: true,

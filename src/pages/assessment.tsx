@@ -91,7 +91,7 @@ export default function AssessmentPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4">
+      <div className="min-h-dvh bg-[#050505] flex items-center justify-center p-4">
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -122,7 +122,7 @@ export default function AssessmentPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] text-zinc-100 font-sans">
+    <div className="min-h-dvh bg-[#050505] text-zinc-100 font-sans">
       <header className="sticky top-0 z-10 bg-[#050505] border-b border-zinc-900">
         <div className="max-w-lg mx-auto px-4 py-4 flex items-center justify-between">
           <button onClick={() => router.back()} className="p-2 hover:bg-[#111111] rounded-lg transition-colors text-zinc-400">
