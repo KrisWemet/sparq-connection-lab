@@ -21,6 +21,8 @@ async function deleteGrowthData(supabase: SupabaseClient, userId: string): Promi
     // User-owned reasons are memory-class too (their words about what matters).
     supabase.from('user_reasons').delete().eq('user_id', userId),
     supabase.from('rejected_hypotheses').delete().eq('user_id', userId),
+    // Identity evidence links their behavior to who they want to become (v1.2 §11B).
+    supabase.from('identity_evidence').delete().eq('user_id', userId),
   ]);
 }
 
@@ -89,6 +91,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       await ctx.supabase.from('reflections').delete().eq('user_id', ctx.userId);
       // Experiments (the user's own plans) go on delete-all, like reflections.
       await ctx.supabase.from('experiments').delete().eq('user_id', ctx.userId);
+      // Rites of passage are the user's own writing — delete-all only (v1.2 §11C).
+      await ctx.supabase.from('growth_arcs').delete().eq('user_id', ctx.userId);
       return res.status(200).json({ deleted: true });
     } catch (err) {
       console.error('Failed to delete user memories:', err);

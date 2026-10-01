@@ -3,6 +3,7 @@
 // askings of "Why is that important to you?", user can stop at any layer. All functions fail-soft — a ladder failure
 // must always degrade to a normal evening check-in, never a broken evening.
 
+import { deepWhyLayersFromTranscript, saveDeepWhyChain } from '@/lib/server/reasons';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 export interface NorthStarRow {
@@ -259,19 +260,21 @@ export async function processLadderTurn(
 
     if (MARKER_CONFIRMED.test(rawOutput)) {
       const { data: cur } = await supabase
-        .from('north_stars').select('proposed_line').eq('id', row.id).maybeSingle();
+        .from('north_stars').select('proposed_line, ladder_transcript').eq('id', row.id).maybeSingle();
       const line = cur?.proposed_line || null;
       if (line) {
+        let activeId = row.id;
         if (state.isReladder && row.line) {
           // retire-and-replace (spec §2): old row keeps history
           await supabase.from('north_stars')
             .update({ status: 'retired', needs_reladder: false }).eq('id', row.id);
-          await supabase.from('north_stars').insert({
+          const { data: created } = await supabase.from('north_stars').insert({
             user_id: userId,
             status: 'active',
             line,
             confirmed_at: new Date().toISOString(),
-          });
+          }).select('id').single();
+          if (created?.id) activeId = created.id;
         } else {
           await supabase.from('north_stars').update({
             status: 'active',
@@ -279,6 +282,12 @@ export async function processLadderTurn(
             confirmed_at: new Date().toISOString(),
             needs_reladder: false,
           }).eq('id', row.id);
+        }
+        // Deep Why (constitution v1.2 §5B): their seven layers, in their
+        // words, become a reason chain — only if the transcript was stored
+        // (memory settings allow it).
+        if (canStoreTranscript && Array.isArray(cur?.ladder_transcript)) {
+          await saveDeepWhyChain(supabase, userId, activeId, deepWhyLayersFromTranscript(cur.ladder_transcript));
         }
         return { visibleMessage, ladderOpen: false };
       }
