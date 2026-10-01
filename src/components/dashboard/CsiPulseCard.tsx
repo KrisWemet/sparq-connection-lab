@@ -113,7 +113,7 @@ export function CsiPulseCard() {
                 <button
                   key={label}
                   onClick={() => answer(i)}
-                  className="rounded-full border border-brand-primary/20 px-3 py-1.5 text-xs text-brand-espresso hover:bg-brand-primary/10 transition-colors"
+                  className="press rounded-full border border-brand-primary/20 px-3 py-1.5 text-xs text-brand-espresso hover:bg-brand-primary/10"
                 >
                   {label}
                 </button>

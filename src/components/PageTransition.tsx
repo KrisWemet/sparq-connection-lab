@@ -11,7 +11,9 @@ export function PageTransition({ children }: PageTransitionProps) {
 
   return (
     <motion.div
-      key={router.asPath}
+      // Path only: a ?query change (sign in ↔ create account) is the same page,
+      // so it must not remount it and wipe what the user typed.
+      key={router.asPath.split(/[?#]/)[0]}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25, ease: "easeOut" }}

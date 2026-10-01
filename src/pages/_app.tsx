@@ -37,15 +37,28 @@ export default function App({ Component, pageProps }: AppProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const handleStart = () => {
-      setIsLoading(true);
+    // Only show the full-screen loader when a page is genuinely slow. Most
+    // navigations (every bottom-nav tap) finish well under this, and a loader
+    // that flashes on every tap feels slower than no loader at all.
+    let slowTimer: ReturnType<typeof setTimeout> | null = null;
+    const clearSlowTimer = () => {
+      if (slowTimer) clearTimeout(slowTimer);
+      slowTimer = null;
+    };
+
+    const handleStart = (_url: string, { shallow }: { shallow: boolean }) => {
+      if (shallow) return; // same page, just a query change (e.g. sign in ↔ create account)
+      clearSlowTimer();
+      slowTimer = setTimeout(() => setIsLoading(true), 400);
     };
 
     const handleComplete = () => {
+      clearSlowTimer();
       setIsLoading(false);
     };
 
     const handleRouteError = (error: unknown, url: string) => {
+      clearSlowTimer();
       setIsLoading(false);
       if (!shouldReportPrimaryPathRouteError(error, url)) return;
       void reportPrimaryPathClientError('route_change', error, { url });
@@ -59,6 +72,7 @@ export default function App({ Component, pageProps }: AppProps) {
       router.events.off('routeChangeStart', handleStart);
       router.events.off('routeChangeComplete', handleComplete);
       router.events.off('routeChangeError', handleRouteError);
+      clearSlowTimer();
     };
   }, [router.events]);
 

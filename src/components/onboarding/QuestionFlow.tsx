@@ -261,7 +261,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
                   type="button"
                   autoFocus
                   onClick={continueFromBridge}
-                  className="mt-3 w-full bg-brand-primary text-white rounded-2xl py-2.5 font-bold text-sm"
+                  className="press mt-3 w-full bg-brand-primary text-white rounded-2xl py-2.5 font-bold text-sm"
                 >
                   Next →
                 </button>
@@ -285,7 +285,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
             <button
               disabled={textInput.trim().length < 1}
               onClick={() => handleFreeTextSubmit(textInput, 'firstName')}
-              className="w-full bg-brand-primary text-white rounded-2xl py-3 font-bold disabled:opacity-40"
+              className="press w-full bg-brand-primary text-white rounded-2xl py-3 font-bold disabled:opacity-40"
             >
               Continue →
             </button>
@@ -302,7 +302,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
                   <button
                     key={label}
                     onClick={() => setMultiPartState(s => ({ ...s, ageRange: label }))}
-                    className={`w-full p-3 rounded-2xl border-2 text-left text-sm font-medium transition-all ${
+                    className={`press w-full p-3 rounded-2xl border-2 text-left text-sm font-medium ${
                       multiPartState.ageRange === label
                         ? 'border-brand-primary bg-brand-primary/5 text-brand-text-primary'
                         : 'border-brand-primary/20 bg-brand-parchment text-brand-text-primary'
@@ -320,7 +320,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
                   <button
                     key={label}
                     onClick={() => setMultiPartState(s => ({ ...s, pronouns: label.toLowerCase().replace(' / ', '/') }))}
-                    className={`w-full p-3 rounded-2xl border-2 text-left text-sm font-medium transition-all ${
+                    className={`press w-full p-3 rounded-2xl border-2 text-left text-sm font-medium ${
                       multiPartState.pronouns === label.toLowerCase().replace(' / ', '/')
                         ? 'border-brand-primary bg-brand-primary/5 text-brand-text-primary'
                         : 'border-brand-primary/20 bg-brand-parchment text-brand-text-primary'
@@ -350,7 +350,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
                 };
                 playBridge("Good to know. Let's keep going.", () => advanceQuestion(newProgress));
               }}
-              className="w-full bg-brand-primary text-white rounded-2xl py-3 font-bold disabled:opacity-40"
+              className="press w-full bg-brand-primary text-white rounded-2xl py-3 font-bold disabled:opacity-40"
             >
               Continue →
             </button>
@@ -378,7 +378,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
                     playBridge(option.bridge, () => setAwaitingPartnerName(true));
                   }
                 }}
-                className="w-full p-4 rounded-2xl border-2 border-brand-primary/20 bg-brand-parchment text-brand-text-primary text-left text-sm font-medium hover:border-brand-primary"
+                className="press w-full p-4 rounded-2xl border-2 border-brand-primary/20 bg-brand-parchment text-brand-text-primary text-left text-sm font-medium hover:border-brand-primary"
               >
                 {option.label}
               </button>
@@ -409,7 +409,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
                 };
                 advanceQuestion(newProgress);
               }}
-              className="w-full bg-brand-primary text-white rounded-2xl py-3 font-bold disabled:opacity-40"
+              className="press w-full bg-brand-primary text-white rounded-2xl py-3 font-bold disabled:opacity-40"
             >
               Continue →
             </button>
@@ -439,7 +439,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
                   setGrowthGoalSubmitted(true);
                 });
               }}
-              className="w-full bg-brand-primary text-white rounded-2xl py-3 font-bold disabled:opacity-40"
+              className="press w-full bg-brand-primary text-white rounded-2xl py-3 font-bold disabled:opacity-40"
             >
               Continue →
             </button>
@@ -455,7 +455,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
               <button
                 key={option.label}
                 onClick={() => handleOptionSelect(option)}
-                className="w-full p-4 rounded-2xl border-2 border-brand-primary/20 bg-brand-parchment text-brand-text-primary text-left text-sm font-medium hover:border-brand-primary"
+                className="press w-full p-4 rounded-2xl border-2 border-brand-primary/20 bg-brand-parchment text-brand-text-primary text-left text-sm font-medium hover:border-brand-primary"
               >
                 {option.label}
               </button>
@@ -477,7 +477,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
                     handleOptionSelect(option);
                   }
                 }}
-                className={`w-full p-4 rounded-2xl border-2 text-left text-sm font-medium transition-all ${
+                className={`press w-full p-4 rounded-2xl border-2 text-left text-sm font-medium ${
                   option.isFreeText
                     ? 'border-dashed border-brand-primary/30 bg-transparent text-brand-text-secondary text-xs italic'
                     : 'border-brand-primary/20 bg-brand-parchment text-brand-text-primary hover:border-brand-primary'
@@ -500,7 +500,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
                 <button
                   disabled={textInput.trim().length < 2}
                   onClick={() => handleFreeTextSubmit(textInput)}
-                  className="w-full bg-brand-primary text-white rounded-2xl py-3 font-bold disabled:opacity-40 text-sm"
+                  className="press w-full bg-brand-primary text-white rounded-2xl py-3 font-bold disabled:opacity-40 text-sm"
                 >
                   Continue →
                 </button>
@@ -513,7 +513,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
         {showBack && (
           <button
             onClick={handleBack}
-            className="mt-6 text-brand-text-secondary text-sm font-medium px-2 py-1"
+            className="press mt-6 text-brand-text-secondary text-sm font-medium px-2 py-1"
           >
             ← Back
           </button>

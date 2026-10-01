@@ -202,7 +202,7 @@ export function PeterAvatar({
       <motion.div
         className="absolute inset-[-12%] rounded-full"
         style={{
-          background: 'radial-gradient(circle, rgba(197,107,77,0.18) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(233,120,104,0.16) 0%, transparent 70%)', // soft coral (brand)
         }}
         animate={{ scale: isTyping ? [1, 1.18, 1] : [1, 1.06, 1] }}
         transition={{ duration: isTyping ? 1.4 : 3.5, repeat: Infinity, ease: 'easeInOut' }}
