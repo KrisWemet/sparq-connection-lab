@@ -116,6 +116,7 @@ export async function buildPatternContext(
       .select('trait_key, inferred_value, effective_weight')
       .eq('user_id', userId)
       .in('trait_key', [...PATTERN_KEYS])
+      .neq('status', 'rejected') // a guess the user rejected never shapes anything (§6A)
       .gte('effective_weight', 0.3); // D-15: threshold applied at DB layer
 
     for (const row of data || []) {
@@ -161,6 +162,7 @@ export async function buildLegacyTraits(
       .select('trait_key, inferred_value, confidence, effective_weight')
       .eq('user_id', userId)
       .in('trait_key', ['love_language', 'conflict_style'])
+      .neq('status', 'rejected')
       .gte('effective_weight', 0.3);
     return (data || []) as ProfileTrait[];
   } catch {

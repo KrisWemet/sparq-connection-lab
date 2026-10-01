@@ -26,8 +26,8 @@ Tiers (§5C): **1** ambient process priming — normal review · **2** personal 
 | Rites of passage | `RiteOfPassage` | 2 | Process | User writes every line | — | ✅ new |
 | Peter's quiet North Star orientation | `buildNorthStarOrientation` (chat) | 2 | Destination | User-confirmed line | Yes | ✅ — disclosed on `/how-sparq-works` ("your own words… at the moments they might help") |
 | Peter values–behavior challenge | `PETER_SHARED_RULES` | 2 | Destination | Only a value the user stated | Yes — "doesn't fit anymore" | ✅ new; run eval L1–L2 |
-| **Story steering toward trait gaps** | `trait-gaps.ts` → morning story "Story idea" | **3** | Process (learning about the user) | Inferred trait gaps | — | ⚠️ **Chris to review.** Approved as "quiet assessment" (2026-09-29) and phrased as "an ordinary story, not a test"; v1.2 puts inferred-trait priming in tier 3. Disclosed on `/how-sparq-works` ("Stories that fit you"). |
-| **Content adapted by inferred attachment signals** | `attachment-context.ts`, `personality-adaptation-guide.md` | **3** | Process (tone, pacing) | Inferred traits (hypotheses) | Rejected traits are excluded | ⚠️ **Chris to review.** Adjusts *how* content is worded, never the destination; shown to the user on `/insight-profile`. |
+| **Story steering toward trait gaps** | `trait-gaps.ts` → morning story "Story idea" | **3** | Process (learning about the user) | Inferred trait gaps | Rejected / confirmed traits are never probed | ✅ **Kept with guardrails (Chris delegated, 2026-10-01).** Steers only toward open, unknown dimensions; never re-probes a trait the user rejected or already confirmed; never steers toward `worth_pattern` (sensitive). Stays "an ordinary story, not a test"; disclosed on `/how-sparq-works` ("Stories that fit you"). Test: `tests/trait-gaps.test.ts`. |
+| **Content adapted by inferred attachment signals** | `attachment-context.ts`, `personality-adaptation-guide.md` | **3** | Process (tone, pacing) | Inferred traits (hypotheses) | Yes — rejected traits are excluded explicitly (`status <> 'rejected'`, not only by weight) | ✅ **Kept with guardrails (Chris delegated, 2026-10-01).** Adjusts *how* content is worded (gentler, shorter, more reassurance), never *what* the user should conclude or choose; every trait used is visible and correctable on `/insight-profile`. |
 | Shared Peter question | `/api/peter/shared-reflect` | 3 | Process | Only `shared_items` | — | ✅ reviewed in step 8 (no sides, partners anonymized) |
 | Mission ideas / reminders by notification | — | 3 | — | — | — | Not built (push notifications are out of beta scope) |
 | Timing by inferred receptivity | — | 3 | — | — | — | Not built. Timing today uses only what the user states (`hard_days` setting) and the message itself (`conversation-mode.ts`). |
@@ -36,7 +36,11 @@ Tiers (§5C): **1** ambient process priming — normal review · **2** personal 
 
 No subliminal or hidden cues, embedded commands, fear or shame imagery, loss framing, countdowns, fabricated social proof, or priming toward a destination the user hasn't chosen. Upgrade copy describes depth, not scarcity (INFLUENCE_AUDIT B15–B16).
 
-## Open items for Chris
+## Decisions (2026-10-01)
 
-1. Keep or drop story steering toward trait gaps (tier 3). It is disclosed on `/how-sparq-works` either way; dropping it means removing that line too.
-2. Confirm tier-3 sign-off for tone adaptation by inferred attachment signals.
+Chris delegated both tier-3 items ("do whatever is best"). Both are kept because they change *how* Sparq talks, never *where* the user is going, and both are disclosed — with new guardrails:
+
+1. **Story steering** — never toward a rejected, confirmed or sensitive trait (`trait-gaps.ts`).
+2. **Tone adaptation** — a rejected trait is excluded explicitly in `buildPatternContext` / `buildLegacyTraits`, so a pushback-based rejection can never keep shaping tone through a stale weight.
+
+Revisit if user testing shows anyone feeling "assessed" (`docs/USER_TESTING_PLAN.md` red flags).
