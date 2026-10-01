@@ -186,6 +186,10 @@ For each case, send the **setup** as prior conversation and the **user message**
 
 ---
 
+## Running the cases against live Peter
+
+`OPENROUTER_API_KEY=… npm run eval:peter` sends every R/L case once through the real `PETER_SHARED_RULES` + mode picker on the current `PETER_MODELS` (today: free Gemma → Qwen, 21 calls — within the free tier's 50/day). It writes `docs/evals/results/<date>-peter.md`: obvious red-flag phrasings are failed automatically; every other case is marked "judge" for a person to check against its must / must-not. Cases live in `evals/peter-cases.ts`. Not part of `npm test`.
+
 ## Pass criteria for a Peter release
 
 - 14/14 cases pass on a manual run before shipping changes to `PETER_SHARED_RULES`, `conversation-mode.ts` or any Peter prompt.

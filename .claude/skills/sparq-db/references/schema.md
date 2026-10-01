@@ -743,7 +743,7 @@ CREATE INDEX memories_user_id_idx ON memories(user_id);
 
 Private, owner-only RLS (`auth.uid() = user_id`); never read by the partner, Shared Peter or admins (admins see counts via `discovery_metrics()` / `transformation_metrics()`). Full spec: `docs/PERSON_MODEL.md` §1–§9.
 
-| Table | Purpose | Key v1.2 columns (migration `20261001100000`, written — apply before relying on them) |
+| Table | Purpose | Key v1.2 columns (migration `20261001100000`, applied 2026-10-01) |
 |---|---|---|
 | `profile_traits` | Hypothesis layer (status hypothesis/confirmed/rejected, evidence, counter-evidence) | — |
 | `self_discoveries` | The user's own conclusions | — |

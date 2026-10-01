@@ -663,7 +663,7 @@ Ethical Influence & Behavioral Understanding Layer (v1.1 — steps 11–14 and 1
 15. Learn the Insight Profile from outcomes (what helped, what landed badly) and show it to the user for correction.
 16. Add the §10 influence-health signals to the discovery metrics, and cover the new rules in user testing.
 
-Transformation layer (v1.2 — doctrine reviewed by Chris 2026-10-01; steps 17–26 built the same day, migration `20261001100000` written but not yet applied — status in `docs/TRANSFORMATION_ENGINE.md` *Build status*):
+Transformation layer (v1.2 — doctrine reviewed by Chris 2026-10-01; steps 17–26 built the same day, migrations `20261001100000` and `20261001110000` applied the same day — status in `docs/TRANSFORMATION_ENGINE.md` *Build status*):
 
 17. Map the Transformation Engine onto existing flows and confirm what is reused (`docs/TRANSFORMATION_ENGINE.md`).
 18. Specify the v1.2 Person Model additions (Deep Why chains, desired identity + identity evidence, missions, setbacks, environment, receptivity, capacity) as extensions of existing tables (`docs/PERSON_MODEL.md` §9).

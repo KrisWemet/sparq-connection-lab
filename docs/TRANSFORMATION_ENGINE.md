@@ -1,7 +1,7 @@
 # Transformation Engine — Implementation Map
 
 **Constitution:** v1.2 (§1A, §1B, §5A–§5C, §6B, §8A, §11A–§11D, §12A) · **Date:** 2026-10-01
-**Status (2026-10-01):** doctrine reviewed by Chris; steps 17–26 **built on branch `claude/sparq-constitution-transformation-0a40nt`** (see *Build status* below). The schema change `supabase/migrations/20261001100000_transformation_engine.sql` is **written but not applied**; every code path falls back to the v1.1 schema until it runs (`src/lib/server/schema-fallback.ts`).
+**Status (2026-10-01):** doctrine reviewed by Chris; steps 17–26 **built on branch `claude/sparq-constitution-transformation-0a40nt`** (see *Build status* below). Migrations `20261001100000_transformation_engine.sql` and `20261001110000_retire_consecutive_streak.sql` are **applied to sparq-connection-lab** (2026-10-01). The fail-soft fallbacks (`src/lib/server/schema-fallback.ts`) stay as a safety net.
 
 ## Build status
 
@@ -23,7 +23,11 @@
 
 **Verified 2026-10-01:** the migration was run twice against a local Postgres 16 (on v1.1 table shapes): it applies cleanly and is idempotent, the new CHECK constraints reject bad values, `transformation_metrics()` returns the expected numbers, and RLS hides `identity_evidence` / `growth_arcs` from another user. `next build` passes; the new cards and `/how-sparq-works` were checked in screenshots with mocked APIs.
 
-**Still open:** apply the migration (Chris), then add the two new tables to a live run of `supabase/tests/rls_boundaries.sql`; run the R- and L-cases in `docs/evals/resistance-handling.md` on a preview with an OpenRouter key; unit tests for the new pure logic (`missions.ts`, `identity.ts`, `deepWhyLayersFromTranscript`, the `setback` signal) need Chris's OK; two tier-3 items in `docs/PRIMING_AUDIT.md`; drop the unused `consecutive_streak` column (Chris's OK). Social reinforcement beyond the partner (§8A) and other domains (§12A) wait for explicit authorization.
+**Live checks (2026-10-01, after applying):** `supabase/tests/rls_boundaries.sql` passes every line on the live project, including the new tables (`B sees A identity evidence=0 | B sees A growth arcs=0`); the streak trigger and `get_return_state()` were exercised on a rolled-back throwaway user. 73 unit tests pass (`npm test`).
+
+**Decided 2026-10-01:** the two tier-3 priming items are kept with guardrails (`docs/PRIMING_AUDIT.md`); the consecutive streak columns are dropped.
+
+**Still open:** run the live Peter evals — `OPENROUTER_API_KEY=… npm run eval:peter` (21 calls on the current `PETER_MODELS`, i.e. free Gemma → Qwen; writes `docs/evals/results/<date>-peter.md` for a person to judge). Social reinforcement beyond the partner (§8A) and other domains (§12A) wait for explicit authorization.
 
 This document answers four questions for the v1.2 amendment:
 

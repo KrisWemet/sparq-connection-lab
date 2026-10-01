@@ -24,7 +24,7 @@ Fixed along the way: `/api/admin/kpis` called `is_admin` with the wrong paramete
 
 ## v1.2 transformation metrics
 
-Constitution v1.2 §10 adds measures of lived change. **Instrumented 2026-10-01** as `public.transformation_metrics(window_days)` (migration `20261001100000_transformation_engine.sql`, not yet applied) → `GET /api/admin/kpis` (`transformation` block) → Admin → Discovery → *Lived change*. Same rules: aggregate counts only, never optimized directly, agreement with Peter is never a metric.
+Constitution v1.2 §10 adds measures of lived change. **Instrumented 2026-10-01** as `public.transformation_metrics(window_days)` (migration `20261001100000_transformation_engine.sql`, applied 2026-10-01) → `GET /api/admin/kpis` (`transformation` block) → Admin → Discovery → *Lived change*. Same rules: aggregate counts only, never optimized directly, agreement with Peter is never a metric.
 
 Implemented definitions: **missions tried**; **reflection rate** = resolved missions with a `learning` entry ÷ resolved; **setbacks** = skipped + let go + revised; **adaptation rate** = revised ÷ setbacks; **persistence after setback** = setbacks that were revised or followed by a new attempt within 14 days ÷ setbacks; **user-designed share** = missions not taken from an idea ÷ all; **identity steps** = consistent `identity_evidence`; **Deep Whys** = North Stars with a `deep_why` chain; **chapters** = `growth_arcs`; **missions reaching others** = domain family/friends/work/community. Not yet instrumented from the table below: user-originated insight share (needs `self_discoveries.origin`), identity alignment self-report, repair attempts.
 
