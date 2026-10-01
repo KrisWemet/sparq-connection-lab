@@ -1,6 +1,6 @@
 ---
 name: sparq-psychology
-description: "Comprehensive psychology modalities and content framework for Sparq Connection. Covers 12+ therapeutic frameworks (Gottman, EFT, ACT, CBT, Positive Psychology, Attachment Theory, IFS, Mindfulness, NVC, Somatic, Narrative Therapy, Influence Psychology), personality-based content personalization, and content safety guardrails. Use this skill WHENEVER: generating questions or exercises, writing user-facing prompts or reflections, building onboarding assessments, implementing content personalization logic, designing the AI content engine, building question selection algorithms, creating relationship health scoring, adapting content for personality types, or writing ANY user-facing therapeutic/educational content. If the task involves psychology, content, or personalization in Sparq — use this skill."
+description: "Comprehensive psychology modalities and content framework for Sparq Connection. Covers 12+ therapeutic frameworks (Gottman, EFT, ACT, CBT, Positive Psychology, Attachment Theory, IFS, Mindfulness, NVC, Somatic, Narrative Therapy, DBT-informed skills, Transactional Analysis, Influence Psychology), personality-based content personalization, and content safety guardrails. Use this skill WHENEVER: generating questions or exercises, writing user-facing prompts or reflections, building onboarding assessments, implementing content personalization logic, designing the AI content engine, building question selection algorithms, creating relationship health scoring, adapting content for personality types, or writing ANY user-facing therapeutic/educational content. If the task involves psychology, content, or personalization in Sparq — use this skill."
 ---
 
 # Sparq Connection — Psychology & Content Framework
@@ -55,9 +55,12 @@ The app works at levels 1-2, not just level 4. Peter notices identity evidence a
 | 11 | **Somatic Approaches** | Body awareness; nervous system regulation (window of tolerance) | Grounding, co-regulation, trauma-informed pacing | Conflict First Aid somatic phase, breathing exercises |
 | 12 | **Ethical Influence** *(supplementary layer, not a lens for understanding — constitution §1B)* | Self-persuasion, commitment to the user's own choices, unity, freely chosen generosity; process influence at any stage, destination influence only toward what the user chose (constitution v1.2 §5A) | Follow-through on self-chosen goals; whole-app design and priming (§5C) | Experiments/missions + the user's own reasons (Deep Why), forgiving streaks, grounded normalization |
 
-> **Not approved yet:** DBT and Transactional Analysis (need Chris's decision + a reference entry); Polyvagal theory (removed 2026-06 — somatic regulation is anchored in HRV research); "NLP" (label retired 2026-06 — techniques live on under validated construct names). Constitution §1B.
+| 13 | **DBT-informed skills** *(approved 2026-10-01)* | Acceptance **and** change; teachable skills: wise mind, distress tolerance, emotion regulation, interpersonal effectiveness | Getting through flooded moments; clear asks; opposite action | Stabilization / Conflict First Aid, missions, environment basics |
+| 14 | **Transactional Analysis** *(approved 2026-10-01)* | Ego states, crossed transactions, games, Drama → Winner's Triangle — a descriptive lens, limited trial evidence | Seeing interaction patterns without blame | Interaction cycles, reflection questions ("which part of you was talking?"), missions |
 
-> **Deep reference**: `references/modalities-therapeutic.md` (modalities 1-6), `references/modalities-applied.md` (modalities 7-12)
+> **Still not used:** Polyvagal theory as a named basis (removed 2026-06 — somatic regulation is anchored in HRV research); "NLP" as a label (retired 2026-06 — techniques live on under validated construct names). Constitution §1B.
+
+> **Deep reference**: `references/modalities-therapeutic.md` (modalities 1-6, plus DBT and TA in §7–8), `references/modalities-applied.md` (modalities 7-12)
 
 ---
 

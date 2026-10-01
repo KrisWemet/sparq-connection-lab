@@ -11,6 +11,8 @@
 >
 > Step 1 of §14 (the repo audit) is done — see `docs/CONSTITUTION_AUDIT.md`. Steps 2–9 shipped 2026-09-30; most of the v1.1 layer (steps 11–16) shipped the same day — see `docs/INFLUENCE_AUDIT.md` and `docs/PERSON_MODEL.md` §8 for what is built and what is still open.
 >
+> **v1.2 decisions (Chris, 2026-10-01):** DBT-informed skills and Transactional Analysis are approved modalities (§1B); Deep Why asks "why is that important to you?" seven times (§5B); shallow gamification is out, including the consecutive "dopamine" streak track (§10); Chris is the tier-3 priming reviewer (§5C).
+>
 > **Amendment v1.2 (2026-10-01) — from insight to transformation. Doctrine only: no code, schema or UI changes yet.** Sparq is restated as a *guided transformation system*: it helps people discover who they want to become, understand why it matters, and practice becoming that person in real life. v1.2 adds the Transformation Engine (§1A), keeps the psychology modalities as the foundation for understanding (§1B), replaces v1.1's "no influence before the user chooses" gate with a sharper line — **influence may support the process at any stage; it must never secretly determine the destination** (§5A) — and adds Deep Why (§5B), whole-app psychological design and priming (§5C), timing intelligence (§6B), real-world practice — missions, adaptive difficulty, setbacks, environment (§11A), identity change (§11B), milestones (§11C), contribution (§11D), social reinforcement (§8A) and a domain-agnostic architecture (§12A). As before, new sections use letter suffixes so section numbers cited in code stay valid. Where v1.2 changes a v1.1 rule, the old wording is replaced rather than kept as a competing rule; a short italic note marks the change where code or docs quote the v1.1 wording. Implementation map: `docs/TRANSFORMATION_ENGINE.md`. Steps 17–26 of §14 are **specified, not implemented** — nothing is built until Chris reviews this doctrine.
 
 Version 1.2 • October 1, 2026 • Working product constitution (v1.1: September 30, 2026 · v1.0: September 29, 2026)
@@ -80,11 +82,11 @@ How it maps to what already exists: the Daily Loop's Learn → Implement → Ref
 
 SPARQ's psychology modalities remain the primary sources for understanding psychological and relational dynamics. They help SPARQ reason about what may be happening, what emotional process may be active, what relationship pattern may be occurring, what needs may sit underneath behavior, and what question or intervention may be useful.
 
-The approved modalities are those defined in the `sparq-psychology` skill: Gottman, EFT, ACT, CBT, Positive Psychology, Attachment Theory, IFS, Mindfulness, NVC, Somatic approaches (nervous-system regulation, window of tolerance) and Narrative Therapy. v1.2 does not reduce, replace, subordinate or reinterpret any of them.
+The approved modalities are those defined in the `sparq-psychology` skill: Gottman, EFT, ACT, CBT, Positive Psychology, Attachment Theory, IFS, Mindfulness, NVC, Somatic approaches (nervous-system regulation, window of tolerance), Narrative Therapy, and — approved by Chris 2026-10-01 — **DBT-informed skills** (mindfulness, distress tolerance, emotion regulation, interpersonal effectiveness; skills only, never DBT as a treatment program) and **Transactional Analysis** (ego states, transactions, games, Drama/Winner's Triangle — a descriptive lens for interaction patterns, never a label, offered with its limited trial evidence). v1.2 does not reduce, replace, subordinate or reinterpret any of the existing ones.
 
 Influence research (commitment and consistency, unity, reciprocity, social proof, authority, liking, scarcity), behavioral-observation concepts (§3, §5A), priming (§5C), UX and behavior design are **supplementary layers**. They improve *how* SPARQ helps a user move toward a chosen goal. They never replace psychological understanding of *what* is happening. The `sparq-psychology` skill lists "Ethical Influence" as its twelfth entry for continuity; constitutionally it is a supplementary layer, not a lens for understanding a person.
 
-Frameworks not yet approved for SPARQ content: **DBT** (appears only in a 2026-03 onboarding routing draft; no reference content), **Transactional Analysis** (not present). Adding either requires Chris's decision and a reference entry in the skill. **Polyvagal theory** was removed as a named basis in 2026-06 because its specific physiological claims are contested; the somatic modality's nervous-system language (regulation, window of tolerance, co-regulation) is anchored in HRV/vagal-tone research instead (Thayer & Lane 2000). Re-adding it as a named framework requires Chris's decision. **"NLP"** stays retired as a label (2026-06); its techniques remain available under their validated construct names (reappraisal, linguistic presupposition, identity-based motivation, rapport/mimicry).
+DBT and TA reference entries live in `sparq-psychology/references/modalities-therapeutic.md` §7–8. **Polyvagal theory** was removed as a named basis in 2026-06 because its specific physiological claims are contested; the somatic modality's nervous-system language (regulation, window of tolerance, co-regulation) is anchored in HRV/vagal-tone research instead (Thayer & Lane 2000). Re-adding it as a named framework requires Chris's decision. **"NLP"** stays retired as a label (2026-06); its techniques remain available under their validated construct names (reappraisal, linguistic presupposition, identity-based motivation, rapport/mimicry).
 
 ## 2. Non-Negotiable Product Principles
 
@@ -293,9 +295,9 @@ Goals should not stay superficial when deeper motivation can be discovered. SPAR
 
 **Deep Why.** When the moment is right (§6B), Peter recursively explores *why does this matter?* beneath surface answers until the user reaches emotionally meaningful territory — identity, love, belonging, family, integrity, freedom, contribution, meaning, safety, legacy, purpose.
 
-- **Adaptive, not rigid.** It can use a "Seven Layers of Why" style, but seven is a ceiling, not a target. Stop as soon as genuine emotional meaning is reached. Within one sitting, the North Star ladder's cap (at most four follow-ups) still applies; a Deep Why may deepen across sessions.
-- **Phrasing adapts to the person.** "What makes that matter?", "What would it give you?" and "What would that make possible?" often land better than a bare "why?", which can invite justification instead of feeling.
-- **An offer, not an interrogation.** The user can stop at any layer; "I don't know" ends it warmly.
+- **Seven layers — seven askings (Chris, 2026-10-01).** Peter asks *"Why is that important to you?"* seven times, each time about the user's previous answer, so the user goes all the way from the surface reason down to what truly matters. Peter doesn't stop early just because an answer sounds emotional: the deepest layers are often the ones that pull. Reflecting a few of the user's words before each ask keeps it warm rather than mechanical; the core question stays "why is that important to you?" (lightly varied — "And why is *that* important to you?").
+- **The user can still stop.** It is an offer, not an interrogation: the user can stop at any layer, and "I don't know" or "that's enough" ends it warmly — the layers reached are kept. If they deflect twice, Peter lets it go for tonight.
+- **After the seventh layer,** Peter reflects the deepest answer back in their words and asks "Did I get that right?" — the user confirms or adjusts (Reflect → Breathe → Declare).
 - **Stored in the user's words** as a first-class Deep Why entry (§4) linked to the goal, value, North Star, experiment, identity, relationship intention or contribution it explains.
 - **Revisable.** A past reason is not a permanent contract. "That isn't why anymore" is respected and recorded as growth.
 
@@ -323,7 +325,7 @@ Review tiers for priming and design influence:
 |---|---|---|
 | **1 — Ambient process priming** | Warm golden-hour imagery; calm palette on reflection screens; settling before deepening; stories that model a small brave act | Normal design review against the language framework and `sparq-ui` |
 | **2 — Personal priming** | Showing the user's own words, Deep Why or identity statement at a chosen moment; reminders tied to their reason; progress displays built from their evidence | Needs a user-chosen target (provenance, §12) and a check that "not anymore" retires it everywhere |
-| **3 — Stronger priming** | Priming tied to inferred traits or the Insight Profile; anything in the shared couple space; anything touching sex, body, money, faith, family-of-origin, substances or a major life decision; notifications; any timing based on receptivity (§6B); anything that would read differently if the user knew it was designed | Explicit review by Chris against §5A before shipping, and a line in the plain-language "how SPARQ is designed to help you" explanation |
+| **3 — Stronger priming** | Priming tied to inferred traits or the Insight Profile; anything in the shared couple space; anything touching sex, body, money, faith, family-of-origin, substances or a major life decision; notifications; any timing based on receptivity (§6B); anything that would read differently if the user knew it was designed | Explicit review by Chris (confirmed reviewer, 2026-10-01) against §5A before shipping, and a line in the plain-language "how SPARQ is designed to help you" explanation |
 
 Never, at any tier: subliminal or hidden cues, hidden commands or emphasis tricks, fear-based imagery, shame cues, loss framing, priming toward a destination the user has not chosen, or priming one partner on the other's behalf.
 
@@ -505,7 +507,7 @@ The influence rules of §5A apply to engagement as strictly as to coaching:
 
 - **No artificial scarcity or urgency.** No countdowns, FOMO, "don't lose your streak" framing, expiring offers or manufactured deadlines. Streaks may celebrate a run while it lasts; missing a day is never framed as a loss.
 - **No fabricated social proof.** No invented statistics, testimonials or "couples like you" claims.
-- **No shallow gamification as the engine.** XP, badges and points are not the reason to act; missions are not chores and milestones are not badge collection (§11A, §11C).
+- **Shallow gamification is out (Chris, 2026-10-01).** No XP, points, badges, levels-as-rewards or reward streaks that silently reset to create a "keep it alive" pull. The two-track streak's consecutive "dopamine" track is retired; the forgiving count of days shown up stays as a light acknowledgment. Missions are not chores and milestones are not badge collection (§11A, §11C).
 - **No reciprocity pressure toward SPARQ.** Peter's warmth is not a debt; SPARQ never implies the user owes it their time, data or an upgrade.
 - **Agreement is not a success metric.** How often users accept Peter's reflections is tracked only as a diagnostic; a high acceptance rate is not a goal, and a healthy correction rate is a sign of agency.
 - **Useful signals of healthy influence:** how often conclusions and experiments originate with the user, how often users give their own reasons, follow-through on self-chosen experiments, and how often users revise or retire a commitment on their own terms.
@@ -572,7 +574,7 @@ Where appropriate, meaningful milestones replace shallow gamification. When a us
 - what I want to carry forward;
 - what I'm ready to work on next.
 
-These moments should feel psychologically meaningful, not like badge collection. Peter supplies evidence; the user supplies the meaning. The Day-14 reveal and Day-30 Mirror are the first instances; later arcs follow the same shape. Streaks may remain as a light, forgiving celebration of showing up; they are never the milestone.
+These moments should feel psychologically meaningful, not like badge collection. Peter supplies evidence; the user supplies the meaning. The Day-14 reveal and Day-30 Mirror are the first instances; later arcs follow the same shape. Shallow gamification is out (§10): the forgiving count of days shown up may stay as a light acknowledgment; it is never the milestone, and there is no reward streak to protect.
 
 ## 11D. Contribution and Purpose
 

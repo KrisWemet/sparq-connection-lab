@@ -37,7 +37,7 @@ It is a **relationship gym** — not therapy, not a wellness platform, not a gam
 
 The transformation arc: **autopilot → intentional → deeply connected.**
 
-Sparq integrates 12 evidence-based modalities (Gottman, EFT, ACT, CBT, Positive Psychology, Attachment Theory, IFS, Mindfulness, NVC, Somatic, Narrative Therapy, Influence Psychology). This is the core competitive advantage. See `sparq-psychology` skill for the full framework.
+Sparq integrates evidence-based modalities (Gottman, EFT, ACT, CBT, Positive Psychology, Attachment Theory, IFS, Mindfulness, NVC, Somatic, Narrative Therapy, DBT-informed skills, Transactional Analysis), with Influence Psychology as a supplementary layer (constitution §1B). This is the core competitive advantage. See `sparq-psychology` skill for the full framework.
 
 ---
 
@@ -116,7 +116,7 @@ Full Daily Loop structure, modality sequencing, and session architecture: see `s
 - User auth (email/password via Supabase)
 - Couple linking / partner invite system
 - Daily question flow (both partners, reveal mechanic)
-- Streak tracking
+- Streak tracking — a forgiving count of days shown up (no reward streak; shallow gamification is out, constitution §10)
 - Journeys (existing 14 — no new ones for beta)
 - Peter (present, mood-driven, emotionally expressive)
 - Basic profile
