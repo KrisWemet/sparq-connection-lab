@@ -209,7 +209,7 @@ export const GOT_IN_THE_WAY_LABELS: Record<GotInTheWay, string> = {
   too_big: 'It was too big',
   wrong_moment: 'The moment never came',
   forgot: 'I forgot',
-  busy: 'Life got busy',
+  busy: 'Life got in the way',
   not_important_now: "It doesn't matter to me now",
 };
 

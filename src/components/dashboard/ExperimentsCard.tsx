@@ -27,7 +27,11 @@ type Experiment = {
 };
 
 type Outcome = 'helped' | 'mixed' | 'didnt_help';
-type Step = 'ask' | 'tried' | 'identity' | 'not_yet' | 'reshape';
+type Step = 'ask' | 'tried' | 'identity' | 'still_matters' | 'not_yet' | 'reshape';
+
+// Two steps, never more than three choices at once (language framework §4):
+// first whether it still matters, then what got in the way.
+const WAY_CHOICES: GotInTheWay[] = ['too_big', 'wrong_moment', 'busy'];
 
 const OUTCOME_LABELS: Record<Outcome, string> = {
   helped: 'It helped',
@@ -36,12 +40,11 @@ const OUTCOME_LABELS: Record<Outcome, string> = {
 };
 
 // Contribution (constitution §11D) is offered, never required — "Me & us" is the default.
+// Three choices at most (language framework §4); the stored domain stays finer-grained.
 const DOMAIN_LABELS: Array<[Domain, string]> = [
   ['self', 'Me & us'],
-  ['family', 'Family'],
-  ['friends', 'Friends'],
-  ['work', 'Work'],
-  ['community', 'Community'],
+  ['family', 'Family or friends'],
+  ['community', 'Work or community'],
 ];
 
 // "Not now" on an idea is respected for two weeks on this device.
@@ -202,12 +205,12 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
     await finish(linked ? "Noted — in your words, not mine. 🦦" : 'Thank you for trying. That counts, whatever happened. 🦦');
   }
 
-  async function saveSetback(action: 'keep' | 'let_go' | 'reshape') {
+  async function saveSetback(action: 'keep' | 'let_go' | 'reshape', way: GotInTheWay | null = gotInTheWay) {
     if (!current) return;
-    const learning = { what_got_in_way: gotInTheWay };
+    const learning = { what_got_in_way: way };
     if (action === 'reshape') {
       if (!reshaped.trim()) return;
-      const ok = await send('PATCH', { id: current.id, action: 'revise', intention: reshaped, smaller: gotInTheWay === 'too_big', learning });
+      const ok = await send('PATCH', { id: current.id, action: 'revise', intention: reshaped, smaller: way === 'too_big', learning });
       if (ok) await finish("New version saved. I'll check in again in a couple of days. 🦦");
       return;
     }
@@ -217,7 +220,7 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
     if (!ok) return;
     await finish(action === 'keep'
       ? "Okay. That's useful to know. I'll ask again in a couple of days."
-      : gotInTheWay === 'not_important_now'
+      : way === 'not_important_now'
         ? "That's a real answer. I won't bring it back."
         : 'Letting it go is a choice too.');
   }
@@ -242,11 +245,11 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
     await load();
   }
 
-  function acceptSuggestion(edit: boolean) {
+  function acceptSuggestion() {
     if (!suggestion) return;
     setFromSuggestion(suggestion);
     setDraft(missionText(suggestion.cue, suggestion.intention));
-    if (!edit) setThanks('');
+    setThanks('');
   }
 
   function declineSuggestion() {
@@ -298,7 +301,7 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
                 <p className="text-sm text-brand-text-secondary">How did it go?</p>
                 <div className="flex flex-wrap gap-2">
                   <button type="button" disabled={busy} onClick={() => setStep('tried')} className={primaryBtn}>I tried it</button>
-                  <button type="button" disabled={busy} onClick={() => setStep('not_yet')} className={quietBtn}>It didn&apos;t happen yet</button>
+                  <button type="button" disabled={busy} onClick={() => setStep('still_matters')} className={quietBtn}>It didn&apos;t happen yet</button>
                 </div>
               </>
             )}
@@ -338,18 +341,27 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
               </>
             )}
 
+            {step === 'still_matters' && (
+              <>
+                <p className="text-sm text-brand-text-secondary">That&apos;s information, not failure. Does it still matter to you?</p>
+                <div className="flex flex-wrap gap-2">
+                  <button type="button" disabled={busy} onClick={() => setStep('not_yet')} className={primaryBtn}>Yes, it does</button>
+                  <button type="button" disabled={busy}
+                    onClick={() => { setGotInTheWay('not_important_now'); void saveSetback('let_go', 'not_important_now'); }}
+                    className={quietBtn}>Not anymore</button>
+                </div>
+              </>
+            )}
+
             {step === 'not_yet' && (
               <>
-                <p className="text-sm text-brand-text-secondary">That&apos;s information, not failure. What got in the way?</p>
+                <p className="text-sm text-brand-text-secondary">What got in the way?</p>
                 <div className="flex flex-wrap gap-2">
-                  {(Object.keys(GOT_IN_THE_WAY_LABELS) as GotInTheWay[]).map(key => (
+                  {WAY_CHOICES.map(key => (
                     <Chip key={key} active={gotInTheWay === key} onClick={() => setGotInTheWay(key)}>{GOT_IN_THE_WAY_LABELS[key]}</Chip>
                   ))}
                 </div>
-                {gotInTheWay === 'not_important_now' && (
-                  <button type="button" disabled={busy} onClick={() => saveSetback('let_go')} className={primaryBtn}>Let it go</button>
-                )}
-                {gotInTheWay && gotInTheWay !== 'not_important_now' && (
+                {gotInTheWay && (
                   <div className="flex flex-wrap gap-2">
                     <button type="button" disabled={busy}
                       onClick={() => { setReshaped(current.intention); setStep('reshape'); }} className={primaryBtn}>
@@ -448,8 +460,7 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
               </p>
               <p className="font-serif text-brand-espresso">{missionText(suggestion.cue, suggestion.intention)}</p>
               <div className="flex flex-wrap gap-2">
-                <button type="button" onClick={() => acceptSuggestion(false)} className={primaryBtn}>I&apos;ll try this</button>
-                <button type="button" onClick={() => acceptSuggestion(true)} className={quietBtn}>Change it</button>
+                <button type="button" onClick={acceptSuggestion} className={primaryBtn}>Make it mine</button>
                 <button type="button" onClick={declineSuggestion} className={quietBtn}>Not now</button>
               </div>
             </div>
@@ -457,7 +468,7 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
 
           <div className="space-y-2">
             <p className="text-sm text-brand-text-secondary">
-              {fromSuggestion ? 'Make it yours — change any words.' : 'Something small you want to try out there?'}
+              {fromSuggestion ? 'Change any words you like, then save it.' : 'Something small you want to try out there?'}
             </p>
             <textarea value={draft} onChange={e => setDraft(e.target.value)} rows={2} maxLength={300}
               placeholder="When ___ happens, I'll try ___" aria-label="Something small you want to try" className={field} />
