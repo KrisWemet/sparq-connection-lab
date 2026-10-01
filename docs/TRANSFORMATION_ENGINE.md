@@ -78,6 +78,8 @@ Legend: **Exists** = in the product now · **Partial** = the right idea exists, 
 
 ### Peter (prompts and mode logic)
 
+**Done 2026-10-01:** P1–P4 (prompt wording in `PETER_SHARED_RULES`, new `setback` signal and stabilizing heavy-feeling line in `conversation-mode.ts`) and the prompt part of P7 (seven-why ladder in `north-star.ts`, turn caps raised to 11/12). Still to do: run the R- and L-cases on a preview with an OpenRouter key.
+
 | # | Where | Change | Constitution |
 |---|---|---|---|
 | P1 | `src/lib/peterService.ts` `PETER_SHARED_RULES` header ("discovery before direction, agency before influence") | Restate as "the user chooses where they're going; you help with the way" — wording only | §1 |

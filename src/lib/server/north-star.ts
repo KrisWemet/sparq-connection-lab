@@ -1,6 +1,6 @@
 // north-star.ts — single owner of North Star ladder state (spec §4).
-// Adaptive values laddering: variable depth, what/how phrasing, bedrock
-// detection, max 4 follow-ups. All functions fail-soft — a ladder failure
+// Deep Why laddering (constitution v1.2 §5B, Chris 2026-10-01): seven
+// askings of "Why is that important to you?", user can stop at any layer. All functions fail-soft — a ladder failure
 // must always degrade to a normal evening check-in, never a broken evening.
 
 import type { SupabaseClient } from '@supabase/supabase-js';
@@ -155,8 +155,9 @@ export async function getNorthStarState(
 
 /**
  * The evening system-prompt replacement for ladder turns (spec §2 + §4).
- * Voice rules: what/how phrasing only — NEVER the pattern "why is that
- * important" (triggers justification, not feeling). Fourth-grade level.
+ * Seven Layers of Why (constitution v1.2 §5B): ask "Why is that important to
+ * you?" seven times, each about the previous answer. The user can stop at
+ * any layer. Fourth-grade level.
  */
 export function buildLadderPromptBlock(
   state: NorthStarState,
@@ -167,25 +168,25 @@ export function buildLadderPromptBlock(
   const opening = state.isReladder
     ? `At their graduation they told you their "becoming" line ("${row?.line ?? ''}") might be shifting. Tonight, gently ask what feels true now.`
     : row?.seed_text
-      ? `When you first met, they said they wanted: "${row.seed_text}". Tonight, after warmly receiving their reflection, get genuinely curious: ask what having that would actually give them.`
-      : `Tonight, after warmly receiving their reflection, get genuinely curious about what they're really here for — ask what they're hoping changes, then what that would give them.`;
+      ? `When you first met, they said they wanted: "${row.seed_text}". Tonight, after warmly receiving their reflection, get genuinely curious: ask why that is important to them.`
+      : `Tonight, after warmly receiving their reflection, get genuinely curious about what they're really here for — ask what they're hoping changes, then ask why that is important to them.`;
 
-  const hardClose = turnNumber >= 7
+  // Seven askings + distill + confirm (+ one adjustment) fit inside turn 10.
+  const hardClose = turnNumber >= 11
     ? `\nThis conversation has gone long. Warmly wrap up NOW: thank them, no more questions, end with [[NORTH_STAR_DEFERRED]].`
     : '';
 
   return `\n\nTONIGHT'S SPECIAL FOCUS (Day ${day} — values conversation, woven into the evening check-in):
 ${opening}
 
-How to ladder (one step per reply, at most 4 ladder questions total):
-- Reflect a few of their own words back, then ask ONE gentle deeper question.
-- Use "what" and "how" questions only: "What would that give you?", "What does that feel like?", "What happens for you in those moments?" NEVER ask "why is that
-  important" — never interrogate.
-- You are listening for bedrock: feeling words, shorter answers, a sentence about who they are or fear becoming ("I don't want to shut down like my dad"), or "I don't know how to say it." When you hear bedrock, STOP asking.
-- At bedrock: distill it into one warm identity sentence in THEIR language — "So it sounds like you're becoming someone who ___." Ask "Did I get that right?" and end that message with the hidden line [[NORTH_STAR_PROPOSED: someone who ___]].
+How to ladder — the Seven Layers of Why (one layer per reply, seven layers in all):
+- Each reply: reflect a few of their own words back warmly, then ask ONE question: "Why is that important to you?" — always about the answer they just gave. Small variations are fine ("And why is that important to you?"), but keep the question.
+- Ask it seven times in total. Do not stop early just because an answer sounds emotional — the deepest layers are often the ones that matter most. If they have answered every layer so far, you have asked ${Math.min(Math.max(turnNumber - 1, 0), 7)} of 7 before this reply.
+- It is an offer, never an interrogation. If they say "I don't know", "that's enough", or want to stop, stop asking right away and go to the distill step with what they have shared.
+- After the seventh answer (or when they stop): distill the deepest answer into one warm identity sentence in THEIR language — "So it sounds like you're becoming someone who ___." Ask "Did I get that right?" and end that message with the hidden line [[NORTH_STAR_PROPOSED: someone who ___]].
 - If they confirm (yes / that's it / exactly): respond warmly, bridge into one short normal reflection question about their day, and end the message with [[NORTH_STAR_CONFIRMED]].
 - If they adjust your wording: re-distill ONCE using their adjustment, end with a new [[NORTH_STAR_PROPOSED: ...]].
-- If they deflect or stay on the surface twice in a row: let it go completely with warmth ("That's okay — it'll come when it comes"), continue as a normal evening reflection, and end that message with [[NORTH_STAR_DEFERRED]].
+- If they deflect twice in a row (change the subject, joke it away, or say they'd rather not): let it go completely with warmth ("That's okay — it'll come when it comes"), continue as a normal evening reflection, and end that message with [[NORTH_STAR_DEFERRED]].
 - The hidden [[...]] lines are for the system, not the user — always place them at the very end of the message.${hardClose}`;
 }
 
@@ -217,11 +218,11 @@ export async function processLadderTurn(
     let row = state.row;
     if (!row) return { visibleMessage, ladderOpen: false };
 
-    // DETERMINISTIC hard cap (spec §4 safety net): at turn >= 8 the ladder
+    // DETERMINISTIC hard cap (spec §4 safety net): at turn >= 12 the ladder
     // closes regardless of what the LLM emitted. Without this, one
     // marker-less wrap-up strands ladder_active=true and the client can
     // never set canCompleteDay — streak loss from a disobedient LLM turn.
-    const forceClose = turnNumber >= 8;
+    const forceClose = turnNumber >= 12;
 
     // First ladder turn: open the attempt. Re-ladders ALSO move through
     // 'laddering' (line preserved on the row; needs_reladder stays true as

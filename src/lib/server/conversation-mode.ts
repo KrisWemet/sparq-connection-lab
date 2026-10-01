@@ -8,6 +8,7 @@ export type ConversationMode = 'listen' | 'explore' | 'reflect' | 'challenge' | 
 export type MomentSignal =
   | 'pushback'
   | 'self_discovery'
+  | 'setback'
   | 'intention'
   | 'asks_for_help'
   | 'absolute_about_partner'
@@ -27,6 +28,10 @@ const PUSHBACK =
   /^\s*(no|nope|nah|not really|not quite|i don'?t think so|that'?s not (it|true|right|what i meant)|you'?re wrong|stop|don'?t do that)\b|\b(that'?s not (it|true|right|what i meant)|you don'?t (get|understand)( it| me)?|not what i (meant|said)|you'?re not listening|i didn'?t say that)\b/i;
 const SELF_DISCOVERY =
   /\b(i (just )?reali[sz]e|it (just )?hit me|i never noticed|now i see|i see now|that'?s why i|i think i (get|see|understand) (it|now|why)|i guess i('m| am| do| always)|maybe i('m| am) (the one|scared|afraid|worried)|i noticed (that )?i)\b/i;
+// Setbacks are data (constitution v1.2 §11A): something they tried didn't
+// happen or an old pattern came back.
+const SETBACK =
+  /\b(didn'?t (do|try|get to) it|didn'?t get around to it|i forgot to|i fell back|slipped back|back to my old|old habits?|did it again|(straight|right) back into|i messed (it )?up|i blew it|i gave up|it didn'?t work)\b/i;
 const INTENTION =
   /\b(i('ll| will| am going to|'m going to| want to try| plan to)|tomorrow i|next time i|i'?m going to try)\b/i;
 const ASKS_FOR_HELP =
@@ -34,7 +39,7 @@ const ASKS_FOR_HELP =
 const ABSOLUTE = /\b(always|never|every (single )?time|nothing ever|no one ever)\b/i;
 const PARTNER_REF = /\b(he|she|they|him|her|them|partner|husband|wife|boyfriend|girlfriend|spouse)\b/i;
 const HEAVY_FEELING =
-  /\b(hurt|lonely|exhausted|overwhelmed|scared|angry|furious|heartbroken|crying|cried|ashamed|hopeless|so tired|fed up|just need to vent|can'?t do this)\b/i;
+  /\b(hurt|lonely|exhausted|overwhelmed|scared|angry|furious|heartbroken|crying|cried|ashamed|hopeless|so tired|fed up|just need to vent|can'?t do this|shaking|panicking|can'?t breathe|can'?t think|flooded)\b/i;
 
 function wordCount(text: string): number {
   return text.trim().split(/\s+/).filter(Boolean).length;
@@ -46,6 +51,7 @@ export function classifyMoment(message: string): MomentSignal {
   if (!text) return 'none';
   if (PUSHBACK.test(text)) return 'pushback';
   if (SELF_DISCOVERY.test(text)) return 'self_discovery';
+  if (SETBACK.test(text)) return 'setback';
   if (ASKS_FOR_HELP.test(text)) return 'asks_for_help';
   if (INTENTION.test(text)) return 'intention';
   if (HEAVY_FEELING.test(text)) return 'heavy_feeling';
@@ -63,6 +69,10 @@ const INSTRUCTIONS: Record<Exclude<MomentSignal, 'none'>, { mode: ConversationMo
     mode: 'listen',
     line: 'They just saw something true about themselves. Honor it in their own words. Do not add your interpretation or dig deeper. It is fine to end without a question.',
   },
+  setback: {
+    mode: 'explore',
+    line: 'Something they tried did not happen, or an old pattern came back. Treat it as information, not failure — no shame, no streak talk, no "try harder". Ask one curious question about what got in the way or what was different. If it fits, offer to make it smaller, try a different moment, or let it rest. If they seem unsure it still matters, ask whether it still does, and accept "not anymore".',
+  },
   intention: {
     mode: 'act',
     line: 'They chose something to try. Help them make it small and specific (when, and what exactly), in their words. If they have not said why it matters to them, ask once what makes it worth trying. Do not add a second task.',
@@ -73,7 +83,7 @@ const INSTRUCTIONS: Record<Exclude<MomentSignal, 'none'>, { mode: ConversationMo
   },
   heavy_feeling: {
     mode: 'listen',
-    line: 'They are carrying something heavy. Comfort first. Reflect the feeling in plain words. No advice, no reframing, and at most one gentle question.',
+    line: 'They are carrying something heavy. Comfort first. Reflect the feeling in plain words. No advice, no reframing, no lesson, challenge or task — this is not the moment to push growth. If they seem flooded, help them slow down (a slow breath, feet on the floor). At most one gentle question; calming down can be the whole goal.',
   },
   absolute_about_partner: {
     mode: 'challenge',

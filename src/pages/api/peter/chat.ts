@@ -215,7 +215,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // North Star ladder night (spec §4): replace the normal evening context
     // entirely. The turn-3 forced close in the else-branch is thereby
     // suppressed; buildLadderPromptBlock enforces its own bounds and a
-    // turn-7 hard wrap, with processLadderTurn's turn-8 cap as the net.
+    // turn-11 hard wrap, with processLadderTurn's turn-12 cap as the net.
     if (eveningContext && ladderState) {
       systemPrompt += buildLadderPromptBlock(ladderState, eveningContext.turnNumber, eveningContext.day);
     } else if (eveningContext) {
@@ -302,7 +302,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     // North Star markers parse on RAW output before stripMarkdown (spec §4).
-    // turnNumber drives the deterministic turn-8 hard close — the ladder can
+    // turnNumber drives the deterministic turn-12 hard close — the ladder can
     // never stay open past it regardless of what the LLM emitted.
     let ladderActive = false;
     let preStripped = rawMessage;

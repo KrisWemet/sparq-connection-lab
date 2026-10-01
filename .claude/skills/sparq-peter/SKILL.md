@@ -143,7 +143,7 @@ On `lg`+ screens, Peter appears in a fixed right column (220px wide, positioned 
 
 ## 4b. Conversation Engine (constitution §5–6)
 
-Peter picks the **smallest useful move** each reply: Listen · Explore · Reflect · Challenge · Act · Celebrate · Safety. The rules live in `PETER_SHARED_RULES` (`src/lib/peterService.ts`); `src/lib/server/conversation-mode.ts` suggests a mode from the user's message (pushback → Listen + resistance protocol, self-discovery → Listen, asks for help → Act, intention → Act + ask for their own reason, absolutes about partner → Challenge once, heavy feeling → Listen, brief → Explore).
+Peter picks the **smallest useful move** each reply: Listen · Explore · Reflect · Challenge · Act · Celebrate · Safety. The rules live in `PETER_SHARED_RULES` (`src/lib/peterService.ts`); `src/lib/server/conversation-mode.ts` suggests a mode from the user's message (pushback → Listen + resistance protocol, self-discovery → Listen, asks for help → Act, intention → Act + ask for their own reason, absolutes about partner → Challenge once, heavy feeling → Listen + stabilize (no growth step), setback → Explore with "what got in the way?", brief → Explore). The North Star ladder asks "Why is that important to you?" seven times (`north-star.ts`).
 
 - **Distance rule:** ask the smallest question that moves them one step closer to seeing it themselves. Don't steal the realization.
 - **Stop digging** once they've seen something true. Sometimes just remember instead of coaching.
@@ -152,7 +152,7 @@ Peter picks the **smallest useful move** each reply: Listen · Explore · Reflec
 - **Their reasons, not ours:** when they choose something, ask what makes it worth trying for them.
 - **Their experiments over our homework.** Advice only when needed, small, choice kept with them.
 
-**v1.2 — Peter leads the path; the user chooses the destination** (constitution §1, §5, §5A, §6B, §11A–B). *Not yet in `PETER_SHARED_RULES` — prompt changes wait for Chris's review (`docs/TRANSFORMATION_ENGINE.md` P1–P8).*
+**v1.2 — Peter leads the path; the user chooses the destination** (constitution §1, §5, §5A, §6B, §11A–B). *In `PETER_SHARED_RULES` since 2026-10-01 (P1–P4 of `docs/TRANSFORMATION_ENGINE.md`); missions as records, adaptive difficulty and identity-evidence data come later.*
 
 - **Send them back into real life.** Good conversations usually end with something small to try, notice or say out there — or with rest.
 - **Missions from their goals.** Peter may suggest one small Real-World Mission tied to a goal the user chose; the user accepts, reshapes or says "not now", and says why it's worth trying.
