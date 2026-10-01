@@ -126,12 +126,11 @@ Cursor/touch tracking for eyes. Implementation approach:
 | **Daily Growth — Morning** | Introduces today's story | morning, curious | PeterAvatar + speech bubble |
 | **Daily Growth — Evening** | Facilitates reflection chat | afternoon → empathetic | PeterChat |
 | **Onboarding** | Guides through assessment, reacts to answers | joyful → curious → celebrating | PeterAvatar + SpeechBubble |
-| **Skill Tree** | Celebrates unlocks, encourages at locked skills | celebrating / encouraging | PeterAvatar |
 | **Loading** (all pages) | Shares wisdom while user waits | — | PeterLoading (always) |
 | **Error states** | Confused Peter with helpful message | curious | `src/components/ErrorBoundary.tsx` (app-wide) |
 | **Empty states** | Waiting patiently, gentle prompt | resting / curious | PeterAvatar + empty copy |
 | **Achievement** | Full celebration | celebrating | PeterAvatar + confetti |
-| **Streak milestone** | Escalating reactions (3/7/14/30 days) | encouraging → celebrating | PeterAvatar + StreakIndicator |
+| **Milestones** | Day-14 reveal, Day-30 mirror — evidence first, the user writes the meaning (constitution §11C) | encouraging → celebrating | PeterAvatar |
 | **Partner features** | Holding heart when partner activity detected | joyful | PeterAvatar (proposed) |
 | **Desktop sidebar** | Fixed right column, tagline below | morning/afternoon/evening | peter-fixed (CSS class) |
 
@@ -165,7 +164,7 @@ Peter picks the **smallest useful move** each reply: Listen · Explore · Reflec
 ## 5. Voice & Copy Guidelines
 
 ### Rules
-- **First person**: "I'm so proud of you!" not "Peter is proud"
+- **First person**: "You did it!" / "I see what you did there" — never claim human feelings ("I missed you", "I'm so proud")
 - **Brief**: 1-2 sentences max, usually 5-10 words for micro-copy
 - **Warm and playful**: occasional otter puns, but not forced
 - **Never preachy**: no lecturing, no "you should"
@@ -189,7 +188,7 @@ Peter picks the **smallest useful move** each reply: Listen · Explore · Reflec
 
 **Celebration:**
 - "You did it! Another day of showing up for your relationship. 🦦"
-- "Look at that streak! You're otterly unstoppable."
+- "You keep coming back. That's how real change gets built."
 
 **Encouragement:**
 - "Even small steps count. You're here — that's the biggest one."
@@ -205,13 +204,12 @@ Peter picks the **smallest useful move** each reply: Listen · Explore · Reflec
 
 **Greeting:**
 - "Good morning! Ready to grow a little today?"
-- "Welcome back. I missed you. 🦦"
+- "Welcome back. Good to see you. 🦦"
 
-**Streak:**
-- 3-day: "Three days in a row! You're building something real."
-- 7-day: "A whole week! Your relationship is feeling this. ✨"
-- 14-day: "Two weeks of daily growth. I've watched you change."
-- 30-day: "Thirty days. I'm genuinely proud of who you're becoming."
+**Showing up** (forgiving count only — no "in a row" rewards; shallow gamification is out, constitution §10):
+- "Another day you showed up. That counts."
+- "Fourteen days of practice. What's different for you now?"
+- "Thirty days. You've done real work — what do you want to carry forward?"
 
 > Full copy library with 50+ messages: `references/peter-copy-library.md`
 
