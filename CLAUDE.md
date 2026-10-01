@@ -2,7 +2,7 @@
 
 This file provides comprehensive context for AI assistants working on this codebase. Read the product context section first — every time, without skipping.
 
-> **Product constitution (v1.2):** [`docs/CONSTITUTION.md`](docs/CONSTITUTION.md) defines Sparq's governing principles — *Sparq helps people discover who they want to become, understand why it matters, and practice becoming that person in the real world*; the user chooses the destination and Sparq helps lead the path; the Transformation Engine; hypotheses never diagnoses; Peter's conversation modes; memory discipline; and private/shared privacy boundaries. Read it before planning any feature. Its "Constitutional test" applies to every major feature. Implementation map: `docs/CONSTITUTION_AUDIT.md` (status + §13 checklist), `docs/PERSON_MODEL.md`, `docs/RELATIONSHIP_MODEL.md`, `docs/METRICS.md`, `docs/INFLUENCE_AUDIT.md` (v1.1 conflicts: fixed vs. still to fix), `docs/TRANSFORMATION_ENGINE.md` (v1.2 map: what exists, future alignment, risks, sequence — **doctrine only, not implemented**), `docs/evals/resistance-handling.md` (Peter pushback and leadership cases). It is the source of truth for everything it covers; where it is silent, the rest of this file and the Master PRD apply.
+> **Product constitution (v1.2):** [`docs/CONSTITUTION.md`](docs/CONSTITUTION.md) defines Sparq's governing principles — *Sparq helps people discover who they want to become, understand why it matters, and practice becoming that person in the real world*; the user chooses the destination and Sparq helps lead the path; the Transformation Engine; hypotheses never diagnoses; Peter's conversation modes; memory discipline; and private/shared privacy boundaries. Read it before planning any feature. Its "Constitutional test" applies to every major feature. Implementation map: `docs/CONSTITUTION_AUDIT.md` (status + §13 checklist), `docs/PERSON_MODEL.md`, `docs/RELATIONSHIP_MODEL.md`, `docs/METRICS.md`, `docs/INFLUENCE_AUDIT.md` (v1.1 conflicts: fixed vs. still to fix), `docs/TRANSFORMATION_ENGINE.md` (v1.2 map + build status — missions, Deep Why, identity evidence, rites of passage; migration `20261001100000` **written, not applied**), `docs/PRIMING_AUDIT.md` (design-influence elements by review tier), `docs/evals/resistance-handling.md` (Peter pushback and leadership cases). It is the source of truth for everything it covers; where it is silent, the rest of this file and the Master PRD apply.
 
 ---
 
@@ -420,7 +420,9 @@ Managed via Supabase. Schema defined in `supabase/schema.sql`.
 | `system_settings` | Admin-configurable key-value settings |
 | `profile_traits` | Person Model hypothesis layer — guesses with evidence, `status` hypothesis/confirmed/rejected |
 | `memories` | Distilled memories with `kind` + `importance` (pgvector); `metadata.trace` rows are growth-engine only |
-| `self_discoveries` / `experiments` | The user's own conclusions and self-chosen experiments (private) |
+| `self_discoveries` / `experiments` | The user's own conclusions and self-chosen experiments / Real-World Missions (cue, skill ladder, learning, environment note) (private) |
+| `user_reasons` | The user's own reasons, in their words; Deep Why chains (`parent_reason_id`, `depth`, `is_bedrock`) |
+| `identity_evidence` / `growth_arcs` | Steps the user linked to who they want to become; rites of passage they wrote (private, v1.2) |
 | `couple_spaces` / `shared_items` / `interaction_cycles` | "Us" — only what a partner explicitly shared (RLS-enforced; see `docs/RELATIONSHIP_MODEL.md`) |
 
 ### Row Level Security

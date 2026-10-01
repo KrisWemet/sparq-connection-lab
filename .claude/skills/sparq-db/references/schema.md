@@ -739,6 +739,22 @@ CREATE INDEX memories_user_id_idx ON memories(user_id);
 
 **pgvector note:** The `vector` extension is v0.8.0 in the `public` schema. Do NOT use `extensions.vector()` in migrations or function signatures — use `vector()` directly.
 
+### Person Model & Transformation Engine (2026-09-30 → 2026-10-01)
+
+Private, owner-only RLS (`auth.uid() = user_id`); never read by the partner, Shared Peter or admins (admins see counts via `discovery_metrics()` / `transformation_metrics()`). Full spec: `docs/PERSON_MODEL.md` §1–§9.
+
+| Table | Purpose | Key v1.2 columns (migration `20261001100000`, written — apply before relying on them) |
+|---|---|---|
+| `profile_traits` | Hypothesis layer (status hypothesis/confirmed/rejected, evidence, counter-evidence) | — |
+| `self_discoveries` | The user's own conclusions | — |
+| `experiments` | Self-chosen experiments / Real-World Missions | `kind`, `cue`, `skill_key`, `difficulty_level`, `domain`, `revised_from`, `learning` jsonb, `environment_note`, `accepted_from_suggestion`; status adds `revised` |
+| `user_reasons` | The user's reasons in their words; Deep Why chains | `parent_reason_id`, `depth`, `is_bedrock`; source adds `deep_why` |
+| `rejected_hypotheses` | Guesses the user rejected (never re-pushed) | — |
+| `identity_evidence` | Steps the user linked to their North Star line | new table |
+| `growth_arcs` | Rites of passage the user wrote (`day_30`, `skill:<key>`) | new table |
+
+**Fail-soft pattern:** code that touches v1.2 columns uses `withSchemaFallback()` / `isMissingSchemaError()` from `src/lib/server/schema-fallback.ts` and retries with the v1.1 shape, so a deploy before the migration never breaks a user flow.
+
 ---
 
 *Source of truth: `supabase/schema.sql` + `supabase/migrations/`. When adding new tables, create a new migration file — do not edit schema.sql directly.*

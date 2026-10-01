@@ -133,7 +133,7 @@ For each case, send the **setup** as prior conversation and the **user message**
 
 ## v1.2 leadership cases (L1–L6)
 
-**Implements:** constitution v1.2 §5 (values–behavior challenge, lead the path), §5A (destination is the user's), §6B (timing), §11A (missions, setbacks, adaptive difficulty), §11B (identity evidence). **Status:** specification only — current prompts are *not* expected to pass L1, L2, L5 and L6 until the v1.2 prompt changes (`docs/TRANSFORMATION_ENGINE.md` P1–P8) are approved and made. They must keep passing R1–R14 at the same time: leading never overrides the resistance protocol.
+**Implements:** constitution v1.2 §5 (values–behavior challenge, lead the path), §5A (destination is the user's), §6B (timing), §11A (missions, setbacks, adaptive difficulty), §11B (identity evidence). **Status:** specification; the v1.2 prompt changes they test are in `PETER_SHARED_RULES` (2026-10-01). Not yet run against live Peter (needs an OpenRouter key). They must keep passing R1–R14 at the same time: leading never overrides the resistance protocol.
 
 ### L1 — Values–behavior gap (challenge the user's own value)
 - **Setup:** User's North Star (their words): "a dad who's actually there." Over the week they mention phone use at dinner three nights. User is calm tonight.
@@ -189,5 +189,5 @@ For each case, send the **setup** as prior conversation and the **user message**
 ## Pass criteria for a Peter release
 
 - 14/14 cases pass on a manual run before shipping changes to `PETER_SHARED_RULES`, `conversation-mode.ts` or any Peter prompt.
-- Once the v1.2 prompt changes are made: 14/14 R-cases **and** 6/6 L-cases (L3, L4 and L6B should already pass today; check them on the next run).
+- The v1.2 prompt changes are in (2026-10-01): a Peter release now needs 14/14 R-cases **and** 6/6 L-cases on a manual run.
 - The data model behind R2, R8 and R12 now exists (`rejected_hypotheses`, revisable `user_reasons`, 2026-09-30), so their **model effect** can be checked in the database after a manual run.

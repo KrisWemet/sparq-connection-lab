@@ -22,9 +22,13 @@ Events also logged to `analytics_events`: `mirror_reflected`, `experiment_create
 
 Fixed along the way: `/api/admin/kpis` called `is_admin` with the wrong parameter name (`user_id` instead of `check_user_id`) and therefore always returned 403.
 
-## v1.2 transformation metrics (conceptual — not instrumented)
+## v1.2 transformation metrics
 
-Constitution v1.2 §10 adds measures of lived change. Each needs a precise definition here, and Chris's OK, before it is instrumented. Same rules: aggregate counts only, never optimized directly, agreement with Peter is never a metric.
+Constitution v1.2 §10 adds measures of lived change. **Instrumented 2026-10-01** as `public.transformation_metrics(window_days)` (migration `20261001100000_transformation_engine.sql`, not yet applied) → `GET /api/admin/kpis` (`transformation` block) → Admin → Discovery → *Lived change*. Same rules: aggregate counts only, never optimized directly, agreement with Peter is never a metric.
+
+Implemented definitions: **missions tried**; **reflection rate** = resolved missions with a `learning` entry ÷ resolved; **setbacks** = skipped + let go + revised; **adaptation rate** = revised ÷ setbacks; **persistence after setback** = setbacks that were revised or followed by a new attempt within 14 days ÷ setbacks; **user-designed share** = missions not taken from an idea ÷ all; **identity steps** = consistent `identity_evidence`; **Deep Whys** = North Stars with a `deep_why` chain; **chapters** = `growth_arcs`; **missions reaching others** = domain family/friends/work/community. Not yet instrumented from the table below: user-originated insight share (needs `self_discoveries.origin`), identity alignment self-report, repair attempts.
+
+Events added to `analytics_events`: `identity_step_linked`, `identity_question_answered`, `growth_arc_marked`; `experiment_created` / `experiment_resolved` now carry domain, skill, felt and what got in the way.
 
 | Metric (draft definition) | Likely source |
 |---|---|

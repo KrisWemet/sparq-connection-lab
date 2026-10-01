@@ -1,7 +1,27 @@
 # Transformation Engine — Implementation Map
 
 **Constitution:** v1.2 (§1A, §1B, §5A–§5C, §6B, §8A, §11A–§11D, §12A) · **Date:** 2026-10-01
-**Status: doctrine and planning only.** Nothing in this document is built. No code, migration or UI change follows from it until Chris reviews the v1.2 doctrine (constitution §14, steps 17–26).
+**Status (2026-10-01):** doctrine reviewed by Chris; steps 17–26 **built on branch `claude/sparq-constitution-transformation-0a40nt`** (see *Build status* below). The schema change `supabase/migrations/20261001100000_transformation_engine.sql` is **written but not applied**; every code path falls back to the v1.1 schema until it runs (`src/lib/server/schema-fallback.ts`).
+
+## Build status
+
+| Step (§14) | What shipped | Where |
+|---|---|---|
+| 17 Map | This document | — |
+| 18 Person Model | Additive migration: mission fields on `experiments` (+ status `revised`), Deep Why chains on `user_reasons`, `identity_evidence`, `growth_arcs`, `transformation_metrics()` | `20261001100000_transformation_engine.sql`, `docs/PERSON_MODEL.md` §9 |
+| 19 Peter | Lead the path, values–behavior challenge, stabilization, setbacks, identity evidence; `setback` signal; seven-why ladder | `peterService.ts`, `conversation-mode.ts`, `north-star.ts` |
+| 20 Missions | Idea → "Make it mine" (or "Not now") → cue → check-in → learn → adapt; one idea at most, only with a user-chosen target | `src/lib/missions.ts`, `/api/experiments`, `ExperimentsCard` |
+| 21 Setbacks | "Does it still matter?" → what got in the way → smaller / different moment / later / let go; "not anymore" retires the reason everywhere; Peter sees last week's setback as information | same + `memory.ts` |
+| 22 Adaptive difficulty | Four skill ladders; next step after two easy tries, smaller step after two setbacks, from the most recent level | `missions.ts` |
+| 23 Environment | "What made it easier or harder?" in check-ins; shown on the Insight Profile (removable) and to Peter (plan, never judge) | `ExperimentsCard`, `/insight-profile`, `memory.ts` |
+| 24 Priming audit + disclosure | Every design-influence element tiered; `/how-sparq-works`; "On hard days" and "Ideas" settings | `docs/PRIMING_AUDIT.md`, `/how-sparq-works`, `insight-profile.ts` |
+| 25 Milestones + contribution | Rites of passage for Day 30 and completed skill paths, incl. optional "who else benefits?"; "who does it reach?" on missions | `RiteOfPassage`, `/api/me/growth-arc` |
+| 26 Metrics | `transformation_metrics()` + Admin → Discovery "Lived change"; v1.2 user-testing questions | `docs/METRICS.md`, `admin.tsx`, `USER_TESTING_PLAN.md` |
+| — Identity evidence | User links a tried step to who they want to become; after 3 (30 days, 14-day cooldown) the identity card asks "does that change how you see yourself?" | `src/lib/identity.ts`, `/api/me/identity-evidence`, `IdentityArcCard` |
+| — Deep Why | Seven "why is that important to you?" layers saved as a chain on confirmation; shown with "Not why anymore" | `reasons.ts`, `/api/me/deep-why`, `IdentityArcCard` |
+| — Gamification | Consecutive "in a row" track retired; "Skill Tree Unlocked" removed | `daily-growth.tsx`, `Day14Graduation.tsx` |
+
+**Still open:** apply the migration (Chris); run the R- and L-cases in `docs/evals/resistance-handling.md` on a preview with an OpenRouter key; unit tests for the new pure logic (`missions.ts`, `identity.ts`, `deepWhyLayersFromTranscript`, the `setback` signal) need Chris's OK; two tier-3 items in `docs/PRIMING_AUDIT.md`; drop the unused `consecutive_streak` column (Chris's OK). Social reinforcement beyond the partner (§8A) and other domains (§12A) wait for explicit authorization.
 
 This document answers four questions for the v1.2 amendment:
 
