@@ -21,7 +21,9 @@
 | — Deep Why | Seven "why is that important to you?" layers saved as a chain on confirmation; shown with "Not why anymore" | `reasons.ts`, `/api/me/deep-why`, `IdentityArcCard` |
 | — Gamification | Consecutive "in a row" track retired; "Skill Tree Unlocked" removed | `daily-growth.tsx`, `Day14Graduation.tsx` |
 
-**Still open:** apply the migration (Chris); run the R- and L-cases in `docs/evals/resistance-handling.md` on a preview with an OpenRouter key; unit tests for the new pure logic (`missions.ts`, `identity.ts`, `deepWhyLayersFromTranscript`, the `setback` signal) need Chris's OK; two tier-3 items in `docs/PRIMING_AUDIT.md`; drop the unused `consecutive_streak` column (Chris's OK). Social reinforcement beyond the partner (§8A) and other domains (§12A) wait for explicit authorization.
+**Verified 2026-10-01:** the migration was run twice against a local Postgres 16 (on v1.1 table shapes): it applies cleanly and is idempotent, the new CHECK constraints reject bad values, `transformation_metrics()` returns the expected numbers, and RLS hides `identity_evidence` / `growth_arcs` from another user. `next build` passes; the new cards and `/how-sparq-works` were checked in screenshots with mocked APIs.
+
+**Still open:** apply the migration (Chris), then add the two new tables to a live run of `supabase/tests/rls_boundaries.sql`; run the R- and L-cases in `docs/evals/resistance-handling.md` on a preview with an OpenRouter key; unit tests for the new pure logic (`missions.ts`, `identity.ts`, `deepWhyLayersFromTranscript`, the `setback` signal) need Chris's OK; two tier-3 items in `docs/PRIMING_AUDIT.md`; drop the unused `consecutive_streak` column (Chris's OK). Social reinforcement beyond the partner (§8A) and other domains (§12A) wait for explicit authorization.
 
 This document answers four questions for the v1.2 amendment:
 
