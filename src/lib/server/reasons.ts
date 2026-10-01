@@ -47,15 +47,23 @@ export async function saveExperimentReason(
 
 export const DEEP_WHY_LAYERS = 7;
 
+// "I don't know", "that's enough" — a way of stopping, not a layer.
+const STOP_ANSWER = /^\s*((i don'?t know|idk|not sure|that'?s (enough|it)|stop|can we stop|i'?d rather not|no idea)[\s.!,]*)+$/i;
+
 /**
  * Picks the Deep Why layers out of a ladder transcript (constitution v1.2
- * §5B): the user's answers after their opening reflection, minus the final
- * confirmation turn, at most seven. Pure — exported for tests.
+ * §5B): the user's answers after their opening reflection and before Peter
+ * first proposed their line (the 'proposed' marker), without stop phrases,
+ * at most seven. Without a marker, the final confirmation turn is dropped.
+ * Pure — exported for tests.
  */
 export function deepWhyLayersFromTranscript(transcript: Array<{ role: string; content: string }>): string[] {
-  const answers = transcript.filter(t => t.role === 'user').map(t => (t.content || '').trim()).filter(Boolean);
-  // [0] is the evening reflection Peter asked "why" about; the last is "yes, that's it".
-  return answers.slice(1, -1).slice(0, DEEP_WHY_LAYERS).map(a => a.slice(0, 500));
+  const markerAt = transcript.findIndex(t => t.role === 'system' && t.content === 'proposed');
+  const window = markerAt >= 0 ? transcript.slice(0, markerAt) : transcript;
+  let answers = window.filter(t => t.role === 'user').map(t => (t.content || '').trim()).filter(Boolean);
+  // [0] is the evening reflection Peter asked "why" about.
+  answers = markerAt >= 0 ? answers.slice(1) : answers.slice(1, -1);
+  return answers.filter(a => !STOP_ANSWER.test(a)).slice(0, DEEP_WHY_LAYERS).map(a => a.slice(0, 500));
 }
 
 /**

@@ -31,7 +31,7 @@ const SELF_DISCOVERY =
 // Setbacks are data (constitution v1.2 §11A): something they tried didn't
 // happen or an old pattern came back.
 const SETBACK =
-  /\b(didn'?t (do|try|get to) it|didn'?t get around to it|i forgot to|i fell back|slipped back|back to my old|old habits?|did it again|(straight|right) back into|i messed (it )?up|i blew it|i gave up|it didn'?t work)\b/i;
+  /\b(didn'?t (do|try|get to) it|didn'?t get around to it|i forgot to|i fell back|slipped back|back to my old|my old habits?|i did it again|(straight|right) back into|i messed (it )?up|i blew it|i gave up|it didn'?t work)\b/i;
 const INTENTION =
   /\b(i('ll| will| am going to|'m going to| want to try| plan to)|tomorrow i|next time i|i'?m going to try)\b/i;
 const ASKS_FOR_HELP =
@@ -51,11 +51,12 @@ export function classifyMoment(message: string): MomentSignal {
   if (!text) return 'none';
   if (PUSHBACK.test(text)) return 'pushback';
   if (SELF_DISCOVERY.test(text)) return 'self_discovery';
-  if (SETBACK.test(text)) return 'setback';
   if (ASKS_FOR_HELP.test(text)) return 'asks_for_help';
   if (INTENTION.test(text)) return 'intention';
   if (HEAVY_FEELING.test(text)) return 'heavy_feeling';
   if (ABSOLUTE.test(text) && PARTNER_REF.test(text)) return 'absolute_about_partner';
+  // After heavy feelings: a flooded "I messed up again" needs comfort first.
+  if (SETBACK.test(text)) return 'setback';
   if (wordCount(text) < 8) return 'brief';
   return 'none';
 }

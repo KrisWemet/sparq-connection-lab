@@ -236,6 +236,9 @@ export async function processLadderTurn(
           status: 'laddering',
           attempt_count: row.attempt_count + 1,
           last_attempt_at: new Date().toISOString(),
+          // Each attempt starts a fresh transcript, so a Deep Why is never
+          // built from an earlier, deferred conversation.
+          ladder_transcript: [],
         })
         .eq('id', row.id);
       row = { ...row, status: 'laddering', attempt_count: row.attempt_count + 1 };
@@ -247,6 +250,9 @@ export async function processLadderTurn(
       const transcript = Array.isArray(cur?.ladder_transcript) ? cur.ladder_transcript : [];
       transcript.push({ role: 'user', content: userMessage.slice(0, 500) });
       transcript.push({ role: 'assistant', content: visibleMessage.slice(0, 500) });
+      // Marks the end of the why-layers: answers after this are confirmations
+      // or wording tweaks, never layers (Deep Why, §5B).
+      if (MARKER_PROPOSED.test(rawOutput)) transcript.push({ role: 'system', content: 'proposed' });
       await supabase.from('north_stars')
         .update({ ladder_transcript: transcript }).eq('id', row.id);
     }

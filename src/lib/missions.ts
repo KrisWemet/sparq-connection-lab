@@ -99,7 +99,7 @@ export type MissionHistoryRow = {
 export type SkillCapacity = {
   skill: SkillKey;
   label: string;
-  level: number;            // the highest level they have practiced
+  level: number;            // the level they practiced most recently
   triedAtLevel: number;     // tries at that level
   easyAtLevel: number;      // tries that felt easy and helped (or were mixed)
   setbacksAtLevel: number;  // skipped / let go / too much at that level
@@ -118,9 +118,12 @@ const SETBACKS_FOR_STEP_BACK = 2;
 export function capacityFromHistory(rows: MissionHistoryRow[]): SkillCapacity[] {
   const out: SkillCapacity[] = [];
   for (const skill of SKILL_KEYS) {
-    const mine = rows.filter(r => r.skill_key === skill && r.status !== 'planned');
+    // Most recent first, so a step back (or forward) moves the current level.
+    const mine = rows
+      .filter(r => r.skill_key === skill && r.status !== 'planned')
+      .sort((a, b) => (Date.parse(b.resolved_at ?? '') || 0) - (Date.parse(a.resolved_at ?? '') || 0));
     if (mine.length === 0) continue;
-    const level = Math.max(...mine.map(r => r.difficulty_level ?? 1));
+    const level = mine[0].difficulty_level ?? 1;
     const atLevel = mine.filter(r => (r.difficulty_level ?? 1) === level);
     const tried = atLevel.filter(r => r.status === 'tried');
     const easy = tried.filter(r => r.learning?.felt === 'easy' && r.outcome !== 'didnt_help');
@@ -137,7 +140,7 @@ export function capacityFromHistory(rows: MissionHistoryRow[]): SkillCapacity[] 
       setbacksAtLevel: setbacks.length,
       readyForNext: level < maxLevel && easy.length >= EASY_TRIES_FOR_NEXT,
       suggestStepBack: level > 1 && setbacks.length >= SETBACKS_FOR_STEP_BACK && easy.length === 0,
-      completed: level === maxLevel && tried.length > 0,
+      completed: mine.some(r => (r.difficulty_level ?? 1) === maxLevel && r.status === 'tried'),
     });
   }
   return out;

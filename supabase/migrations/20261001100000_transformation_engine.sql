@@ -118,12 +118,16 @@ BEGIN
     INTO missions_resolved, missions_tried, missions_with_learning, missions_revised, setbacks
     FROM experiments WHERE resolved_at >= since;
 
-  -- Growth persistence: a setback followed by another attempt within 14 days.
-  SELECT count(DISTINCT s.id) INTO persisted
+  -- Growth persistence: a setback the user reshaped ('revised' — the new
+  -- version is created just before the old one resolves) or followed by
+  -- another attempt within 14 days.
+  SELECT count(*) INTO persisted
     FROM experiments s
-    JOIN experiments n ON n.user_id = s.user_id
-      AND n.created_at > s.resolved_at AND n.created_at <= s.resolved_at + interval '14 days'
-    WHERE s.resolved_at >= since AND s.status IN ('skipped', 'let_go', 'revised');
+    WHERE s.resolved_at >= since AND s.status IN ('skipped', 'let_go', 'revised')
+      AND (s.status = 'revised' OR EXISTS (
+        SELECT 1 FROM experiments n
+        WHERE n.user_id = s.user_id AND n.id <> s.id
+          AND n.created_at > s.resolved_at AND n.created_at <= s.resolved_at + interval '14 days'));
 
   SELECT count(*) FILTER (WHERE NOT accepted_from_suggestion), count(*) FILTER (WHERE accepted_from_suggestion)
     INTO user_designed, accepted FROM experiments WHERE created_at >= since;

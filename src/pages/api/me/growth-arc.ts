@@ -16,7 +16,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'GET') {
     const { data, error } = await db.from('growth_arcs').select('arc_key, completed_at').eq('user_id', ctx.userId);
-    if (error) return res.status(200).json({ arcs: [] });
+    if (error) {
+      // Before the migration, a marked arc lives as a "Milestone: <key>" self-discovery.
+      const { data: legacy } = await db.from('self_discoveries').select('context')
+        .eq('user_id', ctx.userId).like('context', 'Milestone: %');
+      return res.status(200).json({ arcs: (legacy || []).map(r => String(r.context).slice('Milestone: '.length)) });
+    }
     return res.status(200).json({ arcs: (data || []).map(a => a.arc_key) });
   }
 
