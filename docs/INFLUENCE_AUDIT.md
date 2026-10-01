@@ -69,6 +69,14 @@ Severity: **High** = directly contradicts a v1.1 rule in something users see or 
 
 ---
 
+## D. Constitution v1.2 (2026-10-01) — what changes for this audit
+
+v1.2 replaces v1.1's gate ("no influence before the user chooses") with **process influence** (any stage, open, in the user's interest) vs. **destination influence** (only toward a user-chosen target). Every B-item above concerned destination influence — assigned identities, presupposed directions, fabricated proof, urgency, assigned homework — so **none of the fixes is undone**; all remain required under v1.2. B6 (daily action as invitation) stays: v1.2 Real-World Missions are suggestions the user accepts or reshapes, not homework.
+
+New alignment work for v1.2 (leading the path, values–behavior challenge, stabilization, setbacks, Deep Why chains, missions, identity evidence, priming tiers) is tracked in `docs/TRANSFORMATION_ENGINE.md` §3, not here. The two-track streak's consecutive "dopamine" track is flagged there for review (C12).
+
+---
+
 ## Summary
 
 - **16 guidance conflicts fixed** (A1–A16).

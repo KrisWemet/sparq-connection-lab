@@ -2,7 +2,7 @@
 
 This file provides comprehensive context for AI assistants working on this codebase. Read the product context section first — every time, without skipping.
 
-> **Product constitution:** [`docs/CONSTITUTION.md`](docs/CONSTITUTION.md) defines Sparq's governing principles — discovery before direction, hypotheses never diagnoses, Peter's conversation modes, memory discipline, and private/shared privacy boundaries. Read it before planning any feature. Its "Constitutional test" applies to every major feature. Implementation map: `docs/CONSTITUTION_AUDIT.md` (status + §13 checklist), `docs/PERSON_MODEL.md`, `docs/RELATIONSHIP_MODEL.md`, `docs/METRICS.md`, `docs/INFLUENCE_AUDIT.md` (v1.1 conflicts: fixed vs. still to fix), `docs/evals/resistance-handling.md` (Peter pushback cases). It is the source of truth for everything it covers; where it is silent, the rest of this file and the Master PRD apply.
+> **Product constitution (v1.2):** [`docs/CONSTITUTION.md`](docs/CONSTITUTION.md) defines Sparq's governing principles — *Sparq helps people discover who they want to become, understand why it matters, and practice becoming that person in the real world*; the user chooses the destination and Sparq helps lead the path; the Transformation Engine; hypotheses never diagnoses; Peter's conversation modes; memory discipline; and private/shared privacy boundaries. Read it before planning any feature. Its "Constitutional test" applies to every major feature. Implementation map: `docs/CONSTITUTION_AUDIT.md` (status + §13 checklist), `docs/PERSON_MODEL.md`, `docs/RELATIONSHIP_MODEL.md`, `docs/METRICS.md`, `docs/INFLUENCE_AUDIT.md` (v1.1 conflicts: fixed vs. still to fix), `docs/TRANSFORMATION_ENGINE.md` (v1.2 map: what exists, future alignment, risks, sequence — **doctrine only, not implemented**), `docs/evals/resistance-handling.md` (Peter pushback and leadership cases). It is the source of truth for everything it covers; where it is silent, the rest of this file and the Master PRD apply.
 
 ---
 
@@ -579,7 +579,7 @@ toast("Title", { description: "Details", action: { label: "Go", onClick: () => {
 
 ## Psychological Content Design
 
-**Governing rule (constitution v1.1): Discovery before direction. Agency before influence.** Peter helps users reach their own conclusions; only after a user has chosen a value, goal, insight, identity, intention or experiment may language help them follow through on it (`docs/CONSTITUTION.md` §5A, §6A).
+**Governing rule (constitution v1.2): The user chooses the destination; Sparq helps lead the path. Leadership supports agency — it does not replace it.** Peter helps users reach their own conclusions about who they are and where they're going (discovery before destination). *Process* influence — making reflection inviting, steps smaller, coming back easier — is allowed at any stage, in the open. *Destination* influence — presupposing a direction, identity reinforcement, commitment and consistency — is allowed only toward a value, goal, insight, identity, intention or experiment the user chose (`docs/CONSTITUTION.md` §5A, §6A). Sparq never tilts toward a major life outcome (stay, leave, forgive) for the user. Psychology modalities stay the foundation; influence and priming are supplementary layers (§1B, §5C).
 
 Sparq uses a layered language system to create genuine change — not just insights. When writing any user-facing content:
 
@@ -589,6 +589,8 @@ Sparq uses a layered language system to create genuine change — not just insig
 - Before the user has chosen: ask, invite, and ask permission ("Want to hear a thought?") — "whether" questions are allowed. After they've chosen: presuppose the *how* of their chosen direction
 - Prefer self-persuasion: help users voice their own reasons rather than supplying reasons
 - Resistance is information: when a user pushes back, ask what Peter might be misunderstanding — never re-push the point
+- Guided growth isn't simple validation: Peter may challenge a gap between the user's *own* stated value and their behavior — once, kindly, at the right moment, leaving "it doesn't fit anymore" open
+- Send people back into real life: small Real-World Missions from their goals, with a cue and their reason; setbacks are data, never shame
 - No fabricated statistics or social proof, no manufactured urgency, no obligation framing, no Peter claims of human feelings
 - Fourth grade reading level — always
 - Never use clinical language — see the forbidden language table in `sparq-psychology` skill

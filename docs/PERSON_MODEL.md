@@ -195,3 +195,72 @@ Effects (constitution §6A resistance protocol, §12):
 ### 8.8 How the pieces flow (reasoning hierarchy, §6A)
 
 `Listen` → `Notice` (baseline deviation, transient) → `Ask/Explore` (style from Insight Profile) → `Reflect` (with permission) → **user accepts** → `self_discoveries` (+ `preceded_by`) · **user rejects** → `rejected_hypotheses` → `Connect` (links to values/reasons) → `Choose` (`experiments` + `reason_id`) → `Support follow-through` (influence with provenance) → `Observe` (`outcome`) → `Revisit` → `Update` (Insight Profile facets, trait confidence).
+
+---
+
+## 9. v1.2 conceptual data model — Transformation Engine
+
+**Status: conceptual only — no migration, no code** (constitution v1.2 §14 steps 17–26; implementation map in `docs/TRANSFORMATION_ENGINE.md`). Implements constitution §3 (Environment & conditions; Growth additions; Insight Profile receptivity and capacity), §4 (Deep Why entries, practice and identity evidence), §5A (process vs. destination provenance), §5B, §11A–§11D.
+
+Every entity below follows the §8 design rules (private by construction, probabilistic and revisable, user-visible and user-correctable, knowingly provided data only) and **extends an existing store** instead of creating a parallel one (§12).
+
+### 9.1 Deep Why — extends `user_reasons`
+
+| Field | Meaning |
+|---|---|
+| `parent_reason_id` | the reason this one sits beneath ("why does *that* matter?") — forms a chain |
+| `depth` | layer number in the chain; seven is a ceiling, never a target |
+| `meaning_domain` | optional coarse tag the user agreed fits: identity · love · belonging · family · integrity · freedom · contribution · meaning · safety · legacy · purpose |
+| `is_bedrock` | the user reached emotionally meaningful territory here (the ladder stopped) |
+| `attached_to` | widened: value · north_star · discovery · experiment · mission · identity · relationship_intention · contribution |
+
+- The North Star ladder's turns become a chain instead of being discarded after distillation.
+- Revising or retiring a link (`still_true = false`) retires dependent reminders and mission framing (constitution §12).
+
+### 9.2 Missions — extends `experiments`
+
+`experiments.origin` already allows `peter_suggested`. Add conceptually:
+
+| Field | Meaning |
+|---|---|
+| `kind` | `experiment` (default) · `mission` |
+| `cue` | the "when X" half of the implementation intention, separate from the action |
+| `skill_key` | the practiced skill (e.g. `stay_present`, `curious_question`, `name_feeling`, `initiate_repair`) — for adaptive difficulty |
+| `difficulty_level` | 1…n within that skill's ladder |
+| `domain` | `self` · `partner` · `family` · `friends` · `work` · `community` — keeps the engine domain-agnostic (§12A) |
+| `revised_from` | the previous version when the user resized or re-cued it (adaptation, not failure) |
+| `learning` | `{ what_helped, what_got_in_way, surprise, conditions }` in the user's words |
+| `environment_notes` | the user's own plan for cues/friction/surroundings (optional) |
+| `accepted_from_suggestion` | true when the user accepted or reshaped a Peter suggestion (metrics: user-originated vs. Peter-originated) |
+
+A setback is represented here (status + learning) — there is no failure table.
+
+### 9.3 Desired identity & identity evidence
+
+- **Desired identity** reuses `north_stars` (confirmed line) and the identity statement. No new store.
+- **Identity evidence** — new conceptual rows (or `growth_moments` with extra fields): `identity_ref`, `direction` (`consistent` · `inconsistent`), `evidence_ref` (mission/experiment/reflection), `user_interpretation` (what the user said it means, if anything), `asked_at`.
+- Peter only asks about identity evidence for an identity the user named; inconsistent evidence is held privately until the right moment (§6B) and raised as a question.
+
+### 9.4 Environment & conditions, receptivity, capacity — Insight Profile facets
+
+Reuse the `profile_traits` `insight.*` namespace already proposed in §8.1:
+
+| Facet | Example | Source |
+|---|---|---|
+| `insight.environment.<factor>` | "Hard talks go worse after 10 p.m." · "Phone at dinner pulls me away" | user's own statements; mission learning |
+| `insight.receptivity` | open to challenge mornings, needs comfort after work; stabilize when flooded | check-ins, what the user says, how past moments went |
+| `insight.capacity.<skill_key>` | `stay_present`: easy now · `initiate_repair`: still a stretch | mission outcomes over time |
+
+All sensitive by default, shown on `/insight-profile`, confirm/correct/delete, frozen once user-confirmed or rejected.
+
+### 9.5 Growth arcs & milestones (§11C)
+
+`growth_arcs` (generalizing the Day-30 mirror record): `arc_key`, `started_at`, `completed_at`, and the user-written fields *used_to · discovered · practiced · changed · still_struggle · now_believe · carry_forward · ready_next*. Peter supplies evidence references; the user writes every field.
+
+### 9.6 Influence provenance — extends §8.6
+
+`{ kind: process | destination, principle, target_type, target_id, review_tier }`. `destination` requires a user-chosen `target_id`; `process` requires none but the element must have a `review_tier` (§5C). When a target is retired, every element pointing at it stops.
+
+### 9.7 Support grants — future, out of beta scope (§8A)
+
+`support_grants`: `owner_id`, `supporter_id` (or invite), `scope_type` + `scope_id` (one goal/mission/milestone), `visibility` (sees / is notified / can encourage), `expires_at`, `revoked_at`. Built on the `shared_items` consent model: nothing reaches a supporter without an explicit per-item action. Never includes hypotheses, Insight Profile, baselines, Deep Why or raw reflections unless the user writes a share.

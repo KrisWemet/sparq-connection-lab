@@ -21,3 +21,20 @@ MDR complements, never replaces, retention and product-health metrics (§10). Av
 Events also logged to `analytics_events`: `mirror_reflected`, `experiment_created`, `experiment_resolved`, `shared_item_created`, `thirty_day_mirror_concluded`.
 
 Fixed along the way: `/api/admin/kpis` called `is_admin` with the wrong parameter name (`user_id` instead of `check_user_id`) and therefore always returned 403.
+
+## v1.2 transformation metrics (conceptual — not instrumented)
+
+Constitution v1.2 §10 adds measures of lived change. Each needs a precise definition here, and Chris's OK, before it is instrumented. Same rules: aggregate counts only, never optimized directly, agreement with Peter is never a metric.
+
+| Metric (draft definition) | Likely source |
+|---|---|
+| **User-originated insight share** — self-discoveries with `origin = user_led` ÷ all self-discoveries | `self_discoveries.origin` (PERSON_MODEL §8.4) |
+| **Missions attempted** — missions/experiments `tried` per active user-week | `experiments` (`kind`) |
+| **Reflection rate** — tried or skipped missions with a learning note ÷ resolved missions | `experiments.learning` |
+| **Adaptation rate** — missions revised (`revised_from`) after a setback ÷ setbacks | `experiments` |
+| **Growth persistence after setbacks** — users who try another mission within 14 days of a skipped/let-go one | `experiments` |
+| **Real-world change evidence** — growth moments + identity evidence (consistent) per active user-month | `growth_moments`, identity evidence |
+| **Identity alignment (self-report)** — periodic "How much did you live like the person you want to be this week?" (1–5) | mirror question |
+| **Repair attempts** — user-reported repair missions/reflections | missions with `skill_key` repair, `shared_items` kind `repair` |
+| **Agency trend** — share of missions the user designed vs. accepted from Peter, over time (rising is healthy) | `experiments.origin`, `accepted_from_suggestion` |
+| **Contribution behaviors** — missions with a `domain` beyond self/partner, only for users who chose contribution | `experiments.domain` |
