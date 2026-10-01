@@ -98,7 +98,7 @@ export default function NeutralObserver() {
   if (loading || !user) return <PeterLoading isLoading />;
 
   return (
-    <div className="min-h-screen bg-brand-linen flex flex-col">
+    <div className="min-h-dvh bg-brand-linen flex flex-col">
       {/* Back nav — hidden on entry and completion */}
       {phase !== 'entry' && phase !== 'completion' && (
         <div className="mx-auto w-full max-w-lg px-4 pt-5 flex items-center">

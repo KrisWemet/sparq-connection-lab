@@ -95,7 +95,7 @@ export default function UsPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-brand-linen pb-28">
+      <div className="min-h-dvh bg-brand-linen pb-28">
         <header className="max-w-lg mx-auto px-4 pt-6">
           <div className="flex items-center justify-between mb-6">
             <button onClick={() => router.push('/dashboard')} aria-label="Back to Home"

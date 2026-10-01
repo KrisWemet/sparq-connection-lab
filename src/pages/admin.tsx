@@ -132,7 +132,7 @@ export default function Admin() {
   
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-dvh flex items-center justify-center">
         <p className="text-lg">Loading admin panel...</p>
       </div>
     );
@@ -143,7 +143,7 @@ export default function Admin() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-dvh bg-gray-50">
       <header className="sticky top-0 z-50 bg-white border-b">
         <div className="container max-w-6xl mx-auto px-4 py-3 flex items-center">
           <button 

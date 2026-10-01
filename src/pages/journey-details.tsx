@@ -596,7 +596,7 @@ export default function JourneyDetails() {
 
   if (error || !journey) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-4">
+      <div className="flex flex-col items-center justify-center min-h-dvh p-4">
         <p className="text-red-500 mb-4">{error || 'Journey not found'}</p>
         <Button onClick={() => router.push('/path-to-together')}>
           Return to Journeys

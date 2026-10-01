@@ -634,7 +634,7 @@ export default function DailyGrowth() {
       : 'Five quiet minutes now can change the tone of the rest of your day.';
 
     return (
-      <div className="min-h-screen bg-brand-linen pb-28 font-sans">
+      <div className="min-h-dvh bg-brand-linen pb-28 font-sans">
         <div className="flex items-center justify-between px-5 pt-6 pb-2">
           <span className="text-lg font-bold tracking-tight text-brand-espresso">SPARQ</span>
           <button
@@ -736,7 +736,7 @@ export default function DailyGrowth() {
 
   if (phase === 'morning') {
     return (
-      <div className="min-h-screen bg-brand-linen flex flex-col font-sans">
+      <div className="min-h-dvh bg-brand-linen flex flex-col font-sans">
         <div className="flex items-center justify-between px-5 pt-5 pb-3">
           <div className="flex items-center gap-2">
             <button
@@ -833,7 +833,7 @@ export default function DailyGrowth() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-linen flex flex-col font-sans">
+    <div className="min-h-dvh bg-brand-linen flex flex-col font-sans">
       {/* Header */}
       <div className="flex items-center justify-between px-5 pt-5 pb-3">
         <div className="flex items-center gap-2">

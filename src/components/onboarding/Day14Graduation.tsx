@@ -110,7 +110,7 @@ export function Day14Graduation() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-brand-linen to-brand-parchment flex flex-col items-center justify-start p-6 pb-12">
+        <div className="min-h-dvh bg-gradient-to-br from-brand-linen to-brand-parchment flex flex-col items-center justify-start p-6 pb-12">
             <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}

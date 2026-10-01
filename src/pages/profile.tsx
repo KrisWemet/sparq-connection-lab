@@ -170,7 +170,7 @@ export default function ProfilePage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-brand-linen pb-24">
+      <div className="min-h-dvh bg-brand-linen pb-24">
         <div className="mx-auto mb-6 flex max-w-lg items-center justify-between px-4 pt-6">
           <button
             onClick={() => router.back()}

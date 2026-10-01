@@ -179,7 +179,7 @@ export default function SettingsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-brand-linen pb-24">
+    <div className="min-h-dvh bg-brand-linen pb-24">
       {/* TOP BAR */}
       <div className="max-w-lg mx-auto px-4 pt-6 flex items-center justify-between mb-6">
         <button

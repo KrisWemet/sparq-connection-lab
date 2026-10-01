@@ -165,7 +165,7 @@ export default function Dashboard() {
   const secondaryCtaLabel = needsEveningReflection ? "Restart Morning Practice" : 'Evening Check-in';
 
   return (
-    <div className="min-h-screen bg-brand-linen pb-24">
+    <div className="min-h-dvh bg-brand-linen pb-24">
       <div className="mx-auto max-w-lg space-y-6 px-4 pt-6">
 
         {/* ── TOP BAR ── */}

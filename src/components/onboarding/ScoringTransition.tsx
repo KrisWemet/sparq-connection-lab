@@ -157,7 +157,7 @@ export function ScoringTransition({ progress, onComplete, onError, userId }: Sco
   }
 
   return (
-    <div className="min-h-screen bg-brand-linen flex flex-col items-center justify-center px-4">
+    <div className="min-h-dvh bg-brand-linen flex flex-col items-center justify-center px-4">
       <motion.div
         animate={{ scale: [1, 1.08, 1] }}
         transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}

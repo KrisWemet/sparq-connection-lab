@@ -207,7 +207,7 @@ export default function ConflictFirstAidPage() {
 
   if (phase === 'somatic') {
     return (
-      <div className="min-h-screen bg-brand-quiet flex flex-col items-center justify-center text-brand-espresso transition-colors duration-1000">
+      <div className="min-h-dvh bg-brand-quiet flex flex-col items-center justify-center text-brand-espresso transition-colors duration-1000">
         <div className="absolute top-6 left-6">
           <button
             onClick={() => router.back()}
@@ -263,7 +263,7 @@ export default function ConflictFirstAidPage() {
     : REPAIR_STARTERS;
 
   return (
-    <div className="min-h-screen bg-brand-quiet animate-in fade-in duration-1000 font-sans">
+    <div className="min-h-dvh bg-brand-quiet animate-in fade-in duration-1000 font-sans">
       <header className="sticky top-0 z-10 border-b border-zinc-200 bg-white/70 backdrop-blur-xl">
         <div className="mx-auto max-w-3xl px-4 py-4 flex items-center justify-between">
           <button

@@ -29,7 +29,7 @@ export default function HelpNowPage({ resources }: HelpNowProps) {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-brand-linen">
+    <div className="min-h-dvh bg-brand-linen">
       <main className="mx-auto max-w-lg px-5 py-10">
         <h1 className="font-serif text-2xl leading-snug text-brand-espresso mb-3">
           You deserve real support right now.

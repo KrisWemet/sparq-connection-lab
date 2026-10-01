@@ -21,7 +21,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-brand-linen font-sans selection:bg-brand-primary/30">
+    <div className="min-h-dvh bg-brand-linen font-sans selection:bg-brand-primary/30">
       {showMetaphor && (
         <MetaphorAnimation
           title={currentMetaphor === 'bridge' ? 'Building Connection' : currentMetaphor === 'flower' ? 'Nurturing Growth' : 'Flowing Together'}

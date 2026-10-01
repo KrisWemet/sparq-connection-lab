@@ -134,7 +134,7 @@ export default function ReflectionHistory() {
   if (loading || !user) return <PeterLoading isLoading />;
 
   return (
-    <div className="min-h-screen bg-brand-linen pb-24">
+    <div className="min-h-dvh bg-brand-linen pb-24">
       <div className="mx-auto max-w-lg px-4 pt-6 space-y-5">
         {/* Header */}
         <div className="flex items-center gap-3">
