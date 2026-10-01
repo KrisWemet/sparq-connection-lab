@@ -54,6 +54,34 @@ describe('decideMode', () => {
     expect(decideMode("Tomorrow I'll put my phone away at dinner").instruction).toMatch(/what makes it worth trying/);
   });
 
+  // Constitution v1.2 §11A: setbacks are information, not failure.
+  it.each([
+    ["Didn't do it. Jumped straight back into fixing again.", 'setback'],
+    ['I forgot to ask her about work', 'setback'],
+    ['I did it again, back to my old habits', 'setback'],
+  ])('treats "%s" as a setback to get curious about', (message, signal) => {
+    const decision = decideMode(message);
+    expect(decision.signal).toBe(signal);
+    expect(decision.mode).toBe('explore');
+    expect(decision.instruction).toMatch(/information, not failure/);
+    expect(decision.instruction).toMatch(/no streak talk/);
+  });
+
+  // §6B: a flooded "I messed up again" needs comfort before any growth step.
+  it.each([
+    ["I messed up again and I'm panicking"],
+    ["He did it again and I'm so hurt"],
+    ["Huge fight. I'm shaking. I can't think."],
+  ])('comforts first when "%s"', message => {
+    const decision = decideMode(message);
+    expect(decision.signal).toBe('heavy_feeling');
+    expect(decision.instruction).toMatch(/not the moment to push growth/);
+  });
+
+  it('does not call it a setback when the partner "did it again"', () => {
+    expect(classifyMoment('He did it again')).not.toBe('setback');
+  });
+
     it('treats empty input as nothing to act on', () => {
     expect(classifyMoment('   ')).toBe('none');
   });
