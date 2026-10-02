@@ -27,6 +27,7 @@ import { FavoriteUsCard } from '@/components/playful/FavoriteUsCard';
 import { EditorialEyebrow } from '@/components/editorial/EditorialSurface';
 import { TONE } from '@/lib/moment-tone';
 import { cn } from '@/lib/utils';
+import { SharePrompt } from '@/components/shared/SharePrompt';
 
 type Phase = 'loading' | 'morning' | 'evening' | 'evening-checkin' | 'journey-complete' | 'complete';
 type PracticeMode = 'solo' | 'partner_optional' | 'partner_joint';
@@ -95,6 +96,8 @@ export default function DailyGrowth() {
   const [practiceDays, setPracticeDays] = useState(0);
   const [consecutiveStreak, setConsecutiveStreak] = useState(0);
   const [reflectionClosed, setReflectionClosed] = useState(false);
+  // Tonight's reflection, kept only so the user can choose to share it (constitution §8).
+  const [justReflected, setJustReflected] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
 
@@ -482,6 +485,7 @@ export default function DailyGrowth() {
     const peterMsgs = eveningMessages.filter(m => m.role === 'assistant');
     const lastUserMsg = userMsgs[userMsgs.length - 1]?.content || '';
     const lastPeterMsg = peterMsgs[peterMsgs.length - 1]?.content || '';
+    setJustReflected(lastUserMsg);
 
     try {
       if (sessionId) {
@@ -1055,8 +1059,8 @@ export default function DailyGrowth() {
 
                   {/* Two-track streak (PRD decision 4).
                       Track 1 (always shown): forgiving practice days — never resets.
-                      Track 2 (only when alive): the gold dopamine beat for a live
-                      consecutive run. When a run is broken it simply isn't shown —
+                      Track 2 (only when alive): a gold celebration beat for a live
+                      consecutive run (constitution §10 — never a loss). When a run is broken it simply isn't shown —
                       no guilt copy, and the practice-days count is untouched. */}
                   <div className={cn(TONE.grow.card, 'mt-6 w-full max-w-xs rounded-3xl p-5 text-center shadow-sm')}>
                     <Flame size={28} className="text-brand-gold-deep mx-auto mb-2" />
@@ -1081,6 +1085,14 @@ export default function DailyGrowth() {
                       </motion.div>
                     )}
                   </div>
+
+                  {/* Private by default. Nothing reaches the partner unless the
+                      user taps "Share with partner", edits, and taps Share (§8). */}
+                  {justReflected.trim() && (
+                    <div className="w-full max-w-xs">
+                      <SharePrompt text={justReflected} />
+                    </div>
+                  )}
 
                   {/* Return button */}
                   <button
