@@ -1,6 +1,6 @@
 # Person Model V1 & Memory Schema
 
-**Constitution steps:** §14.2 (specify) · implements §3, §4, §12
+**Constitution steps:** §14.2 (specify) · implements §3, §4, §12 · §9 below: v1.2 conceptual additions (steps 18–22)
 **Migration:** `supabase/migrations/20260930100000_person_model_v1.sql` (additive — nothing existing breaks)
 
 One rule governs everything here: **the user is the authority on themselves.** Sparq holds *hypotheses*; only the user can turn one into a fact.
@@ -195,3 +195,36 @@ Effects (constitution §6A resistance protocol, §12):
 ### 8.8 How the pieces flow (reasoning hierarchy, §6A)
 
 `Listen` → `Notice` (baseline deviation, transient) → `Ask/Explore` (style from Insight Profile) → `Reflect` (with permission) → **user accepts** → `self_discoveries` (+ `preceded_by`) · **user rejects** → `rejected_hypotheses` → `Connect` (links to values/reasons) → `Choose` (`experiments` + `reason_id`) → `Support follow-through` (influence with provenance) → `Observe` (`outcome`) → `Revisit` → `Update` (Insight Profile facets, trait confidence).
+
+---
+
+## 9. v1.2 conceptual data model — Guided Transformation
+
+**Status: conceptual only — no migration, no code yet** (constitution v1.2 §1A, §1B, §3, §4; build steps 18–22). Same design rules as §8: private by construction, probabilistic and revisable, user-visible and user-correctable, knowingly provided data only, additive.
+
+**Rule for this section: extend, don't duplicate.** Every v1.2 concept maps onto a record that already exists. None of them needs a new parallel store of psychological truth.
+
+| v1.2 concept | Extends | Conceptual additions |
+|---|---|---|
+| **Real-World Mission** | `experiments` (a mission *is* an experiment) | `cue_text` ("when X, I'll try Y"; may default from `profiles.habit_anchors`), `suggested_by` (`user` · `peter_offered_then_adopted`), `difficulty_level`, `practice_key` (which practice it belongs to, e.g. `presence_in_conflict`), `revised_from` (already planned in §8.5) → adaptation history, `domain` (default `relationship`) |
+| **Setback** | existing `experiments.status` (`tried` · `skipped` · `let_go`) + `outcome` (`helped` · `mixed` · `didnt_help`) + `outcome_note` | add `what_got_in_way` (the user's words) and `adaptation` (`smaller` · `new_cue` · `new_moment` · `revised_goal` · `let_go`); optionally `old_pattern_returned` as a user-chosen flag. A setback writes Insight Evidence; it **never deletes or discounts** earlier growth evidence |
+| **Deep Why** | `user_reasons` | `parent_reason_id` (a reason *for* a reason → a chain; deepest layer last), `depth`, optional coarse `theme` tag (identity · love · belonging · family · integrity · freedom · safety · meaning · legacy · purpose · contribution) for retrieval only — never shown as a label. Revision via the existing `still_true` / `revised_at` |
+| **Desired identity** | `north_stars` (confirmed line) + the dashboard identity statement | treat as one user-authored record with history (`superseded_at`); the user can rewrite it anytime |
+| **Identity evidence** | `growth_moments` (growth engine stays the only writer) | `identity_ref` (which desired identity it bears on) and `direction` (`consistent` · `inconsistent`). Inconsistent evidence is stored, not hidden — it is a discovery opportunity, never a gotcha (constitution §4) |
+| **Practice capacity** (adaptive difficulty) | derived at read time from mission outcomes per `practice_key` | `capacity_level` per practice, computed, not stored as a judgement; compared only with the user's own history |
+| **Conditions** (environment) | `memories` kind `context` (+ `user_insights.emotional_state`) | `context_type` (`sleep` · `stress` · `workload` · `routine` · `surroundings` · `social` · `money` · `substances` · `other`); `money`/`substances`/health are `sensitive` by default; decays like other context |
+| **Readiness** (timing) | transient, like baseline deviations (§8.2) | computed per turn from current state + baseline + what the user just said (`reflect` · `challenge` · `act` · `reassure` · `explore_deeper` · `rest` · `stabilize`); **not persisted as a trait**. Only learned *patterns* of readiness go to the Insight Profile `pacing` facet |
+| **Milestone / rite of passage** | `growth_moments` + Day-14 / Day-30 mirror records | `milestone_kind`, the evidence ids it cites, and the user's own written reflection (what I used to do … what I'm ready for next). Earned by evidence, not by days alone |
+| **Contribution** | `user_reasons` / `self_discoveries` | `beneficiary` tag (partner · children · family · friends · work · community · other) when the user names who benefits. Optional; absence is never a gap to fill |
+| **Trusted people** (future, out of beta) | `couple_spaces` / `shared_items` pattern | a general "circle" with per-item, revocable, explicit sharing. Not designed further until Chris authorizes it |
+| **Influence provenance** | §8.6 | `kind`: `direction` (target = user-chosen record id) or `process` (target = process state: calm · curiosity · courage · reflection · return). No target → no direction influence |
+
+### Domain generality
+
+Missions, reasons, identity evidence and milestones carry a `domain` (default `relationship`) so the Transformation Engine is not hard-coded to couples. Only `relationship` is used until Chris authorizes another domain. Couple-specific records (`couple_spaces`, `interaction_cycles`) stay couple-specific.
+
+### What stays out
+
+- No "commitment score", "consistency score" or "resistance score" about the user.
+- No readiness or condition data from sensors, typing dynamics, location or inferred schedules.
+- Nothing in this section is readable by the partner or Shared Peter.

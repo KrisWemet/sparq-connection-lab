@@ -79,7 +79,7 @@ All messages are first-person, warm, brief, and 4th-grade reading level. Organiz
 
 | # | Length | Message |
 |---|---|---|
-| 31 | Standard | "Fourteen days ago, you started a journey. Today, you've become someone different. Not perfect — just more present, more aware, more intentional. I'm proud of you." |
+| 31 | Standard | "Fourteen days ago, you started a journey. Look at what you've practiced since. What feels different to you?" |
 | 32 | Standard | "You made it! I've put together something special for you — a reflection on everything I've noticed about your growth. Ready to see it? 🦦" |
 
 ---
@@ -93,7 +93,7 @@ All messages are first-person, warm, brief, and 4th-grade reading level. Organiz
 | 33 | Micro | "You've got this." |
 | 34 | Micro | "Keep going. 🦦" |
 | 35 | Short | "Even small steps count. You're here — that's the biggest one." |
-| 36 | Short | "I believe in you. Take your time." |
+| 36 | Short | "Take your time. There's no rush here." |
 | 37 | Standard | "Some days are harder than others. That doesn't mean you're failing — it means you're doing something that matters enough to be difficult." |
 | 38 | Standard | "You don't have to be perfect at this. You just have to keep showing up. And look — here you are." |
 

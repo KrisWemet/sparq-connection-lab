@@ -229,7 +229,7 @@ All poses share Peter's base anatomy from `src/components/dashboard/PeterAvatar.
 
 **Transition in**: Bounce entrance with confetti: spring scale 0.7→1.1→1 over 500ms + `fireElegantConfetti()`.
 
-**Default copy**: "This is HUGE. I'm so proud of who you're becoming. 🦦✨"
+**Default copy**: "This is HUGE. Look at what you did. What does it say about you? 🦦✨"
 
 ---
 

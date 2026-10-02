@@ -77,11 +77,10 @@ EFT views relationship distress as an **attachment crisis**. Partners aren't ene
 
 ### How Sparq Uses EFT
 
-- **Partner Synthesis**: "You both" framing, blended reflection, cycle naming
-- **Couple's Cycle Map** (planned): Names the couple's repeating pattern as a shared system
+- **Interaction cycles in `/us`**: a couple names its repeating pattern as a shared system; it becomes "ours" only when both partners confirm it (automatic partner synthesis was removed — `docs/RELATIONSHIP_MODEL.md`)
 - **Evening Chat**: Peter explores underlying needs behind surface complaints
 - **Morning Stories**: Demonstrate cycle awareness through the rotating morning-story couples
-- **Identity Arc**: "You used to chase. I've watched you learn to wait with trust."
+- **Identity Arc**: evidence, then the user's meaning — "You used to chase. Lately you've waited a few times. What do you make of that?" (constitution §1A: identity is user-authored)
 
 ---
 

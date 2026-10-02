@@ -64,7 +64,7 @@ The Daily Loop is the core engagement engine — a 3-phase daily cycle over 14 d
 - **Post-completion triggers** (fire-and-forget):
   - Trait inference: `POST /api/profile/analyze`
   - Memory storage: Mem0 `addMemory()` → pgvector embeddings
-  - Partner synthesis: If both partners completed → shared reflection generated
+  - ~~Partner synthesis~~ — removed (constitution §8: private reflections never cross into shared space without explicit action; see `docs/RELATIONSHIP_MODEL.md`)
 
 ### Session State Machine
 ```
@@ -185,7 +185,7 @@ Unlocks after Day 14 graduation. Provides ongoing structured growth.
 ## Key Constraints
 
 1. **Not therapy**: No diagnostic language, no clinical claims, no crisis intervention. Peter is a "relationship coach," not a therapist.
-2. **Privacy by default**: Journals and reflections are private. Partners never see each other's Peter conversations or raw trait data. Partner synthesis reveals only blended themes, never exact words.
+2. **Privacy by default**: Journals and reflections are private. Partners never see each other's Peter conversations or raw trait data. Nothing private reaches the partner — not even as blended themes; only items a user explicitly shares reach the "Us" space (constitution §8).
 3. **Safety**: Crisis detection keywords trigger safety response with hotline numbers. Outbound moderation on all AI responses. Conflict First Aid is always free (safety tool, never gated).
 4. **Loading UX**: Always use `<PeterLoading isLoading />` for loading states — never bare spinners or "Loading..." text.
 5. **Subscription**: Free tier: 3 daily loops/week, 10 coach messages/day. Premium: $14.99/mo. Stripe not yet integrated (localStorage mock). Enforcement via `resolveEntitlements()`.
