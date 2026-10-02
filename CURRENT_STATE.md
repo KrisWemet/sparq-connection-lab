@@ -69,7 +69,7 @@ A "relationship gym" for couples — **"a stronger individual creates stronger c
 1. **ICP** = couples in their first **0–18 months of marriage** / whoever will actually pay. Reachable via Rustic Retreat's wedding audience.
 2. **Palette** = reconcile via color theory → **Warm Clay** system. ✅ Done and **verified live in production**. Context worth knowing: the violet wasn't drift — an April commit deliberately shifted "terracotta → pastel lavender-violet". This decision reverses that back to warm, per Chris. If anyone asks why the app looks different, that's why.
 3. **Crisis handling** = **MANUAL LINK ONLY.** No automated text-scanning. (Currently violated in shipped code — see §7 task 1.)
-4. **Streak** = **two-track.** Keep the forgiving "practice days" count (never resets, no shame) AND add a consecutive-streak **dopamine kick** when alive; a miss silently removes the kick, never zeroes the cumulative count, never guilt copy.
+4. **Streak** = **two-track.** Keep the forgiving "practice days" count (never resets, no shame) AND add a consecutive-streak **celebration beat** while a run is alive; a miss silently removes the beat, never zeroes the cumulative count, never guilt copy. (Constitution §10: a celebration of showing up, not a hook — no loss framing, no variable rewards. The migration is still named `streak_dopamine_layer`.)
 5. **§4.2 defaults confirmed** for this ICP: CSI-4 (short, validated), `best_for_all` A/B default (Finkel's), in-app-only delivery (no push in v1).
 
 ---
@@ -202,7 +202,7 @@ Recommended system (color theory: warm analogous core + single cool counterweigh
 | Calm / grounding | Sage | `#9CB5A0` |
 | Anchor / text | Warm Espresso | `#2E2620` |
 | Background | Warm Linen | `#F5F1EA` |
-| Milestone / dopamine | Rationed Gold | `#D9A441` |
+| Milestone / celebration | Rationed Gold | `#D9A441` |
 
 ### Task 4 — Streak dopamine layer (PRD decision 4)
 Add `consecutive_streak` column maintained by the trigger (increments on consecutive days, **silently resets on a gap**) alongside the forgiving `current_streak`. Surface a **gold celebration beat** on the `/daily-growth` completion screen (the existing streak badge, ~line 1036) when the run ≥2. Never any punitive/guilt copy on a miss.
@@ -240,7 +240,7 @@ Add `consecutive_streak` column maintained by the trigger (increments on consecu
 - **Apply the streak-dopamine migration** to the live DB (see §7 warning above).
 - **Manual UAT — PARTIALLY DONE (2026-06-12).** Unauthenticated pass completed against a live dev server: all new/changed routes return 200 with no runtime errors (`/help-now`, `/neutral-observer`, `/login`, `/onboarding`, `/dashboard`), and the Warm Clay palette + Cormorant serif were verified in-browser with computed styles. **This pass is what caught the dual-Tailwind-config bug.** Still needed: an **authenticated** walkthrough (real signup → CSI baseline → questions → Peter → journey → anchor → Day-1 hook → dashboard → day-14), which needs test credentials.
 - **Hardcoded legacy hexes** — ~10 older components still carry `#6E56F7` / `#8B5CF6` / `#5B4A86` inline (PeterAvatar, PeterSession, MorningBrief, DailyTimeline, etc.). The token swap covers everything using `brand-*` classes; these inline ones need a manual pass.
-- **Legacy streak components** (`StreakIndicator`, `JourneyMapCard`, `DashboardContent`) are unmounted on the beta path and contain unsourced stats + "embedded command" copy — retire or clean up.
+- ~~Legacy streak components~~ — `StreakIndicator`, `JourneyMapCard`, `DashboardContent` were deleted in the 2026-09 cleanup.
 
 ---
 
@@ -251,7 +251,7 @@ Add `consecutive_streak` column maintained by the trigger (increments on consecu
 | **Crisis → manual link** | Removed the OpenAI Moderation layer from `safety.ts` (ML-scanned every message, sent user text to a third party) + the `safety_events` insert in `chat.ts` that logged **verbatim matched crisis phrases** + the crisis analytics event. Added `/help-now` (region-aware, no auth, no scanning) and persistent "Need help now?" links on dashboard + Neutral Observer footer. Kept a local explicit-disclosure check so Peter answers with resources instead of coaching — **response routing, not monitoring**. Audited `peter/onboarding.ts` + `rehearsal/message.ts`: they only respond, never log — unchanged. |
 | **Ladder-night defect** | Growth-moment block + insight skeletons now gated on `!ladderState`. Previously a verified growth moment was marked consumed while Peter was busy running the values ladder — burned without the user ever hearing it. |
 | **Palette** | Violet → **Warm Clay**. `tailwind.config.ts` brand tokens + `globals.css` HSL vars swapped in sync. The old "parchment" was `#EEE7F8` — a lavender that silently broke the warm intent. |
-| **Streak dopamine** | Two-track: forgiving `current_streak` (never resets) + new `consecutive_streak` (dopamine track, silently resets on a gap). Completion screen shows "Days you've shown up" always, and a gold "N in a row" beat only when a run is live. No guilt copy on a miss. *(Migration pending — see §7.)* |
+| **Streak celebration** | Two-track: forgiving `current_streak` (never resets) + new `consecutive_streak` (celebration track, silently resets on a gap). Completion screen shows "Days you've shown up" always, and a gold "N in a row" beat only when a run is live. No guilt copy on a miss. *(Migration pending — see §7.)* |
 
 ---
 
@@ -278,7 +278,7 @@ Add `consecutive_streak` column maintained by the trigger (increments on consecu
 - **Vector search self-matches.** Every evening reflection is stored as a memory, so searching with today's reflection returns *today's reflection* at ~1.0 similarity. Required an age-filtered RPC (`match_memories_before`).
 - **Memories are stored as `"user: …\nassistant: …"`** — naive slicing quotes *Peter's* words back as the user's. Extract the user portion only.
 - **"NLP" is ambiguous** — one hit in `SPARQ_MASTER_SPEC.md` meant *natural language processing*, not neuro-linguistic programming. Don't retag blindly.
-- **The active `dashboard.tsx` renders NO streak indicator.** `StreakIndicator`, `JourneyMapCard`, `DashboardContent` are legacy/unmounted on the beta path (they also contain unsourced stats + "embedded command" copy — a future cleanup).
+- **The active `dashboard.tsx` renders NO streak indicator.** `StreakIndicator`, `JourneyMapCard`, `DashboardContent` were deleted in the 2026-09 cleanup.
 - **The onboarding Peter handoff is fragile** — it took two phases to make deterministic. Be careful adding depth there (this is why the Day-1 hook goes *after* journey confirm).
 
 ---

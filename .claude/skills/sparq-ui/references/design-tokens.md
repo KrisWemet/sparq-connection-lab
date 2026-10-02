@@ -189,7 +189,7 @@ All values sourced from the live codebase. Tokens marked **(proposed)** are not 
 |---|---|
 | `shadow-sm` | Default card shadow, subtle elevation |
 | `shadow-[0_8px_30px_rgb(192,97,74,0.15)]` | Elevated CTA cards (TodaysFocusCard) — warm brand-tinted shadow |
-| `shadow-[0_8px_30px_rgb(200,106,88,0.04)]` | Very subtle warm shadow (PartnerSynthesisCard) |
+| `shadow-[0_8px_30px_rgb(200,106,88,0.04)]` | Very subtle warm shadow (warm cards) |
 | `shadow-[0_4px_24px_rgba(200,106,88,0.06)]` | Medium warm shadow (score building state) |
 | `shadow-sm` + `border border-brand-primary/10` | Standard warm card treatment |
 
@@ -276,7 +276,7 @@ All values sourced from the live codebase. Tokens marked **(proposed)** are not 
 | `bg-gradient-to-b from-white to-gray-50` | Page background |
 | `bg-gradient-to-br from-white to-brand-linen/30` | Card surfaces (score, insights) |
 | `bg-gradient-to-br from-white to-primary-100` | DailyConnect card |
-| `bg-gradient-to-r from-brand-primary/10 via-brand-primary/5 to-brand-primary/10` | HeartbeatButton surface |
+| `bg-gradient-to-r from-brand-primary/10 via-brand-primary/5 to-brand-primary/10` | Soft connect surface (e.g. `/us` cards) |
 | `bg-gradient-to-r from-primary-100 to-white` | Streak card |
 | `bg-gradient-to-r from-blue-500 to-brand-primary` | Premium upgrade CTA |
 | `bg-gradient-to-r from-purple-500 to-pink-500` | Ultimate upgrade CTA |

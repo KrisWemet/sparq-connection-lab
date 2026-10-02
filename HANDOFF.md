@@ -3,6 +3,8 @@
 **Last updated:** 2026-09-30 (constitution build: all 10 §14 steps shipped)
 **Read this first in a new chat**, then `CLAUDE.md`, then `docs/CONSTITUTION.md`.
 
+> **2026-10-02:** constitution v1.2 (guided transformation; process vs. direction influence) + doctrine cleanup + Peter behavioral eval spec (`docs/evals/peter-behavior.md`) on branch `claude/eloquent-noether-j35laa` — docs only, awaiting review. See the doctrine map in `CLAUDE.md`.
+>
 > This is a snapshot of *where the build is*, not a spec. Specs/principles live in `docs/CONSTITUTION.md` and `CLAUDE.md`; deeper history lives in `CURRENT_STATE.md`.
 
 ---

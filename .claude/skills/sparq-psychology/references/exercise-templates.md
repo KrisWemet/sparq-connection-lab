@@ -100,7 +100,7 @@ Why This Matters:   Accessible science context
 
 **Reflection prompt**: "What did it feel like to act from who I want to be, rather than how I felt in the moment?"
 
-**Why this matters**: ACT research shows that values-driven behavior is 3x more durable than behavior driven by rules or willpower. When your daily actions align with the partner you want to become, change sticks.
+**Why this matters**: ACT research suggests that change driven by your own values tends to last longer than change driven by rules or willpower alone. When your daily actions line up with the partner you want to be, change is more likely to stick.
 
 ---
 
@@ -136,7 +136,7 @@ Why This Matters:   Accessible science context
 
 **Partner sharing**: "I was paying extra attention today to the moments you reached out. I noticed [X]. I want to get better at catching those."
 
-**Why this matters**: Gottman's research found that happy couples turn toward each other's bids 86% of the time. Unhappy couples: 33%. The difference isn't dramatic gestures — it's responding to the small, everyday attempts to connect.
+**Why this matters**: In one Gottman study of newlyweds, couples still together six years later had turned toward each other's bids about 86% of the time; couples who split, about 33% (Gottman & DeClaire, *The Relationship Cure*, 2001). One study — but a striking one. The difference isn't dramatic gestures — it's responding to the small, everyday attempts to connect.
 
 ---
 
@@ -224,7 +224,7 @@ Why This Matters:   Accessible science context
 **Instructions — Individual prep (4 min)**:
 1. Write a short letter (3-5 sentences) from future you — the partner you're becoming — to present you.
 2. Start with: "Dear [name], I'm writing from a year from now. Here's what I want you to know..."
-3. Include: one thing you've learned, one thing you're proud of, one thing you want to keep practicing.
+3. Include: one thing you've learned, one thing you feel good about, one thing you want to keep practicing.
 
 **Instructions — Partner share (1 min)**:
 4. Read your letter out loud to your partner, or share the part that feels most important.

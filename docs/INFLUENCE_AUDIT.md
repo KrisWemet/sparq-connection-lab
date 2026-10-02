@@ -101,3 +101,40 @@ Severity: **High** = directly contradicts a v1.1 rule in something users see or 
 | D16 | Requested frameworks not in the approved set (DBT, Transactional Analysis); "NLP" label retired in `CLAUDE.md`; Polyvagal treated as a lens | request vs. repo | Not added; §2A says new foundational modalities need Chris's approval; "NLP" label stays retired (techniques kept under construct names); Polyvagal stays a lens |
 
 **Checked and compatible (kept as is):** resistance protocol and `docs/evals/resistance-handling.md`; Behavioral Baseline and Insight Profile limits; reciprocity, social proof, authority, liking and scarcity rules (re-stated in v1.2 §5A, unchanged in substance); forgiving streak and return-after-absence language; private/shared boundaries; the user-owned-reasons model.
+
+---
+
+## E. v1.2 doctrine cleanup (2026-10-02, second pass) — doctrine and eval spec only
+
+**Changed:** documentation, skills and eval specs only. No application code, migrations, UI or tests.
+
+### Fixed
+
+| # | Stale or conflicting guidance | Where | Resolution |
+|---|---|---|---|
+| E1 | "Never ask 'do you want to proceed?'", "Both options must move forward… no stay-stuck option" (the pre-v1.1 rule) | `sparq-ui` SKILL §1, §4 | Rewritten: "how" choices only after the user chose; otherwise a real "not now" |
+| E2 | Eight deleted components documented as live, incl. StreakIndicator with "embedded command text" and streak-triggered upsells, PartnerSynthesisCard, HeartbeatButton | `sparq-ui/references/component-catalog.md`, `design-tokens.md` | Entries removed; replaced by a pointer to the real cards + card/progress/celebration doctrine |
+| E3 | No visual-priming rules in the UI skill | `sparq-ui` SKILL | New "process yes, direction no" section; imagery rule aligned with `CLAUDE.md` (golden-hour metaphors, never people) and no outcome-implying imagery |
+| E4 | Partner synthesis described as live; partner-visible RLS pattern for it; Mem0 as the memory system | `sparq-db` SKILL + `rls-policies.md` + `schema.md`; `sparq-architecture` SKILL + `architecture-overview.md`; `sparq-testing` SKILL + `test-fixtures.md`; `sparq-peter` poses + copy library; `sparq-skill-creator`; `modalities-therapeutic`/`-applied` | Rewritten to the `/us` model; deprecated tables named once as "never use"; memory is pgvector |
+| E5 | RLS doc says partners can read each other's traits ("for conflict guidance") | `sparq-db/references/rls-policies.md` | Owner-only, citing the live boundary check (`rls_boundaries.sql`: B sees A traits = 0) |
+| E6 | Realtime documented for partner presence and partner progress | `sparq-db` SKILL, `sparq-architecture` SKILL, `sparq-testing` | Not used today; if added, only for explicitly shared data — never a partner's private activity |
+| E7 | Testing skill: "ALWAYS write tests — don't wait to be asked"; "Vitest NOT installed" | `sparq-testing` | Aligned with `CLAUDE.md`: propose, ask Chris before adding; Vitest is installed (`tests/`) |
+| E8 | Fixtures/copy that declare traits or claim feelings ("your need for reassurance is actually a strength", "I'm not going anywhere", "I've been thinking about you") | `test-fixtures.md`, `sparq-testing`, `personality-adaptation-guide.md` | Guesses with questions; warm lines without feeling claims |
+| E9 | Unsourced or overstated research ("3x more durable", "#1 predictor", bare 86%/33%, "research shows… significantly happier") | `exercise-templates`, `question-bank-patterns`, `modalities-therapeutic`, `personality-adaptation-guide` | Hedged and cited (Gottman & DeClaire 2001), or softened to what research suggests |
+| E10 | `SPARQ_MASTER_SPEC.md` claims to be "the authoritative source of truth… takes precedence"; describes partner synthesis, a Couple's Cycle Map from both partners' private traits, Peter-narrated identity ("I've watched you… that's who you're becoming"), "silent" profiling, a Translator reading the partner's traits, and a Forgiveness Module framed as the "#1 blocker" | `SPARQ_MASTER_SPEC.md` | Precedence now defers to the constitution; sections rewritten to `/us`, evidence-led identity, transparent learning, user-typed Translator context, and an optional forgiveness path that never presumes forgiveness |
+| E11 | `SPARQ-PSYCHOLOGY-MODALITIES.md` claims to be "the psychology source of truth"; influence-first positioning; public-commitment pressure; "therapist endorsements"; archetype identity lines; Day-14 retention moment | `SPARQ-PSYCHOLOGY-MODALITIES.md` | Demoted to background beneath the constitution and skill; conflicting lines rewritten |
+| E12 | `SPARQ-VISION.md`: "Trojan Horse" onboarding, silent profiling, mastery-gated upsells, Translator using the partner's profile with clinical labels | `SPARQ-VISION.md` | Rewritten as a short v1.2-aligned brief |
+| E13 | `architecture-overview.md` says the Master Spec wins over every file; `LAUNCH_CHECKLIST.md` / `IMPLEMENTATION_STATUS.md` name it "source of truth" | those files | Precedence corrected |
+| E14 | Deleted streak components described as pending cleanup; streak framed as a "dopamine kick" | `CURRENT_STATE.md` | Marked deleted; reframed as a celebration beat (constitution §10) |
+| E15 | Mission ownership required the user to state a reason before a suggestion became theirs | constitution §1A/§6/§6A/§9, `PERSON_MODEL.md` §8.5, `modalities-applied`, language framework, Peter skill | **Explicit choice** makes it theirs; a reason is connected when useful, never a toll gate |
+| E16 | Process vs. direction influence defined only by example | constitution §5A (+ `CLAUDE.md`, language framework, `sparq-ui`) | Defined by what each *does*, with a per-surface table and a four-question test |
+| E17 | Which documents give instructions was implicit | `CLAUDE.md` | One doctrine map: active rules → references → snapshots → historical |
+
+### Open decisions (need Chris)
+
+| # | Question | Why it matters |
+|---|---|---|
+| O1 | May a partner see that the other **completed a day**? The Master Spec listed it as visible; under constitution §8 it is private activity unless the user opts in. | Affects any future partner nudge, the Peter "partner heart" pose, and the daily-question reveal flow |
+| O2 | The beta daily-question **reveal mechanic** ("each partner answers, then answers are revealed") is an explicit-share feature only if users know *before* answering that their answer will be shown. | Needs a consent line in the flow to satisfy §8 |
+| O3 | **Relationship OS Score** / CSI trajectory: a score shown to the user is process influence (visible progress) if it is never a grade or comparison. Confirm wording and that it is never shown to the partner. | Progress displays vs. grading (§5A, §11) |
+| O4 | Historical docs (`OLD_PRD.md`, `REFERENCE_UNIFIED_PRD.md`, `Sparq_build_Spec.md`, `audit_report_sprint1.md`, `docs/superpowers/`, `.planning/`) were classified as historical in `CLAUDE.md` but not rewritten. Archive them to a folder, or keep in place? | Fewer places for future agents to pick up superseded rules |

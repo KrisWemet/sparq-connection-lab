@@ -174,19 +174,21 @@ All messages are first-person, warm, brief, and 4th-grade reading level. Organiz
 
 ## Partner Features
 
-### Partner Activity Detected
+Only what a partner explicitly shared triggers partner copy — never their private activity or reflections (constitution §8).
+
+### Partner Shared Something
 
 | # | Length | Message |
 |---|---|---|
-| 64 | Short | "Your partner just finished their session. You're growing together. 💜" |
-| 65 | Standard | "Your partner just sent some love your way. That little moment? It matters more than you'd think. 💜" |
+| 64 | Short | "Your partner shared something with you in Us. 💜" |
+| 65 | Standard | "Your partner chose to share something with you. Take a look when you have a quiet minute. 💜" |
 
-### Partner Synthesis Available
+### A Cycle You Both Named
 
 | # | Length | Message |
 |---|---|---|
-| 66 | Short | "I've woven both your reflections together. Want to see?" |
-| 67 | Standard | "Both of you reflected today. I noticed something beautiful in the overlap. Here's what I see. 🦦" |
+| 66 | Short | "You both named the same loop. That's the two of you vs. the loop now." |
+| 67 | Standard | "You both see this pattern. Want one question to talk about together? 🦦" |
 
 ### Solo User (No Partner Linked)
 

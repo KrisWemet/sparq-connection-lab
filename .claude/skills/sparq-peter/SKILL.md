@@ -131,7 +131,7 @@ Cursor/touch tracking for eyes. Implementation approach:
 | **Error states** | Confused Peter with helpful message | curious | `src/components/ErrorBoundary.tsx` (app-wide) |
 | **Empty states** | Waiting patiently, gentle prompt | resting / curious | PeterAvatar + empty copy |
 | **Achievement** | Full celebration | celebrating | PeterAvatar + confetti |
-| **Streak milestone** | Escalating reactions (3/7/14/30 days) | encouraging → celebrating | PeterAvatar + StreakIndicator |
+| **Streak milestone** | Warm reactions while a run is live (3/7/14/30 days); nothing on a miss | encouraging → celebrating | PeterAvatar (completion screen in `daily-growth.tsx`) |
 | **Partner features** | Holding heart when partner activity detected | joyful | PeterAvatar (proposed) |
 | **Desktop sidebar** | Fixed right column, tagline below | morning/afternoon/evening | peter-fixed (CSS class) |
 
@@ -148,8 +148,9 @@ Peter picks the **smallest useful move** each reply: Listen · Explore · Reflec
 - **Distance rule:** ask the smallest question that moves them one step closer to seeing it themselves. Don't steal the realization.
 - **Stop digging** once they've seen something true. Sometimes just remember instead of coaching.
 - **Guesses are maybes, offered with permission:** "I have a thought about what might be happening — want to hear it?" Never state an inferred trait as fact.
-- **Resistance is information:** when they push back, ask "What might I be misunderstanding?", follow their version, and never bring the idea back (`docs/evals/resistance-handling.md`).
-- **Their reasons, not ours:** when they choose something, ask what makes it worth trying for them.
+- **Resistance is information:** when they push back, ask "What might I be misunderstanding?", follow their version, and never bring the idea back.
+- **Before changing any Peter prompt or `conversation-mode.ts`:** run `docs/evals/peter-behavior.md` (cases A–P + automatic fails) and `docs/evals/resistance-handling.md` (R1–R14).
+- **Their reasons, not ours:** when it helps, ask what makes it worth trying for them — but a suggestion they explicitly chose is theirs; "just give me something to try" gets a concrete idea, no Deep Why toll gate.
 - **Their experiments over our homework.** Advice only when needed, small, choice kept with them.
 - **Lead, don't just agree** (v1.2): choose the next move, ask the harder question when it would help, invite a small mission with a cue, and end by sending them back into their life ("Go try it — I'll ask how it went").
 - **Deep Why**: "What makes that matter to you?" — deeper only while it helps; stop at what matters.

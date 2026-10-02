@@ -103,7 +103,7 @@ This is the most researched destructive dyadic pattern and the most common coupl
 
 **Key insight**: Neither partner is the problem. The CYCLE is the problem. When they can name it together ("we're in the cycle again"), blame decreases and empathy increases.
 
-**In Sparq**: Conflict First Aid uses the attachment pairing to describe the couple's current dynamic. The couple can name the cycle together in `/us` (both confirm it) without blame. Peter coaches each individual to make their growth move.
+**In Sparq**: Conflict First Aid helps the user see their own side of the loop; it never uses the partner's private traits (constitution §8). The couple can name the cycle together in `/us` (both confirm it) without blame. Peter coaches each individual to make their growth move.
 
 ### How Sparq Uses Attachment Theory
 
@@ -111,7 +111,7 @@ This is the most researched destructive dyadic pattern and the most common coupl
 - **Content Adaptation**: Every exercise is adapted for all 4 styles (see personality-adaptation-guide.md)
 - **Peter's Behavior**: Adjusts warmth/intensity based on attachment style
 - **Notification Personalization**: Anxious users get more frequent, warm notifications; avoidant users get less frequent, choice-emphasizing notifications (see personality-adaptation-guide.md)
-- **Conflict First Aid**: "Your Dynamic Right Now" card uses attachment pairing to describe the couple's interaction pattern
+- **Conflict First Aid**: "Your Dynamic Right Now" may describe a loop only from the user's own side, or from a cycle both partners confirmed in `/us` — never from the partner's private traits (the current code reads `partner_traits`, which the API now always returns empty; see `docs/CONSTITUTION_AUDIT.md`)
 - **Couple's Cycle Map** (planned): Uses both partners' attachment styles to name their cycle
 
 ---
@@ -249,7 +249,7 @@ The strongest reasons for change are the user's own. Before any direction influe
 
 | Principle | Ethical application in Sparq | Not used this way |
 |---|---|---|
-| **Commitment & Consistency** | Reconnect current choices to the user's own stated values, North Star, discoveries, reasons and experiments. Small, specific, self-chosen commitments, revisited with curiosity. Commitments are revisable anytime. | Using a past commitment to shame or corner. "Public goal-setting" to create pressure. Commitments Peter proposed and the user merely accepted — a suggested mission becomes theirs only once they give their own reason for it. |
+| **Commitment & Consistency** | Reconnect current choices to the user's own stated values, North Star, discoveries, reasons and experiments. Small, specific, self-chosen commitments, revisited with curiosity. Commitments are revisable anytime. | Using a past commitment to shame or corner. "Public goal-setting" to create pressure. Commitments Peter proposed that the user never explicitly chose — a suggested mission becomes theirs only through explicit choice; a reason is welcome but not required. |
 | **Unity** | Healthy shared identity written by both partners; recurring interaction cycles framed as the problem the couple faces together ("you two vs. the loop"). | Shared identity used to push one partner into agreement; Sparq positioning itself as part of the "us". |
 | **Reciprocity → freely chosen generosity** | Invite appreciation, curiosity, kindness and vulnerability offered for their own sake. | "Peter gives warmth → user gives honest reflection" (a debt). "Do one thing and notice what comes back." Any framing that the partner now owes something. |
 | **Social proof → grounded normalization** | True, general normalization that reduces shame: "Lots of people go quiet when they feel criticized." | Invented statistics or testimonials, "other couples at your stage…" unless it's a real, cited finding, comparing partners or users, "most people quit — you're not most people". |

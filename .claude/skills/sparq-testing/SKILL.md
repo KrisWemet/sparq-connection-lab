@@ -1,6 +1,6 @@
 ---
 name: sparq-testing
-description: "Testing standards, patterns, and Sparq-specific edge cases for the Sparq Connection codebase. Use this skill whenever: writing tests for new features, debugging test failures, setting up test infrastructure, creating mock data, testing psychology-based content personalization, testing partner sync scenarios, testing streak/daily-reset logic, or when Claude should be writing tests alongside new feature code. ALWAYS write tests when building new features — don't wait to be asked."
+description: "Testing standards, patterns, and Sparq-specific edge cases for the Sparq Connection codebase. Use this skill whenever: writing tests for new features, debugging test failures, setting up test infrastructure, creating mock data, testing psychology-based content personalization, testing partner sync scenarios, testing streak/daily-reset logic, or when planning tests for new feature code. Repo rule (CLAUDE.md): ask Chris before adding any new test — propose the test, then write it once approved."
 ---
 
 # Sparq Connection — Testing Guide
@@ -12,7 +12,7 @@ description: "Testing standards, patterns, and Sparq-specific edge cases for the
 | Tool | Purpose | Status |
 |---|---|---|
 | **Playwright** (`@playwright/test ^1.58`) | E2E browser tests | Installed, configured, 7 test suites |
-| **Vitest** | Unit/integration tests | **NOT installed — add when needed** |
+| **Vitest** (`^2.1`) | Unit tests for constitution guarantees | Installed — `tests/*.test.ts`, `npm test` (pure logic, no network/DB) |
 | **React Testing Library** | Component tests | **NOT installed — add when needed** |
 
 ### Playwright Config (`playwright.config.ts`)
@@ -66,7 +66,7 @@ Add to `package.json` scripts: `"test": "vitest"`, `"test:ci": "vitest run"`
 
 ### Core Principles
 
-1. **Every new feature ships with tests.** Don't wait to be asked — write them alongside the code.
+1. **Propose tests with every new feature, and ask Chris before adding them** (CLAUDE.md non-negotiable). Behavioral expectations for Peter live as eval specs in `docs/evals/` — manual until Chris approves automating them.
 2. **Test behavior, not implementation.** Write tests from the user's perspective:
    - Good: "when user completes daily check-in, celebration screen appears"
    - Bad: "when `setPhase('completed')` is called, `phase` state equals 'completed'"
@@ -100,7 +100,7 @@ Add to `package.json` scripts: `"test": "vitest"`, `"test:ci": "vitest run"`
 - Concurrent race: two simultaneous starts resolve to one session
 - Double completion: second complete call is idempotent, doesn't increment day_index
 - Timer/phase transitions: morning → evening → completed state machine
-- Partner sharing: completion triggers partner synthesis when both done
+- Partner privacy: completing a session generates nothing for the partner (constitution §8)
 
 ### Skill Tree
 - Locked gate shows when `discovery_day < 15`
@@ -119,9 +119,9 @@ Add to `package.json` scripts: `"test": "vitest"`, `"test:ci": "vitest run"`
 ### Partner Sync
 - Single user (no partner): all partner-referencing UI handles gracefully
 - Partner linked but hasn't completed onboarding: don't show "your partner's reflection"
-- Both partners active: partner synthesis appears after both complete
+- Both partners active: each sees only what the other explicitly shared in `/us`; never the other's reflections, traits or memories
 - Partner removed mid-journey: graceful degradation
-- Realtime presence: partner online/offline status via Supabase channels
+- No partner presence or activity tracking (not built; would need an explicit opt-in under constitution §8)
 
 ### Auth
 - Login → dashboard redirect
@@ -144,10 +144,8 @@ Add to `package.json` scripts: `"test": "vitest"`, `"test:ci": "vitest run"`
 These are the relationship-app-specific scenarios that generic testing would miss:
 
 ### Solo User (No Partner)
-- Dashboard hides partner synthesis card
+- `/us` and share prompts render only for linked couples
 - "Invite your partner" CTA is visible
-- HeartbeatButton ("Thinking of you") is hidden or disabled
-- Daily completion skips partner synthesis trigger
 - All copy referencing "your partner" has fallback for solo mode
 
 ### Relationship Stage Personalization
@@ -156,15 +154,14 @@ These are the relationship-app-specific scenarios that generic testing would mis
 - Post-graduation (Day 15+): sees Skill Tree, not daily loop gate
 
 ### Attachment Style Personalization
-- **Anxious** profile: receives more reassurance copy ("I'm not going anywhere")
+- **Anxious** profile: receives more reassurance copy ("No rush — this will be here when you're ready") — never Peter claims of attachment or feelings
 - **Avoidant** profile: receives shorter, lower-pressure copy ("Take your time")
 - **Secure** profile: receives balanced, growth-oriented copy
 - Verify that different profiles produce different Peter responses
 
 ### Content Referencing Partner
-- "Your partner completed their session" — only show when partner actually completed
-- Partner synthesis: only generate when BOTH partners have completed that day
-- "Your partner is online" — only show when realtime presence confirms it
+- Never show a partner's private activity ("completed their session", "is online") unless that partner opted in — open decision, see `docs/INFLUENCE_AUDIT.md` §E
+- Shared Peter output uses only `shared_items` / `interaction_cycles` (`tests/shared-peter.test.ts`)
 - Partner hasn't completed onboarding: don't leak incomplete state
 
 ### Daily Reset / Timezone

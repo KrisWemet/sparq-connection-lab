@@ -1,7 +1,7 @@
 # Sparq Connection Lab — Implementation Status
 
 > Repo-first snapshot: 2026-03-30
-> Source of truth: `SPARQ_MASTER_SPEC.md`
+> Dated snapshot. Product rules: `docs/CONSTITUTION.md` (wins), then `SPARQ_MASTER_SPEC.md`.
 > Supporting context: `LAUNCH_CHECKLIST.md`, Phase 1 and Phase 2 planning artifacts
 
 ---

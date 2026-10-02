@@ -35,7 +35,7 @@ Peter the otter appears throughout the UX as a warm, wise companion. He delivers
 | Backend/DB | Supabase (PostgreSQL, Auth, Realtime, Edge Functions, pgvector) |
 | AI (chat) | OpenRouter → Claude Haiku 4.5 |
 | AI (analysis) | OpenAI GPT-4o-mini (trait inference, moderation, embeddings) |
-| Memory | Mem0 OSS + Supabase pgvector |
+| Memory | Supabase pgvector (`src/lib/server/memory.ts`) — no Mem0 SDK |
 | Animation | Framer Motion |
 | State | React Context (Auth, Subscription) + TanStack React Query |
 | Deployment | Vercel |
@@ -63,8 +63,8 @@ The Daily Loop is the core engagement engine — a 3-phase daily cycle over 14 d
 - On completion: `PATCH /api/daily/session/complete`
 - **Post-completion triggers** (fire-and-forget):
   - Trait inference: `POST /api/profile/analyze`
-  - Memory storage: Mem0 `addMemory()` → pgvector embeddings
-  - ~~Partner synthesis~~ — removed (constitution §8: private reflections never cross into shared space without explicit action; see `docs/RELATIONSHIP_MODEL.md`)
+  - Memory: zero or more *distilled* memories (kind + importance) → pgvector; "nothing worth remembering" is valid (`docs/PERSON_MODEL.md` §5)
+  - Nothing is generated for the partner: private reflections never cross into shared space without explicit action (constitution §8)
 
 ### Session State Machine
 ```
@@ -107,21 +107,20 @@ Unlocks after Day 14 graduation. Provides ongoing structured growth.
 ### RLS Policies
 - All tables have RLS enabled
 - Core pattern: users read/write only their own rows
-- Partners can read each other's profile (via `partner_id`)
-- Partner syntheses: SELECT where `auth.uid() = user_a_id OR auth.uid() = user_b_id`
+- Partners can read each other's profile row (via `partner_id`) — never each other's traits, memories, reflections or other Person Model data
+- Shared space: `couple_spaces` / `shared_items` / `interaction_cycles` — only what a partner explicitly shared (`docs/RELATIONSHIP_MODEL.md`)
 - Admin bypass via `is_admin()` database function
 
 ### Realtime
-- Used for partner sync (completion signals, synthesis availability)
-- Subscribe to `daily_sessions` changes filtered by partner's user ID
+- Not used today. If added, only for explicitly shared data — never a partner's private activity, completion or presence (see `sparq-db`)
 
 ### Edge Functions
 - `send-partner-invite` — sends invitation emails with invite codes
-- `memory-operations` — CRUD for Mem0-style relationship memories
+- `memory-operations` — legacy, on the deprecated `conversation_memories` table; don't build on it
 
 ### Supabase Client
 - **Canonical**: `src/lib/supabase.ts` (uses `process.env.NEXT_PUBLIC_*`)
-- **Legacy** (do not use for new code): `src/integrations/supabase/client.ts`
+- (The legacy `src/integrations/supabase/client.ts` shim was removed in 2026-09.)
 
 ---
 
@@ -146,16 +145,16 @@ Unlocks after Day 14 graduation. Provides ongoing structured growth.
 
 ### Partner System
 - `partner_invitations` — invite codes with 7-day expiry
-- `partner_syntheses` — AI-generated shared reflections when both complete
+- `couple_spaces` / `shared_items` / `interaction_cycles` — the "Us" space (explicit sharing only)
 
 ### AI & Memory
-- `memories` — pgvector embeddings for semantic search (Mem0)
+- `memories` — distilled memories with kind + importance (pgvector)
+- `self_discoveries`, `experiments`, `user_reasons`, `rejected_hypotheses` — the user's own conclusions, experiments/missions, reasons and Peter's corrected guesses (private)
 - `weekly_insights` — patterns, growth edge, strength (cached weekly)
 - `graduation_reports` — Day 14 personalized reports
 
 ### Safety & Analytics
 - `conflict_episodes` — conflict tracking with resolution timestamps
-- `vulnerability_escrow` — encrypted sensitive content
 - `analytics_events` / `user_activities` — event logging
 
 ---
@@ -169,7 +168,7 @@ Unlocks after Day 14 graduation. Provides ongoing structured growth.
 | API auth middleware | `src/lib/server/supabase-auth.ts` |
 | Trait analysis | `src/lib/server/profile-analysis.ts` |
 | Entitlements | `src/lib/server/entitlements.ts` + `src/lib/product.ts` |
-| Memory (Mem0) | `src/lib/server/memory.ts` |
+| Memory (pgvector) | `src/lib/server/memory.ts` |
 | Safety system | `src/lib/safety.ts` |
 | Morning parser | `src/lib/morning-parser.ts` |
 | Daily session APIs | `src/pages/api/daily/session/` |

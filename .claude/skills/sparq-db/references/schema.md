@@ -360,18 +360,9 @@ CREATE TABLE weekly_insights (
 );
 ```
 
-### partner_syntheses (migration 20260303000001)
-```sql
-CREATE TABLE partner_syntheses (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_a_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  user_b_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  day_index INTEGER NOT NULL,
-  synthesis TEXT NOT NULL,
-  generated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  UNIQUE(user_a_id, user_b_id, day_index)
-);
-```
+### partner_syntheses (migration 20260303000001) — deprecated
+
+Still in the database, unused by code. Automatic partner synthesis was removed because it moved private reflections into shared space without explicit action (constitution §8, `docs/RELATIONSHIP_MODEL.md`). Never read or write it; it will be dropped with Chris's OK.
 
 ### graduation_reports (migration 20260303000002)
 ```sql

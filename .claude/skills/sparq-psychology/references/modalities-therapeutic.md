@@ -31,7 +31,7 @@ These are the 6 core therapy-derived modalities that form the clinical backbone 
 
 - **5:1 Ratio**: Stable couples have 5 positive interactions for every 1 negative. Content should help users notice and create positive interactions.
 - **Bids for Connection**: A "bid" is any attempt to connect (a look, a question, a touch). Partners can turn toward, turn away, or turn against. Sparq trains bid recognition.
-- **Repair Attempts**: Any effort to de-escalate during conflict. Gottman's #1 predictor of relationship success is not conflict frequency — it's **repair speed and quality**.
+- **Repair Attempts**: Any effort to de-escalate during conflict. In Gottman's research, **repair** — how quickly and how well couples recover — mattered more than how often they fought (hedge this whenever it reaches users).
 - **Perpetual Problems**: 69% of couple conflicts are perpetual (never fully resolved). The goal is dialogue, not solution.
 - **Dreams Within Conflict**: Behind every rigid position is a dream or deep personal meaning.
 
@@ -101,7 +101,7 @@ EFT views relationship distress as an **attachment crisis**. Partners aren't ene
 
 - **Values vs. Goals**: Values are directions (being a caring partner); goals are destinations (plan a date night). Values never complete — they guide ongoing action.
 - **Willingness**: Choosing to feel uncomfortable feelings in service of what matters, rather than avoiding discomfort
-- **The "Why" Anchor**: Connecting daily actions to personal values makes behavior change 3x more durable than rule-following
+- **The "Why" Anchor**: Connecting daily actions to personal values tends to make behavior change last longer than rule-following (ACT research; hedge this whenever it reaches users)
 - **Defusion Techniques**: "I notice I'm having the thought that my partner doesn't care" (creates distance from thought)
 
 ### How Sparq Uses ACT

@@ -2,7 +2,7 @@
 
 > Goal: make the solo-first beta path safe and believable for real user testing.
 > Repo-first refresh: 2026-03-30
-> Source of truth: `SPARQ_MASTER_SPEC.md`
+> Dated snapshot. Product rules: `docs/CONSTITUTION.md` (wins), then `SPARQ_MASTER_SPEC.md`.
 
 ---
 

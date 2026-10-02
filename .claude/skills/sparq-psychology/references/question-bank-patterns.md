@@ -31,14 +31,14 @@ Expected Outcome:  What the user should walk away with
 **Q**: "Think about the last time your partner reached out to you — a comment, a look, a question. How did you respond? Did you turn toward it, or did it slip by?"
 - **Intent**: Bid recognition — awareness of connection attempts
 - **Stage**: Established, struggling
-- **Why this matters**: Gottman found that couples who "turn toward" each other's bids 86% of the time stay together. Couples who turn toward only 33% don't. Learning to notice bids is the first step.
+- **Why this matters**: In one Gottman study of newlyweds, couples still together years later had "turned toward" each other's bids about 86% of the time; couples who split, about 33% (Gottman & DeClaire, 2001). Learning to notice bids is the first step.
 - **Expected outcome**: User becomes aware of bids for connection in daily life
 
 ### Advanced
 **Q**: "In your most recent disagreement, what was the first moment either of you tried to soften things — a joke, a touch, an apology, a change of tone? What happened after that attempt?"
 - **Intent**: Repair attempt recognition and analysis
 - **Stage**: Established, struggling, thriving
-- **Why this matters**: The ability to repair after conflict is the #1 predictor of long-term relationship health — more important than how often you fight or what you fight about.
+- **Why this matters**: In Gottman's research, how well couples repair after conflict mattered more for long-term health than how often they fought or what about. One lens — but a hopeful one.
 - **Expected outcome**: User recognizes repair attempts in their own conflict patterns
 
 ---

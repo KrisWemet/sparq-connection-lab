@@ -159,7 +159,7 @@ Existing: `intention`, `context`, `origin`, `status`, `outcome`, `outcome_note`,
 
 | Field | Meaning |
 |---|---|
-| `reason_id` | the user-owned reason it serves (§8.3) — **required for Peter to use any influence on it** |
+| `reason_id` | the user-owned reason it serves (§8.3) — optional. Direction influence needs the experiment to be **explicitly chosen** by the user; a reason, when present, is what Peter reconnects them to (constitution v1.2 §1A, §5A) |
 | `linked_value_id` | optional: the value/North Star it connects to |
 | `obstacle_plan` | the user's own "if X gets in the way, I'll…" (optional) |
 | `follow_through_supports` | which supports were used (reminder tied to reason, made smaller, obstacle plan) — for learning `insight.helped` |

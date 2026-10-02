@@ -97,9 +97,9 @@ This is the critical personalization reference. Every piece of Sparq content sho
 
 ## Notification Personalization by Attachment Style
 
-| Style | Frequency | Tone | Example Push Notification |
+| Style | Suggested default (the user sets the real frequency and time) | Tone | Example notification *(push is out of beta scope)* |
 |---|---|---|---|
-| **Anxious** | More frequent, predictable timing (same time daily) | Warm, reassuring, emotionally present | "Your daily growth moment is ready — I've been thinking about you ✨" |
+| **Anxious** | Predictable timing (same time daily) | Warm, reassuring | "Your daily growth moment is ready whenever you are ✨" *(never claim Peter thinks about or misses them)* |
 | **Avoidant** | Less frequent, user-controlled schedule | Respectful, non-intrusive, emphasizing choice | "New practice available when you're ready" |
 | **Secure** | Standard frequency, balanced | Collaborative, straightforward | "Today's practice is ready for you" |
 | **Disorganized** | Predictable timing, gentle, never surprising | Extra safe, permission-giving | "Something gentle is waiting — no pressure, skip anytime" |
@@ -190,7 +190,7 @@ This is the critical personalization reference. Every piece of Sparq content sho
 
 > **Today's Action**: After a disagreement — even a small one — try saying something like: "I know that was hard. I want you to know I'm still here and I still care about us."
 >
-> You don't need to fix everything in one sentence. The repair attempt IS the win — not the resolution. And here's something that might surprise you: research shows that couples who try to repair (even imperfectly!) are significantly happier than couples who avoid conflict entirely.
+> You don't need to fix everything in one sentence. The repair attempt IS the win — not the resolution. And here's something that might surprise you: in Gottman's research, couples who kept trying to repair — even clumsily — tended to do better over time than couples who never repaired.
 >
 > **Why this matters**: Repair attempts are how your partner knows you're still in this together. For someone who really values hearing that they matter, offering those words out loud — even when it's uncomfortable — is one of the most powerful things you can do.
 
