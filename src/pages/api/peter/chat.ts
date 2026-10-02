@@ -9,7 +9,7 @@ import { searchMemories, buildOwnWordsBlock } from '@/lib/server/memory';
 import { loadPrivacyState } from '@/lib/server/privacy';
 import { assessReflectionQuality } from '@/lib/server/reflection-quality';
 import { stripMarkdown } from '@/lib/strip-markdown';
-import { decideMode } from '@/lib/server/conversation-mode';
+import { classifyMoment, decideMode } from '@/lib/server/conversation-mode';
 import { buildDoNotRepushBlock, detectVoicedInsight, loadRecentRejections, recordRejection, rejectedTraitKeys } from '@/lib/server/rejected-hypotheses';
 import { applyRejectionEvidence, type TraitRow } from '@/lib/server/trait-revision';
 import { buildConversationPrefsBlock, cleanPrefs } from '@/lib/server/insight-profile';
@@ -216,8 +216,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // entirely. The turn-3 forced close in the else-branch is thereby
     // suppressed; buildLadderPromptBlock enforces its own bounds and a
     // turn-7 hard wrap, with processLadderTurn's turn-8 cap as the net.
+    // Timing intelligence (constitution v1.2 §1B): when the user is depleted,
+    // stabilizing beats any growth move — including a ladder night or a
+    // "tell me more" nudge.
+    const stabilizeNow = classifyMoment(latestUserMessage) === 'depleted';
+
     if (eveningContext && ladderState) {
       systemPrompt += buildLadderPromptBlock(ladderState, eveningContext.turnNumber, eveningContext.day);
+      if (stabilizeNow) {
+        systemPrompt += `\n\nOVERRIDE: They are overwhelmed right now. Do not ladder tonight and ask no deeper questions. Comfort them in a few plain words, offer one optional slow breath, tell them nothing is due, and end the message with [[NORTH_STAR_DEFERRED]].`;
+      }
     } else if (eveningContext) {
       // Append evening context with reflection quality nudging (Phase 3)
       const { day, morningAction, turnNumber, reflectionPrompt, journeyTitle } = eveningContext;
@@ -241,7 +249,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         // Assess reflection quality and nudge Peter's response style
         const quality = assessReflectionQuality(latestUserMessage);
-        if (quality.depth === 'shallow' && turnNumber < 2) {
+        if (quality.depth === 'shallow' && turnNumber < 2 && !stabilizeNow) {
           systemPrompt += `\n\nThe user's response was brief. Warmly reflect what they shared, then gently invite more detail with a specific follow-up question. Don't pressure — just be curious. Example: "I hear you — can you tell me about one specific moment from today?"`;
         } else if (quality.depth === 'deep') {
           systemPrompt += `\n\nThe user shared something meaningful. Acknowledge the depth and specificity. Celebrate their openness. Don't push for more — honor what they gave you.`;
