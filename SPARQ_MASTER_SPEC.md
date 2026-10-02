@@ -1137,7 +1137,8 @@ After each evening session completion:
 ### What Partners Can See
 - What the other explicitly shared into `/us`, and interaction cycles both confirmed
 - Shared reflection prompts (opt-in per journey)
-- *Open decision:* whether a partner may see that the other completed a day. It is private activity under constitution §8 unless the user opts in — see `docs/INFLUENCE_AUDIT.md` §E
+- That the other completed a day — **only if they opted in** (Chris, 2026-10-02)
+- Daily answers — only those the author shared with the "Share with partner" button; never automatic
 - Partner's display name and avatar
 
 ---

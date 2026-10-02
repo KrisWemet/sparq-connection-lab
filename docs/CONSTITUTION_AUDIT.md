@@ -185,7 +185,6 @@ None exist. Chris decided (2026-09-29): tests are allowed but ask before adding 
 
 | Where | Conflict | Proposed fix | Step |
 |---|---|---|---|
-| `src/lib/server/conversation-mode.ts` | No Stabilize or Follow-up mode; a heavy-feeling turn maps to Listen, but nothing says "not the moment to push growth" | Add the two modes + signals (depleted / "can't tonight"; mission due) | 19 |
 | `src/lib/peterService.ts` daily concepts | Fixed 14-day rotation regardless of what the user has mastered | Read capacity from outcomes; offer the next level | 21 |
 | `src/lib/server/partner-synthesis.ts` | Dead module for the removed partner synthesis (no imports) | Delete with the deprecated tables, with Chris's OK | — |
 | `src/pages/conflict-first-aid.tsx` (`getPersonalizedGuidance`) | Built to use the partner's private `conflict_style` / `love_language` and to state them as fact ("Your partner's instinct is to pull back"). Dormant only because `/api/profile/traits` now returns empty `partner_traits` | Rewrite to use the user's own side, or a cycle both confirmed in `/us`; phrase as maybes | 23 |

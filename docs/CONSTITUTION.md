@@ -549,6 +549,11 @@ Sparq has three distinct knowledge spaces:
 
 Private knowledge may improve how Peter helps a user communicate. It may never become information Peter communicates for that user.
 
+**Decided (Chris, 2026-10-02):**
+
+- **Daily answers and reflections are private.** A partner sees one only when its author taps **"Share with partner"**, reviews the words and sends them. Nothing is shared or revealed automatically.
+- **Activity is private too.** Whether someone completed a day, is online, or kept a streak is visible to their partner only if they opt in.
+
 Behavioral baselines, motivational drivers, Insight Profiles, conditions and readiness are the most sensitive part of the Person Model. They stay in the owner's private space, are never visible to the partner, and are never used by Shared Peter. Shared Peter adapts only to what the couple shares and to how they talk together in the shared space.
 
 When a private discovery could benefit the relationship, Peter offers the user control: keep it private, or help the user put it into words to share.
@@ -716,7 +721,7 @@ Guided Transformation Layer (v1.2 — specified, not yet implemented):
 
 17. Map every Transformation Engine stage to existing flows and record gaps (done for doctrine in `docs/CONSTITUTION_AUDIT.md` v1.2 section; confirm against the live app).
 18. Extend the Person Model specification: desired identity and identity evidence, Deep Why chains, conditions and readiness, practice capacity, mission cues and adaptation history (`docs/PERSON_MODEL.md` §9).
-19. Update Peter's prompts and `conversation-mode.ts`: Stabilize and Follow-up modes, setbacks protocol, Deep Why pacing, process vs. direction influence, "send into real life", evidence-led identity questions. Run the eval spec (`docs/evals/peter-behavior.md` + `resistance-handling.md`) as a baseline first, and to green after.
+19. *(First slice shipped 2026-10-02: Stabilize + Follow-up modes, setbacks protocol, Deep Why stop rule, major-life-decision rule, "send into real life"; "Share with partner" on the day-complete screen. Live eval run pending.)* Update Peter's prompts and `conversation-mode.ts`: Stabilize and Follow-up modes, setbacks protocol, Deep Why pacing, process vs. direction influence, "send into real life", evidence-led identity questions. Run the eval spec (`docs/evals/peter-behavior.md` + `resistance-handling.md`) as a baseline first, and to green after.
 20. Missions: let experiments carry an implementation cue and an adaptation history; offer suggested missions as editable invitations; reflect after every mission.
 21. Adaptive difficulty: read capacity from mission outcomes and offer the next level.
 22. Milestones: evolve the Day-14 reveal and Day-30 Mirror into evidence-earned rites of passage; keep streaks as simple celebration.

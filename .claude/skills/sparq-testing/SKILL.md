@@ -160,7 +160,7 @@ These are the relationship-app-specific scenarios that generic testing would mis
 - Verify that different profiles produce different Peter responses
 
 ### Content Referencing Partner
-- Never show a partner's private activity ("completed their session", "is online") unless that partner opted in — open decision, see `docs/INFLUENCE_AUDIT.md` §E
+- Never show a partner's private activity ("completed their session", "is online") unless that partner opted in (decided 2026-10-02); daily answers reach the partner only via "Share with partner"
 - Shared Peter output uses only `shared_items` / `interaction_cycles` (`tests/shared-peter.test.ts`)
 - Partner hasn't completed onboarding: don't leak incomplete state
 

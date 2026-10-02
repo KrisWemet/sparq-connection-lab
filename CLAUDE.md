@@ -100,7 +100,7 @@ Peter always checks in before any content. "Is there anything you'd like to shar
 3. **Today's Implement** (2 min) — micro-action to practice in real life
 4. **Set Intention** (30 sec)
 
-Each partner answers independently, then answers are revealed. The loop closes with acknowledgment (streak, completion state).
+Each partner answers independently, and answers stay private. A partner sees an answer only when its author taps **"Share with partner"** — nothing is shared automatically, and whether someone completed a day is visible to their partner only if they opt in (Chris, 2026-10-02; constitution §8). The loop closes with acknowledgment (streak, completion state).
 
 It should feel like a ritual, not a checklist.
 
@@ -124,7 +124,7 @@ Full Daily Loop structure, modality sequencing, and session architecture: see `s
 
 - User auth (email/password via Supabase)
 - Couple linking / partner invite system
-- Daily question flow (both partners, reveal mechanic)
+- Daily question flow (both partners answer privately; "Share with partner" button, never automatic)
 - Streak tracking
 - Journeys (existing 14 — no new ones for beta)
 - Peter (present, mood-driven, emotionally expressive)

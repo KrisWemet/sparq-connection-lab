@@ -130,11 +130,15 @@ Severity: **High** = directly contradicts a v1.1 rule in something users see or 
 | E16 | Process vs. direction influence defined only by example | constitution §5A (+ `CLAUDE.md`, language framework, `sparq-ui`) | Defined by what each *does*, with a per-surface table and a four-question test |
 | E17 | Which documents give instructions was implicit | `CLAUDE.md` | One doctrine map: active rules → references → snapshots → historical |
 
-### Open decisions (need Chris)
+### Decisions (Chris, 2026-10-02)
+
+- **O1 → opt-in only.** A partner sees that the other completed a day only if that person opts in. (Nothing in the app shows it today.)
+- **O2 → "Share with partner" button, never automatic.** Built: the day-complete screen offers `SharePrompt` with tonight's reflection; private by default.
+- **Tests for the new Peter modes → approved.**
+
+### Still open
 
 | # | Question | Why it matters |
 |---|---|---|
-| O1 | May a partner see that the other **completed a day**? The Master Spec listed it as visible; under constitution §8 it is private activity unless the user opts in. | Affects any future partner nudge, the Peter "partner heart" pose, and the daily-question reveal flow |
-| O2 | The beta daily-question **reveal mechanic** ("each partner answers, then answers are revealed") is an explicit-share feature only if users know *before* answering that their answer will be shown. | Needs a consent line in the flow to satisfy §8 |
 | O3 | **Relationship OS Score** / CSI trajectory: a score shown to the user is process influence (visible progress) if it is never a grade or comparison. Confirm wording and that it is never shown to the partner. | Progress displays vs. grading (§5A, §11) |
 | O4 | Historical docs (`OLD_PRD.md`, `REFERENCE_UNIFIED_PRD.md`, `Sparq_build_Spec.md`, `audit_report_sprint1.md`, `docs/superpowers/`, `.planning/`) were classified as historical in `CLAUDE.md` but not rewritten. Archive them to a folder, or keep in place? | Fewer places for future agents to pick up superseded rules |
