@@ -412,7 +412,7 @@ export function JourneyContentView({
   // No concepts
   if (!conceptItems || conceptItems.length === 0) {
     return (
-      <div className="min-h-dvh bg-brand-linen flex items-center justify-center px-4">
+      <div className="emotion-page min-h-dvh bg-brand-linen flex items-center justify-center px-4">
         <div className="text-center">
           <p className="text-lg font-serif text-brand-taupe">This journey is coming soon.</p>
           <p className="text-sm text-brand-text-secondary mt-2">We&apos;re building something special for you.</p>
@@ -434,7 +434,7 @@ export function JourneyContentView({
     const nextTierName = nextTier === 'growth' ? 'Growth' : nextTier === 'bloom' ? 'Bloom' : null;
 
     return (
-      <div className="min-h-dvh bg-brand-linen flex flex-col items-center justify-center px-6 text-center relative overflow-hidden">
+      <div className="emotion-page min-h-dvh bg-brand-linen flex flex-col items-center justify-center px-6 text-center relative overflow-hidden">
         <motion.div
           animate={{ scale: [1, 1.1, 1], rotate: [0, 90, 0] }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
@@ -514,10 +514,8 @@ export function JourneyContentView({
   }
 
   return (
-    <div className="min-h-dvh bg-brand-linen pb-32 relative overflow-hidden">
+    <div className="emotion-page min-h-dvh bg-brand-linen pb-32 relative overflow-hidden">
       {/* Ambient backgrounds */}
-      <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[500px] bg-brand-primary/5 blur-[120px] rounded-full pointer-events-none mix-blend-multiply" />
-      <div className="absolute top-[40%] right-[-10%] w-[50%] h-[600px] bg-brand-sand/10 blur-[120px] rounded-full pointer-events-none mix-blend-multiply" />
 
       <div className="max-w-lg mx-auto py-6 px-4 relative z-10">
         {/* Back to tiers */}

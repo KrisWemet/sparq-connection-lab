@@ -1,3 +1,4 @@
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from 'next/router';
@@ -221,7 +222,7 @@ export default function DateIdeas() {
   );
 
   return (
-    <div className="min-h-dvh bg-background dark:bg-background pb-24">
+    <div className="emotion-page min-h-dvh bg-background dark:bg-background pb-24">
       <header className="sticky top-0 z-50 bg-popover dark:bg-card border-b dark:border-border">
         <div className="container max-w-lg mx-auto px-4 py-3 flex items-center">
           <button 
@@ -237,6 +238,9 @@ export default function DateIdeas() {
       </header>
 
       <main className="container max-w-lg mx-auto px-4 pt-6">
+        <div className="relative mb-5 overflow-hidden px-5 py-2">
+          <SceneAccent kind="bridge" className="h-28 w-full" />
+        </div>
         <AnimatedContainer variant="slideUp" className="mb-4">
           <div className="flex items-center gap-2 mb-2">
             <MapPin className="w-4 h-4 text-primary" />
@@ -335,32 +339,31 @@ export default function DateIdeas() {
                               <span>Cost: {idea.cost}</span>
                             </div>
                           </div>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <Button 
-                                size="sm" 
-                                variant="outline"
-                                onClick={() => handleSaveIdea(idea.id)}
-                                className={`dark:bg-card dark:border-border dark:text-white ${savedIdeas.includes(idea.id) ? "text-brand-hover border-primary dark:border-primary dark:text-primary" : ""}`}
-                              >
-                                <Bookmark className={`w-4 h-4 mr-1 ${savedIdeas.includes(idea.id) ? "fill-primary" : ""}`} />
-                                {savedIdeas.includes(idea.id) ? "Saved" : "Save"}
-                              </Button>
-                              <Button 
-                                size="sm" 
-                                variant="outline"
-                                onClick={() => handleShareIdea(idea.title)}
-                                className="dark:bg-card dark:text-white dark:border-border"
-                              >
-                                <Share2 className="w-4 h-4 mr-1" />
-                                Share
-                              </Button>
-                            </div>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleSaveIdea(idea.id)}
+                              className={`min-h-[44px] flex-1 whitespace-nowrap dark:bg-card dark:border-border dark:text-white ${savedIdeas.includes(idea.id) ? "text-brand-hover border-primary dark:border-primary dark:text-primary" : ""}`}
+                            >
+                              <Bookmark className={`w-4 h-4 mr-1 shrink-0 ${savedIdeas.includes(idea.id) ? "fill-primary" : ""}`} />
+                              {savedIdeas.includes(idea.id) ? "Saved" : "Save"}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleShareIdea(idea.title)}
+                              className="min-h-[44px] flex-1 whitespace-nowrap dark:bg-card dark:text-white dark:border-border"
+                            >
+                              <Share2 className="w-4 h-4 mr-1 shrink-0" />
+                              Share
+                            </Button>
                             <Button 
                               size="sm"
+                              className="min-h-[44px] flex-1 whitespace-nowrap"
                               onClick={() => handleScheduleDate(idea.title)}
                             >
-                              <Calendar className="w-4 h-4 mr-1" />
+                              <Calendar className="w-4 h-4 mr-1 shrink-0" />
                               Schedule
                             </Button>
                           </div>
@@ -399,32 +402,31 @@ export default function DateIdeas() {
                           <span>Cost: {idea.cost}</span>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={() => handleSaveIdea(idea.id)}
-                            className={`dark:bg-card dark:border-border dark:text-white ${savedIdeas.includes(idea.id) ? "text-brand-hover border-primary dark:border-primary dark:text-primary" : ""}`}
-                          >
-                            <Bookmark className={`w-4 h-4 mr-1 ${savedIdeas.includes(idea.id) ? "fill-primary" : ""}`} />
-                            {savedIdeas.includes(idea.id) ? "Saved" : "Save"}
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={() => handleShareIdea(idea.title)}
-                            className="dark:bg-card dark:text-white dark:border-border"
-                          >
-                            <Share2 className="w-4 h-4 mr-1" />
-                            Share
-                          </Button>
-                        </div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleSaveIdea(idea.id)}
+                          className={`min-h-[44px] flex-1 whitespace-nowrap dark:bg-card dark:border-border dark:text-white ${savedIdeas.includes(idea.id) ? "text-brand-hover border-primary dark:border-primary dark:text-primary" : ""}`}
+                        >
+                          <Bookmark className={`w-4 h-4 mr-1 shrink-0 ${savedIdeas.includes(idea.id) ? "fill-primary" : ""}`} />
+                          {savedIdeas.includes(idea.id) ? "Saved" : "Save"}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleShareIdea(idea.title)}
+                          className="min-h-[44px] flex-1 whitespace-nowrap dark:bg-card dark:text-white dark:border-border"
+                        >
+                          <Share2 className="w-4 h-4 mr-1 shrink-0" />
+                          Share
+                        </Button>
                         <Button 
                           size="sm"
+                          className="min-h-[44px] flex-1 whitespace-nowrap"
                           onClick={() => handleScheduleDate(idea.title)}
                         >
-                          <Calendar className="w-4 h-4 mr-1" />
+                          <Calendar className="w-4 h-4 mr-1 shrink-0" />
                           Schedule
                         </Button>
                       </div>
@@ -495,21 +497,22 @@ export default function DateIdeas() {
                               <span>Cost: {idea.cost}</span>
                             </div>
                           </div>
-                          <div className="flex items-center justify-between">
+                          <div className="flex flex-wrap items-center gap-2">
                             <Button 
                               size="sm" 
                               variant="outline"
                               onClick={() => handleSaveIdea(idea.id)}
-                              className="text-brand-hover border-primary dark:border-primary dark:text-primary"
+                              className="min-h-[44px] flex-1 whitespace-nowrap text-brand-hover border-primary dark:border-primary dark:text-primary"
                             >
-                              <Bookmark className="w-4 h-4 mr-1 fill-primary" />
+                              <Bookmark className="w-4 h-4 mr-1 shrink-0 fill-primary" />
                               Remove
                             </Button>
                             <Button 
                               size="sm"
+                              className="min-h-[44px] flex-1 whitespace-nowrap"
                               onClick={() => handleScheduleDate(idea.title)}
                             >
-                              <Calendar className="w-4 h-4 mr-1" />
+                              <Calendar className="w-4 h-4 mr-1 shrink-0" />
                               Schedule
                             </Button>
                           </div>
@@ -526,4 +529,4 @@ export default function DateIdeas() {
       
     </div>
   );
-} 
+}

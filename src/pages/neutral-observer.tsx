@@ -1,3 +1,4 @@
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -98,7 +99,7 @@ export default function NeutralObserver() {
   if (loading || !user) return <PeterLoading isLoading />;
 
   return (
-    <div className="min-h-dvh bg-brand-linen flex flex-col">
+    <div className="emotion-page min-h-dvh bg-brand-linen flex flex-col">
       {/* Back nav — hidden on entry and completion */}
       {phase !== 'entry' && phase !== 'completion' && (
         <div className="mx-auto w-full max-w-lg px-4 pt-5 flex items-center">
@@ -129,7 +130,8 @@ export default function NeutralObserver() {
             {/* ── ENTRY SCREEN ── */}
             {phase === 'entry' && (
               <motion.div key="entry" {...slide} className="space-y-6">
-                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-8 shadow-[0_20px_50px_hsl(var(--shadow)/0.10)]">
+                <div className="emotion-surface emotion-featured relative overflow-hidden rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-8 shadow-[0_20px_50px_hsl(var(--shadow)/0.10)]">
+                  <SceneAccent kind="flow" quiet className="-mt-4 mb-2 h-20 w-full" />
                   <div className="flex items-start justify-between gap-3 mb-5">
                     <div>
                       <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-hover mb-1">

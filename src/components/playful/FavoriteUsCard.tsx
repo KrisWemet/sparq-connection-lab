@@ -1,3 +1,4 @@
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Send } from 'lucide-react';
@@ -103,8 +104,9 @@ export function FavoriteUsCard({ prompt, dateKey, surface }: FavoriteUsCardProps
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.42, delay: 0.2 }}
-      className="rounded-[30px] border border-brand-primary/10 bg-[linear-gradient(135deg,hsl(var(--connection)/0.12),hsl(var(--popover)/0.82))] p-5 shadow-[0_16px_38px_hsl(var(--shadow)/0.06)]"
+      className="emotion-paper relative overflow-hidden rounded-[30px] border border-brand-primary/10 bg-[linear-gradient(135deg,hsl(var(--connection)/0.12),hsl(var(--popover)/0.82))] p-5 shadow-[0_16px_38px_hsl(var(--shadow)/0.06)]"
     >
+      <SceneAccent kind="bridge" area="games" className="-mt-3 mb-2 h-16 w-full" />
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="mb-2 text-xs font-semibold tracking-widest uppercase text-brand-hover">

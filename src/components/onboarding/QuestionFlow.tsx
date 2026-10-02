@@ -214,7 +214,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
   const showBack = currentIndex > 0 && !isBridging;
 
   return (
-    <div className="min-h-dvh bg-brand-linen">
+    <div className="emotion-page min-h-dvh bg-brand-linen">
       <div className="container max-w-md mx-auto px-4 py-8">
         {/* Progress bar */}
         <div className="w-full mb-6">
@@ -235,7 +235,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
         <div className="flex items-start gap-3 mb-6">
           <PeterAvatar mood="curious" size={48} />
           <div
-            className="flex-1 bg-popover rounded-2xl rounded-tl-sm p-4 text-foreground text-[15px] leading-relaxed font-serif italic"
+            className="emotion-paper flex-1 bg-popover rounded-2xl rounded-tl-sm p-4 text-foreground text-[15px] leading-relaxed font-serif italic"
             style={{ border: '1px solid hsl(var(--border))' }}
           >
             {peterText}
@@ -251,7 +251,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
               exit={{ opacity: 0 }}
               className="flex items-start gap-3 mb-6"
             >
-              <PeterAvatar mood="celebrating" size={48} />
+              <PeterAvatar state="encouraging" size={48} />
               <div
                 className="flex-1 bg-popover rounded-2xl rounded-tl-sm p-4 text-foreground text-[14px] leading-relaxed"
                 style={{ border: '1px solid hsl(var(--border))' }}

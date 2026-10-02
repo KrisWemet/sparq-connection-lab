@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import Image from 'next/image';
+import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
+import { PeterResponseStatus } from '@/components/peter/PeterResponseStatus';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Mic, Square, Loader2 } from 'lucide-react';
 import { PeterMessage } from '@/lib/peterService';
@@ -11,36 +12,6 @@ interface PeterChatProps {
   isLoading?: boolean;
   placeholder?: string;
   inputDisabled?: boolean;
-}
-
-function PeterAvatar({ isTyping = false }: { isTyping?: boolean }) {
-  return (
-    <div className="relative flex-shrink-0" style={{ width: 36, height: 36 }}>
-      {isTyping && (
-        <motion.div
-          className="absolute inset-[-4px] rounded-full"
-          style={{ background: 'radial-gradient(circle, hsl(var(--primary)/0.2) 0%, transparent 70%)' }}
-          animate={{ scale: [1, 1.3, 1] }}
-          transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      )}
-      <Image
-        src="/images/peter-default.png"
-        alt="Peter"
-        width={36}
-        height={36}
-        style={{ width: 36, height: 36, objectFit: 'contain', filter: 'drop-shadow(0 2px 4px hsl(var(--shadow)/0.12))' }}
-      />
-    </div>
-  );
-}
-
-function TypingIndicator() {
-  return (
-    <div className="flex items-end gap-3">
-      <PeterAvatar isTyping={true} />
-    </div>
-  );
 }
 
 export function PeterChat({
@@ -61,7 +32,7 @@ export function PeterChat({
   const audioChunksRef = useRef<Blob[]>([]);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    bottomRef.current?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }, [messages, isLoading]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -154,7 +125,7 @@ export function PeterChat({
               transition={{ type: "spring", bounce: 0, duration: 0.4 }}
               className={`flex items-end gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
             >
-              {msg.role === 'assistant' && <PeterAvatar />}
+              {msg.role === 'assistant' && <PeterAvatar size={36} state="neutral" />}
 
               <motion.div
                 layout="position"
@@ -167,6 +138,7 @@ export function PeterChat({
                   : { backgroundColor: 'hsl(var(--primary))', color: 'hsl(var(--primary-foreground))' }
                 }
               >
+                {msg.role === 'assistant' && <span className="sr-only">Peter: </span>}
                 {msg.role === 'assistant' ? stripMarkdown(msg.content) : msg.content}
               </motion.div>
             </motion.div>
@@ -186,7 +158,7 @@ export function PeterChat({
                 </div>
               </div>
             ) : (
-              <TypingIndicator />
+              <PeterResponseStatus />
             )}
           </motion.div>
         )}
@@ -216,9 +188,10 @@ export function PeterChat({
               onChange={e => setInputText(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={placeholder}
+              aria-label="Message Peter"
               rows={1}
               disabled={isLoading || isTranscribing}
-              className="flex-1 resize-none rounded-2xl bg-popover border border-border px-4 py-2.5 text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-ring disabled:opacity-50 max-h-32 overflow-y-auto shadow-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background border-input"
+              className="min-w-0 flex-1 resize-none rounded-2xl bg-popover border border-border px-4 py-2.5 text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-ring disabled:opacity-50 max-h-32 overflow-y-auto shadow-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background border-input"
               style={{ lineHeight: '1.4' }}
             />
           )}
@@ -226,8 +199,9 @@ export function PeterChat({
           <button
             type="button"
             onClick={toggleRecording}
+            aria-label={isRecording ? 'Stop recording' : 'Record a voice note'}
             disabled={isLoading || isTranscribing}
-            className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 disabled:opacity-40 transition-colors shadow-sm ${isRecording
+            className={`w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 disabled:opacity-40 transition-colors shadow-sm ${isRecording
               ? 'bg-destructive text-white hover:bg-destructive'
               : 'bg-popover text-brand-text-secondary hover:bg-background hover:text-foreground border border-border'
               }`}
@@ -238,8 +212,9 @@ export function PeterChat({
           {!isRecording && (
             <button
               type="submit"
+              aria-label="Send message"
               disabled={!inputText.trim() || isLoading || isTranscribing}
-              className="w-10 h-10 rounded-full bg-brand-primary text-white flex items-center justify-center flex-shrink-0 disabled:opacity-40 hover:bg-brand-hover transition-colors shadow-sm font-bold"
+              className="w-11 h-11 rounded-full bg-brand-primary text-white flex items-center justify-center flex-shrink-0 disabled:opacity-40 hover:bg-brand-hover transition-colors shadow-sm font-bold"
             >
               <Send size={16} className={inputText.trim() ? "translate-x-[-1px] translate-y-[1px]" : ""} />
             </button>

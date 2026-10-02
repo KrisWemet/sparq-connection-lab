@@ -55,9 +55,9 @@ export function HabitAnchorPick({ userId, onComplete }: HabitAnchorPickProps) {
   };
 
   return (
-    <div className="min-h-dvh bg-brand-linen flex flex-col items-center justify-center px-4">
+    <div className="emotion-page min-h-dvh bg-brand-linen flex flex-col items-center justify-center px-4">
       <div className="w-full max-w-lg">
-        <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-8 shadow-[0_20px_50px_hsl(var(--shadow)/0.10)]">
+        <div className="emotion-paper rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-8 shadow-[0_20px_50px_hsl(var(--shadow)/0.10)]">
           <div className="mb-5 flex items-center gap-3">
             <PeterAvatar mood="morning" size={40} />
             <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-hover">

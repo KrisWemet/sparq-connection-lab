@@ -1,3 +1,4 @@
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
@@ -16,7 +17,7 @@ export default function Reflect() {
   }, []);
 
   return (
-    <div className="min-h-dvh bg-background pb-24">
+    <div className="emotion-page min-h-dvh bg-background pb-24">
       <header className="sticky top-0 z-50 bg-popover border-b">
         <div className="container max-w-lg mx-auto px-4 py-3 flex items-center">
           <button 
@@ -33,7 +34,8 @@ export default function Reflect() {
 
       <main className="container max-w-lg mx-auto px-4 pt-8 animate-slide-up">
         {/* Notes Recap */}
-        <section className="bg-popover rounded-2xl p-6 shadow-sm mb-6">
+        <section className="emotion-paper relative overflow-hidden bg-popover rounded-2xl p-6 shadow-sm mb-6">
+          <SceneAccent kind="flow" quiet className="-mt-3 mb-2 h-20 w-full" />
           <div className="flex items-center gap-2 mb-4">
             <BookOpen className="w-5 h-5 text-primary" />
             <h2 className="text-lg font-semibold text-foreground">Your Notes</h2>
@@ -44,7 +46,7 @@ export default function Reflect() {
         </section>
 
         {/* Align Section */}
-        <section className="bg-popover rounded-2xl p-6 shadow-sm">
+        <section className="emotion-paper bg-popover rounded-2xl p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-4">
             <AlignCenter className="w-5 h-5 text-primary" />
             <h2 className="text-lg font-semibold text-foreground">Align</h2>

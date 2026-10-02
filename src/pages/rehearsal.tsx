@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { Copy, Check } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
+import { PeterResponseStatus } from '@/components/peter/PeterResponseStatus';
 import { buildAuthedHeaders } from '@/lib/api-auth';
 import { toast } from 'sonner';
 
@@ -373,9 +374,9 @@ export default function RehearsalRoom() {
 
   if (loading || phase === 'init') {
     return (
-      <div className="min-h-dvh bg-brand-linen flex items-center justify-center">
+      <div className="emotion-page min-h-dvh bg-brand-linen flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <PeterAvatar mood="curious" size={64} />
+          <PeterAvatar state="grounding" size={64} />
           <p className="text-brand-text-secondary text-sm font-serif italic">Getting ready...</p>
         </div>
       </div>
@@ -383,7 +384,7 @@ export default function RehearsalRoom() {
   }
 
   return (
-    <div className="min-h-dvh bg-brand-linen flex flex-col">
+    <div className="emotion-page min-h-dvh bg-brand-linen flex flex-col">
       {/* Rehearsal banner — only during rehearsal phase */}
       <AnimatePresence>
         {phase === 'rehearsal' && (
@@ -451,7 +452,7 @@ export default function RehearsalRoom() {
             >
               {msg.role === 'assistant' && !msg.isPartner && (
                 <PeterAvatar
-                  mood={phase === 'debrief' || phase === 'debrief_close' || phase === 'close' || phase === 'complete' ? 'morning' : 'curious'}
+                  state={phase === 'debrief' || phase === 'debrief_close' || phase === 'close' || phase === 'complete' ? 'reflective' : 'listening'}
                   size={40}
                 />
               )}
@@ -476,23 +477,7 @@ export default function RehearsalRoom() {
         </AnimatePresence>
 
         {/* Loading indicator */}
-        {isLoading && (
-          <div className="flex items-start gap-3 mb-4">
-            <PeterAvatar mood="curious" size={40} />
-            <div className="bg-popover border border-brand-primary/10 rounded-2xl rounded-tl-sm px-4 py-3">
-              <motion.div className="flex gap-1" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                {[0, 1, 2].map(i => (
-                  <motion.div
-                    key={i}
-                    className="w-2 h-2 rounded-full bg-brand-primary"
-                    animate={{ y: [0, -4, 0] }}
-                    transition={{ duration: 0.6, delay: i * 0.15, repeat: Infinity }}
-                  />
-                ))}
-              </motion.div>
-            </div>
-          </div>
-        )}
+        {isLoading && <PeterResponseStatus />}
 
         {/* Abandoned session options */}
         {phase === 'abandoned' && !isLoading && (

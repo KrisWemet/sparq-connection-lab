@@ -1,3 +1,4 @@
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/lib/auth-context';
@@ -207,7 +208,7 @@ export default function ConflictFirstAidPage() {
 
   if (phase === 'somatic') {
     return (
-      <div className="min-h-dvh bg-brand-quiet flex flex-col items-center justify-center text-foreground transition-colors duration-1000">
+      <div className="emotion-page min-h-dvh bg-brand-quiet flex flex-col items-center justify-center text-foreground transition-colors duration-1000">
         <div className="absolute top-6 left-6">
           <button
             onClick={() => router.back()}
@@ -263,7 +264,7 @@ export default function ConflictFirstAidPage() {
     : REPAIR_STARTERS;
 
   return (
-    <div className="min-h-dvh bg-brand-quiet animate-in fade-in duration-1000 font-sans">
+    <div className="emotion-page min-h-dvh bg-brand-quiet animate-in fade-in duration-1000 font-sans">
       <header className="sticky top-0 z-10 border-b border-border bg-popover/70 backdrop-blur-xl">
         <div className="mx-auto max-w-3xl px-4 py-4 flex items-center justify-between">
           <button
@@ -290,7 +291,8 @@ export default function ConflictFirstAidPage() {
           </p>
         </section>
 
-        <section className="rounded-3xl border border-brand-border bg-popover/70 p-6">
+        <section className="emotion-paper relative overflow-hidden rounded-3xl border border-brand-border bg-popover/70 p-6">
+          <SceneAccent kind="flow" quiet className="-mt-3 mb-2 h-16 w-full opacity-60" />
           <h2 className="text-[11px] font-bold uppercase tracking-wider text-brand-text-secondary mb-4">2-10 Minute Reset Protocol</h2>
           <ol className="mt-3 space-y-3 text-base text-foreground">
             {RESET_PROTOCOL.map((step, idx) => (

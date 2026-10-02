@@ -1,3 +1,4 @@
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 // src/components/onboarding/JourneyDetail.tsx
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
@@ -132,7 +133,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
   if (!journey && !starterJourney) return null;
 
   return (
-    <div className="min-h-dvh bg-brand-linen">
+    <div className="emotion-page min-h-dvh bg-brand-linen">
       <div className="container max-w-md mx-auto px-4 py-8">
         <button
           onClick={onBack}
@@ -141,14 +142,13 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
           ← Back
         </button>
 
-        {/* Header image placeholder */}
+        {/* The same organic language as the rest of the journey. */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="h-40 rounded-[20px] flex items-center justify-center text-5xl mb-6"
-          style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-hover)))' }}
+          className="emotion-surface relative h-40 overflow-hidden rounded-[20px] mb-6"
         >
-          ✨
+          <SceneAccent kind="bloom" className="h-full w-full" />
         </motion.div>
 
         <h1 className="text-2xl font-bold text-foreground mb-1">{displayTitle}</h1>

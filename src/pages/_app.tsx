@@ -14,6 +14,9 @@ import { TimeOutOverlay } from '../components/TimeOutOverlay';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { reportPrimaryPathClientError, shouldReportPrimaryPathRouteError } from '@/lib/beta/primaryPath';
 import '../styles/globals.css';
+import '../styles/emotion.css';
+import { VisualEmotionProvider } from '@/components/emotion/VisualEmotionProvider';
+import { EmotionalEnvironment } from '@/components/emotion/EmotionalEnvironment';
 
 const sans = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const editorialSerif = Cormorant_Garamond({
@@ -88,24 +91,28 @@ export default function App({ Component, pageProps }: AppProps) {
       {/* reducedMotion="user": people who turn on "reduce motion" get fades
           instead of movement, across every Framer Motion animation. */}
       <MotionConfig reducedMotion="user">
-      <AuthProvider>
-        <SubscriptionProvider>
-          <div
-            className={`${sans.variable} ${editorialSerif.variable} texture-bg min-h-dvh bg-brand-linen font-sans text-brand-text-primary selection:bg-brand-primary/20 selection:text-brand-espresso`}
-          >
-            <PeterLoading isLoading={isLoading} />
-            <TimeOutOverlay />
-            <div className="pb-20"> {/* Add padding for BottomNav */}
-              <ErrorBoundary resetKey={router.asPath}>
-                <PageTransition>
-                  <Component {...pageProps} />
-                </PageTransition>
-              </ErrorBoundary>
-            </div>
-            <BottomNav />
-          </div>
-        </SubscriptionProvider>
-      </AuthProvider>
+        <AuthProvider>
+          <SubscriptionProvider>
+            <VisualEmotionProvider>
+              <div
+                className={`${sans.variable} ${editorialSerif.variable} texture-bg min-h-dvh bg-brand-linen font-sans text-brand-text-primary selection:bg-brand-primary/20 selection:text-brand-espresso`}
+              >
+                <EmotionalEnvironment>
+                  <PeterLoading isLoading={isLoading} />
+                  <TimeOutOverlay />
+                  <div className={['/', '/login', '/signup'].includes(router.pathname) ? undefined : 'pb-20'}>
+                    <ErrorBoundary resetKey={router.asPath}>
+                      <PageTransition>
+                        <Component {...pageProps} />
+                      </PageTransition>
+                    </ErrorBoundary>
+                  </div>
+                  <BottomNav />
+                </EmotionalEnvironment>
+              </div>
+            </VisualEmotionProvider>
+          </SubscriptionProvider>
+        </AuthProvider>
       </MotionConfig>
     </QueryClientProvider>
   );

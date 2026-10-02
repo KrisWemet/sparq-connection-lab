@@ -162,17 +162,17 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
 
   return (
     <motion.div 
-      className="w-full max-w-md mx-auto p-6 bg-popover rounded-lg shadow-md"
+      className="w-full max-w-md mx-auto"
       initial="hidden"
       animate="visible"
       variants={formVariants}
     >
-      <motion.h2 
-        className="text-2xl font-bold text-center text-brand-primary mb-6"
+      <motion.h1
+        className="font-serif text-4xl font-medium text-center text-brand-primary mb-7"
         variants={itemVariants}
       >
         {isRegisterMode ? 'Create Your Account' : 'Welcome Back'}
-      </motion.h2>
+      </motion.h1>
 
       {error && (
         <motion.div 
@@ -239,7 +239,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
           </div>
           <p className="mt-3 text-xs text-brand-hover">
             By continuing, you agree to our{' '}
-            <a href="#" className="underline">Privacy Policy</a>.
+            <a href="/privacy" className="underline">Privacy Policy</a>.
           </p>
         </motion.div>
       )}
@@ -332,7 +332,9 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
             </div>
             <button
               type="button"
-              className="press absolute right-3 top-2.5 text-brand-text-secondary hover:text-muted-foreground"
+              className="press absolute right-0 top-0 w-12 h-12 flex items-center justify-center rounded-xl text-brand-text-secondary hover:text-muted-foreground"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-pressed={showPassword}
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -355,7 +357,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
           <button
             type="submit"
             disabled={isSubmitting || loading}
-            className="press w-full bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition duration-200 flex items-center justify-center font-bold"
+            className="press w-full min-h-[48px] bg-brand-primary text-white py-2 px-4 rounded-2xl hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition duration-200 flex items-center justify-center font-bold"
           >
             {isSubmitting || loading ? (
               <Loader className="h-5 w-5 animate-spin" />
@@ -380,7 +382,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
           <button
             type="button"
             onClick={onToggleMode}
-            className="press ml-1 text-brand-hover hover:text-brand-espresso font-medium"
+            className="press min-h-[44px] ml-1 text-brand-hover hover:text-brand-espresso font-medium"
           >
             {isRegisterMode ? 'Sign In' : 'Create Account'}
           </button>

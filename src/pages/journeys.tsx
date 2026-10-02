@@ -1,3 +1,4 @@
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import { useState } from "react";
 import Image from "next/image";
 import { journeys } from "@/data/journeys";
@@ -115,11 +116,7 @@ export default function Journeys() {
     : null;
 
   return (
-    <div className="min-h-dvh bg-brand-linen pb-28 relative overflow-hidden">
-      {/* Ambient backgrounds */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-primary/5 blur-[120px] rounded-full pointer-events-none -translate-y-1/2 mix-blend-multiply" />
-      <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-brand-sand/10 blur-[100px] rounded-full pointer-events-none translate-x-1/3 mix-blend-multiply" />
-
+    <div className="emotion-page min-h-dvh bg-brand-linen pb-28 relative overflow-hidden">
       {/* Header */}
       <header className="sticky top-0 z-50 backdrop-blur-2xl border-b px-4 py-4 shadow-[0_4px_30px_hsl(var(--shadow)/0.02)] transition-all"
         style={{
@@ -133,12 +130,15 @@ export default function Journeys() {
       </header>
 
       <main className="max-w-lg mx-auto px-4 pt-4">
+        <div className="relative mb-4 overflow-hidden px-5 py-2">
+          <SceneAccent kind="bloom" className="h-24 w-full" />
+        </div>
         {activeJourney && (
           <motion.section
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.28 }}
-            className="mb-4 rounded-3xl border border-brand-primary/10 bg-brand-parchment p-5 shadow-sm"
+            className="emotion-paper mb-4 rounded-3xl border border-brand-primary/10 bg-brand-parchment p-5 shadow-sm"
           >
             <div className="flex items-start gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-primary/10 text-brand-primary">

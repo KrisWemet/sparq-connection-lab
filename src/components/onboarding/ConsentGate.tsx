@@ -11,12 +11,12 @@ interface ConsentGateProps {
 
 export function ConsentGate({ onAgree, onReviewTrust, isSaving, error }: ConsentGateProps) {
   return (
-    <div className="flex min-h-dvh items-center justify-center px-4 py-10 bg-brand-linen">
+    <div className="emotion-page flex min-h-dvh items-center justify-center px-4 py-10 bg-brand-linen">
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.35 }}
-        className="w-full max-w-md rounded-[28px] p-7"
+        className="emotion-featured emotion-surface w-full max-w-md rounded-[28px] p-7"
         style={{ backgroundColor: 'hsl(var(--card))' }}
       >
         <div className="flex justify-center mb-4">

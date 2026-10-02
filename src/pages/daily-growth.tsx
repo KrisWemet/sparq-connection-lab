@@ -27,6 +27,8 @@ import { FavoriteUsCard } from '@/components/playful/FavoriteUsCard';
 import { EditorialEyebrow } from '@/components/editorial/EditorialSurface';
 import { TONE } from '@/lib/moment-tone';
 import { cn } from '@/lib/utils';
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
+import { useVisualEmotion } from '@/components/emotion/VisualEmotionProvider';
 
 type Phase = 'loading' | 'morning' | 'evening' | 'evening-checkin' | 'journey-complete' | 'complete';
 type PracticeMode = 'solo' | 'partner_optional' | 'partner_joint';
@@ -78,6 +80,7 @@ function getPracticeSupportCopy(mode: PracticeMode) {
 
 export default function DailyGrowth() {
   const router = useRouter();
+  const { observePracticeDays } = useVisualEmotion();
   const { user, loading: authLoading } = useAuth();
 
   const [phase, setPhase] = useState<Phase>('loading');
@@ -512,6 +515,7 @@ export default function DailyGrowth() {
               if (!res.ok) return;
               const rs = await res.json();
               setPracticeDays(Number(rs.practice_days ?? 0));
+              observePracticeDays(rs.practice_days);
               setConsecutiveStreak(Number(rs.consecutive_streak ?? 0));
             } catch {
               /* fail-soft: no dopamine beat */
@@ -634,7 +638,7 @@ export default function DailyGrowth() {
       : 'Five quiet minutes now can change the tone of the rest of your day.';
 
     return (
-      <div className="min-h-dvh bg-brand-linen pb-28 font-sans">
+      <div className="emotion-page min-h-dvh bg-brand-linen pb-28 font-sans">
         <div className="flex items-center justify-between px-5 pt-6 pb-2">
           <span className="text-lg font-bold tracking-tight text-brand-espresso">SPARQ</span>
           <button
@@ -736,7 +740,7 @@ export default function DailyGrowth() {
 
   if (phase === 'morning') {
     return (
-      <div className="min-h-dvh bg-brand-linen flex flex-col font-sans">
+      <div className="emotion-page min-h-dvh bg-brand-linen flex flex-col font-sans">
         <div className="flex items-center justify-between px-5 pt-5 pb-3">
           <div className="flex items-center gap-2">
             <button
@@ -833,7 +837,7 @@ export default function DailyGrowth() {
   }
 
   return (
-    <div className="min-h-dvh bg-brand-linen flex flex-col font-sans">
+    <div className="emotion-page min-h-dvh bg-brand-linen flex flex-col font-sans">
       {/* Header */}
       <div className="flex items-center justify-between px-5 pt-5 pb-3">
         <div className="flex items-center gap-2">
@@ -1040,8 +1044,8 @@ export default function DailyGrowth() {
               >
                 <div className="max-w-lg mx-auto px-4 py-12 flex flex-col items-center">
 
-                  {/* Peter — no container, directly on linen */}
-                  <PeterAvatar mood="celebrating" size={80} />
+                  {/* A quiet unfolding form marks completion. */}
+                  <SceneAccent kind="bloom" className="w-full max-w-xs h-44 emotion-accomplishment" />
 
                   {/* Headline */}
                   <h2 className="mt-6 text-center font-serif text-2xl italic text-brand-espresso">
@@ -1067,7 +1071,7 @@ export default function DailyGrowth() {
                       <motion.div
                         initial={{ opacity: 0, y: 8, scale: 0.96 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        transition={{ delay: 0.45, type: 'spring', bounce: 0.35 }}
+                        transition={{ duration: 0.24, ease: 'easeOut' }}
                         className="mt-4 rounded-2xl border border-brand-sand/40 bg-brand-sand/10 px-4 py-3"
                       >
                         <p className="text-sm font-semibold text-brand-espresso">

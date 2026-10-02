@@ -1,3 +1,4 @@
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 // src/components/onboarding/JourneyRecommendation.tsx
 import { motion } from 'framer-motion';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
@@ -26,7 +27,7 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
     .filter(a => a.journey);
 
   return (
-    <div className="min-h-dvh bg-brand-linen">
+    <div className="emotion-page min-h-dvh bg-brand-linen">
       <div className="container max-w-md mx-auto px-4 py-8">
         {/* Peter's closing sentence */}
         <motion.div
@@ -71,14 +72,11 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
               });
               onSelectJourney(primaryJourney.id, recommendation.primary.peterNote);
             }}
-            className="w-full text-left bg-popover rounded-[20px] overflow-hidden shadow-sm mb-6"
+            className="emotion-paper w-full text-left bg-popover rounded-[20px] overflow-hidden shadow-sm mb-6"
             style={{ border: '1px solid hsl(var(--border))' }}
           >
-            <div
-              className="h-28 flex items-center justify-center text-5xl"
-              style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-hover)))' }}
-            >
-              <span className="text-4xl">{primaryJourney.id === 'attachment-healing' ? '🧡' : '✨'}</span>
+            <div className="emotion-surface relative h-32 overflow-hidden">
+              <SceneAccent kind="bloom" className="h-full w-full" />
             </div>
             <div className="p-4">
               <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-1">

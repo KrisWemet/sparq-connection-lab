@@ -1,3 +1,4 @@
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
@@ -16,7 +17,7 @@ export default function JournalPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-dvh bg-brand-linen pb-28">
+      <div className="emotion-page min-h-dvh bg-brand-linen pb-28">
         <header className="max-w-lg mx-auto px-4 pt-6">
           <div className="flex items-center justify-between mb-6">
             <button
@@ -38,13 +39,13 @@ export default function JournalPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.24 }}
-            className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6 relative overflow-hidden"
+            className="emotion-opening bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6 relative overflow-hidden"
           >
-            <div className="absolute -top-12 right-0 w-32 h-32 rounded-full bg-brand-primary/10 blur-3xl pointer-events-none" />
+            <SceneAccent kind="bloom" className="-mt-3 mb-1 h-24 w-full" />
             <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
               Journal
             </p>
-            <h1 className="text-xl font-semibold text-brand-text-primary">Journal</h1>
+            <h1 className="font-serif font-medium text-brand-text-primary">Journal</h1>
             <p className="font-serif italic text-2xl leading-snug text-brand-text-primary mt-3">
               A quieter place to notice what is changing in you.
             </p>
@@ -62,7 +63,7 @@ export default function JournalPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.24, delay: 0.04 }}
-            className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6 space-y-4"
+            className="emotion-paper bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6 space-y-4"
           >
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-full bg-brand-primary/10 text-brand-primary flex items-center justify-center flex-shrink-0">

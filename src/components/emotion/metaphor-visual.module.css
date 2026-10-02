@@ -1,0 +1,114 @@
+.visual {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 15 / 11;
+  overflow: visible;
+  pointer-events: none;
+  user-select: none;
+  isolation: isolate;
+  --material-drift: calc(2px + var(--emotion-energy, .3) * 3px);
+}
+
+/* The motion belongs to the material, never to the surrounding interface.
+   Small transforms and opacity are the only properties animated. */
+.fieldLeft,
+.fieldRight,
+.bloomBack,
+.bloomOpen,
+.bloomMiddle,
+.flowBack,
+.flowFront {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-duration: var(--emotion-motion-duration, 24s);
+  animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  animation-iteration-count: infinite;
+}
+
+.fieldLeft { animation-name: reach; }
+.fieldRight { animation-name: receive; animation-delay: -9s; }
+.bloomBack { animation-name: shelter; transform-origin: 75% 95%; }
+.bloomOpen { animation-name: unfurl; animation-delay: -7s; transform-origin: 15% 96%; }
+.bloomMiddle { animation-name: breathe; animation-delay: -13s; transform-origin: 50% 95%; }
+.flowBack { animation-name: current; animation-delay: -8s; }
+.flowFront { animation-name: countercurrent; animation-delay: -2s; }
+
+.connections,
+.connectionLight,
+.innerLight {
+  animation: illuminate var(--emotion-motion-duration, 24s) cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.connections { stroke-opacity: calc(.55 + var(--emotion-bridge-strength, .45) * .45); }
+.bloomOpen { fill-opacity: calc(.7 + var(--emotion-bloom, .4) * .3); }
+.flowBack { stroke-opacity: calc(.65 + var(--emotion-flow-coherence, .6) * .35); }
+
+.connectionLight { animation-delay: -10s; }
+.innerLight { animation-delay: -6s; }
+
+.visual[data-paused="true"] * { animation-play-state: paused; }
+
+/* Quiet environments retain the form without moving separate focal points. */
+.visual[data-quiet="true"] .connections,
+.visual[data-quiet="true"] .connectionLight,
+.visual[data-quiet="true"] .innerLight {
+  animation: none;
+}
+
+.visual[data-quiet="true"] .fieldLeft,
+.visual[data-quiet="true"] .fieldRight,
+.visual[data-quiet="true"] .bloomBack,
+.visual[data-quiet="true"] .bloomOpen,
+.visual[data-quiet="true"] .bloomMiddle,
+.visual[data-quiet="true"] .flowBack,
+.visual[data-quiet="true"] .flowFront {
+  animation-duration: var(--emotion-motion-duration, 28s);
+}
+
+@keyframes reach {
+  0%, 100% { transform: translate(0, 1px) rotate(-0.5deg); }
+  50% { transform: translate(var(--material-drift), -2px) rotate(0.5deg); }
+}
+
+@keyframes receive {
+  0%, 100% { transform: translate(1px, -1px) rotate(0.6deg); }
+  50% { transform: translate(calc(-1 * var(--material-drift)), 2px) rotate(-0.6deg); }
+}
+
+@keyframes shelter {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-1.4deg); }
+}
+
+@keyframes unfurl {
+  0%, 100% { transform: rotate(-0.7deg) scale(1); }
+  50% { transform: rotate(1deg) scale(1.012); }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.012, 1.018); }
+}
+
+@keyframes current {
+  0%, 100% { transform: translate(0, -1px) rotate(-0.3deg); }
+  50% { transform: translate(1px, 3px) rotate(0.3deg); }
+}
+
+@keyframes countercurrent {
+  0%, 100% { transform: translate(0, 2px) rotate(0.3deg); }
+  50% { transform: translate(-1px, -2px) rotate(-0.3deg); }
+}
+
+@keyframes illuminate {
+  0%, 100% { opacity: 0.48; }
+  50% { opacity: 0.9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .visual * {
+    animation: none !important;
+    transform: none !important;
+  }
+}

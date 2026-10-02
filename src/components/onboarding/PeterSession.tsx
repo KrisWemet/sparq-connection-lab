@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
+import { PeterResponseStatus } from '@/components/peter/PeterResponseStatus';
 import { buildAuthedHeaders } from '@/lib/api-auth';
 import { supabase } from '@/lib/supabase';
 import type { DerivedProfile } from '@/lib/onboarding/types';
@@ -108,7 +109,7 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
   const canSend = userInput.trim().length > 0 && !isLoading && !isClosing && exchangeCount < 5;
 
   return (
-    <div className="min-h-dvh bg-brand-linen flex flex-col">
+    <div className="emotion-page min-h-dvh bg-brand-linen flex flex-col">
       <div className="flex-1 overflow-y-auto px-4 py-8 pb-32 max-w-md mx-auto w-full">
         <AnimatePresence>
           {messages.map((msg, i) => (
@@ -133,27 +134,7 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
           ))}
         </AnimatePresence>
 
-        {isLoading && (
-          <div className="flex items-start gap-3 mb-4">
-            <PeterAvatar mood="morning" size={40} />
-            <div className="bg-popover border border-border rounded-2xl rounded-tl-sm px-4 py-3">
-              <motion.div
-                className="flex gap-1"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                {[0, 1, 2].map(i => (
-                  <motion.div
-                    key={i}
-                    className="w-2 h-2 rounded-full bg-brand-primary"
-                    animate={{ y: [0, -4, 0] }}
-                    transition={{ duration: 0.6, delay: i * 0.15, repeat: Infinity }}
-                  />
-                ))}
-              </motion.div>
-            </div>
-          </div>
-        )}
+        {isLoading && <PeterResponseStatus />}
         <div ref={bottomRef} />
       </div>
 

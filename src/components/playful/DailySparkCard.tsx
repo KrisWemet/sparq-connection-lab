@@ -1,3 +1,4 @@
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { RefreshCcw, Send, Sparkles } from 'lucide-react';
@@ -91,8 +92,9 @@ export function DailySparkCard({ prompt, surface, onSwap }: DailySparkCardProps)
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.14 }}
-      className="rounded-[30px] border border-brand-primary/10 bg-brand-linen/90 p-5 shadow-[0_16px_36px_hsl(var(--shadow)/0.05)]"
+      className="emotion-paper relative overflow-hidden rounded-[30px] border border-brand-primary/10 bg-brand-linen/90 p-5 shadow-[0_16px_36px_hsl(var(--shadow)/0.05)]"
     >
+      <SceneAccent kind="bloom" area="games" className="-mt-3 mb-2 h-16 w-full" />
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="mb-2 text-xs font-semibold tracking-widest uppercase text-brand-hover">

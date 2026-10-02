@@ -1,3 +1,4 @@
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "@/lib/auth-context";
@@ -165,7 +166,7 @@ export default function Dashboard() {
   const secondaryCtaLabel = needsEveningReflection ? "Restart Morning Practice" : 'Evening Check-in';
 
   return (
-    <div className="min-h-dvh bg-brand-linen pb-24">
+    <div className="emotion-page min-h-dvh bg-brand-linen pb-24">
       <div className="mx-auto max-w-lg space-y-6 px-4 pt-6">
 
         {/* ── TOP BAR ── */}
@@ -219,12 +220,9 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.08 }}
-          className="relative overflow-hidden rounded-[34px] border border-brand-primary/12 bg-brand-parchment px-6 py-6 shadow-[0_26px_60px_hsl(var(--shadow)/0.12)]"
+          className="emotion-featured emotion-surface relative overflow-hidden rounded-[34px] border border-brand-primary/12 bg-brand-parchment px-6 py-6 shadow-[0_26px_60px_hsl(var(--shadow)/0.12)]"
         >
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute right-0 top-0 h-36 w-36 rounded-full bg-brand-primary/10 blur-3xl"
-          />
+          <SceneAccent kind="bridge" className="mb-2 -mt-4 h-28 w-full" />
           <div className="relative">
             <EditorialEyebrow className="mb-3 text-brand-hover">
               {activeJourney

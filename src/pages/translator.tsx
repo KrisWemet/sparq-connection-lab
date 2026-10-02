@@ -80,8 +80,8 @@ export default function Translator() {
   };
 
   return (
-    <div className="min-h-dvh bg-gradient-to-br from-brand-linen to-brand-parchment flex flex-col items-center py-12 px-4 relative">
-      <div className="max-w-2xl w-full bg-popover rounded-2xl shadow-lg p-8 z-10">
+    <div className="emotion-page min-h-dvh bg-brand-linen flex flex-col items-center py-12 px-4 relative">
+      <div className="emotion-paper max-w-2xl w-full bg-popover rounded-2xl shadow-lg p-8 z-10">
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={() => router.push('/connect')}

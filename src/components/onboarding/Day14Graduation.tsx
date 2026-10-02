@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import { CheckCircle, Award, ArrowRight, Sparkles, TrendingUp } from 'lucide-react';
-import confetti from 'canvas-confetti';
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import { supabase } from '@/lib/supabase';
 import { CsiTrajectoryCard } from '@/components/dashboard/CsiTrajectoryCard';
 
@@ -33,37 +33,6 @@ export function Day14Graduation() {
     const [reportLoading, setReportLoading] = useState(true);
     const [northStar, setNorthStar] = useState<string | null>(null);
     const [boundaryDone, setBoundaryDone] = useState(false);
-
-    useEffect(() => {
-        // Fire confetti on mount
-        const duration = 3 * 1000;
-        const animationEnd = Date.now() + duration;
-        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-        const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
-
-        const interval: any = setInterval(function () {
-            const timeLeft = animationEnd - Date.now();
-
-            if (timeLeft <= 0) {
-                return clearInterval(interval);
-            }
-
-            const particleCount = 50 * (timeLeft / duration);
-            confetti({
-                ...defaults,
-                particleCount,
-                origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-            });
-            confetti({
-                ...defaults,
-                particleCount,
-                origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-            });
-        }, 250);
-
-        return () => clearInterval(interval);
-    }, []);
 
     useEffect(() => {
         (async () => {
@@ -110,18 +79,14 @@ export function Day14Graduation() {
     };
 
     return (
-        <div className="min-h-dvh bg-gradient-to-br from-brand-linen to-brand-parchment flex flex-col items-center justify-start p-6 pb-12">
+        <div className="emotion-page emotion-accomplishment min-h-dvh bg-brand-linen flex flex-col items-center justify-start p-6 pb-12">
             <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: 'spring', damping: 20 }}
-                className="bg-popover rounded-3xl p-8 shadow-xl max-w-sm w-full border border-growth/20 mt-8"
+                initial={{ y: 8, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="emotion-featured emotion-surface relative overflow-hidden bg-popover rounded-3xl p-8 shadow-xl max-w-sm w-full border border-growth/20 mt-8"
             >
-                <div className="flex justify-center mb-6">
-                    <div className="w-20 h-20 rounded-full bg-gradient-to-r from-growth to-connection flex items-center justify-center text-4xl shadow-inner shadow-white/20">
-                        🦦
-                    </div>
-                </div>
+                <SceneAccent kind="bloom" className="-mt-4 mb-3 h-36 w-full" />
 
                 <h1 className="text-3xl font-bold text-foreground mb-2 text-center">You Did It.</h1>
                 <p className="text-brand-text-secondary mb-6 text-center">14 days of showing up.</p>

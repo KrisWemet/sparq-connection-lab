@@ -1,3 +1,4 @@
+import { AmbientScene, SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Lock } from 'lucide-react';
@@ -37,20 +38,14 @@ export default function GoConnect() {
 
   return (
     <div className="dark min-h-dvh bg-background text-foreground flex flex-col items-center justify-center p-6 fixed inset-0 z-[100] font-sans">
+      <AmbientScene quiet />
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="max-w-md text-center flex flex-col items-center gap-10"
+        className="relative max-w-md text-center flex flex-col items-center gap-10"
       >
-        {/* Pulsing Heart Icon */}
-        <motion.div
-          animate={{ scale: [1, 1.1, 1] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="w-24 h-24 bg-brand-primary/20 rounded-full flex items-center justify-center"
-        >
-          <Heart size={40} className="text-brand-hover fill-brand-primary" />
-        </motion.div>
+        <SceneAccent kind="bridge" quiet className="h-32 w-full" />
 
         {/* Mission Text */}
         <div className="space-y-4">

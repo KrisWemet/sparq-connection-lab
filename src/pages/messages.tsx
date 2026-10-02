@@ -71,7 +71,7 @@ export default function Messaging() {
   };
 
   return (
-    <div className="min-h-dvh bg-background pb-24">
+    <div className="emotion-page min-h-dvh bg-background pb-24">
       <header className="sticky top-0 z-50 bg-popover border-b">
         <div className="container max-w-lg mx-auto px-4 py-3 flex items-center">
           <button
