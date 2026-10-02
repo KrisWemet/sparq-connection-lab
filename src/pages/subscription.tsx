@@ -1,426 +1,200 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { 
-  ChevronLeft, 
-  Check, 
-  X, 
-  CreditCard, 
-  Sparkles, 
-  Heart, 
-  Calendar, 
-  MessageCircle, 
-  Target, 
-  Zap,
-  Lock
-} from "lucide-react";
-import { toast } from "sonner";
 import { motion } from "framer-motion";
+import { Check, ChevronLeft } from "lucide-react";
+import { PeterAvatar } from "@/components/dashboard/PeterAvatar";
+import { useAuth } from "@/lib/auth-context";
+import { useSubscription } from "@/lib/subscription-provider";
+import { getTrialDaysRemaining } from "@/lib/product";
+import { PLANS, formatPrice, yearlyAsMonthly, yearlySavingsPercent, type Plan } from "@/lib/plans";
+import { TONE } from "@/lib/moment-tone";
+import { cn } from "@/lib/utils";
 
-// Pricing plans data
-const plans = [
+type Billing = "monthly" | "yearly";
+
+// Together is a connect moment (coral); Solo is the everyday plum.
+const PLAN_TONE: Record<Plan["id"], { card: string; eyebrow: string }> = {
+  free: { card: "bg-white/70 border border-brand-border", eyebrow: "text-brand-text-secondary" },
+  solo: { card: TONE.understand.card, eyebrow: TONE.understand.eyebrow },
+  together: { card: TONE.connect.card, eyebrow: TONE.connect.eyebrow },
+};
+
+const FAQ = [
   {
-    id: "free",
-    name: "Free",
-    price: 0,
-    description: "Start with simple daily steps",
-    features: [
-      { name: "14-day journey with Peter 🦦", included: true },
-      { name: "Daily morning story + action", included: true },
-      { name: "Evening reflection check-ins", included: true },
-      { name: "Quiet pattern tracking", included: true },
-      { name: "Skill Tree: Basic levels (all 3 tracks)", included: true },
-      { name: "Partner linking (optional)", included: true },
-      { name: "Daily connection questions", included: true },
-      { name: "Conflict First Aid, always free", included: true },
-      { name: "Skill Tree: Advanced levels", included: false },
-      { name: "Skill Tree: Expert levels", included: false },
-      { name: "The Translator (unlimited)", included: false },
-      { name: "Peter AI Coach sessions", included: false },
-      { name: "Couples shared journey", included: false },
-    ],
-    popular: false,
-    buttonText: "Current Plan",
-    disabled: true
+    q: "What happens after my first 14 days?",
+    a: "You keep Free. You can still practice 3 days a week, talk with Peter, and keep up to 2 journeys going. Nothing you wrote is lost.",
   },
   {
-    id: "premium",
-    name: "Premium",
-    price: 4.99,
-    yearlyPrice: 49.99,
-    description: "Go deeper with more practice and more help",
-    features: [
-      { name: "Everything in Free", included: true },
-      { name: "Skill Tree: Advanced levels (all 3 tracks)", included: true },
-      { name: "The Translator (unlimited rephrases)", included: true },
-      { name: "Personal insight report", included: true },
-      { name: "Longer Peter coaching sessions", included: true },
-      { name: "Daily questions (unlimited)", included: true },
-      { name: "Pattern dashboard", included: true },
-      { name: "Skill Tree: Expert levels", included: false },
-      { name: "Peter AI Coach (deep sessions)", included: false },
-      { name: "Couples shared journey", included: false },
-    ],
-    popular: true,
-    buttonText: "Go deeper with Premium",
-    disabled: false,
-    persuasiveText: "Unlock the tools that help good habits stick"
+    q: "Does Peter forget me on Free?",
+    a: "No. Peter keeps learning from what you share on every plan, so if you move up later, he already knows you.",
   },
   {
-    id: "ultimate",
-    name: "Ultimate",
-    price: 19.99,
-    yearlyPrice: 199.99,
-    description: "Your deepest support plan",
-    features: [
-      { name: "Everything in Premium", included: true },
-      { name: "Skill Tree: Expert levels (all 3 tracks)", included: true },
-      { name: "Peter remembers your full story", included: true, new: true },
-      { name: "Talk to Peter anytime", included: true, new: true },
-      { name: "Weekly check-in from Peter", included: true, new: true },
-      { name: "Shared fit view when both join", included: true },
-      { name: "Repeat the 14-day journey with a better fit", included: true },
-      { name: "Milestone celebrations from Peter", included: true },
-    ],
-    popular: false,
-    buttonText: "Get Ultimate",
-    disabled: false,
-    persuasiveText: "Peter knows your story and helps you use it in real life"
-  }
+    q: "Does Together really cover both of us?",
+    a: "Yes. One plan gives both partners everything in Solo, plus the things you do together. That's $7.50 each a month, less than two Solo plans.",
+  },
+  {
+    q: "Is Conflict First Aid ever paid?",
+    a: "Never. Conflict First Aid and crisis help are free for everyone, always.",
+  },
 ];
-
-// Journey packages data
-const journeys = [
-  {
-    id: "communication",
-    title: "Effective Communication",
-    description: "Master the art of truly understanding each other",
-    price: 3.99,
-    steps: 5,
-    image: "/images/journeys/communication.png",
-    popular: true
-  },
-  {
-    id: "intimacy",
-    title: "Deepening Intimacy",
-    description: "Strengthen your emotional and physical connection",
-    price: 4.99,
-    steps: 7,
-    image: "/images/journeys/intimacy.jpg",
-    popular: false
-  },
-  {
-    id: "trust",
-    title: "Building Trust",
-    description: "Create a foundation of security and reliability",
-    price: 3.99,
-    steps: 4,
-    image: "/images/journeys/trust-rebuilding.jpg",
-    popular: false
-  },
-  {
-    id: "future",
-    title: "Planning Your Future",
-    description: "Align your visions and create shared goals",
-    price: 4.99,
-    steps: 6,
-    image: "/images/journeys/values.png",
-    popular: false
-  },
-  {
-    id: "attachment",
-    title: "Feeling Safe Together",
-    description: "Understand your attachment patterns and build secure connections",
-    price: 4.99,
-    steps: 5,
-    image: "/images/journeys/attachment-healing.png",
-    popular: true,
-    new: true
-  },
-  {
-    id: "conflict",
-    title: "Healthy Conflict Resolution",
-    description: "Transform disagreements into opportunities for growth",
-    price: 4.99,
-    steps: 6,
-    image: "/images/journeys/conflict-resolution.png",
-    popular: false,
-    new: true
-  },
-  {
-    id: "bundle",
-    title: "Complete Journey Bundle",
-    description: "All current and future journeys at a discounted price",
-    price: 14.99,
-    steps: 33,
-    image: "/images/journeys/relationship-renewal.png",
-    popular: true,
-    bestValue: true
-  }
-];
-
 
 export default function Subscription() {
   const router = useRouter();
-  const [billingCycle, setBillingCycle] = useState("monthly");
-  const [highlightFeature, setHighlightFeature] = useState<{planId: string, featureIndex: number} | null>(null);
-  
-  // Highlight a random premium feature every few seconds
-  useEffect(() => {
-    if (billingCycle === "yearly") {
-      const premiumPlan = plans.find(p => p.id === "premium");
-      const ultimatePlan = plans.find(p => p.id === "ultimate");
-      
-      if (premiumPlan && ultimatePlan) {
-        const interval = setInterval(() => {
-          const planId = Math.random() > 0.5 ? "premium" : "ultimate";
-          const plan = planId === "premium" ? premiumPlan : ultimatePlan;
-          const includedFeatures = plan.features
-            .map((f, i) => ({ ...f, index: i }))
-            .filter(f => f.included);
-          
-          if (includedFeatures.length > 0) {
-            const randomFeature = includedFeatures[Math.floor(Math.random() * includedFeatures.length)];
-            setHighlightFeature({ planId, featureIndex: randomFeature.index });
-            
-            // Reset highlight after 2 seconds
-            setTimeout(() => setHighlightFeature(null), 2000);
-          }
-        }, 5000);
-        
-        return () => clearInterval(interval);
-      }
-    }
-  }, [billingCycle]);
+  const { user } = useAuth();
+  const { subscription } = useSubscription();
+  const [billing, setBilling] = useState<Billing>("monthly");
 
-  const handleSubscribe = (planId: string) => {
-    toast.success(
-      planId === "premium" 
-        ? "You've upgraded to Premium! Notice how your connection naturally deepens as you explore new features together."
-        : "You've upgraded to Ultimate! You now have deeper support for the hard moments and the good ones too.",
-      { duration: 5000 }
-    );
-  };
-  
-  // Calculate savings for yearly billing
-  const calculateYearlySavings = (plan: any) => {
-    if (!plan.yearlyPrice || !plan.price) return 0;
-    const monthlyCost = plan.price * 12;
-    return Math.round((monthlyCost - plan.yearlyPrice) / monthlyCost * 100);
-  };
-  
-  // Format price with appropriate billing cycle
-  const formatPrice = (plan: any) => {
-    if (plan.price === 0) return "Free";
-    
-    const price = billingCycle === "yearly" && plan.yearlyPrice 
-      ? plan.yearlyPrice 
-      : plan.price;
-      
-    return `$${price}${billingCycle === "yearly" ? "/year" : "/month"}`;
-  };
-  
+  const trialDays = getTrialDaysRemaining(user?.created_at);
+  const onPaidPlan = subscription.tier === "premium";
+
   return (
-    <div className="container max-w-6xl py-8">
-      <div className="flex items-center mb-8">
-        <Button 
-          variant="ghost" 
-          onClick={() => router.back()}
-          className="mr-2"
+    <div className="min-h-dvh bg-brand-linen pb-28">
+      <div className="mx-auto max-w-5xl px-4 pt-6">
+        <div className="mb-6 flex items-center justify-between">
+          <button
+            onClick={() => router.back()}
+            aria-label="Go back"
+            className="press flex h-10 w-10 items-center justify-center rounded-full border border-brand-primary/10 bg-brand-parchment text-brand-primary"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <span className="text-xs font-semibold uppercase tracking-widest text-brand-text-secondary">Plans</span>
+          <div className="h-10 w-10" aria-hidden="true" />
+        </div>
+
+        {/* Where the user stands today */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+          className="mx-auto mb-8 flex max-w-lg items-start gap-3"
         >
-          <ChevronLeft className="h-4 w-4 mr-1" />
-          Back
-        </Button>
-        <h1 className="text-2xl font-bold">Subscription Plans</h1>
-      </div>
-      
-      {/* Billing cycle toggle */}
-      <div className="flex justify-center mb-8">
-        <div className="bg-gray-100 p-1 rounded-full flex items-center">
-          <button
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-              billingCycle === "monthly" 
-                ? "bg-white shadow text-primary-700" 
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-            onClick={() => setBillingCycle("monthly")}
-          >
-            Monthly
-          </button>
-          <button
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-              billingCycle === "yearly" 
-                ? "bg-white shadow text-primary-700" 
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-            onClick={() => setBillingCycle("yearly")}
-          >
-            Yearly
-            <span className="ml-1 text-xs font-bold text-green-600">Save up to 17%</span>
-          </button>
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {plans.map((plan) => {
-          const yearlySavings = calculateYearlySavings(plan);
-          
-          return (
-            <motion.div 
-              key={plan.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: plans.indexOf(plan) * 0.1 }}
-              whileHover={!plan.disabled ? { scale: 1.02 } : {}}
-              className="relative"
-            >
-              <Card className={`h-full overflow-hidden ${
-                plan.popular 
-                  ? "border-primary-200 shadow-lg" 
-                  : "border-gray-200"
-              }`}>
-                {plan.popular && (
-                  <div className="absolute top-0 right-0 bg-gradient-to-r from-primary-500 to-primary-600 text-white px-3 py-1 text-xs font-bold uppercase transform translate-x-2 -translate-y-0 rotate-45 origin-bottom-left shadow-sm">
-                    Most Popular
-                  </div>
+          <PeterAvatar mood="afternoon" size={44} />
+          <div className="flex-1 rounded-2xl rounded-tl-sm border border-brand-border bg-white p-4">
+            <h1 className="font-serif text-xl text-brand-espresso">Pick what fits you</h1>
+            <p className="mt-1 text-sm leading-relaxed text-brand-text-secondary">
+              {onPaidPlan
+                ? "You're on a paid plan. Thank you for growing with Sparq."
+                : trialDays > 0
+                  ? `You have everything in Solo free for ${trialDays} more ${trialDays === 1 ? "day" : "days"}. After that, Free is still yours.`
+                  : "You're on Free. Each plan below adds to the one before it."}
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Billing toggle */}
+        <div className="mb-6 flex justify-center">
+          <div role="tablist" aria-label="Billing" className="flex items-center rounded-full border border-brand-border bg-white/70 p-1">
+            {(["monthly", "yearly"] as Billing[]).map((b) => (
+              <button
+                key={b}
+                role="tab"
+                aria-selected={billing === b}
+                onClick={() => setBilling(b)}
+                className={cn(
+                  "press rounded-full px-4 py-2 text-sm font-medium",
+                  billing === b ? "bg-brand-primary font-bold text-white" : "text-brand-text-secondary",
                 )}
-                
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    {plan.id === "premium" && <Sparkles className="h-5 w-5 mr-2 text-primary-500" />}
-                    {plan.id === "ultimate" && <Heart className="h-5 w-5 mr-2 text-red-500" />}
-                    {plan.name}
-                  </CardTitle>
-                  <CardDescription>{plan.description}</CardDescription>
-                  <div className="mt-2">
-                    <span className="text-3xl font-bold">{formatPrice(plan)}</span>
-                    {billingCycle === "yearly" && plan.yearlyPrice && (
-                      <Badge variant="outline" className="ml-2 bg-green-50 text-green-700 border-green-200">
-                        Save {yearlySavings}%
-                      </Badge>
-                    )}
-                  </div>
-                </CardHeader>
-                
-                <CardContent className="space-y-4">
-                  {/* Persuasive text for premium/ultimate plans */}
-                  {plan.persuasiveText && (
-                    <motion.p 
-                      className="text-sm italic text-primary-600 font-medium"
-                      initial={{ opacity: 0.7 }}
-                      animate={{ opacity: [0.7, 1, 0.7] }}
-                      transition={{ duration: 4, repeat: Infinity }}
-                    >
-                      {plan.persuasiveText}
-                    </motion.p>
+              >
+                {b === "monthly" ? "Monthly" : "Yearly · save 33%"}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Plans — each adds to the one before */}
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+          {PLANS.map((plan, i) => {
+            const prev = PLANS[i - 1];
+            const tone = PLAN_TONE[plan.id];
+            const price = billing === "yearly" ? plan.yearly : plan.monthly;
+            return (
+              <motion.section
+                key={plan.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: i * 0.06, ease: [0.23, 1, 0.32, 1] }}
+                className={cn(tone.card, "flex flex-col rounded-3xl p-6 shadow-sm")}
+                aria-labelledby={`plan-${plan.id}`}
+              >
+                <div className="flex items-baseline justify-between">
+                  <h2 id={`plan-${plan.id}`} className="font-serif text-2xl text-brand-espresso">{plan.name}</h2>
+                  <span className={cn("text-xs font-semibold uppercase tracking-widest", tone.eyebrow)}>{plan.covers}</span>
+                </div>
+                <p className="mt-1 text-sm text-brand-text-secondary">{plan.tagline}</p>
+
+                <div className="mt-4">
+                  {plan.monthly === 0 ? (
+                    <p className="text-3xl font-bold text-brand-espresso">$0</p>
+                  ) : (
+                    <>
+                      <p className="text-3xl font-bold text-brand-espresso">
+                        {formatPrice(price)}
+                        <span className="text-base font-medium text-brand-text-secondary">{billing === "yearly" ? " / year" : " / month"}</span>
+                      </p>
+                      <p className="mt-1 text-xs text-brand-text-secondary">
+                        {billing === "yearly"
+                          ? `That's ${formatPrice(yearlyAsMonthly(plan))} a month. You save ${yearlySavingsPercent(plan)}%.`
+                          : plan.id === "together"
+                            ? `${formatPrice(plan.monthly / 2)} each for two people.`
+                            : `Or ${formatPrice(plan.yearly)} a year.`}
+                      </p>
+                    </>
                   )}
-                  
-                  <div className="space-y-2">
-                    {plan.features.map((feature, index) => (
-                      <motion.div 
-                        key={index}
-                        className={`flex items-start ${
-                          highlightFeature?.planId === plan.id && 
-                          highlightFeature?.featureIndex === index
-                            ? "bg-primary-50 -mx-4 px-4 py-1 rounded-md"
-                            : ""
-                        }`}
-                        animate={
-                          highlightFeature?.planId === plan.id && 
-                          highlightFeature?.featureIndex === index
-                            ? { 
-                                backgroundColor: ["rgba(236, 254, 255, 0.5)", "rgba(236, 254, 255, 1)", "rgba(236, 254, 255, 0.5)"],
-                              }
-                            : {}
-                        }
-                        transition={{ duration: 2 }}
-                      >
-                        {feature.included ? (
-                          <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-                        ) : (
-                          <X className="h-5 w-5 text-brand-text-secondary mr-2 flex-shrink-0" />
-                        )}
-                        <span className={feature.included ? "text-gray-700" : "text-brand-text-secondary"}>
-                          {feature.name}
-                          {'new' in feature && feature.new && (
-                            <Badge className="ml-2 bg-amber-100 text-amber-800 border-amber-200">
-                              New
-                            </Badge>
-                          )}
-                        </span>
-                      </motion.div>
-                    ))}
-                  </div>
-                  
-                </CardContent>
-                
-                <CardFooter>
-                  <Button 
-                    className={`w-full ${
-                      plan.popular 
-                        ? "bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700" 
-                        : ""
-                    }`}
-                    disabled={plan.disabled}
-                    onClick={() => handleSubscribe(plan.id)}
-                  >
-                    {plan.id === "premium" && <Zap className="h-4 w-4 mr-1" />}
-                    {plan.buttonText}
-                  </Button>
-                </CardFooter>
-              </Card>
-            </motion.div>
-          );
-        })}
-      </div>
-      
-      {/* Made-up testimonials removed — Sparq has no real user quotes yet (constitution §5A: no fabricated social proof). */}
-      
-      {/* Statistics section */}
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-primary-50 p-4 rounded-lg text-center">
-          <h3 className="text-2xl font-bold text-primary-700 mb-1">87%</h3>
-          <p className="text-sm text-primary-600">of couples report improved communication within 2 weeks</p>
+                </div>
+
+                <p className={cn("mt-5 text-xs font-semibold uppercase tracking-widest", tone.eyebrow)}>
+                  {prev ? `Everything in ${prev.name}, plus` : "Includes"}
+                </p>
+                <ul className="mt-2 flex-1 space-y-2.5">
+                  {plan.adds.map((feature) => (
+                    <li key={feature} className="flex items-start gap-2 text-sm text-brand-espresso">
+                      <Check className={cn("mt-0.5 h-4 w-4 flex-shrink-0", tone.eyebrow)} aria-hidden="true" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-6">
+                  {plan.id === "free" ? (
+                    <p className="rounded-2xl border border-brand-border bg-white/60 py-3 text-center text-sm font-medium text-brand-text-secondary">
+                      {onPaidPlan ? "Always here if you need it" : "You have this"}
+                    </p>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled
+                      className={cn(
+                        "w-full rounded-2xl py-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-80",
+                        plan.id === "together" ? TONE.connect.button : TONE.understand.button,
+                      )}
+                    >
+                      Opening soon
+                    </button>
+                  )}
+                </div>
+              </motion.section>
+            );
+          })}
         </div>
-        <div className="bg-primary-50 p-4 rounded-lg text-center">
-          <h3 className="text-2xl font-bold text-primary-700 mb-1">94%</h3>
-          <p className="text-sm text-primary-600">of Premium users would recommend Sparq to friends</p>
-        </div>
-        <div className="bg-primary-50 p-4 rounded-lg text-center">
-          <h3 className="text-2xl font-bold text-primary-700 mb-1">3x</h3>
-          <p className="text-sm text-primary-600">more Skill Tree completions for users who talk to Peter weekly</p>
-        </div>
-      </div>
-      
-      {/* FAQ section */}
-      <div className="mt-12">
-        <h2 className="text-xl font-bold mb-4">Frequently Asked Questions</h2>
-        <div className="space-y-4">
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <h3 className="font-medium">Can I switch between plans?</h3>
-            <p className="text-sm text-gray-600 mt-1">
-              Yes! You can upgrade at any time. When you upgrade, you&apos;ll immediately gain access to all the features of your new plan.
-            </p>
+
+        <p className="mx-auto mt-5 max-w-lg text-center text-xs text-brand-text-secondary">
+          Paid plans aren&apos;t open yet, so nothing will charge you. Prices are in US dollars.
+        </p>
+
+        {/* Questions */}
+        <section className="mx-auto mt-10 max-w-2xl">
+          <h2 className="mb-4 font-serif text-xl text-brand-espresso">Good questions</h2>
+          <div className="space-y-3">
+            {FAQ.map(({ q, a }) => (
+              <div key={q} className="rounded-2xl border border-brand-border bg-white/70 p-4">
+                <h3 className="text-sm font-semibold text-brand-espresso">{q}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-brand-text-secondary">{a}</p>
+              </div>
+            ))}
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <h3 className="font-medium">What does &quot;Peter remembers your history&quot; actually mean?</h3>
-            <p className="text-sm text-gray-600 mt-1">
-              In Ultimate, Peter has access to everything you&apos;ve shared during your 14-day journey and Skill Tree sessions — your reflections, patterns, and breakthroughs. When you chat with Peter, he builds on what he already knows about you instead of starting from scratch every time. It&apos;s what makes it feel like a real coaching relationship.
-            </p>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <h3 className="font-medium">Is there a money-back guarantee?</h3>
-            <p className="text-sm text-gray-600 mt-1">
-              Absolutely! We offer a 30-day satisfaction guarantee. If you&apos;re not completely satisfied, contact us for a full refund.
-            </p>
-          </div>
-        </div>
+        </section>
       </div>
-      
-      
     </div>
   );
-} 
+}
