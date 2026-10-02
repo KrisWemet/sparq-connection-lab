@@ -640,7 +640,7 @@ export default function DailyGrowth() {
           <button
             onClick={() => router.push('/settings')}
             aria-label="Settings"
-            className="p-1.5 rounded-xl text-brand-hover hover:bg-brand-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/20 focus-visible:ring-offset-2"
+            className="p-1.5 rounded-xl text-brand-hover hover:bg-brand-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             <Settings size={20} />
           </button>
@@ -660,7 +660,7 @@ export default function DailyGrowth() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
-            className="relative overflow-hidden rounded-[34px] border border-brand-primary/12 bg-brand-parchment px-6 py-6 shadow-[0_24px_54px_rgba(46,38,32,0.12)]"
+            className="relative overflow-hidden rounded-[34px] border border-brand-primary/12 bg-brand-parchment px-6 py-6 shadow-[0_24px_54px_hsl(var(--shadow)/0.12)]"
           >
             <div
               aria-hidden="true"
@@ -682,7 +682,7 @@ export default function DailyGrowth() {
               <span className="text-sm text-brand-taupe">5 min morning page</span>
               <button
                 onClick={() => setShowHome(false)}
-                className="rounded-[22px] bg-brand-primary px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+                className="rounded-[22px] bg-brand-primary px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 Start Morning Story
               </button>
@@ -706,7 +706,7 @@ export default function DailyGrowth() {
             </div>
           </motion.div>
 
-          <div className="rounded-[28px] border border-brand-primary/10 bg-white/60 p-5 shadow-[0_14px_34px_rgba(46,38,32,0.05)]">
+          <div className="rounded-[28px] border border-brand-primary/10 bg-popover/60 p-5 shadow-[0_14px_34px_hsl(var(--shadow)/0.05)]">
             <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
               Solo-first reminder
             </p>
@@ -742,7 +742,7 @@ export default function DailyGrowth() {
             <button
               onClick={() => setShowHome(true)}
               aria-label="Back"
-              className="p-1.5 rounded-xl text-brand-hover hover:bg-brand-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/20"
+              className="p-1.5 rounded-xl text-brand-hover hover:bg-brand-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <ChevronLeft size={20} />
             </button>

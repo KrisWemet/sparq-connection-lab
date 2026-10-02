@@ -31,14 +31,14 @@ export default function Home() {
         />
       )}
 
-      <header className="fixed top-0 inset-x-0 z-50 bg-white/70 backdrop-blur-xl border-b border-zinc-200/80">
+      <header className="fixed top-0 inset-x-0 z-50 bg-popover/70 backdrop-blur-xl border-b border-border/80">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4 flex justify-between items-center">
           <h1 className="flex items-center w-fit">
             <SparqLogo />
           </h1>
           <div className="flex items-center gap-4">
             <Link href="/login">
-              <span className="text-sm font-medium text-zinc-600 hover:text-black transition-colors cursor-pointer px-2">
+              <span className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer px-2">
                 Sign In
               </span>
             </Link>
@@ -60,7 +60,7 @@ export default function Home() {
           <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-brand-sand/60 rounded-full blur-[80px] pointer-events-none" />
 
           <div className="max-w-4xl mx-auto text-center relative z-10">
-            <h1 className="text-5xl md:text-6xl font-serif text-zinc-900 mb-6 tracking-tight leading-tight">
+            <h1 className="text-5xl md:text-6xl font-serif text-foreground mb-6 tracking-tight leading-tight">
               Become a <span className="text-brand-hover italic">steadier partner</span>, one small day at a time.
             </h1>
             <p className="text-lg md:text-xl text-brand-text-secondary mb-12 max-w-2xl mx-auto leading-relaxed">
@@ -68,13 +68,13 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link href="/login">
-                <span className="px-8 py-4 bg-zinc-900 text-white rounded-full hover:bg-black transition-colors font-medium shadow-xl shadow-zinc-900/20 text-base cursor-pointer inline-block">
+                <span className="px-8 py-4 bg-primary text-primary-foreground rounded-full hover:bg-primary-hover transition-colors font-medium shadow-xl shadow-shadow/20 text-base cursor-pointer inline-block">
                   Start Your Journey
                 </span>
               </Link>
               <button
                 onClick={() => handleShowMetaphor('bridge')}
-                className="px-8 py-4 bg-white/60 backdrop-blur-md text-zinc-800 border border-zinc-200/50 rounded-full hover:bg-white/80 transition-colors shadow-sm text-base font-medium inline-block"
+                className="px-8 py-4 bg-popover/60 backdrop-blur-md text-foreground border border-border/50 rounded-full hover:bg-popover/80 transition-colors shadow-sm text-base font-medium inline-block"
               >
                 Experience a Demo
               </button>
@@ -86,10 +86,10 @@ export default function Home() {
         </section>
 
         {/* Features Section */}
-        <section className="py-24 bg-white relative">
+        <section className="py-24 bg-popover relative">
           <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
             <div className="text-center mb-20">
-              <h2 className="text-3xl md:text-4xl font-serif text-black mb-4 tracking-tight">How Sparq Guides You</h2>
+              <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-4 tracking-tight">How Sparq Guides You</h2>
               <p className="text-lg text-brand-text-secondary max-w-2xl mx-auto leading-relaxed">
                 Sparq helps one person make real change first, then bring that change into the relationship.
               </p>
@@ -103,7 +103,7 @@ export default function Home() {
                 <div className="w-12 h-12 bg-brand-primary/10 rounded-2xl shadow-sm flex items-center justify-center mb-6">
                   <span className="text-brand-hover font-bold text-lg">1</span>
                 </div>
-                <h3 className="text-xl font-bold text-black mb-3 tracking-tight">
+                <h3 className="text-xl font-bold text-foreground mb-3 tracking-tight">
                   Change the part you control
                 </h3>
                 <p className="text-brand-text-secondary mb-8 leading-relaxed">
@@ -121,7 +121,7 @@ export default function Home() {
                 <div className="w-12 h-12 bg-brand-primary/10 rounded-2xl shadow-sm flex items-center justify-center mb-6">
                   <span className="text-brand-hover font-bold text-lg">2</span>
                 </div>
-                <h3 className="text-xl font-bold text-black mb-3 tracking-tight">
+                <h3 className="text-xl font-bold text-foreground mb-3 tracking-tight">
                   Practice closeness in small moments
                 </h3>
                 <p className="text-brand-text-secondary mb-8 leading-relaxed">
@@ -139,7 +139,7 @@ export default function Home() {
                 <div className="w-12 h-12 bg-brand-primary/10 rounded-2xl shadow-sm flex items-center justify-center mb-6">
                   <span className="text-brand-hover font-bold text-lg">3</span>
                 </div>
-                <h3 className="text-xl font-bold text-black mb-3 tracking-tight">
+                <h3 className="text-xl font-bold text-foreground mb-3 tracking-tight">
                   Bring a calmer self into conflict
                 </h3>
                 <p className="text-brand-text-secondary mb-8 leading-relaxed">
@@ -154,9 +154,9 @@ export default function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-24 bg-white border-y border-zinc-100">
+        <section className="py-24 bg-popover border-y border-border">
           <div className="max-w-4xl mx-auto text-center px-6 relative z-10">
-            <h2 className="text-4xl md:text-5xl font-serif text-black mb-6 tracking-tight">Begin Your Experience</h2>
+            <h2 className="text-4xl md:text-5xl font-serif text-foreground mb-6 tracking-tight">Begin Your Experience</h2>
             <p className="text-lg text-brand-text-secondary mb-10 max-w-lg mx-auto leading-relaxed">
               Start with your own daily practice. Invite your partner later if it helps.
             </p>
@@ -169,23 +169,23 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="bg-white text-brand-text-secondary border-t border-zinc-200 py-12">
+      <footer className="bg-popover text-brand-text-secondary border-t border-border py-12">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="text-center md:text-left">
-              <h2 className="text-lg font-bold text-black mb-1 tracking-tight">Sparq</h2>
+              <h2 className="text-lg font-bold text-foreground mb-1 tracking-tight">Sparq</h2>
               <p className="text-sm">Identity-level change through clinical design.</p>
               <p className="text-sm mt-1">Solo-first growth for healthier relationships.</p>
             </div>
             <div className="flex flex-wrap justify-center gap-6 text-sm font-medium text-brand-text-secondary">
               <Link href="/about">
-                <span className="hover:text-black transition-colors cursor-pointer">About</span>
+                <span className="hover:text-foreground transition-colors cursor-pointer">About</span>
               </Link>
               <Link href="/privacy">
-                <span className="hover:text-black transition-colors cursor-pointer">Privacy</span>
+                <span className="hover:text-foreground transition-colors cursor-pointer">Privacy</span>
               </Link>
               <Link href="/terms">
-                <span className="hover:text-black transition-colors cursor-pointer">Terms</span>
+                <span className="hover:text-foreground transition-colors cursor-pointer">Terms</span>
               </Link>
             </div>
           </div>

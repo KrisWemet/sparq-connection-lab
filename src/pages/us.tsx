@@ -90,7 +90,7 @@ export default function UsPage() {
 
   // The shared space is a connect moment (coral) — see lib/moment-tone.ts.
   const card = cn(TONE.connect.card, 'rounded-3xl shadow-sm p-6');
-  const input = 'w-full rounded-xl border border-brand-border bg-white/70 p-3 text-sm text-brand-espresso placeholder:text-brand-text-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary/30';
+  const input = 'w-full rounded-xl border border-input bg-popover/70 p-3 text-sm text-foreground placeholder:text-brand-text-secondary focus:outline-none focus:ring-2 focus:ring-ring';
   const primary = cn(TONE.connect.button, 'rounded-full px-5 py-2 text-sm disabled:opacity-50');
 
   return (
@@ -152,7 +152,7 @@ export default function UsPage() {
                   {SHARE_KINDS.map(k => (
                     <button key={k} type="button" onClick={() => setKind(k)}
                       className={cn('rounded-full border px-3 py-1.5 text-xs transition-colors',
-                        kind === k ? 'border-brand-primary bg-brand-primary/10 font-semibold text-brand-hover' : 'border-brand-border text-brand-espresso hover:bg-white/60')}>
+                        kind === k ? 'border-brand-primary bg-brand-primary/10 font-semibold text-brand-hover' : 'border-brand-border text-brand-espresso hover:bg-popover/60')}>
                       {KIND_LABELS[k]}
                     </button>
                   ))}

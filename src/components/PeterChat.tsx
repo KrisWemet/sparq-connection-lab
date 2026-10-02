@@ -19,7 +19,7 @@ function PeterAvatar({ isTyping = false }: { isTyping?: boolean }) {
       {isTyping && (
         <motion.div
           className="absolute inset-[-4px] rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(75,46,87,0.2) 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, hsl(var(--primary)/0.2) 0%, transparent 70%)' }}
           animate={{ scale: [1, 1.3, 1] }}
           transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
         />
@@ -29,7 +29,7 @@ function PeterAvatar({ isTyping = false }: { isTyping?: boolean }) {
         alt="Peter"
         width={36}
         height={36}
-        style={{ width: 36, height: 36, objectFit: 'contain', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.12))' }}
+        style={{ width: 36, height: 36, objectFit: 'contain', filter: 'drop-shadow(0 2px 4px hsl(var(--shadow)/0.12))' }}
       />
     </div>
   );
@@ -163,8 +163,8 @@ export function PeterChat({
                   : 'rounded-[20px] rounded-br-[4px] font-sans'
                   }`}
                 style={msg.role === 'assistant'
-                  ? { backgroundColor: '#F4EFEB', color: '#8C827A' }
-                  : { backgroundColor: '#4B2E57', color: '#FFFFFF' }
+                  ? { backgroundColor: 'hsl(var(--card))', color: 'hsl(var(--muted-foreground))' }
+                  : { backgroundColor: 'hsl(var(--primary))', color: 'hsl(var(--primary-foreground))' }
                 }
               >
                 {msg.role === 'assistant' ? stripMarkdown(msg.content) : msg.content}
@@ -181,7 +181,7 @@ export function PeterChat({
           >
             {isTranscribing ? (
               <div className="flex items-end gap-3 flex-row-reverse">
-                <div className="bg-[#E9E9EB] text-zinc-600 rounded-[20px] rounded-br-[4px] px-4 py-2.5 text-[15px] flex items-center gap-2">
+                <div className="bg-muted text-muted-foreground rounded-[20px] rounded-br-[4px] px-4 py-2.5 text-[15px] flex items-center gap-2">
                   <Loader2 size={16} className="animate-spin text-brand-text-secondary" /> Turning your voice into words...
                 </div>
               </div>
@@ -198,12 +198,12 @@ export function PeterChat({
       {!inputDisabled && (
         <form
           onSubmit={handleSubmit}
-          className="bg-white/80 backdrop-blur-xl border-t border-zinc-200 px-4 py-3 flex gap-2 items-end relative"
+          className="bg-popover/80 backdrop-blur-xl border-t border-border px-4 py-3 flex gap-2 items-end relative"
         >
           {isRecording ? (
-            <div className="flex-1 flex items-center justify-center gap-3 h-10 bg-red-50 text-red-500 rounded-full px-4 border border-red-100">
+            <div className="flex-1 flex items-center justify-center gap-3 h-10 bg-destructive-subtle text-destructive-emphasis rounded-full px-4 border border-destructive">
               <motion.div
-                className="w-2.5 h-2.5 bg-red-500 rounded-full"
+                className="w-2.5 h-2.5 bg-destructive rounded-full"
                 animate={{ opacity: [1, 0.4, 1] }}
                 transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
               />
@@ -218,7 +218,7 @@ export function PeterChat({
               placeholder={placeholder}
               rows={1}
               disabled={isLoading || isTranscribing}
-              className="flex-1 resize-none rounded-2xl bg-white border border-zinc-200 px-4 py-2.5 text-[15px] text-black placeholder:text-zinc-400 focus:outline-none focus:border-brand-primary disabled:opacity-50 max-h-32 overflow-y-auto shadow-sm"
+              className="flex-1 resize-none rounded-2xl bg-popover border border-border px-4 py-2.5 text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-ring disabled:opacity-50 max-h-32 overflow-y-auto shadow-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background border-input"
               style={{ lineHeight: '1.4' }}
             />
           )}
@@ -228,8 +228,8 @@ export function PeterChat({
             onClick={toggleRecording}
             disabled={isLoading || isTranscribing}
             className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 disabled:opacity-40 transition-colors shadow-sm ${isRecording
-              ? 'bg-red-500 text-white hover:bg-red-600'
-              : 'bg-white text-brand-text-secondary hover:bg-zinc-50 hover:text-black border border-zinc-200'
+              ? 'bg-destructive text-white hover:bg-destructive'
+              : 'bg-popover text-brand-text-secondary hover:bg-background hover:text-foreground border border-border'
               }`}
           >
             {isRecording ? <Square size={16} fill="white" /> : <Mic size={18} strokeWidth={2.5} />}

@@ -66,7 +66,7 @@ export class ErrorBoundary extends Component<Props, State> {
             {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
             <a
               href="/dashboard"
-              className="rounded-full border border-brand-border px-5 py-2.5 text-sm font-medium text-brand-text-primary transition-colors hover:bg-white/60"
+              className="rounded-full border border-brand-border px-5 py-2.5 text-sm font-medium text-brand-text-primary transition-colors hover:bg-popover/60"
             >
               Back home
             </a>

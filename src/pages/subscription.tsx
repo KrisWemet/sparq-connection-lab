@@ -239,12 +239,12 @@ export default function Subscription() {
       
       {/* Billing cycle toggle */}
       <div className="flex justify-center mb-8">
-        <div className="bg-gray-100 p-1 rounded-full flex items-center">
+        <div className="bg-muted p-1 rounded-full flex items-center">
           <button
             className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
               billingCycle === "monthly" 
-                ? "bg-white shadow text-primary-700" 
-                : "text-gray-600 hover:text-gray-900"
+                ? "bg-popover shadow text-primary-emphasis"
+                : "text-muted-foreground hover:text-foreground"
             }`}
             onClick={() => setBillingCycle("monthly")}
           >
@@ -253,13 +253,13 @@ export default function Subscription() {
           <button
             className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
               billingCycle === "yearly" 
-                ? "bg-white shadow text-primary-700" 
-                : "text-gray-600 hover:text-gray-900"
+                ? "bg-popover shadow text-primary-emphasis"
+                : "text-muted-foreground hover:text-foreground"
             }`}
             onClick={() => setBillingCycle("yearly")}
           >
             Yearly
-            <span className="ml-1 text-xs font-bold text-green-600">Save up to 17%</span>
+            <span className="ml-1 text-xs font-bold text-success-emphasis">Save up to 17%</span>
           </button>
         </div>
       </div>
@@ -280,25 +280,25 @@ export default function Subscription() {
               <Card className={`h-full overflow-hidden ${
                 plan.popular 
                   ? "border-primary-200 shadow-lg" 
-                  : "border-gray-200"
+                  : "border-border"
               }`}>
                 {plan.popular && (
-                  <div className="absolute top-0 right-0 bg-gradient-to-r from-primary-500 to-primary-600 text-white px-3 py-1 text-xs font-bold uppercase transform translate-x-2 -translate-y-0 rotate-45 origin-bottom-left shadow-sm">
+                  <div className="absolute top-0 right-0 bg-gradient-to-r from-primary to-primary-hover text-white px-3 py-1 text-xs font-bold uppercase transform translate-x-2 -translate-y-0 rotate-45 origin-bottom-left shadow-sm">
                     Most Popular
                   </div>
                 )}
                 
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    {plan.id === "premium" && <Sparkles className="h-5 w-5 mr-2 text-primary-500" />}
-                    {plan.id === "ultimate" && <Heart className="h-5 w-5 mr-2 text-red-500" />}
+                    {plan.id === "premium" && <Sparkles className="h-5 w-5 mr-2 text-primary-emphasis" />}
+                    {plan.id === "ultimate" && <Heart className="h-5 w-5 mr-2 text-connection-emphasis" />}
                     {plan.name}
                   </CardTitle>
                   <CardDescription>{plan.description}</CardDescription>
                   <div className="mt-2">
                     <span className="text-3xl font-bold">{formatPrice(plan)}</span>
                     {billingCycle === "yearly" && plan.yearlyPrice && (
-                      <Badge variant="outline" className="ml-2 bg-green-50 text-green-700 border-green-200">
+                      <Badge variant="outline" className="ml-2 bg-success-subtle text-success-emphasis border-success">
                         Save {yearlySavings}%
                       </Badge>
                     )}
@@ -309,7 +309,7 @@ export default function Subscription() {
                   {/* Persuasive text for premium/ultimate plans */}
                   {plan.persuasiveText && (
                     <motion.p 
-                      className="text-sm italic text-primary-600 font-medium"
+                      className="text-sm italic text-primary-emphasis font-medium"
                       initial={{ opacity: 0.7 }}
                       animate={{ opacity: [0.7, 1, 0.7] }}
                       transition={{ duration: 4, repeat: Infinity }}
@@ -325,28 +325,28 @@ export default function Subscription() {
                         className={`flex items-start ${
                           highlightFeature?.planId === plan.id && 
                           highlightFeature?.featureIndex === index
-                            ? "bg-primary-50 -mx-4 px-4 py-1 rounded-md"
+                            ? "bg-accent -mx-4 px-4 py-1 rounded-md"
                             : ""
                         }`}
                         animate={
                           highlightFeature?.planId === plan.id && 
                           highlightFeature?.featureIndex === index
                             ? { 
-                                backgroundColor: ["rgba(236, 254, 255, 0.5)", "rgba(236, 254, 255, 1)", "rgba(236, 254, 255, 0.5)"],
+                                backgroundColor: ["hsl(var(--growth)/0.12)", "hsl(var(--growth)/0.24)", "hsl(var(--growth)/0.12)"],
                               }
                             : {}
                         }
                         transition={{ duration: 2 }}
                       >
                         {feature.included ? (
-                          <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
+                          <Check className="h-5 w-5 text-success-emphasis mr-2 flex-shrink-0" />
                         ) : (
                           <X className="h-5 w-5 text-brand-text-secondary mr-2 flex-shrink-0" />
                         )}
-                        <span className={feature.included ? "text-gray-700" : "text-brand-text-secondary"}>
+                        <span className={feature.included ? "text-foreground" : "text-brand-text-secondary"}>
                           {feature.name}
                           {'new' in feature && feature.new && (
-                            <Badge className="ml-2 bg-amber-100 text-amber-800 border-amber-200">
+                            <Badge className="ml-2 bg-growth-subtle text-growth-emphasis border-growth/40">
                               New
                             </Badge>
                           )}
@@ -361,7 +361,7 @@ export default function Subscription() {
                   <Button 
                     className={`w-full ${
                       plan.popular 
-                        ? "bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700" 
+                        ? "bg-gradient-to-r from-primary to-primary-hover hover:from-primary-hover hover:to-primary-hover"
                         : ""
                     }`}
                     disabled={plan.disabled}
@@ -381,17 +381,17 @@ export default function Subscription() {
       
       {/* Statistics section */}
       <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-primary-50 p-4 rounded-lg text-center">
-          <h3 className="text-2xl font-bold text-primary-700 mb-1">87%</h3>
-          <p className="text-sm text-primary-600">of couples report improved communication within 2 weeks</p>
+        <div className="bg-accent p-4 rounded-lg text-center">
+          <h3 className="text-2xl font-bold text-primary-emphasis mb-1">87%</h3>
+          <p className="text-sm text-primary-emphasis">of couples report improved communication within 2 weeks</p>
         </div>
-        <div className="bg-primary-50 p-4 rounded-lg text-center">
-          <h3 className="text-2xl font-bold text-primary-700 mb-1">94%</h3>
-          <p className="text-sm text-primary-600">of Premium users would recommend Sparq to friends</p>
+        <div className="bg-accent p-4 rounded-lg text-center">
+          <h3 className="text-2xl font-bold text-primary-emphasis mb-1">94%</h3>
+          <p className="text-sm text-primary-emphasis">of Premium users would recommend Sparq to friends</p>
         </div>
-        <div className="bg-primary-50 p-4 rounded-lg text-center">
-          <h3 className="text-2xl font-bold text-primary-700 mb-1">3x</h3>
-          <p className="text-sm text-primary-600">more Skill Tree completions for users who talk to Peter weekly</p>
+        <div className="bg-accent p-4 rounded-lg text-center">
+          <h3 className="text-2xl font-bold text-primary-emphasis mb-1">3x</h3>
+          <p className="text-sm text-primary-emphasis">more Skill Tree completions for users who talk to Peter weekly</p>
         </div>
       </div>
       
@@ -399,21 +399,21 @@ export default function Subscription() {
       <div className="mt-12">
         <h2 className="text-xl font-bold mb-4">Frequently Asked Questions</h2>
         <div className="space-y-4">
-          <div className="bg-white p-4 rounded-lg shadow-sm">
+          <div className="bg-popover p-4 rounded-lg shadow-sm">
             <h3 className="font-medium">Can I switch between plans?</h3>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               Yes! You can upgrade at any time. When you upgrade, you&apos;ll immediately gain access to all the features of your new plan.
             </p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
+          <div className="bg-popover p-4 rounded-lg shadow-sm">
             <h3 className="font-medium">What does &quot;Peter remembers your history&quot; actually mean?</h3>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               In Ultimate, Peter has access to everything you&apos;ve shared during your 14-day journey and Skill Tree sessions — your reflections, patterns, and breakthroughs. When you chat with Peter, he builds on what he already knows about you instead of starting from scratch every time. It&apos;s what makes it feel like a real coaching relationship.
             </p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
+          <div className="bg-popover p-4 rounded-lg shadow-sm">
             <h3 className="font-medium">Is there a money-back guarantee?</h3>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               Absolutely! We offer a 30-day satisfaction guarantee. If you&apos;re not completely satisfied, contact us for a full refund.
             </p>
           </div>

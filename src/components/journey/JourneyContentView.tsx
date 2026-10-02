@@ -450,7 +450,7 @@ export function JourneyContentView({
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 200, damping: 15 }}
-          className="w-24 h-24 rounded-full bg-gradient-to-br from-brand-primary to-[#d87b64] flex items-center justify-center mb-8 shadow-2xl relative z-10"
+          className="w-24 h-24 rounded-full bg-gradient-to-br from-brand-primary to-primary-hover flex items-center justify-center mb-8 shadow-2xl relative z-10"
         >
           <CheckCircle className="w-12 h-12 text-white" />
         </motion.div>
@@ -556,7 +556,7 @@ export function JourneyContentView({
                     You can leave if this journey is not the right fit. Still, most people get more value by finishing, because each day builds on the last one.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
-                <p className="text-sm text-zinc-600 leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   If this journey is not a fit, leaving will free you to choose another one. Your 14-day onboarding will stay exactly as it is.
                 </p>
                 <AlertDialogFooter>
@@ -569,7 +569,7 @@ export function JourneyContentView({
             </AlertDialog>
           </div>
 
-          <div className="rounded-[1.5rem] bg-white/70 backdrop-blur-md border border-white p-5 shadow-sm">
+          <div className="rounded-[1.5rem] bg-popover/70 backdrop-blur-md border border-popover p-5 shadow-sm">
             <div className="flex justify-between text-sm mb-3">
               <span className="font-semibold text-brand-taupe">Day {currentDay} of {totalDays}</span>
               <span className="text-brand-hover font-medium">{Math.round(progress)}%</span>
@@ -583,13 +583,13 @@ export function JourneyContentView({
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center justify-center py-20 px-6 text-center bg-white/60 backdrop-blur-xl border border-white/40 rounded-3xl shadow-2xl mt-8"
+            className="flex flex-col items-center justify-center py-20 px-6 text-center bg-popover/60 backdrop-blur-xl border border-popover/40 rounded-3xl shadow-2xl mt-8"
           >
             <div className="w-24 h-24 bg-gradient-to-br from-brand-sand/20 to-brand-primary/10 rounded-full flex items-center justify-center mb-6 shadow-inner">
               <Star className="w-10 h-10 text-brand-primary" />
             </div>
             <h2 className="text-3xl font-serif font-bold text-brand-taupe mb-4">Rest & Reflect</h2>
-            <p className="text-zinc-600 text-lg leading-relaxed max-w-sm mb-8">
+            <p className="text-muted-foreground text-lg leading-relaxed max-w-sm mb-8">
               You&apos;ve completed your session for today. 30 minutes of thoughtful focus builds a stronger foundation than rushing through. Let today&apos;s concepts sink in, and come back tomorrow to continue your growth!
             </p>
             <Button
@@ -624,7 +624,7 @@ export function JourneyContentView({
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.1 }}
-              className="rounded-[2rem] bg-white/80 backdrop-blur-md border border-white/60 p-6 shadow-xl shadow-brand-taupe/5"
+              className="rounded-[2rem] bg-popover/80 backdrop-blur-md border border-popover/60 p-6 shadow-xl shadow-brand-taupe/5"
             >
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 rounded-full bg-brand-sand/10 flex items-center justify-center">
@@ -632,7 +632,7 @@ export function JourneyContentView({
                 </div>
                 <p className="text-xs font-bold text-brand-gold-deep uppercase tracking-[0.2em]">Today&apos;s Learning</p>
               </div>
-              <div className="text-sm text-zinc-700 leading-relaxed space-y-3">
+              <div className="text-sm text-foreground leading-relaxed space-y-3">
                 {currentDayContent.learning.split('\n\n').map((p, i) => (
                   <p key={i}>
                     {p.split(/(\*\*[^*]+\*\*)/).map((part, j) =>
@@ -653,7 +653,7 @@ export function JourneyContentView({
               className="rounded-2xl bg-brand-sand/10 border border-brand-sand/20 p-5 relative overflow-hidden"
             >
               <div className="absolute top-0 left-0 w-2 h-full bg-brand-sand opacity-50" />
-              <p className="text-sm text-zinc-700 font-serif italic leading-relaxed pl-2 tracking-wide">
+              <p className="text-sm text-foreground font-serif italic leading-relaxed pl-2 tracking-wide">
                 {currentDayContent.whyItMatters}
               </p>
             </motion.div>
@@ -663,7 +663,7 @@ export function JourneyContentView({
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.2 }}
-              className="rounded-[2rem] bg-white border border-white/60 overflow-hidden shadow-2xl shadow-brand-primary/5"
+              className="rounded-[2rem] bg-popover border border-popover/60 overflow-hidden shadow-2xl shadow-brand-primary/5"
             >
               <div className="px-6 pt-6 pb-2">
                 <div className="flex items-center gap-2 mb-2">
@@ -675,7 +675,7 @@ export function JourneyContentView({
                 <h3 className="text-lg font-bold text-brand-taupe">{currentDayContent.activity.title}</h3>
               </div>
               <div className="px-6 pb-6 space-y-5">
-                <div className="text-sm text-zinc-700 leading-relaxed space-y-3">
+                <div className="text-sm text-foreground leading-relaxed space-y-3">
                   {currentDayContent.activity.instructions.split('\n\n').map((p, i) => (
                     <p key={i}>
                       {p.split(/(\*\*[^*]+\*\*)/).map((part, j) =>
@@ -700,7 +700,7 @@ export function JourneyContentView({
                           placeholder="Your thoughts..."
                           value={responses[`question_${index}`] || ''}
                           onChange={(e) => handleResponseChange(index, e.target.value)}
-                          className="min-h-[120px] rounded-[1.25rem] border-zinc-200 focus:ring-2 focus:ring-brand-primary/30 bg-zinc-50/50 shadow-inner resize-none p-4 text-brand-taupe placeholder:text-zinc-400 transition-all font-medium"
+                          className="min-h-[120px] rounded-[1.25rem] border-border focus:ring-2 focus:ring-ring bg-background/50 shadow-inner resize-none p-4 text-brand-taupe placeholder:text-muted-foreground transition-all font-medium"
                         />
                       </div>
                     ))}

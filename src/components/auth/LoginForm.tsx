@@ -162,7 +162,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
 
   return (
     <motion.div 
-      className="w-full max-w-md mx-auto p-6 bg-white rounded-lg shadow-md"
+      className="w-full max-w-md mx-auto p-6 bg-popover rounded-lg shadow-md"
       initial="hidden"
       animate="visible"
       variants={formVariants}
@@ -176,23 +176,23 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
 
       {error && (
         <motion.div 
-          className="bg-red-50 border-l-4 border-red-500 p-4 mb-6"
+          className="bg-destructive-subtle border-l-4 border-destructive p-4 mb-6"
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
         >
-          <p className="text-red-700 text-sm">{error}</p>
+          <p className="text-destructive-emphasis text-sm">{error}</p>
         </motion.div>
       )}
 
       {successMessage && (
         <motion.div 
-          className="bg-green-50 border-l-4 border-green-500 p-4 mb-6"
+          className="bg-success-subtle border-l-4 border-success p-4 mb-6"
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
         >
-          <p className="text-green-700 text-sm">{successMessage}</p>
+          <p className="text-success-emphasis text-sm">{successMessage}</p>
         </motion.div>
       )}
 
@@ -247,7 +247,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
       <motion.form onSubmit={handleSubmit} className="space-y-4" variants={formVariants}>
         {isRegisterMode && (
           <motion.div variants={itemVariants}>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="name" className="block text-sm font-medium text-foreground mb-1">
               Your Name
             </label>
             <div className="relative">
@@ -257,7 +257,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-2 pl-10 border rounded-md focus:ring-brand-primary focus:border-brand-primary"
+                className="w-full px-4 py-2 pl-10 border rounded-md focus:ring-ring focus:border-ring bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background border-input"
                 placeholder="Enter your name"
               />
               <div className="absolute left-3 top-2.5 text-brand-text-secondary">
@@ -271,7 +271,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
 
         {isRegisterMode && (
           <motion.div variants={itemVariants}>
-            <label htmlFor="partnerName" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="partnerName" className="block text-sm font-medium text-foreground mb-1">
               Partner&apos;s Name (Optional)
             </label>
             <div className="relative">
@@ -281,7 +281,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
                 name="partnerName"
                 value={formData.partnerName}
                 onChange={handleChange}
-                className="w-full px-4 py-2 pl-10 border rounded-md focus:ring-brand-primary focus:border-brand-primary"
+                className="w-full px-4 py-2 pl-10 border rounded-md focus:ring-ring focus:border-ring bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background border-input"
                 placeholder="Enter your partner's name"
               />
               <div className="absolute left-3 top-2.5 text-brand-text-secondary">
@@ -294,7 +294,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
         )}
 
         <motion.div variants={itemVariants}>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1">
             Email
           </label>
           <div className="relative">
@@ -304,7 +304,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-4 py-2 pl-10 border rounded-md focus:ring-brand-primary focus:border-brand-primary"
+              className="w-full px-4 py-2 pl-10 border rounded-md focus:ring-ring focus:border-ring bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background border-input"
               placeholder="Enter your email"
             />
             <div className="absolute left-3 top-2.5 text-brand-text-secondary">
@@ -314,7 +314,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="password" className="block text-sm font-medium text-foreground mb-1">
             Password
           </label>
           <div className="relative">
@@ -324,7 +324,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full px-4 py-2 pl-10 pr-10 border rounded-md focus:ring-brand-primary focus:border-brand-primary"
+              className="w-full px-4 py-2 pl-10 pr-10 border rounded-md focus:ring-ring focus:border-ring bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background border-input"
               placeholder={isRegisterMode ? "Create a password" : "Enter your password"}
             />
             <div className="absolute left-3 top-2.5 text-brand-text-secondary">
@@ -332,7 +332,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
             </div>
             <button
               type="button"
-              className="press absolute right-3 top-2.5 text-brand-text-secondary hover:text-gray-600"
+              className="press absolute right-3 top-2.5 text-brand-text-secondary hover:text-muted-foreground"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -355,7 +355,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
           <button
             type="submit"
             disabled={isSubmitting || loading}
-            className="press w-full bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary transition duration-200 flex items-center justify-center font-bold"
+            className="press w-full bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition duration-200 flex items-center justify-center font-bold"
           >
             {isSubmitting || loading ? (
               <Loader className="h-5 w-5 animate-spin" />
@@ -373,7 +373,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
         className="mt-6 text-center text-sm"
         variants={itemVariants}
       >
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           {isRegisterMode 
             ? 'Already have an account?' 
             : "Don't have an account yet?"}

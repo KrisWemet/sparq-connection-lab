@@ -36,7 +36,7 @@ export default function GoConnect() {
   };
 
   return (
-    <div className="min-h-dvh bg-black text-white flex flex-col items-center justify-center p-6 fixed inset-0 z-[100] font-sans">
+    <div className="dark min-h-dvh bg-background text-foreground flex flex-col items-center justify-center p-6 fixed inset-0 z-[100] font-sans">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -57,13 +57,13 @@ export default function GoConnect() {
           <h2 className="text-brand-hover text-sm font-semibold tracking-widest uppercase">
             Real World Mission
           </h2>
-          <p className="text-2xl font-serif italic leading-relaxed text-zinc-200 px-4">
+          <p className="text-2xl font-serif italic leading-relaxed text-foreground px-4">
             &quot;{mission}&quot;
           </p>
         </div>
 
         {/* Timer */}
-        <div className="bg-zinc-900/50 p-6 rounded-3xl border border-zinc-800 w-full backdrop-blur-md">
+        <div className="bg-card/50 p-6 rounded-3xl border border-border w-full backdrop-blur-md">
           <div className="flex items-center justify-center gap-3 mb-3 text-brand-text-secondary">
             <Lock size={16} />
             <span className="text-sm font-medium uppercase tracking-wider">App Paused</span>
@@ -79,7 +79,7 @@ export default function GoConnect() {
         {/* Override / Return */}
         <button
           onClick={() => router.push('/connect')}
-          className="text-zinc-600 text-sm hover:text-white transition-colors underline underline-offset-4"
+          className="text-muted-foreground text-sm hover:text-white transition-colors underline underline-offset-4"
         >
           I&apos;ve completed my mission
         </button>

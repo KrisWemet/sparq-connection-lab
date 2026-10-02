@@ -151,22 +151,22 @@ export default function TrustCenterPage() {
   if (authLoading || isLoading) {
     return (
       <div className="min-h-dvh bg-gradient-to-br from-brand-linen to-brand-parchment flex items-center justify-center">
-        <p className="text-sm text-slate-500">Loading Trust Center...</p>
+        <p className="text-sm text-muted-foreground">Loading Trust Center...</p>
       </div>
     );
   }
 
   return (
     <div className="min-h-dvh bg-gradient-to-br from-brand-linen to-brand-parchment">
-      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/90 backdrop-blur-sm">
+      <header className="sticky top-0 z-10 border-b border-border bg-popover/90 backdrop-blur-sm">
         <div className="mx-auto max-w-3xl px-4 py-3 flex items-center justify-between">
           <button
             onClick={() => router.back()}
-            className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-50"
+            className="rounded-lg border border-border px-3 py-1.5 text-sm text-muted-foreground hover:bg-background"
           >
             Back
           </button>
-          <h1 className="text-base font-semibold text-slate-800">Trust Center</h1>
+          <h1 className="text-base font-semibold text-foreground">Trust Center</h1>
           <button
             onClick={save}
             disabled={isSaving}
@@ -178,32 +178,32 @@ export default function TrustCenterPage() {
       </header>
 
       <main className="mx-auto max-w-3xl px-4 py-6 space-y-4">
-        <section className="rounded-2xl border border-slate-200 bg-white p-5">
-          <h2 className="text-sm font-semibold text-slate-800">Consent Status</h2>
-          <p className="mt-1 text-xs text-slate-500">
+        <section className="rounded-2xl border border-border bg-popover p-5">
+          <h2 className="text-sm font-semibold text-foreground">Consent Status</h2>
+          <p className="mt-1 text-xs text-muted-foreground">
             Peter only uses your data after you say yes.
           </p>
-          <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
-            <p className="text-sm font-medium text-slate-700">
+          <div className="mt-3 rounded-xl border border-border bg-background px-4 py-3">
+            <p className="text-sm font-medium text-foreground">
               {consent.has_consented ? 'Consent captured' : 'Consent required'}
             </p>
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-muted-foreground">
               {consent.consent_given_at
                 ? `Recorded on ${new Date(consent.consent_given_at).toLocaleString()}`
                 : 'Without consent, Peter stays general and does not save new personal details.'}
             </p>
           </div>
-          <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
-            <p className="text-sm font-medium text-slate-700">What stays private</p>
-            <p className="mt-1 text-xs text-slate-600 leading-relaxed">
+          <div className="mt-3 rounded-xl border border-warning/40 bg-warning-subtle px-4 py-3">
+            <p className="text-sm font-medium text-foreground">What stays private</p>
+            <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
               Your journal notes and chats stay private to you. If you later use a shared feature, Sparq should share the pattern, not your exact words.
             </p>
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-5">
-          <h2 className="text-sm font-semibold text-slate-800">Personalization Controls</h2>
-          <p className="text-xs text-slate-500 mt-1">
+        <section className="rounded-2xl border border-border bg-popover p-5">
+          <h2 className="text-sm font-semibold text-foreground">Personalization Controls</h2>
+          <p className="text-xs text-muted-foreground mt-1">
             Journals stay private by default. These settings change how Peter learns from you.
           </p>
 
@@ -223,8 +223,8 @@ export default function TrustCenterPage() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-5">
-          <h2 className="text-sm font-semibold text-slate-800">AI Memory Window</h2>
+        <section className="rounded-2xl border border-border bg-popover p-5">
+          <h2 className="text-sm font-semibold text-foreground">AI Memory Window</h2>
           <div className="mt-3 grid gap-2 sm:grid-cols-3">
             <MemoryOption
               active={prefs.ai_memory_mode === 'off'}
@@ -247,9 +247,9 @@ export default function TrustCenterPage() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-5">
-          <h2 className="text-sm font-semibold text-slate-800">Relationship Mode</h2>
-          <p className="text-xs text-slate-500 mt-1">Solo is the full default. Partnered mode just adds shared tools later.</p>
+        <section className="rounded-2xl border border-border bg-popover p-5">
+          <h2 className="text-sm font-semibold text-foreground">Relationship Mode</h2>
+          <p className="text-xs text-muted-foreground mt-1">Solo is the full default. Partnered mode just adds shared tools later.</p>
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
             <ModeOption
               active={prefs.relationship_mode === 'solo'}
@@ -266,9 +266,9 @@ export default function TrustCenterPage() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
-          <h2 className="text-sm font-semibold text-amber-900">Safety & Data Boundaries</h2>
-          <ul className="mt-2 text-xs text-amber-900 space-y-1">
+        <section className="rounded-2xl border border-warning/40 bg-warning-subtle p-5">
+          <h2 className="text-sm font-semibold text-warning-emphasis">Safety & Data Boundaries</h2>
+          <ul className="mt-2 text-xs text-warning-emphasis space-y-1">
             <li>Journals stay private unless you explicitly share an item.</li>
             <li>Sparq is not therapy and does not provide diagnosis.</li>
             <li>In crisis moments, coaching pauses and safety resources are prioritized.</li>
@@ -278,7 +278,7 @@ export default function TrustCenterPage() {
 
         <ScienceSection />
 
-        {saved && <p className="text-sm text-emerald-600">Saved.</p>}
+        {saved && <p className="text-sm text-success-emphasis">Saved.</p>}
       </main>
     </div>
   );
@@ -298,16 +298,16 @@ function ToggleRow({
   return (
     <button
       onClick={onToggle}
-      className="w-full rounded-xl border border-slate-200 px-3 py-3 text-left hover:bg-slate-50"
+      className="w-full rounded-xl border border-border px-3 py-3 text-left hover:bg-background"
     >
       <div className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-medium text-slate-700">{label}</p>
-          <p className="text-xs text-slate-500 mt-0.5">{hint}</p>
+          <p className="text-sm font-medium text-foreground">{label}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">{hint}</p>
         </div>
         <span
           className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold ${
-            checked ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'
+            checked ? 'bg-success-subtle text-success-emphasis' : 'bg-muted text-muted-foreground'
           }`}
         >
           {checked ? 'On' : 'Off'}
@@ -332,11 +332,11 @@ function MemoryOption({
     <button
       onClick={onClick}
       className={`rounded-xl border px-3 py-3 text-left ${
-        active ? 'border-brand-primary bg-brand-linen' : 'border-slate-200 bg-white'
+        active ? 'border-brand-primary bg-brand-linen' : 'border-border bg-popover'
       }`}
     >
-      <p className="text-sm font-medium text-slate-700">{title}</p>
-      <p className="text-xs text-slate-500 mt-0.5">{detail}</p>
+      <p className="text-sm font-medium text-foreground">{title}</p>
+      <p className="text-xs text-muted-foreground mt-0.5">{detail}</p>
     </button>
   );
 }
@@ -356,11 +356,11 @@ function ModeOption({
     <button
       onClick={onClick}
       className={`rounded-xl border px-3 py-3 text-left ${
-        active ? 'border-teal-400 bg-teal-50' : 'border-slate-200 bg-white'
+        active ? 'border-ring bg-accent' : 'border-border bg-popover'
       }`}
     >
-      <p className="text-sm font-medium text-slate-700">{title}</p>
-      <p className="text-xs text-slate-500 mt-0.5">{detail}</p>
+      <p className="text-sm font-medium text-foreground">{title}</p>
+      <p className="text-xs text-muted-foreground mt-0.5">{detail}</p>
     </button>
   );
 }
@@ -381,17 +381,17 @@ const SCIENCE_PILLARS: Array<{ name: string; founder: string; note: string }> = 
 
 function ScienceSection() {
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white p-5">
-      <h2 className="text-sm font-semibold text-slate-800">The Science</h2>
-      <p className="mt-1 text-xs text-slate-500 leading-relaxed">
+    <section className="rounded-2xl border border-border bg-popover p-5">
+      <h2 className="text-sm font-semibold text-foreground">The Science</h2>
+      <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
         Sparq is built on decades of relationship science from Harvard, Stanford, Northwestern,
         University of Washington, University of Rochester, UCLA, and UNC Chapel Hill — translated
         into short daily practices. The research stays back here; the practice stays simple.
       </p>
 
       <div className="mt-3 rounded-xl border border-brand-primary/10 bg-brand-linen px-4 py-3">
-        <p className="text-sm font-medium text-slate-800">21 minutes. Over 2 years. Measurable results.</p>
-        <p className="mt-1 text-xs text-slate-600 leading-relaxed">
+        <p className="text-sm font-medium text-foreground">21 minutes. Over 2 years. Measurable results.</p>
+        <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
           In a 2013 study in <em>Psychological Science</em>, Northwestern researchers led by Eli Finkel
           had married couples write for 7 minutes, three times a year, about a recent disagreement from
           the eyes of a neutral observer who wants the best for both people. That alone eliminated the
@@ -402,25 +402,25 @@ function ScienceSection() {
       </div>
 
       <details className="mt-3 group">
-        <summary className="cursor-pointer text-xs font-medium text-slate-700 hover:text-slate-900">
+        <summary className="cursor-pointer text-xs font-medium text-foreground hover:text-foreground">
           The eight research pillars behind Sparq
         </summary>
         <ul className="mt-2 space-y-2">
           {SCIENCE_PILLARS.map(p => (
-            <li key={p.name} className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-2">
-              <p className="text-xs font-semibold text-slate-700">{p.name}</p>
-              <p className="text-[11px] text-slate-500">{p.founder}</p>
-              <p className="mt-0.5 text-[11px] text-slate-600">{p.note}</p>
+            <li key={p.name} className="rounded-lg border border-border bg-background px-3 py-2">
+              <p className="text-xs font-semibold text-foreground">{p.name}</p>
+              <p className="text-[11px] text-muted-foreground">{p.founder}</p>
+              <p className="mt-0.5 text-[11px] text-muted-foreground">{p.note}</p>
             </li>
           ))}
         </ul>
       </details>
 
       <details className="mt-2">
-        <summary className="cursor-pointer text-xs font-medium text-slate-700 hover:text-slate-900">
+        <summary className="cursor-pointer text-xs font-medium text-foreground hover:text-foreground">
           What to honestly expect
         </summary>
-        <div className="mt-2 space-y-2 text-xs text-slate-600 leading-relaxed">
+        <div className="mt-2 space-y-2 text-xs text-muted-foreground leading-relaxed">
           <p>
             Digital relationship programs like Sparq produce meaningful but modest improvements in
             relationship satisfaction — research benchmarks land around d = 0.3–0.5 (Hatch et al., 2023,
@@ -439,7 +439,7 @@ function ScienceSection() {
         </div>
       </details>
 
-      <p className="mt-3 text-[11px] text-slate-400">
+      <p className="mt-3 text-[11px] text-muted-foreground">
         The Harvard Study of Adult Development — the longest-running study of human happiness — found
         that relationship quality is the single strongest predictor of long-term health and happiness.
         That&apos;s why this practice is worth five minutes of your day.

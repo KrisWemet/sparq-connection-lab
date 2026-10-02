@@ -7,7 +7,7 @@ description: "Sparq Connection design system, component patterns, and UI standar
 
 ## 1. Design Philosophy
 
-Sparq should feel like **a warm journal in a quiet room** — never a clinical tool, never a generic SaaS dashboard. The visual language is built entirely from warm tones. There are no cool or cold colors anywhere in the system. That warmth is felt before a single word is read.
+Sparq should feel like **a warm journal in a quiet room** — never a clinical tool, never a generic SaaS dashboard. The visual language balances deep plum, warm coral and soft gold with ivory and stone surfaces. That warmth is felt before a single word is read.
 
 Every visual choice serves emotional safety: generous whitespace, rounded corners, serif italic for emotional moments, soft animations that guide rather than demand attention.
 
@@ -52,25 +52,24 @@ The Stitch MCP is connected to Claude Code. When generating new screens or UI mo
 
 ## 3. Color System
 
-**The palette principle (2026-09-30, Chris): colour carries meaning.** Plum = understand, Coral = connect, Gold = grow. Most screens live in ivory and plum; coral arrives for connection moments, gold for insight and milestones, and repair/hard moments go quieter (mauve, sage). The Sparq mark (`src/components/brand/SparqMark.tsx`, `public/favicon.svg`) is deep plum with a coral-to-gold spark — the brightest thing in the identity.
+**Colour carries meaning:** plum = understand, coral = connect, gold = grow. Most screens live in ivory, stone and plum; coral appears for connection and gold for insight/progress. Calm and repair moments can use quiet sage. Errors, warnings and success keep explicit status roles.
 
-### Brand Palette (implement in `tailwind.config.ts`)
+`src/styles/globals.css` is the source of truth for colour values. `tailwind.config.ts` maps the existing shadcn variables and compatible `brand-*` aliases with opacity support. Exact light/dark values and measured contrast: `references/design-tokens.md`.
 
-| Token | Hex | Meaning | Usage |
-|---|---|---|---|
-| `brand-primary` / `brand-plum` | `#4B2E57` | Deep Plum — understand | Primary buttons (white text, 11.5:1), active nav, headings accents, the everyday brand |
-| `brand-hover` | `#3A2244` | Plum, pressed | Hover/pressed; small accent text |
-| `brand-coral` | `#E97868` | Warm Coral — connect | Fills and accents for connection moments (partner reveal, shared items). Text on it: `text-brand-espresso` (5.7:1). **Never white text on coral (2.9:1).** |
-| `brand-coral-deep` | `#A8452F` | Coral for text | Coral-coloured words/icons (5.5:1 on ivory) |
-| `brand-gold` (legacy `brand-sand`) | `#F3B55A` | Soft Gold — grow | Fills/accents for insights, milestones, streaks. Dark-plum text on it. Never as text colour (1.7:1). |
-| `brand-gold-deep` | `#8A5E14` | Gold for text | Gold-coloured words/icons (5.3:1 on ivory) |
-| `brand-linen` / `brand-ivory` | `#FAF7F2` | Warm Ivory | Page backgrounds |
-| `brand-parchment` / `brand-stone` | `#EEE8E3` | Soft Stone | Card surfaces |
-| `brand-light` | `#FFFDFA` | Brightest tint | Very light tints |
-| `brand-espresso` / `brand-text-primary` | `#241D27` | Dark Plum | Main text (13.5:1 on stone) |
-| `brand-taupe` / `brand-text-secondary` / `brand-mauve` | `#685C6A` | Muted Mauve | Secondary text, Peter captions (5.2:1 on stone — deepened from the spec's `#776B78`, which was 4.2:1) |
-| `brand-growth` | `#9CB5A0` | Sage — calm | Quiet/repair moments, progress (fills, not text) |
-| `brand-border` | `#DED5CF` | Stone edge | Borders |
+| Role | Light value | Use |
+|---|---|---|
+| `primary` | `#4B2E57` | Deep-plum primary buttons, brand anchors |
+| `primary-emphasis` / `understand` | `#4B2E57` | Understanding, reflection, selected navigation text |
+| `connection` | `#E97868` | Coral connection fills/accents, with `connection-foreground` text |
+| `connection-emphasis` | `#A8452F` | Readable coral words/icons |
+| `growth` / `insight` | `#F3B55A` | Gold progress, insights, milestones, with `growth-foreground` text |
+| `growth-emphasis` | `#8A5E14` | Readable gold words/icons |
+| `background` | `#FAF7F2` | Ivory canvas (`brand-linen`) |
+| `card` | `#EEE8E3` | Stone surfaces (`brand-parchment`) |
+| `foreground` | `#241D27` | Main plum-black text |
+| `muted-foreground` | `#685C6A` | Supporting mauve text, deepened for contrast on stone |
+| `brand-mauve` swatch | `#776B78` | Supplied identity swatch; text uses muted foreground |
+| `calm` | `#9CB5A0` | Quiet sage accent |
 
 ### Moment tones — colour that follows the emotion (`src/lib/moment-tone.ts`)
 
@@ -85,39 +84,15 @@ Use `TONE[tone].card / eyebrow / icon / button / outline / inset` instead of han
 
 Keep coral and gold rare: they mean something only because most of the app is plum. Safety content (danger banners) keeps its own rose colours.
 
-### Semantic Colors (CSS variables in `globals.css`)
+### Rules
 
-| Token | Light | Dark | Usage |
-|---|---|---|---|
-| `primary` | `#C56B4D` | `hsl(210 40% 98%)` | shadcn primary — buttons, links |
-| `primary-100` | `#FBF8F3` | — | Light primary tint |
-| `primary-200` | `#EFE7DC` | — | Medium primary tint (matches brand-parchment) |
-| `secondary` | `#EFE7DC` | `hsl(217.2 32.6% 17.5%)` | Secondary surfaces |
-| `destructive` | `hsl(0 84.2% 60.2%)` | `hsl(0 62.8% 30.6%)` | Errors, destructive actions |
-| `muted` | `hsl(210 40% 96.1%)` | `hsl(217.2 32.6% 17.5%)` | Subdued text, disabled states |
-| `background` | `#F5F1EA` | `#1A0F0A` | Page background — warm linen, not pure white |
-| `card` | `#EFE7DC` | `hsl(240 3.7% 15.9%)` | Card surfaces — parchment |
-
-### Color Usage Rules
-
-- **Page backgrounds**: Always `bg-brand-linen` — never pure white, never grey
-- **Card backgrounds**: `bg-brand-parchment` — must read as distinct from linen background
-- **Text primary**: `brand-espresso` for headings, `brand-text-primary` for body
-- **Text secondary**: `brand-text-secondary` for captions, Peter's voice, supporting copy
-- **Borders**: `border-brand-primary/10` for warm subtle borders
-- **Accent backgrounds**: `bg-brand-primary/5` to `bg-brand-primary/10` for tinted surfaces
-- **Celebration**: `brand-sand` for milestone moments, streaks, achievement indicators
-- **Growth/progress**: `brand-growth` for forward movement, completion states
-- **Dark emotional moments**: `brand-espresso` background for Couples Mode, Day 14 reveal — warm dark, never cold navy or pure black
-- **Confetti colors**: `['#C56B4D', '#F5F1EA', '#D9A441']` in `ElegantConfetti.ts`
-
-### Supplementary Colors (used inline)
-
-| Color | Hex | Context |
-|---|---|---|
-| Nav inactive | `#9E8A86` | Bottom nav inactive icons and labels |
-| Peter tagline | `#c2a8a0` | Peter fixed/mobile italic text |
-| Score muted | `#8C827A` | Building-state description text |
+- Default actions use plum with `text-primary-foreground`. Use coral selectively for connection; gold is not a default CTA.
+- Coral and gold fills take dark-plum labels. Their small text/icons use emphasis variants. Never white labels on coral or gold.
+- Use semantic surfaces and control borders (`background`, `card`, `popover`, `border`, `input`, `ring`). Do not add component-specific neutral palettes.
+- Keep functional status colours distinct: `destructive`, `warning`, `success`, with their `*-emphasis` and `*-subtle` variants.
+- Legacy brand aliases are theme-aware. Text utilities for primary, espresso, coral and gold resolve to readable text roles; fill utilities retain the fill role.
+- The existing Sparq mark is plum with its existing coral-to-gold spark. No new logo asset is needed.
+- Confetti uses coral, gold and plum (`ElegantConfetti.ts`). Natural illustrations retain their specific colours.
 
 ---
 
@@ -203,12 +178,12 @@ Peter is never reduced to a static icon or loading spinner. He is the emotional 
 
 ### Dark Screens for Peak Emotional Moments
 
-Couples Mode shared reflection and Day 14 profile reveal use a dark background — warm espresso `#2E2620`, not cold navy or pure black. This creates intimacy and signals importance. The contrast says: *this moment is different.*
+Couples Mode shared reflection and Day 14 profile reveal use a dark background — warm espresso `#241D27`, not cold navy or pure black. This creates intimacy and signals importance. The contrast says: *this moment is different.*
 
 ### The Linen-to-Parchment Layering
 
-Background: `brand-linen` `#F5F1EA`
-Card surfaces: `brand-parchment` `#EFE7DC`
+Background: `brand-linen` `#FAF7F2`
+Card surfaces: `brand-parchment` `#EEE8E3`
 
 The separation must be visible but never harsh. It reads like pages in a journal — layered warmth, not stark contrast. If parchment cards disappear into the linen background, increase parchment depth until the separation is clear at arm's length on a phone screen.
 
@@ -269,7 +244,7 @@ min-h-screen bg-brand-linen pb-24
 - **Border radius**: `rounded-3xl` (24px) — the signature Sparq radius
 - **Card padding**: `p-5` to `p-6` (20-24px)
 - **Card background**: `bg-brand-parchment` — distinct from linen page background
-- **Card shadow**: `shadow-sm` default, `shadow-[0_8px_30px_rgb(197,107,77,0.15)]` for elevated CTA cards
+- **Card shadow**: `shadow-sm` default, `shadow-[0_8px_30px_hsl(var(--shadow)/0.15)]` for elevated CTA cards
 - **Card border**: `border border-brand-primary/10` for warm-tinted borders
 
 ### Container Widths
@@ -356,9 +331,9 @@ Never use: radio buttons, dropdowns, checkbox lists, tab bars for content choice
 
 | Days | Color | Background | Rationale |
 |---|---|---|---|
-| 1–6 | `brand-sand` | `bg-brand-sand/15` | Warm gold — early momentum |
-| 7–13 | `brand-growth` | `bg-brand-growth/15` | Sage — building strength |
-| 14–29 | `brand-primary` | `bg-brand-primary/10` | Clay — real achievement |
+| 1–6 | `brand-sand` | `bg-brand-sand/15` | Gold — early momentum |
+| 7–13 | `brand-growth` | `bg-brand-growth/15` | Gold — building strength |
+| 14–29 | `brand-primary` | `bg-brand-primary/10` | Plum — real achievement |
 | 30+ | `brand-espresso` | `bg-brand-sand/20` | Deep warmth — mastery |
 
 ### Relationship Score Dimension Colors
@@ -386,7 +361,7 @@ Never use: radio buttons, dropdowns, checkbox lists, tab bars for content choice
 
 - **Mobile**: Fixed bottom nav, 4–5 items max
 - **Active state**: `bg-brand-primary/10` pill, `brand-primary` color, bolder stroke
-- **Inactive**: `#9E8A86` color, thinner stroke
+- **Inactive**: `text-muted-foreground`, thinner stroke
 
 ---
 
@@ -508,18 +483,10 @@ Dark mode via `darkMode: ["class"]` in Tailwind config and `.dark` overrides in 
 
 ### Current Approach
 
-- CSS variable swaps for shadcn semantic tokens
-- Brute-force overrides for non-semantic classes
-- Background: warm near-black `#1A0F0A` — never pure black
-- Cards: warm dark grey — never cold grey
-- Colored backgrounds use `/30` opacity in dark mode
-
-### Rules for New Components
-
-- Prefer semantic tokens (`bg-card`, `text-foreground`) over raw colors
-- If using raw colors, check `globals.css` for existing dark overrides
-- Brand colors work in both modes without override
-- Test both modes before shipping
+- Semantic CSS variables and compatible brand aliases respond to `.dark`.
+- Canvas is plum-black, cards are plum stone, and text/focus use lighter readable variants.
+- Coral and gold remain accents with dark labels or readable emphasis variants.
+- Prefer semantic utilities and check both modes. No theme toggle/provider is added by the colour update.
 
 ---
 

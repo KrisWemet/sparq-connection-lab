@@ -393,12 +393,12 @@ export default function RehearsalRoom() {
             exit={{ y: -48, opacity: 0 }}
             transition={{ duration: 0.25 }}
             className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-3"
-            style={{ background: 'rgba(181,96,78,0.95)', backdropFilter: 'blur(8px)' }}
+            style={{ background: 'hsl(var(--primary)/0.95)', backdropFilter: 'blur(8px)' }}
           >
             <span className="text-white text-sm font-semibold">Peter is playing your partner</span>
             <button
               onClick={endRehearsal}
-              className="text-white/80 text-sm font-medium border border-white/30 rounded-xl px-3 py-1 hover:text-white hover:border-white/60 transition-colors"
+              className="text-white/80 text-sm font-medium border border-popover/30 rounded-xl px-3 py-1 hover:text-white hover:border-popover/60 transition-colors"
             >
               End rehearsal
             </button>
@@ -414,7 +414,7 @@ export default function RehearsalRoom() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             className="fixed top-14 left-0 right-0 z-30 flex items-center justify-between px-4 py-2"
-            style={{ background: 'rgba(244,240,235,0.96)', borderBottom: '1px solid rgba(181,96,78,0.15)' }}
+            style={{ background: 'hsl(var(--background)/0.96)', borderBottom: '1px solid hsl(var(--primary)/0.15)' }}
           >
             <span className="text-brand-text-secondary text-sm font-serif italic">Ready to debrief?</span>
             <div className="flex gap-2">
@@ -465,8 +465,8 @@ export default function RehearsalRoom() {
                   msg.role === 'user'
                     ? 'bg-brand-primary text-white rounded-tr-sm'
                     : msg.isPartner
-                    ? 'bg-amber-50 border border-amber-200 text-brand-espresso rounded-tl-sm'
-                    : 'bg-white border border-brand-primary/10 text-brand-espresso rounded-tl-sm font-serif italic'
+                    ? 'bg-insight-subtle border border-insight/30 text-brand-espresso rounded-tl-sm'
+                    : 'bg-popover border border-brand-primary/10 text-brand-espresso rounded-tl-sm font-serif italic'
                 } font-bold`}
               >
                 {msg.content}
@@ -479,7 +479,7 @@ export default function RehearsalRoom() {
         {isLoading && (
           <div className="flex items-start gap-3 mb-4">
             <PeterAvatar mood="curious" size={40} />
-            <div className="bg-white border border-brand-primary/10 rounded-2xl rounded-tl-sm px-4 py-3">
+            <div className="bg-popover border border-brand-primary/10 rounded-2xl rounded-tl-sm px-4 py-3">
               <motion.div className="flex gap-1" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                 {[0, 1, 2].map(i => (
                   <motion.div
@@ -614,7 +614,7 @@ export default function RehearsalRoom() {
           >
             {/* Anchor card */}
             {peterAnchor && (
-              <div className="bg-white border border-brand-primary/15 rounded-2xl p-5 mb-6 shadow-sm">
+              <div className="bg-popover border border-brand-primary/15 rounded-2xl p-5 mb-6 shadow-sm">
                 <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
                   Your anchor
                 </p>
@@ -718,7 +718,7 @@ export default function RehearsalRoom() {
                   ? 'Say what you came to say...'
                   : 'Type your response...'
               }
-              className="flex-1 px-4 py-3 rounded-2xl border-2 border-brand-primary/20 bg-white text-brand-espresso placeholder-brand-text-secondary/50 focus:outline-none focus:border-brand-primary text-sm"
+              className="flex-1 px-4 py-3 rounded-2xl border-2 border-input bg-popover text-brand-espresso placeholder:text-muted-foreground focus:outline-none focus:border-ring text-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             />
             <button
               onClick={() => {

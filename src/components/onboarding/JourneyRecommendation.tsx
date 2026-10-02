@@ -37,15 +37,15 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
         >
           <PeterAvatar mood="celebrating" size={48} />
           <div
-            className="flex-1 bg-white rounded-2xl rounded-tl-sm p-4 text-[#1f2937] text-[15px] leading-relaxed font-serif italic"
-            style={{ border: '1px solid #e5e7eb' }}
+            className="flex-1 bg-popover rounded-2xl rounded-tl-sm p-4 text-foreground text-[15px] leading-relaxed font-serif italic"
+            style={{ border: '1px solid hsl(var(--border))' }}
           >
             {profile.peterClosingSentence?.trim() ||
               `${profile.firstName ? `Thanks, ${profile.firstName}. ` : ''}Here's where I think we could start. It's just a first guess, so pick whatever feels right to you.`}
           </div>
         </motion.div>
 
-        <div className="bg-[#fff7ed] border border-[#fdba74] rounded-2xl p-4 mb-6">
+        <div className="bg-insight-subtle border border-insight/40 rounded-2xl p-4 mb-6">
           <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-2">
             Solo-first start
           </p>
@@ -71,12 +71,12 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
               });
               onSelectJourney(primaryJourney.id, recommendation.primary.peterNote);
             }}
-            className="w-full text-left bg-white rounded-[20px] overflow-hidden shadow-sm mb-6"
-            style={{ border: '1px solid #e5e7eb' }}
+            className="w-full text-left bg-popover rounded-[20px] overflow-hidden shadow-sm mb-6"
+            style={{ border: '1px solid hsl(var(--border))' }}
           >
             <div
               className="h-28 flex items-center justify-center text-5xl"
-              style={{ background: 'linear-gradient(135deg, #4B2E57, #3A2244)' }}
+              style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-hover)))' }}
             >
               <span className="text-4xl">{primaryJourney.id === 'attachment-healing' ? '🧡' : '✨'}</span>
             </div>
@@ -84,7 +84,7 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
               <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-1">
                 Recommended for you
               </p>
-              <p className="text-lg font-bold text-[#1f2937] mb-2">{primaryJourney.title}</p>
+              <p className="text-lg font-bold text-foreground mb-2">{primaryJourney.title}</p>
               <p className="text-sm text-brand-text-secondary leading-relaxed italic">
                 &quot;I think this one fits you best — {recommendation.primary.reason} Start here for yourself. Invite your partner later if it helps.&quot;
               </p>
@@ -112,14 +112,14 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
                     });
                     onSelectJourney(alt.journeyId, alt.peterNote);
                   }}
-                  className="w-full flex items-center gap-3 bg-white rounded-2xl p-3 text-left opacity-80 hover:opacity-100 transition-opacity"
-                  style={{ border: '1px solid #e5e7eb' }}
+                  className="w-full flex items-center gap-3 bg-popover rounded-2xl p-3 text-left opacity-80 hover:opacity-100 transition-opacity"
+                  style={{ border: '1px solid hsl(var(--border))' }}
                 >
-                  <div className="w-10 h-10 rounded-xl bg-[#f3f4f6] flex items-center justify-center text-xl flex-shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center text-xl flex-shrink-0">
                     ✨
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-[#1f2937]">{alt.journey?.title}</p>
+                    <p className="text-sm font-semibold text-foreground">{alt.journey?.title}</p>
                     <p className="text-xs text-brand-text-secondary mt-0.5">{alt.journey?.duration}</p>
                   </div>
                 </motion.button>

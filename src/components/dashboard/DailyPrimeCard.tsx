@@ -52,7 +52,7 @@ export function DailyPrimeCard() {
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-3xl border border-brand-primary/10 bg-white/60 p-5 shadow-sm backdrop-blur-sm"
+      className="rounded-3xl border border-brand-primary/10 bg-popover/60 p-5 shadow-sm backdrop-blur-sm"
     >
       <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-hover">
         Today&apos;s nudge

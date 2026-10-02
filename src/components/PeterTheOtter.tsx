@@ -30,10 +30,10 @@ export function PeterTheOtter({ status = 'idle', message }: PeterTheOtterProps) 
             initial={{ opacity: 0, y: 10, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.9 }}
-            className="mb-4 mr-4 p-4 max-w-xs bg-white text-gray-800 rounded-2xl shadow-xl border border-gray-100 relative pointer-events-auto"
+            className="mb-4 mr-4 p-4 max-w-xs bg-popover text-foreground rounded-2xl shadow-xl border border-border relative pointer-events-auto"
           >
             {/* Speech bubble tail */}
-            <div className="absolute -bottom-2 right-8 w-4 h-4 bg-white border-b border-r border-gray-100 transform rotate-45" />
+            <div className="absolute -bottom-2 right-8 w-4 h-4 bg-popover border-b border-r border-border transform rotate-45" />
             
             <div className="text-sm font-medium leading-relaxed flex items-center">
               {status === 'thinking' && (
@@ -74,10 +74,10 @@ export function PeterTheOtter({ status = 'idle', message }: PeterTheOtterProps) 
         />
         {/* Status indicator badges */}
         {status === 'thinking' && (
-          <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-400 rounded-full border-2 border-white animate-pulse" />
+          <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-popover animate-pulse" />
         )}
         {status === 'speaking' && (
-          <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white animate-pulse" />
+          <div className="absolute -top-1 -right-1 w-4 h-4 bg-success rounded-full border-2 border-popover animate-pulse" />
         )}
       </motion.div>
     </div>

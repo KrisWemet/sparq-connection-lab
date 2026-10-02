@@ -42,7 +42,7 @@ export function TimeOutOverlay() {
       {/* Floating Action Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-[88px] right-4 md:right-8 bg-zinc-900 text-white p-3 rounded-full shadow-lg border border-zinc-700 z-[40] hover:scale-105 transition-transform"
+        className="fixed bottom-[88px] right-4 md:right-8 bg-primary text-primary-foreground p-3 rounded-full shadow-lg border border-border z-[40] hover:scale-105 transition-transform"
         aria-label="Emergency Time Out"
       >
         <HandHelping size={24} />
@@ -55,7 +55,7 @@ export function TimeOutOverlay() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/95 flex flex-col items-center justify-center p-6 backdrop-blur-md"
+            className="fixed inset-0 z-[100] bg-inverse/95 flex flex-col items-center justify-center p-6 backdrop-blur-md"
           >
             <button
               onClick={() => setIsOpen(false)}
@@ -67,7 +67,7 @@ export function TimeOutOverlay() {
             {/* Minimalist Breathing Circle */}
             <div className="relative w-64 h-64 flex items-center justify-center mb-16">
               <motion.div
-                className="absolute bg-white/20 rounded-full mix-blend-screen"
+                className="absolute bg-popover/20 rounded-full mix-blend-screen"
                 animate={{
                   scale: breathState === 'inhale' ? 1 : breathState === 'hold' ? 1 : 0.4,
                   opacity: breathState === 'inhale' ? 0.8 : breathState === 'hold' ? 0.6 : 0.2,
@@ -101,14 +101,14 @@ export function TimeOutOverlay() {
               <p className="text-white/60 text-sm font-medium uppercase tracking-widest">
                 Send to partner
               </p>
-              <div className="bg-white/10 p-5 rounded-2xl border border-white/20">
+              <div className="bg-popover/10 p-5 rounded-2xl border border-popover/20">
                 <p className="text-white text-lg font-serif italic leading-relaxed">
                   &quot;{message}&quot;
                 </p>
               </div>
               <button
                 onClick={handleCopy}
-                className="w-full py-4 bg-white text-black font-bold rounded-2xl text-lg hover:bg-zinc-200 transition-colors"
+                className="w-full py-4 bg-popover text-foreground font-bold rounded-2xl text-lg hover:bg-border transition-colors"
               >
                 Copy Message
               </button>

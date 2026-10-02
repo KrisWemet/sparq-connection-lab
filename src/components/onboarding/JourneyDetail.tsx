@@ -146,15 +146,15 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           className="h-40 rounded-[20px] flex items-center justify-center text-5xl mb-6"
-          style={{ background: 'linear-gradient(135deg, #4B2E57, #3A2244)' }}
+          style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-hover)))' }}
         >
           ✨
         </motion.div>
 
-        <h1 className="text-2xl font-bold text-[#1f2937] mb-1">{displayTitle}</h1>
+        <h1 className="text-2xl font-bold text-foreground mb-1">{displayTitle}</h1>
         <p className="text-sm text-brand-text-secondary mb-6">{displayDuration} · Beginner · Starts today</p>
 
-        <div className="bg-[#fff7ed] rounded-[20px] p-5 mb-4" style={{ border: '1px solid #fdba74' }}>
+        <div className="bg-insight-subtle rounded-[20px] p-5 mb-4" style={{ border: '1px solid hsl(var(--growth) / 0.4)' }}>
           <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
             Solo-first path
           </p>
@@ -164,33 +164,33 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
         </div>
 
         {/* What you'll be doing */}
-        <div className="bg-white rounded-[20px] p-5 mb-4" style={{ border: '1px solid #e5e7eb' }}>
+        <div className="bg-popover rounded-[20px] p-5 mb-4" style={{ border: '1px solid hsl(var(--border))' }}>
           <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-4">
             Here&apos;s what you&apos;ll be doing
           </p>
           <div className="space-y-3">
             <div className="flex items-start gap-3">
               <div className="w-2 h-2 rounded-full bg-brand-primary mt-1.5 flex-shrink-0" />
-              <p className="text-sm text-[#374151] leading-relaxed">
+              <p className="text-sm text-foreground leading-relaxed">
                 <strong>Each day:</strong> one reflection question, one short insight from me, one small action to try in real life.
               </p>
             </div>
             <div className="flex items-start gap-3">
               <div className="w-2 h-2 rounded-full bg-brand-primary mt-1.5 flex-shrink-0" />
-              <p className="text-sm text-[#374151] leading-relaxed">
+              <p className="text-sm text-foreground leading-relaxed">
                 <strong>Takes about 5 minutes.</strong> No homework, no pressure — just one tiny move at a time.
               </p>
             </div>
             <div className="flex items-start gap-3">
               <div className="w-2 h-2 rounded-full bg-brand-primary mt-1.5 flex-shrink-0" />
-              <p className="text-sm text-[#374151] leading-relaxed">
+              <p className="text-sm text-foreground leading-relaxed">
                 <strong>Partner optional.</strong> Some prompts may fit best with your partner, but each day can still help you listen, speak, and stay steady.
               </p>
             </div>
             {day1Preview && (
               <div className="flex items-start gap-3">
                 <div className="w-2 h-2 rounded-full bg-brand-primary mt-1.5 flex-shrink-0" />
-                <p className="text-sm text-[#374151] leading-relaxed">
+                <p className="text-sm text-foreground leading-relaxed">
                   <strong>Day 1 today:</strong> {day1Preview}
                 </p>
               </div>
@@ -202,8 +202,8 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
         <div className="flex items-start gap-3 mb-8">
           <PeterAvatar mood="morning" size={40} />
           <div
-            className="flex-1 bg-[#fef3c7] rounded-2xl rounded-tl-sm p-4 text-sm text-[#92400e] leading-relaxed font-serif italic"
-            style={{ border: '1px solid #fbbf24' }}
+            className="flex-1 bg-warning-subtle rounded-2xl rounded-tl-sm p-4 text-sm text-warning-emphasis leading-relaxed font-serif italic"
+            style={{ border: '1px solid hsl(var(--warning) / 0.4)' }}
           >
             {peterNote}
           </div>
@@ -217,7 +217,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
           {isStarting ? 'Starting...' : "Let's start →"}
         </button>
         {startError ? (
-          <p className="mt-3 text-center text-sm text-[#92400e]">
+          <p className="mt-3 text-center text-sm text-warning-emphasis">
             {startError}
           </p>
         ) : null}

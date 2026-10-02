@@ -39,8 +39,8 @@ export function DailyTimeline({ phase, actionVerified = false }: DailyTimelinePr
   return (
     <div className="w-full border-b px-6 py-4"
       style={{
-        background: "rgba(251,248,243,0.92)",
-        borderColor: "rgba(75,46,87,0.1)",
+        background: "hsl(var(--background)/0.92)",
+        borderColor: "hsl(var(--primary)/0.1)",
       }}
     >
       <div className="max-w-md mx-auto flex items-center justify-between relative">
@@ -68,9 +68,9 @@ export function DailyTimeline({ phase, actionVerified = false }: DailyTimelinePr
               <motion.div
                 initial={false}
                 animate={{
-                  backgroundColor: status === 'completed' ? '#4B2E57' : status === 'active' ? '#FFFFFF' : '#FFFDFA',
-                  borderColor: status === 'active' ? '#4B2E57' : 'rgba(75,46,87,0)',
-                  color: status === 'completed' ? '#FFFFFF' : status === 'active' ? '#4B2E57' : '#9E8A86',
+                  backgroundColor: status === 'completed' ? 'hsl(var(--primary))' : status === 'active' ? 'hsl(var(--primary-foreground))' : 'hsl(var(--popover))',
+                  borderColor: status === 'active' ? 'hsl(var(--primary))' : 'transparent',
+                  color: status === 'completed' ? 'hsl(var(--primary-foreground))' : status === 'active' ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
                   scale: status === 'active' ? 1.1 : 1,
                 }}
                 className="w-10 h-10 rounded-full border-2 flex items-center justify-center shadow-sm transition-colors duration-300"

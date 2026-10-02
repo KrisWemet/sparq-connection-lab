@@ -134,7 +134,7 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
                     I tried it
                   </button>
                   <button type="button" disabled={busy} onClick={() => setStep('not_yet')}
-                    className="rounded-full border border-brand-border px-5 py-2 text-sm font-medium text-brand-espresso hover:bg-white/60 disabled:opacity-50">
+                    className="rounded-full border border-brand-border px-5 py-2 text-sm font-medium text-brand-espresso hover:bg-popover/60 disabled:opacity-50">
                     Not yet
                   </button>
                 </div>
@@ -149,7 +149,7 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
                     <button key={key} type="button" onClick={() => setOutcome(key)}
                       className={cn(
                         'rounded-full border px-4 py-1.5 text-sm transition-colors',
-                        outcome === key ? 'border-brand-primary bg-brand-primary/10 font-semibold text-brand-hover' : 'border-brand-border text-brand-espresso hover:bg-white/60',
+                        outcome === key ? 'border-brand-primary bg-brand-primary/10 font-semibold text-brand-hover' : 'border-brand-border text-brand-espresso hover:bg-popover/60',
                       )}>
                       {OUTCOME_LABELS[key]}
                     </button>
@@ -157,7 +157,7 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
                 </div>
                 <textarea value={note} onChange={e => setNote(e.target.value)} rows={2} maxLength={500}
                   placeholder="What did you notice? (optional)" aria-label="What did you notice?"
-                  className="w-full rounded-xl border border-brand-border bg-white/70 p-3 text-sm text-brand-espresso placeholder:text-brand-text-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary/30" />
+                  className="w-full rounded-xl border border-brand-border bg-popover/70 p-3 text-sm text-brand-espresso placeholder:text-brand-text-secondary focus:outline-none focus:ring-2 focus:ring-ring border-input" />
                 <button type="button" disabled={!outcome || busy}
                   onClick={() => patch({ id: current.id, status: 'tried', outcome, outcome_note: note }, 'Thank you for trying. That counts, whatever happened. 🦦')}
                   className="rounded-full bg-brand-primary px-5 py-2 text-sm font-bold text-white hover:opacity-90 disabled:opacity-50">
@@ -175,7 +175,7 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
                 </button>
                 <button type="button" disabled={busy}
                   onClick={() => patch({ id: current.id, status: 'let_go' }, 'Letting it go is a choice too.')}
-                  className="rounded-full border border-brand-border px-5 py-2 text-sm font-medium text-brand-espresso hover:bg-white/60 disabled:opacity-50">
+                  className="rounded-full border border-brand-border px-5 py-2 text-sm font-medium text-brand-espresso hover:bg-popover/60 disabled:opacity-50">
                   Let it go
                 </button>
               </div>
@@ -209,11 +209,11 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
             <p className="text-sm text-brand-text-secondary">Something small you want to try?</p>
             <textarea value={draft} onChange={e => setDraft(e.target.value)} rows={2} maxLength={300}
               placeholder="When ___ happens, I'll try ___" aria-label="Something small you want to try"
-              className="w-full rounded-xl border border-brand-border bg-white/70 p-3 text-sm text-brand-espresso placeholder:text-brand-text-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary/30" />
+              className="w-full rounded-xl border border-brand-border bg-popover/70 p-3 text-sm text-brand-espresso placeholder:text-brand-text-secondary focus:outline-none focus:ring-2 focus:ring-ring border-input" />
             {draft.trim() && (
               <textarea value={draftReason} onChange={e => setDraftReason(e.target.value)} rows={2} maxLength={500}
                 placeholder="What makes it worth trying for you? (optional)" aria-label="What makes it worth trying for you?"
-                className="w-full rounded-xl border border-brand-border bg-white/70 p-3 text-sm text-brand-espresso placeholder:text-brand-text-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary/30" />
+                className="w-full rounded-xl border border-brand-border bg-popover/70 p-3 text-sm text-brand-espresso placeholder:text-brand-text-secondary focus:outline-none focus:ring-2 focus:ring-ring border-input" />
             )}
             <button type="button" disabled={!draft.trim() || busy} onClick={addExperiment}
               className="rounded-full bg-brand-primary px-5 py-2 text-sm font-bold text-white hover:opacity-90 disabled:opacity-50">

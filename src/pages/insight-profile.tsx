@@ -78,7 +78,7 @@ export default function InsightProfilePage() {
   const card = 'bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6 space-y-4';
   const chip = (active: boolean) => cn(
     'rounded-full border px-3 py-1.5 text-sm transition-colors disabled:opacity-50',
-    active ? 'border-brand-primary bg-brand-primary/10 font-semibold text-brand-hover' : 'border-brand-border text-brand-espresso hover:bg-white/60',
+    active ? 'border-brand-primary bg-brand-primary/10 font-semibold text-brand-hover' : 'border-brand-border text-brand-espresso hover:bg-popover/60',
   );
 
   const guesses = (data?.guesses || []).filter(g => g.level !== 'excluded');

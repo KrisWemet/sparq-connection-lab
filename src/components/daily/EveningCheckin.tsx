@@ -156,7 +156,7 @@ export function EveningCheckin({ sessionId, morningAction, journeyTitle, trigger
                     ? 'Even a sentence or two is perfect...'
                     : 'Whatever is on your mind...'
                   }
-                  className="w-full bg-transparent text-brand-text-primary text-[15px] leading-relaxed placeholder:text-brand-text-secondary/50 resize-none focus:outline-none min-h-[120px]"
+                  className="w-full bg-transparent text-brand-text-primary text-[15px] leading-relaxed placeholder:text-brand-text-secondary/50 resize-none focus:outline-none min-h-[120px] border-input focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   autoFocus
                 />
               </div>

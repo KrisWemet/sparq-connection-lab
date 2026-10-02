@@ -218,10 +218,10 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
       <div className="container max-w-md mx-auto px-4 py-8">
         {/* Progress bar */}
         <div className="w-full mb-6">
-          <div className="h-1 w-full rounded-full" style={{ backgroundColor: '#EEE8E3' }}>
+          <div className="h-1 w-full rounded-full" style={{ backgroundColor: 'hsl(var(--card))' }}>
             <motion.div
               className="h-1 rounded-full"
-              style={{ backgroundColor: '#4B2E57' }}
+              style={{ backgroundColor: 'hsl(var(--primary))' }}
               animate={{ width: `${((currentIndex) / QUESTIONS.length) * 100}%` }}
               transition={{ duration: 0.4, ease: 'easeInOut' }}
             />
@@ -235,8 +235,8 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
         <div className="flex items-start gap-3 mb-6">
           <PeterAvatar mood="curious" size={48} />
           <div
-            className="flex-1 bg-white rounded-2xl rounded-tl-sm p-4 text-[#1f2937] text-[15px] leading-relaxed font-serif italic"
-            style={{ border: '1px solid #e5e7eb' }}
+            className="flex-1 bg-popover rounded-2xl rounded-tl-sm p-4 text-foreground text-[15px] leading-relaxed font-serif italic"
+            style={{ border: '1px solid hsl(var(--border))' }}
           >
             {peterText}
           </div>
@@ -253,8 +253,8 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
             >
               <PeterAvatar mood="celebrating" size={48} />
               <div
-                className="flex-1 bg-white rounded-2xl rounded-tl-sm p-4 text-[#1f2937] text-[14px] leading-relaxed"
-                style={{ border: '1px solid #e5e7eb' }}
+                className="flex-1 bg-popover rounded-2xl rounded-tl-sm p-4 text-foreground text-[14px] leading-relaxed"
+                style={{ border: '1px solid hsl(var(--border))' }}
               >
                 <p>{activeBridge}</p>
                 <button
@@ -278,7 +278,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
               value={textInput}
               onChange={e => setTextInput(e.target.value)}
               placeholder="Your first name..."
-              className="w-full px-4 py-3.5 rounded-2xl border-2 border-brand-primary/20 bg-brand-parchment text-brand-text-primary placeholder-brand-text-secondary/50 focus:outline-none focus:border-brand-primary transition-colors text-base"
+              className="w-full px-4 py-3.5 rounded-2xl border-2 border-input bg-brand-parchment text-brand-text-primary placeholder:text-muted-foreground focus:outline-none focus:border-ring transition-colors text-base focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               onKeyDown={e => e.key === 'Enter' && textInput.trim() && handleFreeTextSubmit(textInput, 'firstName')}
               autoFocus
             />
@@ -332,7 +332,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
                 <input
                   type="text"
                   placeholder="Something else..."
-                  className="w-full px-4 py-3 rounded-2xl border-2 border-brand-primary/20 bg-brand-parchment text-brand-text-primary text-sm focus:outline-none focus:border-brand-primary"
+                  className="w-full px-4 py-3 rounded-2xl border-2 border-input bg-brand-parchment text-brand-text-primary text-sm focus:outline-none focus:border-ring placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   onChange={e => e.target.value && setMultiPartState(s => ({ ...s, pronouns: e.target.value }))}
                 />
               </div>
@@ -397,7 +397,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
               value={partnerNameInput}
               onChange={e => setPartnerNameInput(e.target.value)}
               placeholder="What should we call them?"
-              className="w-full px-4 py-3.5 rounded-2xl border-2 border-brand-primary/20 bg-brand-parchment text-brand-text-primary placeholder-brand-text-secondary/50 focus:outline-none focus:border-brand-primary transition-colors text-base"
+              className="w-full px-4 py-3.5 rounded-2xl border-2 border-input bg-brand-parchment text-brand-text-primary placeholder:text-muted-foreground focus:outline-none focus:border-ring transition-colors text-base focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             />
             <button
               disabled={partnerNameInput.trim().length < 1}
@@ -424,7 +424,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
               value={textInput}
               onChange={e => setTextInput(e.target.value)}
               placeholder="Type anything that comes to mind..."
-              className="w-full px-4 py-3.5 rounded-2xl border-2 border-brand-primary/20 bg-brand-parchment text-brand-text-primary placeholder-brand-text-secondary/50 focus:outline-none focus:border-brand-primary transition-colors text-base resize-none"
+              className="w-full px-4 py-3.5 rounded-2xl border-2 border-input bg-brand-parchment text-brand-text-primary placeholder:text-muted-foreground focus:outline-none focus:border-ring transition-colors text-base resize-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             />
             <button
               disabled={textInput.trim().length < 3}
@@ -493,7 +493,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
                   rows={2}
                   autoFocus
                   placeholder="Type your answer..."
-                  className="w-full px-4 py-3 rounded-2xl border-2 border-brand-primary/20 bg-brand-parchment text-brand-text-primary placeholder-brand-text-secondary/50 focus:outline-none focus:border-brand-primary text-sm resize-none"
+                  className="w-full px-4 py-3 rounded-2xl border-2 border-input bg-brand-parchment text-brand-text-primary placeholder:text-muted-foreground focus:outline-none focus:border-ring text-sm resize-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   value={textInput}
                   onChange={e => setTextInput(e.target.value)}
                 />

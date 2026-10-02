@@ -46,16 +46,16 @@ const TIER_META: Record<TierId, { name: string; tagline: string; color: string; 
   roots: {
     name: 'Roots',
     tagline: 'Build awareness and understanding',
-    color: 'text-emerald-700',
-    bgColor: 'bg-emerald-50',
-    borderColor: 'border-emerald-200',
+    color: 'text-success-emphasis',
+    bgColor: 'bg-success-subtle',
+    borderColor: 'border-success/30',
   },
   growth: {
     name: 'Growth',
     tagline: 'Practice with intention and nuance',
-    color: 'text-amber-700',
-    bgColor: 'bg-amber-50',
-    borderColor: 'border-amber-200',
+    color: 'text-growth-emphasis',
+    bgColor: 'bg-growth-subtle',
+    borderColor: 'border-growth/30',
   },
   bloom: {
     name: 'Bloom',
@@ -150,12 +150,12 @@ export function JourneyTierView({
         >
           <h1 className="text-3xl font-serif font-bold text-brand-taupe tracking-tight mb-2">{title}</h1>
           <p className="text-brand-text-secondary leading-relaxed">{description}</p>
-          <div className="mt-4 rounded-[1.5rem] bg-white/80 border border-brand-primary/10 p-5 shadow-sm">
+          <div className="mt-4 rounded-[1.5rem] bg-popover/80 border border-brand-primary/10 p-5 shadow-sm">
             <p className="text-xs font-bold text-brand-hover uppercase tracking-[0.2em] mb-2">Before You Start</p>
             <p className="text-sm text-brand-taupe leading-relaxed mb-3">
               {overview || description}
             </p>
-            <p className="text-sm text-zinc-600 leading-relaxed mb-3">
+            <p className="text-sm text-muted-foreground leading-relaxed mb-3">
               {bestFitCopy}
             </p>
             <div className="flex flex-wrap gap-2 text-xs text-brand-text-secondary mb-3">
@@ -167,7 +167,7 @@ export function JourneyTierView({
               <div className="space-y-1.5">
                 <p className="text-xs font-semibold uppercase tracking-widest text-brand-text-secondary">What You Will Practice</p>
                 {benefits.slice(0, 3).map((benefit) => (
-                  <p key={benefit} className="text-sm text-zinc-600 leading-relaxed">
+                  <p key={benefit} className="text-sm text-muted-foreground leading-relaxed">
                     {benefit}
                   </p>
                 ))}
@@ -184,7 +184,7 @@ export function JourneyTierView({
         {/* Tier progression */}
         <div className="relative">
           {/* Connecting line */}
-          <div className="absolute left-8 top-12 bottom-12 w-px bg-gradient-to-b from-emerald-300 via-amber-300 to-brand-primary/40" />
+          <div className="absolute left-8 top-12 bottom-12 w-px bg-gradient-to-b from-calm via-growth to-brand-primary/40" />
 
           <div className="space-y-4">
             {tiers.map((tier, idx) => {
@@ -208,16 +208,16 @@ export function JourneyTierView({
                     className={`w-full text-left rounded-[1.5rem] border p-5 transition-all duration-300 relative ${
                       unlocked
                         ? `${meta.bgColor} ${meta.borderColor} hover:shadow-lg hover:-translate-y-0.5 cursor-pointer`
-                        : 'bg-zinc-50 border-zinc-200 opacity-60 cursor-not-allowed'
+                        : 'bg-background border-border opacity-60 cursor-not-allowed'
                     }`}
                   >
                     <div className="flex items-start gap-4">
                       {/* Tier icon */}
                       <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 ${
-                        unlocked ? 'bg-white shadow-sm' : 'bg-zinc-100'
+                        unlocked ? 'bg-popover shadow-sm' : 'bg-muted'
                       }`}>
                         {isComplete ? (
-                          <CheckCircle className="w-7 h-7 text-emerald-500" />
+                          <CheckCircle className="w-7 h-7 text-success-emphasis" />
                         ) : unlocked ? (
                           icon
                         ) : (
@@ -232,33 +232,33 @@ export function JourneyTierView({
                             {meta.name}
                           </h3>
                           {isComplete && (
-                            <span className="text-xs font-semibold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">
+                            <span className="text-xs font-semibold bg-success-subtle text-success-emphasis px-2 py-0.5 rounded-full">
                               Complete
                             </span>
                           )}
                           {isInProgress && (
-                            <span className="text-xs font-semibold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
+                            <span className="text-xs font-semibold bg-growth-subtle text-growth-emphasis px-2 py-0.5 rounded-full">
                               Day {progress.currentDay}
                             </span>
                           )}
                         </div>
-                        <p className={`text-sm mb-2 ${unlocked ? 'text-zinc-600' : 'text-brand-text-secondary'}`}>
+                        <p className={`text-sm mb-2 ${unlocked ? 'text-muted-foreground' : 'text-brand-text-secondary'}`}>
                           {meta.tagline}
                         </p>
                         <div className="flex items-center gap-3 text-xs text-brand-text-secondary">
                           <span>{tier.totalDays} days</span>
-                          <span className="w-1 h-1 rounded-full bg-zinc-300" />
+                          <span className="w-1 h-1 rounded-full bg-border" />
                           <span>{tier.concepts.length} concepts</span>
                         </div>
 
                         {/* Progress bar for in-progress tiers */}
                         {isInProgress && (
-                          <div className="mt-3 h-1.5 bg-white rounded-full overflow-hidden">
+                          <div className="mt-3 h-1.5 bg-popover rounded-full overflow-hidden">
                             <motion.div
                               initial={{ width: 0 }}
                               animate={{ width: `${(progress.currentDay / tier.totalDays) * 100}%` }}
                               transition={{ duration: 0.6, delay: 0.3 }}
-                              className="h-full bg-gradient-to-r from-emerald-400 to-amber-400 rounded-full"
+                              className="h-full bg-gradient-to-r from-calm to-growth rounded-full"
                             />
                           </div>
                         )}

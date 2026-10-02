@@ -85,7 +85,7 @@ export default function JournalPage() {
             {/* Peter's guesses now live on one page the user controls (Insight Profile). */}
             <Link
               href="/insight-profile"
-              className="block rounded-2xl bg-brand-linen border border-brand-primary/10 p-4 hover:bg-white/60 transition-colors"
+              className="block rounded-2xl bg-brand-linen border border-brand-primary/10 p-4 hover:bg-popover/60 transition-colors"
             >
               <p className="text-sm font-semibold text-brand-espresso">See everything Peter guesses about you</p>
               <p className="text-xs text-brand-text-secondary mt-1">Keep what fits, fix what doesn&apos;t, and tell Peter how you like to talk.</p>

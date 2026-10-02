@@ -89,13 +89,13 @@ export default function LoginPage() {
 
           {/* Right Side - Welcome copy */}
           <motion.div
-            className="hidden lg:flex lg:w-1/2 bg-white border-l border-zinc-200 p-12 lg:p-24 flex-col justify-center relative"
+            className="hidden lg:flex lg:w-1/2 bg-popover border-l border-border p-12 lg:p-24 flex-col justify-center relative"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
           >
             <motion.div variants={itemVariants} className="relative z-10">
-              <h2 className="text-4xl lg:text-5xl font-bold mb-4 tracking-tight text-black">
+              <h2 className="text-4xl lg:text-5xl font-bold mb-4 tracking-tight text-foreground">
                 {isRegisterMode
                   ? "Start Small"
                   : "Welcome Back"
@@ -111,11 +111,11 @@ export default function LoginPage() {
             </motion.div>
 
             <motion.div
-              className="mt-16 border-t border-zinc-200 pt-8 relative z-10"
+              className="mt-16 border-t border-border pt-8 relative z-10"
               variants={itemVariants}
             >
               <h3 className="text-sm font-semibold text-brand-text-secondary mb-5">How Sparq helps</h3>
-              <ul className="space-y-4 text-sm text-zinc-600">
+              <ul className="space-y-4 text-sm text-muted-foreground">
                 <li className="flex items-center">
                   <div className="w-1.5 h-1.5 rounded-full bg-brand-primary mr-4" />
                   <span>Simple steps based on real psychology</span>

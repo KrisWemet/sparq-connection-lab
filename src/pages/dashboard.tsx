@@ -192,7 +192,7 @@ export default function Dashboard() {
               type="button"
               aria-label="Open profile"
               onClick={() => router.push("/profile")}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               <span className="text-white text-sm font-bold">{userInitials}</span>
             </button>
@@ -219,7 +219,7 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.08 }}
-          className="relative overflow-hidden rounded-[34px] border border-brand-primary/12 bg-brand-parchment px-6 py-6 shadow-[0_26px_60px_rgba(46,38,32,0.12)]"
+          className="relative overflow-hidden rounded-[34px] border border-brand-primary/12 bg-brand-parchment px-6 py-6 shadow-[0_26px_60px_hsl(var(--shadow)/0.12)]"
         >
           <div
             aria-hidden="true"
@@ -277,7 +277,7 @@ export default function Dashboard() {
             {showEveningCTA && !isPostJourney && (
               <button
                 onClick={() => router.push(needsEveningReflection ? '/daily-growth' : '/daily-growth?mode=evening-checkin')}
-                className="flex w-full items-center justify-center gap-2 rounded-[22px] border border-brand-primary/12 bg-white/65 py-3 text-sm font-medium text-brand-espresso transition-colors hover:bg-white"
+                className="flex w-full items-center justify-center gap-2 rounded-[22px] border border-brand-primary/12 bg-popover/65 py-3 text-sm font-medium text-brand-espresso transition-colors hover:bg-popover"
               >
                 <Moon size={16} />
                 {secondaryCtaLabel}

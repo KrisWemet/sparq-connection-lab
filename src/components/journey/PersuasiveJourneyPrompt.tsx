@@ -91,7 +91,7 @@ export function PersuasiveJourneyPrompt({
 
   return (
     <>
-      <div className="rounded-3xl overflow-hidden border border-brand-primary/10 shadow-sm bg-gradient-to-br from-white to-brand-linen/30">
+      <div className="rounded-3xl overflow-hidden border border-brand-primary/10 shadow-sm bg-gradient-to-br from-popover to-brand-linen/30">
         <div className="p-5">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
@@ -106,7 +106,7 @@ export function PersuasiveJourneyPrompt({
               )}
             </div>
 
-            <p className="text-sm text-zinc-600 leading-relaxed">{journeyDescription}</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">{journeyDescription}</p>
 
             {/* Progress bar for ongoing journeys */}
             {hasAccess && completionPercentage > 0 && (
@@ -136,7 +136,7 @@ export function PersuasiveJourneyPrompt({
                 transition={{ duration: 0.5 }}
                 className="bg-brand-linen p-3 rounded-2xl"
               >
-                <p className="text-sm text-zinc-700 font-serif italic leading-relaxed">
+                <p className="text-sm text-foreground font-serif italic leading-relaxed">
                   {reflectionPrompts[motivationalIndex]}
                 </p>
               </motion.div>
@@ -172,13 +172,13 @@ export function PersuasiveJourneyPrompt({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
+          className="fixed inset-0 flex items-center justify-center bg-inverse/50 z-50"
           onClick={() => setShowUpgradePrompt(false)}
         >
           <motion.div
             initial={{ scale: 0.9, y: 20 }}
             animate={{ scale: 1, y: 0 }}
-            className="bg-white rounded-3xl p-6 m-4 max-w-md shadow-xl"
+            className="bg-popover rounded-3xl p-6 m-4 max-w-md shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-center mb-4">
@@ -198,7 +198,7 @@ export function PersuasiveJourneyPrompt({
                   {getJourneyBenefits().map((benefit, index) => (
                     <motion.li
                       key={index}
-                      className="flex items-start text-sm text-zinc-700"
+                      className="flex items-start text-sm text-foreground"
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}

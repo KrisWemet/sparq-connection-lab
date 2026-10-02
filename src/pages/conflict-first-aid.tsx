@@ -207,18 +207,18 @@ export default function ConflictFirstAidPage() {
 
   if (phase === 'somatic') {
     return (
-      <div className="min-h-dvh bg-brand-quiet flex flex-col items-center justify-center text-brand-espresso transition-colors duration-1000">
+      <div className="min-h-dvh bg-brand-quiet flex flex-col items-center justify-center text-foreground transition-colors duration-1000">
         <div className="absolute top-6 left-6">
           <button
             onClick={() => router.back()}
-            className="text-brand-text-secondary hover:text-zinc-800 text-sm font-medium transition-colors"
+            className="text-brand-text-secondary hover:text-foreground text-sm font-medium transition-colors"
           >
             ← Retreat
           </button>
         </div>
 
         <div className="text-center space-y-12 w-full max-w-md px-6">
-          <h1 className="text-2xl tracking-tight text-black font-semibold">
+          <h1 className="text-2xl tracking-tight text-foreground font-semibold">
             Before we enter the conflict,<br />we must calm the body.
           </h1>
 
@@ -228,19 +228,19 @@ export default function ConflictFirstAidPage() {
                 }`}
             />
             <div
-              className={`absolute rounded-full bg-brand-growth/30 mix-blend-multiply blur-lg transition-all ease-in-out delay-75 ${breathState === 'inhale' ? 'w-40 h-40 duration-[4000ms]' : 'w-16 h-16 duration-[6000ms]'
+              className={`absolute rounded-full bg-calm/30 mix-blend-multiply blur-lg transition-all ease-in-out delay-75 ${breathState === 'inhale' ? 'w-40 h-40 duration-[4000ms]' : 'w-16 h-16 duration-[6000ms]'
                 }`}
             />
-            <p className="z-10 text-[10px] font-bold tracking-[0.3em] uppercase text-zinc-600">
+            <p className="z-10 text-[10px] font-bold tracking-[0.3em] uppercase text-muted-foreground">
               {breathState}
             </p>
           </div>
 
           <div className="flex flex-col items-center space-y-4">
-            <div className="text-5xl font-light text-black tracking-tight tabular-nums">
+            <div className="text-5xl font-light text-foreground tracking-tight tabular-nums">
               0:{timeLeft.toString().padStart(2, '0')}
             </div>
-            <p className="text-zinc-600 text-base">
+            <p className="text-muted-foreground text-base">
               Your nervous system is currently flooded. Breathe with the circle.
             </p>
           </div>
@@ -248,7 +248,7 @@ export default function ConflictFirstAidPage() {
           {process.env.NODE_ENV === 'development' && (
             <button
               onClick={() => setPhase('tools')}
-              className="mt-8 text-[10px] tracking-widest uppercase text-zinc-800 hover:text-zinc-600"
+              className="mt-8 text-[10px] tracking-widest uppercase text-foreground hover:text-muted-foreground"
             >
               Skip (Dev Only)
             </button>
@@ -264,7 +264,7 @@ export default function ConflictFirstAidPage() {
 
   return (
     <div className="min-h-dvh bg-brand-quiet animate-in fade-in duration-1000 font-sans">
-      <header className="sticky top-0 z-10 border-b border-zinc-200 bg-white/70 backdrop-blur-xl">
+      <header className="sticky top-0 z-10 border-b border-border bg-popover/70 backdrop-blur-xl">
         <div className="mx-auto max-w-3xl px-4 py-4 flex items-center justify-between">
           <button
             onClick={() => router.back()}
@@ -272,10 +272,10 @@ export default function ConflictFirstAidPage() {
           >
             ← Retreat
           </button>
-          <h1 className="text-base font-semibold text-black">Conflict First Aid</h1>
+          <h1 className="text-base font-semibold text-foreground">Conflict First Aid</h1>
           <button
             onClick={() => router.push('/trust-center')}
-            className="rounded-full bg-rose-100 px-4 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-200 transition-colors shadow-sm"
+            className="rounded-full bg-destructive-subtle px-4 py-2 text-sm font-semibold text-destructive-emphasis hover:bg-destructive/15 transition-colors shadow-sm"
           >
             Safety
           </button>
@@ -283,16 +283,16 @@ export default function ConflictFirstAidPage() {
       </header>
 
       <main className="mx-auto max-w-3xl px-4 py-8 space-y-6">
-        <section className="rounded-3xl border border-rose-200 bg-rose-50 p-6 shadow-sm">
-          <h2 className="text-sm font-bold text-rose-600 uppercase tracking-wider">If there is immediate danger</h2>
-          <p className="text-base text-rose-900 mt-2 leading-relaxed">
+        <section className="rounded-3xl border border-destructive/30 bg-destructive-subtle p-6 shadow-sm">
+          <h2 className="text-sm font-bold text-destructive-emphasis uppercase tracking-wider">If there is immediate danger</h2>
+          <p className="text-base text-destructive-emphasis mt-2 leading-relaxed">
             Stop this exercise and call emergency services now. Your physical safety is paramount.
           </p>
         </section>
 
-        <section className="rounded-3xl border border-brand-border bg-white/70 p-6">
+        <section className="rounded-3xl border border-brand-border bg-popover/70 p-6">
           <h2 className="text-[11px] font-bold uppercase tracking-wider text-brand-text-secondary mb-4">2-10 Minute Reset Protocol</h2>
-          <ol className="mt-3 space-y-3 text-base text-black">
+          <ol className="mt-3 space-y-3 text-base text-foreground">
             {RESET_PROTOCOL.map((step, idx) => (
               <li key={step} className="rounded-2xl bg-brand-quiet px-5 py-4 leading-relaxed flex items-start">
                 <span className="font-bold text-brand-text-secondary mr-3 mt-0.5">{idx + 1}.</span>
@@ -304,17 +304,17 @@ export default function ConflictFirstAidPage() {
 
         {/* Personalized dynamic section */}
         {personalizedGuidance && (
-          <section className="rounded-3xl border border-brand-border bg-white/70 p-6">
+          <section className="rounded-3xl border border-brand-border bg-popover/70 p-6">
             <h2 className="text-[11px] font-bold uppercase tracking-wider text-brand-text-secondary mb-3">Your Dynamic Right Now</h2>
-            <p className="text-base text-brand-espresso leading-relaxed">{personalizedGuidance.dynamic}</p>
+            <p className="text-base text-foreground leading-relaxed">{personalizedGuidance.dynamic}</p>
           </section>
         )}
 
-        <section className="rounded-3xl border border-brand-border bg-white/70 p-6">
+        <section className="rounded-3xl border border-brand-border bg-popover/70 p-6">
           <h2 className="text-[11px] font-bold uppercase tracking-wider text-brand-text-secondary mb-4">Repair Starters</h2>
           <div className="mt-3 space-y-3">
             {allRepairStarters.map((starter, i) => (
-              <p key={i} className="rounded-2xl bg-brand-quiet px-5 py-4 text-base text-brand-espresso italic">
+              <p key={i} className="rounded-2xl bg-brand-quiet px-5 py-4 text-base text-foreground italic">
                 &quot;{starter}&quot;
               </p>
             ))}

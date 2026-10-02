@@ -66,14 +66,14 @@ export function SharePrompt({ text, kind = 'discovery' }: { text: string; kind?:
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0 }}
-        className={cn('mt-3 rounded-2xl p-4 space-y-3', step === 'offer' || step === 'kept' ? 'border border-brand-primary/10 bg-white/60' : TONE.connect.card)}
+        className={cn('mt-3 rounded-2xl p-4 space-y-3', step === 'offer' || step === 'kept' ? 'border border-brand-primary/10 bg-popover/60' : TONE.connect.card)}
       >
         {step === 'offer' && (
           <>
             <p className="text-sm text-brand-espresso">This is yours. Do you want to keep it private, or put it into words for your partner?</p>
             <div className="flex flex-wrap gap-2">
               <button type="button" onClick={() => setStep('kept')}
-                className="rounded-full border border-brand-border px-4 py-1.5 text-sm font-medium text-brand-espresso hover:bg-white">
+                className="rounded-full border border-brand-border px-4 py-1.5 text-sm font-medium text-brand-espresso hover:bg-popover">
                 Keep it private
               </button>
               <button type="button" onClick={helpMeShare}
@@ -89,7 +89,7 @@ export function SharePrompt({ text, kind = 'discovery' }: { text: string; kind?:
             <p className="text-xs text-brand-text-secondary">Change anything you like. Nothing is sent until you tap Share.</p>
             <textarea value={draft} onChange={e => setDraft(e.target.value)} rows={4} maxLength={1000}
               aria-label="Message to share with your partner"
-              className="w-full rounded-xl border border-brand-border bg-white p-3 text-sm text-brand-espresso focus:outline-none focus:ring-2 focus:ring-brand-primary/30" />
+              className="w-full rounded-xl border border-brand-border bg-popover p-3 text-sm text-brand-espresso focus:outline-none focus:ring-2 focus:ring-ring border-input placeholder:text-muted-foreground" />
             {error && <p className="text-xs text-brand-hover">{error}</p>}
             <div className="flex flex-wrap gap-2">
               <button type="button" onClick={share} disabled={!draft.trim()}
@@ -97,7 +97,7 @@ export function SharePrompt({ text, kind = 'discovery' }: { text: string; kind?:
                 Share
               </button>
               <button type="button" onClick={() => setStep('kept')}
-                className="rounded-full border border-brand-border px-4 py-1.5 text-sm font-medium text-brand-espresso hover:bg-white">
+                className="rounded-full border border-brand-border px-4 py-1.5 text-sm font-medium text-brand-espresso hover:bg-popover">
                 Not now
               </button>
             </div>
