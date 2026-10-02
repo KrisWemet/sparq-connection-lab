@@ -384,13 +384,17 @@ import { useSubscription } from "@/lib/subscription-provider";
 const { subscription, isFeatureAvailable, upgradeToPremium } = useSubscription();
 ```
 
-### Tiers
+### Plans (decided 2026-10-02 — source of truth: `src/lib/plans.ts`)
 
-| Tier | Daily Questions | Journeys | Features |
-|---|---|---|---|
-| `free` | 2 (1 morning + 1 evening) | 0 | Basic 5 question categories |
-| `premium` | 4 (2 morning + 2 evening) | 3 | All categories, date ideas, analytics |
-| `ultimate` | — | — | Legacy tier — stored values are mapped to `premium` |
+Each plan adds to the one before it. Only list features that exist in the app.
+
+| Plan | Price (USD) | Adds |
+|---|---|---|
+| Free | $0 | First 14 days = everything in Solo (trial); then daily practice 3 days/week, Peter 10 messages/day, 2 journeys, Insight Profile, partner linking. Conflict First Aid + crisis help always free |
+| Solo | $9.99/mo or $79.99/yr | Daily practice every day, unlimited Peter, all 14 journeys |
+| Together | $14.99/mo or $119.99/yr, both partners | Solo for both + "Us" shared space, Shared Peter (something to talk about), patterns between you |
+
+Payments aren't built (design, don't enforce). Server entitlements stay two-level (`lib/product.ts`): Free = `FREE_ENTITLEMENTS` (enforced in daily session start, Peter chat and journey start); Solo and Together both map to `premium`. Together's couple features are open to everyone until payments launch. Never paywall safety tools or the user's view/control of their own data. The subscription provider's `features` block (dailyQuestions, etc.) is legacy — don't build on it.
 
 `SubscriptionProvider` is mounted in `_app.tsx`, so `useSubscription()` works on every page.
 

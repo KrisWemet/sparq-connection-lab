@@ -1163,12 +1163,15 @@ After each evening session completion:
 
 ### Pricing
 
-| Tier | Price | Limits |
-|---|---|---|
-| Free | $0 | 3 daily loops/week, 10 coach messages/day, 1-2 starter quests |
-| Premium | $14.99/month or $119.99/year per couple | Full daily engine, full quest library, unlimited coach |
+**Updated 2026-10-02 (Chris): Free → Solo → Together.** Each plan adds to the last. Source of truth: `src/lib/plans.ts`.
 
-**Launch scope:** only `Free` and `Premium` are part of the authoritative pricing model. "Ultimate" remains a future exploration concept and is intentionally excluded from current entitlements and enforcement rules.
+| Plan | Price | Adds |
+|---|---|---|
+| Free | $0 | 14-day full trial; then 3 daily loops/week, 10 coach messages/day, 2 starter quests |
+| Solo | $9.99/month or $79.99/year | Full daily engine, full quest library, unlimited coach |
+| Together | $14.99/month or $119.99/year, both partners | Solo for both + shared space, Shared Peter, patterns between you |
+
+Solo and Together both map to the `premium` entitlement. "Ultimate" is retired.
 
 ### Enforcement Points
 

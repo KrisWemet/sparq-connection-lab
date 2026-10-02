@@ -319,18 +319,18 @@ export default function SettingsPage() {
             </p>
             <p className="text-xs text-brand-text-secondary mt-0.5 mb-4">
               {subscription.tier === "free"
-                ? "Upgrade to unlock all journeys and unlimited sessions"
+                ? "See what Solo and Together add"
                 : `Renews ${subscription.expiresAt?.toLocaleDateString()}`}
             </p>
             <button
               onClick={() => router.push("/subscription")}
-              className={`w-full rounded-2xl py-3 text-sm font-bold transition-colors ${
+              className={`press w-full rounded-2xl py-3 text-sm font-bold transition-colors ${
                 subscription.tier === "free"
                   ? "bg-brand-primary text-white hover:bg-brand-hover"
                   : "border border-brand-primary text-brand-hover hover:bg-brand-primary/5"
               }`}
             >
-              {subscription.tier === "free" ? "Explore Premium" : "Manage Subscription"}
+              {subscription.tier === "free" ? "See plans" : "Manage plan"}
             </button>
           </div>
         </motion.div>
