@@ -45,7 +45,8 @@ export default function Subscription() {
   const [billing, setBilling] = useState<Billing>("monthly");
 
   const trialDays = getTrialDaysRemaining(user?.created_at);
-  const onPaidPlan = subscription.tier === "premium";
+  // Trial users get premium entitlements too, but they haven't paid.
+  const onPaidPlan = subscription.tier === "premium" && trialDays === 0;
 
   return (
     <div className="min-h-dvh bg-brand-linen pb-28">

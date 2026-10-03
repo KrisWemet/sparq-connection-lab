@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSubscription } from "@/lib/subscription-provider";
+import { getTrialDaysRemaining } from "@/lib/product";
 import { useAuth } from "@/lib/auth-context";
 import {
   ChevronLeft,
@@ -13,13 +14,9 @@ export default function SettingsPage() {
   const router = useRouter();
   const { subscription } = useSubscription();
   const { user, logout } = useAuth();
+  const trialDays = getTrialDaysRemaining(user?.created_at);
 
-  const [notifications, setNotifications] = useState(true);
-  const [reminderTime, setReminderTime] = useState("09:00");
   const [emailUpdates, setEmailUpdates] = useState(true);
-  const [partnerNotifications, setPartnerNotifications] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [trustSummary, setTrustSummary] = useState<{
     personalizationEnabled: boolean;
     memoryMode: string;
@@ -39,15 +36,6 @@ export default function SettingsPage() {
         const res = await fetch('/api/profile/preferences', { headers });
         if (res.ok) {
           const data = await res.json();
-          if (data.preferences?.notifications_enabled !== undefined) {
-            setNotifications(data.preferences.notifications_enabled);
-          } else if (data.notifications_enabled !== undefined) {
-            setNotifications(data.notifications_enabled);
-          }
-          const reminderValue = data.preferences?.reminder_time ?? data.reminder_time;
-          if (reminderValue !== undefined && reminderValue !== null) {
-            setReminderTime(reminderValue.slice(0, 5));
-          }
           setTrustSummary({
             personalizationEnabled: data.preferences?.personalization_enabled ?? true,
             memoryMode: data.preferences?.ai_memory_mode ?? 'rolling_90_days',
@@ -56,38 +44,10 @@ export default function SettingsPage() {
         }
       } catch (err) {
         console.error("Failed to load pref:", err);
-      } finally {
-        setIsLoading(false);
       }
     }
     loadPreferences();
   }, [user]);
-
-  const updatePreference = async (key: string, value: any) => {
-    try {
-      const { buildAuthedHeaders } = await import('@/lib/api-auth');
-      const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
-      await fetch('/api/profile/preferences', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ [key]: value })
-      });
-      toast.success("Preferences updated");
-    } catch (err) {
-      toast.error("Failed to update preference");
-    }
-  };
-
-  const handleNotificationsChange = (checked: boolean) => {
-    setNotifications(checked);
-    updatePreference('notifications_enabled', checked);
-  };
-
-  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    setReminderTime(val);
-    updatePreference('reminder_time', val);
-  };
 
   const handleLogout = async () => {
     try {
@@ -114,34 +74,6 @@ export default function SettingsPage() {
       transition: { duration: 0.35, delay: i * 0.06, ease: 'easeOut' }
     })
   };
-
-  // Simple inline toggle component
-  const Toggle = ({
-    checked,
-    onChange,
-    disabled,
-  }: {
-    checked: boolean;
-    onChange: (v: boolean) => void;
-    disabled?: boolean;
-  }) => (
-    <button
-      type="button"
-      disabled={disabled}
-      onClick={() => !disabled && onChange(!checked)}
-      className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full transition-colors duration-200 focus:outline-none ${
-        checked ? 'bg-brand-primary' : 'bg-brand-primary/20'
-      } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-      role="switch"
-      aria-checked={checked}
-    >
-      <span
-        className={`inline-block h-5 w-5 transform rounded-full bg-popover shadow transition-transform duration-200 mt-[2px] ${
-          checked ? 'translate-x-[22px]' : 'translate-x-[2px]'
-        }`}
-      />
-    </button>
-  );
 
   // Section label above a card
   const SectionLabel = ({ children }: { children: React.ReactNode }) => (
@@ -222,59 +154,6 @@ export default function SettingsPage() {
           </div>
         </motion.div>
 
-        {/* PREFERENCES */}
-        <motion.div custom={1} variants={cardVariants} initial="hidden" animate="visible">
-          <SectionLabel>Preferences</SectionLabel>
-          <div className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm overflow-hidden">
-            <Row
-              label="Daily reminder"
-              secondary={notifications ? reminderTime : 'Off'}
-              right={
-                <div className="flex items-center gap-3">
-                  {notifications && (
-                    <input
-                      type="time"
-                      value={reminderTime}
-                      disabled={isLoading}
-                      onChange={handleTimeChange}
-                      className="border border-input rounded-lg px-2 py-1 text-xs text-brand-text-primary bg-brand-linen focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground"
-                    />
-                  )}
-                  <Toggle
-                    checked={notifications}
-                    onChange={handleNotificationsChange}
-                    disabled={isLoading}
-                  />
-                </div>
-              }
-            />
-            <Row
-              label="Partner notifications"
-              secondary="When your partner completes a session"
-              right={
-                <Toggle
-                  checked={partnerNotifications}
-                  onChange={(v) => {
-                    setPartnerNotifications(v);
-                    updatePreference('partner_notifications', v);
-                  }}
-                />
-              }
-            />
-            <Row
-              label="Dark mode"
-              secondary="Coming soon"
-              right={
-                <Toggle
-                  checked={darkMode}
-                  onChange={setDarkMode}
-                  disabled
-                />
-              }
-            />
-          </div>
-        </motion.div>
-
         {/* PRIVACY */}
         <motion.div custom={2} variants={cardVariants} initial="hidden" animate="visible">
           <SectionLabel>Privacy</SectionLabel>
@@ -315,22 +194,24 @@ export default function SettingsPage() {
           <SectionLabel>Plan</SectionLabel>
           <div className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-5">
             <p className="font-semibold text-brand-text-primary text-sm">
-              {subscription.name}
+              {trialDays > 0 ? 'Free trial' : subscription.name}
             </p>
             <p className="text-xs text-brand-text-secondary mt-0.5 mb-4">
-              {subscription.tier === "free"
-                ? "See what Solo and Together add"
-                : `Renews ${subscription.expiresAt?.toLocaleDateString()}`}
+              {trialDays > 0
+                ? `Everything in Solo for ${trialDays} more ${trialDays === 1 ? 'day' : 'days'}`
+                : subscription.tier === "free"
+                  ? "See what Solo and Together add"
+                  : "Thank you for growing with Sparq"}
             </p>
             <button
               onClick={() => router.push("/subscription")}
               className={`press w-full rounded-2xl py-3 text-sm font-bold transition-colors ${
-                subscription.tier === "free"
+                subscription.tier === "free" || trialDays > 0
                   ? "bg-brand-primary text-white hover:bg-brand-hover"
                   : "border border-brand-primary text-brand-hover hover:bg-brand-primary/5"
               }`}
             >
-              {subscription.tier === "free" ? "See plans" : "Manage plan"}
+              {subscription.tier === "free" || trialDays > 0 ? "See plans" : "Manage plan"}
             </button>
           </div>
         </motion.div>

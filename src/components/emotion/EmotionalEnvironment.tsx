@@ -10,10 +10,10 @@ export function areaForRoute(path: string): EmotionalArea | null {
   if (['/', '/login', '/signup'].includes(path)) return null;
   if (path.startsWith('/onboarding')) return 'onboarding';
   if (['/conflict-first-aid', '/neutral-observer', '/rehearsal', '/translator'].includes(path)) return 'repair';
-  if (['/journal', '/reflect', '/daily-growth', '/daily-questions', '/peter'].includes(path)) return 'journal';
+  if (['/journal', '/daily-growth', '/daily-questions', '/peter'].includes(path)) return 'journal';
   if (['/connect', '/us', '/messages', '/join-partner', '/go-connect'].includes(path)) return 'connect';
   if (['/date-ideas', '/journeys'].includes(path) || path.startsWith('/journeys/')) return 'discover';
-  if (['/insight-profile', '/growth', '/weekly-insights', '/quiz', '/skill-tree'].includes(path)) return 'insights';
+  if (['/insight-profile', '/growth', '/weekly-insights', '/skill-tree'].includes(path)) return 'insights';
   if (path === '/dashboard') return 'retreat';
   return null;
 }

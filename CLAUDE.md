@@ -259,7 +259,6 @@ sparq-connection-lab/
 │   │   ├── ui/                 # shadcn/ui primitives + custom base components
 │   │   ├── dashboard/          # Dashboard section components
 │   │   ├── profile/            # Profile section components
-│   │   ├── quiz/               # Relationship health quiz components
 │   │   ├── journey/            # Journey view components
 │   │   ├── onboarding/         # Onboarding flow (4 steps)
 │   │   ├── auth/               # Auth-specific components (LoginForm, AuthLayout)
@@ -287,13 +286,11 @@ sparq-connection-lab/
 │   ├── types/
 │   │   ├── profile.ts          # Profile, UserBadge, DailyActivity types
 │   │   ├── journey.ts          # Journey types
-│   │   ├── quiz.ts             # Quiz types
 │   │   ├── memory.ts           # Memory types
 │   │   └── supabase.ts         # Generated Supabase DB types
 │   │
 │   ├── data/
 │   │   ├── journeys.ts         # Static journey definitions
-│   │   ├── quizData.ts         # Relationship health quiz questions
 │   │   └── persuasiveContent.ts    # Psychological messaging content
 │   │
 │   ├── content/journeys/       # Markdown content for journey narratives
@@ -341,7 +338,6 @@ All pages use **Next.js Pages Router**. Key routes:
 | `/profile` | `src/pages/Profile.tsx` | Protected |
 | `/settings` | `src/pages/Settings.tsx` | |
 | `/subscription` | `src/pages/Subscription.tsx` | |
-| `/quiz` | `src/pages/Quiz.tsx` | Relationship health quiz |
 | `/join-partner` | `src/pages/JoinPartner.tsx` | Partner invite acceptance |
 | `/date-ideas` | `src/pages/DateIdeas.tsx` | AI-powered date suggestions |
 
