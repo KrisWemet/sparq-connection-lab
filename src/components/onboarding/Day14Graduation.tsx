@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { CheckCircle, Award, ArrowRight, Sparkles, TrendingUp } from 'lucide-react';
+import { CheckCircle, Compass, ArrowRight, Sparkles, TrendingUp } from 'lucide-react';
 import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import { supabase } from '@/lib/supabase';
 import { CsiTrajectoryCard } from '@/components/dashboard/CsiTrajectoryCard';
@@ -105,9 +105,9 @@ export function Day14Graduation() {
                         </p>
                     </div>
                     <div className="flex items-start gap-3">
-                        <Award className="text-growth-emphasis mt-0.5 flex-shrink-0" size={20} />
+                        <Compass className="text-growth-emphasis mt-0.5 flex-shrink-0" size={20} />
                         <p className="text-sm font-semibold text-foreground leading-relaxed">
-                            Skill Tree Unlocked
+                            Your journeys are ready when you are. Go deeper wherever you choose.
                         </p>
                     </div>
                 </div>

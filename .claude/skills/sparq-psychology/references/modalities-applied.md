@@ -1,6 +1,6 @@
 # Applied Frameworks Deep Reference (7-12)
 
-These 6 modalities are applied science frameworks that inform Sparq's content design, engagement mechanics, and personalization system.
+Sections 7–11 are foundational modalities, like 1–6. Section 12 is the **supplementary layer** (constitution v1.2 §1B): it shapes *how* Sparq leads — wording, timing, cues, priming, design — and never replaces the modalities' reasoning about what is happening.
 
 ---
 
@@ -103,7 +103,7 @@ This is the most researched destructive dyadic pattern and the most common coupl
 
 **Key insight**: Neither partner is the problem. The CYCLE is the problem. When they can name it together ("we're in the cycle again"), blame decreases and empathy increases.
 
-**In Sparq**: Conflict First Aid uses the attachment pairing to describe the couple's current dynamic. Partner Synthesis names the cycle without blame. Peter coaches each individual to make their growth move.
+**In Sparq**: Conflict First Aid helps the user see their own side of the loop; it never uses the partner's private traits (constitution §8). The couple can name the cycle together in `/us` (both confirm it) without blame. Peter coaches each individual to make their growth move.
 
 ### How Sparq Uses Attachment Theory
 
@@ -111,7 +111,7 @@ This is the most researched destructive dyadic pattern and the most common coupl
 - **Content Adaptation**: Every exercise is adapted for all 4 styles (see personality-adaptation-guide.md)
 - **Peter's Behavior**: Adjusts warmth/intensity based on attachment style
 - **Notification Personalization**: Anxious users get more frequent, warm notifications; avoidant users get less frequent, choice-emphasizing notifications (see personality-adaptation-guide.md)
-- **Conflict First Aid**: "Your Dynamic Right Now" card uses attachment pairing to describe the couple's interaction pattern
+- **Conflict First Aid**: "Your Dynamic Right Now" may describe a loop only from the user's own side, or from a cycle both partners confirmed in `/us` — never from the partner's private traits (the current code reads `partner_traits`, which the API now always returns empty; see `docs/CONSTITUTION_AUDIT.md`)
 - **Couple's Cycle Map** (planned): Uses both partners' attachment styles to name their cycle
 
 ---
@@ -235,21 +235,23 @@ Most people use ~10 emotion words. NVC teaches ~100+. This precision reduces mis
 
 ---
 
-## 12. Ethical Influence & Behavioral Understanding
+## 12. Ethical Influence & Behavioral Understanding (supplementary layer)
 
-**Governing rule (constitution v1.1, §5A):** *Discovery before direction. Agency before influence.* Influence may help a user follow through on a value, goal, insight, identity, intention or experiment **they chose themselves**. It must never manufacture that choice, suppress disagreement, overcome resistance, increase dependence on Sparq, maximize engagement against the user's interests, or work one partner on behalf of the other.
+**Governing rule (constitution v1.2, §5A):** *Sparq may help determine the path. The user determines the destination. Leadership supports agency; it does not replace it.* **Process influence** (making reflection inviting, steps smaller, coming back easier) may be used at any stage, in the open, in the user's interest. **Destination influence** (commitment and consistency, presupposing a direction, identity reinforcement, missions aimed at a goal) may only help a user follow through on a value, goal, insight, identity, intention or experiment **they chose themselves**. Influence must never secretly determine the destination, manufacture a choice, suppress disagreement, overcome a refusal, increase dependence on Sparq, maximize engagement against the user's interests, or work one partner on behalf of the other. Every use passes the seven constitutional questions (§5A).
 
-**Research basis:** influence and persuasion research (Cialdini, *Influence*), behavior design (Fogg), identity-based habits (Clear), self-determination theory (Deci & Ryan), and motivational-interviewing research on self-persuasion (Miller & Rollnick). Hook-model engagement mechanics (variable rewards, engineered craving) are **not** used.
+This layer is **supplementary** to the psychology modalities (constitution §1B): it shapes how Sparq helps, never what Sparq concludes about a person.
+
+**Research basis:** influence and persuasion research (Cialdini, *Influence*), behavior design (Fogg), implementation intentions (Gollwitzer), identity-based habits (Clear), self-determination theory (Deci & Ryan), motivational-interviewing research on self-persuasion (Miller & Rollnick), and priming/choice-architecture research — used only in the transparent forms the constitution allows. Hook-model engagement mechanics (variable rewards, engineered craving) are **not** used.
 
 ### Self-persuasion first
 
-The strongest reasons for change are the user's own. Before any influence principle applies, Peter helps the user say what they want and why it matters to them ("What would it give you?", "What makes this worth trying?"). Those **user-owned reasons** are stored in their words and are what Peter reconnects them to later.
+The strongest reasons for change are the user's own. Before any direction influence applies, Peter helps the user say what they want and why it matters to them — going deeper with the Deep Why only while it helps ("What would it give you?", "What makes this worth trying?"). Those **user-owned reasons** are stored in their words and are what Peter reconnects them to later.
 
 ### How each principle is used in Sparq
 
 | Principle | Ethical application in Sparq | Not used this way |
 |---|---|---|
-| **Commitment & Consistency** | Reconnect current choices to the user's own stated values, North Star, discoveries, reasons and experiments. Small, specific, self-chosen commitments, revisited with curiosity. Commitments are revisable anytime. | Using a past commitment to shame or corner. "Public goal-setting" to create pressure. Commitments Peter proposed and the user merely accepted. |
+| **Commitment & Consistency** | Reconnect current choices to the user's own stated values, North Star, discoveries, reasons and experiments. Small, specific, self-chosen commitments, revisited with curiosity. Commitments are revisable anytime. | Using a past commitment to shame or corner. "Public goal-setting" to create pressure. Commitments Peter proposed that the user never explicitly chose — a suggested mission becomes theirs only through explicit choice; a reason is welcome but not required. |
 | **Unity** | Healthy shared identity written by both partners; recurring interaction cycles framed as the problem the couple faces together ("you two vs. the loop"). | Shared identity used to push one partner into agreement; Sparq positioning itself as part of the "us". |
 | **Reciprocity → freely chosen generosity** | Invite appreciation, curiosity, kindness and vulnerability offered for their own sake. | "Peter gives warmth → user gives honest reflection" (a debt). "Do one thing and notice what comes back." Any framing that the partner now owes something. |
 | **Social proof → grounded normalization** | True, general normalization that reduces shame: "Lots of people go quiet when they feel criticized." | Invented statistics or testimonials, "other couples at your stage…" unless it's a real, cited finding, comparing partners or users, "most people quit — you're not most people". |
@@ -271,7 +273,8 @@ Based on BJ Fogg's Behavior Model (B = MAP: Motivation × Ability × Prompt):
 
 - **Motivation**: the user's own values and reasons (ACT values work, self-persuasion), identity framing toward the identity *they* named. Streaks celebrate a run while it lasts; missing a day is never framed as a loss.
 - **Ability**: Micro-format exercises (2-5 min), simplified language (4th-grade level), clear single actions
-- **Prompt**: reminders the user chose, at times they chose; warm, never urgent
+- **Prompt**: reminders the user chose, at times they chose; warm, never urgent. An implementation cue ("when I pour my coffee…", the onboarding habit anchor) ties the action to a real moment
+- **Ability grows**: when a practice becomes easy, offer the next level (adaptive difficulty); after a hard week, shrink it (constitution §1A–1B)
 
 ### Identity-Level Habit Design (James Clear)
 
@@ -282,9 +285,14 @@ Sparq uses this only for identities the user has named themselves (identity stat
 - Peter reflecting identity arcs back as questions ("It sounds like you're becoming someone who… does that fit?"), never assigning an identity
 - Graduation and mirrors cite evidence; the user writes what it means
 
+### Whole-app design and priming (constitution v1.2 §5C)
+
+Influence and priming are not only Peter's words. Imagery, color, sequencing, progress displays, reminders and choice architecture may support calm, reflection, hope, connection, agency, courage, curiosity, consistency, growth and contribution — for growth the user chose. Each element has a review tier: **1** ambient process priming (normal review), **2** personal priming using the user's own words (needs a user-chosen target; retiring it stops the element), **3** inferred-trait, shared-space, sensitive-topic, notification or timing-based priming (Chris reviews before shipping). Never: hidden cues or commands, fear or shame imagery, loss framing, or priming toward an unchosen destination.
+
 ### How Sparq uses ethical influence
 
-- **Experiments**: the user writes the experiment and their reason; Peter helps make it small, plans for obstacles, and checks back with curiosity (a skipped experiment is information).
+- **Experiments and Real-World Missions**: the user writes the experiment and their reason, or reshapes a mission Peter suggested from their own goal; Peter helps make it small, adds a cue, plans for obstacles and environment, and checks back with curiosity (a skipped experiment is information — learn, adapt, try again or let it go). Difficulty grows when it gets easy. A suggested mission becomes theirs through explicit choice; a reason is welcome, never required.
+- **Priming**: calm, hope or courage through imagery, color, sequence and tone — open and explainable; never hidden commands and never aimed at a major life outcome.
 - **Streaks**: a forgiving count of days shown up, plus a celebration while a run is live — no loss framing, no guilt.
 - **Peter's personality**: warmth and humor matched to the user — never claims of human feelings.
 - **Onboarding**: minimal and useful before complete; deeper questions can be skipped.

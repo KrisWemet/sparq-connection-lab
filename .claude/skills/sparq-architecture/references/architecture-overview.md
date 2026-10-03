@@ -111,20 +111,6 @@ CREATE TABLE partner_invitations (
 );
 ```
 
-### partner_syntheses
-```sql
-CREATE TABLE partner_syntheses (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_a_id UUID REFERENCES profiles(id),
-  user_b_id UUID REFERENCES profiles(id),
-  session_date DATE,
-  synthesis_text TEXT,
-  theme TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
--- RLS: SELECT WHERE auth.uid() = user_a_id OR auth.uid() = user_b_id
-```
-
 ### memories (pgvector — migration 20260318000000)
 ```sql
 CREATE TABLE memories (
@@ -238,7 +224,7 @@ User correction flow: Profile page shows trait labels → user gives feedback (y
 
 1. User A sends invite → creates `partner_invitations` row → `send-partner-invite` Edge Function sends email
 2. User B opens link → `/join-partner` page → accepts → `profiles.partner_id` linked on both sides
-3. Privacy: journals private, no partner access to Peter conversations, trait labels hidden, synthesis shows only blended themes
+3. Privacy: journals, Peter conversations, traits and reflections stay private; the partner sees only what a user explicitly shares into `/us` (constitution §8)
 
 ---
 
@@ -276,14 +262,13 @@ Used in graduation report `recommended_track` logic:
 ```
 NEXT_PUBLIC_SUPABASE_URL         # Supabase project URL
 NEXT_PUBLIC_SUPABASE_ANON_KEY    # Supabase anon key
-SUPABASE_SERVICE_ROLE_KEY        # Server-side only (Mem0, service ops)
+SUPABASE_SERVICE_ROLE_KEY        # Server-side only (service ops)
 OPENROUTER_API_KEY               # Peter AI chat (OpenRouter)
 OPENAI_API_KEY                   # Trait analysis, moderation, embeddings
 ```
 
 ### Optional
 ```
-NEXT_PUBLIC_MEM0_API_KEY         # Mem0 cloud (unused — OSS version is primary)
 NEXT_PUBLIC_GOOGLE_API_KEY       # Google Places for date ideas
 ```
 
@@ -292,8 +277,6 @@ NEXT_PUBLIC_GOOGLE_API_KEY       # Google Places for date ideas
 ## Known Technical Debt
 
 - Stripe payment not integrated (localStorage mock)
-- Legacy Supabase client at `src/integrations/supabase/client.ts` (do not use for new code)
-- Duplicate auth implementations in `src/lib/auth/` (unused, can be deleted)
 - Duplicate ProtectedRoute components (3 copies)
 - `MetaphorAnimation.tsx` is ~24K lines, `supabaseService.ts` is ~29K lines
 - Schema migration history is mostly placeholder files
@@ -301,4 +284,4 @@ NEXT_PUBLIC_GOOGLE_API_KEY       # Google Places for date ideas
 
 ---
 
-*Authoritative source: `SPARQ_MASTER_SPEC.md` in project root. When this document conflicts with any other file, the master spec takes precedence — except for actual running code, which represents the current implementation state.*
+*Precedence: `docs/CONSTITUTION.md` governs product behavior; where it is silent, `CLAUDE.md` and the Master PRD apply. Running code is the record of what is implemented today. `SPARQ_MASTER_SPEC.md` is historical background.*

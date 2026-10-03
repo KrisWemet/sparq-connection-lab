@@ -195,7 +195,7 @@ All poses share Peter's base anatomy from `src/components/dashboard/PeterAvatar.
 
 **Mood key**: `partner` (proposed)
 
-**Visual description**: Peter is holding a small heart in both paws, front and center. Joyful eyes (like afternoon). Heart pulses gently. Conveys "your partner is thinking of you."
+**Visual description**: Peter is holding a small heart in both paws, front and center. Joyful eyes (like afternoon). Heart pulses gently. Conveys "something was shared with you."
 
 **Eyes**: Standard friendly (like afternoon) with extra sparkle.
 
@@ -203,11 +203,11 @@ All poses share Peter's base anatomy from `src/components/dashboard/PeterAvatar.
 
 **Prop**: Heart shape in brand-primary (`#C56B4D`), centered between paws at ~(50, 78). Gentle pulse animation: scale 1→1.1→1 on 2s loop.
 
-**When it triggers**: Partner sends "Thinking of you" heartbeat, partner completes their daily session, partner synthesis is available.
+**When it triggers**: The partner explicitly shares something into `/us` (an appreciation, a need, something they noticed), or both partners confirm an interaction cycle. Never on the partner's private activity — completing a session, being online, or anything they didn't choose to share (constitution §8).
 
 **Transition in**: Heart fades in separately after Peter appears (200ms delay).
 
-**Default copy**: "Your partner just sent some love your way. 💜"
+**Default copy**: "Your partner shared something with you. 💜"
 
 ---
 
@@ -229,7 +229,7 @@ All poses share Peter's base anatomy from `src/components/dashboard/PeterAvatar.
 
 **Transition in**: Bounce entrance with confetti: spring scale 0.7→1.1→1 over 500ms + `fireElegantConfetti()`.
 
-**Default copy**: "This is HUGE. I'm so proud of who you're becoming. 🦦✨"
+**Default copy**: "This is HUGE. Look at what you did. What does it say about you? 🦦✨"
 
 ---
 

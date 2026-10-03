@@ -1,6 +1,6 @@
 # Component Catalog — Detailed Specs
 
-Every component documented below exists in the codebase. Each entry includes: location, props, visual states, responsive behavior, animation, accessibility notes, and a usage example.
+Every component documented below exists in the codebase (checked 2026-10-02; deleted components were removed from this file rather than kept as stale specs). Each entry includes: location, props, visual states, responsive behavior, animation, accessibility notes, and a usage example.
 
 ---
 
@@ -84,147 +84,17 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 ---
 
-## Card: CTA (TodaysFocusCard)
+## Dashboard & journal cards (current)
 
-**File**: `src/components/dashboard/TodaysFocusCard.tsx`
+The live dashboard and journal cards are in `src/components/dashboard/` — read the file before reusing a pattern: `PeterGreeting`, `DailyPrimeCard` (anchored micro-prime), `ExperimentsCard` (the user's experiments / missions + their reasons), `WeeklyMirrorCard`, `ThirtyDayMirrorCard`, `NorthStarCard`, `IdentityArcCard` (the user's own words only), `GrowthThread`, `CsiPulseCard` / `CsiTrajectoryCard`, `NeutralObserverCard`, `WelcomeBackCard`, `HomeDestinationStrip`. Onboarding steps are in `src/components/onboarding/` (`ConsentGate`, `QuestionFlow`, `HabitAnchorPick`, `PeterSession`, `Day14Graduation`, …).
 
-### Props
-```typescript
-interface TodaysFocusCardProps {
-  actionText: string;
-}
-```
+### Doctrine for cards, progress and celebration (constitution v1.2 §5A, §10)
 
-### Visual
-Full-width button with `bg-brand-primary`, `rounded-[24px]`, warm brand shadow. White text with serif font for action text. Leaf icon in frosted circle, arrow button on right. Organic white blur shape in top-right corner.
-
-### Animation
-- `whileHover={{ scale: 1.01 }}`
-- `whileTap={{ scale: 0.99 }}`
-- Arrow translates right on group hover
-
-### Responsive
-- Padding: `p-5 md:p-6`
-- Full width on all breakpoints
-
-### Accessibility
-- Renders as `<motion.button>` — keyboard accessible
-- `text-left` for readable content alignment
-- High contrast: white on `#C56B4D` (7.2:1)
-
----
-
-## Card: Peter Insight (PetersInsightCard) — removed 2026-09, pattern kept for reference
-
-**File**: `src/components/dashboard/PetersInsightCard.tsx`
-
-### Props
-```typescript
-interface PetersInsightCardProps {
-  insight: string;
-}
-```
-
-### Visual
-Speech bubble with `bg-brand-linen rounded-2xl rounded-tr-sm`. Rotated square creates speech tail pointing up-right. Serif italic text in `brand-taupe`. Positioned right-aligned (`ml-auto mr-4`).
-
-### Layout
-- Max width: `max-w-sm`
-- Margin: `ml-auto mr-4 md:mr-8 mb-6`
-- Positioned to appear as if Peter is speaking
-
----
-
-## Card: Relationship Score (RelationshipScoreCard)
-
-**File**: `src/components/dashboard/RelationshipScoreCard.tsx`
-
-### States
-
-**Loading**: Skeleton — `bg-white/80 rounded-3xl border border-brand-primary/10 shadow-sm p-6 h-48 animate-pulse backdrop-blur-md`
-
-**Building** (not enough data): Centered message with muted `Activity` icon, serif heading, description text. Organic blur orb in top-right. Gradient background via inline style.
-
-**Active**: Full score card with:
-- Header: serif title + mini SVG sparkline
-- Hero number: `text-5xl font-serif` with trend indicator pill
-- 4 dimension progress bars with animated width (Framer Motion, 1s ease-out)
-- Background: `bg-gradient-to-br from-white to-brand-linen/30` with blur orb
-
-### Animation
-- Container: `initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}`
-- Progress bars: `initial={{ width: 0 }} animate={{ width: "X%" }}` with 1s ease-out
-
-### Dimension Colors
-| Dimension | Color |
-|---|---|
-| Communication | `bg-blue-500` |
-| Repair Speed | `bg-green-500` |
-| Emotional Safety | `bg-purple-500` |
-| Daily Ritual | `bg-amber-500` |
-
----
-
-## Card: Partner Synthesis (PartnerSynthesisCard)
-
-**File**: `src/components/dashboard/PartnerSynthesisCard.tsx`
-
-### Visual
-`bg-brand-primary/5 backdrop-blur-md rounded-3xl` with warm shadow. Icon in `bg-white/60 rounded-2xl` container. Serif italic quote for synthesis text. Privacy disclaimer at bottom.
-
-### Animation
-- `initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}` at 400ms
-
----
-
-## Interactive: HeartbeatButton
-
-**File**: `src/components/dashboard/HeartbeatButton.tsx`
-
-### Visual
-Full-width button with gradient brand background (`from-brand-primary/10 via-brand-primary/5 to-brand-primary/10`), `rounded-3xl`. Heart icon + serif "Thinking of you" label in `brand-primary`.
-
-### Animation
-- `whileHover={{ scale: 1.02 }}`, `whileTap={{ scale: 0.95 }}`
-- **On press**: Expanding ripple circle (`scale: 0.5→3, opacity: 0.5→0`), heart pulses (`scale: [1, 1.2, 1, 1.2, 1]`)
-- Haptic feedback via `navigator.vibrate([50, 100, 50])` when supported
-
-### Feedback
-- Toast notification: "Thinking of you sent." with heart icon
-
----
-
-## Gamification: StreakIndicator
-
-**File**: `src/components/StreakIndicator.tsx`
-
-### Props
-```typescript
-interface StreakIndicatorProps {
-  streak: number;
-  onShare?: () => void;
-}
-```
-
-### Visual Tiers
-| Days | Icon | Color | Background |
-|---|---|---|---|
-| 1-6 | Flame | `text-orange-500` | `bg-orange-100` |
-| 7-13 | Star | `text-blue-500` | `bg-blue-100` |
-| 14-29 | Medal | `text-brand-primary/80` | `bg-brand-primary/10` |
-| 30+ | Trophy | `text-amber-500` | `bg-amber-100` |
-
-### Animation
-- Container: slide-up spring entrance
-- Icon: `whileHover={{ scale: 1.2, rotate: 10 }}`
-- Streak number: keyframe scale pulse (`[1, 1.2, 1]`) with delay
-- Embedded command text: fade-in with 1s delay
-- Premium upsell: height + opacity reveal with 2s delay
-
-### Conditional Sections
-- `streak === 0`: renders nothing
-- `streak >= 3 && !isPremium`: shows premium upgrade prompt
-- `streak >= 10 && isPremium`: shows ultimate upgrade prompt
+- **Progress displays are process influence** — they make real progress visible. They never grade, rank, compare partners or users, or show a loss ("streak broken", "you missed 3 days").
+- **Streaks** celebrate a run while it lasts and welcome a return; no countdowns, no "don't lose it", and no upgrade prompt triggered by a streak milestone.
+- **Celebrations** point to evidence and hand the meaning back to the user; Peter never claims to be proud or to have missed them.
+- **No embedded commands** or emphasis tricks in card copy; no copy, imagery or ordering that favors a relationship outcome (stay, leave, forgive, reconcile).
+- **Upgrade prompts** describe more depth plainly; never scarcity, urgency or guilt, and never on a safety tool.
 
 ---
 
@@ -356,65 +226,6 @@ fireSubtleBurst();
 ```
 
 Both use `disableForReducedMotion: true` and render at `z-index: 100`.
-
----
-
-## Layout: DashboardLayout
-
-**File**: `src/components/dashboard/DashboardLayout.tsx`
-
-### Props
-```typescript
-interface DashboardLayoutProps {
-  children: React.ReactNode;
-  isLoading: boolean;
-}
-```
-
-### Behavior
-- `isLoading={true}`: Returns `<PeterLoading isLoading />`
-- `isLoading={false}`: Renders `DashboardHeader` + main content area
-
-### Layout
-```
-min-h-screen bg-gradient-to-b from-white to-gray-50 pb-24
-  └─ DashboardHeader
-  └─ main.container.max-w-lg.mx-auto.px-4.py-6.space-y-5
-       └─ {children}
-```
-
-### Desktop Enhancement (globals.css)
-At `lg` (1024px+): Peter moves to fixed right position, content area constrains to 520px within 1100px wrapper.
-
----
-
-## Layout: OnboardingContainer
-
-**File**: `src/components/onboarding/OnboardingContainer.tsx`
-
-### Props
-```typescript
-interface OnboardingContainerProps {
-  step: number;
-  totalSteps: number;
-  loading: boolean;
-  children: React.ReactNode;
-  onBack: () => void;
-  onNext: () => void;
-  onComplete: () => void;
-  onSkip: () => void;
-}
-```
-
-### Layout
-```
-min-h-screen bg-slate-50 py-8 px-4
-  └─ max-w-md mx-auto
-       └─ OnboardingHeader (step indicator)
-       └─ Card
-            └─ CardContent pt-6 → {children}
-            └─ CardFooter → OnboardingControls (back/next/skip/complete)
-```
 
 ---
 

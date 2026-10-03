@@ -2,7 +2,13 @@
 
 This file provides comprehensive context for AI assistants working on this codebase. Read the product context section first — every time, without skipping.
 
-> **Product constitution:** [`docs/CONSTITUTION.md`](docs/CONSTITUTION.md) defines Sparq's governing principles — discovery before direction, hypotheses never diagnoses, Peter's conversation modes, memory discipline, and private/shared privacy boundaries. Read it before planning any feature. Its "Constitutional test" applies to every major feature. Implementation map: `docs/CONSTITUTION_AUDIT.md` (status + §13 checklist), `docs/PERSON_MODEL.md`, `docs/RELATIONSHIP_MODEL.md`, `docs/METRICS.md`, `docs/INFLUENCE_AUDIT.md` (v1.1 conflicts: fixed vs. still to fix), `docs/evals/resistance-handling.md` (Peter pushback cases). It is the source of truth for everything it covers; where it is silent, the rest of this file and the Master PRD apply.
+> **Product constitution (v1.2):** [`docs/CONSTITUTION.md`](docs/CONSTITUTION.md) defines Sparq as a **guided transformation system** — "Sparq helps people discover who they want to become, understand why it matters, and practice becoming that person in the real world." It sets the governing principle (**Sparq leads the path; the user chooses the destination**), the Transformation Engine (UNDERSTAND → CHOOSE → ACT → REFLECT → ADAPT → REPEAT → BECOME), psychology modalities (incl. DBT-informed skills and Transactional Analysis) as the foundation with influence as a supplementary layer, hypotheses never diagnoses, Peter's conversation modes, memory discipline, and private/shared privacy boundaries. Read it before planning any feature. Its "Constitutional test" applies to every major feature. Implementation map: `docs/TRANSFORMATION_ENGINE.md` (engine map + v1.2 build status), `docs/CONSTITUTION_AUDIT.md` (status + §13 checklist), `docs/PERSON_MODEL.md`, `docs/RELATIONSHIP_MODEL.md`, `docs/METRICS.md`, `docs/INFLUENCE_AUDIT.md` (influence/doctrine conflicts: fixed, open decisions), `docs/evals/peter-behavior.md` + `docs/evals/resistance-handling.md` (Peter behavioral eval spec — run both before any Peter prompt change). It is the source of truth for everything it covers; where it is silent, the rest of this file and the Master PRD apply.
+>
+> **Doctrine map — which documents give instructions:**
+> - **Active rules:** `docs/CONSTITUTION.md` → `CLAUDE.md` → `docs/*.md` (Person Model, Relationship Model, Metrics, audits) and `docs/evals/` → the `.claude/skills/sparq-*` skills.
+> - **Reference beneath the constitution:** `SPARQ_MASTER_SPEC.md` (product/repo/roadmap), `SPARQ-PSYCHOLOGY-MODALITIES.md` (modality background), `SPARQ-VISION.md` (brief).
+> - **Snapshots — status, not rules:** `HANDOFF.md`, `CURRENT_STATE.md`, `LAUNCH_CHECKLIST.md`, `IMPLEMENTATION_STATUS.md`.
+> - **Historical — never follow as instructions:** `OLD_PRD.md`, `REFERENCE_UNIFIED_PRD.md`, `Sparq_build_Spec.md`, `audit_report_sprint1.md`, `docs/superpowers/`, `.planning/`. They predate the constitution and contain superseded ideas (silent profiling, partner synthesis, "always presuppose", streak pressure).
 
 ---
 
@@ -40,7 +46,7 @@ It is a **relationship gym** — not therapy, not a wellness platform, not a gam
 
 The transformation arc: **autopilot → intentional → deeply connected.**
 
-Sparq integrates 12 evidence-based modalities (Gottman, EFT, ACT, CBT, Positive Psychology, Attachment Theory, IFS, Mindfulness, NVC, Somatic, Narrative Therapy, Influence Psychology). This is the core competitive advantage. See `sparq-psychology` skill for the full framework.
+Sparq is grounded in evidence-based modalities (Gottman, EFT, ACT, CBT, Positive Psychology, Attachment Theory, IFS, Mindfulness, NVC, Somatic, Narrative Therapy, DBT-informed skills, Transactional Analysis) — the foundation for understanding what is happening — plus a supplementary ethical-influence and behavioral-science layer that shapes how Sparq leads (constitution §1B). This is the core competitive advantage. See `sparq-psychology` skill for the full framework.
 
 ---
 
@@ -83,7 +89,7 @@ Full character spec, SVG anatomy, poses, voice rules, and copy library: see `spa
 
 ## The Daily Loop
 
-The Daily Loop is the spine of the product — not a feature. Every session completes in 5 minutes.
+The Daily Loop is the spine of the product — not a feature. It is the daily form of the constitution's Transformation Engine (§1A): learn something, take it into real life, reflect on what happened. Every session completes in 5 minutes.
 
 **Before the loop begins — emotional check-in:**
 Peter always checks in before any content. "Is there anything you'd like to share before we begin? I'm here to listen." If the user shares something difficult, Peter responds as an interactive journal — empathizing, asking gentle self-reflection questions, and suggesting somatic work before modified daily content begins. Emotional state comes first. Content is always second.
@@ -94,7 +100,7 @@ Peter always checks in before any content. "Is there anything you'd like to shar
 3. **Today's Implement** (2 min) — micro-action to practice in real life
 4. **Set Intention** (30 sec)
 
-Each partner answers independently, then answers are revealed. The loop closes with acknowledgment (streak, completion state).
+Each partner answers independently, and answers stay private. A partner sees an answer only when its author taps **"Share with partner"** — nothing is shared automatically, and whether someone completed a day is visible to their partner only if they opt in (Chris, 2026-10-02; constitution §8). The loop closes with acknowledgment (streak, completion state).
 
 It should feel like a ritual, not a checklist.
 
@@ -118,8 +124,8 @@ Full Daily Loop structure, modality sequencing, and session architecture: see `s
 
 - User auth (email/password via Supabase)
 - Couple linking / partner invite system
-- Daily question flow (both partners, reveal mechanic)
-- Streak tracking
+- Daily question flow (both partners answer privately; "Share with partner" button, never automatic)
+- Streak tracking — a forgiving count of days shown up (no reward streak; shallow gamification is out, constitution §10)
 - Journeys (existing 14 — no new ones for beta)
 - Peter (present, mood-driven, emotionally expressive)
 - Basic profile
@@ -203,7 +209,7 @@ npm run lint         # Run ESLint (next lint)
 npm test             # Vitest unit tests (constitution guarantees, tests/)
 ```
 
-Unit tests (Vitest, `tests/`) cover the constitution guarantees Chris approved (2026-09-30): guess revision, Peter's mode picker, and privacy boundaries. They are pure logic — no network or database. Ask Chris before adding new tests. Playwright e2e scripts live in `e2e/`.
+Unit tests (Vitest, `tests/`) cover the constitution guarantees Chris approved (2026-09-30, extended 2026-10-01): guess revision, Peter's mode picker (incl. setbacks vs. comfort-first), privacy boundaries, mission ideas and adaptive difficulty, identity-evidence timing, and Deep Why layers. They are pure logic — no network or database. Ask Chris before adding new tests. Playwright e2e scripts live in `e2e/`.
 
 ---
 
@@ -427,7 +433,9 @@ Managed via Supabase. Schema defined in `supabase/schema.sql`.
 | `system_settings` | Admin-configurable key-value settings |
 | `profile_traits` | Person Model hypothesis layer — guesses with evidence, `status` hypothesis/confirmed/rejected |
 | `memories` | Distilled memories with `kind` + `importance` (pgvector); `metadata.trace` rows are growth-engine only |
-| `self_discoveries` / `experiments` | The user's own conclusions and self-chosen experiments (private) |
+| `self_discoveries` / `experiments` | The user's own conclusions and self-chosen experiments / Real-World Missions (cue, skill ladder, learning, environment note) (private) |
+| `user_reasons` | The user's own reasons, in their words; Deep Why chains (`parent_reason_id`, `depth`, `is_bedrock`) |
+| `identity_evidence` / `growth_arcs` | Steps the user linked to who they want to become; rites of passage they wrote (private, v1.2) |
 | `couple_spaces` / `shared_items` / `interaction_cycles` | "Us" — only what a partner explicitly shared (RLS-enforced; see `docs/RELATIONSHIP_MODEL.md`) |
 
 ### Row Level Security
@@ -587,7 +595,7 @@ toast("Title", { description: "Details", action: { label: "Go", onClick: () => {
 
 ## Psychological Content Design
 
-**Governing rule (constitution v1.1): Discovery before direction. Agency before influence.** Peter helps users reach their own conclusions; only after a user has chosen a value, goal, insight, identity, intention or experiment may language help them follow through on it (`docs/CONSTITUTION.md` §5A, §6A).
+**Governing rule (constitution v1.2): Sparq leads the path. The user chooses the destination.** Peter actively leads — questions, challenge, missions, follow-up — and helps users reach their own conclusions. *Process influence* — helping the user reflect, notice, persist, return, act, regulate, stay curious, see progress, or feel courage, hope, calm, connection or agency — is allowed at any stage and on every surface (Peter, copy, visuals, imagery, notifications, progress, onboarding, relationship flows) when it serves the user. *Direction influence* — anything favoring a particular belief, interpretation, identity, goal, relationship outcome, life decision or moral conclusion — needs a direction the user explicitly chose, and is never used toward a major life outcome (stay, leave, reconcile, forgive, cut someone off). A suggested mission becomes the user's only through explicit choice (`docs/CONSTITUTION.md` §1A, §5A, §6A).
 
 Sparq uses a layered language system to create genuine change — not just insights. When writing any user-facing content:
 
@@ -595,8 +603,12 @@ Sparq uses a layered language system to create genuine change — not just insig
 - Questions must pull the user forward, not push — surface emotional truth, not intellectual compliance
 - Maximum 2 options per question (3 absolute maximum) — never more; leave room for "not now" when the user hasn't chosen yet
 - Before the user has chosen: ask, invite, and ask permission ("Want to hear a thought?") — "whether" questions are allowed. After they've chosen: presuppose the *how* of their chosen direction
+- Send people back into their real lives: small missions with a cue, then "what happened?" Setbacks are data, never failure
+- Identity reinforcement only from lived evidence, for an identity the user authored
 - Prefer self-persuasion: help users voice their own reasons rather than supplying reasons
 - Resistance is information: when a user pushes back, ask what Peter might be misunderstanding — never re-push the point
+- Guided growth isn't simple validation: Peter may challenge a gap between the user's *own* stated value and their behavior — once, kindly, at the right moment, leaving "it doesn't fit anymore" open
+- Send people back into real life: small Real-World Missions from their goals, with a cue and their reason; setbacks are data, never shame
 - No fabricated statistics or social proof, no manufactured urgency, no obligation framing, no Peter claims of human feelings
 - Fourth grade reading level — always
 - Never use clinical language — see the forbidden language table in `sparq-psychology` skill

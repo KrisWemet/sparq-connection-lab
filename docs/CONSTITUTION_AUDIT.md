@@ -145,8 +145,53 @@ None exist. Chris decided (2026-09-29): tests are allowed but ask before adding 
 | Days 22–29 agency | Peter's Listen/distance rules + user's own discoveries outranking guesses |
 | Day 30 The Mirror | Day-30 mirror from their own words and verified growth; user writes the conclusion |
 
+## v1.2 (2026-10-01)
+
+The v1.2 Transformation layer (constitution §14 steps 17–26) is doctrine only. Its keep/extend/missing map lives in `docs/TRANSFORMATION_ENGINE.md` §1 rather than here, so this audit stays a record of the v1.0 build.
+
 ## Still open (not constitution blockers)
 
 - Drop the deprecated tables (`personality_signals`, `personality_profiles`, `mirror_narratives`, `memory_storage`, `conversation_memories`, `if_then_checkins`, `partner_syntheses`, and the `user_insights` trait columns) — all empty or unused; waiting for Chris's OK.
 - Logged-in walkthrough of the new UI (Journal experiments, mirrors, `/us`) — no test account in the cloud environment.
 - A CI-run database test for shared-space access needs a test database or Supabase branch.
+
+---
+
+## v1.2 — Guided Transformation: concept → existing system map
+
+**Date:** 2026-10-02 · **Constitution step:** §14.17 (doctrine-level map; confirm against the live app before building). Read-only pass — no code changed.
+
+| v1.2 concept | Existing system | Verdict | Notes |
+|---|---|---|---|
+| **Transformation Engine** — Insight | morning stories, evening chat, weekly mirror, `self_discoveries` | **Keep** | |
+| Meaning / **Deep Why** | `user_reasons` (revisable), North Star ladder (`north-star.ts`), Seven Layers of Why in the language framework | **Adapt** | Reasons are flat — no chain (`parent_reason_id`) yet |
+| Choice | `experiments` (user-written), "not now" honored in prompts | **Keep** | |
+| Micro-action / **Real-World Mission** | daily action (`BASE_CONCEPTS` / `TRACK_CONCEPTS` in `peterService.ts`), `experiments` | **Adapt** | Daily action is offered as an invitation (B6) but is not stored as an experiment unless the user writes one |
+| Implementation cue | `profiles.habit_anchors` (`HabitAnchorPick`), anchored micro-primes (`DailyPrimeCard`) | **Adapt** | Cue exists for primes; experiments have no cue field |
+| Real-world practice | off-app | — | |
+| Reflection | experiment check-in after 2 days, evening reflection | **Keep** | |
+| Learning | `outcome`, `outcome_note`, discoveries | **Keep** | |
+| Adaptation | snooze, rewrite reason, `let_go` | **Adapt** | No "make it smaller / new cue" flow, no adaptation history |
+| Repetition / **Adaptive difficulty** | post-day-14 skill tracks (`TRACK_CONCEPTS`), streak | **Adapt** | Concepts rotate on a schedule; nothing reads capacity from outcomes |
+| **Identity evidence** | growth engine + `growth_moments` (Celebrate-mode "what changed?"), `IdentityArcCard` (user's words only), identity statement | **Adapt** | Evidence isn't tied to a desired identity; inconsistent evidence isn't recorded |
+| Contribution | — | **Missing** | Deliberately later-stage |
+| **Setbacks are data** | `skipped`/`let_go` statuses, R7 eval case, forgiving streak, `WelcomeBackCard` + `return-state.ts` | **Keep / Adapt** | No setback-specific Peter protocol yet |
+| **Milestones / rites of passage** | Day-14 graduation (`graduation-report.ts`, guesses-as-maybes), Day-30 mirror (user writes the conclusion) | **Adapt** | Day-based, not evidence-earned; no "what I still struggle with / next" prompts |
+| **Environment** | `memories` kind `context`, `user_insights.emotional_state` | **Adapt** | No condition types |
+| **Timing Intelligence** | conversation-mode signals (heavy feeling → Listen), evening turn-3 close, Conflict First Aid forced pause (`is_locked_for_pause`) | **Adapt** | No Stabilize mode; Insight Profile pacing facet not inferred yet |
+| **Process vs. direction influence** | `PETER_SHARED_RULES` ("only assume a direction they already chose") | **Keep** | Prompt header still says "agency before influence" — still true under v1.2's narrower meaning |
+| **Priming** | warm golden-hour imagery rule, palette semantics (plum = understand, coral = connect, gold = grow) | **Keep** | Never audited as priming; step 23 |
+| **Trusted people** | partner-only `couple_spaces` / `shared_items` | — | Out of beta scope |
+| **Domain generality** | — | **Missing** | Records assume relationship context; add `domain` when next touched |
+| **v1.2 metrics** | `discovery_metrics()` (MDR, follow-through, correction rate, own-reason rate) | **Adapt** | See `docs/METRICS.md` v1.2 table |
+
+### Code that directly contradicts v1.2 (to fix in a later, code-touching pass)
+
+| Where | Conflict | Proposed fix | Step |
+|---|---|---|---|
+| `src/lib/peterService.ts` daily concepts | Fixed 14-day rotation regardless of what the user has mastered | Read capacity from outcomes; offer the next level | 21 |
+| `src/lib/server/partner-synthesis.ts` | Dead module for the removed partner synthesis (no imports) | Delete with the deprecated tables, with Chris's OK | — |
+| `src/pages/conflict-first-aid.tsx` (`getPersonalizedGuidance`) | Built to use the partner's private `conflict_style` / `love_language` and to state them as fact ("Your partner's instinct is to pull back"). Dormant only because `/api/profile/traits` now returns empty `partner_traits` | Rewrite to use the user's own side, or a cycle both confirmed in `/us`; phrase as maybes | 23 |
+| `supabase/functions/memory-operations/` | Legacy edge function on the deprecated `conversation_memories` table | Retire with the deprecated tables, with Chris's OK | — |
+
+Skill/doc conflicts listed here in the first v1.2 pass (stale UI catalog entries, partner synthesis described as live) were fixed in the doctrine cleanup — see `docs/INFLUENCE_AUDIT.md` §E. Only code-level items remain above.

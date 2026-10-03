@@ -1,4 +1,4 @@
-# Therapeutic Modalities Deep Reference (1-6)
+# Therapeutic Modalities Deep Reference (1-6, plus DBT and TA)
 
 These are the 6 core therapy-derived modalities that form the clinical backbone of Sparq's content. All are used educationally — never clinically.
 
@@ -31,7 +31,7 @@ These are the 6 core therapy-derived modalities that form the clinical backbone 
 
 - **5:1 Ratio**: Stable couples have 5 positive interactions for every 1 negative. Content should help users notice and create positive interactions.
 - **Bids for Connection**: A "bid" is any attempt to connect (a look, a question, a touch). Partners can turn toward, turn away, or turn against. Sparq trains bid recognition.
-- **Repair Attempts**: Any effort to de-escalate during conflict. Gottman's #1 predictor of relationship success is not conflict frequency — it's **repair speed and quality**.
+- **Repair Attempts**: Any effort to de-escalate during conflict. In Gottman's research, **repair** — how quickly and how well couples recover — mattered more than how often they fought (hedge this whenever it reaches users).
 - **Perpetual Problems**: 69% of couple conflicts are perpetual (never fully resolved). The goal is dialogue, not solution.
 - **Dreams Within Conflict**: Behind every rigid position is a dream or deep personal meaning.
 
@@ -77,11 +77,10 @@ EFT views relationship distress as an **attachment crisis**. Partners aren't ene
 
 ### How Sparq Uses EFT
 
-- **Partner Synthesis**: "You both" framing, blended reflection, cycle naming
-- **Couple's Cycle Map** (planned): Names the couple's repeating pattern as a shared system
+- **Interaction cycles in `/us`**: a couple names its repeating pattern as a shared system; it becomes "ours" only when both partners confirm it (automatic partner synthesis was removed — `docs/RELATIONSHIP_MODEL.md`)
 - **Evening Chat**: Peter explores underlying needs behind surface complaints
 - **Morning Stories**: Demonstrate cycle awareness through the rotating morning-story couples
-- **Identity Arc**: "You used to chase. I've watched you learn to wait with trust."
+- **Identity Arc**: evidence, then the user's meaning — "You used to chase. Lately you've waited a few times. What do you make of that?" (constitution §1A: identity is user-authored)
 
 ---
 
@@ -102,7 +101,7 @@ EFT views relationship distress as an **attachment crisis**. Partners aren't ene
 
 - **Values vs. Goals**: Values are directions (being a caring partner); goals are destinations (plan a date night). Values never complete — they guide ongoing action.
 - **Willingness**: Choosing to feel uncomfortable feelings in service of what matters, rather than avoiding discomfort
-- **The "Why" Anchor**: Connecting daily actions to personal values makes behavior change 3x more durable than rule-following
+- **The "Why" Anchor**: Connecting daily actions to personal values tends to make behavior change last longer than rule-following (ACT research; hedge this whenever it reaches users)
 - **Defusion Techniques**: "I notice I'm having the thought that my partner doesn't care" (creates distance from thought)
 
 ### How Sparq Uses ACT
@@ -200,3 +199,51 @@ Example in relationships:
 - **Graduation Report**: Re-authors the user's self-story based on 14 days of evidence
 - **Weekly Mirror**: "I noticed you..." language — finding unique outcomes in the user's own behavior
 - **Peter's Core Move**: Always frame traits as patterns-in-progress, never fixed labels. "You tend to step back" → "You used to step back, and I've watched you stay present three times this week."
+
+---
+
+## 7. DBT-Informed Skills (Dialectical Behavior Therapy)
+
+*Approved by Chris 2026-10-01 (constitution v1.2 §1B). Sparq uses DBT's teachable **skills** in plain language — never DBT as a treatment program (no diary cards, chain analysis homework, phone coaching, or any diagnosis it was built for).*
+
+**Research basis**: Marsha Linehan (1993; *DBT Skills Training Manual*, 2nd ed., 2015). Strong evidence for the full program in clinical settings; the skills modules are widely taught on their own, with growing but more modest evidence in non-clinical groups — present them as useful practices, not proven cures.
+
+### Core idea — the dialectic
+Acceptance **and** change at the same time: "You're doing the best you can, and you can learn to do it differently." This sits close to Sparq's own stance — honor where the user is, and help them grow.
+
+### The four skill areas (plain-language versions)
+
+| Skill area | What it helps with | Sparq phrasing |
+|---|---|---|
+| **Mindfulness** ("wise mind") | Noticing feeling and thinking together before acting | "What does the calm, wise part of you know here?" |
+| **Distress tolerance** | Getting through a flooded moment without making it worse (pausing, cold water, slow breathing, short distraction) | "Let's just get through the next ten minutes. Cold water on your face can help your body slow down." |
+| **Emotion regulation** | Naming feelings, caring for the basics (sleep, food, movement), "opposite action" when a feeling's urge won't help | "Your body wants to walk out. What would the opposite small step look like?" |
+| **Interpersonal effectiveness** | Asking for what you need while keeping the relationship and your self-respect (DEAR MAN, GIVE, FAST) | "Say what happened, how it felt, and one clear ask." |
+
+### How Sparq uses DBT
+- **Conflict First Aid / stabilization (§6B)**: distress-tolerance skills when a user is flooded — before any reflection or growth step.
+- **Missions (§11A)**: "opposite action" and a simple DEAR MAN-style ask make good small real-world missions.
+- **Environment design (§11A)**: emotion-regulation basics (sleep, food, stress) are treated as conditions, never moralized.
+- **Language**: never "dysregulated", "borderline" or any diagnosis; say "flooded", "overwhelmed", "running on empty".
+
+---
+
+## 8. Transactional Analysis (TA)
+
+*Approved by Chris 2026-10-01 (constitution v1.2 §1B). Used as a descriptive lens for noticing interaction patterns — not as a personality typology and never as a label for the user or their partner.*
+
+**Research basis**: Eric Berne (*Games People Play*, 1964); Stephen Karpman's Drama Triangle (1968); Acey Choy's Winner's Triangle (1990). TA is widely used in coaching and counseling, but its controlled-trial evidence is limited. Offer its ideas as "one way to look at it", with that uncertainty (§5A Authority).
+
+### Key ideas
+
+- **Ego states**: the same person can respond from a *Parent*-like stance (rules, caretaking or criticism), an *Adult* stance (here-and-now thinking) or a *Child*-like stance (feelings, play, or old hurt). In Sparq language: "the part of you that wants to fix it", "the calm part of you", "the part of you that feels small".
+- **Transactions**: a message sent from one stance invites a reply from another. *Crossed* transactions ("Can you help?" → "You never do anything yourself") are where conversations derail.
+- **Games**: repeating patterns with a predictable bad ending ("Yes, but…", "Look what you made me do"). Sparq treats them like EFT cycles: the pattern is the problem, never either person.
+- **Drama Triangle → Winner's Triangle**: Rescuer, Persecutor and Victim roles, and their healthier versions — caring without taking over, being assertive without attacking, being vulnerable without giving up agency.
+- **Strokes**: units of recognition. Freely given appreciation (§5A Reciprocity) — never as a trade.
+
+### How Sparq uses TA
+- **Reflection questions**: "Which part of you was talking in that moment?" — the user names it, Peter doesn't assign it.
+- **Interaction cycles (§7)**: crossed transactions and the Drama Triangle help couples see "you two vs. the loop".
+- **Missions**: "Next time you feel the urge to rescue, ask one question instead of fixing."
+- **Never**: calling a partner "the Persecutor", telling a user they are "in Child", or using roles to blame. Roles describe moments, not people.

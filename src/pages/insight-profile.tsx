@@ -1,6 +1,7 @@
 import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ChevronLeft } from 'lucide-react';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -18,7 +19,12 @@ type Guess = {
 };
 type Rejected = { id: string; offered_text: string | null; user_response: string | null };
 type Reason = { id: string; reason_text: string; for_what: string | null };
-type Data = { prefs: Record<string, string>; guesses: Guess[]; rejected: Rejected[]; reasons: Reason[] };
+type Condition = { id: string; note: string; for_what: string | null };
+type Practice = { skill: string; label: string; level: number; triedAtLevel: number };
+type Data = {
+  prefs: Record<string, string>; guesses: Guess[]; rejected: Rejected[]; reasons: Reason[];
+  conditions?: Condition[]; practice?: Practice[];
+};
 
 // Mirrors CONVERSATION_PREFS in src/lib/server/insight-profile.ts (labels only).
 const PREFS: Array<{ key: string; label: string; options: Array<{ value: string; label: string }> }> = [
@@ -33,6 +39,14 @@ const PREFS: Array<{ key: string; label: string; options: Array<{ value: string;
   { key: 'directness', label: 'When you’re stuck', options: [
     { value: 'gentle', label: 'Go gently' },
     { value: 'direct', label: 'Be direct with me' },
+  ] },
+  { key: 'hard_days', label: 'On hard days', options: [
+    { value: 'comfort', label: 'Just be with me' },
+    { value: 'nudge', label: 'Still nudge me, gently' },
+  ] },
+  { key: 'ideas', label: 'Ideas for things to try', options: [
+    { value: 'welcome', label: 'Offer me ideas' },
+    { value: 'ask_first', label: 'Only when I ask' },
   ] },
 ];
 
@@ -130,7 +144,9 @@ export default function InsightProfilePage() {
                 </div>
               </div>
             ))}
-            <p className="text-xs text-brand-text-secondary">Tap again to clear. Peter follows these.</p>
+            <p className="text-xs text-brand-text-secondary">
+              Tap again to clear. Peter follows these. <Link href="/how-sparq-works" className="font-semibold text-brand-hover hover:underline">How Sparq is designed to help you</Link>
+            </p>
           </section>
 
           {/* 2. Peter's guesses */}
@@ -170,6 +186,42 @@ export default function InsightProfilePage() {
                   </button>
                 </div>
               ))}
+            </section>
+          )}
+
+          {/* 5. What makes it easier or harder — their words (constitution v1.2 §3, §11A) */}
+          {(data?.conditions?.length ?? 0) > 0 && (
+            <section className={card}>
+              <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover">What makes it easier or harder</p>
+              <p className="text-sm text-brand-text-secondary">
+                Things you noticed while trying something out there. They&apos;re just information — Peter may use them to
+                help you plan the next step, never to judge you.
+              </p>
+              {data!.conditions!.map(c => (
+                <div key={c.id} className="border-b border-brand-border/60 pb-3 last:border-0 last:pb-0">
+                  {c.for_what && <p className="text-xs text-brand-text-secondary">While trying: &ldquo;{c.for_what}&rdquo;</p>}
+                  <p className="font-serif text-brand-espresso text-[15px]">&ldquo;{c.note}&rdquo;</p>
+                  <button type="button" disabled={busy} className="mt-1 text-xs font-semibold text-brand-hover hover:text-brand-espresso"
+                    onClick={() => send('/api/me/insight-profile', { action: 'clear_condition', id: c.id })}>
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </section>
+          )}
+
+          {/* 6. What they're practicing — built only from their own outcomes */}
+          {(data?.practice?.length ?? 0) > 0 && (
+            <section className={card}>
+              <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover">What you&apos;re practicing</p>
+              {data!.practice!.map(p => (
+                <p key={p.skill} className="text-sm text-brand-espresso">
+                  {p.label} <span className="text-brand-text-secondary">· step {p.level} · tried {p.triedAtLevel}×</span>
+                </p>
+              ))}
+              <p className="text-xs text-brand-text-secondary">
+                When a step gets easy for you, you may be offered a next one. You can always stay where you are.
+              </p>
             </section>
           )}
 

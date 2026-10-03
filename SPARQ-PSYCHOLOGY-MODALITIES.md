@@ -1,8 +1,6 @@
 # Sparq Connection — Psychological Modalities Reference
 
-> **Purpose**: This is the definitive reference for all psychological modalities, content personalization rules, and therapeutic frameworks used in Sparq Connection. Feed this file to Claude Code alongside the skill creation prompts to produce richer, more accurate skills.
->
-> **How to use**: Place this file in your Sparq project root (or Obsidian vault) and reference it when creating the `sparq-psychology` skill. Tell Claude Code: "Read ./SPARQ_PSYCHOLOGY_MODALITIES.md before creating the psychology skill."
+> **Purpose**: Long-form background on the modalities. It was the seed for the `sparq-psychology` skill, which is now the working reference for content and personalization. **Precedence:** `docs/CONSTITUTION.md` (v1.2) governs Peter's behavior, influence and privacy, then the `sparq-psychology` skill; where this file disagrees with either, they win and this file should be corrected.
 
 ---
 
@@ -36,11 +34,11 @@
 
 ## 1. Philosophy & Positioning
 
-Sparq Connection is a **"relationship gym"** — not therapy, not counseling, not a clinical tool. It's an educational platform deeply rooted in psychology and influence that helps individuals and couples grow.
+Sparq Connection is a **"relationship gym"** — not therapy, not counseling, not a clinical tool. It's an educational, guided transformation system grounded in psychology that helps individuals and couples grow (constitution §1).
 
 **Core belief**: When each individual heals, it's easier to heal the relationship.
 
-**Positioning**: Educational with real-life strategies, deeply rooted in psychology and influence. The app uses different psychology and influence techniques from the moment the user logs in to help the individual AND the couple.
+**Positioning**: Educational with real-life strategies. The psychology modalities are the foundation for understanding what is happening; ethical influence and behavioral science are a supplementary layer that shapes how Sparq leads — process influence at any stage, direction influence only toward what the user chose (constitution §1B, §5A).
 
 **What we are**:
 - An evidence-based relationship growth platform
@@ -66,13 +64,13 @@ Sparq Connection is a **"relationship gym"** — not therapy, not counseling, no
 | 3 | ACT | Values alignment & psychological flexibility | Values identification exercises, cognitive defusion micro-practices, committed action prompts | 7 |
 | 4 | CBT | Thought pattern awareness & restructuring | Cognitive distortion identification, thought records, behavioral activation | 8 |
 | 5 | Positive Psychology | Strengths & gratitude | Character strengths assessment, gratitude practices, savoring exercises, PERMA tracking | 7 |
-| 6 | Attachment Theory | Core personality profiling & content personalization | Onboarding assessment, content adaptation engine, partner compatibility insights | 9 |
+| 6 | Attachment Theory | Core personality profiling & content personalization | Onboarding assessment, content adaptation engine, helping each partner understand the cycle between them (never comparing partners) | 9 |
 | 7 | IFS | Self-awareness & internal conflict resolution | Parts identification, Self-leadership exercises, unblending practices | 6 |
 | 8 | Mindfulness | Present-moment awareness & regulation | Mindful listening exercises, co-regulation practices, guided awareness moments | 7 |
 | 9 | NVC | Communication skills & empathy | Four-step communication exercises, feelings vocabulary building, needs expression | 7 |
 | 10 | Somatic | Body awareness & nervous system regulation | Grounding exercises, co-regulation practices, body check-in prompts | 5 |
 | 11 | Narrative Therapy | Story reframing & journaling | Reflection prompts, relationship narrative exercises, externalization practices | 6 |
-| 12 | Influence Psychology | Ethical engagement & habit formation | Reciprocity practices, commitment reinforcement, social proof elements, app engagement design | 6 |
+| 12 | Influence Psychology *(supplementary layer, not a foundational modality)* | How Sparq leads: follow-through, cues, priming | Freely chosen generosity, reconnecting to the user's own commitments, grounded normalization, transparent design | 6 |
 
 ---
 
@@ -397,16 +395,16 @@ User profile fields: primary_attachment_style, secondary_attachment_style, attac
 **Research Foundation**: Robert Cialdini (Influence: The Psychology of Persuasion).
 
 **Ethical Application for Positive Relationship Dynamics**:
-- **Reciprocity → freely chosen generosity**: kindness, appreciation and vulnerability offered for their own sake — never framed as creating an obligation (constitution v1.1 §5A)
-- **Consistency & Commitment**: Aligning daily actions with stated relationship values. Streak mechanics. Public commitment to growth.
+- **Reciprocity → freely chosen generosity**: kindness, appreciation and vulnerability offered for their own sake — never framed as creating an obligation (constitution §5A)
+- **Consistency & Commitment**: Reconnecting daily actions to values and commitments the user chose, in their words; commitments are revisable and never used to shame. No public-commitment pressure.
 - **Social proof → grounded normalization**: true, general statements that reduce shame ("lots of people go quiet when they feel criticized") — no invented statistics or "other couples" claims
 - **Liking & Rapport**: Building genuine connection and affinity through shared positive experiences
 - **Scarcity → genuine context only**: appreciating what's precious is fine; no artificial urgency, countdowns or loss framing
-- **Authority & Expertise**: Research citations, therapist endorsements, evidence-based positioning
+- **Authority → evidence with uncertainty**: real research citations, hedged; supports understanding, never obedience. No endorsements that don't exist.
 
 **Sparq Implementation (also drives app engagement design)**:
 - Generosity exercises ("Do one small kind thing for your partner today, just because. Notice how it feels to you.")
-- Commitment devices (streaks, goals, identity archetypes)
+- Self-chosen experiments / missions with the user's own reason; streaks only as a celebration of a live run (no loss framing)
 - Normalizing lines in UI ("Lots of couples find this one awkward at first.") — never fabricated percentages
 - Value appreciation prompts
 - The app itself uses these principles ethically to form healthy habits
@@ -534,7 +532,7 @@ For **Secure** attachment:
 - Warm, accessible, conversational — like a supportive, knowledgeable friend
 - Never clinical, academic, or textbook-like
 - Never preachy, never lecturing
-- Identity reinforcement ("As a Growth Seeker, you...") — grounded in identity-based motivation (Oyserman 2009); no embedded commands
+- Identity reinforcement only for an identity the user chose or wrote, grounded in evidence of their own actions (identity-based motivation, Oyserman 2009); no embedded commands
 - Peter the otter's voice when delivering celebration/encouragement (see Peter specs)
 
 ### Framing
@@ -588,7 +586,7 @@ Content adapts based on relationship stage:
 - Days 1-3: Positive Psychology (warm, approachable, non-threatening entry)
 - Days 4-7: Attachment Theory + Gottman (the deeper hook — "aha moment" territory)
 - Days 8-14: Rotating through all modalities based on user profile and responses
-- Day 14: Personality profile reveal — major milestone and retention moment
+- Day 14: Growth reveal — first milestone; evidence plus guesses offered as maybes, and the user says what it means
 - Days 15+: AI-driven selection based on profile, recent responses, and growth areas
 
 ### Question-to-Modality Mapping
@@ -882,4 +880,4 @@ narrative_therapy, influence_psychology
 
 ---
 
-*This document is the psychology source of truth for Sparq Connection. All content, features, and AI behavior should align with these frameworks, rules, and personalization patterns.*
+*Background reference. For working rules, use `docs/CONSTITUTION.md` and the `sparq-psychology` skill.*

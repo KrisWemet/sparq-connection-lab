@@ -50,6 +50,9 @@ Two waves, same people:
 | Memory feels right (§4) | "Did Peter remember something that mattered? Anything he shouldn't have?" |
 | Growth proof (§11) | Day 31: "What does your 30-day mirror say to you? Is it true?" |
 | No dependence (§10) | "Do you notice your own patterns more than before, with or without the app?" |
+| *v1.2, when missions ship:* Real-world practice (§11A) | "Did you try anything out in your life because of Sparq? What happened?" |
+| *v1.2:* Destination is yours (§5A) | "Did Sparq ever feel like it was pushing you toward a decision you hadn't made?" |
+| *v1.2:* Setbacks are data (§11A) | "When something didn't go to plan, how did Sparq make you feel about it?" |
 
 ## Red flags that stop broadening the feature surface
 

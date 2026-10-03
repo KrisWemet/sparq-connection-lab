@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 type Step = 'offer' | 'drafting' | 'editing' | 'kept' | 'shared';
 
 /**
- * "Keep it private, or help me put it into words" (constitution §8).
+ * "Keep it private, or share with partner" (constitution §8).
  * Shown after a user writes a private discovery. Renders nothing unless the
  * user has a linked partner. Private is the default; nothing is shared until
  * the user reads, edits and taps Share.
@@ -70,7 +70,7 @@ export function SharePrompt({ text, kind = 'discovery' }: { text: string; kind?:
       >
         {step === 'offer' && (
           <>
-            <p className="text-sm text-brand-espresso">This is yours. Do you want to keep it private, or put it into words for your partner?</p>
+            <p className="text-sm text-brand-espresso">This is yours. Keep it private, or share it with your partner? You&apos;ll see the words before anything is sent.</p>
             <div className="flex flex-wrap gap-2">
               <button type="button" onClick={() => setStep('kept')}
                 className="rounded-full border border-brand-border px-4 py-1.5 text-sm font-medium text-brand-espresso hover:bg-popover">
@@ -78,7 +78,7 @@ export function SharePrompt({ text, kind = 'discovery' }: { text: string; kind?:
               </button>
               <button type="button" onClick={helpMeShare}
                 className={cn(TONE.connect.button, 'rounded-full px-4 py-1.5 text-sm')}>
-                Help me share it
+                Share with partner
               </button>
             </div>
           </>

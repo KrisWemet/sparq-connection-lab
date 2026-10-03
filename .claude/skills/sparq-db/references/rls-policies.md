@@ -24,8 +24,8 @@ Used in admin override policies. `SECURITY DEFINER` means it runs as the functio
 | Pattern | SQL Shape | Tables |
 |---|---|---|
 | **User-scoped** | `auth.uid() = user_id` | Most tables including memories (see below) |
-| **Partner-visible** | `auth.uid() = user_a_id OR auth.uid() = user_b_id` | partner_syntheses, vulnerability_escrow |
-| **User + partner read** | Own rows + partner's via subquery | profiles, profile_traits |
+| **Couple-shared** | member of the `couple_spaces` row; insert/delete only by the author | shared_items, interaction_cycles (`docs/RELATIONSHIP_MODEL.md`) |
+| **User + partner read** | Own row + partner's *profile row* via subquery | profiles only — never Person Model tables |
 | **Admin override** | `public.is_admin(auth.uid())` | profiles, user_roles, partner_invitations, user_entitlements, user_insights, relationship_scores |
 | **Public read** | `FOR SELECT USING (true)` | journeys, journey_questions, daily_questions, date_ideas, system_settings |
 
@@ -224,15 +224,9 @@ CREATE POLICY "Users access own weekly insights" ON weekly_insights
   FOR ALL USING (auth.uid() = user_id);
 ```
 
-### partner_syntheses (migration 20260303000001)
+### partner_syntheses (deprecated)
 
-```sql
-CREATE POLICY "Users can read syntheses they are part of" ON partner_syntheses
-  FOR SELECT USING (auth.uid() = user_a_id OR auth.uid() = user_b_id);
-
-CREATE POLICY "Users can insert syntheses they are part of" ON partner_syntheses
-  FOR INSERT WITH CHECK (auth.uid() = user_a_id OR auth.uid() = user_b_id);
-```
+Exists in the database but no code uses it; automatic partner synthesis was removed (`docs/RELATIONSHIP_MODEL.md`). Do not read, write or add policies to it.
 
 ### graduation_reports (migration 20260303000002)
 
@@ -262,17 +256,12 @@ CREATE POLICY "Users access own skill tracks" ON user_skill_tracks
 CREATE POLICY "Users access own traits" ON profile_traits
   FOR ALL USING (auth.uid() = user_id);
 
--- Partner-visible: users can read partner's traits (for conflict guidance)
--- Used by GET /api/profile/traits?include_partner=true
-CREATE POLICY "Users can view partner traits" ON profile_traits
-  FOR SELECT USING (
-    user_id IN (SELECT partner_id FROM profiles WHERE id = auth.uid())
-  );
 ```
+
+**Owner-only.** A partner must never read another partner's traits (constitution §8). `supabase/tests/rls_boundaries.sql` checks this live ("B sees A traits = 0"; last run 2026-09-30). The old `include_partner=true` API path now always returns an empty `partner_traits`. If a partner-read policy is ever found on the remote, drop it.
 
 **Notes:**
 - Server-side writes (profile-analysis.ts) use service role, bypassing RLS
-- Partner read is limited to specific trait_keys (`conflict_style`, `love_language`) at the API level, but the RLS policy allows all columns — API-layer filtering is intentional
 - Admin access: not explicitly needed since admin APIs use service role
 
 ### user_insights (created directly on remote — no migration file)

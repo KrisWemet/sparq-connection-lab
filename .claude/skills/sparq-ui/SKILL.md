@@ -18,8 +18,18 @@ Every visual choice serves emotional safety: generous whitespace, rounded corner
 - **Breathing room** — Generous padding, relaxed line heights, space between elements. White space is structural, not decorative. Crowded screens feel unsafe.
 - **Gentle motion** — Animations are subtle and purposeful. They guide attention, never demand it.
 - **Progressive revelation** — Don't overwhelm. Show what matters now, reveal depth as users go deeper.
-- **Pull, don't push** — Every interactive element assumes the user is moving forward. Never ask "do you want to proceed?" — offer a choice of how to proceed.
+- **Pull, don't push** — Make the next step inviting and easy. Once the user has chosen a direction, offer choices of *how* to proceed; before they have, a real "whether" choice with a "not now" is respected (constitution §5A).
 - **Emotional resonance** — Typography, color, and micro-interactions reinforce the feeling of growth and connection.
+
+### Psychological design: process yes, direction no (constitution v1.2 §5A)
+
+Every visual choice is influence, and that is expected. Apply the same test as Peter's words:
+
+- **Process influence** helps the user engage with growth — reflect, notice, persist, return, act, regulate, stay curious, see progress, feel courage/hope/calm/connection/agency. **Direction influence** favors a particular belief, interpretation, identity, goal, relationship outcome, life decision or moral conclusion, and needs a direction the user explicitly chose.
+- **Process priming is allowed anywhere it serves the user:** calm backgrounds before a hard reflection, hopeful golden-hour imagery, warmth before a vulnerable question, sequencing safety before courage, progress made visible, friction removed from a chosen mission, a welcoming return screen.
+- **Direction priming is not:** no imagery, color, ordering, default selection or copy that quietly favors a belief, an identity, or a relationship or life outcome (stay, leave, reconcile, forgive, cut someone off). A two-option choice about a life decision gets equal visual weight.
+- **Never:** urgency or scarcity styling (countdowns, red badges, "expires"), loss framing on progress ("streak lost"), comparison with a partner or other couples, embedded commands or emphasis tricks.
+- **Transparency test:** if a user asked "why does this screen look like this?", the honest answer must be acceptable to them.
 
 ---
 
@@ -168,7 +178,7 @@ Examples:
 
 Never present more than three choices. Preferably two. Choice selectors are large, full-width tap targets — not radio buttons, not dropdowns, not small toggles.
 
-Both options must move forward. There is no "stay stuck" option on the menu. The question is never "do you want to?" — always "which way would you like to?"
+When the user has already chosen the direction, both options move forward ("which way would you like to start?"). When they haven't, one honest option can be "not now" — that is agency, not a "stay stuck" option (constitution §5A, language framework §3–4).
 
 ### Peter Appears Without a Container
 
@@ -178,7 +188,7 @@ Peter is never reduced to a static icon or loading spinner. He is the emotional 
 
 ### Dark Screens for Peak Emotional Moments
 
-Couples Mode shared reflection and Day 14 profile reveal use a dark background — warm espresso `#241D27`, not cold navy or pure black. This creates intimacy and signals importance. The contrast says: *this moment is different.*
+Couples Mode shared reflection and the Day-14 Growth Reveal (a milestone — evidence plus the user's own meaning) use a dark background — warm espresso `#241D27`, not cold navy or pure black. This creates intimacy and signals importance. The contrast says: *this moment is different.*
 
 ### The Linen-to-Parchment Layering
 
@@ -189,7 +199,7 @@ The separation must be visible but never harsh. It reads like pages in a journal
 
 ### No Stock Photography of Humans. Ever.
 
-Peter is the emotional presence. Human photography of couples or people breaks the emotional contract of the app. If an illustration or image is needed — it is Peter, or it is an abstract warm shape. Never a stock photo of a couple, a person, or a lifestyle scene.
+Peter is the emotional presence. Human photography of couples or people breaks the emotional contract of the app. If an image is needed — it is Peter, an abstract warm shape, or a warm golden-hour metaphor image (`public/images/journeys/`, `public/images/dates/`; hands-only is allowed). Never a stock photo of a couple, a person, or a lifestyle scene, and never imagery that implies how a relationship should turn out.
 
 ### Button Hierarchy — Three Patterns Only
 
@@ -230,7 +240,7 @@ Tailwind's 4px base. Primary spacers: `4` (16px), `5` (20px), `6` (24px), `8` (3
 ### Page Layout (implemented in `DashboardLayout`)
 
 ```
-min-h-screen bg-brand-linen pb-24
+min-h-dvh bg-brand-linen pb-24
   └─ main.container.max-w-lg.mx-auto.px-4.py-6.space-y-5
 ```
 
@@ -327,7 +337,7 @@ Large full-width tap targets. The only choice format used in the app.
 
 Never use: radio buttons, dropdowns, checkbox lists, tab bars for content choices.
 
-### Streak Indicator Tiers
+### Streak Colour Tiers (tokens only — celebrate a live run, never show a loss)
 
 | Days | Color | Background | Rationale |
 |---|---|---|---|
@@ -347,7 +357,7 @@ Never use: radio buttons, dropdowns, checkbox lists, tab bars for content choice
 
 ### Onboarding
 
-- Container: `min-h-screen bg-brand-linen py-8 px-4` with `max-w-md` centered
+- Container: `min-h-dvh bg-brand-linen py-8 px-4` with `max-w-md` centered (never `min-h-screen` — see `mobile-native`)
 - Progress indicator in header, back/next/skip controls in footer
 - Peter appears in-flow above content, no container box
 
@@ -384,7 +394,7 @@ Never use: radio buttons, dropdowns, checkbox lists, tab bars for content choice
 | **Tap feedback** | `whileTap={{ scale: 0.95–0.99 }}` | Buttons, tappable cards |
 | **Spring motion** | `type: "spring", stiffness: 400, damping: 17` | Bouncy interactive elements |
 | **Progress bar** | `width: 0→X%` @ 1s ease-out | Skill bars, score dimensions |
-| **Heartbeat pulse** | `scale: [1, 1.2, 1, 1.2, 1]` @ 600ms | HeartbeatButton send animation |
+| **Heartbeat pulse** | `scale: [1, 1.2, 1, 1.2, 1]` @ 600ms | Share-sent confirmation in `/us` (keep subtle; respects reduced motion) |
 
 ### Page Transition Easing
 

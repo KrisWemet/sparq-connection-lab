@@ -2,6 +2,7 @@
 
 **Date:** 2026-06-11
 **Status:** Approved by Chris (brainstorming session 2026-06-11)
+**Update (Chris, 2026-10-01, constitution v1.2 §5B):** the ladder now asks "Why is that important to you?" seven times instead of at most four what/how follow-ups. The user can still stop at any layer. Where this spec says otherwise, the constitution wins.
 **Origin:** Phase B of the science/psychology program (Chris-approved order: credibility → ideal self → Finkel → relapse/repair). Incorporates Chris's "7 layers of why" idea, adapted to adaptive values laddering.
 
 ---

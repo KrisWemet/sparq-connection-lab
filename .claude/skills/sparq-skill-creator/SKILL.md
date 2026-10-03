@@ -220,7 +220,7 @@ Read the actual files. Extract real values, real patterns, real conventions. Lis
 | **sparq-payments** | When Stripe integration is built | Subscription logic, webhook handling, entitlement enforcement, pricing |
 | **sparq-analytics** | When analytics/metrics become a major feature area | Event taxonomy, dashboard queries, KPI definitions, A/B testing |
 | **sparq-api** | If sparq-db grows too large or API conventions diverge from DB patterns | API route conventions, request/response shapes, error handling, rate limiting |
-| **sparq-partner-sync** | If partner features grow complex enough | Realtime patterns, synthesis generation, invitation flow, privacy boundaries |
+| **sparq-partner-sync** | If partner features grow complex enough | Invitation flow, `/us` shared space, Shared Peter, private/shared boundaries (constitution §8, `docs/RELATIONSHIP_MODEL.md`) |
 
 ---
 

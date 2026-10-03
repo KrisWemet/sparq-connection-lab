@@ -6,11 +6,9 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 export interface ReturnState {
   returning: boolean;
   days_away: number;
-  /** Forgiving lifetime count — never resets (PRD decision 4, track 1). */
+  /** Forgiving lifetime count — never resets. (The consecutive reward track
+   *  was retired 2026-10-01, constitution v1.2 §10.) */
   practice_days: number;
-  /** Live consecutive run — the dopamine track (PRD decision 4, track 2). */
-  consecutive_streak: number;
-  longest_consecutive: number;
 }
 
 const AWAY_THRESHOLD_DAYS = 3;
@@ -19,8 +17,6 @@ const EMPTY_STATE: ReturnState = {
   returning: false,
   days_away: 0,
   practice_days: 0,
-  consecutive_streak: 0,
-  longest_consecutive: 0,
 };
 
 export async function getReturnState(
@@ -40,10 +36,6 @@ export async function getReturnState(
       returning,
       days_away,
       practice_days,
-      // Columns arrive only after the dopamine-layer migration — default to 0
-      // so this stays safe if code ships ahead of the migration.
-      consecutive_streak: Number(row.consecutive_streak ?? 0),
-      longest_consecutive: Number(row.longest_consecutive ?? 0),
     };
   } catch {
     return EMPTY_STATE;

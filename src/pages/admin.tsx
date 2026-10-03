@@ -34,6 +34,7 @@ export default function Admin() {
   const [betaTesters, setBetaTesters] = useState<BetaTester[]>([]);
   const [betaLoading, setBetaLoading] = useState(false);
   const [discovery, setDiscovery] = useState<Record<string, number | null> | null>(null);
+  const [transformation, setTransformation] = useState<Record<string, number | null> | null>(null);
   const [modifiedSettings, setModifiedSettings] = useState({
     enablePremiumFeatures: true,
     enableUserRegistration: true,
@@ -103,7 +104,11 @@ export default function Admin() {
             const { data: { session } } = await supabase.auth.getSession();
             if (!session?.access_token) return;
             const res = await fetch('/api/admin/kpis', { headers: { Authorization: `Bearer ${session.access_token}` } });
-            if (res.ok) setDiscovery((await res.json()).discovery ?? null);
+            if (res.ok) {
+              const kpis = await res.json();
+              setDiscovery(kpis.discovery ?? null);
+              setTransformation(kpis.transformation ?? null);
+            }
           } catch {
             // metrics are optional on this page
           }
@@ -222,6 +227,41 @@ export default function Admin() {
                       <div key={label as string} className="rounded-lg border bg-popover p-4">
                         <p className="text-xs text-brand-text-secondary">{label}</p>
                         <p className="text-2xl font-semibold text-foreground">{value ?? '—'}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Lived change — last {transformation?.window_days ?? 28} days</CardTitle>
+                <CardDescription>
+                  Real-world practice, adaptation after setbacks, and user agency (constitution v1.2 §10). Agreement
+                  with Peter is never a metric. Counts only.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {!transformation ? (
+                  <p className="text-sm text-brand-text-secondary">Not available until the v1.2 migration has run.</p>
+                ) : (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {[
+                      ['Missions tried', transformation.missions_tried],
+                      ['Reflected on (share)', transformation.reflection_rate],
+                      ['Setbacks', transformation.setbacks],
+                      ['Adapted after a setback', transformation.adaptation_rate],
+                      ['Tried again within 14 days', transformation.persistence_after_setback],
+                      ['Designed by the user (share)', transformation.user_designed_share],
+                      ['Accepted ideas', transformation.accepted_from_suggestion],
+                      ['Identity steps linked', transformation.identity_steps],
+                      ['Deep Whys found', transformation.deep_whys],
+                      ['Chapters marked', transformation.growth_arcs],
+                      ['Missions reaching others', transformation.contribution_missions],
+                    ].map(([label, value]) => (
+                      <div key={label as string} className="rounded-lg border bg-white p-4">
+                        <p className="text-xs text-brand-text-secondary">{label}</p>
+                        <p className="text-2xl font-semibold text-gray-900">{value ?? '—'}</p>
                       </div>
                     ))}
                   </div>

@@ -1,6 +1,6 @@
 ---
 name: sparq-psychology
-description: "Comprehensive psychology modalities and content framework for Sparq Connection. Covers 12+ therapeutic frameworks (Gottman, EFT, ACT, CBT, Positive Psychology, Attachment Theory, IFS, Mindfulness, NVC, Somatic, Narrative Therapy, Influence Psychology), personality-based content personalization, and content safety guardrails. Use this skill WHENEVER: generating questions or exercises, writing user-facing prompts or reflections, building onboarding assessments, implementing content personalization logic, designing the AI content engine, building question selection algorithms, creating relationship health scoring, adapting content for personality types, or writing ANY user-facing therapeutic/educational content. If the task involves psychology, content, or personalization in Sparq — use this skill."
+description: "Comprehensive psychology modalities and content framework for Sparq Connection. Covers 12+ therapeutic frameworks (Gottman, EFT, ACT, CBT, Positive Psychology, Attachment Theory, IFS, Mindfulness, NVC, Somatic, Narrative Therapy, DBT-informed skills, Transactional Analysis, Influence Psychology), personality-based content personalization, and content safety guardrails. Use this skill WHENEVER: generating questions or exercises, writing user-facing prompts or reflections, building onboarding assessments, implementing content personalization logic, designing the AI content engine, building question selection algorithms, creating relationship health scoring, adapting content for personality types, or writing ANY user-facing therapeutic/educational content. If the task involves psychology, content, or personalization in Sparq — use this skill."
 ---
 
 # Sparq Connection — Psychology & Content Framework
@@ -9,17 +9,23 @@ description: "Comprehensive psychology modalities and content framework for Spar
 
 Sparq uses **12+ evidence-based modalities** for both individual growth and couple connection. The core belief: **when each individual heals, it's easier to heal the relationship.**
 
+**Sparq helps people discover who they want to become, understand why it matters, and practice becoming that person in the real world** (constitution v1.2). It is a guided transformation system, not a content library: knowledge matters when it turns into lived change. Sparq may help lead the path; the user chooses the destination.
+
+The modalities below remain the foundation for *understanding* what is happening in a person and a relationship. Influence, priming and behavior design are supplementary layers for *how* Sparq helps a user move toward what they chose — they never replace psychological understanding (constitution §1B).
+
 Sparq is a **relationship gym** — not therapy. It is educational, not clinical. It draws from research-backed therapeutic frameworks and presents them as accessible daily practices. Every piece of content serves a dual purpose: helping the individual grow AND strengthening their relationship.
 
 ### The Change Chain
 
-Permanent internal change requires this full chain — the app must support every link:
+The Change Chain is the compressed daily form of the constitution's **Transformation Engine** (§1A: Insight → Meaning → Choice → Micro-action → Cue → Real-world practice → Reflection → Learning → Adaptation → Repetition → Identity evidence → Contribution). Permanent internal change requires the full chain — the app must support every link:
 
 ```
 Insight → Emotional Processing → New Behavior in a Real Moment → Different Outcome → Updated Self-Story
 ```
 
 Most apps stop at Insight. Sparq closes the whole chain through the Daily Loop (morning story → daily action → evening reflection).
+
+The Change Chain is a compact form of the constitution's **Transformation Engine** (§1A): Insight → Meaning (Deep Why) → Choice → Micro-action → Implementation cue → Real-world practice → Reflection → Learning → Adaptation → Repetition → Identity evidence → Contribution. Setbacks are data inside that loop, not a break in it.
 
 ### Levels of Change (deepest to most fragile)
 
@@ -28,7 +34,7 @@ Most apps stop at Insight. Sparq closes the whole chain through the Daily Loop (
 3. **Beliefs** — "Conflict doesn't mean the relationship is broken."
 4. **Behaviors** — "I paused before responding." (most fragile — reverts under stress)
 
-The app works at levels 1-2, not just level 4. Peter narrates identity arcs ("You used to pull away. I've watched you stay present three times this week."), not just behavioral tips.
+The app works at levels 1-2, not just level 4. Peter notices identity evidence and asks about it ("You've stayed present three times this week. Does that change how you see yourself?") — only toward an identity the user named, never as a verdict (constitution §11B). Level 4 behaviors are practiced in real life as missions, so levels 1-2 rest on real evidence rather than empty affirmation.
 
 ---
 
@@ -37,7 +43,7 @@ The app works at levels 1-2, not just level 4. Peter narrates identity arcs ("Yo
 | # | Modality | Core Idea | Primary Use in Sparq | Features It Powers |
 |---|---|---|---|---|
 | 1 | **Gottman Method** | Sound Relationship House; repair attempts predict success more than conflict frequency | Repair science, bid recognition, 5:1 ratio | Conflict First Aid, Repair Window, Weekly Mirror |
-| 2 | **EFT** | Couples change when they name their negative cycle as the enemy — not each other | Cycle mapping, attachment bonding, emotional accessibility | Partner Synthesis, Couple's Cycle Map, evening chat |
+| 2 | **EFT** | Couples change when they name their negative cycle as the enemy — not each other | Cycle mapping, attachment bonding, emotional accessibility | Interaction cycles in `/us` (both confirm), evening chat |
 | 3 | **ACT** | Values-based action is more durable than symptom-reduction action | Values anchoring, psychological flexibility, defusion | Values Clarification, Daily Loop micro-actions |
 | 4 | **CBT** | Thought-Feeling-Behavior Triangle; identify distortions, change patterns | Cognitive restructuring, distortion identification | Morning stories (reframing), Translator |
 | 5 | **IFS** | Self-Leadership; understand reactive "parts" without being controlled by them | Parts awareness, unblending from reactivity | Evening reflection, Conflict First Aid |
@@ -47,9 +53,14 @@ The app works at levels 1-2, not just level 4. Peter narrates identity arcs ("Yo
 | 9 | **Mindfulness** | Present-moment awareness; non-judgmental observation | Emotional regulation, mindful listening | Somatic phase in Conflict First Aid, daily actions |
 | 10 | **NVC** | Observation → Feelings → Needs → Requests | Communication skill building | Translator, Communication skill track |
 | 11 | **Somatic Approaches** | Body awareness; nervous system regulation (window of tolerance) | Grounding, co-regulation, trauma-informed pacing | Conflict First Aid somatic phase, breathing exercises |
-| 12 | **Ethical Influence** | Self-persuasion, commitment to the user's own choices, unity, freely chosen generosity (constitution v1.1 §5A) | Follow-through on self-chosen goals | Experiments + the user's own reasons, forgiving streaks, grounded normalization |
+| 12 | **Ethical Influence** *(supplementary layer, not a lens for understanding — constitution §1B)* | Self-persuasion, commitment to the user's own choices, unity, freely chosen generosity; process influence at any stage, destination influence only toward what the user chose (constitution v1.2 §5A) | Follow-through on self-chosen goals; whole-app design and priming (§5C) | Experiments/missions + the user's own reasons (Deep Why), forgiving streaks, grounded normalization |
 
-> **Deep reference**: `references/modalities-therapeutic.md` (modalities 1-6), `references/modalities-applied.md` (modalities 7-12)
+| 13 | **DBT-informed skills** *(approved 2026-10-01)* | Acceptance **and** change; teachable skills: wise mind, distress tolerance, emotion regulation, interpersonal effectiveness | Getting through flooded moments; clear asks; opposite action | Stabilization / Conflict First Aid, missions, environment basics |
+| 14 | **Transactional Analysis** *(approved 2026-10-01)* | Ego states, crossed transactions, games, Drama → Winner's Triangle — a descriptive lens, limited trial evidence | Seeing interaction patterns without blame | Interaction cycles, reflection questions ("which part of you was talking?"), missions |
+
+> **Still not used:** Polyvagal theory as a named basis (removed 2026-06 — somatic regulation is anchored in HRV research); "NLP" as a label (retired 2026-06 — techniques live on under validated construct names). Constitution §1B.
+
+> **Deep reference**: `references/modalities-therapeutic.md` (modalities 1-6, plus DBT and TA in §7–8), `references/modalities-applied.md` (modalities 7-12)
 
 ---
 
@@ -71,12 +82,12 @@ Additionally tracked but not a formal dimension:
 
 ### Progressive Discovery (NOT an Upfront Questionnaire)
 
-Assessment is **woven into daily content** — users don't realize they're being assessed. This is more accurate than self-report questionnaires because it's based on real responses to real exercises. Whatever is learned stays a hypothesis: when a trait is surfaced to the user, it is offered tentatively and they can correct it — never presented as a label or diagnosis (constitution §2).
+Assessment is **woven into daily content** rather than front-loaded as a questionnaire — it is more accurate because it's based on real responses to real exercises. It is not hidden: the user can see Peter's guesses on their Insight Profile, and Peter explains honestly if asked why (constitution §5A, transparency). Whatever is learned stays a hypothesis: when a trait is surfaced to the user, it is offered tentatively and they can correct it — never presented as a label or diagnosis (constitution §2).
 
 - **Day 1**: Name, solo/partner, what brings you here, daily time preference, identity archetype selection
 - **Days 2-14**: Assessment questions embedded naturally in daily exercises. Each day's content is selected partly to reveal a personality dimension.
 - **By Day 14**: Full personality profile built from actual answers and behaviors
-- **Day 14**: Profile reveal — a major milestone and retention moment ("Here's what I've learned about you")
+- **Day 14**: Profile reveal — a major milestone ("Here are some guesses about you — you're the judge"); only user-confirmed traits are stated, everything else is offered as a guess (constitution §2, INFLUENCE_AUDIT B2)
 - **Ongoing**: Traits continue to refine with each session. Re-assessed quarterly or after significant life events.
 
 ### Identity Archetypes
@@ -90,7 +101,7 @@ Users select an archetype during onboarding that affects content framing, celebr
 | **Growth Seeker** | Challenge, achievement | "You're someone who pushes for better..." |
 | **Connection Builder** | Togetherness, bonding | "Your drive to bring people closer..." |
 
-Archetypes work **WITH** attachment style, not instead of it. Archetype affects framing and celebration language; attachment style affects content depth, wording, and safety scaffolding.
+The archetype is the user's own pick and can be changed anytime; once they write their own identity statement or North Star, their words take priority over the archetype's framing. Archetypes work **WITH** attachment style, not instead of it. Archetype affects framing and celebration language; attachment style affects content depth, wording, and safety scaffolding.
 
 ### Confidence System
 
@@ -136,7 +147,7 @@ Archetypes work **WITH** attachment style, not instead of it. Archetype affects 
 
 ### Notification Personalization by Attachment Style
 
-| Style | Frequency | Tone | Example |
+| Style | Suggested default frequency (the user sets the real one) | Tone | Example |
 |---|---|---|---|
 | **Anxious** | More frequent, predictable timing | Warm, reassuring, "I'm here" | "Your daily growth moment is ready whenever you are" *(never claim Peter thinks about or misses them)* |
 | **Avoidant** | Less frequent, user-controlled | Respectful, non-intrusive, choice-emphasizing | "New practice available when you're ready" |
@@ -145,7 +156,7 @@ Archetypes work **WITH** attachment style, not instead of it. Archetype affects 
 
 ### The Transparent Growth Principle
 
-*(Replaces the former "Covert Growth Principle" — constitution v1.1: discovery before direction, agency before influence. If a technique would stop working once the user understood it, it isn't used.)*
+*(Replaces the former "Covert Growth Principle" — constitution v1.2: Sparq leads the path, the user chooses the destination; process influence any time, direction influence only toward what the user explicitly chose. If a technique would stop working once the user understood it, it isn't used.)*
 
 Sparq helps users change **by helping them see themselves clearly and choose for themselves** — not by changing them without their noticing:
 
@@ -172,13 +183,13 @@ Sparq helps users change **by helping them see themselves clearly and choose for
 
 ### The Daily Cycle: Learn → Implement → Reflect
 
-Every day follows this pedagogical structure (rewrites the subconscious through practice, not just knowledge):
+Every day follows this pedagogical structure (change through practice in real life, not just knowledge):
 
 1. **Learn** (Morning — 2 min): Discovery question or psycho-educational content from the day's modality. Story-based, not lecture-based.
-2. **Implement** (During the day — 2 min): Micro-action or exercise to practice in real life. Always specific and doable.
-3. **Reflect** (Evening — 3 min): How did it go? What did you notice? Peter facilitates processing.
+2. **Implement** (During the day — 2 min): Micro-action or exercise to practice in real life — a small Real-World Mission. Always specific and doable, offered as an invitation the user can reshape, ideally tied to a cue ("when X, I'll try Y") and to their own reason. Difficulty grows as it gets easy; it shrinks after a setback (constitution §11A).
+3. **Reflect** (Evening — 3 min): How did it go? What did you notice? What got in the way? Peter facilitates processing — learning and adapting, never grading.
 
-This maps to the Change Chain: Learn = Insight, Implement = New Behavior in a Real Moment, Reflect = Emotional Processing → Updated Self-Story.
+This maps to the Change Chain and the Transformation Engine: Learn = Insight (+ Meaning), Implement = a Real-World Mission with a cue, Reflect = Reflection → Learning → Adaptation. When a practice becomes easy, offer the next level (adaptive difficulty); when a day goes badly, treat it as data, never failure (constitution §1A).
 
 ### Modality Sequencing (Days 1-14+)
 
@@ -187,7 +198,7 @@ This maps to the Change Chain: Learn = Insight, Implement = New Behavior in a Re
 | 1-3 | **Positive Psychology** | Warm, approachable, non-threatening entry. Builds rapport and positive framing before deeper work. |
 | 4-7 | **Attachment Theory + Gottman** | The deeper hook — "aha moment" territory. Users discover their patterns. |
 | 8-14 | **Rotating all modalities** | Selected based on user profile and responses. AI-driven personalization begins. |
-| 14 | **Profile reveal** | Personality profile presented — major milestone and retention moment. |
+| 14 | **Growth reveal** | Evidence of change + guesses offered as maybes; the user interprets. First milestone (rite of passage, not a retention device). |
 | 15+ | **AI-driven selection** | Based on full profile, recent responses, growth areas, and skill tree track. |
 
 Question format also progresses: **Multiple choice heavy** in Days 1-7, **mixed** Days 8-14, **open-ended heavy** Day 15+.
@@ -260,7 +271,7 @@ Every piece of generated content must include (in metadata or system prompt):
 
 ### Privacy & Data
 - Sensitive response data is **encrypted** and never used for model training
-- Partner reflections are **never shared** — only AI-synthesized blends
+- Partner reflections are **never shared** — not even as AI-synthesized blends (automatic partner synthesis was removed; see `docs/RELATIONSHIP_MODEL.md`). Only what a partner explicitly shares reaches the "Us" space
 - Trait inferences are **private** — partner never sees the other's trait labels
 - Users control their own data: memory window, visibility toggle, deletion rights
 - **Conflict First Aid is ALWAYS free** — safety features are never paywalled

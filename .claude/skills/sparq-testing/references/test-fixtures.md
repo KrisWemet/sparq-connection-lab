@@ -284,15 +284,12 @@ export const TRAIT_ANALYSIS_RESULT = {
   confidence: 0.72,
 };
 
-export const PARTNER_SYNTHESIS = {
-  synthesis: "Both of you reflected on presence today. You noticed how silence can feel connecting, and your partner noticed how small gestures speak louder than words. There's a beautiful overlap: you're both learning that love doesn't always need words.",
-};
-
 export const GRADUATION_REPORT = {
-  what_i_learned: 'You discovered that your need for reassurance is actually a strength — it shows how deeply you care.',
-  biggest_growth: 'You went from shutting down during conflict to pausing and naming your feelings before responding.',
-  relationship_superpower: 'Deep empathy — you naturally tune into your partner\'s emotional state.',
-  focus_next: 'Building on your conflict repair skills through the Communication track.',
+  // Guesses tied to what the user said, ending in questions — never declarations (constitution §2, §1A)
+  what_i_learned: 'You mentioned a few times that hearing "we\'re okay" helps you settle. Does that fit?',
+  biggest_growth: 'Early on you said you shut down in arguments. Twice this week you paused and named a feeling first. What do you make of that?',
+  relationship_superpower: 'A guess, and you\'re the judge: you seem to notice quickly how your partner is feeling.',
+  focus_next: 'What would you like to keep practicing next?',
   recommended_track: 'communication',
 };
 ```

@@ -22,8 +22,8 @@ Sparq uses **Supabase** (PostgreSQL) with RLS on every table. The schema is defi
 │  PARTNERSHIPS                                                       │
 │  profiles.partner_id ←→ profiles    (bidirectional link)            │
 │  partner_invitations                (7-day expiring invite codes)    │
-│  partner_syntheses                  (shared AI reflections)          │
-│  vulnerability_escrow               (mutual-unlock deep prompts)    │
+│  couple_spaces → shared_items       (only what a partner shared)    │
+│  interaction_cycles                 (named cycles; both confirm)    │
 │                                                                     │
 │  DAILY LOOP                                                         │
 │  daily_sessions                     (1 per user per day, 4-phase)   │
@@ -39,7 +39,8 @@ Sparq uses **Supabase** (PostgreSQL) with RLS on every table. The schema is defi
 │  user_skill_tracks (aggregate XP per track, level-up via RPC)       │
 │                                                                     │
 │  AI & INSIGHTS                                                      │
-│  memories          (pgvector embeddings for Mem0 semantic search)   │
+│  memories          (pgvector, distilled, kind + importance)         │
+│  self_discoveries · experiments · user_reasons · rejected_hypotheses│
 │  weekly_insights   (cached weekly analysis: patterns, growth edge)  │
 │  graduation_reports (Day 14 personalized report)                    │
 │  profile_traits    (attachment, conflict, love language inferences)  │
@@ -65,8 +66,7 @@ Sparq uses **Supabase** (PostgreSQL) with RLS on every table. The schema is defi
 - `daily_sessions` unique on `(user_id, session_local_date)` — one session per user per day
 - `journey_responses` unique on `(user_id, question_id)` — one answer per question
 - `user_skill_tracks` primary key `(user_id, track_key)` — one row per user per track
-- `partner_syntheses` unique on `(user_a_id, user_b_id, day_index)` — one synthesis per couple per day
-- `vulnerability_escrow` unique on `(couple_id, prompt_id, user_id)` — one response per user per prompt
+- Deprecated tables (no code uses them; never read or write them): `partner_syntheses`, `vulnerability_escrow`, `personality_signals`, `personality_profiles`, `mirror_narratives`, `memory_storage`, `conversation_memories`, `if_then_checkins` — see `docs/PERSON_MODEL.md` §1
 
 ### Custom Enums
 
@@ -136,8 +136,8 @@ No database trigger — profiles are created client-side during registration in 
 | Pattern | SQL Shape | Used By |
 |---|---|---|
 | **User-scoped** | `auth.uid() = user_id` | Most tables (daily_sessions, user_journeys, goals, etc.) |
-| **Partner-visible** | `auth.uid() IN (user_a_id, user_b_id)` | partner_syntheses, vulnerability_escrow |
-| **Profile + partner** | Own profile + partner via subquery | profiles |
+| **Couple-shared** | member of the `couple_spaces` row; insert/delete only by `author_id = auth.uid()` | shared_items, interaction_cycles (see `docs/RELATIONSHIP_MODEL.md`) |
+| **Profile + partner** | Own profile + partner's *profile row* via subquery — never the partner's traits, memories, reflections or any Person Model data (constitution §8) | profiles |
 | **Admin override** | `public.is_admin(auth.uid())` | profiles, user_roles, partner_invitations, user_entitlements |
 | **Public read** | `FOR SELECT USING (true)` | journeys, journey_questions, daily_questions, date_ideas |
 
@@ -157,7 +157,7 @@ Located in `supabase/functions/`. Each has its own directory with `index.ts`.
 
 | Function | Purpose | Trigger |
 |---|---|---|
-| `memory-operations` | Mem0 CRUD (get, set, delete, search, batchGet, clear) | API call |
+| `memory-operations` | Legacy memory CRUD on the deprecated `conversation_memories` table — don't build on it; memory is `src/lib/server/memory.ts` | API call |
 | `send-partner-invite` | Send invite email via SendGrid | Partner invite UI |
 | `generate-daily-insight` | Generate daily relationship insight | Scheduled / API |
 | `send-tonight-action` | Send evening action reminders | Scheduled |
@@ -180,46 +180,11 @@ Located in `supabase/functions/`. Each has its own directory with `index.ts`.
 
 ## Realtime Subscriptions
 
-Realtime is used for partner synchronization. Implementation in `src/hooks/useRealtimeSync.ts`.
+**Not used today** — there is no realtime code in `src/`. If realtime is added:
 
-### Presence (Partner Online Status)
-```tsx
-const channel = supabase.channel(`presence:${partnerId}`)
-  .on('presence', { event: 'sync' }, () => {
-    const state = channel.presenceState();
-    setPartnerIsOnline(Object.keys(state).length > 0);
-  })
-  .subscribe();
-```
-
-### Postgres Changes (Partner Progress)
-```tsx
-supabase.channel('journey_progress')
-  .on('postgres_changes', {
-    event: '*',
-    schema: 'public',
-    table: 'user_journey_progress',
-    filter: `user_id=eq.${partnerId}&journey_id=eq.${journeyId}`
-  }, (payload) => {
-    setPartnerProgress(payload.new);
-  })
-  .subscribe();
-```
-
-### Tables with Realtime Subscriptions
-- `user_journey_progress` — partner journey progress updates
-- `activity_responses` — partner activity completion signals
-- `partner_invitations` — invitation status changes
-
-### Cleanup
-Always unsubscribe on component unmount:
-```tsx
-useEffect(() => {
-  const channel = supabase.channel('...');
-  // ... setup ...
-  return () => { supabase.removeChannel(channel); };
-}, []);
-```
+- Subscribe only to data both partners are entitled to see: `shared_items`, `interaction_cycles`, `partner_invitations` status.
+- **Never** subscribe to a partner's private activity — presence/online status, daily-session completion, journey or skill progress, reflections, traits or memories. Those are private Person Model data (constitution §8); a partner learns about them only if the owner explicitly shares.
+- Always remove the channel on unmount (`supabase.removeChannel(channel)`).
 
 ---
 
@@ -465,10 +430,8 @@ await supabase.from("daily_sessions").upsert(data, { onConflict: "user_id,sessio
 | Server auth middleware | `src/lib/server/supabase-auth.ts` |
 | Analytics helper | `src/lib/server/analytics.ts` |
 | Entitlements resolver | `src/lib/server/entitlements.ts` |
-| Memory (Mem0 stub) | `src/lib/server/memory.ts` |
+| Memory (pgvector) | `src/lib/server/memory.ts` |
 | Profile analysis | `src/lib/server/profile-analysis.ts` |
-| Partner synthesis | `src/lib/server/partner-synthesis.ts` |
-| Realtime hook | `src/hooks/useRealtimeSync.ts` |
 | Edge Functions | `supabase/functions/` |
 
 ---

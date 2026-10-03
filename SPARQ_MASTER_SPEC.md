@@ -1,5 +1,5 @@
 # Sparq Connection — Master Specification
-### The Complete Source of Truth for Building This App
+### Product, Repo and Roadmap Reference
 
 > "Stronger individuals create stronger relationships. Stronger relationships create stronger families. Stronger families create stronger communities."
 
@@ -7,7 +7,7 @@
 **Last Updated:** 2026-03-06
 **Last Repo Audit:** 2026-03-06
 **Evidence Basis:** Repo-first (`src/`, `supabase/`, `package.json`, `vercel.json`)
-**Status:** Living document — authoritative source of truth for product behavior, current repo state, and planned work
+**Status:** Living reference for product behavior, repo state and planned work. **Precedence:** `docs/CONSTITUTION.md` (v1.2) governs everything it covers — product philosophy, Peter's behavior, influence, the Person Model, memory and privacy — and wins over this file. Where this file and the constitution disagree, the constitution is right and this file should be corrected.
 
 ## Document Contract
 
@@ -82,7 +82,7 @@ Sparq helps you become a steadier, more connected partner through small daily ac
 
 **1. Individual first.** We coach the user's own behavior and mindset. We never attempt to fix their partner or take sides in a conflict.
 
-**2. Relationally adaptive.** Guidance changes based on attachment cues, conflict style, love language, and emotional state — silently inferred over time.
+**2. Relationally adaptive.** Guidance changes based on attachment cues, conflict style, love language, and emotional state — learned over time as hypotheses the user can always see and correct (constitution §2–3).
 
 **3. Non-clinical voice.** Warm, simple, emotionally safe, approximately 4th-grade reading level. No diagnostic language ever.
 
@@ -90,7 +90,7 @@ Sparq helps you become a steadier, more connected partner through small daily ac
 
 **5. Safety by design.** Crisis risk is detected and routed to human professional support. This is non-negotiable and always available regardless of subscription tier.
 
-**6. Identity-level change.** The goal is not behavior change (fragile) but identity shift ("I am becoming someone who..."). Every design decision should serve this deeper mechanism.
+**6. Identity-level change.** The goal is not behavior change alone (fragile) but identity shift — an identity the user authors, grounded in evidence from their own repeated actions. Sparq never assigns an identity (constitution §1A).
 
 **7. The couple as a system.** Both partners are trapped in patterns together — not enemies. When we help them name the pattern ("the cycle"), not each other, everything shifts.
 
@@ -108,7 +108,7 @@ Permanent internal change requires this full chain — the app must support ever
 Insight → Emotional Processing → New Behavior in a Real Moment → Different Outcome → Updated Self-Story
 ```
 
-Most relationship apps stop at Insight. Sparq is architected to close the whole chain.
+Most relationship apps stop at Insight. Sparq is architected to close the whole chain. The canonical, fuller model is the constitution's **Transformation Engine** (§1A: Insight → Meaning → Choice → Micro-action → Cue → Real-world practice → Reflection → Learning → Adaptation → Repetition → Identity evidence → Contribution); this chain is its short form.
 
 ### 3.2 Levels of Change (deepest to most fragile)
 
@@ -135,7 +135,7 @@ The app must work at levels 1-2, not just level 4.
 **Narrative Therapy**
 - People change when they change the story they tell about themselves
 - Not "I'm avoidant" (fixed label) but "I used to pull away, and I'm learning to stay" (arc)
-- Peter must narrate the user's growth arc, not just their current state
+- Peter points to evidence of the user's growth arc and lets the user say what it means ("You used to pull away. This week you stayed three times. What do you make of that?")
 
 **Neuroscience of Habit and Identity**
 - Every action is a "vote" for the identity you're becoming (James Clear)
@@ -143,7 +143,7 @@ The app must work at levels 1-2, not just level 4.
 - Spaced repetition (revisiting skills at increasing intervals) prevents regression
 
 **Repair Science (Gottman)**
-- The #1 predictor of long-term relationship health is not conflict frequency — it's repair speed and quality
+- In Gottman's research, how well couples repair after conflict matters more for long-term health than how often they fight (one lens, not a law for every couple)
 - Successful repair after conflict is more important than avoiding conflict
 - Tracking repair attempts and speed is the primary behavioral outcome metric
 
@@ -167,7 +167,7 @@ The app must work at levels 1-2, not just level 4.
 | Backend/DB | Supabase (PostgreSQL, Auth, Realtime, Edge Functions) | Canonical client: `src/lib/supabase.ts` |
 | AI — Coach | OpenRouter (Claude Haiku 4.5 primary, fallbacks) | `src/lib/openrouter.ts` |
 | AI — Analysis | OpenAI GPT-4o-mini | Used for trait analysis, moderations |
-| AI — Memory | Mem0 OSS (Supabase vector store) | `src/lib/server/memory.ts` |
+| AI — Memory | Supabase pgvector (no Mem0 SDK) | `src/lib/server/memory.ts` |
 | Animation | Framer Motion | Standard variants in `AnimatedContainer` |
 | State | React Context (Auth, Subscription) + TanStack React Query v5 | |
 | Icons | Lucide React | |
@@ -234,7 +234,7 @@ sparq-connection-lab/
 │   │   │   ├── daily/session/
 │   │   │   │   ├── start.ts            # Create/resume daily session
 │   │   │   │   ├── morning-viewed.ts   # Mark morning story as viewed
-│   │   │   │   └── complete.ts         # Complete session (triggers trait analysis + partner synthesis)
+│   │   │   │   └── complete.ts         # Complete session (triggers trait analysis + distilled memories)
 │   │   │   ├── me/
 │   │   │   │   ├── assessment.ts       # Relationship assessment submission/fetch
 │   │   │   │   ├── patterns.ts         # Weekly Mirror — pattern insights API
@@ -260,7 +260,6 @@ sparq-connection-lab/
 │   │   ├── dashboard/
 │   │   │   ├── RelationshipScoreCard.tsx     # Relationship OS Score card
 │   │   │   ├── WeeklyMirrorCard.tsx          # Weekly pattern insights (new)
-│   │   │   ├── PartnerSynthesisCard.tsx      # Shared partner reflection (new)
 │   │   │   ├── DailyConnectCard.tsx
 │   │   │   ├── DateIdeasCard.tsx
 │   │   │   └── PartnerConnectionCard.tsx
@@ -291,9 +290,8 @@ sparq-connection-lab/
 │   │   └── server/
 │   │       ├── supabase-auth.ts        # getAuthedContext() — use in all API routes
 │   │       ├── analytics.ts            # trackEvent() server helper
-│   │       ├── memory.ts               # Mem0 OSS: addMemory(), searchMemories(), getRecentMemories()
+│   │       ├── memory.ts               # pgvector memory: addMemory(), searchMemories(), getRecentMemories()
 │   │       ├── profile-analysis.ts     # analyzeProfileTraits() — fire-and-forget trait inference
-│   │       ├── partner-synthesis.ts    # generatePartnerSynthesis() — EFT couple reflection (new)
 │   │       ├── entitlements.ts         # resolveEntitlements() — subscription tier checks
 │   │       └── date-utils.ts           # parseLocalDate()
 │   │
@@ -329,7 +327,7 @@ sparq-connection-lab/
 │   │   ├── 20260302113000_align_daily_sessions_with_api.sql
 │   │   ├── 20260302120000_create_missing_tables.sql
 │   │   ├── 20260303000000_create_weekly_insights.sql      # Pattern Mirror
-│   │   ├── 20260303000001_create_partner_syntheses.sql    # Partner Reflection Loop
+│   │   ├── 20260303000001_create_partner_syntheses.sql    # Partner Reflection Loop (table deprecated, unused)
 │   │   └── 20260303000002_create_graduation_reports.sql   # Day 14 Report
 │   └── functions/
 │       ├── memory-operations/           # Edge function: Mem0 memory CRUD
@@ -339,7 +337,7 @@ sparq-connection-lab/
 ├── public/
 │   └── Path to Together/               # Educational markdown content
 ├── CLAUDE.md                           # AI agent instructions (dev context)
-├── SPARQ_MASTER_SPEC.md               # This file — master source of truth
+├── SPARQ_MASTER_SPEC.md               # This file — product/repo/roadmap reference (beneath docs/CONSTITUTION.md)
 └── vercel.json                         # Vercel config (framework: nextjs)
 ```
 
@@ -489,7 +487,7 @@ partner_invitations (
   created_at timestamptz DEFAULT now()
 )
 
--- Synthesized reflections when both partners complete the same day
+-- DEPRECATED, unused: automatic partner synthesis was removed (constitution §8)
 partner_syntheses (
   id uuid PRIMARY KEY,
   user_a_id uuid REFERENCES auth.users(id),   -- always min(id1, id2) for idempotency
@@ -660,7 +658,7 @@ Repo-first note: this section documents the current checked-in HTTP surface. It 
 |--------|-------|-------------|
 | POST | `/api/daily/session/start` | Create or resume today's session |
 | POST | `/api/daily/session/morning-viewed` | Mark morning story as read |
-| POST | `/api/daily/session/complete` | Complete session (triggers trait analysis + partner synthesis) |
+| POST | `/api/daily/session/complete` | Complete session (triggers trait analysis + distilled memories) |
 
 ### Peter AI Coach
 
@@ -699,7 +697,7 @@ Repo-first note: this section documents the current checked-in HTTP surface. It 
 |--------|-------|-------------|
 | POST | `/api/date-ideas/generate` | Generate AI-powered date ideas |
 | POST | `/api/journeys/start` | Start or resume a journey with free/premium enforcement |
-| POST | `/api/translator` | Rephrase message for partner's communication style |
+| POST | `/api/translator` | Rephrase the user's message, using only context the user typed |
 | GET | `/api/admin/kpis` | Admin KPI dashboard (admin-only) |
 
 ### Partner System
@@ -736,7 +734,7 @@ There is currently **no standalone `/api/partner/*` HTTP surface** in the checke
 - Peter responds using full personalization (traits + vector memories + evening context)
 - `eveningContext: { day, morningAction, turnNumber }` appended to personalized system prompt
 - After 2+ turns, user can mark day complete
-- Completion triggers: trait analysis (fire-and-forget) + partner synthesis if partner completed same day
+- Completion triggers: trait analysis and distilled memories (fire-and-forget). Nothing is generated for the partner (constitution §8)
 
 **Day Advancement Logic:**
 - `user_insights.onboarding_day` = next day cursor
@@ -753,7 +751,7 @@ See full spec in [Section 9](#9-peter-the-otter--full-ai-behavior-spec).
 
 ### 8.3 Living Profile System
 
-**How traits are inferred (silent — no quizzes):**
+**How traits are inferred (quietly — no quizzes; every guess is a hypothesis the user can see and correct on their Insight Profile):**
 1. User completes evening reflection
 2. `complete.ts` fires `analyzeProfileTraits()` asynchronously
 3. GPT-4o-mini reads the reflection + Peter response
@@ -803,26 +801,9 @@ See full spec in [Section 9](#9-peter-the-otter--full-ai-behavior-spec).
 
 ---
 
-### 8.5 Partner Synthesis (Couple Reflection Loop)
+### 8.5 "Us" — the shared space (replaces Partner Synthesis)
 
-**Purpose:** When both partners complete the same day, synthesize their reflections using EFT framing. This is the moment they see the relationship as a shared experience, not two parallel ones.
-
-**How it works:**
-1. Session complete → `complete.ts` checks partner's `partner_id`
-2. Fetch partner's `daily_sessions` row for same `day_index`
-3. If partner completed: call `generatePartnerSynthesis()`
-4. Canonical UUID ordering (min → user_a_id) ensures unique constraint is idempotent
-5. GPT generates synthesis with "you both" framing, never revealing who said what
-6. Privacy note always shown: "Peter isn't sharing what either of you said word for word."
-
-**Synthesis prompt rules:**
-- "You both" framing throughout
-- Highlight genuine commonality (even if described differently)
-- Name one gentle difference — warmly, not as criticism
-- Never identify who said which reflection
-- Warm, not clinical
-
-**`PartnerSynthesisCard`:** Soft purple card, renders only when synthesis exists, shown on Dashboard when `partnerName` is truthy.
+Automatic partner synthesis was removed (2026-09): it blended both partners' private reflections into shared text without either partner choosing to share, which violates constitution §8. The couple experience is now explicit and authored — `SharePrompt` ("keep it private, or help me put it into words"), the `/us` page (shared items + interaction cycles both partners confirm) and the Shared Peter question built only from shared items. Spec: `docs/RELATIONSHIP_MODEL.md`.
 
 ---
 
@@ -944,7 +925,7 @@ Hendrick Relationship Assessment Scale — standardized pre/post measurement.
 
 ### 8.13 Translator (`/translator`)
 
-Rephrase a message the user is about to send, optimized for their partner's communication style. Uses partner's love language and conflict style from traits.
+Rephrase a message the user is about to send, using only what the user types about their partner (`partnerContext`) — never the partner's private traits (constitution §8).
 
 ---
 
@@ -965,11 +946,13 @@ AI-generated date suggestions based on location preferences and relationship sta
 
 ---
 
-## 9. Peter the Otter — Full AI Behavior Spec
+## 9. Peter the Otter — Voice & Personalization
+
+> The binding rules for how Peter thinks and behaves — leading the path while the user chooses the destination, conversation modes, permission before interpretation, resistance, influence, setbacks and timing — are in `docs/CONSTITUTION.md` §5, §5A, §6, §6A and in `PETER_SHARED_RULES` (`src/lib/peterService.ts`). This section covers his voice and the personalization plumbing.
 
 ### Core Identity
 
-Peter is a warm, friendly otter who helps people build stronger relationships. He is NOT a therapist, counselor, or coach in the clinical sense. He is a knowledgeable friend who cares deeply and has seen a lot.
+Peter is a warm, friendly otter who helps people build stronger relationships. He is NOT a therapist, counselor, or coach in the clinical sense. He is a knowledgeable, warm guide — and he never claims human feelings, never says he misses or needs the user.
 
 ### Personality Rules
 
@@ -1028,8 +1011,8 @@ Added on top of layers 1+2:
 | Distress / shame / hopelessness language | Reassurance first — comfort, then comfort again |
 | Post-conflict or flooding indicators | De-escalation — slower pace, no growth-pushing |
 | Stable + repeated avoidable mistake | Gentle accountability — direct, action-oriented |
-| Heavy blame with low self-ownership | Ownership redirect — what can YOU do? |
-| Consistent completion streaks | Increase challenge depth — celebrate momentum |
+| Heavy blame with low self-ownership | Listen first; then invite agency with curiosity — "What part of this is yours to steer?" — once, and drop it if they push back |
+| Practice has become easy (evidence, not just a streak) | Offer the next level; the user chooses (adaptive difficulty) |
 
 ### Crisis Protocol
 
@@ -1041,14 +1024,15 @@ When `detectCrisisIntent()` triggers (self-harm, DV, child harm, stalking, acute
 5. "Please reach out to a real human right now"
 6. All subsequent normal coaching suspended for that session
 
-### Identity Arc Language (Critical)
+### Identity Language (Critical)
 
-Peter should narrate users' **growth arc**, not just their current state. When the system has data across multiple sessions, Peter references the delta:
+Peter points to the **evidence** of a growth arc and hands the meaning back; he never declares who the user is becoming (constitution §1A, identity change).
 
-**Wrong:** "You tend to step back when things get heated."
-**Right:** "You used to pull away every time. I've watched you stay present three times this week. That's who you're becoming."
+**Wrong:** "You tend to step back when things get heated." (an inference stated as fact)
+**Also wrong:** "I've watched you stay present three times this week. That's who you're becoming." (assigns identity, claims Peter watched)
+**Right:** "You used to pull away when things got heated. This week you stayed three times. Does that change how you see yourself?"
 
-This is the identity-level intervention. It should be woven into weekly mirrors, Day 14 reports, and evening responses when there's historical data to draw from.
+"You're becoming someone who…" is used only for an identity the user named themselves. Use this in weekly mirrors, the Day-14 reveal and evening responses when there is real historical evidence.
 
 ---
 
@@ -1096,7 +1080,7 @@ Always available regardless of subscription tier. This is a safety feature, not 
 - Relationship mode (solo/partnered)
 - Timezone + notification preferences
 
-**Inferred silently over time:**
+**Learned quietly over time (hypotheses, visible and correctable on the Insight Profile):**
 - Attachment tendency (anxious/avoidant/disorganized/secure)
 - Conflict style (avoidant/volatile/validating)
 - Love language (words/acts/gifts/time/touch)
@@ -1148,13 +1132,13 @@ After each evening session completion:
 - Journals and reflections are **private by default**
 - No partner access to the other's Peter conversations
 - Profile trait labels hidden from partner
-- Partner synthesis: never reveals exact words — only synthesized blend
-- `partner_syntheses` RLS: SELECT only where `auth.uid() = user_a_id OR auth.uid() = user_b_id`
+- Nothing private reaches the partner — not even blended or summarized (constitution §8); the only path into shared space is an explicit share by its author
 
 ### What Partners Can See
-- That the other completed a day (completion signal)
-- Partner Synthesis card (when both complete same day)
+- What the other explicitly shared into `/us`, and interaction cycles both confirmed
 - Shared reflection prompts (opt-in per journey)
+- That the other completed a day — **only if they opted in** (Chris, 2026-10-02)
+- Daily answers — only those the author shared with the "Share with partner" button; never automatic
 - Partner's display name and avatar
 
 ---
@@ -1205,9 +1189,8 @@ Implementation snapshot as of 2026-03-06, based on checked-in repo state. This s
 - Daily Loop: Morning story generation, evening chat, session completion
 - Peter AI: Personalized chat (traits + memories), crisis detection, evening context
 - Profile trait inference (fire-and-forget after each session)
-- Vector memory (Mem0 OSS with Supabase vector store)
+- Vector memory (Supabase pgvector)
 - Weekly Mirror Card (patterns, growth edge, strength — cached weekly)
-- Partner Synthesis (EFT couple reflection when both complete same day)
 - Day 14 Personalized Graduation Report
 - Personalized Conflict First Aid (conflict style + love language guidance)
 - Relationship OS Score
@@ -1239,11 +1222,11 @@ Implementation snapshot as of 2026-03-06, based on checked-in repo state. This s
 - **Stripe integration** — cannot charge users without this
 - **Spaced repetition for skills** — skills decay without revisit cadence
 - **Pre-situation coaching** — highest-leverage feature gap (see Section 16)
-- **The Couple's Cycle Map** — core EFT intervention (see Section 16)
+- **Naming the couple's cycle** — core EFT intervention; partly shipped as `interaction_cycles` in `/us` (see Section 16)
 - **Repair Window flow** — post-conflict debriefing to encode learning
 - **Values clarification module** — intrinsic motivation anchor
-- **Forgiveness micro-journey** — addresses #1 blocker of relationship change
-- **Identity arc tracking** — delta between earliest traits and recent behavior
+- **Forgiveness micro-journey** — only for users who choose to work on a hurt; never presumes forgiveness as the goal (see Section 16)
+- **Identity evidence** — repeated actions consistent / inconsistent with the identity the user authored (constitution §1A)
 
 ---
 
@@ -1263,16 +1246,16 @@ Roadmap snapshot as of 2026-03-06. Items here are planned work, not shipped guar
 7. Activation metric: Day 3 completion + goal set → emit composite analytics event
 
 ### P2 — Psychological Depth (100x Effectiveness)
-8. **Couple's Cycle Map** — generate the couple's repeating pattern description using both partners' traits; show in Partner Synthesis and on Profile (see Section 16)
+8. **Couple's cycle** — help a couple name their repeating pattern together, from what each chose to share; confirmed by both in `/us` (see Section 16)
 9. **Pre-Situation Coaching** — free-text "anything coming up?" in evening chat, Peter responds with trait-based specific guidance for the upcoming situation
 10. **Repair Window Flow** — post-conflict dedicated screen: "How did the repair go?" → structured debrief → tracks repair speed over time
-11. **Values Clarification Module** — 5-question exercise at start of journey or Day 3; user's "why" stored and referenced by Peter in hard moments
-12. **Identity Arc Tracking** — store earliest trait snapshot; compute delta after 14 days; feed into Peter's language as "you used to... I've watched you..."
+11. **Values / Deep Why** — the user's "why", in their words, stored as revisable `user_reasons` and reconnected to in hard moments (constitution §1A)
+12. **Identity evidence** — tie growth moments to the identity the user authored; Peter asks what the evidence means (constitution §1A)
 
 ### P3 — Retention & Monetization Depth
 13. Spaced repetition for skill tree — revisit cadence (Day 21, 42, 84) for each completed skill
 14. Weekly summary notifications (email or push) with that week's Mirror Report
-15. Forgiveness micro-journey (3-5 day module addressing unresolved resentment)
+15. Forgiveness micro-journey (3-5 day module, chosen by the user, for working through a hurt)
 16. Behavioral specificity feedback in Weekly Mirror ("you made 4 repair attempts this week, up from 1 last week")
 
 ### P4 — Privacy & Compliance
@@ -1294,17 +1277,16 @@ Roadmap snapshot as of 2026-03-06. Items here are planned work, not shipped guar
 
 This section describes the features that will make Sparq transformatively effective at permanent internal change — not just engagement. These are rooted in EFT, ACT, narrative therapy, and repair science.
 
-### 16.1 The Couple's Cycle Map (Highest Priority)
+### 16.1 Naming the Couple's Cycle (Highest Priority)
 
 **What it does:** Names the couple's repeating argument pattern as a *shared system* — not as each other's fault. This is the single most powerful moment in EFT.
 
 **How to build:**
-- After both partners have 7+ days of data, GPT synthesizes their attachment + conflict style combination into a "cycle description"
-- Example output: "When conflict comes up, one of you tends to press in and the other tends to pull back — you've both probably felt this loop before. The moment you both call it 'the cycle' instead of calling it each other, it loses its grip."
-- Shown in: Partner Synthesis card, Profile page "Your Dynamic" section
-- Updated quarterly or when traits shift significantly
+- **Never built from either partner's private traits or reflections** (constitution §8). Each partner's private Peter may help them describe the loop *from their side*, and they choose whether to share it.
+- In `/us`, either partner can propose a cycle in plain words ("when one of us presses in, the other pulls back"); it becomes "ours" only when both confirm (`interaction_cycles`, already built).
+- Shared Peter may then ask the couple one question about it, using only what they shared.
 
-**Why it works:** Couples who can name their cycle without blame show dramatically faster repair and deeper empathy for each other's behavior.
+**Why it works:** In EFT, couples who can name their cycle as the shared problem — "you two vs. the loop" — tend to blame less and repair more. One lens, not a promise.
 
 ---
 
@@ -1344,29 +1326,25 @@ This section describes the features that will make Sparq transformatively effect
 - 5-question exercise at Day 3 or journey start
 - Questions: "What kind of partner do you want to be in 5 years?", "What does a great relationship feel like for you?", "Why does this matter to you at your core?"
 - Store as `user_values` (or in user_preferences JSONB)
-- Peter references the user's stated values in hard moments: "You said being a steady presence for your partner is what you want most. This moment is that."
+- Peter reconnects the user to their stated values in hard moments, without cornering them: "You said being a steady presence matters most to you. What would that look like right now?" — and "that's not true anymore" is respected (constitution §4, §5A).
 
 **Why it works:** ACT research: behavior change driven by personal values is more durable and requires less willpower than behavior change driven by rules or fear.
 
 ---
 
-### 16.5 Identity Arc Tracking
+### 16.5 Identity Evidence
 
-**What it does:** Peter narrates the user's growth arc — who they were vs. who they're becoming. This is the identity-level intervention that makes change feel real and worth continuing.
+**What it does:** Helps the user notice when repeated action may mean real change, and decide for themselves what it means (constitution §1A, identity change).
 
-**How to build:**
-- Store earliest trait snapshot (Day 3 or first confident inference) in a `trait_snapshots` table
-- After Day 14: compute delta between snapshot and current state
-- Feed delta into: Day 14 Graduation Report (already implemented), Weekly Mirror, evening responses
-- Peter language: "You used to pull away every time conflict came up. I've watched you stay present three times this week. That's who you're becoming."
+**How to build:** see `docs/PERSON_MODEL.md` §9 — identity evidence (consistent / inconsistent) linked to the user's own identity statement or North Star; growth moments stay written only by the growth engine; Peter asks "Does that change how you see yourself?" rather than declaring it.
 
-**Why it works:** Identity-level language ("I am becoming...") creates more durable change than behavioral language ("I did X"). James Clear: every action is a vote for the identity you're becoming.
+**Why it works:** Self-perception research (Bem) and identity-based habits (Clear) suggest repeated action shapes how people see themselves — strongest when the person draws the conclusion.
 
 ---
 
 ### 16.6 The Forgiveness Module
 
-**What it does:** Addresses the #1 silent blocker of relationship change — unresolved resentment. Without this, users hit a ceiling no matter how many tools they learn.
+**What it does:** Offers a gentle, optional path for a user who has chosen to work through a hurt they're carrying. Forgiveness is a major life outcome (constitution §5A): Sparq never presumes it, steers toward it, or treats not forgiving as failure. The user decides what "putting it down" means — it may or may not include forgiving, reconciling or staying.
 
 **How to build:**
 - 3-5 day micro-journey within the skill tree under "Trust & Security"
@@ -1374,10 +1352,10 @@ This section describes the features that will make Sparq transformatively effect
 - Day 2: Explore what the hurt means about your needs
 - Day 3: Separate the person from the action
 - Day 4: The internal release — "choosing to put this down" as a self-interested act, not a favor
-- Day 5: What you want the relationship to be from here
+- Day 5: What you want from here — for yourself and, if you choose, the relationship
 - Peter holds this space with exceptional gentleness — no fixing, only witnessing
 
-**Why it works:** Forgiveness is not about the other person — it's about releasing the user from the weight of carrying the hurt. It's the doorway to genuine change.
+**Why it may help:** For some people, setting down a hurt they've carried frees energy for change. For others, the right step is a boundary or distance. Peter helps the user find their own answer; safety concerns route to the safety path, never to forgiveness.
 
 ---
 
@@ -1545,4 +1523,4 @@ Used in graduation report `recommended_track` logic:
 
 ---
 
-*This document is the authoritative source of truth for Sparq Connection. Any agent building, modifying, or auditing this codebase should treat this document as the primary reference. When this document conflicts with any other file, this document takes precedence — except for actual running code, which represents the current implementation state.*
+*Precedence: `docs/CONSTITUTION.md` governs everything it covers and wins over this document. This file is the product/repo/roadmap reference beneath it; running code is the record of what is implemented today.*
