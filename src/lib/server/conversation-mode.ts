@@ -32,15 +32,15 @@ export type ModeDecision = {
   instruction: string | null;
 };
 
-// Timing intelligence (constitution v1.2 §1B): no capacity for growth right
+// Timing intelligence (constitution v1.2 §6B): no capacity for growth right
 // now. Checked before everything else — stabilizing beats any growth move.
 const DEPLETED =
-  /\b(can'?t (do|handle|deal with|take) (this|it|anything|any more|anymore)|too much( right now| tonight| today)?$|it'?s (all )?too much|falling apart|breaking down|(no|zero|barely any) sleep|haven'?t slept|can'?t (breathe|think straight|stop shaking)|completely overwhelmed|so overwhelmed|overwhelmed|i'?m done for (today|tonight)|running on empty)\b/i;
+  /\b(can'?t (do|handle|deal with|take) (this|it|anything|any more|anymore)|too much( right now| tonight| today)?$|it'?s (all )?too much|falling apart|breaking down|(no|zero|barely any) sleep|haven'?t slept|can'?t (breathe|think( straight)?|stop shaking)|i'?m (shaking|panicking)|panicking|so flooded|completely overwhelmed|so overwhelmed|overwhelmed|i'?m done for (today|tonight)|running on empty)\b/i;
 
-// Setbacks are data (constitution v1.2 §1A): they didn't follow through, or
+// Setbacks are data (constitution v1.2 §11A): they didn't follow through, or
 // an old pattern came back.
 const SETBACK =
-  /\b(i (totally |completely )?(blew it|messed (it )?up|screwed (it )?up|failed|slipped|fell back|caved)|didn'?t (do|try|get to) it|forgot (to|again|every day|all week)|back to square one|old (habit|pattern)s? (came|is|are) back|did(n'?t| not) (manage|follow through)|skipped it)\b/i;
+  /\b(i (totally |completely )?(blew it|messed (it )?up|screwed (it )?up|failed|slipped|fell back|caved|gave up|did it again)|didn'?t (do|try|get to) it|didn'?t get around to it|forgot (to|again|every day|all week)|back to square one|back to my old|my old habits?|slipped back|(straight|right) back into|old (habit|pattern)s? (came|is|are) back|did(n'?t| not) (manage|follow through)|skipped it)\b/i;
 
 // Follow up (constitution v1.2 §6): they're reporting on something they tried.
 const TRIED_IT =
@@ -87,7 +87,7 @@ export function classifyMoment(message: string): MomentSignal {
 const INSTRUCTIONS: Record<Exclude<MomentSignal, 'none'>, { mode: ConversationMode; line: string }> = {
   depleted: {
     mode: 'stabilize',
-    line: 'They have no room for growth right now. This is not the moment to push anything. Comfort them in a few plain words, offer at most one tiny optional grounding step (one slow breath, feet on the floor), and say nothing is due tonight. No questions about experiments, no lessons, no reframes, no new task, no pep talk.',
+    line: 'They have no room for growth right now. This is not the moment to push growth or anything else. Comfort them in a few plain words, offer at most one tiny optional grounding step (one slow breath, feet on the floor), and say nothing is due tonight. No questions about experiments, no lessons, no reframes, no new task, no pep talk.',
   },
   setback: {
     mode: 'follow_up',
@@ -115,7 +115,7 @@ const INSTRUCTIONS: Record<Exclude<MomentSignal, 'none'>, { mode: ConversationMo
   },
   heavy_feeling: {
     mode: 'listen',
-    line: 'They are carrying something heavy. Comfort first. Reflect the feeling in plain words. No advice, no reframing, and at most one gentle question.',
+    line: 'They are carrying something heavy. Comfort first. Reflect the feeling in plain words. No advice, no reframing, no lesson, challenge or task — this is not the moment to push growth. If they seem flooded, help them slow down (a slow breath, feet on the floor). At most one gentle question; calming down can be the whole goal.',
   },
   absolute_about_partner: {
     mode: 'challenge',

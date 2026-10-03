@@ -215,8 +215,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // North Star ladder night (spec §4): replace the normal evening context
     // entirely. The turn-3 forced close in the else-branch is thereby
     // suppressed; buildLadderPromptBlock enforces its own bounds and a
-    // turn-7 hard wrap, with processLadderTurn's turn-8 cap as the net.
-    // Timing intelligence (constitution v1.2 §1B): when the user is depleted,
+    // turn-11 hard wrap, with processLadderTurn's turn-12 cap as the net.
+    // Timing intelligence (constitution v1.2 §6B): when the user is depleted,
     // stabilizing beats any growth move — including a ladder night or a
     // "tell me more" nudge.
     const stabilizeNow = classifyMoment(latestUserMessage) === 'depleted';
@@ -310,7 +310,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     // North Star markers parse on RAW output before stripMarkdown (spec §4).
-    // turnNumber drives the deterministic turn-8 hard close — the ladder can
+    // turnNumber drives the deterministic turn-12 hard close — the ladder can
     // never stay open past it regardless of what the LLM emitted.
     let ladderActive = false;
     let preStripped = rawMessage;

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { buildAuthedHeaders } from '@/lib/api-auth';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
 import { SharePrompt } from '@/components/shared/SharePrompt';
+import { RiteOfPassage } from '@/components/shared/RiteOfPassage';
 import { TONE } from '@/lib/moment-tone';
 import { cn } from '@/lib/utils';
 
@@ -39,6 +40,8 @@ export function ThirtyDayMirrorCard({ compact = false }: { compact?: boolean }) 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [justSaved, setJustSaved] = useState(false);
+  const [arcMarked, setArcMarked] = useState(true);
+  const [showRite, setShowRite] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -46,6 +49,8 @@ export function ThirtyDayMirrorCard({ compact = false }: { compact?: boolean }) 
         const headers = await buildAuthedHeaders();
         const res = await fetch('/api/me/thirty-day-mirror', { headers });
         if (res.ok) setData(await res.json());
+        const arcs = await fetch('/api/me/growth-arc', { headers });
+        if (arcs.ok) setArcMarked(((await arcs.json()).arcs || []).includes('day_30'));
       } catch {
         // fail-soft: the card stays hidden
       }
@@ -144,6 +149,23 @@ export function ThirtyDayMirrorCard({ compact = false }: { compact?: boolean }) 
           <>
             <p className="text-sm text-brand-espresso leading-relaxed whitespace-pre-wrap">{data.conclusion}</p>
             {justSaved && <SharePrompt text={data.conclusion} />}
+            {/* Rite of passage (constitution v1.2 §11C) — optional, every line theirs. */}
+            {!arcMarked && !showRite && (
+              <button type="button" onClick={() => setShowRite(true)}
+                className="mt-3 rounded-full border border-brand-primary/30 px-5 py-2 text-sm font-semibold text-brand-primary hover:bg-brand-primary/5">
+                Mark this chapter
+              </button>
+            )}
+            {!arcMarked && showRite && (
+              <div className="mt-4">
+                <RiteOfPassage
+                  arcKey="day_30"
+                  intro="A few quiet lines to close this chapter. Skip any you like."
+                  fields={['used_to', 'changed', 'still_struggle', 'now_believe', 'carry_forward', 'ready_next', 'who_benefits']}
+                  onDone={() => setArcMarked(true)}
+                />
+              </div>
+            )}
           </>
         ) : (
           <>

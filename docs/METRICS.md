@@ -22,23 +22,23 @@ Events also logged to `analytics_events`: `mirror_reflected`, `experiment_create
 
 Fixed along the way: `/api/admin/kpis` called `is_admin` with the wrong parameter name (`user_id` instead of `check_user_id`) and therefore always returned 403.
 
----
+## v1.2 transformation metrics
 
-## v1.2 transformation metrics (conceptual — not yet instrumented)
+Constitution v1.2 §10 adds measures of lived change. **Instrumented 2026-10-01** as `public.transformation_metrics(window_days)` (migration `20261001100000_transformation_engine.sql`, applied 2026-10-01) → `GET /api/admin/kpis` (`transformation` block) → Admin → Discovery → *Lived change*. Same rules: aggregate counts only, never optimized directly, agreement with Peter is never a metric.
 
-Constitution v1.2 §10 adds measures of whether *lived change* is happening, alongside the metrics above. Same rules: admin-only, aggregate counts, no user content, never optimized at the user's expense. **Agreement with Peter is never a success metric.**
+Implemented definitions: **missions tried**; **reflection rate** = resolved missions with a `learning` entry ÷ resolved; **setbacks** = skipped + let go + revised; **adaptation rate** = revised ÷ setbacks; **persistence after setback** = setbacks that were revised or followed by a new attempt within 14 days ÷ setbacks; **user-designed share** = missions not taken from an idea ÷ all; **identity steps** = consistent `identity_evidence`; **Deep Whys** = North Stars with a `deep_why` chain; **chapters** = `growth_arcs`; **missions reaching others** = domain family/friends/work/community. Not yet instrumented from the table below: user-originated insight share (needs `self_discoveries.origin`), identity alignment self-report, repair attempts.
 
-| Metric | Conceptual definition | Data it needs (see `PERSON_MODEL.md` §9) |
-|---|---|---|
-| User-originated conclusion share | self-discoveries with `origin = user_led` ÷ all self-discoveries | `self_discoveries.origin` (§8.4) |
-| User-originated mission share | missions with `suggested_by = user` ÷ all missions | `experiments.suggested_by` |
-| Missions created → attempted → reflected | three counts per active user-week; "attempted" = `status = tried`; "reflected" = resolved (`tried`/`skipped`/`let_go`) with an `outcome_note` | existing `experiments` + outcome vocabulary |
-| Real-world behavior change | growth moments citing repeated mission outcomes in the same practice | `growth_moments` + `practice_key` |
-| Identity alignment | consistent ÷ (consistent + inconsistent) identity evidence, per user over time — a trend for the user's own mirror, reported to admins only in aggregate | `growth_moments.direction` |
-| Repair attempts | missions/shared items of kind repair | `practice_key`, `shared_items.kind = repair` |
-| Growth after setbacks | users who record a setback and later attempt or adapt a mission in the same practice ÷ users with a setback | outcome + adaptation |
-| Increasing agency | trend of user-originated shares, self-designed missions and user-initiated commitment revisions over a user's tenure | as above + `user_reasons.revised_at` |
-| Contribution behaviors | missions or reasons with a `beneficiary` beyond the user, *only* among users who chose to explore contribution | `beneficiary` |
-| Return after a break | users who come back after ≥7 days away and complete a session — success, not churn recovery | `daily_sessions` |
+Events added to `analytics_events`: `identity_step_linked`, `identity_question_answered`, `growth_arc_marked`; `experiment_created` / `experiment_resolved` now carry domain, skill, felt and what got in the way.
 
-**Guardrails.** Time in app and message count are not success metrics. A user who needs Peter less over time, or who designs their own missions without asking, counts as success. Per-user values are shown only to that user, as evidence in their own mirrors — never ranked, compared or shared.
+| Metric (draft definition) | Likely source |
+|---|---|
+| **User-originated insight share** — self-discoveries with `origin = user_led` ÷ all self-discoveries | `self_discoveries.origin` (PERSON_MODEL §8.4) |
+| **Missions attempted** — missions/experiments `tried` per active user-week | `experiments` (`kind`) |
+| **Reflection rate** — tried or skipped missions with a learning note ÷ resolved missions | `experiments.learning` |
+| **Adaptation rate** — missions revised (`revised_from`) after a setback ÷ setbacks | `experiments` |
+| **Growth persistence after setbacks** — users who try another mission within 14 days of a skipped/let-go one | `experiments` |
+| **Real-world change evidence** — growth moments + identity evidence (consistent) per active user-month | `growth_moments`, identity evidence |
+| **Identity alignment (self-report)** — periodic "How much did you live like the person you want to be this week?" (1–5) | mirror question |
+| **Repair attempts** — user-reported repair missions/reflections | missions with `skill_key` repair, `shared_items` kind `repair` |
+| **Agency trend** — share of missions the user designed vs. accepted from Peter, over time (rising is healthy) | `experiments.origin`, `accepted_from_suggestion` |
+| **Contribution behaviors** — missions with a `domain` beyond self/partner, only for users who chose contribution | `experiments.domain` |

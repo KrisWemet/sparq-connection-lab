@@ -69,6 +69,14 @@ Severity: **High** = directly contradicts a v1.1 rule in something users see or 
 
 ---
 
+## D. Constitution v1.2 (2026-10-01) — what changes for this audit
+
+v1.2 replaces v1.1's gate ("no influence before the user chooses") with **process influence** (any stage, open, in the user's interest) vs. **destination influence** (only toward a user-chosen target). Every B-item above concerned destination influence — assigned identities, presupposed directions, fabricated proof, urgency, assigned homework — so **none of the fixes is undone**; all remain required under v1.2. B6 (daily action as invitation) stays: v1.2 Real-World Missions are suggestions the user accepts or reshapes, not homework.
+
+New alignment work for v1.2 (leading the path, values–behavior challenge, stabilization, setbacks, Deep Why chains, missions, identity evidence, priming tiers) is tracked in `docs/TRANSFORMATION_ENGINE.md` §3, not here. The two-track streak's consecutive "dopamine" track is flagged there for review (C12).
+
+---
+
 ## Summary
 
 - **16 guidance conflicts fixed** (A1–A16).
@@ -86,19 +94,19 @@ Severity: **High** = directly contradicts a v1.1 rule in something users see or 
 | D1 | v1.1's gate allowed **no** influence before the user chose a goal — which forbade making reflection inviting, courage approachable or progress visible | constitution §1, §2, §5A, §6 (Act), §6A, §9 (Days 8–14), §13; language framework governing rule; `modalities-applied` §12 | Split into **process influence** (any stage, transparent, names the process state it serves) and **direction influence** (only toward a user-chosen destination, with provenance). "Agency before influence" kept with that precise meaning |
 | D2 | Peter defined as a "guided-discovery engine", "not a persuader" — read as passive/agreeable | constitution §5 | Peter is a growth *guide* who **leads the path**; challenge, hard questions, missions and follow-up are expected. Advice-first stays a fallback; deciding destinations stays forbidden |
 | D3 | Two competing loops: v1.1 "core product loop" and the psychology skill's Change Chain / Learn→Implement→Reflect | constitution §1; `sparq-psychology` | One unified Sparq loop (§1) + the Transformation Engine (§1A); the Change Chain and Daily Loop are documented as its compressed daily form |
-| D4 | "Ethical Influence" listed as modality #12, a peer of the therapeutic frameworks | `CLAUDE.md`, `sparq-psychology` §2, `modalities-applied` | Modalities are the **foundation** (§2A); influence, behavioral observation, priming and behavior design are a **supplementary layer**. Row kept (for content tags) but labeled supplementary |
+| D4 | "Ethical Influence" listed as modality #12, a peer of the therapeutic frameworks | `CLAUDE.md`, `sparq-psychology` §2, `modalities-applied` | Modalities are the **foundation** (§1B); influence, behavioral observation, priming and behavior design are a **supplementary layer**. Row kept (for content tags) but labeled supplementary |
 | D5 | "Users don't realize they're being assessed" | `sparq-psychology` §3 | Woven into content, not hidden: guesses are visible on the Insight Profile and explained on request |
 | D6 | Day-14 "profile reveal — retention moment ('Here's what I've learned about you')" | `sparq-psychology` §3, §5 | Day-14 Growth Reveal = first milestone; evidence + guesses as maybes; user interprets; not a retention device |
 | D7 | Partner reflections shared as "AI-synthesized blends"; partner synthesis described as live | `sparq-psychology` §6, `sparq-architecture` (flow + privacy constraint), `modalities-therapeutic`/`-applied` EFT & attachment | Corrected to constitution §8 / `RELATIONSHIP_MODEL.md`: nothing private reaches the partner, not even blended; cycles named in `/us` when both confirm |
 | D8 | Peter claims human feelings ("I'm so proud of you", "I missed you", "I believe in you", "your relationship is feeling this") | `sparq-peter` SKILL (A15 had fixed only the copy library), `peter-poses.md`, two copy-library lines | Rewritten as evidence + question, or warm lines without emotion claims |
 | D9 | Identity narrated by Peter ("I've watched you learn to wait with trust") | `sparq-psychology` §1, `modalities-therapeutic` EFT | Evidence first, then the user's meaning ("Does that change how you see yourself?") — §1A identity change |
-| D10 | Seven Layers of Why: "ask seven times" | language framework | Deep Why: up to seven, only while useful; reasons revisable; never steer toward a "real" layer |
+| D10 | Seven Layers of Why wording | language framework | Superseded by Chris's 2026-10-01 decision, reconfirmed 2026-10-02: Peter asks "Why is that important to you?" seven times; the user can stop, and overwhelm ends it at once (constitution §5B) |
 | D11 | Notification frequency set by Sparq per attachment style vs. "reminders the user chose, at times they chose" | `sparq-psychology` §4 vs `modalities-applied` | Column relabeled "suggested default — the user sets the real one" (push notifications remain out of beta) |
 | D12 | Assigned archetype framing could outrank the user's own identity words | `sparq-psychology` §3 | Archetype is the user's revisable pick; their own identity statement / North Star takes priority |
 | D13 | Return thought "What will I understand about myself today?" is insight-only | constitution §10 | Adds "What happened when I tried it?"; engagement from real-world success; time-in-app not a goal |
 | D14 | Priming not acknowledged, while "no hidden commands" existed — unclear whether ambient design influence was allowed | constitution §5A; language framework | Priming explicitly allowed for process states and the chosen direction, open and explainable; hidden commands stay banned; never toward major life outcomes |
 | D15 | No rule on major life outcomes | constitution | §5A: Sparq never steers stay/leave/forgive/reconcile/children/end-contact, openly or covertly; safety is not steering |
-| D16 | Requested frameworks not in the approved set (DBT, Transactional Analysis); "NLP" label retired in `CLAUDE.md`; Polyvagal treated as a lens | request vs. repo | Not added; §2A says new foundational modalities need Chris's approval; "NLP" label stays retired (techniques kept under construct names); Polyvagal stays a lens |
+| D16 | DBT and Transactional Analysis reported as "not approved" | first v1.2 pass | Wrong: Chris approved both on 2026-10-01 (constitution §1B). "NLP" label stays retired; Polyvagal stays a lens |
 
 **Checked and compatible (kept as is):** resistance protocol and `docs/evals/resistance-handling.md`; Behavioral Baseline and Insight Profile limits; reciprocity, social proof, authority, liking and scarcity rules (re-stated in v1.2 §5A, unchanged in substance); forgiving streak and return-after-absence language; private/shared boundaries; the user-owned-reasons model.
 

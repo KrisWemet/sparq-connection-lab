@@ -31,6 +31,22 @@ export const CONVERSATION_PREFS = {
       direct: { label: 'Be direct with me', prompt: 'When they are stuck, they want you to be direct — say the honest thing kindly and plainly.' },
     },
   },
+  // Timing (constitution v1.2 §6B) — what they told us, never inferred.
+  hard_days: {
+    label: 'On hard days',
+    options: {
+      comfort: { label: 'Just be with me', prompt: 'On hard days they want comfort only — no growth step, challenge or idea unless they ask.' },
+      nudge: { label: 'Still nudge me, gently', prompt: 'On hard days they still welcome one small, gentle nudge — after comfort, never instead of it.' },
+    },
+  },
+  // Real-World Mission ideas (§11A) — the user decides whether Sparq offers them.
+  ideas: {
+    label: 'Ideas for things to try',
+    options: {
+      welcome: { label: 'Offer me ideas', prompt: 'They welcome one small idea to try in real life when it fits a goal they chose.' },
+      ask_first: { label: 'Only when I ask', prompt: 'Only suggest things to try when they ask for ideas.' },
+    },
+  },
 } as const;
 
 export type PrefKey = keyof typeof CONVERSATION_PREFS;

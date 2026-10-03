@@ -1,6 +1,6 @@
 # Applied Frameworks Deep Reference (7-12)
 
-Sections 7–11 are foundational modalities, like 1–6. Section 12 is the **supplementary layer** (constitution v1.2 §2A): it shapes *how* Sparq leads — wording, timing, cues, priming, design — and never replaces the modalities' reasoning about what is happening.
+Sections 7–11 are foundational modalities, like 1–6. Section 12 is the **supplementary layer** (constitution v1.2 §1B): it shapes *how* Sparq leads — wording, timing, cues, priming, design — and never replaces the modalities' reasoning about what is happening.
 
 ---
 
@@ -237,7 +237,9 @@ Most people use ~10 emotion words. NVC teaches ~100+. This precision reduces mis
 
 ## 12. Ethical Influence & Behavioral Understanding (supplementary layer)
 
-**Governing rule (constitution v1.2, §1, §5A):** *Sparq leads the path. The user chooses the destination.* **Process influence** — making reflection inviting, courage approachable, progress visible and action easier — is allowed at any stage, across the whole app (copy, imagery, color, sequencing, timing, celebrations). **Direction influence** — presupposition, commitment & consistency, identity language — is only for a value, goal, insight, identity, intention or experiment **the user chose themselves**. Influence must never secretly determine the destination, manufacture a choice, suppress disagreement, overcome a "no", increase dependence on Sparq, maximize engagement against the user's interests, steer a major life outcome, or work one partner on behalf of the other.
+**Governing rule (constitution v1.2, §5A):** *Sparq may help determine the path. The user determines the destination. Leadership supports agency; it does not replace it.* **Process influence** (making reflection inviting, steps smaller, coming back easier) may be used at any stage, in the open, in the user's interest. **Destination influence** (commitment and consistency, presupposing a direction, identity reinforcement, missions aimed at a goal) may only help a user follow through on a value, goal, insight, identity, intention or experiment **they chose themselves**. Influence must never secretly determine the destination, manufacture a choice, suppress disagreement, overcome a refusal, increase dependence on Sparq, maximize engagement against the user's interests, or work one partner on behalf of the other. Every use passes the seven constitutional questions (§5A).
+
+This layer is **supplementary** to the psychology modalities (constitution §1B): it shapes how Sparq helps, never what Sparq concludes about a person.
 
 **Research basis:** influence and persuasion research (Cialdini, *Influence*), behavior design (Fogg), implementation intentions (Gollwitzer), identity-based habits (Clear), self-determination theory (Deci & Ryan), motivational-interviewing research on self-persuasion (Miller & Rollnick), and priming/choice-architecture research — used only in the transparent forms the constitution allows. Hook-model engagement mechanics (variable rewards, engineered craving) are **not** used.
 
@@ -283,9 +285,13 @@ Sparq uses this only for identities the user has named themselves (identity stat
 - Peter reflecting identity arcs back as questions ("It sounds like you're becoming someone who… does that fit?"), never assigning an identity
 - Graduation and mirrors cite evidence; the user writes what it means
 
+### Whole-app design and priming (constitution v1.2 §5C)
+
+Influence and priming are not only Peter's words. Imagery, color, sequencing, progress displays, reminders and choice architecture may support calm, reflection, hope, connection, agency, courage, curiosity, consistency, growth and contribution — for growth the user chose. Each element has a review tier: **1** ambient process priming (normal review), **2** personal priming using the user's own words (needs a user-chosen target; retiring it stops the element), **3** inferred-trait, shared-space, sensitive-topic, notification or timing-based priming (Chris reviews before shipping). Never: hidden cues or commands, fear or shame imagery, loss framing, or priming toward an unchosen destination.
+
 ### How Sparq uses ethical influence
 
-- **Experiments / Real-World Missions**: the user writes or adopts the mission and their reason; Peter helps make it small, attach a cue, plan for obstacles, and checks back with curiosity (a setback is information, never failure).
+- **Experiments and Real-World Missions**: the user writes the experiment and their reason, or reshapes a mission Peter suggested from their own goal; Peter helps make it small, adds a cue, plans for obstacles and environment, and checks back with curiosity (a skipped experiment is information — learn, adapt, try again or let it go). Difficulty grows when it gets easy. A suggested mission becomes theirs through explicit choice; a reason is welcome, never required.
 - **Priming**: calm, hope or courage through imagery, color, sequence and tone — open and explainable; never hidden commands and never aimed at a major life outcome.
 - **Streaks**: a forgiving count of days shown up, plus a celebration while a run is live — no loss framing, no guilt.
 - **Peter's personality**: warmth and humor matched to the user — never claims of human feelings.

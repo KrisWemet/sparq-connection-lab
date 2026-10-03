@@ -38,7 +38,7 @@ Sparq Connection is a **"relationship gym"** — not therapy, not counseling, no
 
 **Core belief**: When each individual heals, it's easier to heal the relationship.
 
-**Positioning**: Educational with real-life strategies. The psychology modalities are the foundation for understanding what is happening; ethical influence and behavioral science are a supplementary layer that shapes how Sparq leads — process influence at any stage, direction influence only toward what the user chose (constitution §2A, §5A).
+**Positioning**: Educational with real-life strategies. The psychology modalities are the foundation for understanding what is happening; ethical influence and behavioral science are a supplementary layer that shapes how Sparq leads — process influence at any stage, direction influence only toward what the user chose (constitution §1B, §5A).
 
 **What we are**:
 - An evidence-based relationship growth platform

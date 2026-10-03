@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { useAuth } from '@/lib/auth-context';
 import { supabase } from '@/lib/supabase';
 import { buildAuthedHeaders } from '@/lib/api-auth';
@@ -274,6 +275,18 @@ export default function TrustCenterPage() {
             <li>In crisis moments, coaching pauses and safety resources are prioritized.</li>
             <li>If you turn personalization off, Peter stops using stored traits and memories for new replies.</li>
           </ul>
+        </section>
+
+        {/* Design-level disclosure (constitution v1.2 §5A Transparency, §5C). */}
+        <section className="rounded-2xl border border-slate-200 bg-white p-5">
+          <h2 className="text-sm font-semibold text-slate-800">How Sparq is designed to help you</h2>
+          <p className="mt-1 text-xs text-slate-500 leading-relaxed">
+            Stories, colours, small steps, check-ins and ideas are all designed on purpose. You choose where you are
+            going; Sparq helps with the way. Here is how it works, in plain words, and how to say no to any of it.
+          </p>
+          <Link href="/how-sparq-works" className="mt-3 inline-block text-sm font-semibold text-brand-primary hover:underline">
+            See how Sparq works
+          </Link>
         </section>
 
         <ScienceSection />

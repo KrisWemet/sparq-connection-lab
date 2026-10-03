@@ -145,6 +145,10 @@ None exist. Chris decided (2026-09-29): tests are allowed but ask before adding 
 | Days 22–29 agency | Peter's Listen/distance rules + user's own discoveries outranking guesses |
 | Day 30 The Mirror | Day-30 mirror from their own words and verified growth; user writes the conclusion |
 
+## v1.2 (2026-10-01)
+
+The v1.2 Transformation layer (constitution §14 steps 17–26) is doctrine only. Its keep/extend/missing map lives in `docs/TRANSFORMATION_ENGINE.md` §1 rather than here, so this audit stays a record of the v1.0 build.
+
 ## Still open (not constitution blockers)
 
 - Drop the deprecated tables (`personality_signals`, `personality_profiles`, `mirror_narratives`, `memory_storage`, `conversation_memories`, `if_then_checkins`, `partner_syntheses`, and the `user_insights` trait columns) — all empty or unused; waiting for Chris's OK.

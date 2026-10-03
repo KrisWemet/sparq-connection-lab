@@ -1,6 +1,6 @@
 ---
 name: sparq-psychology
-description: "Comprehensive psychology modalities and content framework for Sparq Connection. Covers 12+ therapeutic frameworks (Gottman, EFT, ACT, CBT, Positive Psychology, Attachment Theory, IFS, Mindfulness, NVC, Somatic, Narrative Therapy, Influence Psychology), personality-based content personalization, and content safety guardrails. Use this skill WHENEVER: generating questions or exercises, writing user-facing prompts or reflections, building onboarding assessments, implementing content personalization logic, designing the AI content engine, building question selection algorithms, creating relationship health scoring, adapting content for personality types, or writing ANY user-facing therapeutic/educational content. If the task involves psychology, content, or personalization in Sparq — use this skill."
+description: "Comprehensive psychology modalities and content framework for Sparq Connection. Covers 12+ therapeutic frameworks (Gottman, EFT, ACT, CBT, Positive Psychology, Attachment Theory, IFS, Mindfulness, NVC, Somatic, Narrative Therapy, DBT-informed skills, Transactional Analysis, Influence Psychology), personality-based content personalization, and content safety guardrails. Use this skill WHENEVER: generating questions or exercises, writing user-facing prompts or reflections, building onboarding assessments, implementing content personalization logic, designing the AI content engine, building question selection algorithms, creating relationship health scoring, adapting content for personality types, or writing ANY user-facing therapeutic/educational content. If the task involves psychology, content, or personalization in Sparq — use this skill."
 ---
 
 # Sparq Connection — Psychology & Content Framework
@@ -9,11 +9,11 @@ description: "Comprehensive psychology modalities and content framework for Spar
 
 Sparq uses **12+ evidence-based modalities** for both individual growth and couple connection. The core belief: **when each individual heals, it's easier to heal the relationship.**
 
-Sparq is a **guided transformation system**, starting with relationships (constitution v1.2 §1) — a relationship gym, not therapy. It is educational, not clinical. It draws from research-backed therapeutic frameworks and presents them as accessible daily practices. Every piece of content serves a dual purpose: helping the individual grow AND strengthening their relationship.
+**Sparq helps people discover who they want to become, understand why it matters, and practice becoming that person in the real world** (constitution v1.2). It is a guided transformation system, not a content library: knowledge matters when it turns into lived change. Sparq may help lead the path; the user chooses the destination.
 
-### Foundation first
+The modalities below remain the foundation for *understanding* what is happening in a person and a relationship. Influence, priming and behavior design are supplementary layers for *how* Sparq helps a user move toward what they chose — they never replace psychological understanding (constitution §1B).
 
-These modalities are Sparq's **foundation**: they are how Sparq reasons about what may be happening, what need sits under a behavior, what cycle is running and what question or intervention might fit (constitution §2A). Ethical influence, behavioral observation, priming and behavior design (§12 below) are a **supplementary layer** that shapes *how* Sparq leads — never the reason an intervention is chosen. New foundational modalities (e.g. DBT, Transactional Analysis) need Chris's approval before they are added here.
+Sparq is a **relationship gym** — not therapy. It is educational, not clinical. It draws from research-backed therapeutic frameworks and presents them as accessible daily practices. Every piece of content serves a dual purpose: helping the individual grow AND strengthening their relationship.
 
 ### The Change Chain
 
@@ -25,6 +25,8 @@ Insight → Emotional Processing → New Behavior in a Real Moment → Different
 
 Most apps stop at Insight. Sparq closes the whole chain through the Daily Loop (morning story → daily action → evening reflection).
 
+The Change Chain is a compact form of the constitution's **Transformation Engine** (§1A): Insight → Meaning (Deep Why) → Choice → Micro-action → Implementation cue → Real-world practice → Reflection → Learning → Adaptation → Repetition → Identity evidence → Contribution. Setbacks are data inside that loop, not a break in it.
+
 ### Levels of Change (deepest to most fragile)
 
 1. **Identity** — "I am someone who stays present during conflict." (most durable)
@@ -32,7 +34,7 @@ Most apps stop at Insight. Sparq closes the whole chain through the Daily Loop (
 3. **Beliefs** — "Conflict doesn't mean the relationship is broken."
 4. **Behaviors** — "I paused before responding." (most fragile — reverts under stress)
 
-The app works at levels 1-2, not just level 4 — but identity is **user-authored and evidence-grounded** (constitution §1A). Peter points to the evidence and asks what it means ("You used to pull away. This week you stayed present three times. Does that change how you see yourself?"); he never assigns the identity.
+The app works at levels 1-2, not just level 4. Peter notices identity evidence and asks about it ("You've stayed present three times this week. Does that change how you see yourself?") — only toward an identity the user named, never as a verdict (constitution §11B). Level 4 behaviors are practiced in real life as missions, so levels 1-2 rest on real evidence rather than empty affirmation.
 
 ---
 
@@ -51,9 +53,14 @@ The app works at levels 1-2, not just level 4 — but identity is **user-authore
 | 9 | **Mindfulness** | Present-moment awareness; non-judgmental observation | Emotional regulation, mindful listening | Somatic phase in Conflict First Aid, daily actions |
 | 10 | **NVC** | Observation → Feelings → Needs → Requests | Communication skill building | Translator, Communication skill track |
 | 11 | **Somatic Approaches** | Body awareness; nervous system regulation (window of tolerance) | Grounding, co-regulation, trauma-informed pacing | Conflict First Aid somatic phase, breathing exercises |
-| 12 | **Ethical Influence** *(supplementary layer, not a foundational modality — §2A)* | Process influence at any stage; direction influence only toward what the user chose (constitution v1.2 §5A) | How Sparq leads: follow-through, cues, priming, timing | Experiments/missions + the user's own reasons, forgiving streaks, grounded normalization |
+| 12 | **Ethical Influence** *(supplementary layer, not a lens for understanding — constitution §1B)* | Self-persuasion, commitment to the user's own choices, unity, freely chosen generosity; process influence at any stage, destination influence only toward what the user chose (constitution v1.2 §5A) | Follow-through on self-chosen goals; whole-app design and priming (§5C) | Experiments/missions + the user's own reasons (Deep Why), forgiving streaks, grounded normalization |
 
-> **Deep reference**: `references/modalities-therapeutic.md` (modalities 1-6), `references/modalities-applied.md` (modalities 7-12)
+| 13 | **DBT-informed skills** *(approved 2026-10-01)* | Acceptance **and** change; teachable skills: wise mind, distress tolerance, emotion regulation, interpersonal effectiveness | Getting through flooded moments; clear asks; opposite action | Stabilization / Conflict First Aid, missions, environment basics |
+| 14 | **Transactional Analysis** *(approved 2026-10-01)* | Ego states, crossed transactions, games, Drama → Winner's Triangle — a descriptive lens, limited trial evidence | Seeing interaction patterns without blame | Interaction cycles, reflection questions ("which part of you was talking?"), missions |
+
+> **Still not used:** Polyvagal theory as a named basis (removed 2026-06 — somatic regulation is anchored in HRV research); "NLP" as a label (retired 2026-06 — techniques live on under validated construct names). Constitution §1B.
+
+> **Deep reference**: `references/modalities-therapeutic.md` (modalities 1-6, plus DBT and TA in §7–8), `references/modalities-applied.md` (modalities 7-12)
 
 ---
 
@@ -80,7 +87,7 @@ Assessment is **woven into daily content** rather than front-loaded as a questio
 - **Day 1**: Name, solo/partner, what brings you here, daily time preference, identity archetype selection
 - **Days 2-14**: Assessment questions embedded naturally in daily exercises. Each day's content is selected partly to reveal a personality dimension.
 - **By Day 14**: Full personality profile built from actual answers and behaviors
-- **Day 14**: Growth reveal — the first milestone (constitution §1A, §9): Peter shows evidence and offers guesses as maybes ("Here's what I think I'm noticing — you're the judge"); the user says what it means
+- **Day 14**: Profile reveal — a major milestone ("Here are some guesses about you — you're the judge"); only user-confirmed traits are stated, everything else is offered as a guess (constitution §2, INFLUENCE_AUDIT B2)
 - **Ongoing**: Traits continue to refine with each session. Re-assessed quarterly or after significant life events.
 
 ### Identity Archetypes
@@ -179,8 +186,8 @@ Sparq helps users change **by helping them see themselves clearly and choose for
 Every day follows this pedagogical structure (change through practice in real life, not just knowledge):
 
 1. **Learn** (Morning — 2 min): Discovery question or psycho-educational content from the day's modality. Story-based, not lecture-based.
-2. **Implement** (During the day — 2 min): Micro-action or exercise to practice in real life. Always specific and doable.
-3. **Reflect** (Evening — 3 min): How did it go? What did you notice? Peter facilitates processing.
+2. **Implement** (During the day — 2 min): Micro-action or exercise to practice in real life — a small Real-World Mission. Always specific and doable, offered as an invitation the user can reshape, ideally tied to a cue ("when X, I'll try Y") and to their own reason. Difficulty grows as it gets easy; it shrinks after a setback (constitution §11A).
+3. **Reflect** (Evening — 3 min): How did it go? What did you notice? What got in the way? Peter facilitates processing — learning and adapting, never grading.
 
 This maps to the Change Chain and the Transformation Engine: Learn = Insight (+ Meaning), Implement = a Real-World Mission with a cue, Reflect = Reflection → Learning → Adaptation. When a practice becomes easy, offer the next level (adaptive difficulty); when a day goes badly, treat it as data, never failure (constitution §1A).
 

@@ -16,17 +16,17 @@ describe('decideMode', () => {
     ["That's not it at all", 'pushback', 'listen'],
     ['You don\'t get it', 'pushback', 'listen'],
     ["Not really. I don't want to be fair right now", 'pushback', 'listen'],
-    // v1.2 §1B timing: no capacity for growth → stabilize
+    // v1.2 §6B timing: no capacity for growth → stabilize
     ["kids sick. no sleep. he's away. I can't do anything tonight", 'depleted', 'stabilize'],
     ["I'm so overwhelmed, it's all too much", 'depleted', 'stabilize'],
-    // v1.2 §1A setbacks are data → follow up
+    // v1.2 §11A setbacks are data → follow up
     ['I totally blew it. She brought up money and I snapped again', 'setback', 'follow_up'],
     ['No, I forgot to do it every day this week', 'setback', 'follow_up'],
     ['Back to square one honestly', 'setback', 'follow_up'],
     // v1.2 §6 follow up after real-world action
     ['I tried the question thing twice', 'tried_it', 'follow_up'],
     ["It didn't work, she just looked at me funny", 'tried_it', 'follow_up'],
-    // v1.2 §1A mission ownership: "just give me something" is a request for ideas
+    // v1.2 §11A mission ownership: "just give me something" is a request for ideas
     ["I don't want to talk about it. Just give me something to try", 'asks_for_help', 'act'],
   ])('%s → %s', (message, signal, mode) => {
     const decision = decideMode(message);
@@ -100,6 +100,36 @@ describe('decideMode', () => {
 
   it('keeps an ordinary tired message as comfort, not stabilize', () => {
     expect(classifyMoment("I'm so exhausted and lonely lately, it feels like we're roommates")).toBe('heavy_feeling');
+  });
+
+  // Constitution v1.2 §11A: setbacks are information, not failure.
+  it.each([
+    ["Didn't do it. Jumped straight back into fixing again.", 'setback'],
+    ['I forgot to ask her about work', 'setback'],
+    ['I did it again, back to my old habits', 'setback'],
+  ])('treats "%s" as a setback to get curious about', (message, signal) => {
+    const decision = decideMode(message);
+    expect(decision.signal).toBe(signal);
+    expect(decision.mode).toBe('follow_up');
+    expect(decision.instruction).toMatch(/information, not failure/);
+    expect(decision.instruction).toMatch(/no streak talk/);
+  });
+
+  // §6B: a flooded "I messed up again" needs comfort before any growth step.
+  // Panic and shaking mean no capacity → Stabilize; plain hurt → comfort (Listen).
+  it.each([
+    ["I messed up again and I'm panicking", 'depleted', 'stabilize'],
+    ["He did it again and I'm so hurt", 'heavy_feeling', 'listen'],
+    ["Huge fight. I'm shaking. I can't think.", 'depleted', 'stabilize'],
+  ])('comforts first when "%s"', (message, signal, mode) => {
+    const decision = decideMode(message);
+    expect(decision.signal).toBe(signal);
+    expect(decision.mode).toBe(mode);
+    expect(decision.instruction).toMatch(/not the moment to push growth/);
+  });
+
+  it('does not call it a setback when the partner "did it again"', () => {
+    expect(classifyMoment('He did it again')).not.toBe('setback');
   });
 
     it('treats empty input as nothing to act on', () => {

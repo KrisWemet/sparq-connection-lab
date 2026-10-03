@@ -92,9 +92,8 @@ export default function DailyGrowth() {
   const [isEveningLoading, setIsEveningLoading] = useState(false);
   const [eveningTurns, setEveningTurns] = useState(0);
   const [canCompleteDay, setCanCompleteDay] = useState(false);
-  // Two-track streak for the completion screen (PRD decision 4)
+  // Forgiving practice-day count for the completion screen (never resets)
   const [practiceDays, setPracticeDays] = useState(0);
-  const [consecutiveStreak, setConsecutiveStreak] = useState(0);
   const [reflectionClosed, setReflectionClosed] = useState(false);
   // Tonight's reflection, kept only so the user can choose to share it (constitution §8).
   const [justReflected, setJustReflected] = useState('');
@@ -506,7 +505,7 @@ export default function DailyGrowth() {
           setCurrentDay(payload.next_day_index || currentDay + 1);
           fireElegantConfetti();
 
-          // Read both streak tracks AFTER completion so the celebration shows
+          // Read the practice-day count AFTER completion so the celebration shows
           // today's numbers (the trigger fires on session insert). Fail-soft:
           // on error the badge falls back to the day count.
           void (async () => {
@@ -516,9 +515,8 @@ export default function DailyGrowth() {
               if (!res.ok) return;
               const rs = await res.json();
               setPracticeDays(Number(rs.practice_days ?? 0));
-              setConsecutiveStreak(Number(rs.consecutive_streak ?? 0));
             } catch {
-              /* fail-soft: no dopamine beat */
+              /* fail-soft: falls back to the day count */
             }
           })();
 
@@ -1057,33 +1055,14 @@ export default function DailyGrowth() {
                     You showed up. That&apos;s everything.
                   </p>
 
-                  {/* Two-track streak (PRD decision 4).
-                      Track 1 (always shown): forgiving practice days — never resets.
-                      Track 2 (only when alive): a gold celebration beat for a live
-                      consecutive run (constitution §10 — never a loss). When a run is broken it simply isn't shown —
-                      no guilt copy, and the practice-days count is untouched. */}
+                  {/* Forgiving practice-day count — never resets. The consecutive
+                      "in a row" reward track was retired 2026-10-01 (constitution
+                      v1.2 §10: shallow gamification is out). */}
                   <div className={cn(TONE.grow.card, 'mt-6 w-full max-w-xs rounded-3xl p-5 text-center shadow-sm')}>
                     <Flame size={28} className="text-brand-gold-deep mx-auto mb-2" />
                     <p className="text-brand-gold-deep font-bold text-2xl">{practiceDays || currentDay - 1} days</p>
                     <p className="mt-1 text-sm text-brand-taupe">Days you&apos;ve shown up.</p>
 
-                    {consecutiveStreak >= 2 && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        transition={{ delay: 0.45, type: 'spring', bounce: 0.35 }}
-                        className="mt-4 rounded-2xl border border-brand-sand/40 bg-brand-sand/10 px-4 py-3"
-                      >
-                        <p className="text-sm font-semibold text-brand-espresso">
-                          🔥 {consecutiveStreak} in a row
-                        </p>
-                        <p className="mt-0.5 text-xs text-brand-taupe">
-                          {consecutiveStreak >= 7
-                            ? 'A full week running. This is a rhythm now.'
-                            : 'Back-to-back. That rhythm is doing real work.'}
-                        </p>
-                      </motion.div>
-                    )}
                   </div>
 
                   {/* Private by default. Nothing reaches the partner unless the

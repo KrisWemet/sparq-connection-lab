@@ -244,12 +244,22 @@ export async function buildOwnWordsBlock(
   userId: string,
 ): Promise<string> {
   try {
-    const [discoveries, experiments] = await Promise.all([
+    const [discoveries, experiments, setbacks, conditions] = await Promise.all([
       supabase.from('self_discoveries').select('discovery').eq('user_id', userId).eq('still_true', true)
         .order('created_at', { ascending: false }).limit(3),
       supabase.from('experiments').select('intention, reason:user_reasons(reason_text, still_true)')
         .eq('user_id', userId).eq('status', 'planned')
         .order('created_at', { ascending: false }).limit(2),
+      // Recent setbacks with what got in the way (v1.2 §11A). Fails soft
+      // (empty) before the transformation migration adds `learning`.
+      supabase.from('experiments').select('intention, learning, resolved_at')
+        .eq('user_id', userId).in('status', ['skipped', 'let_go', 'revised'])
+        .gte('resolved_at', new Date(Date.now() - 7 * 86_400_000).toISOString())
+        .order('resolved_at', { ascending: false }).limit(1),
+      // What they said makes things easier or harder (environment, §11A).
+      supabase.from('experiments').select('environment_note')
+        .eq('user_id', userId).not('environment_note', 'is', null)
+        .order('resolved_at', { ascending: false }).limit(3),
     ]);
     const lines: string[] = [];
     const d = (discoveries?.data || []) as Array<{ discovery: string }>;
@@ -272,8 +282,26 @@ export async function buildOwnWordsBlock(
         lines.push('If follow-through gets hard, you may gently reconnect them to THEIR reason in their words. Never add a reason of your own, never use it to guilt them, and accept "it doesn\'t matter to me anymore" as a real answer.');
       }
     }
+    const s = (setbacks?.error ? [] : setbacks?.data || []) as Array<{ intention: string; learning?: { what_got_in_way?: string } | null }>;
+    const way = s[0]?.learning?.what_got_in_way;
+    if (s.length > 0 && way && way !== 'not_important_now') {
+      const label = SETBACK_LABELS[way] ?? 'it did not happen';
+      lines.push(`Something they planned did not happen this week: "${s[0].intention}" (they said: ${label}). If it comes up, treat it as information, not failure — be curious about what got in the way. Never shame, never mention streaks.`);
+    }
+    const c = (conditions?.error ? [] : conditions?.data || []) as Array<{ environment_note: string }>;
+    if (c.length > 0) {
+      lines.push('What they noticed makes things easier or harder (their words — use only to help them plan, never to judge, never to moralize):');
+      c.forEach(row => lines.push(`- "${row.environment_note}"`));
+    }
     return lines.length > 0 ? `\n\n${lines.join('\n')}` : '';
   } catch {
     return '';
   }
 }
+
+const SETBACK_LABELS: Record<string, string> = {
+  too_big: 'it was too big',
+  wrong_moment: 'the moment never came',
+  forgot: 'they forgot',
+  busy: 'life got busy',
+};

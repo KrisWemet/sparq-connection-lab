@@ -15,6 +15,14 @@ export interface TraitGap {
 
 const CORE_TRAITS = PATTERN_KEYS;
 
+// Tier-3 guardrails (docs/PRIMING_AUDIT.md, Chris's call 2026-10-01: keep
+// story steering, disclosed on /how-sparq-works, but never use it to re-probe
+// what the user already settled or to steer toward sensitive ground).
+// - rejected: the user said "not me" — never probe it again (§6A)
+// - confirmed: the user already told us — nothing left to learn
+// - sensitive (worth_pattern): too tender to steer stories toward
+const NEVER_STEER_KEYS = new Set(['worth_pattern']);
+
 /**
  * Compute trait coverage gaps for a user.
  * Returns sorted by priority (high first).
@@ -25,16 +33,18 @@ export async function computeTraitGaps(
 ): Promise<TraitGap[]> {
   const { data: traits } = await supabase
     .from('profile_traits')
-    .select('trait_key, confidence')
+    .select('trait_key, confidence, status')
     .eq('user_id', userId)
     .in('trait_key', [...CORE_TRAITS]);
 
   const traitMap = new Map<string, number>();
+  const settled = new Set<string>();
   for (const t of traits || []) {
     traitMap.set(t.trait_key, t.confidence ?? 0);
+    if (t.status === 'rejected' || t.status === 'confirmed') settled.add(t.trait_key);
   }
 
-  const gaps: TraitGap[] = CORE_TRAITS.map(key => {
+  const gaps: TraitGap[] = CORE_TRAITS.filter(key => !settled.has(key) && !NEVER_STEER_KEYS.has(key)).map(key => {
     const confidence = traitMap.get(key) ?? 0;
     let priority: TraitGap['priority'];
     if (confidence === 0) {
