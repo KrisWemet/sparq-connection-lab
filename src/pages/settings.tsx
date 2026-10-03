@@ -16,7 +16,13 @@ export default function SettingsPage() {
   const { user, logout } = useAuth();
   const trialDays = getTrialDaysRemaining(user?.created_at);
 
-  const [emailUpdates, setEmailUpdates] = useState(true);
+  // Reminder emails stay hidden until sending is switched on (docs/REMINDERS.md),
+  // so no one can turn on something that doesn't arrive yet.
+  const remindersAvailable = process.env.NEXT_PUBLIC_REMINDERS_ENABLED === 'true';
+  const [emailReminders, setEmailReminders] = useState(false);
+  const [reminderTime, setReminderTime] = useState('09:00');
+  const [savedTime, setSavedTime] = useState('09:00');
+  const isValidTime = (v: string) => /^([01]\d|2[0-3]):[0-5]\d$/.test(v);
   const [trustSummary, setTrustSummary] = useState<{
     personalizationEnabled: boolean;
     memoryMode: string;
@@ -36,6 +42,11 @@ export default function SettingsPage() {
         const res = await fetch('/api/profile/preferences', { headers });
         if (res.ok) {
           const data = await res.json();
+          setEmailReminders(data.preferences?.email_reminders_enabled === true);
+          if (typeof data.preferences?.reminder_time === 'string') {
+            setReminderTime(data.preferences.reminder_time.slice(0, 5));
+            setSavedTime(data.preferences.reminder_time.slice(0, 5));
+          }
           setTrustSummary({
             personalizationEnabled: data.preferences?.personalization_enabled ?? true,
             memoryMode: data.preferences?.ai_memory_mode ?? 'rolling_90_days',
@@ -76,6 +87,34 @@ export default function SettingsPage() {
   };
 
   // Section label above a card
+  // Saves the reminder choice along with the browser's timezone, so the
+  // email arrives at this time where the user actually is.
+  const saveReminders = async (enabled: boolean, time: string) => {
+    const previous = { enabled: emailReminders, time: savedTime };
+    setEmailReminders(enabled);
+    setReminderTime(time);
+    try {
+      const { buildAuthedHeaders } = await import('@/lib/api-auth');
+      const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
+      const res = await fetch('/api/preferences', {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({
+          email_reminders_enabled: enabled,
+          reminder_time: time,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        }),
+      });
+      if (!res.ok) throw new Error('save failed');
+      setSavedTime(time);
+      toast.success(enabled ? `Peter will email you at ${time}` : 'Reminder emails are off');
+    } catch {
+      setEmailReminders(previous.enabled);
+      setReminderTime(previous.time);
+      toast.error("We couldn't save that just now. Please try again.");
+    }
+  };
+
   const SectionLabel = ({ children }: { children: React.ReactNode }) => (
     <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover px-1 mb-2">
       {children}
@@ -153,6 +192,47 @@ export default function SettingsPage() {
             />
           </div>
         </motion.div>
+
+        {/* REMINDERS */}
+        {remindersAvailable && (
+          <motion.div custom={1} variants={cardVariants} initial="hidden" animate="visible">
+            <SectionLabel>Reminders</SectionLabel>
+            <div className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm overflow-hidden">
+              <Row
+                label="Daily reminder email"
+                secondary={emailReminders ? `Every day at ${reminderTime}` : 'Off'}
+                right={
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={emailReminders}
+                    aria-label="Daily reminder email"
+                    onClick={() => saveReminders(!emailReminders, reminderTime)}
+                    className={`press relative inline-flex h-6 w-11 rounded-full transition-colors ${emailReminders ? 'bg-brand-primary' : 'bg-brand-primary/20'}`}
+                  >
+                    <span className={`mt-[2px] inline-block h-5 w-5 rounded-full bg-popover shadow transition-transform ${emailReminders ? 'translate-x-[22px]' : 'translate-x-[2px]'}`} />
+                  </button>
+                }
+              />
+              {emailReminders && (
+                // Plain markup, not <Row>: Row is redefined each render, which
+                // would remount the input on every keystroke.
+                <div className="flex items-center justify-between px-5 min-h-[52px]">
+                  <label htmlFor="reminder-time" className="text-sm font-medium text-brand-text-primary">Time</label>
+                  <input
+                    id="reminder-time"
+                    type="time"
+                    value={reminderTime}
+                    aria-label="Reminder time"
+                    onChange={e => setReminderTime(e.target.value)}
+                    onBlur={e => isValidTime(e.target.value) && e.target.value !== savedTime && saveReminders(true, e.target.value)}
+                    className="border border-input rounded-lg px-2 py-1 text-sm text-brand-text-primary bg-brand-linen focus:outline-none focus:ring-2 focus:ring-ring"
+                  />
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
 
         {/* PRIVACY */}
         <motion.div custom={2} variants={cardVariants} initial="hidden" animate="visible">

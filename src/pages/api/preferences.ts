@@ -7,6 +7,7 @@ import {
   loadPrivacyState,
   type AiMemoryMode,
 } from '@/lib/server/privacy';
+import { isValidReminderTime, isValidTimeZone } from '@/lib/server/reminders';
 
 type PreferencesPatchBody = {
   insights_visible?: boolean;
@@ -15,6 +16,7 @@ type PreferencesPatchBody = {
   relationship_mode?: 'solo' | 'partnered';
   reminder_time?: string | null;
   notifications_enabled?: boolean;
+  email_reminders_enabled?: boolean;
   timezone?: string;
   grant_consent?: boolean;
   consent_source?: string;
@@ -57,13 +59,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (body.relationship_mode === 'solo' || body.relationship_mode === 'partnered') {
       allowed.relationship_mode = body.relationship_mode;
     }
-    if (typeof body.reminder_time === 'string' || body.reminder_time === null) {
+    if ((typeof body.reminder_time === 'string' && isValidReminderTime(body.reminder_time)) || body.reminder_time === null) {
       allowed.reminder_time = body.reminder_time;
     }
     if (typeof body.notifications_enabled === 'boolean') {
       allowed.notifications_enabled = body.notifications_enabled;
     }
-    if (typeof body.timezone === 'string') {
+    if (typeof body.email_reminders_enabled === 'boolean') {
+      allowed.email_reminders_enabled = body.email_reminders_enabled;
+    }
+    if (typeof body.timezone === 'string' && isValidTimeZone(body.timezone)) {
       allowed.timezone = body.timezone;
     }
 
