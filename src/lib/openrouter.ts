@@ -28,7 +28,7 @@ export async function peterChat({ messages, maxTokens = 512, temperature }: Pete
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) throw new Error('OPENROUTER_API_KEY is not configured');
 
-  const response = await fetch(`${OPENROUTER_BASE}/chat/completions`, {
+  const request = (body: Record<string, unknown>) => fetch(`${OPENROUTER_BASE}/chat/completions`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${apiKey}`,
@@ -37,8 +37,7 @@ export async function peterChat({ messages, maxTokens = 512, temperature }: Pete
       'X-Title': 'Sparq Connection Lab',
     },
     body: JSON.stringify({
-      models: PETER_MODELS,
-      route: 'fallback',
+      ...body,
       // Peter needs plain replies; hidden "thinking" would eat max_tokens.
       reasoning: { enabled: false },
       messages,
@@ -46,6 +45,17 @@ export async function peterChat({ messages, maxTokens = 512, temperature }: Pete
       ...(temperature !== undefined ? { temperature } : {}),
     }),
   });
+
+  let response = await request({ models: PETER_MODELS, route: 'fallback' });
+
+  // OpenRouter's own fallback doesn't always move on when the first model is
+  // rate-limited upstream (429) or its provider errors. Try each remaining
+  // model directly before giving up, so one busy free model doesn't take
+  // Peter down.
+  for (const model of PETER_MODELS.slice(1)) {
+    if (response.ok || (response.status !== 429 && response.status < 500)) break;
+    response = await request({ model });
+  }
 
   if (!response.ok) {
     const errText = await response.text();

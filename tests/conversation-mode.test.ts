@@ -26,6 +26,9 @@ describe('decideMode', () => {
     // v1.2 §6 follow up after real-world action
     ['I tried the question thing twice', 'tried_it', 'follow_up'],
     ["It didn't work, she just looked at me funny", 'tried_it', 'follow_up'],
+    // v1.2 §11A adaptive difficulty: offer the next step, they choose
+    ["That one's easy now honestly", 'got_easy', 'celebrate'],
+    ["It's getting easier every time", 'got_easy', 'celebrate'],
     // v1.2 §11A mission ownership: "just give me something" is a request for ideas
     ["I don't want to talk about it. Just give me something to try", 'asks_for_help', 'act'],
   ])('%s → %s', (message, signal, mode) => {
@@ -96,6 +99,13 @@ describe('decideMode', () => {
 
   it('lets a chosen suggestion be theirs without demanding a reason first', () => {
     expect(decideMode('Just give me something to try').instruction).toMatch(/do not make them explain why first/);
+  });
+
+  it('offers the next step without assigning it when a practice gets easy', () => {
+    const line = decideMode("That one's easy now honestly").instruction ?? '';
+    expect(line).toMatch(/offer one next step/);
+    expect(line).toMatch(/option to stay/);
+    expect(line).toMatch(/do not assign the next level/i);
   });
 
   it('keeps an ordinary tired message as comfort, not stabilize', () => {

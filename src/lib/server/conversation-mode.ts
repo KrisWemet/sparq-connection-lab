@@ -18,6 +18,7 @@ export type MomentSignal =
   | 'pushback'
   | 'setback'
   | 'tried_it'
+  | 'got_easy'
   | 'self_discovery'
   | 'intention'
   | 'asks_for_help'
@@ -45,6 +46,11 @@ const SETBACK =
 // Follow up (constitution v1.2 §6): they're reporting on something they tried.
 const TRIED_IT =
   /\b(i (tried|did) (it|that|the|this)|i gave it a (go|try|shot)|it (worked|didn'?t work|went (well|badly|okay|ok|great|weird))|tried it (once|twice|again|today|yesterday))\b/i;
+
+// Adaptive difficulty (constitution v1.2 §11A): a chosen practice has
+// become easy — offer the next step, never impose it.
+const GOT_EASY =
+  /\b((that|this|it)('s| is)( one| getting| gotten| become)? (easy|easier|natural|second nature)( now)?|getting easier|comes? (naturally|easy) now|easy now)\b/i;
 
 // Resistance is information (constitution v1.1 §2, §6A): the user rejecting
 // Peter's reflection or suggestion. Overrides every growth move below it.
@@ -74,6 +80,7 @@ export function classifyMoment(message: string): MomentSignal {
   // Peter's idea, so it is read before pushback.
   if (SETBACK.test(text)) return 'setback';
   if (TRIED_IT.test(text)) return 'tried_it';
+  if (GOT_EASY.test(text)) return 'got_easy';
   if (PUSHBACK.test(text)) return 'pushback';
   if (SELF_DISCOVERY.test(text)) return 'self_discovery';
   if (ASKS_FOR_HELP.test(text)) return 'asks_for_help';
@@ -92,6 +99,10 @@ const INSTRUCTIONS: Record<Exclude<MomentSignal, 'none'>, { mode: ConversationMo
   setback: {
     mode: 'follow_up',
     line: 'Something they chose to try did not happen, or an old pattern came back. This is information, not failure. No guilt, no "you said you would", no streak talk. If there is earlier evidence of change, it still counts. Get curious about one thing: what got in the way, whether it was too big or the wrong moment, or whether it still matters to them. Then offer to make it smaller, try a different moment, or let it go for now. They choose.',
+  },
+  got_easy: {
+    mode: 'celebrate',
+    line: 'Something they chose to practice is getting easy. Point to it plainly ("that is real"), then offer one next step up and the option to stay where they are a while longer. They choose. Do not grade it, do not assign the next level, and no feeling claims like "I love that".',
   },
   tried_it: {
     mode: 'follow_up',

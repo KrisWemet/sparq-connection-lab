@@ -18,7 +18,10 @@ describe.runIf(hasKey)('Peter live evals', () => {
   it('runs all cases and writes a report', async () => {
     const rows: string[] = [];
     let flagged = 0;
-    for (const c of CASES) {
+    // EVAL_ONLY=R14,L5 re-runs just those cases (the free tier allows 50 calls/day).
+    const only = (process.env.EVAL_ONLY || '').split(',').map(x => x.trim()).filter(Boolean);
+    const cases = only.length ? CASES.filter(c => only.includes(c.id)) : CASES;
+    for (const c of cases) {
       const mode = decideMode(c.user);
       const system = PETER_SHARED_RULES
         + (c.context ? `\n\nContext you already know (do not quote it unless it fits): ${c.context}` : '')
@@ -45,14 +48,14 @@ describe.runIf(hasKey)('Peter live evals', () => {
     const date = new Date().toISOString().slice(0, 10);
     const dir = path.resolve(__dirname, '../docs/evals/results');
     mkdirSync(dir, { recursive: true });
-    const file = path.join(dir, `${date}-peter.md`);
+    const file = path.join(dir, `${date}-peter${only.length ? '-rerun' : ''}.md`);
     writeFileSync(file, [
       `# Peter eval run — ${date}`,
-      `Models: ${PETER_MODELS.join(' → ')} · Cases: ${CASES.length} · Auto-flagged: ${flagged}`,
+      `Models: ${PETER_MODELS.join(' → ')} · Cases: ${cases.length}${only.length ? ' (EVAL_ONLY re-run)' : ''} · Auto-flagged: ${flagged}`,
       'Each "⏳ judge" case still needs a person to check it against its must / must-not (a release needs all of them to pass).',
       '',
       ...rows,
     ].join('\n\n'));
-    console.log(`Peter evals: ${CASES.length} cases, ${flagged} auto-flagged → ${file}`);
+    console.log(`Peter evals: ${cases.length} cases, ${flagged} auto-flagged → ${file}`);
   });
 });
