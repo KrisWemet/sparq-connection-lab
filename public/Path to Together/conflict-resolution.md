@@ -138,7 +138,7 @@ Active listening creates the emotional safety required for genuine intimacy. Whe
 - Feel emotionally connected even during disagreements
 - Reach solutions that genuinely address both people's needs
 
-Research shows that couples who practice active listening during conflicts report higher relationship satisfaction and are better able to maintain connection during challenging times.
+Research suggests that couples who practice active listening during conflicts report higher relationship satisfaction and are better able to maintain connection during challenging times.
 
 ### Today's Activity
 
@@ -190,7 +190,7 @@ Many couples fall into communication patterns that trigger defensiveness. When w
 
 Here are some powerful insights about expressing yourself effectively during conflict:
 
-**How you start a conversation predicts how it will end.** Research shows that the first three minutes of a conversation determine its trajectory with 96% accuracy. A harsh start-up almost always leads to an unsatisfying conclusion.
+**How you start a conversation predicts how it will end.** In Gottman's research, the way a hard conversation started was a strong clue to how it would end. A harsh start-up almost always leads to an unsatisfying conclusion.
 
 **Criticism triggers defensiveness.** When people feel attacked, their natural response is to defend themselves. This defensiveness blocks their ability to consider your perspective or experience empathy for your feelings.
 
@@ -272,7 +272,7 @@ Here are some powerful insights about emotions during conflict:
 
 **Emotional triggers often connect to past experiences.** Your strongest emotional reactions in conflict may be linked to early life experiences or previous relationship patterns. Recognizing these connections helps you respond to present situations more effectively.
 
-**Naming emotions reduces their intensity.** Research shows that the simple act of accurately labeling what you're feeling helps calm the emotional centers of your brain, giving you more access to logical thinking.
+**Naming emotions reduces their intensity.** Research suggests that the simple act of accurately labeling what you're feeling helps calm the emotional centers of your brain, giving you more access to logical thinking.
 
 Let's look at how emotional awareness transforms real conflicts:
 
@@ -296,7 +296,7 @@ Emotional awareness creates the foundation for all other conflict resolution ski
 - You can maintain connection even when discussing difficult topics
 - You model healthy emotional regulation for your partner and any children in your lives
 
-Research shows that couples who can successfully regulate their emotions during conflict report higher relationship satisfaction and are better able to resolve disagreements constructively.
+Research suggests that couples who can successfully regulate their emotions during conflict report higher relationship satisfaction and are better able to resolve disagreements constructively.
 
 ### Today's Activity
 
@@ -374,7 +374,7 @@ Healthy boundaries serve as the foundation for respect and trust in relationship
 - You create space for genuine giving rather than obligatory compliance
 - You model self-respect and clear communication
 
-Research shows that couples with healthy boundaries report greater relationship satisfaction and are better equipped to navigate differences without damaging their connection.
+Research suggests that couples with healthy boundaries report greater relationship satisfaction and are better equipped to navigate differences without damaging their connection.
 
 ### Today's Activity
 
@@ -455,7 +455,7 @@ The ability to find balanced compromises is essential for long-term relationship
 - You build confidence in your ability to navigate future differences
 - You create solutions that have staying power because they genuinely work for both partners
 
-Research shows that couples who can find fair, respectful compromises report greater relationship stability and are better equipped to navigate major life transitions together.
+Research suggests that couples who can find fair, respectful compromises report greater relationship stability and are better equipped to navigate major life transitions together.
 
 ### Today's Activity
 

@@ -1,6 +1,7 @@
 import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 // src/components/onboarding/JourneyRecommendation.tsx
 import { motion } from 'framer-motion';
+import { Compass } from 'lucide-react';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
 import { matchJourney } from '@/lib/onboarding/journeyMatcher';
 import { journeys } from '@/data/journeys';
@@ -113,12 +114,12 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
                   className="w-full flex items-center gap-3 bg-popover rounded-2xl p-3 text-left opacity-80 hover:opacity-100 transition-opacity"
                   style={{ border: '1px solid hsl(var(--border))' }}
                 >
-                  <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center text-xl flex-shrink-0">
-                    ✨
+                  <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center flex-shrink-0">
+                    <Compass size={18} className="text-brand-text-secondary" aria-hidden="true" />
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-foreground">{alt.journey?.title}</p>
-                    <p className="text-xs text-brand-text-secondary mt-0.5">{alt.journey?.duration}</p>
+                    <p className="text-xs text-brand-text-secondary mt-0.5">{typeof alt.journey?.duration === 'number' ? `${alt.journey.duration} days` : alt.journey?.duration}</p>
                   </div>
                 </motion.button>
               ))}

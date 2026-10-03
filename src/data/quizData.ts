@@ -161,7 +161,7 @@ const premiumQuestions: Question[] = [
     intimacyLevel: 2,
     modality: "Gottman Method",
     therapeuticIntent: "Bid recognition — building awareness of daily micro-moments of connection and how you respond to them",
-    explanation: "In Gottman's newlywed research (described in The Relationship Cure, 2001), couples who turned toward each other's bids about 86% of the time were still together six years later. Couples who turn toward only 33% of the time are not. Learning to notice bids is where it starts.",
+    explanation: "In Gottman's newlywed research (described in The Relationship Cure, 2001), couples who turned toward each other's bids about 86% of the time were still together six years later. Couples who split had turned toward about 33% of the time. Learning to notice bids is where it starts.",
   },
   {
     id: 202,

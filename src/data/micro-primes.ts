@@ -77,7 +77,7 @@ export const MICRO_PRIMES: MicroPrime[] = [
     id: 'cap-good-news',
     category: 'capitalization',
     story: "Hannah came home buzzing — her project got picked. Raj put down his fork. \"Wait. How did they tell you?\" She talked for twenty minutes, glowing.",
-    body: 'How you respond to their good news predicts more than how you handle fights. If they share something good today — get curious. Ask a follow-up. Let them tell you more.',
+    body: 'How you respond to good news matters a lot — some research suggests as much as how you handle fights. If they share something good today, get curious. Ask a follow-up. Let them tell you more.',
     ifThen: (a) => `When ${a}, I'll remind myself: if they share good news, I ask one more question about it.`,
     citation: 'Gable, S. L., Reis, H. T., Impett, E. A., & Asher, E. R. (2004).',
     institution: 'UCLA / University of Rochester',

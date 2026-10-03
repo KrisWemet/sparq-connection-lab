@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, Heart, Calendar, Star, Clock, Filter, Search, ThumbsUp, ThumbsDown, Share2, Bookmark, MapPin, Sparkles } from "lucide-react";
+import { ChevronLeft, Heart, Clock, Filter, Search, ThumbsUp, ThumbsDown, Share2, Bookmark, MapPin, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { AIService } from "@/services/aiService";
 import { AnimatedContainer, AnimatedList } from "@/components/ui/animated-container";
@@ -128,7 +128,7 @@ const intimateIdeas = [
 export default function DateIdeas() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
-  const [savedIdeas, setSavedIdeas] = useState<number[]>([2, 5, 102, 105]);
+  const [savedIdeas, setSavedIdeas] = useState<number[]>([]);
   const [location, setLocation] = useState<string>("local area");
   const [aiDateIdeas, setAiDateIdeas] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -140,7 +140,8 @@ export default function DateIdeas() {
     // Simple location detection using the browser's timezone as a hint
     try {
       const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const city = tz.split('/').pop()?.replace(/_/g, ' ');
+      // "UTC" or "Etc/GMT+5" is not a place, so keep "local area".
+      const city = tz.includes('/') && !tz.startsWith('Etc/') ? tz.split('/').pop()?.replace(/_/g, ' ') : undefined;
       if (city) setLocation(city);
     } catch {
       // keep default "local area"
@@ -167,12 +168,22 @@ export default function DateIdeas() {
       setAiDateIdeas(ideas);
     } catch (error) {
       console.error("Error generating date ideas:", error);
-      toast.error("Failed to generate date ideas. Using fallback suggestions.");
     } finally {
       setIsLoading(false);
     }
   };
   
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('sparq.savedDateIdeas') || '[]');
+      if (Array.isArray(saved)) setSavedIdeas(saved.filter((n: unknown) => typeof n === 'number'));
+    } catch { /* storage blocked: start empty */ }
+  }, []);
+
+  useEffect(() => {
+    try { localStorage.setItem('sparq.savedDateIdeas', JSON.stringify(savedIdeas)); } catch { /* ignore */ }
+  }, [savedIdeas]);
+
   const handleSaveIdea = (id: number) => {
     setSavedIdeas(prev => {
       if (prev.includes(id)) {
@@ -185,17 +196,19 @@ export default function DateIdeas() {
     });
   };
   
-  const handleScheduleDate = (title: string) => {
-    toast.success(`"${title}" added to your calendar`);
-  };
-  
-  const handleShareIdea = (title: string) => {
-    toast.success(`Shared "${title}" with your partner`);
+  // Nothing is sent from here: the idea is copied so the user can pass it on
+  // however they like (privacy: sharing is always the user's own act).
+  const handleShareIdea = async (title: string, description?: string) => {
+    try {
+      await navigator.clipboard.writeText(description ? `${title} — ${description}` : title);
+      toast.success("Copied. Send it to your partner however you like.");
+    } catch {
+      toast("Couldn't copy just now — the idea is right here on screen.");
+    }
   };
   
   const handleRefreshIdeas = () => {
     generateDateIdeas();
-    toast.success("Generating new date ideas for you!");
   };
   
   // Filter ideas based on search query
@@ -324,10 +337,6 @@ export default function DateIdeas() {
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between mb-2">
                             <h3 className="text-lg font-semibold text-foreground dark:text-white">{idea.title}</h3>
-                            <div className="flex items-center gap-1">
-                              <Star className="w-4 h-4 text-growth-emphasis fill-current" />
-                              <span className="text-sm font-medium dark:text-foreground">{idea.rating}</span>
-                            </div>
                           </div>
                           <p className="text-sm text-muted-foreground dark:text-muted-foreground mb-3">{idea.description}</p>
                           <div className="flex items-center gap-4 text-xs text-brand-text-secondary dark:text-muted-foreground mb-4">
@@ -352,19 +361,11 @@ export default function DateIdeas() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => handleShareIdea(idea.title)}
+                              onClick={() => handleShareIdea(idea.title, idea.description)}
                               className="min-h-[44px] flex-1 whitespace-nowrap dark:bg-card dark:text-white dark:border-border"
                             >
                               <Share2 className="w-4 h-4 mr-1 shrink-0" />
-                              Share
-                            </Button>
-                            <Button 
-                              size="sm"
-                              className="min-h-[44px] flex-1 whitespace-nowrap"
-                              onClick={() => handleScheduleDate(idea.title)}
-                            >
-                              <Calendar className="w-4 h-4 mr-1 shrink-0" />
-                              Schedule
+                              Copy
                             </Button>
                           </div>
                         </CardContent>
@@ -384,10 +385,6 @@ export default function DateIdeas() {
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="text-lg font-semibold text-foreground dark:text-white">{idea.title}</h3>
-                        <div className="flex items-center gap-1">
-                          <Star className="w-4 h-4 text-growth-emphasis fill-current" />
-                          <span className="text-sm font-medium dark:text-foreground">{idea.rating}</span>
-                        </div>
                       </div>
                       <Badge className="mb-3 bg-primary/10 text-brand-hover border-primary/30">
                         {idea.category}
@@ -415,19 +412,11 @@ export default function DateIdeas() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => handleShareIdea(idea.title)}
+                          onClick={() => handleShareIdea(idea.title, idea.description)}
                           className="min-h-[44px] flex-1 whitespace-nowrap dark:bg-card dark:text-white dark:border-border"
                         >
                           <Share2 className="w-4 h-4 mr-1 shrink-0" />
-                          Share
-                        </Button>
-                        <Button 
-                          size="sm"
-                          className="min-h-[44px] flex-1 whitespace-nowrap"
-                          onClick={() => handleScheduleDate(idea.title)}
-                        >
-                          <Calendar className="w-4 h-4 mr-1 shrink-0" />
-                          Schedule
+                          Copy
                         </Button>
                       </div>
                     </CardContent>
@@ -477,10 +466,6 @@ export default function DateIdeas() {
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between mb-2">
                             <h3 className="text-lg font-semibold text-foreground dark:text-white">{idea.title}</h3>
-                            <div className="flex items-center gap-1">
-                              <Star className="w-4 h-4 text-growth-emphasis fill-current" />
-                              <span className="text-sm font-medium dark:text-foreground">{idea.rating}</span>
-                            </div>
                           </div>
                           {!idea.image && (
                             <Badge className="mb-3 bg-primary/10 text-brand-hover border-primary/30">
@@ -506,14 +491,6 @@ export default function DateIdeas() {
                             >
                               <Bookmark className="w-4 h-4 mr-1 shrink-0 fill-primary" />
                               Remove
-                            </Button>
-                            <Button 
-                              size="sm"
-                              className="min-h-[44px] flex-1 whitespace-nowrap"
-                              onClick={() => handleScheduleDate(idea.title)}
-                            >
-                              <Calendar className="w-4 h-4 mr-1 shrink-0" />
-                              Schedule
                             </Button>
                           </div>
                         </CardContent>

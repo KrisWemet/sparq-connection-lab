@@ -209,7 +209,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
   // When the name question was skipped, Peter still introduces himself.
   const skippedNameIntro = currentIndex === 1 && Boolean(knownFirstName) && !progress.answers[0];
   const peterText = skippedNameIntro
-    ? `Hi ${progress.firstName} — I'm Peter. I'm going to be with you every step of the way. Couple of quick ones first—`
+    ? `Hi ${progress.firstName} — I'm Peter. I'll walk you through the first part. Couple of quick ones first—`
     : getPeterText(question, progress.firstName, progress.partnerName);
   const showBack = currentIndex > 0 && !isBridging;
 
@@ -316,7 +316,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
             <div>
               <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-2">Your pronouns</p>
               <div className="flex flex-col gap-2">
-                {['She / Her', 'He / Him', 'They / Them'].map(label => (
+                {['She / Her', 'He / Him', 'They / Them', 'Prefer not to say'].map(label => (
                   <button
                     key={label}
                     onClick={() => setMultiPartState(s => ({ ...s, pronouns: label.toLowerCase().replace(' / ', '/') }))}

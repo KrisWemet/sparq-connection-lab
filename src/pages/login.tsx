@@ -6,7 +6,6 @@ import Head from 'next/head';
 import { SparqLogo } from '@/components/brand/SparqMark';
 import Link from 'next/link';
 import { AmbientScene } from '@/components/emotion/EmotionalEnvironment';
-import { MetaphorJourney } from '@/components/emotion/MetaphorJourney';
 import { MetaphorVisual } from '@/components/emotion/MetaphorVisual';
 import { emotionStyle } from '@/lib/visual-emotion';
 import styles from '@/components/emotion/welcome.module.css';
@@ -66,7 +65,6 @@ export default function LoginPage() {
               <p>{isRegisterMode ? 'A private practice. A little more understanding. Something you can build on, one day at a time.' : 'Bring the day you have had. Find a little room to reflect, reconnect, and begin again.'}</p>
             </aside>
           </div>
-          <MetaphorJourney />
         </main>
         <footer className={styles.authFooter}>© {new Date().getFullYear()} Sparq</footer>
       </div>

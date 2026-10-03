@@ -19,7 +19,7 @@ export const QUESTIONS: Question[] = [
   {
     index: 0,
     topic: 'Name',
-    peterText: "Hi — I'm Peter. I'm going to be with you every step of the way. Let's start easy: what's your name?",
+    peterText: "Hi — I'm Peter. I'll walk you through the first part. Let's start easy: what's your name?",
     inputType: 'text',
     options: [],
     captures: ['firstName'],

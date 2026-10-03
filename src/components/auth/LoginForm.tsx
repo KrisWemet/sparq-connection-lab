@@ -117,25 +117,13 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
           router.push(isRegisterMode ? '/onboarding' : '/dashboard');
         }, 1500);
       } else {
-        const errMsg = result.error || '';
-        const isNoAccount =
-          /invalid login credentials/i.test(errMsg) ||
-          /invalid_credentials/i.test(errMsg) ||
-          /user not found/i.test(errMsg) ||
-          /no user found/i.test(errMsg);
-
-        if (!isRegisterMode && isNoAccount && onToggleMode) {
-          onToggleMode();
-          setError("No account found for that email. Please create one below.");
-        } else {
-          setError(errMsg || 'An error occurred. Please try again.');
-        }
+        setError(friendlyAuthError(result.error || '', isRegisterMode));
       }
     } catch (err) {
       void reportPrimaryPathClientError('login_form_submit', err, {
         is_register_mode: isRegisterMode,
       });
-      setError('An unexpected error occurred. Please try again later.');
+      setError(friendlyAuthError(err instanceof Error ? err.message : '', isRegisterMode));
       console.error('Auth error:', err);
     } finally {
       setIsSubmitting(false);
@@ -238,8 +226,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
             </button>
           </div>
           <p className="mt-3 text-xs text-brand-hover">
-            By continuing, you agree to our{' '}
-            <a href="/privacy" className="underline">Privacy Policy</a>.
+            <Link href="/how-sparq-works" className="underline">How Sparq works and what happens to your data</Link>
           </p>
         </motion.div>
       )}
@@ -394,14 +381,10 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
         variants={itemVariants}
       >
         <p>
-          By {isRegisterMode ? 'creating an account' : 'signing in'}, you agree to our{' '}
-          <a href="#" className="text-brand-hover hover:text-brand-espresso">
-            Terms of Service
-          </a>{' '}
-          and{' '}
-          <a href="#" className="text-brand-hover hover:text-brand-espresso">
-            Privacy Policy
-          </a>
+          Your journal and reflections stay private.{' '}
+          <Link href="/how-sparq-works" className="text-brand-hover underline hover:text-brand-espresso">
+            How Sparq works
+          </Link>
         </p>
         
         {isRegisterMode && (
@@ -417,4 +400,18 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
       </motion.div>
     </motion.div>
   );
+}
+
+// Plain-language auth errors — never show raw library text to users (CLAUDE.md).
+// Supabase answers "invalid login credentials" for both a wrong password and an
+// unknown email, so sign-in never claims the account doesn't exist.
+function friendlyAuthError(raw: string, isRegisterMode: boolean): string {
+  const msg = raw.toLowerCase();
+  if (/fetch|network|timeout|failed to load/.test(msg)) return "We couldn't reach Sparq. Check your connection and try again.";
+  if (/already registered|already exists|user_already_exists/.test(msg)) return 'There is already an account with that email. Try signing in instead.';
+  if (/invalid login|invalid_credentials|user not found|no user found/.test(msg)) return "That email and password don't match. Try again, or reset your password.";
+  if (/email not confirmed/.test(msg)) return 'Please confirm your email first — check your inbox for the link.';
+  if (/password/.test(msg) && /(short|least|weak)/.test(msg)) return 'Please use a password with at least 8 characters.';
+  if (/rate limit|too many/.test(msg)) return 'Too many tries in a row. Please wait a minute and try again.';
+  return isRegisterMode ? "We couldn't create your account just now. Please try again." : "We couldn't sign you in just now. Please try again.";
 }

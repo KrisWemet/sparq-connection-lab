@@ -28,8 +28,11 @@ export async function peterChat({ messages, maxTokens = 512, temperature }: Pete
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) throw new Error('OPENROUTER_API_KEY is not configured');
 
+  // A free model can hang for minutes; give each try 30s, then treat it like
+  // a busy model (504) so the next one gets a turn.
   const request = (body: Record<string, unknown>) => fetch(`${OPENROUTER_BASE}/chat/completions`, {
     method: 'POST',
+    signal: AbortSignal.timeout(30_000),
     headers: {
       Authorization: `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
@@ -44,17 +47,26 @@ export async function peterChat({ messages, maxTokens = 512, temperature }: Pete
       max_tokens: maxTokens,
       ...(temperature !== undefined ? { temperature } : {}),
     }),
+  }).catch((err: unknown) => {
+    if (err instanceof Error && (err.name === 'TimeoutError' || err.name === 'AbortError')) {
+      return new Response('Timed out waiting for model', { status: 504 });
+    }
+    throw err;
   });
 
-  let response = await request({ models: PETER_MODELS, route: 'fallback' });
+  const retryable = (r: Response) => r.status === 429 || r.status >= 500;
 
   // OpenRouter's own fallback doesn't always move on when the first model is
   // rate-limited upstream (429) or its provider errors. Try each remaining
-  // model directly before giving up, so one busy free model doesn't take
-  // Peter down.
-  for (const model of PETER_MODELS.slice(1)) {
-    if (response.ok || (response.status !== 429 && response.status < 500)) break;
-    response = await request({ model });
+  // model directly, and if every model is busy, wait a moment and try the
+  // whole list once more — free models are often rate-limited for seconds.
+  let response: Response = await request({ models: PETER_MODELS, route: 'fallback' });
+  for (let round = 0; round < 2 && retryable(response); round++) {
+    if (round === 1) await new Promise(r => setTimeout(r, 2500));
+    for (const model of round === 0 ? PETER_MODELS.slice(1) : PETER_MODELS) {
+      response = await request({ model });
+      if (!retryable(response)) break;
+    }
   }
 
   if (!response.ok) {

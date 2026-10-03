@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, HandHelping } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useAuth } from '@/lib/auth-context';
+
+// Pages where the floating button would cover a form or duplicate a
+// calm-down tool the page already has.
+const HIDDEN_ON = new Set(['/', '/login', '/signup', '/onboarding', '/forgot-password', '/reset-password', '/help-now', '/how-sparq-works', '/conflict-first-aid']);
 
 export function TimeOutOverlay() {
+  const { user } = useAuth();
+  const { pathname } = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [breathState, setBreathState] = useState<'inhale' | 'hold' | 'exhale'>('inhale');
 
   // 4-7-8 Breathing logic
@@ -32,10 +42,17 @@ export function TimeOutOverlay() {
 
   const message = "I love you, but I'm feeling overwhelmed right now. I need 20 minutes to cool down, and then I will come back to you.";
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(message);
-    // Could add a toast here, but cognitive load is high, so just change text temporarily
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(message);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      // Clipboard blocked: the message is on screen to read or type.
+    }
   };
+
+  if (!user || HIDDEN_ON.has(pathname)) return null;
 
   return (
     <>
@@ -60,6 +77,7 @@ export function TimeOutOverlay() {
             <button
               onClick={() => setIsOpen(false)}
               className="absolute top-8 right-8 text-white/50 hover:text-white p-2"
+              aria-label="Close time out"
             >
               <X size={32} />
             </button>
@@ -110,8 +128,13 @@ export function TimeOutOverlay() {
                 onClick={handleCopy}
                 className="w-full py-4 bg-popover text-foreground font-bold rounded-2xl text-lg hover:bg-border transition-colors"
               >
-                Copy Message
+                {copied ? 'Copied' : 'Copy Message'}
               </button>
+              <p className="text-sm text-white/70">
+                <Link href="/conflict-first-aid" onClick={() => setIsOpen(false)} className="underline">More calm-down steps</Link>
+                {' · '}
+                <Link href="/help-now" onClick={() => setIsOpen(false)} className="underline">Need help now?</Link>
+              </p>
             </div>
           </motion.div>
         )}

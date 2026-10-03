@@ -37,7 +37,7 @@ export default function RelationshipRenewalJourney() {
           description: "Rebuilding the habit of noticing and expressing what you love about your partner",
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
-          example: "Gottman's research shows that thriving couples have a 5:1 ratio of positive to negative interactions. If yours has slipped, start with one specific appreciation per day: 'I noticed how patient you were with the kids tonight. That really meant something to me.'",
+          example: "In Gottman's research, couples who did well had about five positive moments for every negative one during conflict. If yours has slipped, start with one specific appreciation per day: 'I noticed how patient you were with the kids tonight. That really meant something to me.'",
           story: "Rosa decided on one small thing: one specific thank-you to Ben every day. \"Thanks for warming up the car.\" \"I loved how you talked to our daughter just now.\" By the end of the week, Ben had started doing the same.",
         },
         {
@@ -107,7 +107,7 @@ export default function RelationshipRenewalJourney() {
           description: "Creating small, consistent moments of connection throughout the day",
           icon: <Clock className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
-          example: "A 6-second kiss when you say goodbye (research shows this is long enough to create genuine connection). A 2-minute check-in at lunch. A specific question at dinner: 'What was the best part of your day?' Micro-connections prevent drift.",
+          example: "A 6-second kiss when you say goodbye (a Gottman suggestion — long enough to really notice each other). A 2-minute check-in at lunch. A specific question at dinner: 'What was the best part of your day?' Micro-connections prevent drift.",
           story: "Sam started kissing Theo goodbye for a full six seconds instead of a quick peck. It felt a bit dramatic the first time. They both laughed. But by the end of the week, those six seconds had become the best part of their mornings.",
         },
         {
@@ -159,7 +159,7 @@ export default function RelationshipRenewalJourney() {
           description: "Encouraging individual growth as fuel for relationship growth, not a threat to it",
           icon: <TreePine className="w-5 h-5 text-green-600" />,
           color: "green",
-          example: "Your partner wants to take up painting or go back to school. Instead of feeling threatened by their growth, getting excited: 'Tell me about what you're learning.' Perel's research shows that eroticism thrives when partners have their own sources of vitality.",
+          example: "Your partner wants to take up painting or go back to school. Instead of feeling threatened by their growth, getting excited: 'Tell me about what you're learning.' Esther Perel writes that desire often grows when each partner has their own sources of energy and interest.",
           story: "Dev decided to go back to school at thirty-two. Maya felt a small twist of worry — would he change? Then she chose curiosity instead. \"Tell me what you're learning,\" she said every night. And he did.",
         },
         {

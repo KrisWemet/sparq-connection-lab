@@ -76,7 +76,7 @@ export default function ValuesJourney() {
           description: "Discovering the shared values that already form the invisible foundation of your relationship",
           icon: <Handshake className="w-5 h-5 text-green-500" />,
           color: "green",
-          example: "Couples often share 60-80% of their core values without realizing it. By mapping values side by side, you discover that 'loyalty' and 'commitment' are both present, just expressed differently. Same value, different language.",
+          example: "Couples often share more core values than they realize. By mapping values side by side, you discover that 'loyalty' and 'commitment' are both present, just expressed differently. Same value, different language.",
           story: "Leah and Marcus mapped their values side by side, expecting a fight. Instead, most of the list matched. Loyalty. Family. Honesty. They just showed them differently. \"Huh,\" Marcus said. \"We're more alike than I thought.\"",
         },
         {

@@ -37,7 +37,7 @@ export default function EmotionalIntelligenceJourney() {
           description: "Moving beyond 'fine' and 'stressed' to identify exactly what you're experiencing",
           icon: <MessageSquare className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
-          example: "Instead of saying 'I'm upset,' distinguishing between disappointed, frustrated, hurt, or overwhelmed. Research shows that precisely labeling an emotion reduces its intensity by up to 50% — this is called 'affect labeling.'",
+          example: "Instead of saying 'I'm upset,' distinguishing between disappointed, frustrated, hurt, or overwhelmed. Research on naming feelings (Lieberman, 2007) suggests that putting a precise word to an emotion can make it feel less intense.",
           story: "\"I'm upset,\" Jo said. Then she tried to be more exact. \"Actually — I'm disappointed. I was looking forward to tonight.\" Ellie nodded. Somehow, having the right word made the feeling a little smaller for both of them.",
         },
         {
@@ -107,7 +107,7 @@ export default function EmotionalIntelligenceJourney() {
           description: "Recognizing and responding to your partner's small requests for emotional connection",
           icon: <Sparkles className="w-5 h-5 text-amber-500" />,
           color: "amber",
-          example: "Your partner sighs heavily while reading something on their phone. That sigh is an emotional bid — a request for attention. Turning toward it ('What's going on?') builds trust. Ignoring it ('...' ) erodes connection. Gottman found that couples who 'turn toward' 86% of the time stay together.",
+          example: "Your partner sighs heavily while reading something on their phone. That sigh is an emotional bid — a request for attention. Turning toward it ('What's going on?') builds trust. Ignoring it ('...' ) erodes connection. In one Gottman study of newlyweds, couples still together years later had turned toward each other's bids about 86% of the time.",
           story: "Isaac let out a big sigh while reading his phone. Zoe almost kept scrolling her own. Then she looked up. \"What's going on?\" He turned the screen toward her. It was just a small thing — but she'd turned toward him, and he felt it.",
         },
         {

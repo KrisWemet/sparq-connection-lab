@@ -4,7 +4,7 @@ title: Deepening Intimacy
 duration: 5 weeks
 category: Connection
 sequence: 4
-description: Build stronger emotional and physical connection through proven approaches
+description: Build stronger emotional and physical connection through well-studied approaches
 ---
 
 # Deepening Intimacy Journey
@@ -64,7 +64,7 @@ Physical intimacy includes the full spectrum of physical connection—from holdi
 
 Intimacy is what distinguishes a romantic relationship from other types of relationships in our lives. Without it, partners can begin to feel like roommates or co-parents rather than lovers and companions.
 
-Research shows that couples who maintain intimacy report higher relationship satisfaction, better emotional health, and even improved physical health. When we feel deeply connected to our partner, we experience the world as a safer place because we know we're not facing life's challenges alone.
+Research suggests that couples who maintain intimacy report higher relationship satisfaction, better emotional health, and even improved physical health. When we feel deeply connected to our partner, we experience the world as a safer place because we know we're not facing life's challenges alone.
 
 The good news is that intimacy can be cultivated intentionally. Even if you've drifted apart or never developed the level of intimacy you desire, you can build these connections through understanding, practice, and patience.
 

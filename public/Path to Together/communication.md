@@ -4,7 +4,7 @@ title: Effective Communication
 duration: 3 weeks
 category: Skills
 sequence: 2
-description: Learn to understand each other deeply through proven communication methods
+description: Learn to understand each other deeply through well-studied communication practices
 ---
 
 # Effective Communication Journey

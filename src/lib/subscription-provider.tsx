@@ -97,18 +97,22 @@ function getPlanForTier(tier: SubscriptionTier): SubscriptionPlan {
 }
 
 export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
-  const [subscription, setSubscriptionState] = useState<SubscriptionPlan>(() => {
-    if (typeof window === 'undefined') return defaultSubscription;
+  // Start from the default on server and client alike so the first render
+  // matches; the saved plan is loaded after mount (avoids a hydration error).
+  const [subscription, setSubscriptionState] = useState<SubscriptionPlan>(defaultSubscription);
+  const [storageLoaded, setStorageLoaded] = useState(false);
+
+  useEffect(() => {
     const savedSubscription = localStorage.getItem("subscription");
     if (savedSubscription) {
       try {
-        return normalizeStoredSubscription(JSON.parse(savedSubscription));
+        setSubscriptionState(normalizeStoredSubscription(JSON.parse(savedSubscription)));
       } catch (e) {
         console.error("Failed to parse subscription from localStorage:", e);
       }
     }
-    return defaultSubscription;
-  });
+    setStorageLoaded(true);
+  }, []);
 
   const [remainingDailyQuestions, setRemainingDailyQuestions] = useState<number>(() => {
     if (typeof window === 'undefined') return defaultSubscription.features.dailyQuestions;
@@ -194,8 +198,9 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
 
   // Save to localStorage when these values change
   useEffect(() => {
+    if (!storageLoaded) return;
     localStorage.setItem("subscription", JSON.stringify(subscription));
-  }, [subscription]);
+  }, [subscription, storageLoaded]);
 
   useEffect(() => {
     localStorage.setItem("remainingDailyQuestions", remainingDailyQuestions.toString());

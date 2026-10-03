@@ -48,7 +48,7 @@ export default function ConflictResolutionJourney() {
           description: "Recognizing when your nervous system is overwhelmed and you can no longer think clearly",
           icon: <Thermometer className="w-5 h-5 text-red-500" />,
           color: "red",
-          example: "Your heart is pounding, your thoughts are racing, and everything your partner says sounds like an attack. This is flooding — your body has entered survival mode. Gottman research shows nothing productive happens once your heart rate exceeds 100 BPM.",
+          example: "Your heart is pounding, your thoughts are racing, and everything your partner says sounds like an attack. This is flooding — your body has entered survival mode. Gottman's work suggests that once your heart rate climbs past about 100 beats a minute, it gets very hard to really listen.",
           story: "Halfway through the talk about money, Daniel's heart was pounding and his face felt hot. Every word from Aiko sounded like an attack, even the kind ones. He put his hand on his chest. \"I'm flooded,\" he said. \"I can't hear you well right now.\" Aiko nodded. Saying it out loud was the first step back.",
         },
         {
@@ -57,7 +57,7 @@ export default function ConflictResolutionJourney() {
           description: "Recognizing criticism, contempt, defensiveness, and stonewalling before they erode connection",
           icon: <Shield className="w-5 h-5 text-slate-500" />,
           color: "slate",
-          example: "Catching yourself rolling your eyes (contempt) or responding to a complaint with 'well, you do it too' (defensiveness). Gottman's research shows these four behaviors predict relationship failure with 93% accuracy — but only if left unchecked.",
+          example: "Catching yourself rolling your eyes (contempt) or responding to a complaint with 'well, you do it too' (defensiveness). In Gottman's studies, these four patterns were strong warning signs when they became a habit — and habits can change.",
           story: "Jo felt her eyes start to roll when Ellie brought up the guest room again. She caught it halfway. That eye roll said \"you're ridiculous\" louder than any words. Jo stopped, took a breath, and said, \"Okay. Tell me what's bugging you about it.\"",
         },
         {
@@ -118,7 +118,7 @@ export default function ConflictResolutionJourney() {
           description: "Navigating the perpetual problems that never fully resolve because they reflect fundamental differences",
           icon: <Waypoints className="w-5 h-5 text-brand-primary" />,
           color: "purple",
-          example: "Gottman found that 69% of couple conflicts are perpetual. The introvert-extrovert tension, different spending philosophies, different parenting styles. The goal shifts from resolution to dialogue: 'How do we live with this difference with humor and grace?'",
+          example: "In Gottman's research, about two-thirds of couple conflicts were ongoing differences rather than problems to solve once. The introvert-extrovert tension, different spending philosophies, different parenting styles. The goal shifts from resolution to dialogue: 'How do we live with this difference with humor and grace?'",
           story: "Mateo loves a full house. Clara needs quiet. After twenty years, they've stopped trying to win. Now they plan it: friends over on Friday, a quiet Sunday just for them. \"We're never going to agree on this,\" Clara said, smiling. \"But we're good at living with it.\"",
         },
         {
