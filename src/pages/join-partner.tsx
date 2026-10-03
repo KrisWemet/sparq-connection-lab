@@ -11,6 +11,7 @@ import { TONE } from '@/lib/moment-tone';
 import { readPendingInvite as readPending, writePendingInvite as writePending } from '@/lib/partner-invite';
 
 const REASONS: Record<string, string> = {
+  expired: 'That invite has run out (they last 24 hours). Ask your partner to send a new one.',
   not_found: "That code didn't match anyone. Check it with your partner and try again.",
   own_code: "That's your own code. Send it to your partner, or enter theirs.",
   you_are_linked: "You're already linked with someone. Unlink first if you want to change that.",
@@ -30,7 +31,10 @@ export default function JoinPartner() {
   const partnerName = profile?.partner_name?.trim() || 'your partner';
 
   const [loaded, setLoaded] = useState(false);
+  // Invites last 24 hours; a new one can be made once the last runs out.
   const [myCode, setMyCode] = useState('');
+  const [expiresAt, setExpiresAt] = useState<Date | null>(null);
+  const [hadInvite, setHadInvite] = useState(false);
   const [linked, setLinked] = useState(false);
   const [code, setCode] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -49,16 +53,19 @@ export default function JoinPartner() {
     if (!user) return;
     const { data } = await supabase
       .from('profiles')
-      .select('partner_code, partner_id')
+      .select('partner_code, partner_code_expires_at, partner_id')
       .eq('id', user.id)
       .maybeSingle();
     setMyCode((data?.partner_code || '').toUpperCase());
+    setExpiresAt(data?.partner_code_expires_at ? new Date(data.partner_code_expires_at) : null);
+    setHadInvite(!!data?.partner_code_expires_at);
     setLinked(!!data?.partner_id);
     setLoaded(true);
   }, [user]);
 
   useEffect(() => { load(); }, [load]);
 
+  const inviteActive = !!expiresAt && expiresAt.getTime() > Date.now();
   const inviteLink = myCode && typeof window !== 'undefined'
     ? `${window.location.origin}/join-partner?inviteCode=${myCode}`
     : '';
@@ -66,11 +73,26 @@ export default function JoinPartner() {
   async function copyInvite() {
     try {
       await navigator.clipboard.writeText(
-        `I'm trying Sparq. Want to link up? Open this link, or enter my code ${myCode}: ${inviteLink}`
+        `I'm trying Sparq. Want to link up? Open this link, or enter my code ${myCode} (it works for 24 hours): ${inviteLink}`
       );
       toast.success('Copied. Send it to your partner however you like.');
     } catch {
       toast('Couldn’t copy just now — your code is right here on screen.');
+    }
+  }
+
+  async function createInvite() {
+    setBusy(true);
+    try {
+      const { data, error: rpcError } = await supabase.rpc('new_partner_code');
+      if (rpcError || !data?.ok) throw rpcError ?? new Error('no code');
+      setMyCode(String(data.code).toUpperCase());
+      setExpiresAt(new Date(data.expires_at));
+      setHadInvite(true);
+    } catch {
+      toast("We couldn't make an invite just now. Please try again.");
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -193,11 +215,29 @@ export default function JoinPartner() {
 
             <section className={cn(card, 'space-y-3')}>
               <p className={cn('text-xs font-semibold tracking-widest uppercase', TONE.connect.eyebrow)}>Or send yours</p>
-              <p className="font-mono text-2xl tracking-[0.3em] text-brand-espresso text-center py-2">{myCode}</p>
-              <button type="button" disabled={!myCode} className={outline} onClick={copyInvite}>Copy invite</button>
-              <p className="text-xs text-brand-text-secondary leading-relaxed">
-                Only share your code with your partner. Anyone with it can link to you, and you can unlink any time.
-              </p>
+              {inviteActive && expiresAt ? (
+                <>
+                  <p className="font-mono text-2xl tracking-[0.3em] text-brand-espresso text-center py-2">{myCode}</p>
+                  <p className="text-center text-xs text-brand-text-secondary">
+                    Works until {expiresAt.toLocaleString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit' })}
+                  </p>
+                  <button type="button" className={outline} onClick={copyInvite}>Copy invite</button>
+                  <p className="text-xs text-brand-text-secondary leading-relaxed">
+                    Only share it with your partner. It works once, for 24 hours, and you can unlink any time.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm text-brand-espresso leading-relaxed">
+                    {hadInvite
+                      ? 'Your last invite ran out. Make a new one whenever you’re ready.'
+                      : 'Make an invite to send your partner. It works for 24 hours.'}
+                  </p>
+                  <button type="button" disabled={busy} className={outline} onClick={createInvite}>
+                    {busy ? 'Making it…' : hadInvite ? 'Make a new invite' : 'Make an invite'}
+                  </button>
+                </>
+              )}
             </section>
           </>
         )}
