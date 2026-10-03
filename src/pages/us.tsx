@@ -1,3 +1,4 @@
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -89,13 +90,13 @@ export default function UsPage() {
   }
 
   // The shared space is a connect moment (coral) — see lib/moment-tone.ts.
-  const card = cn(TONE.connect.card, 'rounded-3xl shadow-sm p-6');
-  const input = 'w-full rounded-xl border border-brand-border bg-white/70 p-3 text-sm text-brand-espresso placeholder:text-brand-text-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary/30';
+  const card = cn(TONE.connect.card, 'emotion-paper rounded-3xl shadow-sm p-6');
+  const input = 'w-full rounded-xl border border-input bg-popover/70 p-3 text-sm text-foreground placeholder:text-brand-text-secondary focus:outline-none focus:ring-2 focus:ring-ring';
   const primary = cn(TONE.connect.button, 'rounded-full px-5 py-2 text-sm disabled:opacity-50');
 
   return (
     <ProtectedRoute>
-      <div className="min-h-dvh bg-brand-linen pb-28">
+      <div className="emotion-page min-h-dvh bg-brand-linen pb-28">
         <header className="max-w-lg mx-auto px-4 pt-6">
           <div className="flex items-center justify-between mb-6">
             <button onClick={() => router.push('/dashboard')} aria-label="Back to Home"
@@ -108,7 +109,8 @@ export default function UsPage() {
         </header>
 
         <main className="max-w-lg mx-auto px-4 space-y-5">
-          <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className={card}>
+          <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className={cn(card, 'emotion-featured emotion-surface relative overflow-hidden')}>
+            <SceneAccent kind="bridge" className="-mt-3 mb-2 h-24 w-full" />
             <h1 className="font-serif text-2xl text-brand-espresso">Your shared space</h1>
             <p className="text-sm text-brand-text-secondary leading-relaxed mt-2">
               Only what each of you chooses to share lives here. Everything else stays private, even from Peter&apos;s shared side.
@@ -152,7 +154,7 @@ export default function UsPage() {
                   {SHARE_KINDS.map(k => (
                     <button key={k} type="button" onClick={() => setKind(k)}
                       className={cn('rounded-full border px-3 py-1.5 text-xs transition-colors',
-                        kind === k ? 'border-brand-primary bg-brand-primary/10 font-semibold text-brand-hover' : 'border-brand-border text-brand-espresso hover:bg-white/60')}>
+                        kind === k ? 'border-brand-primary bg-brand-primary/10 font-semibold text-brand-hover' : 'border-brand-border text-brand-espresso hover:bg-popover/60')}>
                       {KIND_LABELS[k]}
                     </button>
                   ))}

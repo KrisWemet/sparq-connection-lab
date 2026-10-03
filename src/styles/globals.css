@@ -3,201 +3,148 @@
 @tailwind utilities;
 
 @layer base {
+  /* Colour source of truth: plum understands, coral connects, gold grows.
+     Dark mode already exists as a class; no theme toggle is added here. */
   :root {
-    /* Plum / Coral / Gold system — must stay in sync with tailwind.config.ts brand.* */
-    --brand-canvas: #FAF7F2;
-    --brand-featured-surface: #EEE8E3;
-    --brand-accent: #4B2E57;
-    --brand-text-primary: #241D27;
-    --brand-text-secondary: #685C6A;
-    --brand-border: #DED5CF;
-    --brand-highlight: #F3B55A;
-    --brand-destructive: #C95B6A;
-    --peter-caption: #685C6A;
-
-    --background: 38 44% 96%;
-    --foreground: 282 15% 13%;
-
-    --card: 27 24% 91%;
-    --card-foreground: 282 15% 13%;
-
-    --popover: 36 100% 99%;
-    --popover-foreground: 282 15% 13%;
-
-    --primary: 282 31% 26%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 27 24% 91%;
-    --secondary-foreground: 282 15% 13%;
-
-    --muted: 38 44% 96%;
-    --muted-foreground: 291 7% 39%;
-
-    --accent: 27 24% 91%;
-    --accent-foreground: 282 15% 13%;
-
-    --destructive: 351 50% 57%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 24 19% 84%;
-    --input: 24 19% 84%;
-    --ring: 282 31% 26%;
-
+    --background: 37.50 44.44% 96.47%;
+    --foreground: 282.00 14.71% 13.33%;
+    --card: 27.27 24.44% 91.18%;
+    --card-foreground: 282.00 14.71% 13.33%;
+    --popover: 36.00 100.00% 99.02%;
+    --popover-foreground: 282.00 14.71% 13.33%;
+    --primary: 282.44 30.83% 26.08%;
+    --primary-foreground: 0.00 0.00% 100.00%;
+    --primary-hover: 282.35 33.33% 20.00%;
+    --primary-emphasis: 282.44 30.83% 26.08%;
+    --primary-emphasis-hover: 282.35 33.33% 20.00%;
+    --secondary: 27.27 24.44% 91.18%;
+    --secondary-foreground: 282.00 14.71% 13.33%;
+    --muted: 27.27 24.44% 91.18%;
+    --muted-foreground: 291.43 7.07% 38.82%;
+    --accent: 281.54 25.49% 90.00%;
+    --accent-foreground: 282.44 30.83% 26.08%;
+    --border: 24.00 18.52% 84.12%;
+    --input: 289.09 9.09% 52.55%;
+    --ring: 282.44 30.83% 26.08%;
+    --connection: 7.44 74.57% 66.08%;
+    --connection-foreground: 282.00 14.71% 13.33%;
+    --connection-emphasis: 10.91 56.28% 42.16%;
+    --connection-subtle: 10.91 73.33% 94.12%;
+    --growth: 35.69 86.44% 65.29%;
+    --growth-foreground: 282.00 14.71% 13.33%;
+    --growth-emphasis: 37.63 74.68% 30.98%;
+    --growth-subtle: 37.06 73.91% 90.98%;
+    --calm: 129.60 14.45% 66.08%;
+    --calm-emphasis: 135.00 21.43% 32.94%;
+    --calm-subtle: 130.91 24.44% 91.18%;
+    --destructive: 350.53 51.82% 43.14%;
+    --destructive-foreground: 0.00 0.00% 100.00%;
+    --destructive-emphasis: 350.53 51.82% 43.14%;
+    --destructive-subtle: 348.00 71.43% 94.51%;
+    --success: 141.60 32.47% 30.20%;
+    --success-foreground: 0.00 0.00% 100.00%;
+    --success-emphasis: 141.60 32.47% 30.20%;
+    --success-subtle: 130.91 24.44% 91.18%;
+    --warning: 35.69 86.44% 65.29%;
+    --warning-foreground: 282.00 14.71% 13.33%;
+    --warning-emphasis: 37.50 77.78% 28.24%;
+    --warning-subtle: 37.06 73.91% 90.98%;
+    --inverse: 282.00 14.71% 13.33%;
+    --inverse-foreground: 37.50 44.44% 96.47%;
+    --shadow: 282.00 14.71% 13.33%;
+    --brand-plum: 282.44 30.83% 26.08%;
+    --brand-mauve: 295.38 5.73% 44.51%;
     --radius: 0.5rem;
-
-    --sidebar-background: 36 100% 99%;
-    --sidebar-foreground: 282 15% 13%;
-    --sidebar-primary: 282 31% 26%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 27 24% 91%;
-    --sidebar-accent-foreground: 282 15% 13%;
-    --sidebar-border: 24 19% 84%;
-    --sidebar-ring: 282 31% 26%;
   }
 
   .dark {
-    --background: 266 18% 13%;
-    --foreground: 28 27% 95%;
-    --card: 266 16% 18%;
-    --card-foreground: 28 27% 95%;
-    --popover: 266 16% 16%;
-    --popover-foreground: 28 27% 95%;
-    --primary: 250 91% 65%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 266 16% 18%;
-    --secondary-foreground: 28 27% 95%;
-    --muted: 266 16% 18%;
-    --muted-foreground: 259 12% 75%;
-    --accent: 266 16% 18%;
-    --accent-foreground: 28 27% 95%;
-    --destructive: 351 50% 57%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 265 13% 28%;
-    --input: 265 13% 28%;
-    --ring: 250 91% 65%;
-    --sidebar-background: 266 18% 11%;
-    --sidebar-foreground: 28 27% 95%;
-    --sidebar-primary: 250 91% 65%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 266 16% 18%;
-    --sidebar-accent-foreground: 28 27% 95%;
-    --sidebar-border: 265 13% 28%;
-    --sidebar-ring: 250 91% 65%;
+    --background: 280.00 19.35% 12.16%;
+    --foreground: 37.50 44.44% 96.47%;
+    --card: 282.86 14.29% 19.22%;
+    --card-foreground: 37.50 44.44% 96.47%;
+    --popover: 282.35 14.78% 22.55%;
+    --popover-foreground: 37.50 44.44% 96.47%;
+    --primary: 279.55 18.64% 46.27%;
+    --primary-foreground: 0.00 0.00% 100.00%;
+    --primary-hover: 280.91 17.46% 50.59%;
+    --primary-emphasis: 281.86 31.85% 73.53%;
+    --primary-emphasis-hover: 283.64 40.74% 84.12%;
+    --secondary: 282.86 14.29% 19.22%;
+    --secondary-foreground: 37.50 44.44% 96.47%;
+    --muted: 282.86 14.29% 19.22%;
+    --muted-foreground: 292.00 11.45% 74.31%;
+    --accent: 285.00 17.91% 26.27%;
+    --accent-foreground: 37.50 44.44% 96.47%;
+    --border: 283.85 14.77% 34.51%;
+    --input: 282.58 14.42% 57.84%;
+    --ring: 281.86 31.85% 73.53%;
+    --connection: 7.44 74.57% 66.08%;
+    --connection-foreground: 282.00 14.71% 13.33%;
+    --connection-emphasis: 8.24 79.69% 74.90%;
+    --connection-subtle: 350.77 22.41% 22.75%;
+    --growth: 35.69 86.44% 65.29%;
+    --growth-foreground: 282.00 14.71% 13.33%;
+    --growth-emphasis: 35.69 86.44% 65.29%;
+    --growth-subtle: 35.29 33.33% 20.00%;
+    --calm: 129.60 14.45% 66.08%;
+    --calm-emphasis: 135.48 26.96% 77.45%;
+    --calm-subtle: 141.00 19.61% 20.00%;
+    --destructive: 350.53 51.82% 43.14%;
+    --destructive-foreground: 0.00 0.00% 100.00%;
+    --destructive-emphasis: 348.97 100.00% 82.94%;
+    --destructive-subtle: 345.45 29.20% 22.16%;
+    --success: 141.60 32.47% 30.20%;
+    --success-foreground: 0.00 0.00% 100.00%;
+    --success-emphasis: 135.48 26.96% 77.45%;
+    --success-subtle: 141.00 19.61% 20.00%;
+    --warning: 35.69 86.44% 65.29%;
+    --warning-foreground: 282.00 14.71% 13.33%;
+    --warning-emphasis: 35.69 86.44% 65.29%;
+    --warning-subtle: 35.29 33.33% 20.00%;
   }
-}
 
-@layer base {
-  * {
-    @apply border-border;
+  /* Keep legacy brand names and sidebar tokens responsive to either theme.
+     Define aliases in both scopes so nested dark surfaces resolve locally. */
+  :root, .dark {
+    color-scheme: light;
+    --brand-canvas: hsl(var(--background));
+    --brand-featured-surface: hsl(var(--card));
+    --brand-accent: hsl(var(--primary));
+    --brand-text-primary: hsl(var(--foreground));
+    --brand-text-secondary: hsl(var(--muted-foreground));
+    --brand-border: hsl(var(--border));
+    --brand-highlight: hsl(var(--growth));
+    --brand-destructive: hsl(var(--destructive));
+    --peter-caption: hsl(var(--muted-foreground));
+    --sidebar-background: var(--popover);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--accent);
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--ring);
   }
 
-  body {
-    @apply bg-background text-foreground;
-    background-color: var(--brand-canvas);
-    color: var(--brand-text-primary);
+  .dark { color-scheme: dark; }
+
+  * { @apply border-border; }
+
+  body { @apply bg-background text-foreground; }
+
+  /* Native controls and unstyled links/buttons share the branded focus cue. */
+  input[type="checkbox"], input[type="radio"] {
+    accent-color: hsl(var(--primary));
   }
-  
-  /* Ensure dropdown menus are not transparent */
-  .dark [data-radix-popper-content-wrapper] > div {
-    @apply bg-gray-800 border-gray-700 text-white !important;
+  a:focus-visible, button:focus-visible, input:focus-visible,
+  textarea:focus-visible, select:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 3px;
   }
-  
+
+  /* Portaled menus use the same semantic surface in either mode. */
   [data-radix-popper-content-wrapper] > div {
-    @apply bg-white border-gray-200 !important;
-  }
-  
-  /* Ensure cards in dark mode are properly styled */
-  .dark .bg-white {
-    @apply bg-gray-800 !important;
-  }
-  
-  .dark .text-gray-900 {
-    @apply text-white !important;
-  }
-  
-  .dark .text-gray-700, 
-  .dark .text-gray-600, 
-  .dark .text-gray-500 {
-    @apply text-gray-300 !important;
-  }
-  
-  .dark .border {
-    @apply border-gray-700 !important;
-  }
-  
-  .dark .bg-gray-50,
-  .dark .bg-gray-100 {
-    @apply bg-gray-900 !important;
-  }
-  
-  .dark .hover\:bg-gray-100:hover {
-    @apply hover:bg-gray-700 !important;
-  }
-  
-  /* Fix placeholder colors in dark mode */
-  .dark input::placeholder,
-  .dark textarea::placeholder,
-  .dark select::placeholder {
-    @apply text-gray-300 !important;
-  }
-  
-  /* Fix placeholder backgrounds in dark mode */
-  .dark input,
-  .dark textarea,
-  .dark select {
-    @apply bg-gray-800 text-white border-gray-700 !important;
-  }
-  
-  /* Fix colored backgrounds in dark mode */
-  .dark .bg-blue-50,
-  .dark .bg-blue-100 {
-    @apply bg-blue-900/30 !important;
-  }
-  
-  .dark .bg-rose-50,
-  .dark .bg-rose-100 {
-    @apply bg-rose-900/30 !important;
-  }
-  
-  .dark .bg-amber-50,
-  .dark .bg-amber-100 {
-    @apply bg-amber-900/30 !important;
-  }
-  
-  .dark .bg-green-50,
-  .dark .bg-green-100 {
-    @apply bg-green-900/30 !important;
-  }
-  
-  .dark .bg-brand-linen,
-  .dark .bg-brand-primary\/10 {
-    background-color: rgba(71, 62, 88, 0.45) !important;
-  }
-  
-  .dark .bg-primary-50,
-  .dark .bg-primary-100 {
-    @apply bg-primary/30 !important;
-  }
-  
-  /* Category card colors in dark mode */
-  .dark .text-blue-800 {
-    @apply text-blue-300 !important;
-  }
-  
-  .dark .text-rose-800 {
-    @apply text-rose-300 !important;
-  }
-  
-  .dark .text-green-800 {
-    @apply text-green-300 !important;
-  }
-  
-  .dark .text-amber-800 {
-    @apply text-amber-300 !important;
-  }
-  
-  .dark .text-brand-hover {
-    color: rgba(158, 141, 255, 0.7) !important;
+    @apply bg-popover text-popover-foreground border-border;
   }
 }
 

@@ -1,3 +1,4 @@
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
@@ -34,10 +35,10 @@ function ConnectRow({
     >
       <Link
         href={href}
-        className="block bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-5 transition-transform hover:-translate-y-0.5 hover:shadow-md"
+        className="emotion-paper block bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-5 transition-transform hover:-translate-y-0.5 hover:shadow-md"
       >
         <div className="flex items-start gap-4">
-          <div className="w-11 h-11 rounded-2xl bg-brand-primary/10 text-brand-primary flex items-center justify-center flex-shrink-0">
+          <div className="w-11 h-11 rounded-2xl bg-connection-subtle text-connection-emphasis flex items-center justify-center flex-shrink-0">
             <Icon className="w-5 h-5" />
           </div>
           <div className="flex-1 min-w-0">
@@ -59,7 +60,7 @@ export default function ConnectPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-dvh bg-brand-linen pb-28">
+      <div className="emotion-page min-h-dvh bg-brand-linen pb-28">
         <header className="max-w-lg mx-auto px-4 pt-6">
           <div className="flex items-center justify-between mb-6">
             <button
@@ -81,8 +82,9 @@ export default function ConnectPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.24 }}
-            className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6"
+            className="emotion-opening relative overflow-hidden bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6"
           >
+            <SceneAccent kind="bridge" className="-mt-3 mb-1 h-24 w-full" />
             <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
               Connect
             </p>

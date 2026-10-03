@@ -1,3 +1,4 @@
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from 'next/router';
@@ -221,26 +222,29 @@ export default function DateIdeas() {
   );
 
   return (
-    <div className="min-h-dvh bg-gray-50 dark:bg-gray-900 pb-24">
-      <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b dark:border-gray-700">
+    <div className="emotion-page min-h-dvh bg-background dark:bg-background pb-24">
+      <header className="sticky top-0 z-50 bg-popover dark:bg-card border-b dark:border-border">
         <div className="container max-w-lg mx-auto px-4 py-3 flex items-center">
           <button 
             onClick={() => router.back()} 
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            className="p-2 hover:bg-muted dark:hover:bg-card rounded-lg transition-colors"
           >
-            <ChevronLeft className="w-6 h-6 dark:text-gray-300" />
+            <ChevronLeft className="w-6 h-6 dark:text-foreground" />
           </button>
-          <h1 className="text-xl font-semibold text-gray-900 dark:text-white mx-auto">
+          <h1 className="text-xl font-semibold text-foreground dark:text-white mx-auto">
             Date & Connection Ideas
           </h1>
         </div>
       </header>
 
       <main className="container max-w-lg mx-auto px-4 pt-6">
+        <div className="relative mb-5 overflow-hidden px-5 py-2">
+          <SceneAccent kind="bridge" className="h-28 w-full" />
+        </div>
         <AnimatedContainer variant="slideUp" className="mb-4">
           <div className="flex items-center gap-2 mb-2">
             <MapPin className="w-4 h-4 text-primary" />
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Showing ideas for <span className="font-medium">{location}</span>
             </p>
           </div>
@@ -250,7 +254,7 @@ export default function DateIdeas() {
           <Search className="absolute left-3 top-3 h-4 w-4 text-brand-text-secondary" />
           <Input 
             placeholder="Search for date ideas..." 
-            className="pl-10 pr-10 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+            className="pl-10 pr-10 dark:bg-card dark:border-border dark:text-white"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -260,10 +264,10 @@ export default function DateIdeas() {
         </AnimatedContainer>
 
         <Tabs defaultValue="date-ideas" className="w-full" onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3 mb-6 dark:bg-gray-800">
-            <TabsTrigger value="date-ideas" className="dark:data-[state=active]:bg-gray-700">Date Ideas</TabsTrigger>
-            <TabsTrigger value="intimate" className="dark:data-[state=active]:bg-gray-700">Intimate</TabsTrigger>
-            <TabsTrigger value="saved" className="dark:data-[state=active]:bg-gray-700">Saved</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 mb-6 dark:bg-card">
+            <TabsTrigger value="date-ideas" className="dark:data-[state=active]:bg-card">Date Ideas</TabsTrigger>
+            <TabsTrigger value="intimate" className="dark:data-[state=active]:bg-card">Intimate</TabsTrigger>
+            <TabsTrigger value="saved" className="dark:data-[state=active]:bg-card">Saved</TabsTrigger>
           </TabsList>
           
           <TabsContent value="date-ideas" className="space-y-6 mt-0">
@@ -279,7 +283,7 @@ export default function DateIdeas() {
                     variant="outline" 
                     onClick={handleRefreshIdeas}
                     disabled={isLoading}
-                    className="dark:bg-gray-800 dark:text-white dark:border-gray-700"
+                    className="dark:bg-card dark:text-white dark:border-border"
                   >
                     {isLoading ? "Generating..." : "Refresh Ideas"}
                   </Button>
@@ -290,12 +294,12 @@ export default function DateIdeas() {
                     <AnimatedContainer variant="pulse" className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mb-4">
                       <Sparkles className="w-6 h-6 text-primary" />
                     </AnimatedContainer>
-                    <p className="text-gray-600 dark:text-gray-400">Generating personalized date ideas...</p>
+                    <p className="text-muted-foreground dark:text-muted-foreground">Generating personalized date ideas...</p>
                   </div>
                 ) : (
                   <AnimatedList variant="slideUp" staggerDelay={0.1}>
                     {filteredDateIdeas.map((idea) => (
-                      <Card key={idea.id} className="overflow-hidden mb-6 dark:bg-gray-800 dark:border-gray-700">
+                      <Card key={idea.id} className="overflow-hidden mb-6 dark:bg-card dark:border-border">
                         <div className="relative h-48">
                           <Image
                             src={idea.image}
@@ -304,13 +308,13 @@ export default function DateIdeas() {
                             className="object-cover"
                           />
                           <div className="absolute top-3 right-3 flex gap-2">
-                            <Badge className="bg-white/80 text-brand-hover hover:bg-white/90 dark:bg-gray-800/80 dark:text-primary">
+                            <Badge className="bg-popover/80 text-brand-hover hover:bg-popover/90 dark:bg-card/80 dark:text-primary">
                               {idea.category}
                             </Badge>
                           </div>
                           {idea.location && (
                             <div className="absolute bottom-3 left-3">
-                              <Badge className="bg-black/60 text-white hover:bg-black/70 flex items-center gap-1">
+                              <Badge className="bg-inverse/60 text-white hover:bg-inverse/70 flex items-center gap-1">
                                 <MapPin className="w-3 h-3" />
                                 {idea.location}
                               </Badge>
@@ -319,14 +323,14 @@ export default function DateIdeas() {
                         </div>
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between mb-2">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{idea.title}</h3>
+                            <h3 className="text-lg font-semibold text-foreground dark:text-white">{idea.title}</h3>
                             <div className="flex items-center gap-1">
-                              <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                              <span className="text-sm font-medium dark:text-gray-300">{idea.rating}</span>
+                              <Star className="w-4 h-4 text-growth-emphasis fill-current" />
+                              <span className="text-sm font-medium dark:text-foreground">{idea.rating}</span>
                             </div>
                           </div>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{idea.description}</p>
-                          <div className="flex items-center gap-4 text-xs text-brand-text-secondary dark:text-gray-500 mb-4">
+                          <p className="text-sm text-muted-foreground dark:text-muted-foreground mb-3">{idea.description}</p>
+                          <div className="flex items-center gap-4 text-xs text-brand-text-secondary dark:text-muted-foreground mb-4">
                             <div className="flex items-center gap-1">
                               <Clock className="w-3.5 h-3.5" />
                               <span>{idea.duration}</span>
@@ -335,32 +339,31 @@ export default function DateIdeas() {
                               <span>Cost: {idea.cost}</span>
                             </div>
                           </div>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <Button 
-                                size="sm" 
-                                variant="outline"
-                                onClick={() => handleSaveIdea(idea.id)}
-                                className={`dark:bg-gray-800 dark:border-gray-700 dark:text-white ${savedIdeas.includes(idea.id) ? "text-brand-hover border-primary dark:border-primary dark:text-primary" : ""}`}
-                              >
-                                <Bookmark className={`w-4 h-4 mr-1 ${savedIdeas.includes(idea.id) ? "fill-primary" : ""}`} />
-                                {savedIdeas.includes(idea.id) ? "Saved" : "Save"}
-                              </Button>
-                              <Button 
-                                size="sm" 
-                                variant="outline"
-                                onClick={() => handleShareIdea(idea.title)}
-                                className="dark:bg-gray-800 dark:text-white dark:border-gray-700"
-                              >
-                                <Share2 className="w-4 h-4 mr-1" />
-                                Share
-                              </Button>
-                            </div>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleSaveIdea(idea.id)}
+                              className={`min-h-[44px] flex-1 whitespace-nowrap dark:bg-card dark:border-border dark:text-white ${savedIdeas.includes(idea.id) ? "text-brand-hover border-primary dark:border-primary dark:text-primary" : ""}`}
+                            >
+                              <Bookmark className={`w-4 h-4 mr-1 shrink-0 ${savedIdeas.includes(idea.id) ? "fill-primary" : ""}`} />
+                              {savedIdeas.includes(idea.id) ? "Saved" : "Save"}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleShareIdea(idea.title)}
+                              className="min-h-[44px] flex-1 whitespace-nowrap dark:bg-card dark:text-white dark:border-border"
+                            >
+                              <Share2 className="w-4 h-4 mr-1 shrink-0" />
+                              Share
+                            </Button>
                             <Button 
                               size="sm"
+                              className="min-h-[44px] flex-1 whitespace-nowrap"
                               onClick={() => handleScheduleDate(idea.title)}
                             >
-                              <Calendar className="w-4 h-4 mr-1" />
+                              <Calendar className="w-4 h-4 mr-1 shrink-0" />
                               Schedule
                             </Button>
                           </div>
@@ -377,20 +380,20 @@ export default function DateIdeas() {
             {activeTab === "intimate" && (
               <AnimatedList variant="slideUp" staggerDelay={0.1}>
                 {filteredIntimateIdeas.map((idea) => (
-                  <Card key={idea.id} className="overflow-hidden mb-6 dark:bg-gray-800 dark:border-gray-700">
+                  <Card key={idea.id} className="overflow-hidden mb-6 dark:bg-card dark:border-border">
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{idea.title}</h3>
+                        <h3 className="text-lg font-semibold text-foreground dark:text-white">{idea.title}</h3>
                         <div className="flex items-center gap-1">
-                          <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                          <span className="text-sm font-medium dark:text-gray-300">{idea.rating}</span>
+                          <Star className="w-4 h-4 text-growth-emphasis fill-current" />
+                          <span className="text-sm font-medium dark:text-foreground">{idea.rating}</span>
                         </div>
                       </div>
                       <Badge className="mb-3 bg-primary/10 text-brand-hover border-primary/30">
                         {idea.category}
                       </Badge>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{idea.description}</p>
-                      <div className="flex items-center gap-4 text-xs text-brand-text-secondary dark:text-gray-500 mb-4">
+                      <p className="text-sm text-muted-foreground dark:text-muted-foreground mb-3">{idea.description}</p>
+                      <div className="flex items-center gap-4 text-xs text-brand-text-secondary dark:text-muted-foreground mb-4">
                         <div className="flex items-center gap-1">
                           <Clock className="w-3.5 h-3.5" />
                           <span>{idea.duration}</span>
@@ -399,32 +402,31 @@ export default function DateIdeas() {
                           <span>Cost: {idea.cost}</span>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={() => handleSaveIdea(idea.id)}
-                            className={`dark:bg-gray-800 dark:border-gray-700 dark:text-white ${savedIdeas.includes(idea.id) ? "text-brand-hover border-primary dark:border-primary dark:text-primary" : ""}`}
-                          >
-                            <Bookmark className={`w-4 h-4 mr-1 ${savedIdeas.includes(idea.id) ? "fill-primary" : ""}`} />
-                            {savedIdeas.includes(idea.id) ? "Saved" : "Save"}
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={() => handleShareIdea(idea.title)}
-                            className="dark:bg-gray-800 dark:text-white dark:border-gray-700"
-                          >
-                            <Share2 className="w-4 h-4 mr-1" />
-                            Share
-                          </Button>
-                        </div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleSaveIdea(idea.id)}
+                          className={`min-h-[44px] flex-1 whitespace-nowrap dark:bg-card dark:border-border dark:text-white ${savedIdeas.includes(idea.id) ? "text-brand-hover border-primary dark:border-primary dark:text-primary" : ""}`}
+                        >
+                          <Bookmark className={`w-4 h-4 mr-1 shrink-0 ${savedIdeas.includes(idea.id) ? "fill-primary" : ""}`} />
+                          {savedIdeas.includes(idea.id) ? "Saved" : "Save"}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleShareIdea(idea.title)}
+                          className="min-h-[44px] flex-1 whitespace-nowrap dark:bg-card dark:text-white dark:border-border"
+                        >
+                          <Share2 className="w-4 h-4 mr-1 shrink-0" />
+                          Share
+                        </Button>
                         <Button 
                           size="sm"
+                          className="min-h-[44px] flex-1 whitespace-nowrap"
                           onClick={() => handleScheduleDate(idea.title)}
                         >
-                          <Calendar className="w-4 h-4 mr-1" />
+                          <Calendar className="w-4 h-4 mr-1 shrink-0" />
                           Schedule
                         </Button>
                       </div>
@@ -440,15 +442,15 @@ export default function DateIdeas() {
               <>
                 {savedDateIdeas.length === 0 ? (
                   <AnimatedContainer variant="fadeIn" className="text-center py-12">
-                    <div className="w-16 h-16 mx-auto bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+                    <div className="w-16 h-16 mx-auto bg-muted dark:bg-card rounded-full flex items-center justify-center mb-4">
                       <Bookmark className="w-8 h-8 text-brand-text-secondary" />
                     </div>
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No saved ideas yet</h3>
-                    <p className="text-gray-600 dark:text-gray-400 mb-6">Save your favorite date ideas to find them here</p>
+                    <h3 className="text-lg font-medium text-foreground dark:text-white mb-2">No saved ideas yet</h3>
+                    <p className="text-muted-foreground dark:text-muted-foreground mb-6">Save your favorite date ideas to find them here</p>
                     <Button 
                       variant="outline" 
                       onClick={() => setActiveTab("date-ideas")}
-                      className="dark:bg-gray-800 dark:text-white dark:border-gray-700"
+                      className="dark:bg-card dark:text-white dark:border-border"
                     >
                       Browse Date Ideas
                     </Button>
@@ -456,7 +458,7 @@ export default function DateIdeas() {
                 ) : (
                   <AnimatedList variant="slideUp" staggerDelay={0.1}>
                     {savedDateIdeas.map((idea) => (
-                      <Card key={idea.id} className="overflow-hidden mb-6 dark:bg-gray-800 dark:border-gray-700">
+                      <Card key={idea.id} className="overflow-hidden mb-6 dark:bg-card dark:border-border">
                         {idea.image && (
                           <div className="relative h-48">
                             <Image
@@ -466,7 +468,7 @@ export default function DateIdeas() {
                               className="object-cover"
                             />
                             <div className="absolute top-3 right-3 flex gap-2">
-                              <Badge className="bg-white/80 text-brand-hover hover:bg-white/90 dark:bg-gray-800/80 dark:text-primary">
+                              <Badge className="bg-popover/80 text-brand-hover hover:bg-popover/90 dark:bg-card/80 dark:text-primary">
                                 {idea.category}
                               </Badge>
                             </div>
@@ -474,10 +476,10 @@ export default function DateIdeas() {
                         )}
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between mb-2">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{idea.title}</h3>
+                            <h3 className="text-lg font-semibold text-foreground dark:text-white">{idea.title}</h3>
                             <div className="flex items-center gap-1">
-                              <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                              <span className="text-sm font-medium dark:text-gray-300">{idea.rating}</span>
+                              <Star className="w-4 h-4 text-growth-emphasis fill-current" />
+                              <span className="text-sm font-medium dark:text-foreground">{idea.rating}</span>
                             </div>
                           </div>
                           {!idea.image && (
@@ -485,8 +487,8 @@ export default function DateIdeas() {
                               {idea.category}
                             </Badge>
                           )}
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{idea.description}</p>
-                          <div className="flex items-center gap-4 text-xs text-brand-text-secondary dark:text-gray-500 mb-4">
+                          <p className="text-sm text-muted-foreground dark:text-muted-foreground mb-3">{idea.description}</p>
+                          <div className="flex items-center gap-4 text-xs text-brand-text-secondary dark:text-muted-foreground mb-4">
                             <div className="flex items-center gap-1">
                               <Clock className="w-3.5 h-3.5" />
                               <span>{idea.duration}</span>
@@ -495,21 +497,22 @@ export default function DateIdeas() {
                               <span>Cost: {idea.cost}</span>
                             </div>
                           </div>
-                          <div className="flex items-center justify-between">
+                          <div className="flex flex-wrap items-center gap-2">
                             <Button 
                               size="sm" 
                               variant="outline"
                               onClick={() => handleSaveIdea(idea.id)}
-                              className="text-brand-hover border-primary dark:border-primary dark:text-primary"
+                              className="min-h-[44px] flex-1 whitespace-nowrap text-brand-hover border-primary dark:border-primary dark:text-primary"
                             >
-                              <Bookmark className="w-4 h-4 mr-1 fill-primary" />
+                              <Bookmark className="w-4 h-4 mr-1 shrink-0 fill-primary" />
                               Remove
                             </Button>
                             <Button 
                               size="sm"
+                              className="min-h-[44px] flex-1 whitespace-nowrap"
                               onClick={() => handleScheduleDate(idea.title)}
                             >
-                              <Calendar className="w-4 h-4 mr-1" />
+                              <Calendar className="w-4 h-4 mr-1 shrink-0" />
                               Schedule
                             </Button>
                           </div>
@@ -526,4 +529,4 @@ export default function DateIdeas() {
       
     </div>
   );
-} 
+}

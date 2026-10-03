@@ -1,0 +1,29 @@
+.companion {
+  display: block;
+  position: relative;
+  flex-shrink: 0;
+  isolation: isolate;
+  pointer-events: none;
+  --peter-rim: #f0c498;
+}
+.companion svg { display: block; width: 100%; height: 100%; overflow: hidden; }
+.body { transform-origin: 120px 248px; }
+.atmosphere { transform-origin: 120px 154px; }
+.companion[data-moving='true'] .body {
+  animation: breathe var(--peter-pace) ease-in-out infinite;
+}
+.companion[data-moving='true'] .atmosphere {
+  animation: light var(--peter-pace) ease-in-out infinite;
+}
+.companion[data-paused='true'] * { animation-play-state: paused !important; }
+@keyframes breathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(calc(-1px * var(--peter-energy))) scaleY(1.003); }
+}
+@keyframes light {
+  0%, 100% { opacity: .72; }
+  50% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .companion *, .companion::before, .companion::after { animation: none !important; transition: none !important; }
+}

@@ -1,3 +1,4 @@
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -98,7 +99,7 @@ export default function NeutralObserver() {
   if (loading || !user) return <PeterLoading isLoading />;
 
   return (
-    <div className="min-h-dvh bg-brand-linen flex flex-col">
+    <div className="emotion-page min-h-dvh bg-brand-linen flex flex-col">
       {/* Back nav — hidden on entry and completion */}
       {phase !== 'entry' && phase !== 'completion' && (
         <div className="mx-auto w-full max-w-lg px-4 pt-5 flex items-center">
@@ -129,7 +130,8 @@ export default function NeutralObserver() {
             {/* ── ENTRY SCREEN ── */}
             {phase === 'entry' && (
               <motion.div key="entry" {...slide} className="space-y-6">
-                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-8 shadow-[0_20px_50px_rgba(46,38,32,0.10)]">
+                <div className="emotion-surface emotion-featured relative overflow-hidden rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-8 shadow-[0_20px_50px_hsl(var(--shadow)/0.10)]">
+                  <SceneAccent kind="flow" quiet className="-mt-4 mb-2 h-20 w-full" />
                   <div className="flex items-start justify-between gap-3 mb-5">
                     <div>
                       <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-hover mb-1">
@@ -208,7 +210,7 @@ export default function NeutralObserver() {
             {/* ── PRIVACY NOTICE ── */}
             {phase === 'privacy_notice' && (
               <motion.div key="privacy" {...slide} className="space-y-6">
-                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-8 shadow-[0_20px_50px_rgba(46,38,32,0.10)]">
+                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-8 shadow-[0_20px_50px_hsl(var(--shadow)/0.10)]">
                   <h2 className="font-serif text-[26px] leading-tight text-brand-espresso mb-4">
                     This stays with you.
                   </h2>
@@ -234,7 +236,7 @@ export default function NeutralObserver() {
             {phase === 'screen_1' && (
               <motion.div key="screen_1" {...slide} className="space-y-5">
                 <ProgressDots current={0} total={3} />
-                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-7 shadow-[0_20px_50px_rgba(46,38,32,0.10)]">
+                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-7 shadow-[0_20px_50px_hsl(var(--shadow)/0.10)]">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-hover mb-4">
                     Step 1 of 3
                   </p>
@@ -253,7 +255,7 @@ export default function NeutralObserver() {
                     onChange={(e) => setAnswer1(e.target.value)}
                     rows={4}
                     placeholder="What comes to mind…"
-                    className="w-full rounded-xl border border-brand-primary/15 bg-white/70 px-4 py-3 text-sm text-brand-espresso placeholder-brand-taupe/50 resize-none focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                    className="w-full rounded-xl border border-input bg-popover/70 px-4 py-3 text-sm text-brand-espresso placeholder-brand-taupe/50 resize-none focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground"
                   />
                   <button
                     onClick={() => setPhase('screen_2')}
@@ -270,7 +272,7 @@ export default function NeutralObserver() {
             {phase === 'screen_2' && (
               <motion.div key="screen_2" {...slide} className="space-y-5">
                 <ProgressDots current={1} total={3} />
-                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-7 shadow-[0_20px_50px_rgba(46,38,32,0.10)]">
+                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-7 shadow-[0_20px_50px_hsl(var(--shadow)/0.10)]">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-hover mb-4">
                     Step 2 of 3
                   </p>
@@ -289,7 +291,7 @@ export default function NeutralObserver() {
                     onChange={(e) => setAnswer2(e.target.value)}
                     rows={5}
                     placeholder="From the outside, looking in…"
-                    className="w-full rounded-xl border border-brand-primary/15 bg-white/70 px-4 py-3 text-sm text-brand-espresso placeholder-brand-taupe/50 resize-none focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                    className="w-full rounded-xl border border-input bg-popover/70 px-4 py-3 text-sm text-brand-espresso placeholder-brand-taupe/50 resize-none focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground"
                   />
                   <button
                     onClick={() => setPhase('screen_3')}
@@ -306,7 +308,7 @@ export default function NeutralObserver() {
             {phase === 'screen_3' && (
               <motion.div key="screen_3" {...slide} className="space-y-5">
                 <ProgressDots current={2} total={3} />
-                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-7 shadow-[0_20px_50px_rgba(46,38,32,0.10)]">
+                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-7 shadow-[0_20px_50px_hsl(var(--shadow)/0.10)]">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-hover mb-4">
                     Step 3 of 3
                   </p>
@@ -331,7 +333,7 @@ export default function NeutralObserver() {
                     onChange={(e) => setAnswer3(e.target.value)}
                     rows={5}
                     placeholder="What gets in the way… and what might help…"
-                    className="w-full rounded-xl border border-brand-primary/15 bg-white/70 px-4 py-3 text-sm text-brand-espresso placeholder-brand-taupe/50 resize-none focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                    className="w-full rounded-xl border border-input bg-popover/70 px-4 py-3 text-sm text-brand-espresso placeholder-brand-taupe/50 resize-none focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground"
                   />
                   <button
                     onClick={handleFinish}
@@ -347,7 +349,7 @@ export default function NeutralObserver() {
             {/* ── COMPLETION ── */}
             {phase === 'completion' && (
               <motion.div key="completion" {...slide} className="space-y-6">
-                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-8 shadow-[0_20px_50px_rgba(46,38,32,0.10)]">
+                <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-8 shadow-[0_20px_50px_hsl(var(--shadow)/0.10)]">
                   <h2 className="font-serif text-[28px] leading-tight text-brand-espresso mb-5">
                     That&apos;s the practice.
                   </h2>

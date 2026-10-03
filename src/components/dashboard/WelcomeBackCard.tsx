@@ -8,9 +8,11 @@ import { supabase } from '@/lib/supabase';
 import { buildAuthedHeaders } from '@/lib/api-auth';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
 import { welcomeCardCopy } from '@/lib/welcome-back';
+import { useVisualEmotion } from '@/components/emotion/VisualEmotionProvider';
 
 export function WelcomeBackCard() {
   const router = useRouter();
+  const { observePracticeDays } = useVisualEmotion();
   const [copy, setCopy] = useState<{ headline: string; body: string; cta: string } | null>(null);
 
   useEffect(() => {
@@ -23,13 +25,16 @@ export function WelcomeBackCard() {
         const res = await fetch('/api/me/return-state', { headers });
         if (!res.ok) return;
         const rs = await res.json();
-        if (!cancelled && rs.returning) setCopy(welcomeCardCopy(rs.practice_days));
+        if (cancelled) return;
+        // Reuse this existing response; the atmosphere only sees a factual count.
+        observePracticeDays(rs.practice_days);
+        if (rs.returning) setCopy(welcomeCardCopy(rs.practice_days));
       } catch {
         // fail-soft: no card
       }
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [observePracticeDays]);
 
   if (!copy) return null;
 

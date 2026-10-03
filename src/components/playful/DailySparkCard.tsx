@@ -1,3 +1,4 @@
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { RefreshCcw, Send, Sparkles } from 'lucide-react';
@@ -91,8 +92,9 @@ export function DailySparkCard({ prompt, surface, onSwap }: DailySparkCardProps)
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.14 }}
-      className="rounded-[30px] border border-brand-primary/10 bg-brand-linen/90 p-5 shadow-[0_16px_36px_rgba(46,38,32,0.05)]"
+      className="emotion-paper relative overflow-hidden rounded-[30px] border border-brand-primary/10 bg-brand-linen/90 p-5 shadow-[0_16px_36px_hsl(var(--shadow)/0.05)]"
     >
+      <SceneAccent kind="bloom" area="games" className="-mt-3 mb-2 h-16 w-full" />
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="mb-2 text-xs font-semibold tracking-widest uppercase text-brand-hover">
@@ -105,7 +107,7 @@ export function DailySparkCard({ prompt, surface, onSwap }: DailySparkCardProps)
             {prompt.prompt}
           </p>
         </div>
-        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[18px] border border-brand-primary/10 bg-white text-brand-primary shadow-sm">
+        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[18px] border border-brand-primary/10 bg-popover text-brand-primary shadow-sm">
           <Sparkles size={16} className="text-brand-hover" />
         </div>
       </div>
@@ -115,10 +117,10 @@ export function DailySparkCard({ prompt, surface, onSwap }: DailySparkCardProps)
       </p>
 
       <div className="mt-3 flex flex-wrap gap-2">
-        <span className="rounded-full border border-brand-primary/10 bg-white/70 px-2.5 py-1 text-[11px] font-semibold text-brand-hover">
+        <span className="rounded-full border border-brand-primary/10 bg-popover/70 px-2.5 py-1 text-[11px] font-semibold text-brand-hover">
           Under a minute
         </span>
-        <span className="rounded-full border border-brand-primary/10 bg-white/70 px-2.5 py-1 text-[11px] font-semibold text-brand-hover">
+        <span className="rounded-full border border-brand-primary/10 bg-popover/70 px-2.5 py-1 text-[11px] font-semibold text-brand-hover">
           Text or say it live
         </span>
       </div>
@@ -130,20 +132,20 @@ export function DailySparkCard({ prompt, surface, onSwap }: DailySparkCardProps)
       <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-3">
         <button
           onClick={handleTry}
-          className="rounded-2xl border border-brand-primary/15 bg-white px-4 py-3 text-sm font-semibold text-brand-hover transition-colors hover:bg-brand-primary/5"
+          className="rounded-2xl border border-brand-primary/15 bg-popover px-4 py-3 text-sm font-semibold text-brand-hover transition-colors hover:bg-brand-primary/5"
         >
           {tried ? 'Doing this today' : 'Try this'}
         </button>
         <button
           onClick={handleSend}
-          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-brand-primary/12 bg-transparent px-4 py-3 text-sm font-semibold text-brand-taupe transition-colors hover:bg-white/60 hover:text-brand-hover"
+          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-brand-primary/12 bg-transparent px-4 py-3 text-sm font-semibold text-brand-taupe transition-colors hover:bg-popover/60 hover:text-brand-hover"
         >
           <Send size={14} />
           {shareState === 'copied' ? 'Copied to send' : shareState === 'shared' ? 'Sent' : 'Copy text'}
         </button>
         <button
           onClick={handleSwap}
-          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-brand-primary/12 bg-transparent px-4 py-3 text-sm font-semibold text-brand-taupe transition-colors hover:bg-white/60 hover:text-brand-hover"
+          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-brand-primary/12 bg-transparent px-4 py-3 text-sm font-semibold text-brand-taupe transition-colors hover:bg-popover/60 hover:text-brand-hover"
         >
           <RefreshCcw size={14} />
           Another one

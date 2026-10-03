@@ -153,7 +153,7 @@ export function ThirtyDayMirrorCard({ compact = false }: { compact?: boolean }) 
               rows={4}
               maxLength={1000}
               aria-label="What would you say about who you are becoming?"
-              className="w-full rounded-xl border border-brand-border bg-white/70 p-3 text-sm text-brand-espresso focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+              className="w-full rounded-xl border border-brand-border bg-popover/70 p-3 text-sm text-brand-espresso focus:outline-none focus:ring-2 focus:ring-ring border-input placeholder:text-muted-foreground"
             />
             {error && <p className="text-xs text-brand-hover mt-1">{error}</p>}
             <button

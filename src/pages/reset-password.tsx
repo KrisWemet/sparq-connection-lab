@@ -137,12 +137,12 @@ export default function ResetPasswordPage() {
     >
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         {error && (
-          <div role="alert" className="p-3 bg-red-50 border border-red-200 rounded-md text-red-600 text-sm">
+          <div role="alert" className="p-3 bg-destructive-subtle border border-destructive rounded-md text-destructive-emphasis text-sm">
             {error}
           </div>
         )}
         <div>
-          <label htmlFor="new-password" className="block text-sm font-medium text-gray-700 mb-1">New password</label>
+          <label htmlFor="new-password" className="block text-sm font-medium text-foreground mb-1">New password</label>
           <div className="relative">
             <input
               type={showPassword ? 'text' : 'password'}
@@ -151,7 +151,7 @@ export default function ResetPasswordPage() {
               autoFocus
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full px-4 py-2 pl-10 pr-10 border rounded-md focus:ring-brand-primary focus:border-brand-primary"
+              className="w-full px-4 py-2 pl-10 pr-10 border rounded-md focus:ring-ring focus:border-ring bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background border-input"
               placeholder="At least 8 characters"
             />
             <div className="absolute left-3 top-2.5 text-brand-text-secondary">
@@ -160,7 +160,7 @@ export default function ResetPasswordPage() {
             <button
               type="button"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
-              className="press absolute right-3 top-2.5 text-brand-text-secondary hover:text-gray-600"
+              className="press absolute right-3 top-2.5 text-brand-text-secondary hover:text-muted-foreground"
               onClick={() => setShowPassword(s => !s)}
             >
               {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -168,7 +168,7 @@ export default function ResetPasswordPage() {
           </div>
         </div>
         <div>
-          <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700 mb-1">Type it again</label>
+          <label htmlFor="confirm-password" className="block text-sm font-medium text-foreground mb-1">Type it again</label>
           <div className="relative">
             <input
               type={showPassword ? 'text' : 'password'}
@@ -176,7 +176,7 @@ export default function ResetPasswordPage() {
               autoComplete="new-password"
               value={confirm}
               onChange={e => setConfirm(e.target.value)}
-              className="w-full px-4 py-2 pl-10 border rounded-md focus:ring-brand-primary focus:border-brand-primary"
+              className="w-full px-4 py-2 pl-10 border rounded-md focus:ring-ring focus:border-ring bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background border-input"
               placeholder="Same password again"
             />
             <div className="absolute left-3 top-2.5 text-brand-text-secondary">
@@ -187,7 +187,7 @@ export default function ResetPasswordPage() {
         <button
           type="submit"
           disabled={saving}
-          className="press w-full bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary transition duration-200 flex items-center justify-center font-bold disabled:opacity-70"
+          className="press w-full bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition duration-200 flex items-center justify-center font-bold disabled:opacity-70"
         >
           {saving ? <Loader className="h-5 w-5 animate-spin" /> : 'Save my new password'}
         </button>

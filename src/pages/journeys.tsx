@@ -1,3 +1,4 @@
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import { useState } from "react";
 import Image from "next/image";
 import { journeys } from "@/data/journeys";
@@ -115,16 +116,12 @@ export default function Journeys() {
     : null;
 
   return (
-    <div className="min-h-dvh bg-brand-linen pb-28 relative overflow-hidden">
-      {/* Ambient backgrounds */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-primary/5 blur-[120px] rounded-full pointer-events-none -translate-y-1/2 mix-blend-multiply" />
-      <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-brand-sand/10 blur-[100px] rounded-full pointer-events-none translate-x-1/3 mix-blend-multiply" />
-
+    <div className="emotion-page min-h-dvh bg-brand-linen pb-28 relative overflow-hidden">
       {/* Header */}
-      <header className="sticky top-0 z-50 backdrop-blur-2xl border-b px-4 py-4 shadow-[0_4px_30px_rgba(0,0,0,0.02)] transition-all"
+      <header className="sticky top-0 z-50 backdrop-blur-2xl border-b px-4 py-4 shadow-[0_4px_30px_hsl(var(--shadow)/0.02)] transition-all"
         style={{
-          background: "rgba(250,246,241,0.85)",
-          borderColor: "rgba(192,97,74,0.08)",
+          background: "hsl(var(--background)/0.85)",
+          borderColor: "hsl(var(--primary)/0.08)",
         }}
       >
         <div className="max-w-lg mx-auto">
@@ -133,12 +130,15 @@ export default function Journeys() {
       </header>
 
       <main className="max-w-lg mx-auto px-4 pt-4">
+        <div className="relative mb-4 overflow-hidden px-5 py-2">
+          <SceneAccent kind="bloom" className="h-24 w-full" />
+        </div>
         {activeJourney && (
           <motion.section
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.28 }}
-            className="mb-4 rounded-3xl border border-brand-primary/10 bg-brand-parchment p-5 shadow-sm"
+            className="emotion-paper mb-4 rounded-3xl border border-brand-primary/10 bg-brand-parchment p-5 shadow-sm"
           >
             <div className="flex items-start gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-primary/10 text-brand-primary">
@@ -178,7 +178,7 @@ export default function Journeys() {
             placeholder="Search journeys..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-2xl border border-brand-primary/10 bg-white/70 py-3 pl-10 pr-4 text-sm text-brand-taupe placeholder-zinc-400 shadow-inner transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+            className="w-full rounded-2xl border border-input bg-popover/70 py-3 pl-10 pr-4 text-sm text-brand-taupe placeholder-zinc-400 shadow-inner transition-all focus:outline-none focus:ring-2 focus:ring-ring text-foreground placeholder:text-muted-foreground"
           />
         </div>
 
@@ -191,7 +191,7 @@ export default function Journeys() {
               className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors relative ${
                 activeCategory === cat
                   ? "text-white"
-                  : "bg-white/60 backdrop-blur-sm text-zinc-600 border border-brand-primary/10 hover:bg-white"
+                  : "bg-popover/60 backdrop-blur-sm text-muted-foreground border border-brand-primary/10 hover:bg-popover"
               }`}
             >
               {activeCategory === cat && (
@@ -220,7 +220,7 @@ export default function Journeys() {
                 transition={{ duration: 0.3, delay: idx * 0.04 }}
               >
                 <Link href={`/journeys/${journey.id}`} onClick={(e) => handleJourneyClick(e, journey.id)}>
-                  <div className="group rounded-[1.5rem] overflow-hidden border border-brand-primary/10 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 cursor-pointer relative z-10">
+                  <div className="group rounded-[1.5rem] overflow-hidden border border-brand-primary/10 bg-popover shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 cursor-pointer relative z-10">
                     {/* Card image */}
                     <div className={`relative ${bgColor} h-36 overflow-hidden`}>
                       {journey.image && (
@@ -233,7 +233,7 @@ export default function Journeys() {
                         />
                       )}
                       <div className="absolute top-2 left-2">
-                        <span className="text-xs font-semibold bg-white/90 backdrop-blur-sm text-brand-taupe px-2.5 py-0.5 rounded-full">
+                        <span className="text-xs font-semibold bg-popover/90 backdrop-blur-sm text-brand-taupe px-2.5 py-0.5 rounded-full">
                           Journey
                         </span>
                       </div>
@@ -242,7 +242,7 @@ export default function Journeys() {
                           <div className="absolute top-2 right-2 w-6 h-6 bg-brand-primary rounded-full flex items-center justify-center">
                             <Crown className="w-3 h-3 text-white" />
                           </div>
-                          <div className="absolute inset-0 bg-black/10 flex items-center justify-center">
+                          <div className="absolute inset-0 bg-inverse/10 flex items-center justify-center">
                             <Lock className="w-5 h-5 text-white drop-shadow" />
                           </div>
                         </>
@@ -250,7 +250,7 @@ export default function Journeys() {
                     </div>
 
                     {/* Card text */}
-                    <div className="p-4 bg-white relative z-20">
+                    <div className="p-4 bg-popover relative z-20">
                       <p className="text-[10px] font-bold text-brand-hover uppercase tracking-[0.2em] mb-1.5">
                         {journey.category}
                       </p>
@@ -259,7 +259,7 @@ export default function Journeys() {
                       </h3>
                       <p className="text-xs text-brand-text-secondary mt-2.5 font-medium flex items-center gap-1.5 opacity-80">
                         <span>{journey.duration}</span>
-                        <span className="w-1 h-1 rounded-full bg-zinc-300" />
+                        <span className="w-1 h-1 rounded-full bg-border" />
                         <span>{journey.phases?.length ?? 4} phases</span>
                       </p>
                     </div>

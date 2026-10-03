@@ -136,7 +136,7 @@ export default function SettingsPage() {
       aria-checked={checked}
     >
       <span
-        className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform duration-200 mt-[2px] ${
+        className={`inline-block h-5 w-5 transform rounded-full bg-popover shadow transition-transform duration-200 mt-[2px] ${
           checked ? 'translate-x-[22px]' : 'translate-x-[2px]'
         }`}
       />
@@ -237,7 +237,7 @@ export default function SettingsPage() {
                       value={reminderTime}
                       disabled={isLoading}
                       onChange={handleTimeChange}
-                      className="border border-brand-primary/20 rounded-lg px-2 py-1 text-xs text-brand-text-primary bg-brand-linen focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                      className="border border-input rounded-lg px-2 py-1 text-xs text-brand-text-primary bg-brand-linen focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground"
                     />
                   )}
                   <Toggle
@@ -346,7 +346,7 @@ export default function SettingsPage() {
             </button>
             <button
               onClick={handleDeleteAccount}
-              className="w-full border border-red-300 text-red-600 rounded-2xl py-3 text-sm font-medium hover:bg-red-50 transition-colors"
+              className="w-full border border-destructive text-destructive-emphasis rounded-2xl py-3 text-sm font-medium hover:bg-destructive-subtle transition-colors"
             >
               Delete account
             </button>

@@ -91,27 +91,27 @@ export default function AssessmentPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-dvh bg-[#050505] flex items-center justify-center p-4">
+      <div className="dark min-h-dvh bg-background flex items-center justify-center p-4">
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
         >
-          <Card className="max-w-md w-full bg-[#111111] border-zinc-800 text-zinc-100">
+          <Card className="max-w-md w-full bg-card border-border text-foreground">
             <CardContent className="p-8 text-center">
-              <CheckCircle className="w-16 h-16 text-zinc-500 mx-auto mb-4" />
+              <CheckCircle className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
               <h2 className="text-2xl font-serif tracking-wide mb-2">Assessment Complete</h2>
-              <p className="text-zinc-400 mb-4 text-sm font-light leading-relaxed">
+              <p className="text-muted-foreground mb-4 text-sm font-light leading-relaxed">
                 {milestone === 'baseline'
                   ? "We've saved your baseline. We'll check in again at Day 14 to see how things have grown."
                   : "Your responses have been recorded. Keep up the great work!"}
               </p>
               {improvement !== null && improvement > 0 && (
-                <div className="flex items-center justify-center gap-2 text-emerald-500 mb-4 text-sm">
+                <div className="flex items-center justify-center gap-2 text-success-emphasis mb-4 text-sm">
                   <TrendingUp className="w-4 h-4" />
                   <span className="font-semibold tracking-wide">+{improvement.toFixed(1)} points since baseline</span>
                 </div>
               )}
-              <Button onClick={() => router.push('/dashboard')} className="w-full bg-white text-black hover:bg-zinc-200 rounded-xl mt-4">
+              <Button onClick={() => router.push('/dashboard')} className="w-full bg-popover text-foreground hover:bg-border rounded-xl mt-4">
                 Back to Dashboard
               </Button>
             </CardContent>
@@ -122,18 +122,18 @@ export default function AssessmentPage() {
   }
 
   return (
-    <div className="min-h-dvh bg-[#050505] text-zinc-100 font-sans">
-      <header className="sticky top-0 z-10 bg-[#050505] border-b border-zinc-900">
+    <div className="dark min-h-dvh bg-background text-foreground font-sans">
+      <header className="sticky top-0 z-10 bg-background border-b border-border">
         <div className="max-w-lg mx-auto px-4 py-4 flex items-center justify-between">
-          <button onClick={() => router.back()} className="p-2 hover:bg-[#111111] rounded-lg transition-colors text-zinc-400">
+          <button onClick={() => router.back()} className="p-2 hover:bg-card rounded-lg transition-colors text-muted-foreground">
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-sm font-semibold tracking-widest uppercase text-zinc-500">Relationship Check-In</h1>
-          <span className="text-sm text-zinc-600 font-medium">{currentQuestion + 1}/{QUESTIONS.length}</span>
+          <h1 className="text-sm font-semibold tracking-widest uppercase text-muted-foreground">Relationship Check-In</h1>
+          <span className="text-sm text-muted-foreground font-medium">{currentQuestion + 1}/{QUESTIONS.length}</span>
         </div>
-        <div className="h-0.5 bg-zinc-900">
+        <div className="h-0.5 bg-background">
           <div
-            className="h-full bg-zinc-400 transition-all duration-300"
+            className="h-full bg-primary-emphasis transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -148,9 +148,9 @@ export default function AssessmentPage() {
             exit={{ opacity: 0, x: -30 }}
             transition={{ duration: 0.2 }}
           >
-            <Card className="bg-[#111111] border-zinc-800">
+            <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-xl font-serif text-zinc-100 leading-relaxed tracking-wide text-center">{q.text}</CardTitle>
+                <CardTitle className="text-xl font-serif text-foreground leading-relaxed tracking-wide text-center">{q.text}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 pb-8">
                 {SCALE_LABELS.map((label, idx) => {
@@ -161,11 +161,11 @@ export default function AssessmentPage() {
                       key={score}
                       onClick={() => handleScore(q.id, score)}
                       className={`w-full text-left px-5 py-4 rounded-xl border transition-all duration-200 ${isSelected
-                          ? 'border-white bg-white text-black font-semibold tracking-wide'
-                          : 'border-zinc-800 hover:border-zinc-700 hover:bg-[#141414] text-zinc-300'
+                          ? 'border-ring bg-primary text-primary-foreground font-semibold tracking-wide'
+                          : 'border-border hover:border-border hover:bg-accent text-foreground'
                         }`}
                     >
-                      <span className={`inline-block w-8 text-sm ${isSelected ? 'text-zinc-600' : 'text-zinc-600'}`}>{score}.</span>
+                      <span className={`inline-block w-8 text-sm ${isSelected ? 'text-primary-foreground' : 'text-muted-foreground'}`}>{score}.</span>
                       {label}
                     </button>
                   );
@@ -180,7 +180,7 @@ export default function AssessmentPage() {
             variant="outline"
             onClick={() => setCurrentQuestion(Math.max(0, currentQuestion - 1))}
             disabled={currentQuestion === 0}
-            className="bg-transparent border-zinc-800 text-zinc-400 hover:bg-[#111111] hover:text-zinc-200 rounded-xl"
+            className="bg-transparent border-border text-muted-foreground hover:bg-card hover:text-foreground rounded-xl"
           >
             <ChevronLeft className="w-4 h-4 mr-1" />
             Back
@@ -190,7 +190,7 @@ export default function AssessmentPage() {
             <Button
               onClick={() => setCurrentQuestion(currentQuestion + 1)}
               disabled={!responses[q.id]}
-              className="bg-white text-black hover:bg-zinc-200 rounded-xl px-6"
+              className="bg-popover text-foreground hover:bg-border rounded-xl px-6"
             >
               Next
               <ChevronRight className="w-4 h-4 ml-1" />
@@ -199,7 +199,7 @@ export default function AssessmentPage() {
             <Button
               onClick={handleSubmit}
               disabled={!isComplete}
-              className="bg-white text-black hover:bg-zinc-200 border border-zinc-300 rounded-xl px-6 shadow-lg shadow-white/5"
+              className="bg-popover text-foreground hover:bg-border border border-border rounded-xl px-6 shadow-lg shadow-white/5"
             >
               Finish
               <CheckCircle className="w-4 h-4 ml-1" />

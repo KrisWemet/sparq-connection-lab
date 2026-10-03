@@ -30,7 +30,7 @@ export default function PathToTogether() {
         duration: '3 weeks',
         category: 'Skills',
         sequence: 2,
-        icon: <MessageCircle className="h-8 w-8 text-blue-500" />
+        icon: <MessageCircle className="h-8 w-8 text-understand" />
       },
       {
         id: 'conflict',
@@ -48,7 +48,7 @@ export default function PathToTogether() {
         duration: '5 weeks',
         category: 'Connection',
         sequence: 4,
-        icon: <Heart className="h-8 w-8 text-rose-500" />
+        icon: <Heart className="h-8 w-8 text-connection" />
       }
     ];
 
@@ -61,13 +61,13 @@ export default function PathToTogether() {
   const getCategoryColor = (category: string) => {
     switch (category.toLowerCase()) {
       case 'skills':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-accent text-understand';
       case 'connection':
-        return 'bg-rose-100 text-rose-800';
+        return 'bg-connection-subtle text-connection';
       case 'growth':
-        return 'bg-green-100 text-green-800';
+        return 'bg-growth-subtle text-growth';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-muted text-foreground';
     }
   };
 
@@ -90,7 +90,7 @@ export default function PathToTogether() {
           <Card key={journey.id} className="overflow-hidden transition-shadow hover:shadow-md">
             <CardHeader className="pb-4">
               <div className="flex justify-between items-start">
-                <div className="flex-shrink-0 p-2 rounded-lg bg-slate-50">
+                <div className="flex-shrink-0 p-2 rounded-lg bg-background">
                   {journey.icon}
                 </div>
                 <span className={`text-xs font-medium px-2.5 py-0.5 rounded ${getCategoryColor(journey.category)}`}>

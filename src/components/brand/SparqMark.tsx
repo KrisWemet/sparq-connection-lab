@@ -19,18 +19,18 @@ export function SparqMark({ size = 28, className }: { size?: number; className?:
     >
       <defs>
         <linearGradient id={`spark-${id}`} x1="14" y1="50" x2="50" y2="14" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#E97868" />
-          <stop offset="1" stopColor="#F3B55A" />
+          <stop offset="0" stopColor="hsl(var(--connection))" />
+          <stop offset="1" stopColor="hsl(var(--growth))" />
         </linearGradient>
       </defs>
-      <rect width="64" height="64" rx="16" fill="#4B2E57" />
+      <rect width="64" height="64" rx="16" fill="hsl(var(--brand-plum))" />
       <path
         d="M30 13 C31.6 27 35 30.4 49 32 C35 33.6 31.6 37 30 51 C28.4 37 25 33.6 11 32 C25 30.4 28.4 27 30 13 Z"
         fill={`url(#spark-${id})`}
       />
       <path
         d="M47 11 C47.6 15.4 48.6 16.4 53 17 C48.6 17.6 47.6 18.6 47 23 C46.4 18.6 45.4 17.6 41 17 C45.4 16.4 46.4 15.4 47 11 Z"
-        fill="#F3B55A"
+        fill="hsl(var(--growth))"
       />
     </svg>
   );

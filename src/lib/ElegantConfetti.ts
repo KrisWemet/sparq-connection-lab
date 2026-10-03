@@ -1,45 +1,6 @@
-import confetti from 'canvas-confetti';
-
+/** Compatibility for existing callers. Completion is a quiet wash of light,
+ * with no particles or changes to the session/progress behavior. */
 export function fireElegantConfetti() {
-  const duration = 3000;
-  const end = Date.now() + duration;
-
-  const colors = ['#E97868', '#F3B55A', '#4B2E57']; // coral (connect), gold (grow), plum
-
-  (function frame() {
-    confetti({
-      particleCount: 3,
-      angle: 60,
-      spread: 55,
-      origin: { x: 0 },
-      colors: colors,
-      disableForReducedMotion: true,
-      zIndex: 100,
-    });
-    confetti({
-      particleCount: 3,
-      angle: 120,
-      spread: 55,
-      origin: { x: 1 },
-      colors: colors,
-      disableForReducedMotion: true,
-      zIndex: 100,
-    });
-
-    if (Date.now() < end) {
-      requestAnimationFrame(frame);
-    }
-  }());
+  if (typeof window !== 'undefined') window.dispatchEvent(new Event('sparq:completion-glow'));
 }
-
-// A single subtle burst
-export function fireSubtleBurst() {
-  confetti({
-    particleCount: 40,
-    spread: 70,
-    origin: { y: 0.6 },
-    colors: ['#E97868', '#F3B55A', '#4B2E57'],
-    disableForReducedMotion: true,
-    zIndex: 100,
-  });
-}
+export function fireSubtleBurst() { fireElegantConfetti(); }

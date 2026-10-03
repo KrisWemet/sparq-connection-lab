@@ -68,12 +68,12 @@ export default function ForgotPasswordPage() {
     >
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         {error && (
-          <div role="alert" className="p-3 bg-red-50 border border-red-200 rounded-md text-red-600 text-sm">
+          <div role="alert" className="p-3 bg-destructive-subtle border border-destructive rounded-md text-destructive-emphasis text-sm">
             {error}
           </div>
         )}
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1">Email</label>
           <div className="relative">
             <input
               type="email"
@@ -82,7 +82,7 @@ export default function ForgotPasswordPage() {
               autoFocus
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full px-4 py-2 pl-10 border rounded-md focus:ring-brand-primary focus:border-brand-primary"
+              className="w-full px-4 py-2 pl-10 border rounded-md focus:ring-ring focus:border-ring bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background border-input"
               placeholder="Enter your email"
             />
             <div className="absolute left-3 top-2.5 text-brand-text-secondary">
@@ -93,7 +93,7 @@ export default function ForgotPasswordPage() {
         <button
           type="submit"
           disabled={sending}
-          className="press w-full bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary transition duration-200 flex items-center justify-center font-bold disabled:opacity-70"
+          className="press w-full bg-brand-primary text-white py-2 px-4 rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition duration-200 flex items-center justify-center font-bold disabled:opacity-70"
         >
           {sending ? <Loader className="h-5 w-5 animate-spin" /> : 'Send me a link'}
         </button>

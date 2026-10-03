@@ -53,10 +53,10 @@ export function TraitCard({ traits, accessToken, onUpdated }: TraitCardProps) {
 
   if (!traits || traits.length === 0) {
     return (
-      <Card className="dark:bg-gray-800 dark:border-gray-700">
+      <Card className="dark:bg-card dark:border-border">
         <CardContent className="p-4 text-center">
           <Brain className="w-8 h-8 mx-auto text-brand-text-secondary mb-2" />
-          <p className="text-sm text-brand-text-secondary dark:text-gray-400">
+          <p className="text-sm text-brand-text-secondary dark:text-muted-foreground">
             Peter is still getting to know you. Complete a few daily sessions and your insights will appear here.
           </p>
         </CardContent>
@@ -87,7 +87,7 @@ export function TraitCard({ traits, accessToken, onUpdated }: TraitCardProps) {
 
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+      <h3 className="text-sm font-semibold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider">
         What Peter has learned about you
       </h3>
       {traits.map((trait) => {
@@ -102,21 +102,21 @@ export function TraitCard({ traits, accessToken, onUpdated }: TraitCardProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <Card className="dark:bg-gray-800 dark:border-gray-700">
+            <Card className="dark:bg-card dark:border-border">
               <CardContent className="p-4">
                 <div className="flex items-start justify-between mb-2">
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{label}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{valueLabel}</p>
+                    <p className="text-sm font-medium text-foreground dark:text-white">{label}</p>
+                    <p className="text-sm text-muted-foreground dark:text-muted-foreground">{valueLabel}</p>
                   </div>
                   <Badge
                     variant="outline"
                     className={
                       confidence === 'Likely'
-                        ? 'text-green-600 border-green-300'
+                        ? 'text-success-emphasis border-success'
                         : confidence === 'Possible'
-                        ? 'text-yellow-600 border-yellow-300'
-                        : 'text-brand-text-secondary border-gray-300'
+                        ? 'text-warning-emphasis border-warning'
+                        : 'text-brand-text-secondary border-border'
                     }
                   >
                     {confidence}
@@ -124,7 +124,7 @@ export function TraitCard({ traits, accessToken, onUpdated }: TraitCardProps) {
                 </div>
 
                 <div className="flex items-center gap-2 mt-3">
-                  <span className="text-xs text-brand-text-secondary dark:text-gray-500 mr-1">
+                  <span className="text-xs text-brand-text-secondary dark:text-muted-foreground mr-1">
                     Does this sound right?
                   </span>
                   <Button

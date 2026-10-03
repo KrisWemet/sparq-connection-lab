@@ -224,16 +224,16 @@ export default function Goals() {
   };
 
   return (
-    <div className="min-h-dvh bg-gray-50 pb-24">
-      <header className="sticky top-0 z-50 bg-white border-b">
+    <div className="min-h-dvh bg-background pb-24">
+      <header className="sticky top-0 z-50 bg-popover border-b">
         <div className="container max-w-6xl mx-auto px-4 py-3 flex items-center">
           <button 
             onClick={() => router.back()} 
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-muted rounded-lg transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-xl font-semibold text-gray-900 mx-auto">
+          <h1 className="text-xl font-semibold text-foreground mx-auto">
             Relationship Goals
           </h1>
         </div>
@@ -242,10 +242,10 @@ export default function Goals() {
       <main className="container max-w-6xl mx-auto px-4 pt-6 animate-slide-up">
         <div className="bg-gradient-to-r from-primary/20 to-primary/10 rounded-lg p-6 mb-8">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-2xl font-bold text-gray-900 mb-3">
+            <h2 className="text-2xl font-bold text-foreground mb-3">
               Set Goals, Grow Together
             </h2>
-            <p className="text-gray-700 mb-6">
+            <p className="text-foreground mb-6">
               Create meaningful goals to strengthen your relationship and track your progress together.
             </p>
             <Button 
@@ -269,7 +269,7 @@ export default function Goals() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="title" className="block text-sm font-medium text-foreground mb-1">
                   Goal Title *
                 </label>
                 <Input
@@ -281,7 +281,7 @@ export default function Goals() {
               </div>
               
               <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="description" className="block text-sm font-medium text-foreground mb-1">
                   Description
                 </label>
                 <Textarea
@@ -294,7 +294,7 @@ export default function Goals() {
               </div>
               
               <div>
-                <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="category" className="block text-sm font-medium text-foreground mb-1">
                   Category *
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-2">
@@ -316,7 +316,7 @@ export default function Goals() {
               </div>
               
               <div>
-                <label htmlFor="dueDate" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="dueDate" className="block text-sm font-medium text-foreground mb-1">
                   Target Date
                 </label>
                 <Input
@@ -349,7 +349,7 @@ export default function Goals() {
                 {goals.filter(goal => goal.progress < 100).length === 0 ? (
                   <div className="text-center py-12">
                     <Target className="w-12 h-12 mx-auto text-brand-text-secondary mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No active goals</h3>
+                    <h3 className="text-lg font-medium text-foreground mb-2">No active goals</h3>
                     <p className="text-brand-text-secondary mb-6">
                       Create your first relationship goal to start tracking your progress together.
                     </p>
@@ -399,7 +399,7 @@ export default function Goals() {
                                     <CheckCircle2 
                                       className={`w-5 h-5 ${
                                         milestone.completed 
-                                          ? "text-green-500 fill-green-500" 
+                                          ? "text-success-emphasis fill-success"
                                           : "text-brand-text-secondary"
                                       }`} 
                                     />
@@ -408,7 +408,7 @@ export default function Goals() {
                                     className={`ml-2 text-sm ${
                                       milestone.completed 
                                         ? "text-brand-text-secondary line-through" 
-                                        : "text-gray-700"
+                                        : "text-foreground"
                                     }`}
                                   >
                                     {milestone.title}
@@ -445,7 +445,7 @@ export default function Goals() {
                 {goals.filter(goal => goal.progress === 100).length === 0 ? (
                   <div className="text-center py-12">
                     <Trophy className="w-12 h-12 mx-auto text-brand-text-secondary mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No completed goals yet</h3>
+                    <h3 className="text-lg font-medium text-foreground mb-2">No completed goals yet</h3>
                     <p className="text-brand-text-secondary mb-6">
                       Goals you reach will rest here — each one a small win you built together.
                     </p>
@@ -459,7 +459,7 @@ export default function Goals() {
                           <CardHeader>
                             <div className="flex justify-between items-start">
                               <CardTitle className="text-lg">{goal.title}</CardTitle>
-                              <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+                              <Badge className="bg-success-subtle text-success-emphasis hover:bg-success-subtle">
                                 Completed
                               </Badge>
                             </div>
@@ -467,7 +467,7 @@ export default function Goals() {
                           </CardHeader>
                           <CardContent>
                             <div className="flex items-center text-sm text-brand-text-secondary">
-                              <CheckCircle2 className="w-4 h-4 mr-1 text-green-500" />
+                              <CheckCircle2 className="w-4 h-4 mr-1 text-success-emphasis" />
                               <span>Completed on {new Date().toLocaleDateString()}</span>
                             </div>
                           </CardContent>

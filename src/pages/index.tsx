@@ -1,199 +1,51 @@
-import React, { useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useAuth } from '../lib/auth-context';
-import { MetaphorAnimation } from '../components/MetaphorAnimation';
 import { useState } from 'react';
+import Head from 'next/head';
+import Link from 'next/link';
+import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { SparqLogo } from '@/components/brand/SparqMark';
+import { MetaphorAnimation } from '@/components/MetaphorAnimation';
+import { MetaphorJourney } from '@/components/emotion/MetaphorJourney';
+import { MetaphorVisual, type MetaphorKind } from '@/components/emotion/MetaphorVisual';
+import { AmbientScene } from '@/components/emotion/EmotionalEnvironment';
+import { emotionStyle } from '@/lib/visual-emotion';
+import styles from '@/components/emotion/welcome.module.css';
 
 export default function Home() {
-  const { user, loading } = useAuth();
-  const router = useRouter();
-  const [showMetaphor, setShowMetaphor] = useState(false);
-
-  // No auto-redirect — always show landing page so users explicitly choose to sign in
-  // (supports shared devices where multiple people may use the same browser)
-  const [currentMetaphor, setCurrentMetaphor] = useState<'bridge' | 'flower' | 'river'>('bridge');
-
-  const handleShowMetaphor = (type: 'bridge' | 'flower' | 'river') => {
-    setCurrentMetaphor(type);
-    setShowMetaphor(true);
-  };
-
-  return (
-    <div className="min-h-dvh bg-brand-linen font-sans selection:bg-brand-primary/30">
-      {showMetaphor && (
-        <MetaphorAnimation
-          title={currentMetaphor === 'bridge' ? 'Building Connection' : currentMetaphor === 'flower' ? 'Nurturing Growth' : 'Flowing Together'}
-          description={currentMetaphor === 'bridge' ? 'Watch your communication bridge grow stronger' : currentMetaphor === 'flower' ? 'See your intimacy bloom' : 'Navigate challenges like water'}
-          metaphorType={currentMetaphor}
-          onComplete={() => setShowMetaphor(false)}
-        />
-      )}
-
-      <header className="fixed top-0 inset-x-0 z-50 bg-white/70 backdrop-blur-xl border-b border-zinc-200/80">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4 flex justify-between items-center">
-          <h1 className="flex items-center w-fit">
-            <SparqLogo />
-          </h1>
-          <div className="flex items-center gap-4">
-            <Link href="/login">
-              <span className="text-sm font-medium text-zinc-600 hover:text-black transition-colors cursor-pointer px-2">
-                Sign In
-              </span>
-            </Link>
-            <Link href="/signup">
-              <span className="px-5 py-2.5 bg-brand-primary text-white font-bold rounded-full hover:bg-brand-hover transition-colors cursor-pointer text-sm shadow-sm">
-                Get Started
-              </span>
-            </Link>
-          </div>
+  const [preview, setPreview] = useState<MetaphorKind | null>(null);
+  // Keep the existing explicit sign-in choice for shared devices.
+  return <div className={styles.welcome} style={emotionStyle('onboarding')}>
+    <Head><title>Sparq — A little closer, every day</title><meta name="description" content="A private space for small daily practices, honest reflection, and a little more connection." /></Head>
+    {preview && <MetaphorAnimation
+      title={preview === 'bridge' ? 'Change the part you control' : preview === 'bloom' ? 'Practice closeness in small moments' : 'Bring a calmer self into conflict'}
+      description={preview === 'bridge' ? 'Connection is built, one moment at a time.' : preview === 'bloom' ? 'What receives care can become something more.' : 'Different currents. Room to reconnect.'}
+      metaphorType={preview === 'bloom' ? 'flower' : preview === 'flow' ? 'river' : 'bridge'}
+      onComplete={() => setPreview(null)} />}
+    <header className={styles.header}>
+      <Link href="/" aria-label="Sparq home"><SparqLogo /></Link>
+      <nav aria-label="Welcome navigation"><Link href="/login" className={styles.signIn}>Sign In</Link><Link href="/signup" className={styles.smallButton}>Get Started <ArrowUpRight size={14} aria-hidden="true" /></Link></nav>
+    </header>
+    <main>
+      <section className={styles.hero}>
+        <AmbientScene />
+        <div className={styles.heroCopy}>
+          <p className={styles.eyebrow}>A private space to grow</p>
+          <h1>Become a <em>steadier partner,</em> one small day at a time.</h1>
+          <p className={styles.description}>Sparq starts with you. A little room to reflect. A calmer way to talk. Small moments that bring you closer to the person you want to be.</p>
+          <div className={styles.actions}><Link href="/login" className={styles.primary}>Start Your Journey <ArrowUpRight size={17} aria-hidden="true" /></Link><a href="#the-sparq-world" className={styles.secondary}>Explore Sparq <ArrowDown size={16} aria-hidden="true" /></a></div>
+          <p className={styles.reassurance}>At your pace. On your own, or together.</p>
         </div>
-      </header>
-
-      <main className="pt-28">
-        {/* Hero Section */}
-        <section className="relative pb-40 pt-32 px-4 overflow-hidden">
-          {/* Background Texture & Orbs */}
-          <div className="absolute inset-0 texture-bg mix-blend-multiply opacity-50 pointer-events-none" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand-primary/15 rounded-full blur-[120px] pointer-events-none" />
-          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-brand-sand/60 rounded-full blur-[80px] pointer-events-none" />
-
-          <div className="max-w-4xl mx-auto text-center relative z-10">
-            <h1 className="text-5xl md:text-6xl font-serif text-zinc-900 mb-6 tracking-tight leading-tight">
-              Become a <span className="text-brand-hover italic">steadier partner</span>, one small day at a time.
-            </h1>
-            <p className="text-lg md:text-xl text-brand-text-secondary mb-12 max-w-2xl mx-auto leading-relaxed">
-              Sparq starts with you. Build calm habits. Say the true thing. Show up better at home. Invite your partner later if that helps.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link href="/login">
-                <span className="px-8 py-4 bg-zinc-900 text-white rounded-full hover:bg-black transition-colors font-medium shadow-xl shadow-zinc-900/20 text-base cursor-pointer inline-block">
-                  Start Your Journey
-                </span>
-              </Link>
-              <button
-                onClick={() => handleShowMetaphor('bridge')}
-                className="px-8 py-4 bg-white/60 backdrop-blur-md text-zinc-800 border border-zinc-200/50 rounded-full hover:bg-white/80 transition-colors shadow-sm text-base font-medium inline-block"
-              >
-                Experience a Demo
-              </button>
-            </div>
-            <p className="mt-8 text-sm text-brand-text-secondary font-medium tracking-wide uppercase">
-              No judgment. No pressure. Just one honest rep at a time.
-            </p>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="py-24 bg-white relative">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-            <div className="text-center mb-20">
-              <h2 className="text-3xl md:text-4xl font-serif text-black mb-4 tracking-tight">How Sparq Guides You</h2>
-              <p className="text-lg text-brand-text-secondary max-w-2xl mx-auto leading-relaxed">
-                Sparq helps one person make real change first, then bring that change into the relationship.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div
-                className="bg-brand-linen p-8 rounded-3xl cursor-pointer hover:scale-[1.02] transition-transform duration-300"
-                onClick={() => handleShowMetaphor('bridge')}
-              >
-                <div className="w-12 h-12 bg-brand-primary/10 rounded-2xl shadow-sm flex items-center justify-center mb-6">
-                  <span className="text-brand-hover font-bold text-lg">1</span>
-                </div>
-                <h3 className="text-xl font-bold text-black mb-3 tracking-tight">
-                  Change the part you control
-                </h3>
-                <p className="text-brand-text-secondary mb-8 leading-relaxed">
-                  Stop doing the same hurtful loop. Learn to slow down, listen, and say what is true.
-                </p>
-                <p className="font-semibold text-brand-hover group-hover:text-brand-espresso transition-colors">
-                  Experience Bridge <span aria-hidden="true">&rarr;</span>
-                </p>
-              </div>
-
-              <div
-                className="bg-brand-linen p-8 rounded-3xl cursor-pointer hover:scale-[1.02] transition-transform duration-300"
-                onClick={() => handleShowMetaphor('flower')}
-              >
-                <div className="w-12 h-12 bg-brand-primary/10 rounded-2xl shadow-sm flex items-center justify-center mb-6">
-                  <span className="text-brand-hover font-bold text-lg">2</span>
-                </div>
-                <h3 className="text-xl font-bold text-black mb-3 tracking-tight">
-                  Practice closeness in small moments
-                </h3>
-                <p className="text-brand-text-secondary mb-8 leading-relaxed">
-                  Closeness grows in small safe moments. Sparq helps you build those moments, even if your partner is not here yet.
-                </p>
-                <p className="font-semibold text-brand-hover group-hover:text-brand-espresso transition-colors">
-                  Experience Bloom <span aria-hidden="true">&rarr;</span>
-                </p>
-              </div>
-
-              <div
-                className="bg-brand-linen p-8 rounded-3xl cursor-pointer hover:scale-[1.02] transition-transform duration-300"
-                onClick={() => handleShowMetaphor('river')}
-              >
-                <div className="w-12 h-12 bg-brand-primary/10 rounded-2xl shadow-sm flex items-center justify-center mb-6">
-                  <span className="text-brand-hover font-bold text-lg">3</span>
-                </div>
-                <h3 className="text-xl font-bold text-black mb-3 tracking-tight">
-                  Bring a calmer self into conflict
-                </h3>
-                <p className="text-brand-text-secondary mb-8 leading-relaxed">
-                  Fights happen. Learn to pause, repair, and come back kinder.
-                </p>
-                <p className="font-semibold text-brand-hover group-hover:text-brand-espresso transition-colors">
-                  Experience Flow <span aria-hidden="true">&rarr;</span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-24 bg-white border-y border-zinc-100">
-          <div className="max-w-4xl mx-auto text-center px-6 relative z-10">
-            <h2 className="text-4xl md:text-5xl font-serif text-black mb-6 tracking-tight">Begin Your Experience</h2>
-            <p className="text-lg text-brand-text-secondary mb-10 max-w-lg mx-auto leading-relaxed">
-              Start with your own daily practice. Invite your partner later if it helps.
-            </p>
-            <Link href="/login">
-              <span className="px-10 py-4 bg-brand-primary text-white rounded-full hover:bg-brand-hover transition-colors font-bold shadow-xl shadow-brand-primary/20 text-base inline-block cursor-pointer">
-                Create Account
-              </span>
-            </Link>
-          </div>
-        </section>
-      </main>
-
-      <footer className="bg-white text-brand-text-secondary border-t border-zinc-200 py-12">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="text-center md:text-left">
-              <h2 className="text-lg font-bold text-black mb-1 tracking-tight">Sparq</h2>
-              <p className="text-sm">Identity-level change through clinical design.</p>
-              <p className="text-sm mt-1">Solo-first growth for healthier relationships.</p>
-            </div>
-            <div className="flex flex-wrap justify-center gap-6 text-sm font-medium text-brand-text-secondary">
-              <Link href="/about">
-                <span className="hover:text-black transition-colors cursor-pointer">About</span>
-              </Link>
-              <Link href="/privacy">
-                <span className="hover:text-black transition-colors cursor-pointer">Privacy</span>
-              </Link>
-              <Link href="/terms">
-                <span className="hover:text-black transition-colors cursor-pointer">Terms</span>
-              </Link>
-            </div>
-          </div>
-          <div className="mt-12 text-center text-xs text-brand-text-secondary">
-            &copy; {new Date().getFullYear()} Sparq Connection Lab
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
+        <div className={styles.heroArt}><MetaphorVisual kind="bridge" /><p>A little space. A new connection.</p></div>
+        <a href="#the-sparq-world" className={styles.scrollNote}><span aria-hidden="true" />There is room to begin here<ArrowDown size={13} aria-hidden="true" /></a>
+      </section>
+      <MetaphorJourney onExplore={setPreview} />
+      <section className={styles.invitation}>
+        <div className={styles.invitationArt}><MetaphorVisual kind="bloom" quiet paused /></div>
+        <p className={styles.eyebrow}>Your next small step</p>
+        <h2>You do not have to have<br /><em>it all figured out.</em></h2>
+        <p>Start with your own daily practice. Invite your partner later if it helps.</p>
+        <Link href="/signup" className={styles.primary}>Create Account <ArrowUpRight size={17} aria-hidden="true" /></Link>
+      </section>
+    </main>
+    <footer className={styles.footer}><div><SparqLogo /><p>A little closer to yourself. A little closer to each other.</p></div><nav aria-label="Footer"><a href="#the-sparq-world">How Sparq helps</a><Link href="/login">Sign In</Link><Link href="/signup">Create Account</Link></nav><small>© {new Date().getFullYear()} Sparq Connection</small></footer>
+  </div>;
 }

@@ -43,53 +43,53 @@ export default function MirrorReport() {
   };
 
   return (
-    <div className="min-h-dvh bg-[#050505] flex flex-col items-center py-12 px-4 relative font-sans">
+    <div className="dark min-h-dvh bg-background flex flex-col items-center py-12 px-4 relative font-sans">
       <div className="max-w-2xl w-full z-10">
-        <h1 className="text-4xl font-serif text-zinc-100 mb-8 text-center tracking-wide">Your Mirror Report</h1>
+        <h1 className="text-4xl font-serif text-foreground mb-8 text-center tracking-wide">Your Mirror Report</h1>
 
-        <div className="bg-[#111111] rounded-3xl border border-zinc-800 p-8 mb-8">
-          <h2 className="text-xl font-serif text-zinc-100 mb-6 flex items-center tracking-wide">
-            <span className="bg-zinc-900 border border-zinc-800 text-zinc-400 p-2 rounded-xl mr-3">🧠</span>
+        <div className="bg-card rounded-3xl border border-border p-8 mb-8">
+          <h2 className="text-xl font-serif text-foreground mb-6 flex items-center tracking-wide">
+            <span className="bg-background border border-border text-muted-foreground p-2 rounded-xl mr-3">🧠</span>
             What Peter&apos;s noticed so far...
           </h2>
 
           <ul className="space-y-6">
             <li className="flex gap-5">
-              <div className="w-[2px] h-full bg-zinc-800 mt-2"></div>
+              <div className="w-[2px] h-full bg-card mt-2"></div>
               <div>
-                <h3 className="font-semibold text-[15px] text-zinc-200 tracking-wide">You value Acts of Service</h3>
-                <p className="text-zinc-400 text-sm mt-1.5 leading-relaxed font-light">Based on your activity, I see you feel most loved when tasks are shared and your burden is lightened.</p>
+                <h3 className="font-semibold text-[15px] text-foreground tracking-wide">You value Acts of Service</h3>
+                <p className="text-muted-foreground text-sm mt-1.5 leading-relaxed font-light">Based on your activity, I see you feel most loved when tasks are shared and your burden is lightened.</p>
               </div>
             </li>
 
             <li className="flex gap-5">
-              <div className="w-[2px] h-full bg-zinc-800 mt-2"></div>
+              <div className="w-[2px] h-full bg-card mt-2"></div>
               <div>
-                <h3 className="font-semibold text-[15px] text-zinc-200 tracking-wide">Communication Style: Direct</h3>
-                <p className="text-zinc-400 text-sm mt-1.5 leading-relaxed font-light">You appreciate clear, straightforward talks over ambiguous hints, especially during conflict.</p>
+                <h3 className="font-semibold text-[15px] text-foreground tracking-wide">Communication Style: Direct</h3>
+                <p className="text-muted-foreground text-sm mt-1.5 leading-relaxed font-light">You appreciate clear, straightforward talks over ambiguous hints, especially during conflict.</p>
               </div>
             </li>
 
             <li className="flex gap-5">
-              <div className="w-[2px] h-full bg-zinc-800 mt-2"></div>
+              <div className="w-[2px] h-full bg-card mt-2"></div>
               <div>
-                <h3 className="font-semibold text-[15px] text-zinc-200 tracking-wide">Growth Area: Vulnerability</h3>
-                <p className="text-zinc-400 text-sm mt-1.5 leading-relaxed font-light">Sharing your fears is a subtle edge for you. I know it&apos;s scary, but leaning into this can really deepen your trust!</p>
+                <h3 className="font-semibold text-[15px] text-foreground tracking-wide">Growth Area: Vulnerability</h3>
+                <p className="text-muted-foreground text-sm mt-1.5 leading-relaxed font-light">Sharing your fears is a subtle edge for you. I know it&apos;s scary, but leaning into this can really deepen your trust!</p>
               </div>
             </li>
           </ul>
         </div>
 
-        <div className="bg-[#111111] border border-zinc-800 rounded-3xl p-8 text-center">
-          <h2 className="text-2xl font-serif tracking-wide text-zinc-100 mb-3">See the Full Picture</h2>
-          <p className="text-sm font-light text-zinc-400 mb-8 max-w-lg mx-auto leading-relaxed">
+        <div className="bg-card border border-border rounded-3xl p-8 text-center">
+          <h2 className="text-2xl font-serif tracking-wide text-foreground mb-3">See the Full Picture</h2>
+          <p className="text-sm font-light text-muted-foreground mb-8 max-w-lg mx-auto leading-relaxed">
             A mirror only shows one reflection. Connect with your partner to unlock joint insights, compatibility scores, and shared growth paths.
           </p>
 
           <button
             onClick={handleUpgrade}
             disabled={isUpgrading}
-            className="w-full sm:w-auto bg-white text-black font-semibold text-sm tracking-wide py-4 px-8 rounded-xl hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full sm:w-auto bg-popover text-foreground font-semibold text-sm tracking-wide py-4 px-8 rounded-xl hover:bg-border transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isUpgrading ? "Connecting..." : "Upgrade to Premium & Connect"}
           </button>

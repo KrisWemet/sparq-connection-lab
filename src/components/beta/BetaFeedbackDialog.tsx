@@ -79,7 +79,7 @@ export function BetaFeedbackDialog({
           Beta feedback
         </button>
       </DialogTrigger>
-      <DialogContent className="bg-white border border-brand-primary/10">
+      <DialogContent className="bg-popover border border-brand-primary/10">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
@@ -118,7 +118,7 @@ export function BetaFeedbackDialog({
               className="min-h-[120px]"
             />
 
-            {error ? <p className="text-sm text-red-600">{error}</p> : null}
+            {error ? <p className="text-sm text-destructive-emphasis">{error}</p> : null}
           </div>
         )}
 

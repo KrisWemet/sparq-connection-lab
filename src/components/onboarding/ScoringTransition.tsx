@@ -1,6 +1,5 @@
 // src/components/onboarding/ScoringTransition.tsx
 import { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
 import { supabase } from '@/lib/supabase';
 import { buildAuthedHeaders } from '@/lib/api-auth';
@@ -157,14 +156,8 @@ export function ScoringTransition({ progress, onComplete, onError, userId }: Sco
   }
 
   return (
-    <div className="min-h-dvh bg-brand-linen flex flex-col items-center justify-center px-4">
-      <motion.div
-        animate={{ scale: [1, 1.08, 1] }}
-        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-        className="mb-6"
-      >
-        <PeterAvatar mood="morning" size={72} />
-      </motion.div>
+    <div className="emotion-page min-h-dvh bg-brand-linen flex flex-col items-center justify-center px-4">
+      <PeterAvatar state="listening" size={96} className="mb-6" />
       <p className="text-brand-text-secondary text-sm font-serif italic text-center">
         Give me just a moment...
       </p>

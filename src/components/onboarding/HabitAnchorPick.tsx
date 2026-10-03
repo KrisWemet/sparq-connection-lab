@@ -55,9 +55,9 @@ export function HabitAnchorPick({ userId, onComplete }: HabitAnchorPickProps) {
   };
 
   return (
-    <div className="min-h-dvh bg-brand-linen flex flex-col items-center justify-center px-4">
+    <div className="emotion-page min-h-dvh bg-brand-linen flex flex-col items-center justify-center px-4">
       <div className="w-full max-w-lg">
-        <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-8 shadow-[0_20px_50px_rgba(46,38,32,0.10)]">
+        <div className="emotion-paper rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-8 shadow-[0_20px_50px_hsl(var(--shadow)/0.10)]">
           <div className="mb-5 flex items-center gap-3">
             <PeterAvatar mood="morning" size={40} />
             <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-hover">
@@ -94,7 +94,7 @@ export function HabitAnchorPick({ userId, onComplete }: HabitAnchorPickProps) {
             value={custom}
             onChange={(e) => { setCustom(e.target.value); setSelected(null); }}
             placeholder="Or describe your own moment…"
-            className="mb-6 w-full rounded-xl border border-brand-primary/15 bg-white/70 px-4 py-3 text-sm text-brand-espresso placeholder-brand-taupe/50 focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+            className="mb-6 w-full rounded-xl border border-input bg-popover/70 px-4 py-3 text-sm text-brand-espresso placeholder-brand-taupe/50 focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground"
           />
 
           <motion.button
