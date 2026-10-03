@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSubscription } from "@/lib/subscription-provider";
 import { getTrialDaysRemaining } from "@/lib/product";
@@ -87,10 +88,47 @@ export default function SettingsPage() {
     }
   };
 
-  const handleDeleteAccount = () => {
-    toast("Account deletion requested", {
-      description: "We've sent a confirmation email with further instructions.",
-    });
+  const [deleteStep, setDeleteStep] = useState<'idle' | 'confirm' | 'busy'>('idle');
+  const [exporting, setExporting] = useState(false);
+
+  const handleDownloadData = async () => {
+    if (exporting) return;
+    setExporting(true);
+    try {
+      const { buildAuthedHeaders } = await import('@/lib/api-auth');
+      const res = await fetch('/api/me/export', { headers: await buildAuthedHeaders() });
+      if (!res.ok) throw new Error(String(res.status));
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `sparq-data-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      toast.error("Couldn't get your data just now. Please try again.");
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    setDeleteStep('busy');
+    try {
+      const { buildAuthedHeaders } = await import('@/lib/api-auth');
+      const res = await fetch('/api/me/delete-account', {
+        method: 'POST',
+        headers: await buildAuthedHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({ confirm: 'DELETE' }),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      try { localStorage.clear(); } catch { /* storage blocked */ }
+      await logout().catch(() => {});
+      router.replace('/login');
+    } catch {
+      setDeleteStep('confirm');
+      toast.error("Couldn't delete your account just now. Please try again.");
+    }
   };
 
   const cardVariants = {
@@ -370,8 +408,8 @@ export default function SettingsPage() {
               right={<ChevronRight className="w-4 h-4 text-brand-text-secondary" />}
             />
             <Row
-              label="Download my data"
-              onClick={() => toast.info("We'll email you a copy of your data within 24 hours.")}
+              label={exporting ? "Getting your data…" : "Download my data"}
+              onClick={handleDownloadData}
               right={<ChevronRight className="w-4 h-4 text-brand-text-secondary" />}
             />
             <Row
@@ -418,16 +456,47 @@ export default function SettingsPage() {
             >
               Sign out
             </button>
-            <button
-              onClick={handleDeleteAccount}
-              className="w-full border border-destructive text-destructive-emphasis rounded-2xl py-3 text-sm font-medium hover:bg-destructive-subtle transition-colors"
-            >
-              Delete account
-            </button>
+            {deleteStep === 'idle' ? (
+              <button
+                onClick={() => setDeleteStep('confirm')}
+                className="w-full border border-destructive text-destructive-emphasis rounded-2xl py-3 text-sm font-medium hover:bg-destructive-subtle transition-colors"
+              >
+                Delete account
+              </button>
+            ) : (
+              <div className="rounded-2xl border border-destructive p-4">
+                <p className="text-sm font-semibold text-brand-text-primary">Delete your account for good?</p>
+                <p className="text-xs text-brand-text-secondary mt-1 mb-3 leading-relaxed">
+                  Everything you&rsquo;ve written, Peter&rsquo;s memory of you and your progress are erased.
+                  This can&rsquo;t be undone. If you&rsquo;re linked with a partner, your shared space ends;
+                  their own account stays.
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleDeleteAccount}
+                    disabled={deleteStep === 'busy'}
+                    className="press flex-1 rounded-xl bg-destructive-emphasis py-2.5 text-sm font-bold text-white disabled:opacity-60"
+                  >
+                    {deleteStep === 'busy' ? 'Deleting…' : 'Delete forever'}
+                  </button>
+                  <button
+                    onClick={() => setDeleteStep('idle')}
+                    disabled={deleteStep === 'busy'}
+                    className="press flex-1 rounded-xl border border-brand-primary/20 py-2.5 text-sm font-medium text-brand-text-primary"
+                  >
+                    Keep my account
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </motion.div>
 
         <p className="text-center text-xs text-brand-text-secondary py-2 pb-6">
+          <Link href="/privacy" className="underline">Privacy</Link>
+          {' · '}
+          <Link href="/terms" className="underline">Terms</Link>
+          <br />
           Sparq v1.0.0 · © 2026 Sparq Connection Lab
         </p>
       </main>

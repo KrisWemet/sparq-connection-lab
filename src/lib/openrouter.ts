@@ -3,14 +3,15 @@
 
 const OPENROUTER_BASE = 'https://openrouter.ai/api/v1';
 
-// TEMPORARY (2026-09-30, Chris testing without OpenRouter credits): free
-// models only. Free tier = 20 req/min and 50 req/day (1,000/day once $10 of
-// credits has ever been bought), and free providers may log prompts — not
-// for real users. To go back, restore:
-//   ['anthropic/claude-haiku-4.5', 'google/gemma-4-31b-it:free']
+// Peter runs on Claude Haiku 4.5 (CLAUDE.md). Free models may log prompts,
+// so they are never used for real users. While testing without OpenRouter
+// credits, set PETER_FREE_FALLBACK=true to fall back to them (free tier:
+// 20 req/min, 50 req/day).
+const FREE_TEST_MODELS = ['google/gemma-4-31b-it:free', 'qwen/qwen3.8-27b:free'];
+
 export const PETER_MODELS = [
-  'google/gemma-4-31b-it:free',
-  'qwen/qwen3.8-27b:free',
+  'anthropic/claude-haiku-4.5',
+  ...(process.env.PETER_FREE_FALLBACK === 'true' ? FREE_TEST_MODELS : []),
 ];
 
 export interface ChatMessage {

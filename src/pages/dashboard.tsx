@@ -303,7 +303,9 @@ export default function Dashboard() {
           </div>
         </motion.div>
 
-        {dailySpark && (
+        {/* Day 1 keeps one clear thing to do: the practice. The spark and the
+            daily prime join once the first day is done. */}
+        {dailySpark && currentDay > 1 && (
           <DailySparkCard
             prompt={dailySpark}
             surface="dashboard"
@@ -316,7 +318,7 @@ export default function Dashboard() {
         <NeutralObserverCard />
 
         {/* Daily micro-prime (PRD §4.3) — connective tissue between reflections */}
-        <DailyPrimeCard />
+        {currentDay > 1 && <DailyPrimeCard />}
 
         <HomeDestinationStrip />
 

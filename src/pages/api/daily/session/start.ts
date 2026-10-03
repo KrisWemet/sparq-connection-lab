@@ -408,7 +408,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     try {
       const fallbacks = require('@/data/fallbackStories.json');
-      const fallbackForDay = fallbacks.find((f: any) => f.day === dayIndex) || fallbacks[0];
+      // Someone who opened this day before without finishing it would get the
+      // same story again; move one story along per earlier try so a return
+      // visit never repeats word for word.
+      const { count: earlierTries } = await ctx.supabase
+        .from('daily_sessions')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', ctx.userId)
+        .eq('day_index', dayIndex);
+      const base = Math.max(0, fallbacks.findIndex((f: any) => f.day === dayIndex));
+      const fallbackForDay = fallbacks[(base + (earlierTries ?? 0)) % fallbacks.length];
       storyRaw = `${fallbackForDay.story}\n\nToday's Action: ${fallbackForDay.action}`;
     } catch {
       return res.status(500).json({ error: 'Failed to generate morning story' });

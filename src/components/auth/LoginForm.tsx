@@ -226,7 +226,10 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
             </button>
           </div>
           <p className="mt-3 text-xs text-brand-hover">
-            <Link href="/how-sparq-works" className="underline">How Sparq works and what happens to your data</Link>
+            By creating an account you agree to the{' '}
+            <Link href="/terms" className="underline">Terms</Link> and{' '}
+            <Link href="/privacy" className="underline">Privacy</Link> policy.{' '}
+            <Link href="/how-sparq-works" className="underline">How Sparq works</Link>
           </p>
         </motion.div>
       )}
@@ -385,6 +388,10 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
           <Link href="/how-sparq-works" className="text-brand-hover underline hover:text-brand-espresso">
             How Sparq works
           </Link>
+          {' · '}
+          <Link href="/privacy" className="text-brand-hover underline hover:text-brand-espresso">Privacy</Link>
+          {' · '}
+          <Link href="/terms" className="text-brand-hover underline hover:text-brand-espresso">Terms</Link>
         </p>
         
         {isRegisterMode && (

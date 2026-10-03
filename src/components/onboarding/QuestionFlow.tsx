@@ -478,7 +478,7 @@ export function QuestionFlow({ initialProgress, onComplete, knownNames }: Questi
                   }
                 }}
                 className={`press w-full p-4 rounded-2xl border-2 text-left text-sm font-medium ${
-                  option.isFreeText
+                  option.isFreeText || option.isSkip
                     ? 'border-dashed border-brand-primary/30 bg-transparent text-brand-text-secondary text-xs italic'
                     : 'border-brand-primary/20 bg-brand-parchment text-brand-text-primary hover:border-brand-primary'
                 }`}

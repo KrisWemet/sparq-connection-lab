@@ -13,6 +13,21 @@
 
 ---
 
+## Before inviting real users (2026-10-03)
+
+Done in code (PR #61): Peter on Haiku only, real Privacy and Terms pages (linked from sign-up, login and Settings), real "Download my data" and "Delete account", practice days counted from real steps, Next.js on the last 13.x patch.
+
+Owner steps — only these remain:
+- 🔴 **OpenRouter credits.** Peter now uses Claude Haiku 4.5 only. Without credits he can't answer. (Testing without credits: `PETER_FREE_FALLBACK=true`, never in production.)
+- 🔴 **`NEXT_PUBLIC_SUPPORT_EMAIL`** in Vercel, so the Privacy and Terms pages show a contact address.
+- 🔴 **`SUPABASE_SERVICE_ROLE_KEY`** in Vercel (Production). Download my data and Delete account need it.
+- 🔴 **Merge PR #61.**
+- 🟡 **Phone reminders:** set the keys in `docs/REMINDERS.md` and schedule the job.
+- 🟡 **Have someone read Privacy and Terms** for your country before charging money.
+- 🟡 **Next.js 16 upgrade.** The remaining `npm audit` warnings on Next 13 are fixed only in 16 (needs React 19). Most don't apply here (no middleware, i18n, App Router or self-hosted image optimizer; Vercel hosts it), but plan the upgrade.
+
+---
+
 ## Supported Beta Path
 
 These are the routes and flows this checklist assumes:
