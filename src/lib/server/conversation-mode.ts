@@ -14,6 +14,7 @@ export type ConversationMode =
   | 'celebrate';
 
 export type MomentSignal =
+  | 'declines_help'
   | 'depleted'
   | 'pushback'
   | 'setback'
@@ -32,6 +33,15 @@ export type ModeDecision = {
   signal: MomentSignal;
   instruction: string | null;
 };
+
+// Safety (constitution §5): they turned down crisis help but are still here.
+// Peter stays with them AND keeps real help within reach.
+const DECLINES_HELP =
+  /\b(don'?t want (a |to call (a |the )?)?(hotline|helpline|crisis line|therapist|anyone else)|no hotlines?|not calling (anyone|a hotline)|stop (sending|giving) me (numbers|hotlines))\b/i;
+
+// Reported speech ("she said I never…") is the partner's absolute, not the
+// user's — it is not a cue to challenge the user's view of their partner.
+const REPORTED_ABSOLUTE = /\b(said|says|told me|tells me|accused me of)\b[^.!?]*\b(always|never)\b/i;
 
 // Timing intelligence (constitution v1.2 §6B): no capacity for growth right
 // now. Checked before everything else — stabilizing beats any growth move.
@@ -75,6 +85,7 @@ function wordCount(text: string): number {
 export function classifyMoment(message: string): MomentSignal {
   const text = message.trim();
   if (!text) return 'none';
+  if (DECLINES_HELP.test(text)) return 'declines_help';
   if (DEPLETED.test(text)) return 'depleted';
   // A report on their own experiment ("No, I forgot") is not a rejection of
   // Peter's idea, so it is read before pushback.
@@ -86,12 +97,16 @@ export function classifyMoment(message: string): MomentSignal {
   if (ASKS_FOR_HELP.test(text)) return 'asks_for_help';
   if (INTENTION.test(text)) return 'intention';
   if (HEAVY_FEELING.test(text)) return 'heavy_feeling';
-  if (ABSOLUTE.test(text) && PARTNER_REF.test(text)) return 'absolute_about_partner';
+  if (ABSOLUTE.test(text) && PARTNER_REF.test(text) && !REPORTED_ABSOLUTE.test(text)) return 'absolute_about_partner';
   if (wordCount(text) < 8) return 'brief';
   return 'none';
 }
 
 const INSTRUCTIONS: Record<Exclude<MomentSignal, 'none'>, { mode: ConversationMode; line: string }> = {
+  declines_help: {
+    mode: 'listen',
+    line: 'They turned down crisis help but are still talking to you. Stay with them warmly and keep talking. Also, gently and without lecturing, keep real help within reach in one short line (the help link stays right here, and they deserve real support too). Never promise not to mention help again, and do not move to normal coaching.',
+  },
   depleted: {
     mode: 'stabilize',
     line: 'They have no room for growth right now. This is not the moment to push growth or anything else. Comfort them in a few plain words, offer at most one tiny optional grounding step (one slow breath, feet on the floor), and say nothing is due tonight. No questions about experiments, no lessons, no reframes, no new task, no pep talk.',
@@ -122,7 +137,7 @@ const INSTRUCTIONS: Record<Exclude<MomentSignal, 'none'>, { mode: ConversationMo
   },
   asks_for_help: {
     mode: 'act',
-    line: 'They asked for help. Offer at most two small, concrete ideas (or ask what they have already thought of) and let them choose. If they pick one, it is theirs — help them start, and do not make them explain why first. Keep the choice theirs.',
+    line: 'They asked for help. If they ask what you think they should do, give your honest view in one or two sentences and what it rests on, say what you cannot know, and leave the choice with them — do not dodge the question. Otherwise offer at most two small, concrete ideas (or ask what they have already thought of) and let them choose. If they pick one, it is theirs — help them start, and do not make them explain why first. Keep the choice theirs.',
   },
   heavy_feeling: {
     mode: 'listen',

@@ -26,6 +26,8 @@ describe('decideMode', () => {
     // v1.2 §6 follow up after real-world action
     ['I tried the question thing twice', 'tried_it', 'follow_up'],
     ["It didn't work, she just looked at me funny", 'tried_it', 'follow_up'],
+    // §5 safety: declining a hotline keeps help within reach
+    ["I don't want a hotline. Just talk to me.", 'declines_help', 'listen'],
     // v1.2 §11A adaptive difficulty: offer the next step, they choose
     ["That one's easy now honestly", 'got_easy', 'celebrate'],
     ["It's getting easier every time", 'got_easy', 'celebrate'],
@@ -106,6 +108,20 @@ describe('decideMode', () => {
     expect(line).toMatch(/offer one next step/);
     expect(line).toMatch(/option to stay/);
     expect(line).toMatch(/do not assign the next level/i);
+  });
+
+  it('keeps help within reach when they decline a hotline', () => {
+    const line = decideMode("No hotlines. I just want to talk.").instruction ?? '';
+    expect(line).toMatch(/keep real help within reach/);
+    expect(line).toMatch(/Never promise not to mention help again/);
+  });
+
+  it('does not challenge the user over their partner\'s words ("she said I never…")', () => {
+    expect(classifyMoment('She said I never plan anything fun. I said fine and went to bed.')).not.toBe('absolute_about_partner');
+  });
+
+  it('gives an honest view instead of dodging "what do you think I should do?"', () => {
+    expect(decideMode('Just tell me what you think I should do').instruction).toMatch(/give your honest view/);
   });
 
   it('keeps an ordinary tired message as comfort, not stabilize', () => {
