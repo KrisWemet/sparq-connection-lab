@@ -1,6 +1,7 @@
 import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { readPendingInvite } from "@/lib/partner-invite";
 import { useAuth } from "@/lib/auth-context";
 import { motion } from "framer-motion";
 import { PeterLoading } from "@/components/PeterLoading";
@@ -84,6 +85,11 @@ export default function Dashboard() {
         ]);
         if (me && me.isonboarded === false && !practised) {
           router.replace('/onboarding');
+          return;
+        }
+        // A partner invite opened before sign-up is waiting.
+        if (readPendingInvite()) {
+          router.replace('/join-partner');
           return;
         }
 

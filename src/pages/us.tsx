@@ -128,6 +128,9 @@ export default function UsPage() {
 
           {spaceId && (
             <>
+              <p className="text-center text-xs text-brand-text-secondary">
+                Linked with {partnerName} · <Link href="/join-partner" className="underline underline-offset-2">Manage link</Link>
+              </p>
               <section className={cn(card, 'space-y-3')}>
                 <div className="flex items-center gap-3">
                   <PeterAvatar mood="afternoon" size={32} />
