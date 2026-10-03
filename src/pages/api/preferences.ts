@@ -17,6 +17,7 @@ type PreferencesPatchBody = {
   reminder_time?: string | null;
   notifications_enabled?: boolean;
   email_reminders_enabled?: boolean;
+  push_reminders_enabled?: boolean;
   timezone?: string;
   grant_consent?: boolean;
   consent_source?: string;
@@ -67,6 +68,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     if (typeof body.email_reminders_enabled === 'boolean') {
       allowed.email_reminders_enabled = body.email_reminders_enabled;
+    }
+    if (typeof body.push_reminders_enabled === 'boolean') {
+      allowed.push_reminders_enabled = body.push_reminders_enabled;
     }
     if (typeof body.timezone === 'string' && isValidTimeZone(body.timezone)) {
       allowed.timezone = body.timezone;

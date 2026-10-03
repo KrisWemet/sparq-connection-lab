@@ -3,6 +3,15 @@ import { useRouter } from "next/router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSubscription } from "@/lib/subscription-provider";
 import { getTrialDaysRemaining } from "@/lib/product";
+import {
+  VAPID_PUBLIC_KEY,
+  disablePushOnThisDevice,
+  enablePushOnThisDevice,
+  getPushSupport,
+  isThisDeviceSubscribed,
+  sendTestPush,
+  type PushSupport,
+} from "@/lib/push-client";
 import { useAuth } from "@/lib/auth-context";
 import {
   ChevronLeft,
@@ -16,10 +25,16 @@ export default function SettingsPage() {
   const { user, logout } = useAuth();
   const trialDays = getTrialDaysRemaining(user?.created_at);
 
-  // Reminder emails stay hidden until sending is switched on (docs/REMINDERS.md),
-  // so no one can turn on something that doesn't arrive yet.
-  const remindersAvailable = process.env.NEXT_PUBLIC_REMINDERS_ENABLED === 'true';
+  // Each reminder channel stays hidden until it can really deliver
+  // (docs/REMINDERS.md), so no one can turn on something that never arrives.
+  const emailAvailable = process.env.NEXT_PUBLIC_EMAIL_REMINDERS_ENABLED === 'true';
+  const pushAvailable = !!VAPID_PUBLIC_KEY;
   const [emailReminders, setEmailReminders] = useState(false);
+  const [pushReminders, setPushReminders] = useState(false);
+  const [pushSupport, setPushSupport] = useState<PushSupport>('unsupported');
+  const [deviceOn, setDeviceOn] = useState(false);
+  const [pushNote, setPushNote] = useState<string | null>(null);
+  const [pushBusy, setPushBusy] = useState(false);
   const [reminderTime, setReminderTime] = useState('09:00');
   const [savedTime, setSavedTime] = useState('09:00');
   const isValidTime = (v: string) => /^([01]\d|2[0-3]):[0-5]\d$/.test(v);
@@ -43,6 +58,7 @@ export default function SettingsPage() {
         if (res.ok) {
           const data = await res.json();
           setEmailReminders(data.preferences?.email_reminders_enabled === true);
+          setPushReminders(data.preferences?.push_reminders_enabled === true);
           if (typeof data.preferences?.reminder_time === 'string') {
             setReminderTime(data.preferences.reminder_time.slice(0, 5));
             setSavedTime(data.preferences.reminder_time.slice(0, 5));
@@ -87,32 +103,88 @@ export default function SettingsPage() {
   };
 
   // Section label above a card
-  // Saves the reminder choice along with the browser's timezone, so the
-  // email arrives at this time where the user actually is.
-  const saveReminders = async (enabled: boolean, time: string) => {
-    const previous = { enabled: emailReminders, time: savedTime };
-    setEmailReminders(enabled);
-    setReminderTime(time);
+  useEffect(() => {
+    if (!pushAvailable) return;
+    setPushSupport(getPushSupport());
+    isThisDeviceSubscribed().then(setDeviceOn);
+  }, [pushAvailable]);
+
+  // Saves reminder choices along with the browser's timezone, so reminders
+  // arrive at the chosen time where the user actually is.
+  const savePrefs = async (patch: Record<string, unknown>): Promise<boolean> => {
     try {
       const { buildAuthedHeaders } = await import('@/lib/api-auth');
       const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
       const res = await fetch('/api/preferences', {
         method: 'PATCH',
         headers,
-        body: JSON.stringify({
-          email_reminders_enabled: enabled,
-          reminder_time: time,
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        }),
+        body: JSON.stringify({ ...patch, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone }),
       });
-      if (!res.ok) throw new Error('save failed');
-      setSavedTime(time);
-      toast.success(enabled ? `Peter will email you at ${time}` : 'Reminder emails are off');
+      return res.ok;
     } catch {
-      setEmailReminders(previous.enabled);
-      setReminderTime(previous.time);
+      return false;
+    }
+  };
+
+  const toggleEmail = async () => {
+    const next = !emailReminders;
+    setEmailReminders(next);
+    if (await savePrefs({ email_reminders_enabled: next, reminder_time: reminderTime })) {
+      setSavedTime(reminderTime);
+      toast.success(next ? `Peter will email you at ${reminderTime}` : 'Reminder emails are off');
+    } else {
+      setEmailReminders(!next);
       toast.error("We couldn't save that just now. Please try again.");
     }
+  };
+
+  const togglePush = async () => {
+    setPushBusy(true);
+    setPushNote(null);
+    try {
+      if (pushReminders && deviceOn) {
+        await disablePushOnThisDevice();
+        setDeviceOn(false);
+        if (await savePrefs({ push_reminders_enabled: false })) {
+          setPushReminders(false);
+          toast.success('Phone reminders are off');
+        }
+        return;
+      }
+      const result = await enablePushOnThisDevice();
+      if (!result.ok) {
+        setPushNote(
+          result.reason === 'denied'
+            ? "Notifications are blocked for Sparq. You can allow them in your phone's settings, then try again."
+            : "We couldn't turn them on just now. Please try again."
+        );
+        return;
+      }
+      setDeviceOn(true);
+      if (await savePrefs({ push_reminders_enabled: true, reminder_time: reminderTime })) {
+        setPushReminders(true);
+        setSavedTime(reminderTime);
+        toast.success(`Peter will nudge this phone at ${reminderTime}`);
+      } else {
+        toast.error("We couldn't save that just now. Please try again.");
+      }
+    } finally {
+      setPushBusy(false);
+    }
+  };
+
+  const saveTime = async (time: string) => {
+    if (await savePrefs({ reminder_time: time })) {
+      setSavedTime(time);
+      toast.success(`Reminders moved to ${time}`);
+    } else {
+      setReminderTime(savedTime);
+      toast.error("We couldn't save that just now. Please try again.");
+    }
+  };
+
+  const testPush = async () => {
+    toast(await sendTestPush() ? 'Sent. It should pop up in a moment.' : "We couldn't send a test just now.");
   };
 
   const SectionLabel = ({ children }: { children: React.ReactNode }) => (
@@ -194,27 +266,68 @@ export default function SettingsPage() {
         </motion.div>
 
         {/* REMINDERS */}
-        {remindersAvailable && (
+        {(emailAvailable || pushAvailable) && (
           <motion.div custom={1} variants={cardVariants} initial="hidden" animate="visible">
             <SectionLabel>Reminders</SectionLabel>
             <div className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm overflow-hidden">
-              <Row
-                label="Daily reminder email"
-                secondary={emailReminders ? `Every day at ${reminderTime}` : 'Off'}
-                right={
+              {pushAvailable && (
+                <div className="border-b border-brand-primary/10 last:border-b-0">
+                  <Row
+                    border={false}
+                    label="Phone notification"
+                    secondary={pushReminders && deviceOn ? `Every day at ${reminderTime}` : pushReminders ? 'On for another device' : 'Off'}
+                    right={
+                      pushSupport === 'supported' ? (
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={pushReminders && deviceOn}
+                    aria-label="Phone notification"
+                    onClick={togglePush} disabled={pushBusy}
+                    className={`press relative inline-flex h-6 w-11 rounded-full transition-colors disabled:opacity-50 ${pushReminders && deviceOn ? 'bg-brand-primary' : 'bg-brand-primary/20'}`}
+                  >
+                    <span className={`mt-[2px] inline-block h-5 w-5 rounded-full bg-popover shadow transition-transform ${pushReminders && deviceOn ? 'translate-x-[22px]' : 'translate-x-[2px]'}`} />
+                  </button>
+                      ) : undefined
+                    }
+                  />
+                  {pushSupport === 'needs-install' && (
+                    <p className="px-5 pb-4 text-xs leading-relaxed text-brand-text-secondary">
+                      On iPhone, add Sparq to your Home Screen first: tap the Share button, then &ldquo;Add to Home Screen&rdquo;. Open Sparq from there and turn this on.
+                    </p>
+                  )}
+                  {pushSupport === 'unsupported' && (
+                    <p className="px-5 pb-4 text-xs leading-relaxed text-brand-text-secondary">
+                      This browser can&apos;t show Sparq notifications. Try Chrome or Safari on your phone.
+                    </p>
+                  )}
+                  {pushNote && <p className="px-5 pb-4 text-xs leading-relaxed text-brand-text-secondary" role="status">{pushNote}</p>}
+                  {pushReminders && deviceOn && (
+                    <button type="button" onClick={testPush} className="press px-5 pb-4 text-xs font-semibold text-brand-hover underline underline-offset-4">
+                      Send a test
+                    </button>
+                  )}
+                </div>
+              )}
+              {emailAvailable && (
+                <Row
+                  label="Daily reminder email"
+                  secondary={emailReminders ? `Every day at ${reminderTime}` : 'Off'}
+                  right={
                   <button
                     type="button"
                     role="switch"
                     aria-checked={emailReminders}
                     aria-label="Daily reminder email"
-                    onClick={() => saveReminders(!emailReminders, reminderTime)}
-                    className={`press relative inline-flex h-6 w-11 rounded-full transition-colors ${emailReminders ? 'bg-brand-primary' : 'bg-brand-primary/20'}`}
+                    onClick={toggleEmail}
+                    className={`press relative inline-flex h-6 w-11 rounded-full transition-colors disabled:opacity-50 ${emailReminders ? 'bg-brand-primary' : 'bg-brand-primary/20'}`}
                   >
                     <span className={`mt-[2px] inline-block h-5 w-5 rounded-full bg-popover shadow transition-transform ${emailReminders ? 'translate-x-[22px]' : 'translate-x-[2px]'}`} />
                   </button>
-                }
-              />
-              {emailReminders && (
+                  }
+                />
+              )}
+              {(emailReminders || pushReminders) && (
                 // Plain markup, not <Row>: Row is redefined each render, which
                 // would remount the input on every keystroke.
                 <div className="flex items-center justify-between px-5 min-h-[52px]">
@@ -225,7 +338,7 @@ export default function SettingsPage() {
                     value={reminderTime}
                     aria-label="Reminder time"
                     onChange={e => setReminderTime(e.target.value)}
-                    onBlur={e => isValidTime(e.target.value) && e.target.value !== savedTime && saveReminders(true, e.target.value)}
+                    onBlur={e => isValidTime(e.target.value) && e.target.value !== savedTime && saveTime(e.target.value)}
                     className="border border-input rounded-lg px-2 py-1 text-sm text-brand-text-primary bg-brand-linen focus:outline-none focus:ring-2 focus:ring-ring"
                   />
                 </div>

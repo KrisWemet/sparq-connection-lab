@@ -5,6 +5,12 @@ export default function Document() {
     <Html lang="en">
       <Head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        {/* Installable to the home screen — needed for phone notifications on iPhone. */}
+        <link rel="manifest" href="/manifest.webmanifest" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-title" content="Sparq" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </Head>
       <body>
         <Main />

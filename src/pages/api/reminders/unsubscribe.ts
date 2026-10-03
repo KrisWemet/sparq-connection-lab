@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { createClient } from '@supabase/supabase-js';
+import { getAdminClient } from '@/lib/server/supabase-admin';
 import { verifyUnsubscribeToken } from '@/lib/server/reminders';
 
 /**
@@ -12,12 +12,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const userId = typeof req.query.u === 'string' ? req.query.u : '';
   const token = typeof req.query.t === 'string' ? req.query.t : '';
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const admin = getAdminClient();
 
   let ok = false;
-  if (userId && token && url && serviceKey && verifyUnsubscribeToken(userId, token)) {
-    const admin = createClient(url, serviceKey, { auth: { persistSession: false } });
+  if (userId && token && admin && verifyUnsubscribeToken(userId, token)) {
     const { error } = await admin
       .from('user_preferences')
       .update({ email_reminders_enabled: false })
