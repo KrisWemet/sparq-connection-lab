@@ -28,6 +28,8 @@ import { EditorialEyebrow } from '@/components/editorial/EditorialSurface';
 import { TONE } from '@/lib/moment-tone';
 import { cn } from '@/lib/utils';
 import { SharePrompt } from '@/components/shared/SharePrompt';
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
+import { useVisualEmotion } from '@/components/emotion/VisualEmotionProvider';
 
 type Phase = 'loading' | 'morning' | 'evening' | 'evening-checkin' | 'journey-complete' | 'complete';
 type PracticeMode = 'solo' | 'partner_optional' | 'partner_joint';
@@ -79,6 +81,7 @@ function getPracticeSupportCopy(mode: PracticeMode) {
 
 export default function DailyGrowth() {
   const router = useRouter();
+  const { observePracticeDays } = useVisualEmotion();
   const { user, loading: authLoading } = useAuth();
 
   const [phase, setPhase] = useState<Phase>('loading');
@@ -515,6 +518,7 @@ export default function DailyGrowth() {
               if (!res.ok) return;
               const rs = await res.json();
               setPracticeDays(Number(rs.practice_days ?? 0));
+              observePracticeDays(rs.practice_days);
             } catch {
               /* fail-soft: falls back to the day count */
             }
@@ -636,13 +640,13 @@ export default function DailyGrowth() {
       : 'Five quiet minutes now can change the tone of the rest of your day.';
 
     return (
-      <div className="min-h-dvh bg-brand-linen pb-28 font-sans">
+      <div className="emotion-page min-h-dvh bg-brand-linen pb-28 font-sans">
         <div className="flex items-center justify-between px-5 pt-6 pb-2">
           <span className="text-lg font-bold tracking-tight text-brand-espresso">SPARQ</span>
           <button
             onClick={() => router.push('/settings')}
             aria-label="Settings"
-            className="p-1.5 rounded-xl text-brand-hover hover:bg-brand-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/20 focus-visible:ring-offset-2"
+            className="p-1.5 rounded-xl text-brand-hover hover:bg-brand-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             <Settings size={20} />
           </button>
@@ -662,7 +666,7 @@ export default function DailyGrowth() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
-            className="relative overflow-hidden rounded-[34px] border border-brand-primary/12 bg-brand-parchment px-6 py-6 shadow-[0_24px_54px_rgba(46,38,32,0.12)]"
+            className="relative overflow-hidden rounded-[34px] border border-brand-primary/12 bg-brand-parchment px-6 py-6 shadow-[0_24px_54px_hsl(var(--shadow)/0.12)]"
           >
             <div
               aria-hidden="true"
@@ -684,7 +688,7 @@ export default function DailyGrowth() {
               <span className="text-sm text-brand-taupe">5 min morning page</span>
               <button
                 onClick={() => setShowHome(false)}
-                className="rounded-[22px] bg-brand-primary px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+                className="rounded-[22px] bg-brand-primary px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 Start Morning Story
               </button>
@@ -708,7 +712,7 @@ export default function DailyGrowth() {
             </div>
           </motion.div>
 
-          <div className="rounded-[28px] border border-brand-primary/10 bg-white/60 p-5 shadow-[0_14px_34px_rgba(46,38,32,0.05)]">
+          <div className="rounded-[28px] border border-brand-primary/10 bg-popover/60 p-5 shadow-[0_14px_34px_hsl(var(--shadow)/0.05)]">
             <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
               Solo-first reminder
             </p>
@@ -738,13 +742,13 @@ export default function DailyGrowth() {
 
   if (phase === 'morning') {
     return (
-      <div className="min-h-dvh bg-brand-linen flex flex-col font-sans">
+      <div className="emotion-page min-h-dvh bg-brand-linen flex flex-col font-sans">
         <div className="flex items-center justify-between px-5 pt-5 pb-3">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowHome(true)}
               aria-label="Back"
-              className="p-1.5 rounded-xl text-brand-hover hover:bg-brand-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/20"
+              className="p-1.5 rounded-xl text-brand-hover hover:bg-brand-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <ChevronLeft size={20} />
             </button>
@@ -835,7 +839,7 @@ export default function DailyGrowth() {
   }
 
   return (
-    <div className="min-h-dvh bg-brand-linen flex flex-col font-sans">
+    <div className="emotion-page min-h-dvh bg-brand-linen flex flex-col font-sans">
       {/* Header */}
       <div className="flex items-center justify-between px-5 pt-5 pb-3">
         <div className="flex items-center gap-2">
@@ -1042,8 +1046,8 @@ export default function DailyGrowth() {
               >
                 <div className="max-w-lg mx-auto px-4 py-12 flex flex-col items-center">
 
-                  {/* Peter — no container, directly on linen */}
-                  <PeterAvatar mood="celebrating" size={80} />
+                  {/* A quiet unfolding form marks completion. */}
+                  <SceneAccent kind="bloom" className="w-full max-w-xs h-44 emotion-accomplishment" />
 
                   {/* Headline */}
                   <h2 className="mt-6 text-center font-serif text-2xl italic text-brand-espresso">

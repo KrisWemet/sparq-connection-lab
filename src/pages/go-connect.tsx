@@ -1,3 +1,4 @@
+import { AmbientScene, SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Lock } from 'lucide-react';
@@ -36,34 +37,28 @@ export default function GoConnect() {
   };
 
   return (
-    <div className="min-h-dvh bg-black text-white flex flex-col items-center justify-center p-6 fixed inset-0 z-[100] font-sans">
+    <div className="dark min-h-dvh bg-background text-foreground flex flex-col items-center justify-center p-6 fixed inset-0 z-[100] font-sans">
+      <AmbientScene quiet />
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="max-w-md text-center flex flex-col items-center gap-10"
+        className="relative max-w-md text-center flex flex-col items-center gap-10"
       >
-        {/* Pulsing Heart Icon */}
-        <motion.div
-          animate={{ scale: [1, 1.1, 1] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="w-24 h-24 bg-brand-primary/20 rounded-full flex items-center justify-center"
-        >
-          <Heart size={40} className="text-brand-hover fill-brand-primary" />
-        </motion.div>
+        <SceneAccent kind="bridge" quiet className="h-32 w-full" />
 
         {/* Mission Text */}
         <div className="space-y-4">
           <h2 className="text-brand-hover text-sm font-semibold tracking-widest uppercase">
             Real World Mission
           </h2>
-          <p className="text-2xl font-serif italic leading-relaxed text-zinc-200 px-4">
+          <p className="text-2xl font-serif italic leading-relaxed text-foreground px-4">
             &quot;{mission}&quot;
           </p>
         </div>
 
         {/* Timer */}
-        <div className="bg-zinc-900/50 p-6 rounded-3xl border border-zinc-800 w-full backdrop-blur-md">
+        <div className="bg-card/50 p-6 rounded-3xl border border-border w-full backdrop-blur-md">
           <div className="flex items-center justify-center gap-3 mb-3 text-brand-text-secondary">
             <Lock size={16} />
             <span className="text-sm font-medium uppercase tracking-wider">App Paused</span>
@@ -79,7 +74,7 @@ export default function GoConnect() {
         {/* Override / Return */}
         <button
           onClick={() => router.push('/connect')}
-          className="text-zinc-600 text-sm hover:text-white transition-colors underline underline-offset-4"
+          className="text-muted-foreground text-sm hover:text-white transition-colors underline underline-offset-4"
         >
           I&apos;ve completed my mission
         </button>

@@ -147,7 +147,7 @@ export default function Quiz() {
 
   if (showHealthQuiz) {
     return (
-      <div className="min-h-dvh bg-gray-50 pb-24">
+      <div className="emotion-page min-h-dvh bg-background pb-24">
         <main className="container max-w-lg mx-auto px-4 pt-8 animate-slide-up">
           <RelationshipHealthQuiz 
             onComplete={handleHealthQuizComplete}
@@ -171,7 +171,7 @@ export default function Quiz() {
 
   if (!currentQuestion) {
     return (
-      <div className="min-h-dvh bg-gray-50 pb-24">
+      <div className="emotion-page min-h-dvh bg-background pb-24">
         <main className="container max-w-lg mx-auto px-4 pt-8 animate-slide-up">
           <NoQuestionView />
           <HealthScoreView 
@@ -185,7 +185,7 @@ export default function Quiz() {
   }
 
   return (
-    <div className="min-h-dvh bg-gray-50 pb-24">
+    <div className="emotion-page min-h-dvh bg-background pb-24">
       <main className="container max-w-lg mx-auto px-4 pt-8 animate-slide-up">
         {showTrialBanner && (
           <div className="mb-4 rounded-xl bg-gradient-to-r from-brand-linen to-brand-parchment border border-brand-primary/10 px-4 py-3 flex items-center justify-between gap-3">

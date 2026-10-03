@@ -159,7 +159,7 @@ export function WeeklyMirrorCard() {
                     maxLength={1000}
                     placeholder="What do you make of your week?"
                     aria-label={mirror.mirror_question}
-                    className="w-full rounded-xl border border-brand-border bg-white/70 p-3 text-sm text-brand-espresso placeholder:text-brand-text-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                    className="w-full rounded-xl border border-brand-border bg-popover/70 p-3 text-sm text-brand-espresso placeholder:text-brand-text-secondary focus:outline-none focus:ring-2 focus:ring-ring border-input"
                   />
                   {saveError && <p className="text-xs text-brand-hover mt-1">{saveError}</p>}
                   <button

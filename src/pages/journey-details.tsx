@@ -597,7 +597,7 @@ export default function JourneyDetails() {
   if (error || !journey) {
     return (
       <div className="flex flex-col items-center justify-center min-h-dvh p-4">
-        <p className="text-red-500 mb-4">{error || 'Journey not found'}</p>
+        <p className="text-destructive-emphasis mb-4">{error || 'Journey not found'}</p>
         <Button onClick={() => router.push('/path-to-together')}>
           Return to Journeys
         </Button>
@@ -618,11 +618,11 @@ export default function JourneyDetails() {
 
       {activeJourney && activeJourneyDay && (
         <div className="mb-6">
-          <Card className="bg-blue-50 border border-blue-100 dark:bg-blue-900/20 dark:border-blue-800/30 p-4">
+          <Card className="bg-accent border border-primary/15 p-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-medium text-gray-900 dark:text-gray-100 text-sm">Continue your journey</h3>
-                <p className="text-gray-600 dark:text-gray-300 text-xs">
+                <h3 className="font-medium text-foreground dark:text-foreground text-sm">Continue your journey</h3>
+                <p className="text-muted-foreground dark:text-foreground text-xs">
                   You&apos;re on day {parseInt(activeJourneyDay) + 1} of this journey
                 </p>
               </div>

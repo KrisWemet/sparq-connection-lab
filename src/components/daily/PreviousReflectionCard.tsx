@@ -28,7 +28,7 @@ export function PreviousReflectionCard({ quote, onViewJournal }: PreviousReflect
       <div className="flex justify-end mt-3">
         <button
           onClick={onViewJournal}
-          className="text-xs font-semibold tracking-widest uppercase text-brand-hover hover:text-brand-espresso transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-1 rounded"
+          className="text-xs font-semibold tracking-widest uppercase text-brand-hover hover:text-brand-espresso transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded"
         >
           View Journal
         </button>

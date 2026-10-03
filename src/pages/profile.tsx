@@ -44,7 +44,7 @@ function SecondaryAccessRow({
   return (
     <Link
       href={href}
-      className="flex items-center justify-between rounded-2xl border border-brand-primary/10 bg-brand-parchment px-4 py-4 transition-colors hover:bg-brand-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+      className="flex items-center justify-between rounded-2xl border border-brand-primary/10 bg-brand-parchment px-4 py-4 transition-colors hover:bg-brand-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-primary/10 text-brand-primary">
@@ -236,7 +236,7 @@ export default function ProfilePage() {
                     value={formData.name}
                     onChange={handleInputChange}
                     placeholder="Enter your name"
-                    className="w-full rounded-xl border border-brand-primary/20 bg-brand-linen px-3 py-2 text-sm text-brand-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                    className="w-full rounded-xl border border-input bg-brand-linen px-3 py-2 text-sm text-brand-text-primary focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground"
                   />
                 </div>
 
@@ -250,7 +250,7 @@ export default function ProfilePage() {
                     value={formData.partnerName}
                     onChange={handleInputChange}
                     placeholder="Enter your partner's name"
-                    className="w-full rounded-xl border border-brand-primary/20 bg-brand-linen px-3 py-2 text-sm text-brand-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                    className="w-full rounded-xl border border-input bg-brand-linen px-3 py-2 text-sm text-brand-text-primary focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground"
                   />
                 </div>
 
@@ -264,7 +264,7 @@ export default function ProfilePage() {
                     onChange={handleInputChange}
                     placeholder="Add a short note about yourself"
                     rows={3}
-                    className="w-full rounded-xl border border-brand-primary/20 bg-brand-linen px-3 py-2 text-sm text-brand-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                    className="w-full rounded-xl border border-input bg-brand-linen px-3 py-2 text-sm text-brand-text-primary focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground"
                   />
                 </div>
 

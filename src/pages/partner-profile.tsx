@@ -67,16 +67,16 @@ export default function PartnerProfile() {
   };
 
   return (
-    <div className="min-h-dvh bg-gray-50 pb-24">
-      <header className="sticky top-0 z-50 bg-white border-b">
+    <div className="min-h-dvh bg-background pb-24">
+      <header className="sticky top-0 z-50 bg-popover border-b">
         <div className="container max-w-lg mx-auto px-4 py-3 flex items-center">
           <button 
             onClick={() => router.back()} 
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-muted rounded-lg transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-xl font-semibold text-gray-900 mx-auto">
+          <h1 className="text-xl font-semibold text-foreground mx-auto">
             Partner Profile
           </h1>
         </div>
@@ -88,7 +88,7 @@ export default function PartnerProfile() {
         ) : error ? (
           <Card className="mb-6">
             <CardContent className="pt-6 flex flex-col items-center text-center">
-              <div className="text-amber-500 mb-4">
+              <div className="text-warning-emphasis mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="10"></circle>
                   <line x1="12" y1="8" x2="12" y2="12"></line>
@@ -112,7 +112,7 @@ export default function PartnerProfile() {
                 <AvatarImage src={partnerProfile.avatar_url || undefined} />
                 <AvatarFallback>{partnerProfile.full_name.charAt(0)}</AvatarFallback>
               </Avatar>
-              <h2 className="text-2xl font-bold text-gray-900">{partnerProfile.full_name}</h2>
+              <h2 className="text-2xl font-bold text-foreground">{partnerProfile.full_name}</h2>
               {partnerProfile.anniversary_date && (
                 <div className="flex items-center gap-2 mt-2">
                   <div className="bg-primary/10 text-brand-hover text-sm px-3 py-1 rounded-full flex items-center gap-1">
@@ -129,13 +129,13 @@ export default function PartnerProfile() {
               <CardContent className="space-y-4">
                 <div>
                   <h3 className="text-sm font-medium text-brand-text-secondary">Email</h3>
-                  <p className="text-gray-900">{partnerProfile.email}</p>
+                  <p className="text-foreground">{partnerProfile.email}</p>
                 </div>
                 
                 {partnerProfile.anniversary_date && (
                   <div>
                     <h3 className="text-sm font-medium text-brand-text-secondary">Anniversary</h3>
-                    <p className="text-gray-900">{new Date(partnerProfile.anniversary_date).toLocaleDateString()}</p>
+                    <p className="text-foreground">{new Date(partnerProfile.anniversary_date).toLocaleDateString()}</p>
                   </div>
                 )}
               </CardContent>

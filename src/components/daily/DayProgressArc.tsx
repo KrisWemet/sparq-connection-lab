@@ -32,7 +32,7 @@ export function DayProgressArc({ currentDay, totalDays = 14 }: DayProgressArcPro
             cx={CENTER}
             cy={CENTER}
             r={RADIUS}
-            stroke="#EEE8E3"
+            stroke="hsl(var(--card))"
             strokeWidth={STROKE}
             fill="none"
           />
@@ -41,7 +41,7 @@ export function DayProgressArc({ currentDay, totalDays = 14 }: DayProgressArcPro
             cx={CENTER}
             cy={CENTER}
             r={RADIUS}
-            stroke="#4B2E57"
+            stroke="hsl(var(--primary))"
             strokeWidth={STROKE}
             fill="none"
             strokeLinecap="round"

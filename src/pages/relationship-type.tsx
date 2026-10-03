@@ -25,8 +25,8 @@ const relationshipTypes = {
   monogamous: {
     title: "Monogamous Relationships",
     description: "Resources and guidance for traditional one-on-one committed relationships",
-    icon: <HeartHandshake className="w-8 h-8 text-rose-500" />,
-    color: "from-rose-100 to-rose-50",
+    icon: <HeartHandshake className="w-8 h-8 text-connection" />,
+    color: "from-connection-subtle to-connection-subtle",
     resources: [
       {
         id: "communication",
@@ -38,13 +38,13 @@ const relationshipTypes = {
         id: "boundaries",
         title: "Healthy Boundaries",
         description: "Setting and respecting boundaries in your exclusive relationship",
-        icon: <Shield className="w-5 h-5 text-blue-500" />
+        icon: <Shield className="w-5 h-5 text-understand" />
       },
       {
         id: "growth",
         title: "Growing Together",
         description: "Balancing individual growth while nurturing your shared journey",
-        icon: <Sparkles className="w-5 h-5 text-amber-500" />
+        icon: <Sparkles className="w-5 h-5 text-growth" />
       }
     ]
   },
@@ -58,19 +58,19 @@ const relationshipTypes = {
         id: "agreements",
         title: "Relationship Agreements",
         description: "Creating and maintaining clear agreements between all partners",
-        icon: <Shield className="w-5 h-5 text-blue-500" />
+        icon: <Shield className="w-5 h-5 text-understand" />
       },
       {
         id: "jealousy",
         title: "Managing Jealousy",
         description: "Healthy approaches to jealousy and compersion in polyamorous dynamics",
-        icon: <Heart className="w-5 h-5 text-rose-500" />
+        icon: <Heart className="w-5 h-5 text-connection" />
       },
       {
         id: "scheduling",
         title: "Time Management",
         description: "Balancing time and energy across multiple relationships",
-        icon: <Zap className="w-5 h-5 text-amber-500" />
+        icon: <Zap className="w-5 h-5 text-growth" />
       }
     ]
   },
@@ -84,27 +84,27 @@ const relationshipTypes = {
         id: "identity",
         title: "Identity Affirmation",
         description: "Supporting each other's identities within your relationship",
-        icon: <HeartHandshake className="w-5 h-5 text-rose-500" />
+        icon: <HeartHandshake className="w-5 h-5 text-connection" />
       },
       {
         id: "community",
         title: "Community Connection",
         description: "Building supportive networks and community relationships",
-        icon: <Users className="w-5 h-5 text-green-500" />
+        icon: <Users className="w-5 h-5 text-growth" />
       },
       {
         id: "challenges",
         title: "Navigating Challenges",
         description: "Addressing unique challenges faced by LGBTQ+ relationships",
-        icon: <Shield className="w-5 h-5 text-blue-500" />
+        icon: <Shield className="w-5 h-5 text-understand" />
       }
     ]
   },
   "long-distance": {
     title: "Long Distance Relationships",
     description: "Tools and strategies to maintain strong connections across physical distance",
-    icon: <Zap className="w-8 h-8 text-cyan-500" />,
-    color: "from-cyan-100 to-cyan-50",
+    icon: <Zap className="w-8 h-8 text-understand" />,
+    color: "from-accent to-accent",
     resources: [
       {
         id: "communication",
@@ -116,13 +116,13 @@ const relationshipTypes = {
         id: "visits",
         title: "Quality Time",
         description: "Maximizing in-person visits and creating meaningful virtual experiences",
-        icon: <HeartHandshake className="w-5 h-5 text-rose-500" />
+        icon: <HeartHandshake className="w-5 h-5 text-connection" />
       },
       {
         id: "trust",
         title: "Building Trust",
         description: "Maintaining trust and security despite the distance",
-        icon: <Shield className="w-5 h-5 text-blue-500" />
+        icon: <Shield className="w-5 h-5 text-understand" />
       }
     ]
   }
@@ -148,16 +148,16 @@ export default function RelationshipType() {
   }
 
   return (
-    <div className="min-h-dvh bg-gray-50 pb-24">
-      <header className="sticky top-0 z-50 bg-white border-b">
+    <div className="min-h-dvh bg-background pb-24">
+      <header className="sticky top-0 z-50 bg-popover border-b">
         <div className="container max-w-lg mx-auto px-4 py-3 flex items-center">
           <button 
             onClick={() => router.back()} 
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-muted rounded-lg transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-xl font-semibold text-gray-900 mx-auto">
+          <h1 className="text-xl font-semibold text-foreground mx-auto">
             {typeData.title}
           </h1>
         </div>
@@ -165,13 +165,13 @@ export default function RelationshipType() {
 
       <main className="container max-w-lg mx-auto px-4 pt-6 animate-slide-up">
         <div className={`bg-gradient-to-r ${typeData.color} rounded-lg p-6 mb-8 flex flex-col items-center text-center`}>
-          <div className="bg-white/80 p-4 rounded-full mb-4">
+          <div className="bg-popover/80 p-4 rounded-full mb-4">
             {typeData.icon}
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-bold text-foreground mb-2">
             {typeData.title}
           </h2>
-          <p className="text-gray-700 max-w-md">
+          <p className="text-foreground max-w-md">
             {typeData.description}
           </p>
         </div>
@@ -191,12 +191,12 @@ export default function RelationshipType() {
                   className="cursor-pointer hover:border-primary/50 transition-colors"
                 >
                   <CardContent className="p-4 flex items-center gap-4">
-                    <div className="bg-white p-3 rounded-full shadow-sm">
+                    <div className="bg-popover p-3 rounded-full shadow-sm">
                       {resource.icon}
                     </div>
                     <div className="flex-1">
                       <h4 className="font-medium mb-1">{resource.title}</h4>
-                      <p className="text-sm text-gray-600">{resource.description}</p>
+                      <p className="text-sm text-muted-foreground">{resource.description}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -211,7 +211,7 @@ export default function RelationshipType() {
                   </div>
                   <div>
                     <h4 className="font-medium mb-2">Tailored Daily Questions</h4>
-                    <p className="text-sm text-gray-600 mb-4">
+                    <p className="text-sm text-muted-foreground mb-4">
                       Answer questions specifically designed for {typeData.title.toLowerCase()} to strengthen your connection.
                     </p>
                     <Button 
@@ -235,33 +235,33 @@ export default function RelationshipType() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-6">
+                <p className="text-muted-foreground mb-6">
                   Our questions are designed to address the unique aspects of your relationship type, helping you build stronger connections and navigate challenges together.
                 </p>
                 
                 <div className="space-y-4">
-                  <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="bg-background p-4 rounded-lg">
                     <h4 className="font-medium mb-2">Communication</h4>
-                    <p className="text-sm text-gray-700 mb-2">
+                    <p className="text-sm text-foreground mb-2">
                       &quot;What communication practices have been most effective in your {type} relationship?&quot;
                     </p>
-                    <Badge className="bg-blue-100 text-blue-800">Level 1</Badge>
+                    <Badge className="bg-accent text-understand">Level 1</Badge>
                   </div>
                   
-                  <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="bg-background p-4 rounded-lg">
                     <h4 className="font-medium mb-2">Boundaries</h4>
-                    <p className="text-sm text-gray-700 mb-2">
+                    <p className="text-sm text-foreground mb-2">
                       &quot;How do you balance personal boundaries with relationship needs in your {type} dynamic?&quot;
                     </p>
-                    <Badge className="bg-yellow-100 text-yellow-800">Level 2</Badge>
+                    <Badge className="bg-growth-subtle text-growth">Level 2</Badge>
                   </div>
                   
-                  <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="bg-background p-4 rounded-lg">
                     <h4 className="font-medium mb-2">Growth</h4>
-                    <p className="text-sm text-gray-700 mb-2">
+                    <p className="text-sm text-foreground mb-2">
                       &quot;What aspects of your {type} relationship have contributed most to your personal growth?&quot;
                     </p>
-                    <Badge className="bg-red-100 text-red-800">Level 3</Badge>
+                    <Badge className="bg-growth-subtle text-growth-emphasis">Level 3</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -286,14 +286,14 @@ export default function RelationshipType() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-6">
+                <p className="text-muted-foreground mb-6">
                   Join our supportive community of couples and individuals in {typeData.title.toLowerCase()} to share experiences, advice, and resources.
                 </p>
                 
                 <div className="space-y-4">
                   <div className="border p-4 rounded-lg">
                     <h4 className="font-medium mb-2">Discussion Forums</h4>
-                    <p className="text-sm text-gray-700 mb-4">
+                    <p className="text-sm text-foreground mb-4">
                       Connect with others who understand your unique relationship journey.
                     </p>
                     <Badge variant="outline">Coming Soon</Badge>
@@ -301,7 +301,7 @@ export default function RelationshipType() {
                   
                   <div className="border p-4 rounded-lg">
                     <h4 className="font-medium mb-2">Expert Resources</h4>
-                    <p className="text-sm text-gray-700 mb-4">
+                    <p className="text-sm text-foreground mb-4">
                       Articles, videos, and guides from relationship experts specializing in {typeData.title.toLowerCase()}.
                     </p>
                     <Badge variant="outline">Coming Soon</Badge>
@@ -309,7 +309,7 @@ export default function RelationshipType() {
                   
                   <div className="border p-4 rounded-lg">
                     <h4 className="font-medium mb-2">Events & Workshops</h4>
-                    <p className="text-sm text-gray-700 mb-4">
+                    <p className="text-sm text-foreground mb-4">
                       Virtual and in-person events designed for {typeData.title.toLowerCase()}.
                     </p>
                     <Badge variant="outline">Coming Soon</Badge>

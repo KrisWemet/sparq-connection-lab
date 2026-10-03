@@ -148,16 +148,16 @@ export default function Admin() {
   }
 
   return (
-    <div className="min-h-dvh bg-gray-50">
-      <header className="sticky top-0 z-50 bg-white border-b">
+    <div className="min-h-dvh bg-background">
+      <header className="sticky top-0 z-50 bg-popover border-b">
         <div className="container max-w-6xl mx-auto px-4 py-3 flex items-center">
           <button 
             onClick={() => router.push("/dashboard")} 
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-muted rounded-lg transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-xl font-semibold text-gray-900 ml-2">
+          <h1 className="text-xl font-semibold text-foreground ml-2">
             Admin Dashboard
           </h1>
           <div className="ml-auto">
@@ -224,9 +224,9 @@ export default function Admin() {
                       ['Own reasons given', discovery.reasons_given],
                       ['Experiments with their own reason', discovery.own_reason_rate],
                     ].map(([label, value]) => (
-                      <div key={label as string} className="rounded-lg border bg-white p-4">
+                      <div key={label as string} className="rounded-lg border bg-popover p-4">
                         <p className="text-xs text-brand-text-secondary">{label}</p>
-                        <p className="text-2xl font-semibold text-gray-900">{value ?? '—'}</p>
+                        <p className="text-2xl font-semibold text-foreground">{value ?? '—'}</p>
                       </div>
                     ))}
                   </div>
@@ -287,7 +287,7 @@ export default function Admin() {
                   <div className="rounded-md border overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="border-b bg-gray-50">
+                        <tr className="border-b bg-background">
                           <th className="text-left p-3 font-medium">Email</th>
                           <th className="text-left p-3 font-medium">Name</th>
                           <th className="text-center p-3 font-medium">Day</th>
@@ -299,7 +299,7 @@ export default function Admin() {
                       </thead>
                       <tbody>
                         {betaTesters.map((t) => (
-                          <tr key={t.id} className="border-b last:border-b-0 hover:bg-gray-50">
+                          <tr key={t.id} className="border-b last:border-b-0 hover:bg-background">
                             <td className="p-3 font-mono text-xs">{t.email}</td>
                             <td className="p-3">{t.name || '—'}</td>
                             <td className="p-3 text-center">
@@ -312,7 +312,7 @@ export default function Admin() {
                             <td className="p-3 text-xs text-brand-text-secondary">{t.last_active || '—'}</td>
                             <td className="p-3 text-xs">
                               {t.consent_given_at ? (
-                                <span className="text-green-600">Yes</span>
+                                <span className="text-success-emphasis">Yes</span>
                               ) : (
                                 <span className="text-brand-text-secondary">No</span>
                               )}
@@ -354,7 +354,7 @@ export default function Admin() {
                   </div>
                   {filteredUsers.length > 0 ? (
                     filteredUsers.map(user => (
-                      <div key={user.id} className="grid grid-cols-4 p-3 border-b last:border-b-0 hover:bg-gray-50">
+                      <div key={user.id} className="grid grid-cols-4 p-3 border-b last:border-b-0 hover:bg-background">
                         <div>{user.name}</div>
                         <div>{user.email}</div>
                         <div>
@@ -424,7 +424,7 @@ export default function Admin() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-center py-6 text-gray-600">
+                <p className="text-center py-6 text-muted-foreground">
                   Database management features would be implemented here in the production version.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">

@@ -80,8 +80,8 @@ export default function Translator() {
   };
 
   return (
-    <div className="min-h-dvh bg-gradient-to-br from-brand-linen to-brand-parchment flex flex-col items-center py-12 px-4 relative">
-      <div className="max-w-2xl w-full bg-white rounded-2xl shadow-lg p-8 z-10">
+    <div className="emotion-page min-h-dvh bg-brand-linen flex flex-col items-center py-12 px-4 relative">
+      <div className="emotion-paper max-w-2xl w-full bg-popover rounded-2xl shadow-lg p-8 z-10">
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={() => router.push('/connect')}
@@ -97,24 +97,24 @@ export default function Translator() {
         <h1 className="text-2xl font-bold text-brand-primary mb-2">
           Peter’s Message Translator
         </h1>
-        <p className="text-sm text-gray-600 mb-6">
+        <p className="text-sm text-muted-foreground mb-6">
           Turn a tense draft into something softer for your partner.
         </p>
 
         <div className="mb-6">
-          <label className="block text-gray-700 font-medium mb-2">
+          <label className="block text-foreground font-medium mb-2">
             Draft your message
           </label>
           <textarea
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder="Type what you want to say..."
-            className="w-full border border-gray-300 rounded-lg p-4 h-36 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none"
+            className="w-full border border-border rounded-lg p-4 h-36 focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent resize-none border-input bg-background text-foreground placeholder:text-muted-foreground"
           />
         </div>
 
         <div className="mb-6">
-          <label className="block text-gray-700 font-medium mb-2">
+          <label className="block text-foreground font-medium mb-2">
             Partner Context
           </label>
           <div className="flex flex-wrap gap-3">
@@ -125,7 +125,7 @@ export default function Translator() {
                 className={`rounded-xl border px-4 py-2 text-sm font-bold transition-colors ${
                   partnerContext === profile.value
                     ? "bg-brand-primary text-white border-brand-primary"
-                    : "bg-white text-gray-700 border-gray-300 hover:border-brand-primary"
+                    : "bg-popover text-foreground border-border hover:border-brand-primary"
                 }`}
               >
                 <span>{profile.label}</span>
@@ -135,33 +135,33 @@ export default function Translator() {
           <p className="text-xs text-brand-text-secondary mt-2">
             Mocked for now — we’ll personalize this later.
           </p>
-          <div className="mt-3 text-xs text-gray-600">
+          <div className="mt-3 text-xs text-muted-foreground">
             {partnerProfiles.find((profile) => profile.value === partnerContext)?.description}
           </div>
         </div>
 
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-lg font-semibold text-gray-800">
+            <h2 className="text-lg font-semibold text-foreground">
               Peter’s suggested rephrase
             </h2>
             {suggestion && (
               <span className="text-xs text-brand-hover font-medium">Ready</span>
             )}
           </div>
-          <div className="min-h-[96px] rounded-xl border border-brand-primary/10 bg-brand-linen p-4 text-gray-700 leading-relaxed">
+          <div className="min-h-[96px] rounded-xl border border-brand-primary/10 bg-brand-linen p-4 text-foreground leading-relaxed">
             {suggestion ||
               "Draft your message and tap ‘Ask Peter’ to see a gentler version."}
           </div>
           {error && (
-            <p className="text-sm text-rose-500 mt-2">{error}</p>
+            <p className="text-sm text-destructive-emphasis mt-2">{error}</p>
           )}
         </div>
 
         <button
           onClick={handleTranslate}
           disabled={isLoading}
-          className="w-full bg-brand-primary text-white font-bold py-3 rounded-xl hover:bg-brand-hover transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+          className="w-full bg-brand-primary text-white font-bold py-3 rounded-xl hover:bg-brand-hover transition-colors disabled:bg-card disabled:text-muted-foreground disabled:cursor-not-allowed"
         >
           {isLoading ? "Peter is thinking..." : "Ask Peter to Rephrase"}
         </button>

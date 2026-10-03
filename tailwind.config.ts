@@ -23,71 +23,150 @@ export default {
     },
     extend: {
       colors: {
-        // Plum / Coral / Gold system (2026-09-30, Chris). Colour carries meaning:
-        //   plum = understand (everyday brand, buttons), coral = connect,
-        //   gold = grow (insight, milestones). Coral and gold are fills and
-        //   accents only — for text use coral-deep / gold-deep (AA on ivory
-        //   and stone). White text never sits on coral or gold.
+        // All application colours resolve to globals.css semantic variables.
+        // Legacy brand aliases keep existing components compatible.
         brand: {
-          primary: "#4B2E57",        // Deep Plum — primary brand, buttons (white text 11.5:1)
-          hover: "#3A2244",          // Plum, pressed — also small accent text
-          plum: "#4B2E57",
-          coral: "#E97868",          // Warm Coral — connection moments (fill; dark-plum text on it)
-          "coral-deep": "#A8452F",   // coral for text/icons (5.5:1 on ivory)
-          gold: "#F3B55A",           // Soft Gold — reward / insight (fill; dark-plum text on it)
-          "gold-deep": "#8A5E14",    // gold for text/icons (5.3:1 on ivory)
-          // Moment tints (src/lib/moment-tone.ts) — dark-plum text ≈14:1 on each.
-          "coral-soft": "#FCEBE7",   // connect moments
-          "gold-soft": "#FDF2DF",    // grow moments
-          quiet: "#F3F0F1",          // repair / hard moments — less colour
-          light: "#FFFDFA",
-          linen: "#FAF7F2",          // Warm Ivory — background
-          ivory: "#FAF7F2",
-          parchment: "#EEE8E3",      // Soft Stone — cards / surfaces
-          stone: "#EEE8E3",
-          card: "#EEE8E3",
-          espresso: "#241D27",       // Dark Plum — main text
-          taupe: "#685C6A",          // Muted Mauve — secondary text (5.2:1 on stone)
-          mauve: "#685C6A",
-          growth: "#9CB5A0",         // Sage — calm/grounding (repair, quiet moments)
-          sand: "#F3B55A",           // legacy name for gold
-          border: "#DED5CF",
-          "text-primary": "#241D27",
-          "text-secondary": "#685C6A",
-          "warm-highlight": "#F3B55A",
-          destructive: "#C95B6A",
+          primary: "hsl(var(--primary) / <alpha-value>)",
+          hover: "hsl(var(--primary-hover) / <alpha-value>)",
+          plum: "hsl(var(--brand-plum) / <alpha-value>)",
+          coral: "hsl(var(--connection) / <alpha-value>)",
+          "coral-deep": "hsl(var(--connection-emphasis) / <alpha-value>)",
+          gold: "hsl(var(--growth) / <alpha-value>)",
+          "gold-deep": "hsl(var(--growth-emphasis) / <alpha-value>)",
+          "coral-soft": "hsl(var(--connection-subtle) / <alpha-value>)",
+          "gold-soft": "hsl(var(--growth-subtle) / <alpha-value>)",
+          quiet: "hsl(var(--muted) / <alpha-value>)",
+          light: "hsl(var(--popover) / <alpha-value>)",
+          linen: "hsl(var(--background) / <alpha-value>)",
+          ivory: "hsl(var(--background) / <alpha-value>)",
+          parchment: "hsl(var(--card) / <alpha-value>)",
+          stone: "hsl(var(--card) / <alpha-value>)",
+          card: "hsl(var(--card) / <alpha-value>)",
+          espresso: "hsl(var(--inverse) / <alpha-value>)",
+          taupe: "hsl(var(--muted-foreground) / <alpha-value>)",
+          mauve: "hsl(var(--brand-mauve) / <alpha-value>)",
+          growth: "hsl(var(--growth) / <alpha-value>)",
+          sand: "hsl(var(--growth) / <alpha-value>)",
+          border: "hsl(var(--border) / <alpha-value>)",
+          "text-primary": "hsl(var(--foreground) / <alpha-value>)",
+          "text-secondary": "hsl(var(--muted-foreground) / <alpha-value>)",
+          "warm-highlight": "hsl(var(--growth) / <alpha-value>)",
+          destructive: "hsl(var(--destructive) / <alpha-value>)",
         },
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        border: "hsl(var(--border) / <alpha-value>)",
+        input: "hsl(var(--input) / <alpha-value>)",
+        ring: "hsl(var(--ring) / <alpha-value>)",
+        background: "hsl(var(--background) / <alpha-value>)",
+        foreground: "hsl(var(--foreground) / <alpha-value>)",
+        shadow: "hsl(var(--shadow) / <alpha-value>)",
         primary: {
-          DEFAULT: "#4B2E57",
-          foreground: "#FFFFFF",
-          100: "#FAF7F2",
-          200: "#EEE8E3",
+          DEFAULT: "hsl(var(--primary) / <alpha-value>)",
+          foreground: "hsl(var(--primary-foreground) / <alpha-value>)",
+          hover: "hsl(var(--primary-hover) / <alpha-value>)",
+          emphasis: "hsl(var(--primary-emphasis) / <alpha-value>)",
+          100: "hsl(var(--background) / <alpha-value>)",
+          200: "hsl(var(--card) / <alpha-value>)",
         },
         secondary: {
-          DEFAULT: "#EEE8E3",
-          foreground: "#241D27",
+          DEFAULT: "hsl(var(--secondary) / <alpha-value>)",
+          foreground: "hsl(var(--secondary-foreground) / <alpha-value>)",
         },
         destructive: {
-          DEFAULT: "#C95B6A",
-          foreground: "hsl(var(--destructive-foreground))",
+          DEFAULT: "hsl(var(--destructive) / <alpha-value>)",
+          foreground: "hsl(var(--destructive-foreground) / <alpha-value>)",
+          emphasis: "hsl(var(--destructive-emphasis) / <alpha-value>)",
+          subtle: "hsl(var(--destructive-subtle) / <alpha-value>)",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "hsl(var(--muted) / <alpha-value>)",
+          foreground: "hsl(var(--muted-foreground) / <alpha-value>)",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "hsl(var(--accent) / <alpha-value>)",
+          foreground: "hsl(var(--accent-foreground) / <alpha-value>)",
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT: "hsl(var(--card) / <alpha-value>)",
+          foreground: "hsl(var(--card-foreground) / <alpha-value>)",
         },
+        popover: {
+          DEFAULT: "hsl(var(--popover) / <alpha-value>)",
+          foreground: "hsl(var(--popover-foreground) / <alpha-value>)",
+        },
+        connection: {
+          DEFAULT: "hsl(var(--connection) / <alpha-value>)",
+          foreground: "hsl(var(--connection-foreground) / <alpha-value>)",
+          emphasis: "hsl(var(--connection-emphasis) / <alpha-value>)",
+          subtle: "hsl(var(--connection-subtle) / <alpha-value>)",
+        },
+        growth: {
+          DEFAULT: "hsl(var(--growth) / <alpha-value>)",
+          foreground: "hsl(var(--growth-foreground) / <alpha-value>)",
+          emphasis: "hsl(var(--growth-emphasis) / <alpha-value>)",
+          subtle: "hsl(var(--growth-subtle) / <alpha-value>)",
+        },
+        success: {
+          DEFAULT: "hsl(var(--success) / <alpha-value>)",
+          foreground: "hsl(var(--success-foreground) / <alpha-value>)",
+          emphasis: "hsl(var(--success-emphasis) / <alpha-value>)",
+          subtle: "hsl(var(--success-subtle) / <alpha-value>)",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning) / <alpha-value>)",
+          foreground: "hsl(var(--warning-foreground) / <alpha-value>)",
+          emphasis: "hsl(var(--warning-emphasis) / <alpha-value>)",
+          subtle: "hsl(var(--warning-subtle) / <alpha-value>)",
+        },
+        inverse: {
+          DEFAULT: "hsl(var(--inverse) / <alpha-value>)",
+          foreground: "hsl(var(--inverse-foreground) / <alpha-value>)",
+        },
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar-background) / <alpha-value>)",
+          foreground: "hsl(var(--sidebar-foreground) / <alpha-value>)",
+          primary: "hsl(var(--sidebar-primary) / <alpha-value>)",
+          "primary-foreground": "hsl(var(--sidebar-primary-foreground) / <alpha-value>)",
+          accent: "hsl(var(--sidebar-accent) / <alpha-value>)",
+          "accent-foreground": "hsl(var(--sidebar-accent-foreground) / <alpha-value>)",
+          border: "hsl(var(--sidebar-border) / <alpha-value>)",
+          ring: "hsl(var(--sidebar-ring) / <alpha-value>)",
+        },
+        understand: {
+          DEFAULT: "hsl(var(--primary-emphasis) / <alpha-value>)",
+        },
+        insight: {
+          DEFAULT: "hsl(var(--growth) / <alpha-value>)",
+          emphasis: "hsl(var(--growth-emphasis) / <alpha-value>)",
+          subtle: "hsl(var(--growth-subtle) / <alpha-value>)",
+          foreground: "hsl(var(--growth-foreground) / <alpha-value>)",
+        },
+        calm: {
+          DEFAULT: "hsl(var(--calm) / <alpha-value>)",
+          emphasis: "hsl(var(--calm-emphasis) / <alpha-value>)",
+          subtle: "hsl(var(--calm-subtle) / <alpha-value>)",
+        },
+      },
+      // Fills and readable text have different roles: coral/gold fills stay
+      // bright, while their words use accessible emphasis variants.
+      textColor: {
+        brand: {
+          primary: "hsl(var(--primary-emphasis) / <alpha-value>)",
+          hover: "hsl(var(--primary-emphasis-hover) / <alpha-value>)",
+          espresso: "hsl(var(--foreground) / <alpha-value>)",
+          mauve: "hsl(var(--muted-foreground) / <alpha-value>)",
+          coral: "hsl(var(--connection-emphasis) / <alpha-value>)",
+          gold: "hsl(var(--growth-emphasis) / <alpha-value>)",
+          sand: "hsl(var(--growth-emphasis) / <alpha-value>)",
+          growth: "hsl(var(--growth-emphasis) / <alpha-value>)",
+          destructive: "hsl(var(--destructive-emphasis) / <alpha-value>)",
+        },
+        primary: { DEFAULT: "hsl(var(--primary-emphasis) / <alpha-value>)" },
+        connection: { DEFAULT: "hsl(var(--connection-emphasis) / <alpha-value>)" },
+        growth: { DEFAULT: "hsl(var(--growth-emphasis) / <alpha-value>)" },
+        insight: { DEFAULT: "hsl(var(--growth-emphasis) / <alpha-value>)" },
+        destructive: { DEFAULT: "hsl(var(--destructive-emphasis) / <alpha-value>)" },
+        success: { DEFAULT: "hsl(var(--success-emphasis) / <alpha-value>)" },
+        warning: { DEFAULT: "hsl(var(--warning-emphasis) / <alpha-value>)" },
       },
       borderRadius: {
         lg: "var(--radius)",

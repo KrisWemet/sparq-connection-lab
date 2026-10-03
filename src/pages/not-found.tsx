@@ -13,11 +13,11 @@ const NotFound = () => {
   }, [router.pathname]);
 
   return (
-    <div className="min-h-dvh flex items-center justify-center bg-gray-100">
+    <div className="min-h-dvh flex items-center justify-center bg-muted">
       <div className="text-center">
         <h1 className="text-4xl font-bold mb-4">404</h1>
-        <p className="text-xl text-gray-600 mb-4">Oops! Page not found</p>
-        <Link href="/" className="text-blue-500 hover:text-blue-700 underline">
+        <p className="text-xl text-muted-foreground mb-4">Oops! Page not found</p>
+        <Link href="/" className="text-primary-emphasis hover:text-brand-hover underline">
           Return to Home
         </Link>
       </div>

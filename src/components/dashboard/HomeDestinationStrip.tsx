@@ -31,7 +31,7 @@ const destinations = [
 
 export function HomeDestinationStrip() {
   return (
-    <EditorialQuietSurface className="overflow-hidden rounded-[30px] border-brand-primary/8 bg-white/55 px-4 py-4 shadow-[0_18px_42px_rgba(46,38,32,0.05)] backdrop-blur-sm">
+    <EditorialQuietSurface className="overflow-hidden rounded-[30px] border-brand-primary/8 bg-popover/55 px-4 py-4 shadow-[0_18px_42px_hsl(var(--shadow)/0.05)] backdrop-blur-sm">
       <div className="mb-4 flex items-end justify-between gap-3">
         <div>
           <EditorialEyebrow className="text-brand-hover">Elsewhere</EditorialEyebrow>
@@ -46,9 +46,9 @@ export function HomeDestinationStrip() {
           <Link
             key={destination.href}
             href={destination.href}
-            className="flex min-h-[7.75rem] flex-col items-start justify-between rounded-[24px] border border-white/80 bg-brand-linen/80 p-3.5 text-left transition-all hover:-translate-y-0.5 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+            className="flex min-h-[7.75rem] flex-col items-start justify-between rounded-[24px] border border-popover/80 bg-brand-linen/80 p-3.5 text-left transition-all hover:-translate-y-0.5 hover:bg-popover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-[18px] border border-brand-primary/10 bg-white text-brand-primary shadow-sm">
+            <div className="flex h-9 w-9 items-center justify-center rounded-[18px] border border-brand-primary/10 bg-popover text-brand-primary shadow-sm">
               <destination.icon size={16} />
             </div>
             <div>

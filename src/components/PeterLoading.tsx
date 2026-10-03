@@ -1,3 +1,4 @@
+import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -40,27 +41,11 @@ export function PeterLoading({ isLoading }: PeterLoadingProps) {
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
             className="flex flex-col items-center max-w-sm px-6 text-center"
           >
-            {/* Elegant Loading Spinner */}
-            <div className="relative w-16 h-16 mb-8">
-              <motion.div
-                className="absolute inset-0 rounded-full border-t-2 border-brand-primary/20"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-              />
-              <motion.div
-                className="absolute inset-2 rounded-full border-r-2 border-brand-primary/50"
-                animate={{ rotate: -360 }}
-                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-              />
-              <motion.div
-                className="absolute inset-4 rounded-full border-l-2 border-brand-primary"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-              />
-            </div>
+            <PeterAvatar size={144} state="grounding" environment="flow" className="mb-4" />
+            <p role="status" className="mb-6 text-sm text-brand-text-secondary">Loading…</p>
 
             {/* Tip Card */}
-            <div className="bg-white/80 shadow-sm border border-brand-primary/10 rounded-3xl p-6 relative overflow-hidden">
+            <div className="bg-popover/80 shadow-sm border border-brand-primary/10 rounded-3xl p-6 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-primary/40 to-brand-primary/10" />
               <p className="text-sm font-semibold text-brand-hover mb-2 tracking-wider uppercase">Peter&apos;s Reminder</p>
               <p className="text-brand-taupe leading-relaxed text-lg italic font-serif">

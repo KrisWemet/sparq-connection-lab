@@ -74,10 +74,10 @@ export default function JoinPartner() {
 
   if (loading) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-brand-linen">
+      <div className="emotion-page min-h-dvh flex items-center justify-center bg-background dark:bg-background">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading invitation...</p>
+          <p className="mt-4 text-muted-foreground dark:text-muted-foreground">Loading invitation...</p>
         </div>
       </div>
     );
@@ -85,16 +85,16 @@ export default function JoinPartner() {
 
   if (error) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-brand-linen">
+      <div className="emotion-page min-h-dvh flex items-center justify-center bg-background dark:bg-background">
         <Card className="max-w-md w-full mx-4 p-6">
           <div className="text-center">
-            <div className="bg-red-100 dark:bg-red-900/20 p-3 rounded-full w-fit mx-auto mb-4">
-              <HeartHandshake className="w-8 h-8 text-red-600 dark:text-red-400" />
+            <div className="bg-destructive-subtle dark:bg-destructive-subtle p-3 rounded-full w-fit mx-auto mb-4">
+              <HeartHandshake className="w-8 h-8 text-destructive-emphasis dark:text-destructive-emphasis" />
             </div>
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+            <h2 className="text-2xl font-semibold text-foreground dark:text-white mb-2">
               Invalid Invitation
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">{error}</p>
+            <p className="text-muted-foreground dark:text-muted-foreground mb-6">{error}</p>
             <Button onClick={() => router.push('/')} variant="outline">
               Return Home
             </Button>
@@ -105,23 +105,23 @@ export default function JoinPartner() {
   }
 
   return (
-    <div className="min-h-dvh flex items-center justify-center bg-brand-linen">
+    <div className="emotion-page min-h-dvh flex items-center justify-center bg-background dark:bg-background">
       <Card className="max-w-md w-full mx-4 p-6">
         <div className="text-center">
           {/* Joining a partner is a connect moment (coral). */}
           <div className="bg-brand-coral/20 p-3 rounded-full w-fit mx-auto mb-4">
             <HeartHandshake className="w-8 h-8 text-brand-coral-deep" />
           </div>
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+          <h2 className="text-2xl font-semibold text-foreground dark:text-white mb-2">
             Add a shared layer to your growth
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
+          <p className="text-muted-foreground dark:text-muted-foreground mb-6">
             You&apos;ve been invited to link up in Sparq. Your own practice stays yours. This just adds shared reflections and shared prompts when they help.
           </p>
           
           {!user ? (
             <div className="space-y-4">
-              <p className="text-sm text-brand-text-secondary dark:text-gray-400">
+              <p className="text-sm text-brand-text-secondary dark:text-muted-foreground">
                 Please sign in or create an account to accept this invitation. You can still use Sparq solo if you want to start there first.
               </p>
               <div className="flex flex-col gap-2">

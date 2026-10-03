@@ -36,7 +36,7 @@ export function QuestionView({
         <div className="flex items-center gap-2">
           <Award className="text-primary w-6 h-6" />
           <div>
-            <h1 className="text-xl font-semibold text-gray-900">
+            <h1 className="text-xl font-semibold text-foreground">
               Daily Quiz
             </h1>
             <p className="text-sm text-brand-text-secondary">{currentQuestion.category}</p>
@@ -52,8 +52,8 @@ export function QuestionView({
         </Button>
       </header>
 
-      <div className="bg-white rounded-2xl p-6 shadow-sm">
-        <h2 className="text-xl font-medium text-gray-900 mb-6">
+      <div className="bg-popover rounded-2xl p-6 shadow-sm">
+        <h2 className="text-xl font-medium text-foreground mb-6">
           {currentQuestion.text}
         </h2>
         <div className="space-y-3">

@@ -1,3 +1,4 @@
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Send } from 'lucide-react';
@@ -103,8 +104,9 @@ export function FavoriteUsCard({ prompt, dateKey, surface }: FavoriteUsCardProps
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.42, delay: 0.2 }}
-      className="rounded-[30px] border border-brand-primary/10 bg-[linear-gradient(135deg,rgba(247,217,120,0.18),rgba(255,255,255,0.82))] p-5 shadow-[0_16px_38px_rgba(46,38,32,0.06)]"
+      className="emotion-paper relative overflow-hidden rounded-[30px] border border-brand-primary/10 bg-[linear-gradient(135deg,hsl(var(--connection)/0.12),hsl(var(--popover)/0.82))] p-5 shadow-[0_16px_38px_hsl(var(--shadow)/0.06)]"
     >
+      <SceneAccent kind="bridge" area="games" className="-mt-3 mb-2 h-16 w-full" />
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="mb-2 text-xs font-semibold tracking-widest uppercase text-brand-hover">
@@ -117,7 +119,7 @@ export function FavoriteUsCard({ prompt, dateKey, surface }: FavoriteUsCardProps
             {prompt.prompt}
           </p>
         </div>
-        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[18px] border border-brand-primary/10 bg-white/80 shadow-sm">
+        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[18px] border border-brand-primary/10 bg-popover/80 shadow-sm">
           <Heart size={16} className="text-brand-hover" />
         </div>
       </div>
@@ -139,20 +141,20 @@ export function FavoriteUsCard({ prompt, dateKey, surface }: FavoriteUsCardProps
         }}
         rows={3}
         placeholder="Write one small thing that felt good about us."
-        className="mt-4 w-full rounded-[22px] border border-brand-primary/12 bg-white/70 px-4 py-3 text-sm text-brand-espresso placeholder:text-brand-taupe/80 focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+        className="mt-4 w-full rounded-[22px] border border-input bg-popover/70 px-4 py-3 text-sm text-brand-espresso placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
       />
 
       <div className="mt-4 flex flex-col sm:flex-row gap-2">
         <button
           onClick={handleSave}
           disabled={!draft.trim()}
-          className="rounded-[22px] border border-brand-primary/15 bg-white px-4 py-3 text-sm font-semibold text-brand-hover transition-colors hover:bg-brand-primary/5 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-[22px] border border-brand-primary/15 bg-popover px-4 py-3 text-sm font-semibold text-brand-hover transition-colors hover:bg-brand-primary/5 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {saved ? 'Kept for today' : 'Keep this note'}
         </button>
         <button
           onClick={handleSend}
-          className="inline-flex items-center justify-center gap-2 rounded-[22px] border border-brand-primary/12 bg-transparent px-4 py-3 text-sm font-semibold text-brand-taupe transition-colors hover:bg-white/60 hover:text-brand-hover"
+          className="inline-flex items-center justify-center gap-2 rounded-[22px] border border-brand-primary/12 bg-transparent px-4 py-3 text-sm font-semibold text-brand-taupe transition-colors hover:bg-popover/60 hover:text-brand-hover"
         >
           <Send size={14} />
           {sendState === 'copied' ? 'Copied short note' : sendState === 'shared' ? 'Sent' : 'Copy short note'}

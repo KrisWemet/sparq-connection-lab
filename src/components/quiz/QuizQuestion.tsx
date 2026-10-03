@@ -29,7 +29,7 @@ export function QuizQuestion({
         className="space-y-3"
       >
         {options.map((option) => (
-          <div key={option.value} className="flex items-center space-x-2 border p-3 rounded hover:bg-slate-50">
+          <div key={option.value} className="flex items-center space-x-2 border p-3 rounded hover:bg-background">
             <RadioGroupItem value={option.value} id={`option-${option.value}`} />
             <Label htmlFor={`option-${option.value}`} className="flex-grow cursor-pointer">
               {option.label}

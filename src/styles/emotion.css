@@ -1,0 +1,65 @@
+/* Sparq's living environment. Emotional controls extend the existing semantic palette.
+   Motion is decorative CSS (requested for this system), never a React frame loop. */
+.emotion-environment {
+  position: relative; isolation: isolate; min-height: 100dvh;
+  --emotion-plum: hsl(var(--brand-plum));
+  --emotion-coral: hsl(var(--connection));
+  --emotion-gold: hsl(var(--growth));
+  --emotion-light: hsl(var(--background));
+}
+.emotion-content { position: relative; z-index: 1; }
+.emotion-environment[data-emotion-area] .emotion-page { background-color: transparent; }
+.emotion-atmosphere { position: absolute; inset: 0; overflow: hidden; opacity: calc(.65 + var(--emotion-intensity, .4) * .35); }
+.emotion-atmosphere[data-paused='true'] .emotion-light-field { animation-play-state: paused; }
+.emotion-app-atmosphere { position: fixed; z-index: 0; }
+.emotion-light-field { position: absolute; width: min(100vw, 1100px); height: min(110vw, 1000px); border-radius: 50%; }
+.emotion-light-field-plum {
+  top: -15%; right: -35%; opacity: calc(.11 + var(--emotion-depth, .3) * .14);
+  background: radial-gradient(ellipse, hsl(var(--brand-plum) / .6), hsl(var(--brand-plum) / .14) 42%, transparent 70%);
+  animation: emotion-drift var(--emotion-motion-duration, 26s) ease-in-out infinite alternate;
+}
+.emotion-light-field-warm {
+  bottom: -20%; left: -35%; opacity: calc(.2 + var(--emotion-warmth, .5) * .18);
+  background: radial-gradient(ellipse at 45% 45%, hsl(var(--growth) / .4), hsl(var(--connection) / .22) 38%, transparent 68%);
+  animation: emotion-drift var(--emotion-motion-duration, 26s) ease-in-out -9s infinite alternate-reverse;
+}
+.emotion-contours { position: absolute; right: -28%; top: 4%; width: min(105vw, 950px); height: 100%; opacity: calc(.025 + var(--emotion-connection, .3) * .045); stroke: hsl(var(--brand-plum)); stroke-width: .9; }
+.emotion-atmosphere-quiet .emotion-light-field { animation: none; }
+.emotion-atmosphere-quiet .emotion-contours { opacity: .025; }
+.emotion-accent { display: block; }
+.emotion-accent > svg { width: 100%; height: 100%; }
+.emotion-accent-quiet { opacity: .55; }
+.emotion-metaphor-dialog > button.absolute { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; right: .25rem; top: .25rem; }
+.emotion-opening { background: transparent; border-color: transparent; box-shadow: none; padding-top: 0; padding-bottom: 2rem; }
+.emotion-opening h1 { font-size: 2rem; line-height: 1.16; }
+.emotion-opening .emotion-accent { height: 155px; margin-bottom: 1rem; }
+.emotion-surface {
+  background: linear-gradient(135deg, hsl(var(--popover) / .93), hsl(var(--card) / .78));
+  border-color: hsl(var(--primary) / .1);
+  box-shadow: 0 2px 2px hsl(var(--shadow) / .015), 0 14px 40px hsl(var(--shadow) / .04);
+}
+.emotion-featured {
+  background: linear-gradient(125deg, hsl(var(--popover) / .97) 12%, hsl(var(--card) / .9) 78%);
+  box-shadow: inset 0 1px hsl(var(--popover)), 0 20px 50px hsl(var(--shadow) / .065);
+  border-color: hsl(var(--primary) / .12);
+}
+.emotion-paper {
+  background: linear-gradient(110deg, hsl(var(--popover) / .95), hsl(var(--background) / .94));
+  box-shadow: inset 3px 0 hsl(var(--primary) / .055), 0 8px 30px hsl(var(--shadow) / .025);
+}
+.emotion-accomplishment { position: relative; isolation: isolate; }
+.emotion-accomplishment::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(ellipse, hsl(var(--growth) / .2), transparent 65%);
+}
+.emotion-completion-light {
+  position: fixed; inset: 0; z-index: 45; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 70%, hsl(var(--growth) / .22), hsl(var(--connection) / .07) 45%, transparent 70%);
+  animation: emotion-completion 4.2s ease-in-out both;
+}
+@keyframes emotion-drift { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(8px, -9px, 0); } }
+@keyframes emotion-completion { 0%, 100% { opacity: 0; transform: scale(.98); } 35% { opacity: 1; transform: scale(1.02); } }
+@media (prefers-reduced-motion: reduce) {
+  .emotion-light-field, .emotion-completion-light { animation: none !important; transform: none !important; }
+  .emotion-completion-light { opacity: .55; }
+}

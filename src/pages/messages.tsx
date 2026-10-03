@@ -71,24 +71,24 @@ export default function Messaging() {
   };
 
   return (
-    <div className="min-h-dvh bg-gray-50 pb-24">
-      <header className="sticky top-0 z-50 bg-white border-b">
+    <div className="emotion-page min-h-dvh bg-background pb-24">
+      <header className="sticky top-0 z-50 bg-popover border-b">
         <div className="container max-w-lg mx-auto px-4 py-3 flex items-center">
           <button
             onClick={() => router.back()}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-muted rounded-lg transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
           <div className="mx-auto text-center">
-            <h1 className="text-lg font-semibold text-gray-900">Talk Practice</h1>
+            <h1 className="text-lg font-semibold text-foreground">Talk Practice</h1>
             <p className="text-xs text-brand-text-secondary">Solo-first help for real life</p>
           </div>
         </div>
       </header>
 
       <main className="container max-w-lg mx-auto px-4 pt-6 space-y-6">
-        <Card className="border-brand-primary/15 bg-gradient-to-br from-white to-brand-primary/5">
+        <Card className="border-brand-primary/15 bg-gradient-to-br from-popover to-brand-primary/5">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Heart className="w-5 h-5 text-brand-primary" />
@@ -114,7 +114,7 @@ export default function Messaging() {
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-hover mb-2">
                     {starter.category}
                   </p>
-                  <p className="text-sm text-gray-700 leading-relaxed mb-4">{starter.question}</p>
+                  <p className="text-sm text-foreground leading-relaxed mb-4">{starter.question}</p>
                   <Button
                     variant="outline"
                     className="w-full"
@@ -167,8 +167,8 @@ export default function Messaging() {
                       <Calendar className="w-4 h-4 text-brand-primary" />
                     </div>
                     <div className="flex-1">
-                      <p className="font-medium text-gray-900">{template.title}</p>
-                      <p className="text-sm text-gray-600 mt-1 leading-relaxed">{template.text}</p>
+                      <p className="font-medium text-foreground">{template.title}</p>
+                      <p className="text-sm text-muted-foreground mt-1 leading-relaxed">{template.text}</p>
                     </div>
                   </div>
                   <Button

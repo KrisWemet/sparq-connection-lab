@@ -168,17 +168,17 @@ export default function JourneyStart() {
           <Card>
             <CardContent className="pt-6">
               <h2 className="text-xl font-semibold mb-2">{journey.title}</h2>
-              <p className="text-gray-600 mb-4">{journey.description}</p>
+              <p className="text-muted-foreground mb-4">{journey.description}</p>
               
-              <div className="bg-gray-100 p-4 rounded-md mb-4">
+              <div className="bg-muted p-4 rounded-md mb-4">
                 <h3 className="font-medium mb-2">Your Progress</h3>
-                <div className="w-full bg-gray-300 rounded-full h-2.5">
+                <div className="w-full bg-border rounded-full h-2.5">
                   <div 
                     className="bg-brand-primary h-2.5 rounded-full transition-all duration-1000"
                     style={{ width: `${completionPercentage}%` }}
                   ></div>
                 </div>
-                <p className="text-sm text-gray-600 mt-2">
+                <p className="text-sm text-muted-foreground mt-2">
                   {completionPercentage.toFixed(0)}% Complete
                 </p>
               </div>
@@ -205,7 +205,7 @@ export default function JourneyStart() {
                   onClick={handleShowMetaphor}
                 >
                   <h3 className="font-medium text-brand-hover mb-2">{metaphor.title}</h3>
-                  <p className="text-sm text-gray-600">{metaphor.description}</p>
+                  <p className="text-sm text-muted-foreground">{metaphor.description}</p>
                   <p className="text-xs text-brand-hover mt-2 font-medium">Click to experience the visualization</p>
                 </div>
                 
@@ -214,7 +214,7 @@ export default function JourneyStart() {
                   onClick={handleShowFuturePacing}
                 >
                   <h3 className="font-medium text-brand-espresso mb-2">Future Vision Journey</h3>
-                  <p className="text-sm text-gray-600">Envision the future of your relationship as you apply the skills from this journey.</p>
+                  <p className="text-sm text-muted-foreground">Envision the future of your relationship as you apply the skills from this journey.</p>
                   <p className="text-xs text-brand-hover mt-2 font-medium">Click to experience the future pacing</p>
                 </div>
               </div>
@@ -233,15 +233,15 @@ export default function JourneyStart() {
                     key={activity.id}
                     className={`p-4 rounded-lg border ${
                       activity.completed 
-                        ? 'border-green-200 bg-green-50' 
-                        : 'border-gray-200 bg-white'
+                        ? 'border-success bg-success-subtle'
+                        : 'border-border bg-popover'
                     }`}
                   >
                     <div className="flex items-center">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${
                         activity.completed 
-                          ? 'bg-green-500 text-white' 
-                          : 'bg-gray-200 text-brand-text-secondary'
+                          ? 'bg-success text-white'
+                          : 'bg-border text-brand-text-secondary'
                       }`}>
                         {index + 1}
                       </div>

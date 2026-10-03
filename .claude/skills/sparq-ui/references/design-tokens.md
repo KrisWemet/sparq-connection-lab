@@ -1,97 +1,91 @@
-# Design Tokens — Complete Reference
+# Sparq Design Tokens
 
-All values sourced from the live codebase. Tokens marked **(proposed)** are not yet implemented but recommended for consistency.
+## Colour
 
----
+`src/styles/globals.css` is the colour source of truth. `tailwind.config.ts` exposes these variables through the existing Tailwind/shadcn system with alpha support. Do not add independent component palettes.
 
-## Colors
+Plum means understanding; coral means connection; gold means growth. Ivory is the canvas and stone is the raised surface. Keep coral and gold selective. Error, warning and success roles remain distinguishable from brand accents.
 
-### Brand Palette (`tailwind.config.ts` → `theme.extend.colors.brand`)
+### Semantic palette
 
-| Token | Hex | HSL (approx) | Usage |
+| Role | Light | Dark | Usage |
 |---|---|---|---|
-| `brand-primary` | `#C56B4D` | 12° 47% 52% | Primary actions, active states, CTA fills |
-| `brand-hover` | `#A3513D` | 12° 45% 44% | Hover state for primary elements |
-| `brand-light` | `#FBF8F3` | 20° 64% 98% | Very light warm tint backgrounds |
-| `brand-linen` | `#F5F1EA` | 33° 56% 96% | Warm cream page background, Peter cards |
-| `brand-sand` | `#E8A857` | 35° 77% 63% | Amber highlights, streak icons, celebrations |
-| `brand-taupe` | `#3D2C28` | 14° 22% 20% | Deep warm brown for grounding text |
-| `brand-growth` | `#8FAF8A` | 113° 18% 61% | Sage green for progress, success |
+| `background` | `#FAF7F2` | `#211925` | Canvas |
+| `foreground` | `#241D27` | `#FAF7F2` | Main text |
+| `card` | `#EEE8E3` | `#342A38` | Stone surface |
+| `card-foreground` | `#241D27` | `#FAF7F2` | Card text |
+| `popover` | `#FFFDFA` | `#3D3142` | Elevated surfaces and menus |
+| `primary` | `#4B2E57` | `#7D608C` | Primary action fill |
+| `primary-foreground` | `#FFFFFF` | `#FFFFFF` | Text on primary action |
+| `primary-hover` | `#3A2244` | `#896B97` | Primary hover fill |
+| `primary-emphasis` | `#4B2E57` | `#C4A6D1` | Readable plum text/icons |
+| `secondary` | `#EEE8E3` | `#342A38` | Secondary surfaces |
+| `secondary-foreground` | `#241D27` | `#FAF7F2` | Secondary surface text |
+| `muted` | `#EEE8E3` | `#342A38` | Quiet surfaces |
+| `muted-foreground` | `#685C6A` | `#C3B6C5` | Supporting text |
+| `accent` | `#E8DFEC` | `#49374F` | Selection and reflection tint |
+| `accent-foreground` | `#4B2E57` | `#FAF7F2` | Selection text |
+| `border` | `#DED5CF` | `#5E4B65` | Decorative dividers |
+| `input` | `#8D7B91` | `#9A84A3` | Visible control boundaries |
+| `ring` | `#4B2E57` | `#C4A6D1` | Keyboard focus |
+| `connection` | `#E97868` | `#E97868` | Coral fill |
+| `connection-foreground` | `#241D27` | `#241D27` | Text on coral |
+| `connection-emphasis` | `#A8452F` | `#F29A8C` | Coral text/icons |
+| `connection-subtle` | `#FBE9E5` | `#472D31` | Connection tint |
+| `growth` | `#F3B55A` | `#F3B55A` | Gold fill |
+| `growth-foreground` | `#241D27` | `#241D27` | Text on gold |
+| `growth-emphasis` | `#8A5E14` | `#F3B55A` | Gold text/icons |
+| `growth-subtle` | `#F9ECD7` | `#443622` | Growth tint |
+| `destructive` | `#A73547` | `#A73547` | Error/destructive fill |
+| `destructive-foreground` | `#FFFFFF` | `#FFFFFF` | Text on destructive fill |
+| `destructive-emphasis` | `#A73547` | `#FFA8B8` | Error messages |
+| `destructive-subtle` | `#FBE7EB` | `#492830` | Error tint |
+| `success` | `#346646` | `#346646` | Success fill |
+| `success-emphasis` | `#346646` | `#B6D5BE` | Success messages |
+| `success-subtle` | `#E3EEE5` | `#293D30` | Success tint |
+| `warning` | `#F3B55A` | `#F3B55A` | Warning fill |
+| `warning-emphasis` | `#805610` | `#F3B55A` | Warning messages |
+| `warning-subtle` | `#F9ECD7` | `#443622` | Warning tint |
+| `calm` | `#9CB5A0` | `#9CB5A0` | Quiet sage accent |
+| `inverse` | `#241D27` | `#241D27` | Fixed intimate dark surface |
+| `inverse-foreground` | `#FAF7F2` | `#FAF7F2` | Text on inverse surface |
 
-### Primary Shades (`tailwind.config.ts`)
+### Compatibility and roles
 
-| Token | Hex | Usage |
+- `brand-linen`/`brand-ivory` → background; `brand-parchment`/`brand-stone`/`brand-card` → card; `brand-light` → popover.
+- `brand-primary` → primary fill; `brand-hover` → primary hover fill. Their **text utilities** use primary emphasis and emphasis hover so they remain readable in dark mode.
+- `brand-text-primary` → foreground; `brand-text-secondary`/`brand-taupe` → muted foreground. The supplied mauve `#776B78` remains the brand swatch; supporting copy uses `#685C6A` to meet AA on stone.
+- `brand-espresso` retains the fixed inverse fill. `text-brand-espresso` uses foreground, so existing body copy responds to the theme.
+- `brand-coral` → connection; `brand-gold`/`brand-sand`/`brand-growth`/`brand-warm-highlight` → growth. Their text utilities use the appropriate emphasis variant. Prefer explicit `connection` and `growth` tokens for new colour work.
+- `understand` aliases primary emphasis; `insight` aliases growth. `calm` is the quiet sage counterweight; success remains a distinct green status.
+- `primary-100`/`primary-200` retain the background/card aliases. Sidebar variables alias the same semantic colours.
+- `shadow` is near-black plum. Existing shadow dimensions/opacity remain unchanged.
+
+### Accessibility
+
+Use dark-plum text on coral and gold fills; white text fails on both. Use emphasis tokens for coloured text, without lowering its opacity. Measured normal-text pairs meet 4.5:1 in both themes; input borders and focus rings exceed 3:1 against their surrounding surfaces. Disabled controls retain their existing state treatment and are not active text targets.
+
+| Pair | Light contrast | Dark contrast |
 |---|---|---|
-| `primary` (DEFAULT) | `#C86A58` | shadcn primary — buttons, links |
-| `primary-foreground` | `#FFFFFF` | Text on primary |
-| `primary-100` | `#FBF8F3` | Lightest primary tint |
-| `primary-200` | `#F4EFEB` | Medium primary tint (gradients) |
+| Main text / canvas | 15.35:1 | 15.97:1 |
+| Supporting text / stone card | 5.20:1 | 7.05:1 |
+| Primary action label / fill | 11.49:1 | 5.35:1 |
+| Primary action label / hover | 14.07:1 | 4.55:1 |
+| Dark plum / coral | 5.74:1 | 5.74:1 |
+| Dark plum / gold | 9.04:1 | 9.04:1 |
+| Input border / card | 3.22:1 | 4.04:1 |
 
-### Secondary
+### Dark mode
 
-| Token | Hex | Usage |
-|---|---|---|
-| `secondary` (DEFAULT) | `#F4EFEB` | Secondary surfaces, subtle backgrounds |
-| `secondary-foreground` | `#1F1235` | Text on secondary |
+The existing `.dark` class uses plum-black canvas, plum stone surfaces, lighter plum emphasis/focus, and restrained coral and gold accents. It is not an inversion. All semantic and legacy brand aliases resolve in either scope, including nested dark screens. This task does not add a theme switch or provider.
 
-### CSS Custom Properties (`:root` in `globals.css`)
+### Logo and artwork
 
-| Property | Light Value | Dark Value |
-|---|---|---|
-| `--background` | `0 0% 100%` | `0 0% 0%` |
-| `--foreground` | `222.2 84% 4.9%` | `0 0% 100%` |
-| `--card` | `0 0% 100%` | `240 3.7% 15.9%` |
-| `--card-foreground` | `222.2 84% 4.9%` | `0 0% 100%` |
-| `--popover` | `0 0% 100%` | `0 0% 10%` |
-| `--popover-foreground` | `222.2 84% 4.9%` | `0 0% 100%` |
-| `--primary` | `222.2 47.4% 11.2%` | `210 40% 98%` |
-| `--primary-foreground` | `210 40% 98%` | `222.2 47.4% 11.2%` |
-| `--secondary` | `210 40% 96.1%` | `217.2 32.6% 17.5%` |
-| `--secondary-foreground` | `222.2 47.4% 11.2%` | `210 40% 98%` |
-| `--muted` | `210 40% 96.1%` | `217.2 32.6% 17.5%` |
-| `--muted-foreground` | `215.4 16.3% 46.9%` | `215 20.2% 65.1%` |
-| `--accent` | `210 40% 96.1%` | `217.2 32.6% 17.5%` |
-| `--accent-foreground` | `222.2 47.4% 11.2%` | `210 40% 98%` |
-| `--destructive` | `0 84.2% 60.2%` | `0 62.8% 30.6%` |
-| `--destructive-foreground` | `210 40% 98%` | `210 40% 98%` |
-| `--border` | `214.3 31.8% 91.4%` | `217.2 32.6% 17.5%` |
-| `--input` | `214.3 31.8% 91.4%` | `217.2 32.6% 17.5%` |
-| `--ring` | `222.2 84% 4.9%` | `212.7 26.8% 83.9%` |
-| `--radius` | `0.5rem` | `0.5rem` |
-
-### Sidebar CSS Properties
-
-| Property | Light Value | Dark Value |
-|---|---|---|
-| `--sidebar-background` | `0 0% 98%` | `0 0% 5%` |
-| `--sidebar-foreground` | `240 5.3% 26.1%` | `240 4.8% 95.9%` |
-| `--sidebar-primary` | `240 5.9% 10%` | `224.3 76.3% 48%` |
-| `--sidebar-primary-foreground` | `0 0% 98%` | `0 0% 100%` |
-| `--sidebar-accent` | `240 4.8% 95.9%` | `240 3.7% 15.9%` |
-| `--sidebar-accent-foreground` | `240 5.9% 10%` | `240 4.8% 95.9%` |
-| `--sidebar-border` | `220 13% 91%` | `240 3.7% 15.9%` |
-| `--sidebar-ring` | `217.2 91.2% 59.8%` | `217.2 91.2% 59.8%` |
-
-### Supplementary Colors (used inline, not in config)
-
-| Color | Hex | Context |
-|---|---|---|
-| Nav inactive | `#9E8A86` | Bottom nav inactive icons + labels |
-| Peter tagline | `#c2a8a0` | Peter fixed/mobile italic text |
-| Score muted | `#8C827A` | Building-state description text |
-| Confetti set | `#C86A58, #F4EFEB, #8C827A` | `ElegantConfetti.ts` brand palette |
-
-### Semantic Color Mapping (used in components)
-
-| Meaning | Light Class | Dark Override (globals.css) |
-|---|---|---|
-| Progress/success | `text-green-500`, `bg-green-50/100` | `bg-green-900/30` |
-| Warning/streak | `text-amber-500`, `bg-amber-50/100` | `bg-amber-900/30` |
-| Info/communication | `text-blue-500`, `bg-blue-50/100` | `bg-blue-900/30` |
-| Love/emotional | `text-rose-500`, `bg-rose-50/100` | `bg-rose-900/30` |
-| Depth/insight | `text-purple-500`, `bg-purple-50/100` | `bg-purple-900/30` |
+The existing Sparq mark remains deep plum with its existing coral-to-gold spark; only its inline colours reference tokens. The static favicon matches the same supplied palette. Natural Peter artwork, metaphor illustrations, and photographic assets keep their specific colours.
 
 ---
+
+The existing `TONE` moment helper keeps its category logic. `brand-coral-soft`, `brand-gold-soft` and `brand-quiet` are semantic surface aliases; coral/gold button labels use their fixed dark foreground roles in both themes.
 
 ## Typography
 
@@ -185,13 +179,7 @@ All values sourced from the live codebase. Tokens marked **(proposed)** are not 
 
 ## Shadows
 
-| Pattern | Usage |
-|---|---|
-| `shadow-sm` | Default card shadow, subtle elevation |
-| `shadow-[0_8px_30px_rgb(192,97,74,0.15)]` | Elevated CTA cards (TodaysFocusCard) — warm brand-tinted shadow |
-| `shadow-[0_8px_30px_rgb(200,106,88,0.04)]` | Very subtle warm shadow (warm cards) |
-| `shadow-[0_4px_24px_rgba(200,106,88,0.06)]` | Medium warm shadow (score building state) |
-| `shadow-sm` + `border border-brand-primary/10` | Standard warm card treatment |
+Preserve the existing elevation dimensions. Use `hsl(var(--shadow)/opacity)` for custom shadows; `shadow` resolves to near-black plum. Standard `shadow-sm` remains the default card elevation. Do not add glow or heavier shadows to introduce the palette.
 
 ---
 
@@ -261,7 +249,7 @@ All values sourced from the live codebase. Tokens marked **(proposed)** are not 
 | `/5` | Very subtle tinted backgrounds (`bg-brand-primary/5`) |
 | `/10` | Light tinted borders, subtle backgrounds (`border-brand-primary/10`) |
 | `/20` | Icon container backgrounds on dark surfaces (`bg-white/20`) |
-| `/30` | Dark mode colored backgrounds (`bg-blue-900/30`) |
+| `/30` | Low-emphasis semantic accents (`bg-connection/30`) |
 | `/40` | Accent gradient endpoints (`from-brand-primary/40`) |
 | `/60` | SVG strokes (`text-brand-primary/60`) |
 | `/80` | Near-full-opacity text overlays (`text-white/80`) |
@@ -269,18 +257,9 @@ All values sourced from the live codebase. Tokens marked **(proposed)** are not 
 
 ---
 
-## Gradient Patterns (implemented)
+## Gradient Patterns (existing only)
 
-| Pattern | Usage |
-|---|---|
-| `bg-gradient-to-b from-white to-gray-50` | Page background |
-| `bg-gradient-to-br from-white to-brand-linen/30` | Card surfaces (score, insights) |
-| `bg-gradient-to-br from-white to-primary-100` | DailyConnect card |
-| `bg-gradient-to-r from-brand-primary/10 via-brand-primary/5 to-brand-primary/10` | Soft connect surface (e.g. `/us` cards) |
-| `bg-gradient-to-r from-primary-100 to-white` | Streak card |
-| `bg-gradient-to-r from-blue-500 to-brand-primary` | Premium upgrade CTA |
-| `bg-gradient-to-r from-purple-500 to-pink-500` | Ultimate upgrade CTA |
-| `linear-gradient(145deg, #FFFFFF 0%, #FBF8F3 100%)` | Inline style for score building state |
+Use the existing gradient shapes with semantic endpoints, such as `from-popover to-card`, `from-brand-linen to-brand-parchment`, and `from-primary to-primary-hover`. The logo's existing spark uses connection to growth. Do not add new gradients for colour rollout.
 
 ---
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import { CheckCircle, Compass, ArrowRight, Sparkles, TrendingUp } from 'lucide-react';
-import confetti from 'canvas-confetti';
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import { supabase } from '@/lib/supabase';
 import { CsiTrajectoryCard } from '@/components/dashboard/CsiTrajectoryCard';
 
@@ -33,37 +33,6 @@ export function Day14Graduation() {
     const [reportLoading, setReportLoading] = useState(true);
     const [northStar, setNorthStar] = useState<string | null>(null);
     const [boundaryDone, setBoundaryDone] = useState(false);
-
-    useEffect(() => {
-        // Fire confetti on mount
-        const duration = 3 * 1000;
-        const animationEnd = Date.now() + duration;
-        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-        const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
-
-        const interval: any = setInterval(function () {
-            const timeLeft = animationEnd - Date.now();
-
-            if (timeLeft <= 0) {
-                return clearInterval(interval);
-            }
-
-            const particleCount = 50 * (timeLeft / duration);
-            confetti({
-                ...defaults,
-                particleCount,
-                origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-            });
-            confetti({
-                ...defaults,
-                particleCount,
-                origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-            });
-        }, 250);
-
-        return () => clearInterval(interval);
-    }, []);
 
     useEffect(() => {
         (async () => {
@@ -110,38 +79,34 @@ export function Day14Graduation() {
     };
 
     return (
-        <div className="min-h-dvh bg-gradient-to-br from-brand-linen to-brand-parchment flex flex-col items-center justify-start p-6 pb-12">
+        <div className="emotion-page emotion-accomplishment min-h-dvh bg-brand-linen flex flex-col items-center justify-start p-6 pb-12">
             <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: 'spring', damping: 20 }}
-                className="bg-white rounded-3xl p-8 shadow-xl max-w-sm w-full border border-teal-100 mt-8"
+                initial={{ y: 8, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="emotion-featured emotion-surface relative overflow-hidden bg-popover rounded-3xl p-8 shadow-xl max-w-sm w-full border border-growth/20 mt-8"
             >
-                <div className="flex justify-center mb-6">
-                    <div className="w-20 h-20 rounded-full bg-gradient-to-r from-teal-400 to-blue-500 flex items-center justify-center text-4xl shadow-inner shadow-white/20">
-                        🦦
-                    </div>
-                </div>
+                <SceneAccent kind="bloom" className="-mt-4 mb-3 h-36 w-full" />
 
-                <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center">You Did It.</h1>
+                <h1 className="text-3xl font-bold text-foreground mb-2 text-center">You Did It.</h1>
                 <p className="text-brand-text-secondary mb-6 text-center">14 days of showing up.</p>
 
-                <div className="bg-gradient-to-br from-teal-50 to-blue-50 rounded-2xl p-5 mb-6 text-left space-y-4">
+                <div className="bg-gradient-to-br from-growth-subtle to-card rounded-2xl p-5 mb-6 text-left space-y-4">
                     <div className="flex items-start gap-3">
-                        <CheckCircle className="text-teal-500 mt-0.5 flex-shrink-0" size={20} />
-                        <p className="text-sm text-gray-700 leading-relaxed">
+                        <CheckCircle className="text-growth-emphasis mt-0.5 flex-shrink-0" size={20} />
+                        <p className="text-sm text-foreground leading-relaxed">
                             You built a consistent habit of reflecting and connecting.
                         </p>
                     </div>
                     <div className="flex items-start gap-3">
-                        <CheckCircle className="text-teal-500 mt-0.5 flex-shrink-0" size={20} />
-                        <p className="text-sm text-gray-700 leading-relaxed">
+                        <CheckCircle className="text-growth-emphasis mt-0.5 flex-shrink-0" size={20} />
+                        <p className="text-sm text-foreground leading-relaxed">
                             You proved to yourself that small, daily actions matter more than giant ones.
                         </p>
                     </div>
                     <div className="flex items-start gap-3">
-                        <Compass className="text-amber-500 mt-0.5 flex-shrink-0" size={20} />
-                        <p className="text-sm font-semibold text-gray-800 leading-relaxed">
+                        <Compass className="text-growth-emphasis mt-0.5 flex-shrink-0" size={20} />
+                        <p className="text-sm font-semibold text-foreground leading-relaxed">
                             Your journeys are ready when you are. Go deeper wherever you choose.
                         </p>
                     </div>
@@ -150,9 +115,9 @@ export function Day14Graduation() {
                 {/* Personalized Report Section */}
                 {reportLoading ? (
                     <div className="space-y-3 mb-6 animate-pulse">
-                        <div className="h-3 bg-gray-100 rounded w-full" />
-                        <div className="h-3 bg-gray-100 rounded w-5/6" />
-                        <div className="h-3 bg-gray-100 rounded w-4/6" />
+                        <div className="h-3 bg-muted rounded w-full" />
+                        <div className="h-3 bg-muted rounded w-5/6" />
+                        <div className="h-3 bg-muted rounded w-4/6" />
                     </div>
                 ) : report ? (
                     <motion.div
@@ -163,23 +128,23 @@ export function Day14Graduation() {
                     >
                         {/* Compound Reveal — the user's own words, then and now (spec §5.3) */}
                         {report.reveal?.narrative && (
-                            <div className="rounded-2xl bg-white border border-teal-100 p-4 shadow-sm">
-                                <p className="text-xs font-bold text-teal-600 uppercase tracking-wider mb-3">
+                            <div className="rounded-2xl bg-popover border border-growth/20 p-4 shadow-sm">
+                                <p className="text-xs font-bold text-growth-emphasis uppercase tracking-wider mb-3">
                                     Something I kept for you
                                 </p>
                                 {report.reveal.verified && report.reveal.before_quote && (
-                                    <blockquote className="mb-2 border-l-2 border-teal-200 pl-3 text-sm italic text-brand-text-secondary">
+                                    <blockquote className="mb-2 border-l-2 border-growth/40 pl-3 text-sm italic text-brand-text-secondary">
                                         &ldquo;{report.reveal.before_quote}&rdquo;
                                         <span className="mt-1 block not-italic text-xs text-brand-text-secondary">— you, when we started</span>
                                     </blockquote>
                                 )}
                                 {report.reveal.verified && report.reveal.after_quote && (
-                                    <blockquote className="mb-3 border-l-2 border-teal-500 pl-3 text-sm italic text-gray-700">
+                                    <blockquote className="mb-3 border-l-2 border-growth-emphasis pl-3 text-sm italic text-foreground">
                                         &ldquo;{report.reveal.after_quote}&rdquo;
                                         <span className="mt-1 block not-italic text-xs text-brand-text-secondary">— you, this week</span>
                                     </blockquote>
                                 )}
-                                <p className="text-sm text-gray-700 leading-relaxed">{report.reveal.narrative}</p>
+                                <p className="text-sm text-foreground leading-relaxed">{report.reveal.narrative}</p>
                             </div>
                         )}
 
@@ -190,24 +155,24 @@ export function Day14Graduation() {
 
                         {/* North Star boundary beat (spec §2/§5) */}
                         {northStar && (
-                            <div className="rounded-2xl bg-white border border-brand-primary/10 p-4 shadow-sm">
-                                <p className="text-sm text-gray-700 leading-relaxed mb-1">
+                            <div className="rounded-2xl bg-popover border border-brand-primary/10 p-4 shadow-sm">
+                                <p className="text-sm text-foreground leading-relaxed mb-1">
                                     When we started, you told me:
                                 </p>
-                                <p className="text-sm italic text-gray-800 mb-3">&ldquo;{northStar}&rdquo;</p>
+                                <p className="text-sm italic text-foreground mb-3">&ldquo;{northStar}&rdquo;</p>
                                 {boundaryDone ? (
                                     <p className="text-xs text-brand-text-secondary">Thank you. I&apos;ll keep that close. 🦦</p>
                                 ) : (
                                     <div className="flex gap-2">
                                         <button
                                             onClick={() => answerBoundary('reaffirm')}
-                                            className="flex-1 rounded-xl border border-teal-200 bg-teal-50 px-3 py-2 text-xs font-medium text-teal-800 hover:bg-teal-100"
+                                            className="flex-1 rounded-xl border border-growth/40 bg-growth-subtle px-3 py-2 text-xs font-medium text-growth-emphasis hover:bg-growth/20"
                                         >
                                             Still true
                                         </button>
                                         <button
                                             onClick={() => answerBoundary('shift')}
-                                            className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                                            className="flex-1 rounded-xl border border-border bg-background px-3 py-2 text-xs font-medium text-foreground hover:bg-muted"
                                         >
                                             It&apos;s shifting
                                         </button>
@@ -222,33 +187,33 @@ export function Day14Graduation() {
                                 <Sparkles size={12} />
                                 What Peter Noticed
                             </p>
-                            <p className="text-sm text-gray-700 leading-relaxed">{report.what_i_learned}</p>
+                            <p className="text-sm text-foreground leading-relaxed">{report.what_i_learned}</p>
                             <p className="text-xs text-brand-text-secondary mt-2">These are Peter&apos;s guesses. You&apos;re the judge of what fits.</p>
                         </div>
 
                         {/* Biggest Growth */}
-                        <div className="rounded-2xl bg-emerald-50 border border-emerald-100 p-4">
-                            <p className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                        <div className="rounded-2xl bg-growth-subtle border border-growth/20 p-4">
+                            <p className="text-xs font-bold text-growth-emphasis uppercase tracking-wider mb-2 flex items-center gap-1.5">
                                 <TrendingUp size={12} />
                                 A Change Peter Saw
                             </p>
-                            <p className="text-sm text-gray-700 leading-relaxed">{report.biggest_growth}</p>
+                            <p className="text-sm text-foreground leading-relaxed">{report.biggest_growth}</p>
                         </div>
 
                         {/* Superpower */}
-                        <div className="rounded-2xl bg-amber-50 border border-amber-100 p-4">
-                            <p className="text-xs font-bold text-amber-600 uppercase tracking-wider mb-2">
+                        <div className="rounded-2xl bg-insight-subtle border border-insight/20 p-4">
+                            <p className="text-xs font-bold text-growth-emphasis uppercase tracking-wider mb-2">
                                 ✨ One Strength Peter Saw
                             </p>
-                            <p className="text-sm text-gray-700 leading-relaxed">{report.relationship_superpower}</p>
+                            <p className="text-sm text-foreground leading-relaxed">{report.relationship_superpower}</p>
                         </div>
 
                         {/* Next Focus */}
-                        <div className="rounded-2xl bg-slate-50 border border-slate-100 p-4">
-                            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                        <div className="rounded-2xl bg-background border border-border p-4">
+                            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
                                 Something You Might Explore Next
                             </p>
-                            <p className="text-sm text-gray-700 leading-relaxed">{report.focus_next}</p>
+                            <p className="text-sm text-foreground leading-relaxed">{report.focus_next}</p>
                         </div>
 
                         {/* Recommended Track */}

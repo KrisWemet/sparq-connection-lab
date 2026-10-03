@@ -72,9 +72,9 @@ function rememberDeclined(skill: string) {
 }
 
 const field =
-  'w-full rounded-xl border border-brand-border bg-white/70 p-3 text-sm text-brand-espresso placeholder:text-brand-text-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary/30';
+  'w-full rounded-xl border border-brand-border bg-popover/70 p-3 text-sm text-brand-espresso placeholder:text-brand-text-secondary focus:outline-none focus:ring-2 focus:ring-ring';
 const primaryBtn = 'rounded-full bg-brand-primary px-5 py-2 text-sm font-bold text-white hover:opacity-90 disabled:opacity-50';
-const quietBtn = 'rounded-full border border-brand-border px-5 py-2 text-sm font-medium text-brand-espresso hover:bg-white/60 disabled:opacity-50';
+const quietBtn = 'rounded-full border border-brand-border px-5 py-2 text-sm font-medium text-brand-espresso hover:bg-popover/60 disabled:opacity-50';
 
 function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
@@ -84,7 +84,7 @@ function Chip({ active, onClick, children }: { active: boolean; onClick: () => v
       aria-pressed={active}
       className={cn(
         'rounded-full border px-4 py-1.5 text-sm transition-colors',
-        active ? 'border-brand-primary bg-brand-primary/10 font-semibold text-brand-hover' : 'border-brand-border text-brand-espresso hover:bg-white/60',
+        active ? 'border-brand-primary bg-brand-primary/10 font-semibold text-brand-hover' : 'border-brand-border text-brand-espresso hover:bg-popover/60',
       )}
     >
       {children}

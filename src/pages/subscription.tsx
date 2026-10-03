@@ -14,7 +14,7 @@ type Billing = "monthly" | "yearly";
 
 // Together is a connect moment (coral); Solo is the everyday plum.
 const PLAN_TONE: Record<Plan["id"], { card: string; eyebrow: string }> = {
-  free: { card: "bg-white/70 border border-brand-border", eyebrow: "text-brand-text-secondary" },
+  free: { card: "bg-card/70 border border-brand-border", eyebrow: "text-brand-text-secondary" },
   solo: { card: TONE.understand.card, eyebrow: TONE.understand.eyebrow },
   together: { card: TONE.connect.card, eyebrow: TONE.connect.eyebrow },
 };
@@ -70,7 +70,7 @@ export default function Subscription() {
           className="mx-auto mb-8 flex max-w-lg items-start gap-3"
         >
           <PeterAvatar mood="afternoon" size={44} />
-          <div className="flex-1 rounded-2xl rounded-tl-sm border border-brand-border bg-white p-4">
+          <div className="flex-1 rounded-2xl rounded-tl-sm border border-brand-border bg-card p-4">
             <h1 className="font-serif text-xl text-brand-espresso">Pick what fits you</h1>
             <p className="mt-1 text-sm leading-relaxed text-brand-text-secondary">
               {onPaidPlan
@@ -84,7 +84,7 @@ export default function Subscription() {
 
         {/* Billing toggle */}
         <div className="mb-6 flex justify-center">
-          <div role="tablist" aria-label="Billing" className="flex items-center rounded-full border border-brand-border bg-white/70 p-1">
+          <div role="tablist" aria-label="Billing" className="flex items-center rounded-full border border-brand-border bg-card/70 p-1">
             {(["monthly", "yearly"] as Billing[]).map((b) => (
               <button
                 key={b}
@@ -93,7 +93,7 @@ export default function Subscription() {
                 onClick={() => setBilling(b)}
                 className={cn(
                   "press rounded-full px-4 py-2 text-sm font-medium",
-                  billing === b ? "bg-brand-primary font-bold text-white" : "text-brand-text-secondary",
+                  billing === b ? "bg-brand-primary font-bold text-primary-foreground" : "text-brand-text-secondary",
                 )}
               >
                 {b === "monthly" ? "Monthly" : "Yearly · save 33%"}
@@ -157,7 +157,7 @@ export default function Subscription() {
 
                 <div className="mt-6">
                   {plan.id === "free" ? (
-                    <p className="rounded-2xl border border-brand-border bg-white/60 py-3 text-center text-sm font-medium text-brand-text-secondary">
+                    <p className="rounded-2xl border border-brand-border bg-card/60 py-3 text-center text-sm font-medium text-brand-text-secondary">
                       {onPaidPlan ? "Always here if you need it" : "You have this"}
                     </p>
                   ) : (
@@ -187,7 +187,7 @@ export default function Subscription() {
           <h2 className="mb-4 font-serif text-xl text-brand-espresso">Good questions</h2>
           <div className="space-y-3">
             {FAQ.map(({ q, a }) => (
-              <div key={q} className="rounded-2xl border border-brand-border bg-white/70 p-4">
+              <div key={q} className="rounded-2xl border border-brand-border bg-card/70 p-4">
                 <h3 className="text-sm font-semibold text-brand-espresso">{q}</h3>
                 <p className="mt-1 text-sm leading-relaxed text-brand-text-secondary">{a}</p>
               </div>

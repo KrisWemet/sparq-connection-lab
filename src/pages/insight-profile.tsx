@@ -1,3 +1,4 @@
+import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -89,17 +90,17 @@ export default function InsightProfilePage() {
     }
   }
 
-  const card = 'bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6 space-y-4';
+  const card = 'emotion-paper bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6 space-y-4';
   const chip = (active: boolean) => cn(
     'rounded-full border px-3 py-1.5 text-sm transition-colors disabled:opacity-50',
-    active ? 'border-brand-primary bg-brand-primary/10 font-semibold text-brand-hover' : 'border-brand-border text-brand-espresso hover:bg-white/60',
+    active ? 'border-brand-primary bg-brand-primary/10 font-semibold text-brand-hover' : 'border-brand-border text-brand-espresso hover:bg-popover/60',
   );
 
   const guesses = (data?.guesses || []).filter(g => g.level !== 'excluded');
 
   return (
     <ProtectedRoute>
-      <div className="min-h-dvh bg-brand-linen pb-28">
+      <div className="emotion-page min-h-dvh bg-brand-linen pb-28">
         <header className="max-w-lg mx-auto px-4 pt-6">
           <div className="flex items-center justify-between mb-6">
             <button onClick={() => router.push('/journal')} aria-label="Back to Journal"
@@ -112,7 +113,8 @@ export default function InsightProfilePage() {
         </header>
 
         <main className="max-w-lg mx-auto px-4 space-y-5">
-          <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className={card}>
+          <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className={cn(card, 'emotion-featured emotion-surface relative overflow-hidden')}>
+            <SceneAccent kind="bloom" className="-mt-3 h-24 w-full" />
             <div className="flex items-center gap-3">
               <PeterAvatar mood="afternoon" size={36} />
               <h1 className="font-serif text-2xl text-brand-espresso">How you see things most clearly</h1>

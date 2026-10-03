@@ -72,7 +72,7 @@ export function FuturePacing({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.5 }}
-                className="bg-white/70 rounded-lg p-4 backdrop-blur-sm"
+                className="bg-popover/70 rounded-lg p-4 backdrop-blur-sm"
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-1.5">
@@ -92,7 +92,7 @@ export function FuturePacing({
                   </Button>
                 </div>
                 
-                <div className="min-h-[120px] text-gray-700 leading-relaxed mb-4">
+                <div className="min-h-[120px] text-foreground leading-relaxed mb-4">
                   <p className="text-sm">
                     {timeframes[activeTimeframe].vision}
                   </p>
