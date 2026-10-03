@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import OpenAI from 'openai';
+import { getAuthedContext } from '@/lib/server/supabase-auth';
 
 interface DateIdea {
   id: number;
@@ -34,6 +35,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
+
+  const authed = await getAuthedContext(req);
+  if (!authed) return res.status(401).json({ error: 'Unauthorized' });
 
   const { location = 'local area', preferences = [], budget, maxResults = 5 } = req.body as {
     location?: string;

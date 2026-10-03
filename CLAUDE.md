@@ -161,7 +161,7 @@ Do not relitigate these:
 - **Tests only with Chris's OK** — Vitest unit tests for constitution guarantees live in `tests/` (`npm test`). Ask Chris before adding any new test.
 - **No Mem0 SDK** — memory is Supabase pgvector (`src/lib/server/memory.ts`). Do not wire real Mem0 unless explicitly asked.
 - **OpenRouter → Claude Haiku 4.5** — Peter's AI backend. Do not change the model.
-  - *Temporary (2026-09-30, Chris's call):* while Chris tests without OpenRouter credits, `PETER_MODELS` in `src/lib/openrouter.ts` is the free `google/gemma-4-31b-it:free` → `qwen/qwen3.8-27b:free`. Free tier is 50 req/day and free providers may log prompts, so switch back to Haiku before real users.
+  - `PETER_MODELS` in `src/lib/openrouter.ts` is Haiku only (2026-10-03). For testing without OpenRouter credits, `PETER_FREE_FALLBACK=true` adds free models as a fallback — they may log prompts, so never in production.
 
 ---
 
@@ -259,7 +259,6 @@ sparq-connection-lab/
 │   │   ├── ui/                 # shadcn/ui primitives + custom base components
 │   │   ├── dashboard/          # Dashboard section components
 │   │   ├── profile/            # Profile section components
-│   │   ├── quiz/               # Relationship health quiz components
 │   │   ├── journey/            # Journey view components
 │   │   ├── onboarding/         # Onboarding flow (4 steps)
 │   │   ├── auth/               # Auth-specific components (LoginForm, AuthLayout)
@@ -287,13 +286,11 @@ sparq-connection-lab/
 │   ├── types/
 │   │   ├── profile.ts          # Profile, UserBadge, DailyActivity types
 │   │   ├── journey.ts          # Journey types
-│   │   ├── quiz.ts             # Quiz types
 │   │   ├── memory.ts           # Memory types
 │   │   └── supabase.ts         # Generated Supabase DB types
 │   │
 │   ├── data/
 │   │   ├── journeys.ts         # Static journey definitions
-│   │   ├── quizData.ts         # Relationship health quiz questions
 │   │   └── persuasiveContent.ts    # Psychological messaging content
 │   │
 │   ├── content/journeys/       # Markdown content for journey narratives
@@ -341,7 +338,6 @@ All pages use **Next.js Pages Router**. Key routes:
 | `/profile` | `src/pages/Profile.tsx` | Protected |
 | `/settings` | `src/pages/Settings.tsx` | |
 | `/subscription` | `src/pages/Subscription.tsx` | |
-| `/quiz` | `src/pages/Quiz.tsx` | Relationship health quiz |
 | `/join-partner` | `src/pages/JoinPartner.tsx` | Partner invite acceptance |
 | `/date-ideas` | `src/pages/DateIdeas.tsx` | AI-powered date suggestions |
 

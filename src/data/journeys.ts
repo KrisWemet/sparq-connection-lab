@@ -52,7 +52,7 @@ export const journeys: Journey[] = [
       { name: "Reflect", days: "Days 11-13", description: "Notice love happening right now", icon: "💭" },
       { name: "Align", days: "Day 14", description: "Choose to grow together every day", icon: "🎯" }
     ],
-    overview: "Over the next 14 days, you will begin to notice all the quiet ways your partner says 'I love you.' As you practice speaking their language, watch how easily your connection grows."
+    overview: "Over the next 14 days, you will begin to notice all the quiet ways your partner says 'I love you.' As you practice speaking their language, see what changes between you."
   },
   {
     id: "communication",
@@ -81,7 +81,7 @@ export const journeys: Journey[] = [
       { name: "Repair", days: "Days 9-11", description: "Gently fix small bumps in the road", icon: "🔧" },
       { name: "Connect", days: "Days 12-14", description: "Keep your connection strong every day", icon: "🤝" }
     ],
-    overview: "As you walk through these 14 days, you will learn to listen with your whole heart. Notice how every honest, gentle conversation you have automatically builds a deeper, safer love."
+    overview: "As you walk through these 14 days, you will learn to listen with your whole heart. Each honest, gentle talk is a small chance to feel closer and safer together."
   },
   {
     id: "conflict-resolution",
@@ -110,7 +110,7 @@ export const journeys: Journey[] = [
       { name: "Practice", days: "Days 9-11", description: "Try a softer way when it matters", icon: "💪" },
       { name: "Integrate", days: "Days 12-14", description: "Choose to always stay on the same team", icon: "🎯" }
     ],
-    overview: "Over the next 14 days, you will learn a beautiful truth: hard moments don't have to hurt your love. As you try these simple steps, notice how disagreements actually bring you closer."
+    overview: "Over the next 14 days, you will learn a beautiful truth: hard moments don't have to hurt your love. As you try these simple steps, you may find a hard talk can end with you closer, not further apart."
   },
   {
     id: "intimacy",
@@ -138,7 +138,7 @@ export const journeys: Journey[] = [
       { name: "Vulnerability", days: "Days 9-11", description: "Bravely share what is in your heart", icon: "🦋" },
       { name: "Sustain", days: "Days 12-14", description: "Make closeness a part of your daily life", icon: "🔥" }
     ],
-    overview: "This 14-day path helps you slowly open your heart. As you share these moments, you will find it surprisingly easy to feel deeply safe and connected."
+    overview: "This 14-day path helps you slowly open your heart. Go at your own pace. Each moment you share is a small step toward feeling safe and close."
   },
   {
     id: "emotional-intelligence",
@@ -166,7 +166,7 @@ export const journeys: Journey[] = [
       { name: "Empathy", days: "Days 9-11", description: "See their heart with gentle eyes", icon: "💗" },
       { name: "Mastery", days: "Days 12-14", description: "Use your heart to guide your days", icon: "✨" }
     ],
-    overview: "For the next 14 days, you will simply notice your feelings. As you understand your own heart better, notice how you automatically feel more connected to theirs."
+    overview: "For the next 14 days, you will simply notice your feelings. Understanding your own heart better can make it easier to understand theirs."
   },
   {
     id: "values",

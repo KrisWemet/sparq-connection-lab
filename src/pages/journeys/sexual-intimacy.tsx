@@ -45,7 +45,7 @@ export default function SexualIntimacyJourney() {
           description: "Understanding that mismatched libidos are the norm, not the exception — and learning to bridge the gap",
           icon: <Users className="w-5 h-5 text-brand-primary" />,
           color: "purple",
-          example: "Perel's research shows that desire discrepancy exists in nearly every relationship. The lower-desire partner isn't 'withholding' and the higher-desire partner isn't 'too much.' Naming this normalizes it and opens space for creative solutions.",
+          example: "Therapist Esther Perel writes that differences in desire show up in most long relationships. The lower-desire partner isn't 'withholding' and the higher-desire partner isn't 'too much.' Naming this normalizes it and opens space for creative solutions.",
           story: "Marcus often wanted closeness more than Leah did. For a long time, he felt rejected and she felt pressured. Then they talked it through. Neither of them was the problem. They were just different, and they could figure it out as a team.",
         },
         {
@@ -72,7 +72,7 @@ export default function SexualIntimacyJourney() {
           description: "Understanding that great sex is built on emotional safety, not just physical technique",
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
-          example: "Sue Johnson's research shows that the most sexually satisfied couples are those with secure emotional bonds. When you feel safe enough to be vulnerable — to say what you want, to be seen without armor — physical intimacy deepens naturally.",
+          example: "Sue Johnson's work suggests that feeling emotionally safe with each other and a satisfying sex life tend to go together. When you feel safe enough to be vulnerable — to say what you want, to be seen without armor — physical intimacy deepens naturally.",
           story: "After months of feeling distant, Aiko and Daniel spent a few weeks just reconnecting: talking, laughing, holding each other. When physical closeness returned, it felt different, safer and deeper. The feeling close came first.",
         },
       ],
@@ -106,7 +106,7 @@ export default function SexualIntimacyJourney() {
           description: "Responding to sexual rejection without punishment, withdrawal, or guilt — which paradoxically increases desire",
           icon: <Shield className="w-5 h-5 text-blue-500" />,
           color: "blue",
-          example: "When your partner says 'Not tonight,' responding with 'That's okay. Can I just hold you?' instead of rolling over in silence. Research shows that when 'no' is safe, 'yes' becomes more genuine and frequent — because desire thrives without pressure.",
+          example: "When your partner says 'Not tonight,' responding with 'That's okay. Can I just hold you?' instead of rolling over in silence. Many couples find that when 'no' feels safe, 'yes' becomes more genuine — desire tends to grow without pressure.",
           story: "\"Not tonight,\" Anna said softly. Kofi felt a flicker of disappointment, then let it pass. \"That's okay. Can I just hold you?\" Anna curled into him. Because \"no\" was safe, closeness still was too.",
         },
         {

@@ -31,6 +31,8 @@ import { SharePrompt } from '@/components/shared/SharePrompt';
 import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import { useVisualEmotion } from '@/components/emotion/VisualEmotionProvider';
 
+const EVENING_SLIP_MESSAGE = "Oops, I slipped on a fish! Can you try again? 🐟";
+
 type Phase = 'loading' | 'morning' | 'evening' | 'evening-checkin' | 'journey-complete' | 'complete';
 type PracticeMode = 'solo' | 'partner_optional' | 'partner_joint';
 
@@ -118,6 +120,9 @@ export default function DailyGrowth() {
   // New states for the Put the Phone Down Quest
   const [actionVerified, setActionVerified] = useState(false);
   const [isHolding, setIsHolding] = useState(false);
+  // True right after the morning commit: send the user out to try the step
+  // before asking how it went (cue now, "what happened?" later).
+  const [justCommitted, setJustCommitted] = useState(false);
 
   // Home screen state — shown before the user enters the morning session
   const [showHome, setShowHome] = useState(true);
@@ -409,6 +414,7 @@ export default function DailyGrowth() {
       journey_id: journeyId,
       trigger_set: false,
     });
+    setJustCommitted(true);
     setPhase('evening');
   };
 
@@ -432,7 +438,8 @@ export default function DailyGrowth() {
 
     const newTurn = eveningTurns + 1;
     const userMsg: PeterMessage = { role: 'user', content: text };
-    const updated = [...eveningMessages, userMsg];
+    // A failed turn's "slipped" note is for the user, not for Peter's history.
+    const updated = [...eveningMessages.filter(m => m.content !== EVENING_SLIP_MESSAGE), userMsg];
     setEveningMessages(updated);
     setEveningTurns(newTurn);
     setIsEveningLoading(true);
@@ -470,9 +477,11 @@ export default function DailyGrowth() {
         if (newTurn >= 3) setReflectionClosed(true);
       }
     } catch {
+      // The failed turn doesn't count toward the reflection.
+      setEveningTurns(newTurn - 1);
       setEveningMessages(prev => [
         ...prev,
-        { role: 'assistant', content: "Oops, I slipped on a fish! Can you try again? 🐟" },
+        { role: 'assistant', content: EVENING_SLIP_MESSAGE },
       ]);
     } finally {
       setIsEveningLoading(false);
@@ -865,7 +874,35 @@ export default function DailyGrowth() {
               transition={{ type: 'spring', bounce: 0, duration: 0.6 }}
               className="h-full flex flex-col"
             >
-              {!actionVerified ? (
+              {!actionVerified && justCommitted ? (
+                /* ── Send-off: go try it, come back later ── */
+                <div className="flex-1 overflow-y-auto">
+                  <div className="max-w-lg mx-auto px-4 py-8 space-y-6 text-center">
+                    <PeterAvatar mood="morning" size={64} />
+                    <div className="bg-brand-parchment rounded-2xl p-4 text-left border border-brand-primary/10">
+                      <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-1">Your step for today</p>
+                      <p className="text-sm text-brand-taupe leading-relaxed">{morningAction}</p>
+                    </div>
+                    <p className="font-serif italic text-brand-taupe text-[15px] leading-relaxed">
+                      Take it with you. Come back tonight and tell me what happened — even if it didn&apos;t go the way you hoped.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => router.push('/dashboard')}
+                      className="press w-full rounded-2xl bg-brand-primary py-4 text-sm font-bold text-white"
+                    >
+                      Back to Home
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setJustCommitted(false)}
+                      className="press text-sm font-semibold text-brand-text-secondary underline underline-offset-4"
+                    >
+                      I already tried it
+                    </button>
+                  </div>
+                </div>
+              ) : !actionVerified ? (
                 /* ── Action verification state ── */
                 <div className="flex-1 overflow-y-auto">
                   <div className="max-w-lg mx-auto px-4 py-6 space-y-5">
@@ -898,6 +935,8 @@ export default function DailyGrowth() {
                         onPointerDown={() => setIsHolding(true)}
                         onPointerUp={() => setIsHolding(false)}
                         onPointerLeave={() => setIsHolding(false)}
+                        onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); setIsHolding(true); } }}
+                        onKeyUp={() => setIsHolding(false)}
                         className="relative w-full overflow-hidden bg-brand-parchment border border-brand-primary/20 rounded-2xl py-4 select-none"
                         style={{ touchAction: 'none' }}
                       >

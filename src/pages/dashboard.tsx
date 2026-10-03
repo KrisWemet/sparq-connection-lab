@@ -1,6 +1,7 @@
 import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { readPendingInvite } from "@/lib/partner-invite";
 import { useAuth } from "@/lib/auth-context";
 import { motion } from "framer-motion";
 import { PeterLoading } from "@/components/PeterLoading";
@@ -75,6 +76,23 @@ export default function Dashboard() {
 
     async function loadDashboardData() {
       try {
+        // Someone who signed up but left onboarding half-way would otherwise land
+        // here forever. Send them back to finish (onboarding resumes where they
+        // stopped) — unless they already practise, which predates onboarding.
+        const [{ data: me }, { count: practised }] = await Promise.all([
+          supabase.from('profiles').select('isonboarded').eq('id', userId).maybeSingle(),
+          supabase.from('daily_sessions').select('id', { count: 'exact', head: true }).eq('user_id', userId),
+        ]);
+        if (me && me.isonboarded === false && !practised) {
+          router.replace('/onboarding');
+          return;
+        }
+        // A partner invite opened before sign-up is waiting.
+        if (readPendingInvite()) {
+          router.replace('/join-partner');
+          return;
+        }
+
         // Fetch user insights + today's session in parallel
         const today = new Date().toISOString().slice(0, 10);
         const [insightsResult, sessionResult] = await Promise.all([
@@ -111,6 +129,7 @@ export default function Dashboard() {
     }
 
     loadDashboardData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- reload per user, not per route change
   }, [user?.id]);
 
   useEffect(() => {
@@ -149,7 +168,7 @@ export default function Dashboard() {
   const primaryPrompt = isPostJourney
     ? "You finished this journey. Where will you grow next?"
     : needsEveningReflection
-      ? "You started today already. Come back now and finish your evening reflection."
+      ? "You started today already. Want to finish your evening reflection?"
       : activeJourney
         ? `Today's focus: ${activeJourney.title}`
         : "What is one small thing you can do today to show up better at home?";
@@ -157,7 +176,7 @@ export default function Dashboard() {
     ? 'Choose Next Journey'
     : needsEveningReflection
       ? 'Resume Evening Reflection'
-      : 'Set my trigger moment →';
+      : "Start today's practice →";
   const primaryCtaHref = isPostJourney
     ? '/journeys'
     : needsEveningReflection
@@ -284,7 +303,9 @@ export default function Dashboard() {
           </div>
         </motion.div>
 
-        {dailySpark && (
+        {/* Day 1 keeps one clear thing to do: the practice. The spark and the
+            daily prime join once the first day is done. */}
+        {dailySpark && currentDay > 1 && (
           <DailySparkCard
             prompt={dailySpark}
             surface="dashboard"
@@ -297,7 +318,7 @@ export default function Dashboard() {
         <NeutralObserverCard />
 
         {/* Daily micro-prime (PRD §4.3) — connective tissue between reflections */}
-        <DailyPrimeCard />
+        {currentDay > 1 && <DailyPrimeCard />}
 
         <HomeDestinationStrip />
 

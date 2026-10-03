@@ -40,7 +40,7 @@ Here are some powerful insights about emotional self-awareness that can transfor
 
 **Your emotional triggers have history.** Current emotional reactions are often connected to past experiences, particularly from childhood or previous relationships. Understanding these connections helps you respond to present situations more skillfully.
 
-**Naming emotions reduces their intensity.** Research shows that simply labeling your emotions activates your brain's regulatory mechanisms. The act of saying "I'm feeling disappointed" actually helps calm the emotional centers of your brain.
+**Naming emotions reduces their intensity.** Research suggests that simply labeling your emotions activates your brain's regulatory mechanisms. The act of saying "I'm feeling disappointed" actually helps calm the emotional centers of your brain.
 
 Let's look at how emotional self-awareness transforms real relationships:
 
@@ -64,7 +64,7 @@ Emotional self-awareness serves as the foundation for authentic connection. When
 - You take greater responsibility for your emotions rather than blaming your partner for causing them
 - You model healthy emotional awareness that encourages your partner to develop the same skill
 
-Research shows that couples with higher emotional self-awareness report greater relationship satisfaction and are better able to navigate conflicts constructively.
+Research suggests that couples with higher emotional self-awareness report greater relationship satisfaction and are better able to navigate conflicts constructively.
 
 ### Today's Activity
 
@@ -115,7 +115,7 @@ Here are some powerful insights about emotional literacy that can enhance your r
 
 **Cultural and family background shapes emotional vocabulary.** Some families and cultures encourage expressing a wide range of emotions, while others emphasize restraint or focus on certain emotional states over others. Understanding your emotional "first language" helps you expand beyond it.
 
-**Emotional granularity improves well-being.** Research shows that people who can differentiate and name their emotions with greater specificity tend to cope more effectively with emotional challenges and experience better psychological health.
+**Emotional granularity improves well-being.** Research suggests that people who can differentiate and name their emotions with greater specificity tend to cope more effectively with emotional challenges and experience better psychological health.
 
 **Partners often have different emotional dialects.** You and your partner may use different words to describe similar emotional states or attach different meanings to the same emotional terms. Developing a shared emotional language enhances understanding.
 
@@ -139,7 +139,7 @@ Emotional literacy provides the foundation for clear communication about your in
 - You create a sense of being truly seen and understood when you accurately name your partner's emotional experience
 - You model the value of emotional awareness and expression, encouraging emotional depth in your relationship
 
-Research shows that couples who can articulate their emotions with greater specificity report feeling more emotionally connected and better understood.
+Research suggests that couples who can articulate their emotions with greater specificity report feeling more emotionally connected and better understood.
 
 ### Today's Activity
 
@@ -405,7 +405,7 @@ Emotional validation creates the foundation for secure attachment and open commu
 - You can discuss difficult topics without conversations becoming defensive
 - Your emotional bond strengthens through consistent experiences of being acknowledged
 
-Research shows that couples who regularly validate each other's emotional experiences report greater relationship satisfaction and are more resilient during challenging times.
+Research suggests that couples who regularly validate each other's emotional experiences report greater relationship satisfaction and are more resilient during challenging times.
 
 ### Today's Activity
 
@@ -492,7 +492,7 @@ Perspective-taking creates the foundation for mutual understanding and respect. 
 - You make decisions that truly work for both of you rather than prioritizing one perspective
 - Your partner feels deeply seen and understood, strengthening your emotional bond
 
-Research shows that couples who can take each other's perspectives during disagreements resolve conflicts more successfully and maintain stronger relationship satisfaction over time.
+Research suggests that couples who can take each other's perspectives during disagreements resolve conflicts more successfully and maintain stronger relationship satisfaction over time.
 
 ### Today's Activity
 
@@ -549,7 +549,7 @@ Many couples focus solely on verbal communication while missing the rich emotion
 
 Here are some powerful insights about emotional attunement that can transform your relationship:
 
-**Most emotional communication happens nonverbally.** Research suggests that up to 90% of emotional meaning is conveyed through facial expressions, tone of voice, body posture, and other nonverbal signals rather than words alone.
+**Most emotional communication happens nonverbally.** A lot of emotional meaning travels through facial expressions, tone of voice, body posture, and other nonverbal signals rather than words alone.
 
 **Micro-expressions reveal deeper feelings.** Brief, subtle facial expressions often reveal emotions that a person may not explicitly acknowledge or might be trying to conceal. Learning to notice these fleeting signals enhances understanding.
 
@@ -579,7 +579,7 @@ Emotional attunement creates the foundation for secure attachment and deep intim
 - You build an atmosphere of emotional safety where both partners feel deeply known
 - Your daily interactions contain more moments of connection rather than missed opportunities
 
-Research shows that couples who demonstrate strong emotional attunement report greater relationship satisfaction and maintain stronger connection during periods of stress or transition.
+Research suggests that couples who demonstrate strong emotional attunement report greater relationship satisfaction and maintain stronger connection during periods of stress or transition.
 
 ### Today's Activity
 

@@ -24,6 +24,8 @@ const secondaryAccessPrefixes = [
   "/settings",
   "/subscription",
   "/trust-center",
+  "/privacy",
+  "/terms",
 ];
 
 type NavOwner = (typeof navItems)[number]["label"] | null;

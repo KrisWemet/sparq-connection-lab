@@ -115,7 +115,7 @@ export default function Translator() {
 
         <div className="mb-6">
           <label className="block text-foreground font-medium mb-2">
-            Partner Context
+            What might they need right now?
           </label>
           <div className="flex flex-wrap gap-3">
             {partnerProfiles.map((profile) => (
@@ -133,7 +133,7 @@ export default function Translator() {
             ))}
           </div>
           <p className="text-xs text-brand-text-secondary mt-2">
-            Mocked for now — we’ll personalize this later.
+            Your best guess for today. You know them better than Peter does.
           </p>
           <div className="mt-3 text-xs text-muted-foreground">
             {partnerProfiles.find((profile) => profile.value === partnerContext)?.description}

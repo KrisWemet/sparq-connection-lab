@@ -14,6 +14,10 @@ export type PrivacyPreferences = {
   relationship_mode: RelationshipMode;
   reminder_time: string | null;
   notifications_enabled: boolean;
+  /** Explicit opt-in to daily reminder emails (off by default). */
+  email_reminders_enabled: boolean;
+  /** Explicit opt-in to phone notifications (off by default). */
+  push_reminders_enabled: boolean;
   timezone: string | null;
 };
 
@@ -44,6 +48,8 @@ const DEFAULT_PREFERENCES: PrivacyPreferences = {
   relationship_mode: 'solo',
   reminder_time: '09:00',
   notifications_enabled: true,
+  email_reminders_enabled: false,
+  push_reminders_enabled: false,
   timezone: null,
 };
 
@@ -77,6 +83,8 @@ export function normalizePrivacyPreferences(row?: PreferenceRow | null): Privacy
       row?.relationship_mode === 'partnered' ? 'partnered' : DEFAULT_PREFERENCES.relationship_mode,
     reminder_time: row?.reminder_time ?? DEFAULT_PREFERENCES.reminder_time,
     notifications_enabled: row?.notifications_enabled ?? DEFAULT_PREFERENCES.notifications_enabled,
+    email_reminders_enabled: row?.email_reminders_enabled ?? DEFAULT_PREFERENCES.email_reminders_enabled,
+    push_reminders_enabled: row?.push_reminders_enabled ?? DEFAULT_PREFERENCES.push_reminders_enabled,
     timezone: row?.timezone ?? DEFAULT_PREFERENCES.timezone,
   };
 }
@@ -89,7 +97,7 @@ export async function loadPrivacyState(
     supabase
       .from('user_preferences')
       .select(
-        'insights_visible, personalization_enabled, ai_memory_mode, relationship_mode, memory_window, reminder_time, notifications_enabled, timezone'
+        'insights_visible, personalization_enabled, ai_memory_mode, relationship_mode, memory_window, reminder_time, notifications_enabled, email_reminders_enabled, push_reminders_enabled, timezone'
       )
       .eq('user_id', userId)
       .maybeSingle(),

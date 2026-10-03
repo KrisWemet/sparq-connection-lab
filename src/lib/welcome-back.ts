@@ -1,17 +1,18 @@
 // Deterministic welcome-back copy (spec §4). Pure functions, no LLM, no deps.
-// Tone: glad you're back, nothing to catch up on, let's just begin.
+// Tone: good to see you, Peter kept your place, let's just begin.
 
 /** Greeting line shown in PeterGreeting when a user returns after a gap. */
 export function welcomeGreeting(firstName: string, daysAway: number): string {
   const name = firstName ? `, ${firstName}` : '';
+  // Never imply Peter lost track of them: he keeps what they've shared.
   if (daysAway >= 14) {
-    return `It's really good to see you again${name}. However long it's been, there's nothing to catch up on — we can just pick up gently from here.`;
+    return `It's really good to see you again${name}. I remember where we left off, so there's nothing to catch up on. Let's pick up from there.`;
   }
   if (daysAway >= 7) {
-    return `Welcome back${name}. It's been a little while, and I'm genuinely glad you're here. No catching up needed — let's just begin.`;
+    return `Welcome back${name}. I kept our place. Let's just begin.`;
   }
   // 3–6 days
-  return `Hey${name} — good to see you back. A few days is nothing. Let's ease back in together.`;
+  return `Hey${name}, good to see you. A few days is nothing. Let's ease back in together.`;
 }
 
 /** Welcome-back card body, celebrating the lifetime practice-days count. */

@@ -65,6 +65,7 @@ export interface QuestionOption {
   traits?: OptionTraits;
   bridge: string;
   isFreeText?: true; // marks the "write my own" option
+  isSkip?: true;     // a quiet "not now" — shown small, not as a choice
 }
 
 export interface Question {

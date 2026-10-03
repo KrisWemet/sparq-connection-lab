@@ -17,7 +17,7 @@ const REASONS: Record<string, string> = {
   'safe-in-love':
     "it works with the part of you that learned to watch instead of rest — so you can finally feel safe enough to stop watching.",
   'building-trust':
-    "building trust from the inside out is exactly what you need right now.",
+    "it starts with small moments of trust you can build yourself, one day at a time.",
   'calm-before-closeness':
     "finding your ground before you let someone in — that's quiet, powerful work.",
   'opening-heart':
@@ -29,9 +29,9 @@ const REASONS: Record<string, string> = {
   'deepening-good':
     "you're not here because something is broken — you're here because you want more of what's good.",
   'shared-language':
-    "learning to say the real thing — before the distance creeps in — changes everything.",
+    "it's practice in saying the real thing, before distance creeps in.",
   'staying-grounded':
-    "when life gets heavy, the most powerful thing you can do is stay rooted in what matters.",
+    "when life gets heavy, it helps you stay close to what matters to you.",
 };
 
 const DEFAULT_REASON = "this journey will give you real tools you can use right away.";
@@ -47,17 +47,17 @@ const PETER_NOTES: Record<string, string> = {
   'building-trust':
     "Trust gets built one small moment at a time. Tomorrow we start with one. 🦦",
   'calm-before-closeness':
-    "Finding your center first — that takes real courage. I'll be right here with you. 🦦",
+    "Finding your center first takes real courage. We'll start small. 🦦",
   'opening-heart':
     "Opening up doesn't have to mean losing yourself. We'll go slow. Day 1 starts tomorrow. 🦦",
   'healing-old-wounds':
-    "This is gentle work — and it matters more than you know. I'll be with you every step. 🦦",
+    "This is gentle work, at your pace. You can pause any time. 🦦",
   'mixed-feelings':
     "The push and pull makes sense. We're going to name it and work with it. See you tomorrow. 🦦",
   'deepening-good':
     "There's more here than you think. Let's find it together. 🦦",
   'shared-language':
-    "Saying the true thing — that's the practice. You're ready for it. 🦦",
+    "Saying the true thing — that's the practice. We'll start small. 🦦",
   'staying-grounded':
     "When everything feels like a lot, we go back to basics. One breath, one day. Tomorrow we begin. 🦦",
 };

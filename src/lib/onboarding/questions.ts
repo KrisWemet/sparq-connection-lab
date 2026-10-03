@@ -11,15 +11,19 @@ const WRITE_MY_OWN: QuestionOption = {
 // Peter keeps learning quietly, so skipping costs nothing.
 const NOT_YET: QuestionOption = {
   label: "I'd rather not say yet",
+  isSkip: true,
   bridge: "That's okay. We can come back to it whenever you like.",
 };
 
+// Reflective questions offer at most 3 answers (CLAUDE.md), plus the quiet
+// "write my own" / "not yet" ways out. Plain facts — age, pronouns, how long
+// you've been together, what makes you feel loved — list the real choices.
 export const QUESTIONS: Question[] = [
   // ── Q1: Name ────────────────────────────────────────────────────────────────
   {
     index: 0,
     topic: 'Name',
-    peterText: "Hi — I'm Peter. I'm going to be with you every step of the way. Let's start easy: what's your name?",
+    peterText: "Hi — I'm Peter. I'll walk you through the first part. Let's start easy: what's your name?",
     inputType: 'text',
     options: [],
     captures: ['firstName'],
@@ -117,8 +121,7 @@ export const QUESTIONS: Question[] = [
     captures: [],
     options: [
       { label: "I bounce back pretty fast",                          scoreDeltas: { secure: 1 },                   bridge: "That resilience is going to serve you well here." },
-      { label: "A few hours — I need to process a bit",             scoreDeltas: { dysregulation: 1 },            bridge: "Processing takes what it takes. Nothing wrong with that." },
-      { label: "It can take a day or more",                         scoreDeltas: { dysregulation: 3 },            bridge: "That's real — sometimes the feelings need somewhere to go first." },
+      { label: "A few hours, sometimes a day or more",              scoreDeltas: { dysregulation: 2 },            bridge: "Processing takes what it takes. Nothing wrong with that." },
       { label: "I shut down and it takes a long time to come back", scoreDeltas: { avoidant: 2, dysregulation: 2 }, bridge: "That kind of shutting down makes sense. We'll work with that gently." },
       WRITE_MY_OWN,
     ],
@@ -138,7 +141,6 @@ export const QUESTIONS: Question[] = [
       { label: "I'd start wondering if something's wrong between us", scoreDeltas: { abandonment: 3, anxious: 3 }, traits: { reassurance_need: 'frequent_check_ins' }, bridge: "That checking instinct — it comes from caring. I hear you." },
       { label: "I'd figure they're busy or tired",                    scoreDeltas: { secure: 2 },                  traits: { reassurance_need: 'figures_it_out' },     bridge: "That kind of trust is a quiet strength." },
       { label: "Honestly, I'd enjoy the space",                      scoreDeltas: { avoidant: 3 },                traits: { reassurance_need: 'figures_it_out' },     bridge: "Nothing wrong with needing room to breathe." },
-      { label: "I'd notice it, but try not to make it mean something", scoreDeltas: { abandonment: 1, anxious: 1 }, bridge: "That awareness is already a step most people skip." },
       NOT_YET,
       WRITE_MY_OWN,
     ],
@@ -155,7 +157,6 @@ export const QUESTIONS: Question[] = [
       { label: "It says I'm probably the problem",              scoreDeltas: { selfWorth: 3 },               bridge: "That voice is lying to you more than you know. We're going to work on that." },
       { label: "It says we're both human and we'll figure it out", scoreDeltas: {},                           bridge: "That's a grounded place to come from. I like that." },
       { label: "It wonders if they're losing interest in me",   scoreDeltas: { selfWorth: 2, abandonment: 2 }, bridge: "That fear makes sense. It doesn't make it true." },
-      { label: "It gets pretty loud and hard to quiet",         scoreDeltas: { selfWorth: 2, dysregulation: 1 }, bridge: "When the volume goes up like that, it's hard to hear anything else. I get it." },
       NOT_YET,
       WRITE_MY_OWN,
     ],
@@ -170,7 +171,6 @@ export const QUESTIONS: Question[] = [
     captures: [],
     options: [
       { label: "Mostly yes",                    scoreDeltas: {},                              bridge: "That kind of foundation carries forward. Good to know." },
-      { label: "It had its moments, but mostly okay", scoreDeltas: { trauma: 1 },            bridge: "Honest answer. Most people's childhoods had some of both." },
       { label: "It was complicated",            scoreDeltas: { trauma: 3 },                  bridge: "Thank you for trusting me with that. It helps me understand you better." },
       { label: "Not really — it was hard",      scoreDeltas: { trauma: 5, disorganized: 2 }, bridge: "That took courage to say. I'm glad you told me. We'll go gently." },
       NOT_YET,
@@ -224,8 +224,7 @@ export const QUESTIONS: Question[] = [
     captures: ['lifeContext'],
     options: [
       { label: "Pretty steady — things are okay",               sets: { field: 'lifeContext', value: 'stable'     }, bridge: "Good. That gives us something solid to build on." },
-      { label: "Busy and a bit stretched thin",                 sets: { field: 'lifeContext', value: 'stressed'   }, scoreDeltas: { dysregulation: 1 }, bridge: "Got it — we'll keep things light and practical." },
-      { label: "We're going through a big change right now",    sets: { field: 'lifeContext', value: 'transition' }, scoreDeltas: { dysregulation: 1 }, bridge: "Change takes a lot out of you. We'll work with where you are." },
+      { label: "Busy, stretched thin, or in a big change",       sets: { field: 'lifeContext', value: 'stressed'   }, scoreDeltas: { dysregulation: 1 }, bridge: "Got it. We'll keep things light and practical." },
       { label: "It's been heavy — loss, grief, or something really hard", sets: { field: 'lifeContext', value: 'heavy' }, scoreDeltas: { trauma: 2, dysregulation: 1 }, bridge: "I'm sorry. We'll go gently, and we'll start where you have the most energy." },
       WRITE_MY_OWN,
     ],

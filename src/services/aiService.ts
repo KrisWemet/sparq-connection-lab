@@ -1,4 +1,4 @@
-import { toast } from "sonner";
+import { buildAuthedHeaders } from "@/lib/api-auth";
 
 interface DateIdea {
   id: number;
@@ -50,7 +50,7 @@ export class AIService {
 
       const response = await fetch('/api/date-ideas/generate', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await buildAuthedHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ location, preferences, budget, maxResults }),
       });
 
@@ -61,8 +61,8 @@ export class AIService {
       const data = await response.json();
       return data.ideas || [];
     } catch (error) {
+      // The built-in ideas are a fine answer; no need to alarm anyone.
       console.error("Error generating date ideas:", error);
-      toast.error("Failed to generate date ideas. Using fallback suggestions.");
       return this.getFallbackDateIdeas();
     }
   }

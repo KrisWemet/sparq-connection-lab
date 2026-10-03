@@ -22,6 +22,9 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
   const [exchangeCount, setExchangeCount] = useState(0);
   // Set once the closing message is saved; the user taps Next when they've read it.
   const [closingProfile, setClosingProfile] = useState<DerivedProfile | null>(null);
+  // A failed send is shown once, outside the conversation, so it never stacks
+  // up or gets sent back to Peter as part of the history.
+  const [sendError, setSendError] = useState(false);
   const hasInitialized = useRef(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -40,6 +43,7 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
   async function sendMessage(userText: string | null) {
     if (isClosing) return;
     setIsLoading(true);
+    setSendError(false);
 
     const nextMessages: PeterMessage[] = userText
       ? [...messages, { role: 'user', content: userText }]
@@ -97,10 +101,10 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
     } catch (err) {
       console.error('PeterSession error:', err);
       setIsClosing(false);
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: "I'm having a moment — give me a second and try again. 🦦",
-      }]);
+      // Roll back: the user's words go back in the box, nothing is duplicated.
+      setMessages(messages);
+      if (userText) setUserInput(userText);
+      setSendError(true);
     } finally {
       setIsLoading(false);
     }
@@ -135,6 +139,20 @@ export function PeterSession({ profile, onComplete, userId }: PeterSessionProps)
         </AnimatePresence>
 
         {isLoading && <PeterResponseStatus />}
+        {sendError && !isLoading && (
+          <div className="flex items-start gap-3 mb-4" role="status">
+            <PeterAvatar mood="curious" size={40} />
+            <div className="max-w-[80%] px-4 py-3 rounded-2xl rounded-tl-sm text-sm leading-relaxed bg-popover border border-border text-foreground font-serif italic">
+              I&apos;m having a moment — give me a second and try again. 🦦
+              {messages.length === 0 && (
+                <button type="button" onClick={() => sendMessage(null)}
+                  className="press mt-3 block rounded-full bg-brand-primary px-4 py-2 text-sm font-bold not-italic text-white">
+                  Try again
+                </button>
+              )}
+            </div>
+          </div>
+        )}
         <div ref={bottomRef} />
       </div>
 

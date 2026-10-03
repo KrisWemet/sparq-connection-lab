@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSubscription } from "@/lib/subscription-provider";
+import { getTrialDaysRemaining } from "@/lib/product";
+import {
+  VAPID_PUBLIC_KEY,
+  disablePushOnThisDevice,
+  enablePushOnThisDevice,
+  getPushSupport,
+  isThisDeviceSubscribed,
+  sendTestPush,
+  type PushSupport,
+} from "@/lib/push-client";
 import { useAuth } from "@/lib/auth-context";
 import {
   ChevronLeft,
@@ -13,13 +24,21 @@ export default function SettingsPage() {
   const router = useRouter();
   const { subscription } = useSubscription();
   const { user, logout } = useAuth();
+  const trialDays = getTrialDaysRemaining(user?.created_at);
 
-  const [notifications, setNotifications] = useState(true);
-  const [reminderTime, setReminderTime] = useState("09:00");
-  const [emailUpdates, setEmailUpdates] = useState(true);
-  const [partnerNotifications, setPartnerNotifications] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  // Each reminder channel stays hidden until it can really deliver
+  // (docs/REMINDERS.md), so no one can turn on something that never arrives.
+  const emailAvailable = process.env.NEXT_PUBLIC_EMAIL_REMINDERS_ENABLED === 'true';
+  const pushAvailable = !!VAPID_PUBLIC_KEY;
+  const [emailReminders, setEmailReminders] = useState(false);
+  const [pushReminders, setPushReminders] = useState(false);
+  const [pushSupport, setPushSupport] = useState<PushSupport>('unsupported');
+  const [deviceOn, setDeviceOn] = useState(false);
+  const [pushNote, setPushNote] = useState<string | null>(null);
+  const [pushBusy, setPushBusy] = useState(false);
+  const [reminderTime, setReminderTime] = useState('09:00');
+  const [savedTime, setSavedTime] = useState('09:00');
+  const isValidTime = (v: string) => /^([01]\d|2[0-3]):[0-5]\d$/.test(v);
   const [trustSummary, setTrustSummary] = useState<{
     personalizationEnabled: boolean;
     memoryMode: string;
@@ -39,14 +58,11 @@ export default function SettingsPage() {
         const res = await fetch('/api/profile/preferences', { headers });
         if (res.ok) {
           const data = await res.json();
-          if (data.preferences?.notifications_enabled !== undefined) {
-            setNotifications(data.preferences.notifications_enabled);
-          } else if (data.notifications_enabled !== undefined) {
-            setNotifications(data.notifications_enabled);
-          }
-          const reminderValue = data.preferences?.reminder_time ?? data.reminder_time;
-          if (reminderValue !== undefined && reminderValue !== null) {
-            setReminderTime(reminderValue.slice(0, 5));
+          setEmailReminders(data.preferences?.email_reminders_enabled === true);
+          setPushReminders(data.preferences?.push_reminders_enabled === true);
+          if (typeof data.preferences?.reminder_time === 'string') {
+            setReminderTime(data.preferences.reminder_time.slice(0, 5));
+            setSavedTime(data.preferences.reminder_time.slice(0, 5));
           }
           setTrustSummary({
             personalizationEnabled: data.preferences?.personalization_enabled ?? true,
@@ -56,38 +72,10 @@ export default function SettingsPage() {
         }
       } catch (err) {
         console.error("Failed to load pref:", err);
-      } finally {
-        setIsLoading(false);
       }
     }
     loadPreferences();
   }, [user]);
-
-  const updatePreference = async (key: string, value: any) => {
-    try {
-      const { buildAuthedHeaders } = await import('@/lib/api-auth');
-      const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
-      await fetch('/api/profile/preferences', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ [key]: value })
-      });
-      toast.success("Preferences updated");
-    } catch (err) {
-      toast.error("Failed to update preference");
-    }
-  };
-
-  const handleNotificationsChange = (checked: boolean) => {
-    setNotifications(checked);
-    updatePreference('notifications_enabled', checked);
-  };
-
-  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    setReminderTime(val);
-    updatePreference('reminder_time', val);
-  };
 
   const handleLogout = async () => {
     try {
@@ -100,10 +88,47 @@ export default function SettingsPage() {
     }
   };
 
-  const handleDeleteAccount = () => {
-    toast("Account deletion requested", {
-      description: "We've sent a confirmation email with further instructions.",
-    });
+  const [deleteStep, setDeleteStep] = useState<'idle' | 'confirm' | 'busy'>('idle');
+  const [exporting, setExporting] = useState(false);
+
+  const handleDownloadData = async () => {
+    if (exporting) return;
+    setExporting(true);
+    try {
+      const { buildAuthedHeaders } = await import('@/lib/api-auth');
+      const res = await fetch('/api/me/export', { headers: await buildAuthedHeaders() });
+      if (!res.ok) throw new Error(String(res.status));
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `sparq-data-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      toast.error("Couldn't get your data just now. Please try again.");
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    setDeleteStep('busy');
+    try {
+      const { buildAuthedHeaders } = await import('@/lib/api-auth');
+      const res = await fetch('/api/me/delete-account', {
+        method: 'POST',
+        headers: await buildAuthedHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({ confirm: 'DELETE' }),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      try { localStorage.clear(); } catch { /* storage blocked */ }
+      await logout().catch(() => {});
+      router.replace('/login');
+    } catch {
+      setDeleteStep('confirm');
+      toast.error("Couldn't delete your account just now. Please try again.");
+    }
   };
 
   const cardVariants = {
@@ -115,35 +140,91 @@ export default function SettingsPage() {
     })
   };
 
-  // Simple inline toggle component
-  const Toggle = ({
-    checked,
-    onChange,
-    disabled,
-  }: {
-    checked: boolean;
-    onChange: (v: boolean) => void;
-    disabled?: boolean;
-  }) => (
-    <button
-      type="button"
-      disabled={disabled}
-      onClick={() => !disabled && onChange(!checked)}
-      className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full transition-colors duration-200 focus:outline-none ${
-        checked ? 'bg-brand-primary' : 'bg-brand-primary/20'
-      } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-      role="switch"
-      aria-checked={checked}
-    >
-      <span
-        className={`inline-block h-5 w-5 transform rounded-full bg-popover shadow transition-transform duration-200 mt-[2px] ${
-          checked ? 'translate-x-[22px]' : 'translate-x-[2px]'
-        }`}
-      />
-    </button>
-  );
-
   // Section label above a card
+  useEffect(() => {
+    if (!pushAvailable) return;
+    setPushSupport(getPushSupport());
+    isThisDeviceSubscribed().then(setDeviceOn);
+  }, [pushAvailable]);
+
+  // Saves reminder choices along with the browser's timezone, so reminders
+  // arrive at the chosen time where the user actually is.
+  const savePrefs = async (patch: Record<string, unknown>): Promise<boolean> => {
+    try {
+      const { buildAuthedHeaders } = await import('@/lib/api-auth');
+      const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
+      const res = await fetch('/api/preferences', {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ ...patch, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone }),
+      });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  };
+
+  const toggleEmail = async () => {
+    const next = !emailReminders;
+    setEmailReminders(next);
+    if (await savePrefs({ email_reminders_enabled: next, reminder_time: reminderTime })) {
+      setSavedTime(reminderTime);
+      toast.success(next ? `Peter will email you at ${reminderTime}` : 'Reminder emails are off');
+    } else {
+      setEmailReminders(!next);
+      toast.error("We couldn't save that just now. Please try again.");
+    }
+  };
+
+  const togglePush = async () => {
+    setPushBusy(true);
+    setPushNote(null);
+    try {
+      if (pushReminders && deviceOn) {
+        await disablePushOnThisDevice();
+        setDeviceOn(false);
+        if (await savePrefs({ push_reminders_enabled: false })) {
+          setPushReminders(false);
+          toast.success('Phone reminders are off');
+        }
+        return;
+      }
+      const result = await enablePushOnThisDevice();
+      if (!result.ok) {
+        setPushNote(
+          result.reason === 'denied'
+            ? "Notifications are blocked for Sparq. You can allow them in your phone's settings, then try again."
+            : "We couldn't turn them on just now. Please try again."
+        );
+        return;
+      }
+      setDeviceOn(true);
+      if (await savePrefs({ push_reminders_enabled: true, reminder_time: reminderTime })) {
+        setPushReminders(true);
+        setSavedTime(reminderTime);
+        toast.success(`Peter will nudge this phone at ${reminderTime}`);
+      } else {
+        toast.error("We couldn't save that just now. Please try again.");
+      }
+    } finally {
+      setPushBusy(false);
+    }
+  };
+
+  const saveTime = async (time: string) => {
+    if (await savePrefs({ reminder_time: time })) {
+      setSavedTime(time);
+      toast.success(`Reminders moved to ${time}`);
+    } else {
+      setReminderTime(savedTime);
+      toast.error("We couldn't save that just now. Please try again.");
+    }
+  };
+
+  const testPush = async () => {
+    toast(await sendTestPush() ? 'Sent. It should pop up in a moment.' : "We couldn't send a test just now.");
+  };
+
   const SectionLabel = ({ children }: { children: React.ReactNode }) => (
     <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover px-1 mb-2">
       {children}
@@ -222,58 +303,87 @@ export default function SettingsPage() {
           </div>
         </motion.div>
 
-        {/* PREFERENCES */}
-        <motion.div custom={1} variants={cardVariants} initial="hidden" animate="visible">
-          <SectionLabel>Preferences</SectionLabel>
-          <div className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm overflow-hidden">
-            <Row
-              label="Daily reminder"
-              secondary={notifications ? reminderTime : 'Off'}
-              right={
-                <div className="flex items-center gap-3">
-                  {notifications && (
-                    <input
-                      type="time"
-                      value={reminderTime}
-                      disabled={isLoading}
-                      onChange={handleTimeChange}
-                      className="border border-input rounded-lg px-2 py-1 text-xs text-brand-text-primary bg-brand-linen focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground"
-                    />
+        {/* REMINDERS */}
+        {(emailAvailable || pushAvailable) && (
+          <motion.div custom={1} variants={cardVariants} initial="hidden" animate="visible">
+            <SectionLabel>Reminders</SectionLabel>
+            <div className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm overflow-hidden">
+              {pushAvailable && (
+                <div className="border-b border-brand-primary/10 last:border-b-0">
+                  <Row
+                    border={false}
+                    label="Phone notification"
+                    secondary={pushReminders && deviceOn ? `Every day at ${reminderTime}` : pushReminders ? 'On for another device' : 'Off'}
+                    right={
+                      pushSupport === 'supported' ? (
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={pushReminders && deviceOn}
+                    aria-label="Phone notification"
+                    onClick={togglePush} disabled={pushBusy}
+                    className={`press relative inline-flex h-6 w-11 rounded-full transition-colors disabled:opacity-50 ${pushReminders && deviceOn ? 'bg-brand-primary' : 'bg-brand-primary/20'}`}
+                  >
+                    <span className={`mt-[2px] inline-block h-5 w-5 rounded-full bg-popover shadow transition-transform ${pushReminders && deviceOn ? 'translate-x-[22px]' : 'translate-x-[2px]'}`} />
+                  </button>
+                      ) : undefined
+                    }
+                  />
+                  {pushSupport === 'needs-install' && (
+                    <p className="px-5 pb-4 text-xs leading-relaxed text-brand-text-secondary">
+                      On iPhone, add Sparq to your Home Screen first: tap the Share button, then &ldquo;Add to Home Screen&rdquo;. Open Sparq from there and turn this on.
+                    </p>
                   )}
-                  <Toggle
-                    checked={notifications}
-                    onChange={handleNotificationsChange}
-                    disabled={isLoading}
+                  {pushSupport === 'unsupported' && (
+                    <p className="px-5 pb-4 text-xs leading-relaxed text-brand-text-secondary">
+                      This browser can&apos;t show Sparq notifications. Try Chrome or Safari on your phone.
+                    </p>
+                  )}
+                  {pushNote && <p className="px-5 pb-4 text-xs leading-relaxed text-brand-text-secondary" role="status">{pushNote}</p>}
+                  {pushReminders && deviceOn && (
+                    <button type="button" onClick={testPush} className="press px-5 pb-4 text-xs font-semibold text-brand-hover underline underline-offset-4">
+                      Send a test
+                    </button>
+                  )}
+                </div>
+              )}
+              {emailAvailable && (
+                <Row
+                  label="Daily reminder email"
+                  secondary={emailReminders ? `Every day at ${reminderTime}` : 'Off'}
+                  right={
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={emailReminders}
+                    aria-label="Daily reminder email"
+                    onClick={toggleEmail}
+                    className={`press relative inline-flex h-6 w-11 rounded-full transition-colors disabled:opacity-50 ${emailReminders ? 'bg-brand-primary' : 'bg-brand-primary/20'}`}
+                  >
+                    <span className={`mt-[2px] inline-block h-5 w-5 rounded-full bg-popover shadow transition-transform ${emailReminders ? 'translate-x-[22px]' : 'translate-x-[2px]'}`} />
+                  </button>
+                  }
+                />
+              )}
+              {(emailReminders || pushReminders) && (
+                // Plain markup, not <Row>: Row is redefined each render, which
+                // would remount the input on every keystroke.
+                <div className="flex items-center justify-between px-5 min-h-[52px]">
+                  <label htmlFor="reminder-time" className="text-sm font-medium text-brand-text-primary">Time</label>
+                  <input
+                    id="reminder-time"
+                    type="time"
+                    value={reminderTime}
+                    aria-label="Reminder time"
+                    onChange={e => setReminderTime(e.target.value)}
+                    onBlur={e => isValidTime(e.target.value) && e.target.value !== savedTime && saveTime(e.target.value)}
+                    className="border border-input rounded-lg px-2 py-1 text-sm text-brand-text-primary bg-brand-linen focus:outline-none focus:ring-2 focus:ring-ring"
                   />
                 </div>
-              }
-            />
-            <Row
-              label="Partner notifications"
-              secondary="When your partner completes a session"
-              right={
-                <Toggle
-                  checked={partnerNotifications}
-                  onChange={(v) => {
-                    setPartnerNotifications(v);
-                    updatePreference('partner_notifications', v);
-                  }}
-                />
-              }
-            />
-            <Row
-              label="Dark mode"
-              secondary="Coming soon"
-              right={
-                <Toggle
-                  checked={darkMode}
-                  onChange={setDarkMode}
-                  disabled
-                />
-              }
-            />
-          </div>
-        </motion.div>
+              )}
+            </div>
+          </motion.div>
+        )}
 
         {/* PRIVACY */}
         <motion.div custom={2} variants={cardVariants} initial="hidden" animate="visible">
@@ -298,8 +408,8 @@ export default function SettingsPage() {
               right={<ChevronRight className="w-4 h-4 text-brand-text-secondary" />}
             />
             <Row
-              label="Download my data"
-              onClick={() => toast.info("We'll email you a copy of your data within 24 hours.")}
+              label={exporting ? "Getting your data…" : "Download my data"}
+              onClick={handleDownloadData}
               right={<ChevronRight className="w-4 h-4 text-brand-text-secondary" />}
             />
             <Row
@@ -315,22 +425,24 @@ export default function SettingsPage() {
           <SectionLabel>Plan</SectionLabel>
           <div className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-5">
             <p className="font-semibold text-brand-text-primary text-sm">
-              {subscription.name}
+              {trialDays > 0 ? 'Free trial' : subscription.name}
             </p>
             <p className="text-xs text-brand-text-secondary mt-0.5 mb-4">
-              {subscription.tier === "free"
-                ? "See what Solo and Together add"
-                : `Renews ${subscription.expiresAt?.toLocaleDateString()}`}
+              {trialDays > 0
+                ? `Everything in Solo for ${trialDays} more ${trialDays === 1 ? 'day' : 'days'}`
+                : subscription.tier === "free"
+                  ? "See what Solo and Together add"
+                  : "Thank you for growing with Sparq"}
             </p>
             <button
               onClick={() => router.push("/subscription")}
               className={`press w-full rounded-2xl py-3 text-sm font-bold transition-colors ${
-                subscription.tier === "free"
+                subscription.tier === "free" || trialDays > 0
                   ? "bg-brand-primary text-white hover:bg-brand-hover"
                   : "border border-brand-primary text-brand-hover hover:bg-brand-primary/5"
               }`}
             >
-              {subscription.tier === "free" ? "See plans" : "Manage plan"}
+              {subscription.tier === "free" || trialDays > 0 ? "See plans" : "Manage plan"}
             </button>
           </div>
         </motion.div>
@@ -344,16 +456,47 @@ export default function SettingsPage() {
             >
               Sign out
             </button>
-            <button
-              onClick={handleDeleteAccount}
-              className="w-full border border-destructive text-destructive-emphasis rounded-2xl py-3 text-sm font-medium hover:bg-destructive-subtle transition-colors"
-            >
-              Delete account
-            </button>
+            {deleteStep === 'idle' ? (
+              <button
+                onClick={() => setDeleteStep('confirm')}
+                className="w-full border border-destructive text-destructive-emphasis rounded-2xl py-3 text-sm font-medium hover:bg-destructive-subtle transition-colors"
+              >
+                Delete account
+              </button>
+            ) : (
+              <div className="rounded-2xl border border-destructive p-4">
+                <p className="text-sm font-semibold text-brand-text-primary">Delete your account for good?</p>
+                <p className="text-xs text-brand-text-secondary mt-1 mb-3 leading-relaxed">
+                  Everything you&rsquo;ve written, Peter&rsquo;s memory of you and your progress are erased.
+                  This can&rsquo;t be undone. If you&rsquo;re linked with a partner, your shared space ends;
+                  their own account stays.
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleDeleteAccount}
+                    disabled={deleteStep === 'busy'}
+                    className="press flex-1 rounded-xl bg-destructive-emphasis py-2.5 text-sm font-bold text-white disabled:opacity-60"
+                  >
+                    {deleteStep === 'busy' ? 'Deleting…' : 'Delete forever'}
+                  </button>
+                  <button
+                    onClick={() => setDeleteStep('idle')}
+                    disabled={deleteStep === 'busy'}
+                    className="press flex-1 rounded-xl border border-brand-primary/20 py-2.5 text-sm font-medium text-brand-text-primary"
+                  >
+                    Keep my account
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </motion.div>
 
         <p className="text-center text-xs text-brand-text-secondary py-2 pb-6">
+          <Link href="/privacy" className="underline">Privacy</Link>
+          {' · '}
+          <Link href="/terms" className="underline">Terms</Link>
+          <br />
           Sparq v1.0.0 · © 2026 Sparq Connection Lab
         </p>
       </main>
