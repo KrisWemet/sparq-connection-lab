@@ -114,6 +114,7 @@ describe('decideMode', () => {
     const line = decideMode("No hotlines. I just want to talk.").instruction ?? '';
     expect(line).toMatch(/keep real help within reach/);
     expect(line).toMatch(/Never promise not to mention help again/);
+    expect(line).toMatch(/do not say "I am not going anywhere"/);
   });
 
   it('does not challenge the user over their partner\'s words ("she said I never…")', () => {

@@ -19,50 +19,42 @@ const REPAIR_STARTERS = [
 ];
 
 type ConflictStyle = 'avoidant' | 'volatile' | 'validating' | null;
-type LoveLanguage = 'words' | 'acts' | 'gifts' | 'time' | 'touch' | null;
 
 interface PersonalizedGuidance {
   dynamic: string;
   repairStarters: string[];
 }
 
-function getPersonalizedGuidance(
-  userConflict: ConflictStyle,
-  partnerConflict: ConflictStyle,
-  partnerLoveLang: LoveLanguage,
-): PersonalizedGuidance | null {
-  if (!userConflict && !partnerConflict) return null;
+type TraitRow = { trait_key: string; inferred_value: string; status?: string | null; confidence?: number | null };
+type CycleRow = { name: string; description?: string | null; what_helps?: string | null; status: string };
 
-  let dynamic = '';
+// "Your Dynamic Right Now" uses only (a) the user's OWN conflict pattern,
+// offered as a maybe they can correct, and (b) a loop both partners named
+// and confirmed in /us. It never uses the partner's private traits
+// (constitution §8) and never states a guess as fact (§2).
+const OWN_SIDE: Record<Exclude<ConflictStyle, null>, string> = {
+  volatile: "You may tend to want to stay in it and sort things out right now. That's okay. If your partner needs a pause, it's often not rejection — it can be their way of calming down. You could try: 'Can we come back to this in 20 minutes?'",
+  avoidant: "You may tend to step back when things heat up. That's okay — calming down first is wise. Letting your partner know you're coming back helps: 'I'm not done with this. I just need 20 minutes.'",
+  validating: "You may tend to want both of you to feel heard before solving anything. That's a real strength. You could say it out loud: 'Before we fix anything, what did I say that landed hardest?'",
+};
 
-  if (userConflict === 'volatile' && partnerConflict === 'avoidant') {
-    dynamic = "Your instinct is to stay in the conversation and work it out right now. Your partner's instinct is to pull back. Neither is wrong — but the combination can feel like chasing and withdrawing. When they go quiet, it usually isn't rejection — it's self-regulation. Give them a time: 'Can we come back to this in 20 minutes?'";
-  } else if (userConflict === 'avoidant' && partnerConflict === 'volatile') {
-    dynamic = "Your instinct is to step back when things get heated. Your partner's instinct is to press in and resolve things. The risk: they feel abandoned, you feel overwhelmed. A simple signal helps both of you — 'I'm not done with this conversation, I just need 20 minutes.'";
-  } else if (userConflict === 'avoidant' && partnerConflict === 'avoidant') {
-    dynamic = "You both tend to step back when things get tense. That can feel peaceful, but the risk is that important things never fully get said. After you've both calmed down, one of you has to gently open the door: 'I want to talk about what happened when we're both ready.'";
-  } else if (userConflict === 'volatile' && partnerConflict === 'volatile') {
-    dynamic = "You both feel things intensely and want to resolve things quickly. That passion is actually a strength — but when you're both flooded, it's heat without light. A 5-minute pause, agreed to by both of you, can lower the temperature enough to actually hear each other.";
-  } else if (userConflict === 'validating' || partnerConflict === 'validating') {
-    dynamic = "At least one of you naturally seeks to make sure both sides feel heard before moving forward. Lean into that — it's a gift. Make it explicit: 'Before we solve anything, can you tell me what I said that landed hardest?'";
+function getPersonalizedGuidance(traits: TraitRow[], cycles: CycleRow[]): PersonalizedGuidance | null {
+  const confirmedCycle = cycles.find(c => c.status === 'confirmed');
+  if (confirmedCycle) {
+    const helps = confirmedCycle.what_helps?.trim();
+    return {
+      dynamic: `You two named this loop together: "${confirmedCycle.name}". It's the two of you vs. the loop, not each other.${helps ? ` What you said helps: ${helps}` : ''}`,
+      repairStarters: [],
+    };
   }
 
-  if (!dynamic) return null;
+  const own = traits.find(t => t.trait_key === 'conflict_style');
+  if (!own || own.status === 'rejected') return null;
+  if (own.status !== 'confirmed' && (own.confidence ?? 0) < 0.4) return null;
+  const style = own.inferred_value as ConflictStyle;
+  if (!style || !(style in OWN_SIDE)) return null;
 
-  const repairStarters: string[] = [];
-  if (partnerLoveLang === 'words') {
-    repairStarters.push("A simple 'I love you and I want to get this right' goes a long way for your partner.");
-  } else if (partnerLoveLang === 'touch') {
-    repairStarters.push("A gentle hand on their arm or a hug can lower the temperature faster than words.");
-  } else if (partnerLoveLang === 'acts') {
-    repairStarters.push("Doing something small and thoughtful — making them tea, tidying something — signals repair without words.");
-  } else if (partnerLoveLang === 'time') {
-    repairStarters.push("Asking for a quiet moment together, even just sitting side by side, can signal you want to reconnect.");
-  } else if (partnerLoveLang === 'gifts') {
-    repairStarters.push("A small, thoughtful gesture — even a note — can signal that you care more than you're letting on right now.");
-  }
-
-  return { dynamic, repairStarters };
+  return { dynamic: `${OWN_SIDE[style]} (Just a guess from what you've shared — you're the judge.)`, repairStarters: [] };
 }
 
 export default function ConflictFirstAidPage() {
@@ -85,20 +77,15 @@ export default function ConflictFirstAidPage() {
         const { data: { session } } = await supabase.auth.getSession();
         if (!session?.access_token) return;
 
-        const res = await fetch('/api/profile/traits', {
-          headers: { Authorization: `Bearer ${session.access_token}` },
-        });
-        if (!res.ok) return;
+        const headers = { Authorization: `Bearer ${session.access_token}` };
+        const [traitsRes, coupleRes] = await Promise.all([
+          fetch('/api/profile/traits', { headers }),
+          fetch('/api/couple', { headers }),
+        ]);
+        const traits: TraitRow[] = traitsRes.ok ? ((await traitsRes.json()).traits || []) : [];
+        const cycles: CycleRow[] = coupleRes.ok ? ((await coupleRes.json()).cycles || []) : [];
 
-        const data = await res.json();
-        const traits: { trait_key: string; inferred_value: string }[] = data.traits || [];
-        const partnerTraits: { trait_key: string; inferred_value: string }[] = data.partner_traits || [];
-
-        const userConflict = (traits.find(t => t.trait_key === 'conflict_style')?.inferred_value as ConflictStyle) ?? null;
-        const partnerConflict = (partnerTraits.find(t => t.trait_key === 'conflict_style')?.inferred_value as ConflictStyle) ?? null;
-        const partnerLoveLang = (partnerTraits.find(t => t.trait_key === 'love_language')?.inferred_value as LoveLanguage) ?? null;
-
-        const guidance = getPersonalizedGuidance(userConflict, partnerConflict, partnerLoveLang);
+        const guidance = getPersonalizedGuidance(traits, cycles);
         if (guidance) setPersonalizedGuidance(guidance);
       } catch { }
     })();

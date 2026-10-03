@@ -111,7 +111,7 @@ This is the most researched destructive dyadic pattern and the most common coupl
 - **Content Adaptation**: Every exercise is adapted for all 4 styles (see personality-adaptation-guide.md)
 - **Peter's Behavior**: Adjusts warmth/intensity based on attachment style
 - **Notification Personalization**: Anxious users get more frequent, warm notifications; avoidant users get less frequent, choice-emphasizing notifications (see personality-adaptation-guide.md)
-- **Conflict First Aid**: "Your Dynamic Right Now" may describe a loop only from the user's own side, or from a cycle both partners confirmed in `/us` — never from the partner's private traits (the current code reads `partner_traits`, which the API now always returns empty; see `docs/CONSTITUTION_AUDIT.md`)
+- **Conflict First Aid**: "Your Dynamic Right Now" may describe a loop only from the user's own side, or from a cycle both partners confirmed in `/us` — never from the partner's private traits
 - **Couple's Cycle Map** (planned): Uses both partners' attachment styles to name their cycle
 
 ---

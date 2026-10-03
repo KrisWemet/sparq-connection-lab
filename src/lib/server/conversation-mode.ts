@@ -105,7 +105,7 @@ export function classifyMoment(message: string): MomentSignal {
 const INSTRUCTIONS: Record<Exclude<MomentSignal, 'none'>, { mode: ConversationMode; line: string }> = {
   declines_help: {
     mode: 'listen',
-    line: 'They turned down crisis help but are still talking to you. Stay with them warmly and keep talking. Also, gently and without lecturing, keep real help within reach in one short line (the help link stays right here, and they deserve real support too). Never promise not to mention help again, and do not move to normal coaching.',
+    line: 'They turned down crisis help but are still talking to you. Stay with them warmly and keep talking. Also, gently and without lecturing, keep real help within reach in one short line (the help link stays right here, and they deserve real support too). Never promise not to mention help again, do not move to normal coaching, and do not say "I am not going anywhere" or claim you will always be there — say what is true: you are here right now, and real people can help too.',
   },
   depleted: {
     mode: 'stabilize',

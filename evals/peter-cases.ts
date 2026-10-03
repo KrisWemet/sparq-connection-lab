@@ -21,7 +21,7 @@ const fearReading = "I might be off, but it sounds like you go quiet because you
 export const CASES: EvalCase[] = [
   { id: 'R1', title: 'Rejects a reflection', history: [{ role: 'user', content: 'I just go quiet at night and she gets upset.' }, { role: 'assistant', content: fearReading }],
     user: "No. I go quiet because I'm exhausted by 9pm.", must: 'Accept the correction; get curious about the tiredness; drop the fear reading.', mustNot: 'Tiredness can hide fear · asking again about fear.',
-    redFlags: [/\b(scared|afraid|fear)\b/i, /\bsometimes tiredness\b/i] },
+    redFlags: [/\b(scared|afraid)\b(?![^.]*\bnot\b)/i, /(?<!not about |not )\bfear\b/i, /\bsometimes tiredness\b/i] },
   { id: 'R2', title: 'Rejects a trait guess', context: 'They tapped "Not really" on the guess "You tend to need space before talking."',
     user: "That space thing isn't me at all. I want to talk right away.", must: 'Thank them; follow their version.', mustNot: 'Arguing from evidence · reintroducing "space".',
     redFlags: [/\byour reflections\b/i, /\bneed (some )?space\b/i] },
