@@ -321,7 +321,7 @@ sparq-connection-lab/
 ├── next-env.d.ts
 ├── tsconfig.json
 ├── tailwind.config.ts
-├── eslint.config.js
+├── .eslintrc.json              # ESLint (next/core-web-vitals)
 └── vercel.json                 # Vercel deployment config (headers, install command)
 ```
 
@@ -654,12 +654,9 @@ Journey markdown content lives in `src/content/journeys/`.
 
 ## Linting
 
-ESLint is configured in `eslint.config.js` with:
-- TypeScript ESLint recommended rules
-- React Hooks plugin (enforces rules of hooks)
-- `@typescript-eslint/no-unused-vars` is **turned off**
+ESLint is configured in `.eslintrc.json`: Next's `next/core-web-vitals` (includes the React Hooks rules), with `react/no-unescaped-entities` and `@next/next/no-html-link-for-pages` as warnings.
 
-Run: `npm run lint`
+Run: `npm run lint` (`next lint`). The old Vite-era `eslint.config.js` was removed (2026-10-03) — it imported packages that aren't installed and broke every ESLint run.
 
 ---
 

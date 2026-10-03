@@ -191,7 +191,6 @@ The v1.2 Transformation layer (constitution §14 steps 17–26) is doctrine only
 |---|---|---|---|
 | `src/lib/peterService.ts` daily concepts | Fixed 14-day rotation regardless of what the user has mastered | Read capacity from outcomes; offer the next level | 21 |
 | `src/lib/server/partner-synthesis.ts` | Dead module for the removed partner synthesis (no imports) | Delete with the deprecated tables, with Chris's OK | — |
-| `src/pages/conflict-first-aid.tsx` (`getPersonalizedGuidance`) | Built to use the partner's private `conflict_style` / `love_language` and to state them as fact ("Your partner's instinct is to pull back"). Dormant only because `/api/profile/traits` now returns empty `partner_traits` | Rewrite to use the user's own side, or a cycle both confirmed in `/us`; phrase as maybes | 23 |
 | `supabase/functions/memory-operations/` | Legacy edge function on the deprecated `conversation_memories` table | Retire with the deprecated tables, with Chris's OK | — |
 
 Skill/doc conflicts listed here in the first v1.2 pass (stale UI catalog entries, partner synthesis described as live) were fixed in the doctrine cleanup — see `docs/INFLUENCE_AUDIT.md` §E. Only code-level items remain above.
