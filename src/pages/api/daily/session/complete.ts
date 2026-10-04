@@ -4,6 +4,8 @@ import { trackEvent } from '@/lib/server/analytics';
 import { trackPrimaryPathServerError } from '@/lib/server/beta-ops';
 import { parseLocalDate } from '@/lib/server/date-utils';
 import { isJourneyComplete } from '@/lib/server/journey-content';
+import { getActiveJourney, recordJourneyStep } from '@/lib/server/journey-state';
+import { isDailyJourney } from '@/lib/journeys/catalog';
 
 type CompleteBody = {
   session_id?: string;
@@ -154,7 +156,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const { data: insights } = await ctx.supabase
     .from('user_insights')
-    .select('onboarding_day, active_journey_id')
+    .select('onboarding_day')
     .eq('user_id', ctx.userId)
     .maybeSingle();
 
@@ -163,13 +165,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const lastCompletedFromCursor = Math.max((insights?.onboarding_day ?? 1) - 1, 0);
   const currentDay = Math.max(updatedSession.day_index, lastCompletedFromCursor, 1);
   const nextDay = currentDay + 1;
-  const activeJourneyId: string | null = insights?.active_journey_id ?? null;
+  // Only daily (starter) journeys run through this loop today; staged ones
+  // keep their own pages until Phase 2.
+  const activeJourney = await getActiveJourney(ctx.supabase, ctx.userId);
+  const activeJourneyId: string | null =
+    activeJourney && isDailyJourney(activeJourney.journey_id) ? activeJourney.journey_id : null;
   const unlocked = activeJourneyId ? false : currentDay >= 14;
 
-  // ── Journey completion check ──
+  // ── Journey progress: count this journey day once, on that journey ──
+  // (journey-state.ts). Completion comes from the journey's own day, not the
+  // global practice-day counter.
   let journeyCompleted = false;
-  if (activeJourneyId && isJourneyComplete(activeJourneyId, nextDay)) {
-    journeyCompleted = true;
+  const sessionJourneyDay = Number(updatedSession.journey_day_index) || 0;
+  if (!alreadyCompleted && activeJourneyId && updatedSession.journey_id === activeJourneyId && sessionJourneyDay > 0) {
+    const step = await recordJourneyStep(ctx.supabase, ctx.userId, activeJourneyId, { day: sessionJourneyDay });
+    if (step.ok) {
+      journeyCompleted = step.value.journeyCompleted;
+    } else if (step.error === 'schema_not_ready' && isJourneyComplete(activeJourneyId, sessionJourneyDay + 1)) {
+      // Before the journey_state migration: the old pointer-only completion.
+      journeyCompleted = true;
+      await ctx.supabase.from('user_insights').upsert({
+        user_id: ctx.userId,
+        active_journey_id: null,
+        last_completed_journey_id: activeJourneyId,
+        journey_completion_state: 'pending_decision',
+      }, { onConflict: 'user_id' });
+    }
   }
 
   if (!alreadyCompleted) {
@@ -180,13 +201,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       last_analysis_at: new Date().toISOString(),
       ...(unlocked ? { onboarding_completed_at: new Date().toISOString() } : {}),
     };
-
-    // If journey just completed, set pending_decision state and store recommendations
-    if (journeyCompleted && activeJourneyId) {
-      insightsUpsert.active_journey_id = null;
-      insightsUpsert.last_completed_journey_id = activeJourneyId;
-      insightsUpsert.journey_completion_state = 'pending_decision';
-    }
 
     await trackEvent(ctx.supabase, ctx.userId, 'solo_practice_completed', {
       day_index: currentDay,
@@ -200,12 +214,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       { onConflict: 'user_id' }
     );
 
-    // Fire journey_completed analytics event + generate synthesis
+    // Generate synthesis (journey_completed is tracked by journey-state.ts)
     if (journeyCompleted && activeJourneyId) {
-      await trackEvent(ctx.supabase, ctx.userId, 'journey_completed', {
-        journey_id: activeJourneyId,
-        days_completed: currentDay,
-      });
 
       // Fire-and-forget: generate journey synthesis, recommendations, and growth thread entry
       (async () => {
@@ -227,7 +237,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           const lastReflection = journeySessions?.[journeySessions.length - 1]?.evening_reflection || '';
           const tones = (journeySessions || []).map(s => s.evening_emotional_tone).filter(Boolean);
 
-          const synthesisPrompt = `You are Peter the otter. A user just completed their relationship journey "${activeJourneyId}" (${currentDay} days).
+          const synthesisPrompt = `You are Peter the otter. A user just completed their relationship journey "${activeJourneyId}" (${journeySessions?.length ?? 0} days practiced).
 
 Day 1 reflection: "${firstReflection.slice(0, 200)}"
 Final day reflection: "${lastReflection.slice(0, 200)}"
@@ -236,7 +246,7 @@ Emotional tones across journey: ${tones.join(', ') || 'not tracked'}
 Write a 3-4 sentence journey synthesis that:
 1. Names what shifted from Day 1 to now (be specific)
 2. Celebrates the growth without being over-the-top
-3. Uses identity language ("You are becoming someone who...")
+3. Describes what they did and wrote, in their own words where you can — never tells them who they are or what it proves (no "you are becoming someone who…"; that meaning is theirs to name)
 4. Ends warmly
 
 Write as Peter — warm, wise, no clinical terms. 4th-grade reading level.
@@ -251,22 +261,22 @@ Output ONLY the synthesis text. No JSON, no formatting.`;
           });
           const synthesis = stripMarkdown(rawSynthesis).trim();
 
-          // Store synthesis on user_journeys (if row exists)
+          // Store synthesis on the journey record (journey-state.ts creates it)
           await ctx.supabase
             .from('user_journeys')
             .update({ completion_synthesis: synthesis })
             .eq('user_id', ctx.userId)
             .eq('journey_id', activeJourneyId);
 
-          // Generate next journey recommendations
+          // Generate next journey recommendations (journeys actually finished,
+          // not every journey they practiced a day of)
           const { data: completedJourneys } = await ctx.supabase
-            .from('daily_sessions')
+            .from('user_journeys')
             .select('journey_id')
             .eq('user_id', ctx.userId)
-            .eq('status', 'completed')
-            .not('journey_id', 'is', null);
+            .eq('status', 'completed');
 
-          const completedIds = [...new Set((completedJourneys || []).map(s => s.journey_id).filter(Boolean))];
+          const completedIds = [...new Set([activeJourneyId, ...(completedJourneys || []).map(r => r.journey_id)].filter(Boolean))] as string[];
 
           const { data: traits } = await ctx.supabase
             .from('profile_traits')

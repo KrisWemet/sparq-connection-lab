@@ -1,15 +1,12 @@
 // src/pages/api/journeys/activate.ts
-// Sets active_journey_id on user_insights for the starter journey system.
+// Start or resume a journey. Kept for existing callers (onboarding, journey
+// completion); the logic lives in src/lib/server/journey-state.ts and
+// /api/journeys/state is the general route.
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getAuthedContext } from '@/lib/server/supabase-auth';
-import { trackEvent } from '@/lib/server/analytics';
-import { starterJourneyMap } from '@/data/starter-journeys';
+import { activateJourney } from '@/lib/server/journey-state';
 import { trackPrimaryPathServerError } from '@/lib/server/beta-ops';
-
-type ActivateBody = {
-  journey_id?: string;
-};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -19,48 +16,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const ctx = await getAuthedContext(req);
   if (!ctx) return res.status(401).json({ error: 'Unauthorized' });
 
-  const { journey_id } = (req.body || {}) as ActivateBody;
-  if (!journey_id) {
+  const journeyId = typeof req.body?.journey_id === 'string' ? req.body.journey_id : '';
+  if (!journeyId) {
     return res.status(400).json({ error: 'journey_id is required' });
   }
 
-  // Validate journey exists in starter journeys
-  const journey = starterJourneyMap.get(journey_id);
-  if (!journey) {
-    return res.status(404).json({ error: 'Starter journey not found' });
-  }
-
-  // Set active_journey_id and reset day cursor to 1
-  const { error: upsertError } = await ctx.supabase
-    .from('user_insights')
-    .upsert(
-      {
-        user_id: ctx.userId,
-        active_journey_id: journey_id,
-        onboarding_day: 1,
-        last_analysis_at: new Date().toISOString(),
-      },
-      { onConflict: 'user_id' }
-    );
-
-  if (upsertError) {
-    await trackPrimaryPathServerError(ctx.supabase, ctx.userId, 'journey_activate', upsertError, {
-      journey_id,
+  const result = await activateJourney(ctx.supabase, ctx.userId, journeyId);
+  if (!result.ok) {
+    if (result.error === 'unknown_journey') return res.status(404).json({ error: 'Journey not found' });
+    if (result.error === 'journey_limit_reached') {
+      return res.status(403).json({
+        error: 'starter_quest_limit_reached',
+        message: 'You reached your free-plan journey limit.',
+        limit: result.limit,
+      });
+    }
+    await trackPrimaryPathServerError(ctx.supabase, ctx.userId, 'journey_activate', new Error(result.error), {
+      journey_id: journeyId,
     });
-    console.error('Failed to activate journey:', upsertError);
     return res.status(500).json({ error: 'Failed to activate journey' });
   }
 
-  await trackEvent(ctx.supabase, ctx.userId, 'starter_journey_activated', {
-    journey_id,
-    journey_title: journey.title,
-    duration: journey.duration,
-  });
-
+  const { journey, pausedJourneyId } = result.value;
   return res.status(200).json({
     activated: true,
-    journey_id,
+    journey_id: journey.journey_id,
     title: journey.title,
-    duration: journey.duration,
+    journey,
+    paused_journey_id: pausedJourneyId,
   });
 }

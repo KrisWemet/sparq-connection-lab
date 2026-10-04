@@ -34,6 +34,7 @@ const SOURCES: Array<[string, string]> = [
   ['growth_thread', 'user_id'],
   ['if_then_checkins', 'user_id'],
   ['user_journeys', 'user_id'],
+  ['journey_step_entries', 'user_id'],
   ['journey_responses', 'user_id'],
   ['ai_journey_content', 'user_id'],
   ['goals', 'user_id'],

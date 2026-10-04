@@ -6,7 +6,8 @@ import { ChevronLeft, ChevronRight, CheckCircle, Star, Lightbulb, Pencil } from 
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
-import { saveJourneyProgress, getJourneyVelocityStatus, cancelJourneyProgress } from '@/services/journeyContentService';
+import { journeyAction, type ClientJourney } from '@/lib/journeys/client';
+import { practicedToday } from '@/lib/journeys/progress';
 import { TierId } from './JourneyTierView';
 import {
   AlertDialog,
@@ -19,7 +20,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { buildAuthedHeaders } from '@/lib/api-auth';
 
 type ConceptItem = {
   id: string;
@@ -48,6 +48,9 @@ interface JourneyContentViewProps {
   conceptItems?: ConceptItem[];
   completionCriteria?: CompletionCriteria;
   onBackToTiers?: () => void;
+  /** This journey's saved state (Supabase). Null while it hasn't been started. */
+  record?: ClientJourney | null;
+  onRecordChange?: (record: ClientJourney) => void;
 }
 
 // ── Day content generation ──────────────────────────────────────────────────
@@ -238,38 +241,6 @@ function getReflectionQuestions(concept: ConceptItem, cycle: number, tierDepth: 
   ];
 }
 
-// ── Tier progress helpers ──────────────────────────────────────────────────
-
-function saveTierDay(journeyId: string, tierId: TierId, day: number, totalDays: number) {
-  if (typeof window === 'undefined') return;
-  try {
-    const raw = localStorage.getItem('sparq_tier_progress');
-    const progress = raw ? JSON.parse(raw) : {};
-    if (!progress[journeyId]) progress[journeyId] = {};
-    progress[journeyId][tierId] = {
-      currentDay: day,
-      totalDays,
-      completed: day >= totalDays,
-    };
-    localStorage.setItem('sparq_tier_progress', JSON.stringify(progress));
-  } catch {
-    // Silently fail
-  }
-}
-
-function loadTierDay(journeyId: string, tierId: TierId): number {
-  if (typeof window === 'undefined') return 1;
-  try {
-    const raw = localStorage.getItem('sparq_tier_progress');
-    if (!raw) return 1;
-    const progress = JSON.parse(raw);
-    const current = progress?.[journeyId]?.[tierId]?.currentDay;
-    return current && !progress[journeyId][tierId].completed ? current : 1;
-  } catch {
-    return 1;
-  }
-}
-
 // ── Component ──────────────────────────────────────────────────────────────
 
 export function JourneyContentView({
@@ -281,24 +252,22 @@ export function JourneyContentView({
   conceptItems,
   completionCriteria,
   onBackToTiers,
+  record = null,
+  onRecordChange,
 }: JourneyContentViewProps) {
   const router = useRouter();
-  const initialDay = tierId ? loadTierDay(journeyId, tierId) : 1;
+  // The next day to practice comes from the saved record (any device).
+  const savedNextDay = record && (!tierId || record.stage === tierId) ? record.journey_day : 1;
+  const initialDay = Math.min(Math.max(1, savedNextDay), totalDays);
   const [currentDay, setCurrentDay] = useState(initialDay);
   const [highestUnlockedDay, setHighestUnlockedDay] = useState(initialDay);
   const [responses, setResponses] = useState<Record<string, string>>({});
   const [completed, setCompleted] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
-  const [canDoNextDay, setCanDoNextDay] = useState(true);
-  const [isCancellingJourney, setIsCancellingJourney] = useState(false);
-
-  React.useEffect(() => {
-    async function checkVelocity() {
-      const status = await getJourneyVelocityStatus(journeyId);
-      setCanDoNextDay(status.canDoNextDay !== false);
-    }
-    checkVelocity();
-  }, [journeyId]);
+  // One journey day per calendar day, in the user's own time zone.
+  const [canDoNextDay, setCanDoNextDay] = useState(() => !practicedToday(record?.last_step_at ?? null));
+  const [isSaving, setIsSaving] = useState(false);
+  const [settingAside, setSettingAside] = useState<'pause' | 'leave' | null>(null);
 
   const progress = (currentDay / totalDays) * 100;
 
@@ -350,28 +319,38 @@ export function JourneyContentView({
   };
 
   const handleNextDay = async () => {
-    if (!validateCompletion()) return;
+    if (!validateCompletion() || isSaving) return;
     setValidationError(null);
+    setIsSaving(true);
 
-    const journeyKey = tierId ? `${journeyId}_${tierId}` : journeyId;
-    await saveJourneyProgress(journeyKey, currentDay, true, responses);
+    const result = await journeyAction({
+      action: 'step',
+      journey_id: journeyId,
+      day: currentDay,
+      stage: tierId ?? null,
+      responses,
+    });
+    setIsSaving(false);
 
-    if (tierId) {
-      saveTierDay(journeyId, tierId, currentDay, totalDays);
+    if (!result.ok || !result.journey) {
+      toast.error("We couldn't save today's practice. Please try again.");
+      return;
     }
+    onRecordChange?.(result.journey);
 
-    if (currentDay >= totalDays) {
-      if (tierId) {
-        saveTierDay(journeyId, tierId, totalDays, totalDays);
-      }
+    if (result.stage_completed || result.journey_completed || (!result.advanced && currentDay >= totalDays)) {
       setCompleted(true);
-    } else {
-      toast.success(`Day ${currentDay} complete!`);
-      setCanDoNextDay(false); // Manually block them from the next day
-      setHighestUnlockedDay(currentDay + 1);
-      setCurrentDay(currentDay + 1);
-      setResponses({});
+      return;
     }
+    if (result.advanced) {
+      toast.success(`Day ${currentDay} saved.`);
+      setCanDoNextDay(false);
+    }
+    // Went back to an earlier day: its answers are saved, move on to the next.
+    const nextDay = Math.min(currentDay + 1, totalDays);
+    setHighestUnlockedDay((h) => Math.max(h, nextDay));
+    setCurrentDay(nextDay);
+    setResponses({});
   };
 
   const handleResponseChange = (questionIndex: number, value: string) => {
@@ -382,31 +361,21 @@ export function JourneyContentView({
     }));
   };
 
-  const handleCancelJourney = async () => {
-    if (isCancellingJourney) return;
-    setIsCancellingJourney(true);
-
-    try {
-      const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
-      const response = await fetch('/api/journeys/cancel', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ journey_id: journeyId }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to cancel journey');
-      }
-
-      await cancelJourneyProgress(journeyId);
-      toast.success('Journey ended. You can choose a different one now.');
-      router.push('/journeys');
-    } catch (error) {
-      console.error('Cancel journey error:', error);
-      toast.error('Could not leave this journey right now.');
-    } finally {
-      setIsCancellingJourney(false);
+  // Pause or leave. Either way the user's place and answers are kept.
+  const handleSetAside = async (action: 'pause' | 'leave') => {
+    if (settingAside) return;
+    setSettingAside(action);
+    const result = await journeyAction({ action, journey_id: journeyId });
+    setSettingAside(null);
+    if (!result.ok) {
+      toast.error("That didn't save. Please try again.");
+      return;
     }
+    if (result.journey) onRecordChange?.(result.journey);
+    toast.success(action === 'pause'
+      ? 'Paused. Your place is saved for when you come back.'
+      : 'You stepped away. Your place and answers are kept.');
+    router.push('/journeys');
   };
 
   // No concepts
@@ -543,24 +512,27 @@ export function JourneyContentView({
 
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <button className="text-sm font-medium text-brand-text-secondary hover:text-brand-hover transition-colors whitespace-nowrap">
-                  Leave Journey
+                <button className="text-sm font-medium text-brand-text-secondary hover:text-brand-hover active:text-brand-hover transition-colors whitespace-nowrap">
+                  Set aside
                 </button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Leave this journey early?</AlertDialogTitle>
+                  <AlertDialogTitle>Set this journey aside?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    You can leave if this journey is not the right fit. Still, most people get more value by finishing, because each day builds on the last one.
+                    Your place and your answers are kept either way. You can come back any time and pick up where you left off.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  If this journey is not a fit, leaving will free you to choose another one. Your 14-day onboarding will stay exactly as it is.
+                  Pause if you want to return to it soon. Leave if it isn&apos;t the right fit right now.
                 </p>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Keep Going</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleCancelJourney} disabled={isCancellingJourney}>
-                    {isCancellingJourney ? 'Leaving...' : 'Leave Journey'}
+                  <AlertDialogCancel>Keep going</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => handleSetAside('leave')} disabled={settingAside !== null} className="bg-transparent text-brand-taupe border border-brand-primary/20 hover:bg-brand-primary/5">
+                    {settingAside === 'leave' ? 'Saving…' : 'Leave for now'}
+                  </AlertDialogAction>
+                  <AlertDialogAction onClick={() => handleSetAside('pause')} disabled={settingAside !== null}>
+                    {settingAside === 'pause' ? 'Saving…' : 'Pause'}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -731,6 +703,7 @@ export function JourneyContentView({
           </Button>
           <Button
             onClick={handleNextDay}
+            disabled={isSaving}
             className="flex-1 rounded-2xl bg-brand-primary hover:bg-brand-hover text-white h-14 font-bold text-base shadow-lg shadow-brand-primary/20 transition-all hover:shadow-xl hover:-translate-y-0.5"
           >
             {currentDay >= totalDays

@@ -12,8 +12,7 @@ import { supabase } from "@/lib/supabase";
 
 import { Bell, Moon } from "lucide-react";
 
-import { getJourneyVelocityStatus } from "@/services/journeyContentService";
-import { journeys } from "@/data/journeys";
+import { fetchJourneyState, type ClientJourney } from "@/lib/journeys/client";
 import { BetaFeedbackDialog } from '@/components/beta/BetaFeedbackDialog';
 import { trackPrimaryPathClientEvent } from '@/lib/beta/primaryPath';
 import { fetchPlayfulConnectionToday } from '@/lib/playfulConnection';
@@ -34,7 +33,7 @@ export default function Dashboard() {
   const { user, profile, loading } = useAuth();
   const router = useRouter();
   const [currentDay, setCurrentDay] = useState(1);
-  const [activeJourney, setActiveJourney] = useState<any>(null);
+  const [activeJourney, setActiveJourney] = useState<ClientJourney | null>(null);
   const [dailySpark, setDailySpark] = useState<PlayfulPrompt | null>(null);
   const [dailySparkOffset, setDailySparkOffset] = useState(0);
 
@@ -46,14 +45,12 @@ export default function Dashboard() {
 
   // Load Active Journey Context + check today's session status
   useEffect(() => {
-    async function loadContext() {
-      const status = await getJourneyVelocityStatus();
-      if (status.activeJourneyId) {
-        const journeyMeta = journeys.find((j) => j.id === status.activeJourneyId);
-        setActiveJourney(journeyMeta);
-      }
-    }
-    loadContext();
+    // The active journey from the user's account (works on any device).
+    let alive = true;
+    fetchJourneyState().then((state) => {
+      if (alive) setActiveJourney(state?.active ?? null);
+    });
+    return () => { alive = false; };
   }, []);
 
   useEffect(() => {
@@ -163,7 +160,7 @@ export default function Dashboard() {
   const userInitials = firstName[0]?.toUpperCase() ?? "?";
 
   // CTA logic: journey completed → choose next, otherwise → begin practice
-  const isPostJourney = completionState === 'pending_decision' || completionState === 'resting';
+  const isPostJourney = !activeJourney && (completionState === 'pending_decision' || completionState === 'resting');
   const needsEveningReflection = showEveningCTA && !isPostJourney;
   const primaryPrompt = isPostJourney
     ? "You finished this journey. Where will you grow next?"
@@ -245,7 +242,7 @@ export default function Dashboard() {
           <div className="relative">
             <EditorialEyebrow className="mb-3 text-brand-hover">
               {activeJourney
-                ? `${activeJourney.title} — Day ${currentDay}`
+                ? `${activeJourney.title} — Day ${Math.min(activeJourney.journey_day, activeJourney.days)}`
                 : `Day ${currentDay}`}
             </EditorialEyebrow>
             <p className="max-w-[16rem] font-serif italic text-[28px] leading-[1.15] text-brand-espresso">
@@ -269,7 +266,7 @@ export default function Dashboard() {
                 stage={dailySpark ? 'dashboard_playful_layer' : 'dashboard'}
                 context={{
                   current_day: currentDay,
-                  active_journey_id: activeJourney?.id || null,
+                  active_journey_id: activeJourney?.journey_id || null,
                   playful_visible: Boolean(dailySpark),
                   playful_surface: dailySpark ? 'dashboard' : null,
                   playful_prompt_id: dailySpark?.id || null,

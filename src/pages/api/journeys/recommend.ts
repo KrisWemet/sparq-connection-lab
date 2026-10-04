@@ -20,16 +20,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .eq('user_id', ctx.userId)
     .maybeSingle();
 
-  // Build list of completed journey IDs from analytics events
-  const { data: completedEvents } = await ctx.supabase
-    .from('user_activities')
-    .select('metadata')
+  // Journeys the user finished (journey records — lib/server/journey-state.ts)
+  const { data: completedRows } = await ctx.supabase
+    .from('user_journeys')
+    .select('journey_id')
     .eq('user_id', ctx.userId)
-    .eq('activity_type', 'journey_completed');
+    .eq('status', 'completed');
 
-  const completedIds: string[] = (completedEvents || [])
-    .map((e: any) => e.metadata?.journey_id)
-    .filter(Boolean);
+  const completedIds: string[] = [
+    ...(completedRows || []).map((r: { journey_id: string }) => r.journey_id),
+    insights?.last_completed_journey_id,
+  ].filter((id): id is string => Boolean(id));
 
   const result = recommendNextJourneys(
     completedIds,

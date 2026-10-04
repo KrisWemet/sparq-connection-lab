@@ -6,8 +6,7 @@ import { ArrowRight, BookOpen, Crown, Lock, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
-import { getJourneyVelocityStatus } from "@/services/journeyContentService";
-import { toast } from "sonner";
+import { fetchJourneyState, type ClientJourney } from "@/lib/journeys/client";
 import { useEffect } from "react";
 
 const CARD_COLORS = [
@@ -29,72 +28,32 @@ const CARD_COLORS = [
 
 const CATEGORIES = ["All", "Foundation", "Growth", "Intimacy", "Advanced"];
 
-const JOURNEY_PROGRESS_STORAGE_KEY = "sparq_journey_progress";
+const STAGE_NAMES: Record<string, string> = { roots: "Roots", growth: "Growth", bloom: "Bloom" };
 
-function parseJourneyDurationInDays(duration: string) {
-  const [value, unit] = duration.toLowerCase().split(" ");
-  const amount = Number.parseInt(value, 10);
-
-  if (!Number.isFinite(amount)) return 14;
-  if (unit.startsWith("week")) return amount * 7;
-  return amount;
-}
-
-function getActiveJourneyNextDay(journeyId: string) {
-  if (typeof window === "undefined") return null;
-
-  try {
-    const raw = window.localStorage.getItem(JOURNEY_PROGRESS_STORAGE_KEY);
-    if (!raw) return null;
-
-    const parsed = JSON.parse(raw) as Record<
-      string,
-      Array<{ journey_id?: string; day?: number; completed?: boolean }>
-    >;
-
-    const completedEntries = Object.entries(parsed)
-      .filter(([storageKey]) => storageKey === journeyId || storageKey.startsWith(`${journeyId}_`))
-      .flatMap(([, entries]) => entries || [])
-      .filter((entry) => entry.completed && typeof entry.day === "number");
-
-    if (!completedEntries.length) return null;
-
-    const highestCompletedDay = completedEntries.reduce(
-      (max, entry) => Math.max(max, entry.day ?? 0),
-      0,
-    );
-
-    return highestCompletedDay + 1;
-  } catch {
-    return null;
+/** "Roots · Day 3" for staged journeys, "Day 3 of 10" for daily ones. */
+function whereYouAre(journey: ClientJourney): string {
+  const day = Math.min(journey.journey_day, journey.days);
+  if (journey.shape === "staged") {
+    const stage = journey.stage ? STAGE_NAMES[journey.stage] : null;
+    return stage ? `${stage} · Day ${day} of ${journey.days}` : `Day ${day}`;
   }
+  return `Day ${day} of ${journey.days}`;
 }
 
 export default function Journeys() {
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
-  const [activeJourneyId, setActiveJourneyId] = useState<string | null>(null);
-  const [activeJourneyNextDay, setActiveJourneyNextDay] = useState<number | null>(null);
+  // The active journey, from the user's account (any device).
+  const [activeJourney, setActiveJourney] = useState<ClientJourney | null>(null);
 
   useEffect(() => {
-    async function loadVelocityStatus() {
-      const status = await getJourneyVelocityStatus();
-      setActiveJourneyId(status.activeJourneyId);
-      setActiveJourneyNextDay(status.activeJourneyId ? getActiveJourneyNextDay(status.activeJourneyId) : null);
-    }
-    loadVelocityStatus();
+    let alive = true;
+    fetchJourneyState().then((state) => {
+      if (alive) setActiveJourney(state?.active ?? null);
+    });
+    return () => { alive = false; };
   }, []);
-
-  const handleJourneyClick = (e: React.MouseEvent, journeyId: string) => {
-    if (activeJourneyId && activeJourneyId !== journeyId) {
-      e.preventDefault();
-      toast("One Journey at a Time", {
-        description: "You already have an active journey. Finish it if it still fits. If it does not fit, open it and leave it early, then start a different one.",
-        icon: "✨",
-      });
-    }
-  };
 
   const filtered = journeys.filter((j) => {
     const matchesSearch =
@@ -105,14 +64,9 @@ export default function Journeys() {
     return matchesSearch && matchesCategory;
   });
 
-  const activeJourney = activeJourneyId
-    ? journeys.find((journey) => journey.id === activeJourneyId) ?? null
-    : null;
-  const activeJourneyTotalDays = activeJourney
-    ? parseJourneyDurationInDays(activeJourney.duration)
-    : null;
-  const resumeDay = activeJourney && activeJourneyNextDay
-    ? Math.min(activeJourneyNextDay, activeJourneyTotalDays ?? activeJourneyNextDay)
+  // Daily journeys continue in the Daily Loop; staged ones on their own page.
+  const continueHref = activeJourney
+    ? activeJourney.shape === "daily" ? "/daily-growth" : `/journeys/${activeJourney.journey_id}`
     : null;
 
   return (
@@ -154,13 +108,11 @@ export default function Journeys() {
                 <p className="mt-2 text-sm leading-relaxed text-brand-text-secondary">
                   Stay with one lane at a time. This is where your active journey lives while Home keeps today&apos;s next step lighter.
                 </p>
-                {resumeDay && activeJourneyTotalDays && (
-                  <p className="mt-3 text-sm font-medium text-brand-text-secondary">
-                    Resume Day {resumeDay} of {activeJourneyTotalDays}
-                  </p>
-                )}
+                <p className="mt-3 text-sm font-medium text-brand-text-secondary">
+                  {whereYouAre(activeJourney)}
+                </p>
                 <Link
-                  href={`/journeys/${activeJourney.id}`}
+                  href={continueHref ?? "/journeys"}
                   className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-hover hover:text-brand-espresso"
                 >
                   Continue {activeJourney.title}
@@ -219,7 +171,7 @@ export default function Journeys() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: idx * 0.04 }}
               >
-                <Link href={`/journeys/${journey.id}`} onClick={(e) => handleJourneyClick(e, journey.id)}>
+                <Link href={`/journeys/${journey.id}`}>
                   <div className="group rounded-[1.5rem] overflow-hidden border border-brand-primary/10 bg-popover shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 cursor-pointer relative z-10">
                     {/* Card image */}
                     <div className={`relative ${bgColor} h-36 overflow-hidden`}>

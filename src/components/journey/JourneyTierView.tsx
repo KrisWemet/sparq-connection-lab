@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Lock, CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
+import type { ClientJourney } from '@/lib/journeys/client';
+import { isStageFinished, isStageOpen } from '@/lib/journeys/progress';
 
 export type TierId = 'roots' | 'growth' | 'bloom';
 
@@ -39,6 +41,10 @@ interface JourneyTierViewProps {
   benefits?: string[];
   psychology?: string[];
   tiers: JourneyTier[];
+  /** This journey's saved state, or null if it hasn't been started. */
+  record?: ClientJourney | null;
+  /** Another journey that is active right now, if any. */
+  otherActive?: ClientJourney | null;
   onSelectTier: (tier: TierId) => void;
 }
 
@@ -72,25 +78,17 @@ const TIER_ICONS: Record<TierId, string> = {
   bloom: '🌸',
 };
 
-function getTierProgress(journeyId: string, tierId: TierId): { completed: boolean; currentDay: number; totalDays: number } {
-  if (typeof window === 'undefined') return { completed: false, currentDay: 0, totalDays: 14 };
-
-  try {
-    const raw = localStorage.getItem('sparq_tier_progress');
-    if (!raw) return { completed: false, currentDay: 0, totalDays: 14 };
-    const progress = JSON.parse(raw);
-    const tierData = progress?.[journeyId]?.[tierId];
-    if (!tierData) return { completed: false, currentDay: 0, totalDays: 14 };
-    return tierData;
-  } catch {
-    return { completed: false, currentDay: 0, totalDays: 14 };
-  }
+function tierProgress(record: ClientJourney | null | undefined, tierId: TierId, totalDays: number) {
+  const saved = record?.stage_progress?.[tierId];
+  const completed = record ? isStageFinished(record, tierId) : false;
+  const nextDay = Math.min(saved?.next_day ?? 1, totalDays);
+  return { completed, nextDay, daysDone: Math.min((saved?.next_day ?? 1) - 1, totalDays) };
 }
 
-function isTierUnlocked(journeyId: string, tierId: TierId): boolean {
-  if (tierId === 'roots') return true;
-  const prerequisite: TierId = tierId === 'growth' ? 'roots' : 'growth';
-  return getTierProgress(journeyId, prerequisite).completed;
+function formatShortDate(iso: string | null | undefined): string | null {
+  if (!iso) return null;
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? null : d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
 
 function buildBestFitCopy(title: string, category?: string): string {
@@ -118,8 +116,12 @@ export function JourneyTierView({
   benefits,
   psychology,
   tiers,
+  record = null,
+  otherActive = null,
   onSelectTier,
 }: JourneyTierViewProps) {
+  const setAsideOn = record?.status === 'paused' ? formatShortDate(record.paused_at)
+    : record?.status === 'left' ? formatShortDate(record.left_at) : null;
   const router = useRouter();
   const bestFitCopy = buildBestFitCopy(title, category);
 
@@ -179,6 +181,17 @@ export function JourneyTierView({
           </div>
         </motion.div>
 
+        {/* Where this journey stands — never a judgment, always a way back in */}
+        {(setAsideOn || record?.status === 'completed' || otherActive) && (
+          <div className="mb-5 rounded-2xl border border-brand-primary/10 bg-brand-parchment px-4 py-3 text-sm leading-relaxed text-brand-taupe">
+            {record?.status === 'completed'
+              ? 'You walked this whole journey. You can walk any stage again whenever you like.'
+              : setAsideOn
+                ? `You set this journey aside on ${setAsideOn}. Your place is saved — pick any open stage to carry on.`
+                : `You're on ${otherActive?.title} right now. Starting this one pauses it, and your place there is kept.`}
+          </div>
+        )}
+
         {/* Tier progression */}
         <div className="relative">
           {/* Connecting line */}
@@ -188,10 +201,10 @@ export function JourneyTierView({
             {tiers.map((tier, idx) => {
               const meta = TIER_META[tier.id];
               const icon = TIER_ICONS[tier.id];
-              const unlocked = isTierUnlocked(journeyId, tier.id);
-              const progress = getTierProgress(journeyId, tier.id);
+              const unlocked = isStageOpen(record ?? { stage_progress: {} }, tier.id);
+              const progress = tierProgress(record, tier.id, tier.totalDays);
               const isComplete = progress.completed;
-              const isInProgress = !isComplete && progress.currentDay > 0;
+              const isInProgress = !isComplete && progress.daysDone > 0;
 
               return (
                 <motion.div
@@ -236,7 +249,7 @@ export function JourneyTierView({
                           )}
                           {isInProgress && (
                             <span className="text-xs font-semibold bg-growth-subtle text-growth-emphasis px-2 py-0.5 rounded-full">
-                              Day {progress.currentDay}
+                              Day {progress.nextDay}
                             </span>
                           )}
                         </div>
@@ -254,7 +267,7 @@ export function JourneyTierView({
                           <div className="mt-3 h-1.5 bg-popover rounded-full overflow-hidden">
                             <motion.div
                               initial={{ width: 0 }}
-                              animate={{ width: `${(progress.currentDay / tier.totalDays) * 100}%` }}
+                              animate={{ width: `${(progress.daysDone / tier.totalDays) * 100}%` }}
                               transition={{ duration: 0.6, delay: 0.3 }}
                               className="h-full bg-gradient-to-r from-calm to-growth rounded-full"
                             />
