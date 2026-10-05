@@ -57,6 +57,7 @@ The app works at levels 1-2, not just level 4. Peter notices identity evidence a
 
 | 13 | **DBT-informed skills** *(approved 2026-10-01)* | Acceptance **and** change; teachable skills: wise mind, distress tolerance, emotion regulation, interpersonal effectiveness | Getting through flooded moments; clear asks; opposite action | Stabilization / Conflict First Aid, missions, environment basics |
 | 14 | **Transactional Analysis** *(approved 2026-10-01)* | Ego states, crossed transactions, games, Drama → Winner's Triangle — a descriptive lens, limited trial evidence | Seeing interaction patterns without blame | Interaction cycles, reflection questions ("which part of you was talking?"), missions |
+| — | **MI-informed conversation** *(supplementary method, 2026-10-05)* | Evoke the user's own reasons; reflect more than ask; ask–offer–ask; equipoise when no direction is chosen | How Peter listens and asks — never a lens for understanding a person | `PETER_SHARED_RULES`, `mixed_feelings` / `low_confidence` modes (`references/modalities-applied.md` §13) |
 
 > **Still not used:** Polyvagal theory as a named basis (removed 2026-06 — somatic regulation is anchored in HRV research); "NLP" as a label (retired 2026-06 — techniques live on under validated construct names). Constitution §1B.
 

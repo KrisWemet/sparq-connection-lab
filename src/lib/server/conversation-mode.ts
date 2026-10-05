@@ -17,6 +17,8 @@ export type MomentSignal =
   | 'declines_help'
   | 'depleted'
   | 'pushback'
+  | 'mixed_feelings'
+  | 'low_confidence'
   | 'setback'
   | 'tried_it'
   | 'got_easy'
@@ -66,6 +68,13 @@ const GOT_EASY =
 // Peter's reflection or suggestion. Overrides every growth move below it.
 const PUSHBACK =
   /^\s*(no|nope|nah|not really|not quite|i don'?t think so|that'?s not (it|true|right|what i meant)|you'?re wrong|stop|don'?t do that)\b|\b(that'?s not (it|true|right|what i meant)|you don'?t (get|understand)( it| me)?|not what i (meant|said)|you'?re not listening|i didn'?t say that)\b/i;
+// Motivational-interviewing-informed moves (docs/evals/peter-behavior.md Q–T).
+// Mixed feelings about a change: reflect both sides before anything else.
+const MIXED_FEELINGS =
+  /\b(part of me|on (the )?one hand|i'?m torn|torn between|mixed feelings|i don'?t know if i (really )?(want|can)|(i (want|need|should)( to)?|i have to) [^.!?]{1,60}\bbut (i|i'?m|it|it'?s|part|then|those|these|that|every time|whenever|at the same time)\b|i (want|wish) [^.!?]{1,60}\band (i'?m|it'?s|it) (also |just )?(scared|afraid|tired|exhausted|drained|hard))/i;
+// Doubting they can do something they chose: explore confidence and barriers.
+const LOW_CONFIDENCE =
+  /\b(i don'?t think i can|i'?m not sure i can|not sure i'?m able|i'?ll (probably |just |likely )+(fail|mess (it|this) up|forget)|i'?m (just )?not good at (this|that|it)|i never (stick|keep) (to|at|with) (anything|things|it))\b/i;
 const SELF_DISCOVERY =
   /\b(i (just )?reali[sz]e|it (just )?hit me|i never noticed|now i see|i see now|that'?s why i|i think i (get|see|understand) (it|now|why)|i guess i('m| am| do| always)|maybe i('m| am) (the one|scared|afraid|worried)|i noticed (that )?i)\b/i;
 const INTENTION =
@@ -93,6 +102,8 @@ export function classifyMoment(message: string): MomentSignal {
   if (TRIED_IT.test(text)) return 'tried_it';
   if (GOT_EASY.test(text)) return 'got_easy';
   if (PUSHBACK.test(text)) return 'pushback';
+  if (MIXED_FEELINGS.test(text)) return 'mixed_feelings';
+  if (LOW_CONFIDENCE.test(text)) return 'low_confidence';
   if (SELF_DISCOVERY.test(text)) return 'self_discovery';
   if (ASKS_FOR_HELP.test(text)) return 'asks_for_help';
   if (INTENTION.test(text)) return 'intention';
@@ -126,6 +137,14 @@ const INSTRUCTIONS: Record<Exclude<MomentSignal, 'none'>, { mode: ConversationMo
   pushback: {
     mode: 'listen',
     line: 'They pushed back on something you said. Thank them plainly, ask what you might be misunderstanding (or follow the correction they gave), and reflect their version in their words. Drop your earlier idea completely — do not rephrase it, hint at it, or bring it back later.',
+  },
+  mixed_feelings: {
+    mode: 'reflect',
+    line: 'They feel two ways about this. Say both sides back in one sentence, in their words, joined with "and" (not "but"), and do not take a side. If they already chose a direction, end on that side and ask one small question about what would make a first step feel doable. If they have not chosen, or it is a big life choice, keep it even and ask which side feels truer tonight, or let it rest. No arguing for change, no list of reasons.',
+  },
+  low_confidence: {
+    mode: 'explore',
+    line: 'They doubt they can do it. Do not reassure them that they can, and do not push. Name one real strength or effort you have seen, if there is one. Then ask one question about what would make it a little easier, or what is in the way. Making it smaller or not now are both fine answers.',
   },
   self_discovery: {
     mode: 'listen',
