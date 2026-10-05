@@ -29,6 +29,7 @@ import { TONE } from '@/lib/moment-tone';
 import { cn } from '@/lib/utils';
 import { SharePrompt } from '@/components/shared/SharePrompt';
 import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
+import { SparqLogo } from '@/components/brand/SparqMark';
 import { useVisualEmotion } from '@/components/emotion/VisualEmotionProvider';
 
 const EVENING_SLIP_MESSAGE = "Oops, I slipped on a fish! Can you try again? 🐟";
@@ -655,7 +656,7 @@ export default function DailyGrowth() {
     return (
       <div className="emotion-page min-h-dvh bg-brand-linen pb-28 font-sans">
         <div className="flex items-center justify-between px-5 pt-6 pb-2">
-          <span className="text-lg font-bold tracking-tight text-brand-espresso">SPARQ</span>
+          <SparqLogo />
           <button
             onClick={() => router.push('/settings')}
             aria-label="Settings"

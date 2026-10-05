@@ -4,7 +4,8 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/icons/favicon-32.png" type="image/png" sizes="32x32" />
+        <link rel="icon" href="/icons/favicon-16.png" type="image/png" sizes="16x16" />
         {/* Installable to the home screen — needed for phone notifications on iPhone. */}
         <link rel="manifest" href="/manifest.webmanifest" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
@@ -18,4 +19,4 @@ export default function Document() {
       </body>
     </Html>
   )
-} 
+}
