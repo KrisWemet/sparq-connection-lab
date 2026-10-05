@@ -5,7 +5,7 @@ This file provides comprehensive context for AI assistants working on this codeb
 > **Product constitution (v1.2):** [`docs/CONSTITUTION.md`](docs/CONSTITUTION.md) defines Sparq as a **guided transformation system** — "Sparq helps people discover who they want to become, understand why it matters, and practice becoming that person in the real world." It sets the governing principle (**Sparq leads the path; the user chooses the destination**), the Transformation Engine (UNDERSTAND → CHOOSE → ACT → REFLECT → ADAPT → REPEAT → BECOME), psychology modalities (incl. DBT-informed skills and Transactional Analysis) as the foundation with influence as a supplementary layer, hypotheses never diagnoses, Peter's conversation modes, memory discipline, and private/shared privacy boundaries. Read it before planning any feature. Its "Constitutional test" applies to every major feature. Implementation map: `docs/TRANSFORMATION_ENGINE.md` (engine map + v1.2 build status), `docs/CONSTITUTION_AUDIT.md` (status + §13 checklist), `docs/PERSON_MODEL.md`, `docs/RELATIONSHIP_MODEL.md`, `docs/METRICS.md`, `docs/INFLUENCE_AUDIT.md` (influence/doctrine conflicts: fixed, open decisions), `docs/evals/peter-behavior.md` + `docs/evals/resistance-handling.md` (Peter behavioral eval spec — run both before any Peter prompt change). It is the source of truth for everything it covers; where it is silent, the rest of this file and the Master PRD apply.
 >
 > **Doctrine map — which documents give instructions:**
-> - **Active rules:** `docs/CONSTITUTION.md` → `CLAUDE.md` → `docs/*.md` (Person Model, Relationship Model, Metrics, audits) and `docs/evals/` → the `.claude/skills/sparq-*` skills.
+> - **Active rules:** `docs/CONSTITUTION.md` → `CLAUDE.md` (with `.claude/rules/`) → `docs/*.md` (Person Model, Relationship Model, Metrics, audits) and `docs/evals/` → the `.claude/skills/sparq-*` skills.
 > - **Reference beneath the constitution:** `SPARQ_MASTER_SPEC.md` (product/repo/roadmap), `SPARQ-PSYCHOLOGY-MODALITIES.md` (modality background), `SPARQ-VISION.md` (brief).
 > - **Snapshots — status, not rules:** `HANDOFF.md`, `CURRENT_STATE.md`, `LAUNCH_CHECKLIST.md`, `IMPLEMENTATION_STATUS.md`.
 > - **Historical — never follow as instructions:** `OLD_PRD.md`, `REFERENCE_UNIFIED_PRD.md`, `Sparq_build_Spec.md`, `audit_report_sprint1.md`, `docs/superpowers/`, `.planning/`. They predate the constitution and contain superseded ideas (silent profiling, partner synthesis, "always presuppose", streak pressure).
@@ -171,9 +171,11 @@ Do not relitigate these:
 2. **Restate before building.** Before writing code: what are you building, what files will you touch, what will you not touch.
 3. **One slice at a time.** Do not expand scope mid-implementation.
 4. **When filling a design gap,** consult the relevant skill — not generic SaaS patterns.
-5. **Flag ambiguity before working around it.** Ask. Don't invent.
+5. **Flag ambiguity before working around it.** Ask when it materially affects scope, behaviour, architecture, security, cost or an irreversible action; for routine choices, state the assumption and proceed. Don't invent.
 6. **Preserve existing architecture** unless Chris explicitly authorizes changes.
 7. **Small changes, explained.** Say why, not just what.
+
+How to scope, verify and report code changes (acceptance criteria, behaviour checks, diff review, honest reporting): [`.claude/rules/karpathy-guidelines.md`](.claude/rules/karpathy-guidelines.md).
 
 ---
 
