@@ -1,8 +1,10 @@
 .welcome { color: hsl(var(--foreground)); background: hsl(var(--background)); overflow: clip; }
 .header { position: relative; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 1rem; max-width: 1360px; padding: 1.5rem 3rem; margin: auto; }
-.header nav { display: flex; align-items: center; gap: 1.5rem; }
-.signIn { display: inline-flex; align-items: center; min-height: 44px; font-size: 13px; color: hsl(var(--primary-emphasis)); }
+.header > a { min-width: 0; }
+.header nav { display: flex; flex-shrink: 0; align-items: center; gap: 1.5rem; }
+.signIn { display: inline-flex; align-items: center; min-height: 44px; white-space: nowrap; font-size: 13px; color: hsl(var(--primary-emphasis)); }
 .smallButton, .primary { display: inline-flex; justify-content: center; align-items: center; gap: 1rem; background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); border-radius: 100px; font-size: 13px; font-weight: 600; min-height: 48px; padding: .85rem 1.35rem; transition: background-color 160ms, transform 160ms; }
+.smallButton { white-space: nowrap; }
 .primary { min-height: 54px; padding: 1rem 1.7rem; }
 .secondary { display: inline-flex; align-items: center; justify-content: center; gap: .8rem; min-height: 48px; padding: .8rem .4rem; color: hsl(var(--primary-emphasis)); font-size: 13px; }
 .smallButton:active, .primary:active { transform: scale(.98); }
@@ -41,8 +43,8 @@
 .authFooter { text-align: center; padding: 2rem 1rem; font-size: 11px; color: hsl(var(--muted-foreground)); }
 @media (hover: hover) and (pointer: fine) { .primary:hover, .smallButton:hover { background: hsl(var(--primary-hover)); } }
 @media (max-width: 899px) {
-  .header { padding: 1rem 1.25rem; } .header nav { gap: 1rem; }
-  .smallButton { font-size: 11px; padding: .6rem 1rem; min-height: 44px; gap: .5rem; }
+  .header { padding: 1rem 1.25rem; gap: .75rem; } .header nav { gap: .75rem; }
+  .smallButton { font-size: 11px; padding: .6rem .75rem; min-height: 44px; gap: .375rem; }
   .hero { grid-template-columns: 1fr; min-height: auto; padding: 2rem 1.5rem 4rem; gap: 0; }
   .heroCopy { max-width: 560px; margin: auto; }
   .hero h1 { font-size: clamp(3.2rem, 10.6vw, 4.8rem); max-width: 540px; margin-top: 1.1rem; }

@@ -1,4 +1,5 @@
 import { SceneAccent } from '@/components/emotion/EmotionalEnvironment';
+import { SparqLogo } from '@/components/brand/SparqMark';
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { readPendingInvite } from "@/lib/partner-invite";
@@ -196,7 +197,7 @@ export default function Dashboard() {
             <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-brand-hover">
               Home
             </p>
-            <span className="text-xl font-semibold tracking-tight text-brand-espresso">SPARQ</span>
+            <SparqLogo />
           </div>
           <div className="flex items-center gap-3">
             <button
