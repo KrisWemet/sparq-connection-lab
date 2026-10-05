@@ -56,10 +56,11 @@ export function TimeOutOverlay() {
 
   return (
     <>
-      {/* Floating Action Button */}
+      {/* Floating Action Button: sits above the bottom nav (~93px + the
+          phone's home-bar inset), never under it. */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-[88px] right-4 md:right-8 bg-primary text-primary-foreground p-3 rounded-full shadow-lg border border-border z-[40] hover:scale-105 transition-transform"
+        className="fixed bottom-[calc(6.5rem+env(safe-area-inset-bottom))] right-4 md:right-8 bg-primary text-primary-foreground p-3 rounded-full shadow-lg border border-border z-[40] hover:scale-105 transition-transform"
         aria-label="Emergency Time Out"
       >
         <HandHelping size={24} />
