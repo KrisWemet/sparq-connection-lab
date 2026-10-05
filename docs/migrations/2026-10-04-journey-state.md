@@ -1,6 +1,6 @@
 # Runbook: `20261004100000_journey_state.sql`
 
-**Status:** written and verified on a local copy of the live schema (2026-10-04). **Not applied to production.** Applying it needs Chris's go-ahead.
+**Status:** verified on a local copy of the live schema (2026-10-04). **Applied to production 2026-10-05** by Chris in the SQL Editor (one transaction), after the pre-flight checks and backups; verification passed (15 active journeys = 15 pointers, no duplicates). The Supabase connector's migration tool timed out on this destructive migration without applying anything, so it isn't listed in Supabase's migration history; the file is idempotent, so a later `db push` re-running it is harmless.
 
 ## What it changes
 
@@ -42,11 +42,15 @@ select distinct v.relname from pg_depend d join pg_rewrite r on r.oid=d.objid
   join pg_class v on v.oid=r.ev_class
  where d.refobjid='public.user_journeys'::regclass and v.relname<>'user_journeys';
 
--- 4. Pointers that the new code won't recognize (expect 0 rows).
+-- 4. Pointers the new code won't recognize (expect 0 rows). Valid ids are the
+--    9 starter journeys and the 13 staged journeys (src/lib/journeys/catalog.ts).
 select active_journey_id, count(*) from public.user_insights
  where active_journey_id is not null
    and active_journey_id not in ('deepening-good','staying-grounded','building-trust','opening-heart','shared-language',
-     'safe-in-love','calm-before-closeness','mixed-feelings','healing-old-wounds')
+     'safe-in-love','calm-before-closeness','mixed-feelings','healing-old-wounds',
+     'love-languages','communication','conflict-resolution','intimacy','emotional-intelligence','values',
+     'attachment-healing','trust-rebuilding','relationship-renewal','sexual-intimacy','mindful-sexuality',
+     'fantasy-exploration','power-dynamics')
  group by 1;
 ```
 
