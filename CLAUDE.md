@@ -209,7 +209,7 @@ npm run lint         # Run ESLint (next lint)
 npm test             # Vitest unit tests (constitution guarantees, tests/)
 ```
 
-Unit tests (Vitest, `tests/`) cover the constitution guarantees Chris approved (2026-09-30, extended 2026-10-01): guess revision, Peter's mode picker (incl. setbacks vs. comfort-first), privacy boundaries, mission ideas and adaptive difficulty, identity-evidence timing, and Deep Why layers. They are pure logic — no network or database. Ask Chris before adding new tests. Playwright e2e scripts live in `e2e/`.
+Unit tests (Vitest, `tests/`) cover the constitution guarantees Chris approved (2026-09-30, extended 2026-10-01): guess revision, Peter's mode picker (incl. setbacks vs. comfort-first), privacy boundaries, mission ideas and adaptive difficulty, identity-evidence timing, Deep Why layers, and journey progress and state (2026-10-04). They are pure logic — no network or database. Ask Chris before adding new tests. Playwright e2e scripts live in `e2e/`.
 
 ---
 
@@ -419,7 +419,8 @@ Managed via Supabase. Schema defined in `supabase/schema.sql`.
 | `partner_invitations` | Invite codes with 7-day expiry |
 | `journeys` | Predefined journey definitions |
 | `journey_questions` | Steps within journeys |
-| `user_journeys` | Per-user journey progress |
+| `user_journeys` | One record per user per journey (all 22, text slug ids): `status` active/paused/completed/left (one active per user), `stage`, `journey_day` (per journey), `progress` (days practiced). Written only by `src/lib/server/journey-state.ts` |
+| `journey_step_entries` | Private answers on staged-journey days (Roots/Growth/Bloom) |
 | `journey_responses` | User answers to journey questions |
 | `goals` + `goal_milestones` | User goal tracking |
 | `daily_questions` | Question bank |
@@ -637,7 +638,9 @@ Warm, golden-hour metaphor images only — never people (hands-only is allowed).
 
 ## Journeys
 
-There are 14 predefined journeys defined in `src/data/journeys.ts` with corresponding page components in `src/pages/journeys/`:
+**Journey state (2026-10-04, Phase 1 of the Journey spine):** Supabase is the only source of truth — `user_journeys` via `src/lib/server/journey-state.ts`, rules in `src/lib/journeys/progress.ts`, one catalog in `src/lib/journeys/catalog.ts` (9 daily starter journeys + 13 staged ones), browser access via `src/lib/journeys/client.ts` and `/api/journeys/state`. Never keep journey progress in localStorage (old browser progress is imported once). Switching journeys pauses the current one; pausing and leaving keep the user's place.
+
+There are 13 staged journeys defined in `src/data/journeys.ts` (Long Distance has no content yet) with corresponding page components in `src/pages/journeys/`:
 
 - Communication, Intimacy, Trust Rebuilding, Conflict Resolution
 - Love Languages, Emotional Intelligence, Feeling Safe Together (route: `attachment-healing`)

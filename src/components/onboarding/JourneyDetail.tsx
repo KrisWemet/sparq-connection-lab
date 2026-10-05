@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
 import { buildAuthedHeaders } from '@/lib/api-auth';
 import { reportPrimaryPathClientError, trackPrimaryPathClientEvent } from '@/lib/beta/primaryPath';
-import { shouldStartLegacyJourney } from '@/lib/journeys/legacyStartPolicy';
 import {
   requireJourneyActivationSuccess,
   requireOnboardingProfilePersistenceSuccess,
@@ -65,32 +64,16 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
     try {
       const headers = await buildAuthedHeaders({ 'Content-Type': 'application/json' });
 
-      // Starter journeys use the new content system directly.
-      // Only UUID-backed legacy journeys should touch the old journey bootstrap route.
-      if (shouldStartLegacyJourney(journeyId)) {
-        const legacyStartResponse = await fetch('/api/journeys/start', {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({ journey_id: journeyId }),
-        });
-        await requireJourneyActivationSuccess(legacyStartResponse, {
-          journeyId,
-          activationType: 'legacy_start',
-        });
-      }
-
-      // Activate starter journey content system (sets active_journey_id + resets day cursor)
-      if (starterJourney) {
-        const activateResponse = await fetch('/api/journeys/activate', {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({ journey_id: journeyId }),
-        });
-        await requireJourneyActivationSuccess(activateResponse, {
-          journeyId,
-          activationType: 'starter_activate',
-        });
-      }
+      // One journey record for every journey (lib/server/journey-state.ts).
+      const activateResponse = await fetch('/api/journeys/activate', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ journey_id: journeyId }),
+      });
+      await requireJourneyActivationSuccess(activateResponse, {
+        journeyId,
+        activationType: 'starter_activate',
+      });
 
       // Mark onboarded
       const { error: profilePersistError } = await supabase

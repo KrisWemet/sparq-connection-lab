@@ -109,6 +109,8 @@ export default function DailyGrowth() {
   const [journeyId, setJourneyId] = useState<string | null>(null);
   const [journeyTitle, setJourneyTitle] = useState<string | null>(null);
   const [journeyDuration, setJourneyDuration] = useState<number | null>(null);
+  // Day within the journey (per journey), as opposed to currentDay (days practiced overall).
+  const [journeyDay, setJourneyDay] = useState<number | null>(null);
   const [journeyModalityLabel, setJourneyModalityLabel] = useState<string | null>(null);
   const [eveningReflectionPrompt, setEveningReflectionPrompt] = useState<string | null>(null);
   const [practiceMode, setPracticeMode] = useState<PracticeMode>('solo');
@@ -242,6 +244,8 @@ export default function DailyGrowth() {
             if (session.journey_id) {
               setJourneyId(session.journey_id);
               if (session.journey_title) setJourneyTitle(session.journey_title);
+              if (session.journey_day_index) setJourneyDay(session.journey_day_index);
+              if (session.journey_day_index) setJourneyDay(session.journey_day_index);
             }
             setPracticeMode(session.practice_mode || inferPracticeMode(session.morning_action || ''));
             if (session.evening_reflection_prompt) {
@@ -668,7 +672,7 @@ export default function DailyGrowth() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
-            <DayProgressArc currentDay={currentDay} totalDays={journeyDuration ?? 14} />
+            <DayProgressArc currentDay={journeyDay ?? currentDay} totalDays={journeyDuration ?? 14} />
           </motion.div>
 
           <motion.section
@@ -683,7 +687,7 @@ export default function DailyGrowth() {
             />
             <div className="relative">
               <EditorialEyebrow className="text-brand-hover">
-                {journeyTitle ? `${journeyTitle} — Day ${currentDay}` : 'Morning practice'}
+                {journeyTitle ? `${journeyTitle} — Day ${journeyDay ?? currentDay}` : 'Morning practice'}
               </EditorialEyebrow>
               <p className="mt-3 max-w-[17rem] font-serif italic text-[31px] leading-[1.08] text-brand-espresso">
                 {homeHeadline}
