@@ -8,7 +8,8 @@
 
 export type SkillKey =
   | 'presence' | 'appreciation' | 'curiosity' | 'repair'
-  | 'request' | 'pause' | 'values';
+  | 'request' | 'pause' | 'values'
+  | 'pattern' | 'self_kindness' | 'what_works';
 
 export type Domain = 'self' | 'partner' | 'family' | 'friends' | 'work' | 'community';
 
@@ -101,6 +102,33 @@ export const SKILL_LADDERS: Record<SkillKey, { label: string; steps: Step[] }> =
       { cue: 'When I notice I acted against it', alt: 'When I slip back into an old habit', intention: 'pause, say what I care about, and choose my next step' },
     ],
   },
+  pattern: {
+    label: 'Seeing the loop, not a villain',
+    steps: [
+      { cue: 'After a fight that felt familiar', alt: 'When I replay an argument in my head', intention: 'write down what happened just before it turned' },
+      { cue: 'When the same fight starts again', alt: 'When I feel the old argument coming', intention: 'notice my usual move and name it to myself' },
+      { cue: 'When things are calm between us', alt: 'On a walk together', intention: 'describe how the loop goes for me, without blaming either of us' },
+      { cue: 'When a difference between us bugs me again', alt: 'When their way of doing it is not my way', intention: 'tell myself it is a difference, not a wrong, and decide what I still want to ask for' },
+    ],
+  },
+  self_kindness: {
+    label: 'Being kind to myself and owning it',
+    steps: [
+      { cue: 'When I am being hard on myself', alt: 'When I replay something I wish I had not said', intention: 'say to myself: "This is a hard moment, and I am not the only one who has them"' },
+      { cue: 'After I mess up', alt: 'When I feel ashamed of something I did', intention: 'remind myself that one mistake is not all of who I am' },
+      { cue: 'When my mistake hurt someone', alt: 'When I see it landed badly', intention: 'name what it did to them, without excuses' },
+      { cue: 'Once I feel steadier', alt: 'Later that day', intention: 'choose one small repair or next try, and do it' },
+    ],
+  },
+  what_works: {
+    label: 'Noticing what already works',
+    steps: [
+      { cue: 'At the end of the day', alt: 'Before bed', intention: 'notice one moment between us that went a little better' },
+      { cue: 'When I notice a better moment', alt: 'When a talk goes okay', intention: 'ask myself what was different this time' },
+      { cue: 'The next time a similar moment comes', alt: 'When a hard talk is coming up', intention: 'do one thing from that better moment again' },
+      { cue: 'Once this week', alt: 'On a calm evening', intention: 'tell them about a moment that went well between us' },
+    ],
+  },
 };
 
 /**
@@ -181,6 +209,33 @@ export const PRACTICE_META: Record<SkillKey, PracticeMeta> = {
     intensity: 'low',
     limitations: 'Values are directions, not rules to be perfect at. Missing one is information.',
     followUp: 'What did it feel like to do it? Did it fit what you care about?',
+  },
+  pattern: {
+    source: ['IBCT (DEEP understanding, unified detachment, acceptance and change)', 'EFT (the cycle as the shared problem)'],
+    skill: 'Seeing a recurring fight as a loop the two of you are caught in',
+    outcome: 'Less blame; clearer about which differences to accept and what to ask for',
+    context: 'Recurring disagreements in a relationship that is safe. Start after the fight, not during it',
+    intensity: 'medium',
+    limitations: 'Acceptance never means putting up with control, threats, being hurt or a crossed boundary. Never assign motives to your partner.',
+    followUp: 'What did you notice about how the loop goes?',
+  },
+  self_kindness: {
+    source: ['Self-compassion (Neff: kindness, common humanity, mindfulness)', 'Gottman (repair)'],
+    skill: 'Responding to your own mistake with kindness and responsibility',
+    outcome: 'Less shame that freezes you; more repair and next tries',
+    context: 'After a setback or something you regret. Not a way to skip the other person\'s hurt',
+    intensity: 'medium',
+    limitations: 'Kindness is not an excuse — it sits next to owning what happened. Not trauma work.',
+    followUp: 'How was it to be kind to yourself and still own it?',
+  },
+  what_works: {
+    source: ['Solution-focused brief therapy (exceptions, doing more of what works)', 'Positive Psychology'],
+    skill: 'Finding times it went a little better and repeating what helped',
+    outcome: 'More of the moments that already work',
+    context: 'After the hard part has been heard; useful when it feels stuck',
+    intensity: 'low',
+    limitations: 'Does not mean every problem can be solved by attitude. Pain is heard first.',
+    followUp: 'What was different in the better moment?',
   },
 };
 
@@ -307,6 +362,9 @@ const GOAL_HINTS: Array<[SkillKey, RegExp]> = [
   ['presence', /\b(present|stay|shut down|walk away|withdraw|in the room)/i],
   ['appreciation', /\b(appreciat|thank|grateful|notice|kind|warm)/i],
   ['values', /\b(value|matter|kids|family|integrity|kind of person|example)/i],
+  ['pattern', /\b(same fight|keep (fighting|arguing)|loop|cycle|pattern|round and round)/i],
+  ['self_kindness', /\b(hard on myself|forgive myself|kinder to myself|guilt|shame|beat myself up)/i],
+  ['what_works', /\b(what works|good days|better days|good moments|stuck)/i],
 ];
 
 function preferredOrder(goalText: string): SkillKey[] {
