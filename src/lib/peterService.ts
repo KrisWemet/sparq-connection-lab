@@ -179,6 +179,7 @@ export function getMorningStoryPrompt(
   insights: Partial<UserInsights>,
   steeringHint?: string | null,
   activeTrack?: string | null,
+  practice?: { label: string; intention: string } | null,
 ): string {
   let concept: string;
 
@@ -255,6 +256,13 @@ The user should leave feeling: "That's worth trying, if I want to."`;
 
   if (steeringHint) {
     prompt += `\n\nStory idea: ${steeringHint}. Keep it natural — it's still an ordinary story, not a test.`;
+  }
+
+  // Practice continuity (docs/TRANSFORMATION_ENGINE.md "Practice consistency"):
+  // the user chose this practice themselves, so today's story may give it one
+  // more real-life moment instead of starting a new topic (§5A provenance).
+  if (practice) {
+    prompt += `\n\nThe reader chose to practice "${practice.label.toLowerCase()}" (their step: "${practice.intention}"). If it fits today's concept, let the story and Today's Action show that same skill in a new, everyday situation. Never call it homework or mention that they chose it.`;
   }
 
   return prompt;

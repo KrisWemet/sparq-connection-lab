@@ -10,6 +10,7 @@ import { trackPrimaryPathServerError } from '@/lib/server/beta-ops';
 import { computeTraitGaps, getSteeringHint, getSteeredTrait } from '@/lib/server/trait-gaps';
 import { PracticeMode, resolveJourneyContent } from '@/lib/server/journey-content';
 import { buildLegacyTraits } from '@/lib/server/attachment-context';
+import { SKILL_LADDERS, isSkillKey } from '@/lib/missions';
 
 const dailySessionColumnCache: Record<string, boolean | undefined> = {};
 
@@ -357,6 +358,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // ── LLM generation path (no active journey or no static content) ──
+  // A practice the user chose in the last two weeks, so the story can give it
+  // one more real-life moment (practice continuity). Fails soft to none.
+  let practice: { label: string; intention: string } | null = null;
+  try {
+    const { data: chosen } = await ctx.supabase
+      .from('experiments')
+      .select('skill_key, intention')
+      .eq('user_id', ctx.userId)
+      .in('status', ['planned', 'tried'])
+      .not('skill_key', 'is', null)
+      .gte('created_at', new Date(Date.now() - 14 * 86_400_000).toISOString())
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    const skill: unknown = chosen?.skill_key;
+    if (chosen && isSkillKey(skill)) {
+      practice = { label: SKILL_LADDERS[skill].label, intention: String(chosen.intention).slice(0, 160) };
+    }
+  } catch {
+    practice = null;
+  }
+
   let storyRaw = "";
   let isValid = false;
   let attempts = 0;
@@ -365,7 +388,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   while (!isValid && attempts < 2) {
     attempts++;
     try {
-      let currentPrompt = getMorningStoryPrompt(dayIndex, insights, steeringHint, activeTrack);
+      let currentPrompt = getMorningStoryPrompt(dayIndex, insights, steeringHint, activeTrack, practice);
       if (lastFailureReason) {
         currentPrompt += `\n\nCRITICAL FIX REQUIRED: Your previous attempt failed validation because: "${lastFailureReason}". Ensure you fix this logical error in your rewrite.`;
       }

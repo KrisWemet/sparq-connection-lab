@@ -90,4 +90,4 @@ Then → now is shown item by item in the user's own words (`CsiTrajectoryCard`)
 
 **Admin:** `GET /api/admin/kpis` reports only how many check-ins were saved (`check_ins_saved`). Answers are never aggregated into a score.
 
-**Not yet done:** a "practice feels like a burden / not helpful" answer does not yet change which practices are suggested — that link belongs to the practice-consistency slice (Phase 3).
+**Linked to practice (2026-10-05):** the latest follow-up `practice_fit` answer feeds `suggestMission` — "A burden" → no mission idea is offered; "Not helpful" → the current practice rests and a different one is offered (docs/TRANSFORMATION_ENGINE.md *Practice consistency*). The answer itself never leaves the user's rows.
