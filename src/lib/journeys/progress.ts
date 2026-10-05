@@ -82,9 +82,15 @@ export function recordStep(
   state: JourneyState,
   shape: JourneyShape,
   step: { day: number; stage?: StageId | null; at: string },
+  opts: { creditSetAside?: boolean } = {},
 ): StepResult {
   const unchanged: StepResult = { state, advanced: false, stageCompleted: null, journeyCompleted: false };
-  if (state.status !== 'active') return unchanged;
+  // A day the user started on this journey still counts for it if they
+  // paused or left it before finishing that day (mid-day switch). Its status
+  // stays as they set it, unless this day finishes the journey.
+  const countable = state.status === 'active'
+    || (opts.creditSetAside === true && (state.status === 'paused' || state.status === 'left'));
+  if (!countable) return unchanged;
 
   if (shape.kind === 'daily') {
     if (step.day !== state.journey_day || step.day > shape.length) return unchanged;

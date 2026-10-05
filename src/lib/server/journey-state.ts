@@ -282,6 +282,8 @@ export type StepOutcome = {
   advanced: boolean;
   stageCompleted: StageId | null;
   journeyCompleted: boolean;
+  /** Whether this was the user's active journey when the day was counted. */
+  wasActive: boolean;
 };
 
 /**
@@ -294,6 +296,7 @@ export async function recordJourneyStep(
   userId: string,
   journeyId: string,
   step: { day: number; stage?: StageId | null; responses?: Record<string, string> | null },
+  opts: { creditSetAside?: boolean } = {},
 ): Promise<JourneyResult<StepOutcome>> {
   const entry = getCatalogJourney(journeyId);
   if (!entry) return { ok: false, error: 'unknown_journey' };
@@ -302,7 +305,8 @@ export async function recordJourneyStep(
   if (!existing.value) return { ok: false, error: 'not_found' };
 
   const at = new Date().toISOString();
-  const result = recordStep(existing.value, entry.shape, { day: step.day, stage: step.stage, at });
+  const wasActive = existing.value.status === 'active';
+  const result = recordStep(existing.value, entry.shape, { day: step.day, stage: step.stage, at }, opts);
 
   // Answers are saved for the day they belong to, even when it was already
   // counted (the user went back and added to an earlier day).
@@ -317,26 +321,27 @@ export async function recordJourneyStep(
   }
 
   if (!result.advanced) {
-    return { ok: true, value: { journey: existing.value, advanced: false, stageCompleted: null, journeyCompleted: false } };
+    return { ok: true, value: { journey: existing.value, advanced: false, stageCompleted: null, journeyCompleted: false, wasActive } };
   }
 
   const saved = await saveRow(db, userId, existing.value, result.state);
   if (!saved.ok) return saved;
 
   if (result.journeyCompleted) {
-    await setInsightsPointer(db, userId, {
-      active_journey_id: null,
-      last_completed_journey_id: journeyId,
-      journey_completion_state: 'pending_decision',
-    });
-    await trackEvent(db, userId, 'journey_completed', { journey_id: journeyId, days_practiced: result.state.progress });
+    // Only the active journey owns the pointer and the "what's next?" state.
+    // Finishing a journey the user had already set aside (a day started
+    // before they switched) must not touch the journey they're on now.
+    await setInsightsPointer(db, userId, wasActive
+      ? { active_journey_id: null, last_completed_journey_id: journeyId, journey_completion_state: 'pending_decision' }
+      : { last_completed_journey_id: journeyId });
+    await trackEvent(db, userId, 'journey_completed', { journey_id: journeyId, days_practiced: result.state.progress, was_active: wasActive });
   } else if (result.stageCompleted) {
     await trackEvent(db, userId, 'journey_stage_completed', { journey_id: journeyId, stage: result.stageCompleted });
   }
 
   return {
     ok: true,
-    value: { journey: saved.value, advanced: true, stageCompleted: result.stageCompleted, journeyCompleted: result.journeyCompleted },
+    value: { journey: saved.value, advanced: true, stageCompleted: result.stageCompleted, journeyCompleted: result.journeyCompleted, wasActive },
   };
 }
 

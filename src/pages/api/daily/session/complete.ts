@@ -168,30 +168,45 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Only daily (starter) journeys run through this loop today; staged ones
   // keep their own pages until Phase 2.
   const activeJourney = await getActiveJourney(ctx.supabase, ctx.userId);
-  const activeJourneyId: string | null =
+  const activeDailyJourneyId: string | null =
     activeJourney && isDailyJourney(activeJourney.journey_id) ? activeJourney.journey_id : null;
-  const unlocked = activeJourneyId ? false : currentDay >= 14;
+  // The journey this session was started on. If the user switched journeys
+  // since (mid-day), the day still belongs to — and is credited to — it,
+  // and the journey they switched to is left exactly as it is.
+  const sessionJourneyId: string | null =
+    isDailyJourney(updatedSession.journey_id) ? updatedSession.journey_id : null;
+  const unlocked = (activeDailyJourneyId || sessionJourneyId) ? false : currentDay >= 14;
 
-  // ── Journey progress: count this journey day once, on that journey ──
+  // ── Journey progress: count this journey day once, on its own journey ──
   // (journey-state.ts). Completion comes from the journey's own day, not the
   // global practice-day counter.
-  let journeyCompleted = false;
+  let journeyCompleted = false;            // the active journey just finished → show "what's next?"
+  let finishedJourneyId: string | null = null; // any journey this day finished → summary + thread
   const sessionJourneyDay = Number(updatedSession.journey_day_index) || 0;
-  if (!alreadyCompleted && activeJourneyId && updatedSession.journey_id === activeJourneyId && sessionJourneyDay > 0) {
-    const step = await recordJourneyStep(ctx.supabase, ctx.userId, activeJourneyId, { day: sessionJourneyDay });
+  if (!alreadyCompleted && sessionJourneyId && sessionJourneyDay > 0) {
+    const step = await recordJourneyStep(ctx.supabase, ctx.userId, sessionJourneyId, { day: sessionJourneyDay }, { creditSetAside: true });
     if (step.ok) {
-      journeyCompleted = step.value.journeyCompleted;
-    } else if (step.error === 'schema_not_ready' && isJourneyComplete(activeJourneyId, sessionJourneyDay + 1)) {
+      if (step.value.journeyCompleted) {
+        finishedJourneyId = sessionJourneyId;
+        journeyCompleted = step.value.wasActive;
+      }
+    } else if (
+      step.error === 'schema_not_ready'
+      && sessionJourneyId === activeDailyJourneyId
+      && isJourneyComplete(sessionJourneyId, sessionJourneyDay + 1)
+    ) {
       // Before the journey_state migration: the old pointer-only completion.
       journeyCompleted = true;
+      finishedJourneyId = sessionJourneyId;
       await ctx.supabase.from('user_insights').upsert({
         user_id: ctx.userId,
         active_journey_id: null,
-        last_completed_journey_id: activeJourneyId,
+        last_completed_journey_id: sessionJourneyId,
         journey_completion_state: 'pending_decision',
       }, { onConflict: 'user_id' });
     }
   }
+  const activeJourneyId: string | null = sessionJourneyId ?? activeDailyJourneyId;
 
   if (!alreadyCompleted) {
     const insightsUpsert: Record<string, unknown> = {
@@ -215,7 +230,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
 
     // Generate synthesis (journey_completed is tracked by journey-state.ts)
-    if (journeyCompleted && activeJourneyId) {
+    if (finishedJourneyId) {
 
       // Fire-and-forget: generate journey synthesis, recommendations, and growth thread entry
       (async () => {
@@ -229,7 +244,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             .from('daily_sessions')
             .select('day_index, morning_action, evening_reflection, evening_emotional_tone')
             .eq('user_id', ctx.userId)
-            .eq('journey_id', activeJourneyId)
+            .eq('journey_id', finishedJourneyId)
             .eq('status', 'completed')
             .order('day_index', { ascending: true });
 
@@ -237,7 +252,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           const lastReflection = journeySessions?.[journeySessions.length - 1]?.evening_reflection || '';
           const tones = (journeySessions || []).map(s => s.evening_emotional_tone).filter(Boolean);
 
-          const synthesisPrompt = `You are Peter the otter. A user just completed their relationship journey "${activeJourneyId}" (${journeySessions?.length ?? 0} days practiced).
+          const synthesisPrompt = `You are Peter the otter. A user just completed their relationship journey "${finishedJourneyId}" (${journeySessions?.length ?? 0} days practiced).
 
 Day 1 reflection: "${firstReflection.slice(0, 200)}"
 Final day reflection: "${lastReflection.slice(0, 200)}"
@@ -266,7 +281,7 @@ Output ONLY the synthesis text. No JSON, no formatting.`;
             .from('user_journeys')
             .update({ completion_synthesis: synthesis })
             .eq('user_id', ctx.userId)
-            .eq('journey_id', activeJourneyId);
+            .eq('journey_id', finishedJourneyId);
 
           // Generate next journey recommendations (journeys actually finished,
           // not every journey they practiced a day of)
@@ -276,7 +291,7 @@ Output ONLY the synthesis text. No JSON, no formatting.`;
             .eq('user_id', ctx.userId)
             .eq('status', 'completed');
 
-          const completedIds = [...new Set([activeJourneyId, ...(completedJourneys || []).map(r => r.journey_id)].filter(Boolean))] as string[];
+          const completedIds = [...new Set([finishedJourneyId, ...(completedJourneys || []).map(r => r.journey_id)].filter(Boolean))] as string[];
 
           const { data: traits } = await ctx.supabase
             .from('profile_traits')
@@ -288,7 +303,7 @@ Output ONLY the synthesis text. No JSON, no formatting.`;
           const { recommendations, suggestRest } = recommendNextJourneys(
             completedIds,
             traits?.inferred_value,
-            activeJourneyId,
+            finishedJourneyId,
           );
 
           // Store recommendations in user_insights
@@ -303,9 +318,9 @@ Output ONLY the synthesis text. No JSON, no formatting.`;
           await ctx.supabase.from('growth_thread').insert({
             user_id: ctx.userId,
             date: new Date().toISOString().slice(0, 10),
-            label: `Completed ${activeJourneyId.replace(/-/g, ' ')}`,
+            label: `Completed ${finishedJourneyId.replace(/-/g, ' ')}`,
             type: 'milestone',
-            journey_id: activeJourneyId,
+            journey_id: finishedJourneyId,
             detail: synthesis,
           });
         } catch (err) {
@@ -377,7 +392,7 @@ Output ONLY the synthesis text. No JSON, no formatting.`;
     next_day_index: nextDay,
     skill_tree_unlocked: unlocked,
     journey_completed: journeyCompleted,
-    completed_journey_id: journeyCompleted ? activeJourneyId : null,
+    completed_journey_id: journeyCompleted ? finishedJourneyId : null,
     session: updatedSession,
   });
 }

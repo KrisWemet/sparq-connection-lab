@@ -18,7 +18,10 @@
 --     their completed daily sessions.
 -- user_insights.active_journey_id stays as a pointer, written by
 -- src/lib/server/journey-state.ts together with user_journeys.
--- Additive and idempotent. Live table had 0 rows when written (2026-10-04).
+-- NOT purely additive: it changes user_journeys.journey_id from uuid to text and
+-- drops the FK to journeys. Idempotent. Live table had 0 rows when written
+-- (2026-10-04). Backup, deployment order and recovery:
+-- docs/migrations/2026-10-04-journey-state.md
 
 -- ── 1. journey_id: uuid → text, no FK to journeys ─────────────────────────
 ALTER TABLE public.user_journeys DROP CONSTRAINT IF EXISTS user_journeys_journey_id_fkey;
