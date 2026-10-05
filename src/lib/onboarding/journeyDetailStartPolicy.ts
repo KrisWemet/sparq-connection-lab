@@ -3,7 +3,7 @@ export type JourneyDetailStartStage =
   | 'journey_detail_profile_persist'
   | 'journey_detail_start';
 
-type JourneyActivationType = 'legacy_start' | 'starter_activate';
+type JourneyActivationType = 'starter_activate';
 
 type MinimalResponse = {
   ok: boolean;

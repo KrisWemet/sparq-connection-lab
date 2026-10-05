@@ -10,6 +10,8 @@ import { trackPrimaryPathServerError } from '@/lib/server/beta-ops';
 import { computeTraitGaps, getSteeringHint, getSteeredTrait } from '@/lib/server/trait-gaps';
 import { PracticeMode, resolveJourneyContent } from '@/lib/server/journey-content';
 import { buildLegacyTraits } from '@/lib/server/attachment-context';
+import { getActiveJourney } from '@/lib/server/journey-state';
+import { isDailyJourney } from '@/lib/journeys/catalog';
 
 const dailySessionColumnCache: Record<string, boolean | undefined> = {};
 
@@ -142,7 +144,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // Journey-driven users skip the old graduation check entirely.
   // Only apply the old day-14 graduation logic when there's no active journey.
-  const activeJourneyId: string | null = insightsRow?.active_journey_id ?? null;
+  // Daily (starter) journeys feed the Daily Loop's content; staged journeys
+  // keep their own pages until Phase 2 brings them into this flow.
+  const activeJourney = await getActiveJourney(ctx.supabase, ctx.userId);
+  const dailyJourney = activeJourney && isDailyJourney(activeJourney.journey_id) ? activeJourney : null;
+  const activeJourneyId: string | null = dailyJourney?.journey_id ?? null;
+  // The journey's own next day — not the global practice-day counter, which
+  // kept counting across journeys and started a second journey mid-way.
+  const journeyDay = dailyJourney?.journey_day ?? 1;
 
   if (!activeJourneyId) {
     if (insightsRow?.skill_tree_unlocked || insightsRow?.onboarding_completed_at) {
@@ -250,7 +259,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // ── Journey content path: use static content when an active journey exists ──
-  const journeyContent = resolveJourneyContent(activeJourneyId, dayIndex);
+  const journeyContent = resolveJourneyContent(activeJourneyId, journeyDay);
 
   if (journeyContent) {
     const { day: jDay, journeyTitle, journeyDuration, modalityLabel, practiceMode } = journeyContent;
@@ -270,7 +279,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       evening_reflection_prompt: jDay.reflection.prompt,
       journey_id: activeJourneyId,
       journey_title: journeyTitle,
-      journey_day_index: dayIndex,
+      journey_day_index: journeyDay,
       idempotency_key: body.idempotency_key || null,
       active_track: modalityLabel || 'communication',
       ...(steeredTrait ? { steered_trait: steeredTrait } : {}),
@@ -335,7 +344,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       local_date: localDate,
       tier: entitlements.tier,
       journey_id: activeJourneyId,
-      journey_day: dayIndex,
+      journey_day: journeyDay,
       practice_mode: practiceMode,
     });
 
@@ -350,6 +359,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         title: journeyTitle,
         duration: journeyDuration,
         dayIndex,
+        journeyDay,
         modalityLabel,
         practiceMode,
       },
