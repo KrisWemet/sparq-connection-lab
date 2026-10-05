@@ -2,75 +2,65 @@
 // moment). Non-negotiable: report honestly even if flat or down.
 //
 // Four states:
-//   remeasure_due -> ask the 4 questions again (the "after" measurement)
-//   ready + up    -> name the rise plainly, no overclaiming
-//   ready + flat  -> say it's flat, and say why that can still be real
-//   ready + down  -> say it honestly and without alarm; never blame the user
+//   remeasure_due -> ask the published CSI-4 again (the "after" measurement),
+//                    then Sparq's own optional check-in questions
+//   ready + up    -> name the rise plainly, no claim about the cause
+//   ready + flat  -> say it's the same, without spin
+//   ready + down  -> say it honestly and without alarm; never blame the user,
+//                    and say the practice can change or pause
 //
 // Design rule: no diagnosis, no "this proves Sparq works", no manufactured
-// urgency. The number is theirs, not a sales device.
+// urgency, no comparison with a partner. The number is theirs, not a sales device.
 
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { buildAuthedHeaders } from '@/lib/api-auth';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
+import { CSI4_ITEMS } from '@/lib/csi4';
+import { CHECK_IN_SHORT, type CheckInKey } from '@/lib/check-in';
+import { InformalCheckIn } from '@/components/checkin/InformalCheckIn';
 
 type DeltaState =
   | { state: 'no_baseline' | 'too_early' }
   | { state: 'remeasure_due'; baseline: number; days_since_baseline: number }
   | { state: 'ready'; baseline: number; latest: number; delta: number; days_since_baseline: number };
 
-const QUESTIONS: Array<{ text: string; options: string[] }> = [
-  {
-    text: 'All things considered, how happy do things feel in your relationship right now?',
-    options: ['Really hard', 'Hard', 'A bit unhappy', 'Even', 'Pretty happy', 'Very happy', 'Wonderfully happy'],
-  },
-  {
-    text: 'How warm and comfortable does your relationship feel day to day?',
-    options: ['Not at all', 'A little', 'Somewhat', 'Mostly', 'Almost always', 'Completely'],
-  },
-  {
-    text: 'How rewarding does your relationship feel?',
-    options: ['Not at all', 'A little', 'Somewhat', 'Mostly', 'Very', 'Completely'],
-  },
-  {
-    text: 'Overall, how satisfied are you with your relationship?',
-    options: ['Not at all', 'A little', 'Somewhat', 'Mostly', 'Very', 'Completely'],
-  },
-];
+const QUESTIONS = CSI4_ITEMS.map(i => ({ text: i.text, options: i.anchors }));
 
-/** Honest copy for every outcome — including the ones that aren't flattering. */
+/**
+ * Honest copy for every outcome — including the ones that aren't flattering.
+ * It reports what the user said, never why it changed: many things move a
+ * relationship, and two answers can't show that Sparq caused anything.
+ */
 function readTrajectory(delta: number): { headline: string; body: string } {
-  if (delta >= 3) {
+  if (delta > 0) {
     return {
-      headline: 'Something moved.',
-      body: `Your own answers came back ${delta} points higher than the day you started. That's your read on your relationship, not mine — and it went up.`,
-    };
-  }
-  if (delta >= 1) {
-    return {
-      headline: 'A small lift.',
-      body: `Up ${delta} ${delta === 1 ? 'point' : 'points'} from where you started. Small, but two weeks is a short window — and small compounds.`,
+      headline: 'Your answers went up.',
+      body: `Your own answers are ${delta} ${delta === 1 ? 'point' : 'points'} higher than on day one. That is your read on your relationship. Lots of things can move it, so this shows what changed, not why.`,
     };
   }
   if (delta === 0) {
     return {
-      headline: 'Level — and that\'s worth saying plainly.',
-      body: 'Your answers landed exactly where they did two weeks ago. I\'m not going to dress that up. Most of what you practiced works underneath the surface first; the felt part often arrives later.',
+      headline: 'Your answers are the same as on day one.',
+      body: "Two weeks is a short time. A steady answer is real information, not a failing grade.",
     };
   }
   return {
-    headline: 'It reads a little lower right now.',
-    body: `Down ${Math.abs(delta)} from where you started. That happens — sometimes paying closer attention makes you notice more, and honest noticing can feel worse before it feels better. It doesn't mean you did this wrong.`,
+    headline: 'Your answers are a little lower than on day one.',
+    body: `Down ${Math.abs(delta)} from where you started. That can happen for many reasons, like a hard week or noticing more than before. It doesn't mean you did this wrong. If what you're practicing isn't helping, you can change it or take a break.`,
   };
 }
+
+type Changes = Array<{ key: CheckInKey; then: string; now: string; direction: 'higher' | 'same' | 'lower' }>;
 
 export function CsiTrajectoryCard() {
   const [data, setData] = useState<DeltaState | null>(null);
   const [step, setStep] = useState(0);
   const [scores, setScores] = useState<number[]>([]);
   const [saving, setSaving] = useState(false);
+  const [informal, setInformal] = useState(false);
+  const [changes, setChanges] = useState<Changes>([]);
 
   const load = async () => {
     try {
@@ -80,6 +70,8 @@ export function CsiTrajectoryCard() {
       const res = await fetch('/api/csi/delta', { headers });
       if (!res.ok) return;
       setData(await res.json());
+      const checkIn = await fetch('/api/me/check-in', { headers });
+      if (checkIn.ok) setChanges(((await checkIn.json()).changes || []) as Changes);
     } catch {
       // fail-soft: card doesn't render
     }
@@ -102,7 +94,7 @@ export function CsiTrajectoryCard() {
         headers,
         body: JSON.stringify({ item_scores: next }),
       });
-      await load(); // re-read so the delta appears immediately
+      setInformal(true); // then the optional informal questions
     } catch {
       // fail-soft
     } finally {
@@ -131,11 +123,18 @@ export function CsiTrajectoryCard() {
       </div>
 
       <AnimatePresence mode="wait">
-        {view.state === 'remeasure_due' ? (
+        {informal ? (
+          <motion.div key="informal" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <InformalCheckIn
+              stage="follow_up"
+              onDone={() => { setInformal(false); void load(); }}
+            />
+          </motion.div>
+        ) : view.state === 'remeasure_due' ? (
           <motion.div key={`q-${step}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <p className="mb-4 text-sm leading-relaxed text-brand-text-secondary">
-              You answered these on day one. Same four, honestly as you feel today —
-              then I&apos;ll show you both side by side. ({step + 1} of {QUESTIONS.length})
+              You answered these on day one. Same four, honestly as you feel today.
+              Then you&apos;ll see both side by side. ({step + 1} of {QUESTIONS.length})
             </p>
             <p className="mb-3 font-serif text-[15px] leading-snug text-brand-espresso">
               {QUESTIONS[step].text}
@@ -146,7 +145,7 @@ export function CsiTrajectoryCard() {
                   key={label}
                   disabled={saving}
                   onClick={() => answer(i)}
-                  className="rounded-full border border-brand-primary/20 px-3 py-1.5 text-xs text-brand-espresso transition-colors hover:bg-brand-primary/10 disabled:opacity-50"
+                  className="rounded-full border border-brand-primary/20 px-3 py-1.5 text-xs text-brand-espresso transition-colors hover:bg-brand-primary/10 active:bg-brand-primary/10 disabled:opacity-50"
                 >
                   {label}
                 </button>
@@ -170,9 +169,21 @@ export function CsiTrajectoryCard() {
                 </div>
                 <p className="mb-1.5 text-sm font-semibold text-brand-espresso">{result.headline}</p>
                 <p className="text-sm leading-relaxed text-brand-text-secondary">{result.body}</p>
+                {changes.length > 0 && (
+                  <div className="mt-4 space-y-1.5 border-t border-brand-primary/10 pt-3">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-brand-taupe">Your other answers, then → now</p>
+                    {changes.map(c => (
+                      <p key={c.key} className="text-xs leading-relaxed text-brand-text-secondary">
+                        {CHECK_IN_SHORT[c.key]}: {c.then} → <span className="text-brand-espresso">{c.now}</span>
+                      </p>
+                    ))}
+                  </div>
+                )}
                 <p className="mt-3 text-[11px] leading-relaxed text-brand-taupe">
-                  Measured with the CSI-4, a short standard relationship-satisfaction
-                  scale. Two weeks is a small window — this is a first data point, not a verdict.
+                  The four questions are the CSI-4, a short published relationship-satisfaction
+                  scale (Funk &amp; Rogge, 2007); the others are Sparq&apos;s own. A change in your
+                  answers shows what you reported, not proof of what caused it. Using Sparq less
+                  can be part of things going well.
                 </p>
               </>
             )}

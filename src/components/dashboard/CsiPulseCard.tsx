@@ -1,37 +1,45 @@
-// CSI-4 pulse card (spec §5.4). Peter-voiced, 4 questions, ~30 seconds.
-// Appears only when a pulse is due; disappears after submission.
-// Scores are never shown as grades.
+// CSI-4 pulse card (spec §5.4). The published CSI-4 (src/lib/csi4.ts), ~30
+// seconds, then Sparq's own optional check-in questions. Appears only when a
+// pulse is due; "Not now" is always available. Scores are never shown as grades.
 
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { buildAuthedHeaders } from '@/lib/api-auth';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
+import { CSI4_ITEMS, CSI4_SOURCE_NOTE } from '@/lib/csi4';
+import { InformalCheckIn } from '@/components/checkin/InformalCheckIn';
 
-const QUESTIONS: Array<{ text: string; options: string[] }> = [
-  {
-    text: 'All things considered, how happy do things feel in your relationship right now?',
-    options: ['Really hard', 'Hard', 'A bit unhappy', 'Even', 'Pretty happy', 'Very happy', 'Wonderfully happy'],
-  },
-  {
-    text: 'How warm and comfortable does your relationship feel day to day?',
-    options: ['Not at all', 'A little', 'Somewhat', 'Mostly', 'Almost always', 'Completely'],
-  },
-  {
-    text: 'How rewarding does your relationship feel?',
-    options: ['Not at all', 'A little', 'Somewhat', 'Mostly', 'Very', 'Completely'],
-  },
-  {
-    text: 'Overall, how satisfied are you with your relationship?',
-    options: ['Not at all', 'A little', 'Somewhat', 'Mostly', 'Very', 'Completely'],
-  },
-];
+const QUESTIONS = CSI4_ITEMS.map(i => ({ text: i.text, options: i.anchors }));
+
+// "Not now" hides the card on this device for a week (a per-viewer
+// convenience; the pulse stays due and nothing is lost).
+const SNOOZE_KEY = 'sparq_csi_pulse_snoozed_until';
+const SNOOZE_DAYS = 7;
+
+function isSnoozed(): boolean {
+  try {
+    const until = Number(window.localStorage.getItem(SNOOZE_KEY) || 0);
+    return until > Date.now();
+  } catch {
+    return false;
+  }
+}
+
+function snooze() {
+  try {
+    window.localStorage.setItem(SNOOZE_KEY, String(Date.now() + SNOOZE_DAYS * 86_400_000));
+  } catch {
+    // storage blocked — the card just hides for this visit
+  }
+}
 
 export function CsiPulseCard() {
   const [due, setDue] = useState<string | null>(null);
   const [step, setStep] = useState(0);
   const [scores, setScores] = useState<number[]>([]);
-  const [done, setDone] = useState(false);
+  const [phase, setPhase] = useState<'csi' | 'informal' | 'done'>('csi');
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -43,7 +51,10 @@ export function CsiPulseCard() {
         const res = await fetch('/api/csi/pulse', { headers });
         if (!res.ok) return;
         const payload = await res.json();
-        if (!cancelled) setDue(payload.due);
+        if (!cancelled) {
+          setDue(payload.due);
+          setHidden(isSnoozed());
+        }
       } catch {
         // fail-soft: card simply doesn't show
       }
@@ -58,7 +69,7 @@ export function CsiPulseCard() {
       setStep(step + 1);
       return;
     }
-    setDone(true);
+    setPhase('informal');
     try {
       const headers = await buildAuthedHeaders();
       await fetch('/api/csi/pulse', {
@@ -71,7 +82,7 @@ export function CsiPulseCard() {
     }
   };
 
-  if (!due) return null;
+  if (!due || hidden) return null;
 
   return (
     <motion.div
@@ -81,7 +92,11 @@ export function CsiPulseCard() {
     >
       <div className="absolute -top-10 -right-10 w-32 h-32 bg-brand-primary/5 rounded-full blur-2xl pointer-events-none" />
       <AnimatePresence mode="wait">
-        {done ? (
+        {phase === 'informal' ? (
+          <motion.div key="informal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative z-10">
+            <InformalCheckIn stage={due === 'baseline' ? 'baseline' : 'follow_up'} onDone={() => setPhase('done')} />
+          </motion.div>
+        ) : phase === 'done' ? (
           <motion.div
             key="thanks"
             initial={{ opacity: 0 }}
@@ -104,7 +119,7 @@ export function CsiPulseCard() {
             <div className="flex items-center gap-3 mb-3">
               <PeterAvatar mood="afternoon" size={32} />
               <p className="text-xs text-brand-text-secondary">
-                30 seconds, just between us — there are no grades here. ({step + 1}/4)
+                30 seconds, just between us. There are no grades here. ({step + 1}/4)
               </p>
             </div>
             <p className="mb-3 text-sm font-serif text-brand-espresso">{QUESTIONS[step].text}</p>
@@ -113,11 +128,22 @@ export function CsiPulseCard() {
                 <button
                   key={label}
                   onClick={() => answer(i)}
-                  className="press rounded-full border border-brand-primary/20 px-3 py-1.5 text-xs text-brand-espresso hover:bg-brand-primary/10"
+                  className="press rounded-full border border-brand-primary/20 px-3 py-1.5 text-xs text-brand-espresso hover:bg-brand-primary/10 active:bg-brand-primary/10"
                 >
                   {label}
                 </button>
               ))}
+            </div>
+            <div className="mt-4 flex items-center justify-between gap-3">
+              <p className="text-[11px] leading-relaxed text-brand-text-secondary">{CSI4_SOURCE_NOTE}</p>
+              {step === 0 && (
+                <button
+                  onClick={() => { snooze(); setHidden(true); }}
+                  className="press shrink-0 text-xs text-brand-text-secondary underline underline-offset-2"
+                >
+                  Not now
+                </button>
+              )}
             </div>
           </motion.div>
         )}

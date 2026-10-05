@@ -26,7 +26,7 @@ function describeMoment(m: SurfaceMoment): string {
     case 'practice_consistency':
       return `They have practiced ${m.evidence.stats?.attempted_this_week ?? 5} times this week — far more consistently than the weeks before.`;
     case 'csi_delta':
-      return `Their own check-in scores about the relationship have meaningfully risen since they started.`;
+      return `Their own answers to the relationship-satisfaction questions rose by ${(m.evidence.stats?.latest ?? 0) - (m.evidence.stats?.baseline ?? 0)} points since they started. It is what they reported, not proof of why — ask what they make of it.`;
     case 'tone_trend':
       return `Their evening reflections have been landing in a warmer place lately than they did two weeks ago.`;
     case 'moment_pair':

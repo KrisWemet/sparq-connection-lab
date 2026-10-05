@@ -9,9 +9,12 @@ type KpiResponse = {
   active_users_30d: number;
   retained_users_30d: number;
   retention_rate_30d: number | null;
+  // Logged time from conflict start to resolved — not repair quality
+  // (docs/METRICS.md "Outcome measurement").
   avg_repair_time_minutes: number | null;
-  avg_relationship_score: number | null;
-  assessment_improvement_avg: number | null;
+  // How many informal check-ins were saved. Counts only: answers are private,
+  // never averaged into a score, never compared across people.
+  check_ins_saved: { baseline: number; follow_up: number } | null;
   memory_utilization: number | null;
   // Constitution §10/§12 — aggregate counts only (see discovery_metrics()).
   discovery: Record<string, number | null> | null;
@@ -89,21 +92,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (periodB.has(userId)) retained30 += 1;
   }
 
-  // New KPIs: avg repair time, avg relationship score, assessment improvement, memory utilization
-  const [repairRows, scoreRows, assessmentRows, memoryCount] = await Promise.all([
+  // Avg logged repair time, check-ins saved, memory utilization. The old
+  // composite "relationship score" average is gone: its inputs (reflection
+  // length, Peter usage, inferred mood) did not measure relationship health.
+  const [repairRows, checkInRows, memoryCount] = await Promise.all([
     ctx.supabase
       .from('conflict_episodes')
       .select('repair_duration_minutes')
       .not('resolved_at', 'is', null)
       .gte('started_at', d30.toISOString()),
     ctx.supabase
-      .from('relationship_scores')
-      .select('overall_score')
-      .gte('computed_at', d30.toISOString()),
-    ctx.supabase
       .from('outcome_assessments')
-      .select('user_id, milestone, total_score')
-      .order('completed_at', { ascending: true }),
+      .select('milestone')
+      .in('milestone', ['checkin_baseline', 'checkin_follow_up']),
     ctx.supabase
       .from('memories')
       .select('*', { count: 'exact', head: true }),
@@ -117,28 +118,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     ? Number((repairDurations.reduce((a, b) => a + b, 0) / repairDurations.length).toFixed(1))
     : null;
 
-  // Avg relationship score
-  const scores = (scoreRows.data || []).map(r => r.overall_score).filter((s): s is number => s != null);
-  const avgRelationshipScore = scores.length > 0
-    ? Number((scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1))
-    : null;
-
-  // Assessment improvement avg (baseline → latest for each user)
-  const userAssessments = new Map<string, { baseline: number; latest: number }>();
-  for (const a of assessmentRows.data || []) {
-    if (!userAssessments.has(a.user_id)) {
-      userAssessments.set(a.user_id, { baseline: a.total_score, latest: a.total_score });
-    } else {
-      userAssessments.get(a.user_id)!.latest = a.total_score;
-    }
-  }
-  const improvements: number[] = [];
-  for (const [, v] of userAssessments) {
-    if (v.latest !== v.baseline) improvements.push(v.latest - v.baseline);
-  }
-  const assessmentImprovementAvg = improvements.length > 0
-    ? Number((improvements.reduce((a, b) => a + b, 0) / improvements.length).toFixed(1))
-    : null;
+  const checkIns = checkInRows.error ? null : {
+    baseline: (checkInRows.data || []).filter(r => r.milestone === 'checkin_baseline').length,
+    follow_up: (checkInRows.data || []).filter(r => r.milestone === 'checkin_follow_up').length,
+  };
 
   // Meaningful Discovery Rate + experiment follow-through, correction rate,
   // mirror usefulness. Computed in SQL (admin-only, counts only).
@@ -159,8 +142,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     retained_users_30d: retained30,
     retention_rate_30d: periodA.size > 0 ? Number((retained30 / periodA.size).toFixed(3)) : null,
     avg_repair_time_minutes: avgRepairTime,
-    avg_relationship_score: avgRelationshipScore,
-    assessment_improvement_avg: assessmentImprovementAvg,
+    check_ins_saved: checkIns,
     memory_utilization: memoryCount.count ?? null,
     discovery: (discovery as Record<string, number | null> | null) ?? null,
     transformation: (transformation as Record<string, number | null> | null) ?? null,

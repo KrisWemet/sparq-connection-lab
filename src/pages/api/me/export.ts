@@ -42,6 +42,7 @@ const SOURCES: Array<[string, string]> = [
   ['conflict_episodes', 'user_id'],
   ['outcome_assessments', 'user_id'],
   ['csi_pulses', 'user_id'],
+  ['relationship_scores', 'user_id'], // retired composite; history kept
   ['baseline_snapshots', 'user_id'],
   ['pattern_snapshots', 'user_id'],
   ['weekly_mirrors', 'user_id'],
