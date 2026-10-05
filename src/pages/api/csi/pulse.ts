@@ -1,10 +1,10 @@
 // CSI-4 pulse (spec §5.4). GET → due status; POST → submit scores.
-// Standard CSI-4: item 1 scored 0-6, items 2-4 scored 0-5. Total 0-21.
+// Published CSI-4 scoring (src/lib/csi4.ts): item 1 scored 0-6, items 2-4
+// scored 0-5, total 0-21. Private to the user (RLS: owner only).
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getAuthedContext } from '@/lib/server/supabase-auth';
-
-const ITEM_MAX = [6, 5, 5, 5];
+import { csi4Total, isValidCsi4 } from '@/lib/csi4';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const ctx = await getAuthedContext(req);
@@ -28,11 +28,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'POST') {
     const { item_scores } = (req.body || {}) as { item_scores?: number[] };
-    if (!Array.isArray(item_scores) || item_scores.length !== 4 ||
-        item_scores.some((s, i) => !Number.isInteger(s) || s < 0 || s > ITEM_MAX[i])) {
+    if (!isValidCsi4(item_scores)) {
       return res.status(400).json({ error: 'item_scores must be 4 integers within CSI-4 ranges' });
     }
-    const total_score = item_scores.reduce((a, b) => a + b, 0);
+    const total_score = csi4Total(item_scores);
 
     const { data: existing } = await ctx.supabase
       .from('csi_pulses')

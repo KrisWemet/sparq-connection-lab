@@ -3,9 +3,10 @@
 // makes the Day-14 delta meaningful, so it MUST run before the app has had
 // any chance to change how the user feels.
 //
-// Same 4-item instrument as CsiPulseCard (item 1 scored 0–6, items 2–4 scored
-// 0–5, total 0–21) posted to the same endpoint — the API assigns
-// context='baseline' automatically for a user's first pulse.
+// The published CSI-4 (src/lib/csi4.ts — wording and scoring unchanged),
+// posted to the same endpoint as CsiPulseCard — the API assigns
+// context='baseline' automatically for a user's first pulse. Afterwards the
+// user may answer Sparq's own informal questions (also optional).
 //
 // Enjoyment-first: this is Peter asking, not a form. Skippable — a refused
 // baseline costs one data point; a bounced signup costs the user.
@@ -14,25 +15,10 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
 import { buildAuthedHeaders } from '@/lib/api-auth';
+import { CSI4_ITEMS, CSI4_SOURCE_NOTE } from '@/lib/csi4';
+import { InformalCheckIn } from '@/components/checkin/InformalCheckIn';
 
-const QUESTIONS: Array<{ text: string; options: string[] }> = [
-  {
-    text: 'All things considered, how happy do things feel in your relationship right now?',
-    options: ['Really hard', 'Hard', 'A bit unhappy', 'Even', 'Pretty happy', 'Very happy', 'Wonderfully happy'],
-  },
-  {
-    text: 'How warm and comfortable does your relationship feel day to day?',
-    options: ['Not at all', 'A little', 'Somewhat', 'Mostly', 'Almost always', 'Completely'],
-  },
-  {
-    text: 'How rewarding does your relationship feel?',
-    options: ['Not at all', 'A little', 'Somewhat', 'Mostly', 'Very', 'Completely'],
-  },
-  {
-    text: 'Overall, how satisfied are you with your relationship?',
-    options: ['Not at all', 'A little', 'Somewhat', 'Mostly', 'Very', 'Completely'],
-  },
-];
+const QUESTIONS = CSI4_ITEMS.map(i => ({ text: i.text, options: i.anchors }));
 
 interface CsiBaselineProps {
   onComplete: () => void;
@@ -42,6 +28,7 @@ export function CsiBaseline({ onComplete }: CsiBaselineProps) {
   const [step, setStep] = useState(0);
   const [scores, setScores] = useState<number[]>([]);
   const [saving, setSaving] = useState(false);
+  const [informal, setInformal] = useState(false);
 
   const submit = async (finalScores: number[]) => {
     setSaving(true);
@@ -56,7 +43,7 @@ export function CsiBaseline({ onComplete }: CsiBaselineProps) {
       // fail-soft: never block onboarding on a measurement
     } finally {
       setSaving(false);
-      onComplete();
+      setInformal(true);
     }
   };
 
@@ -81,15 +68,19 @@ export function CsiBaseline({ onComplete }: CsiBaselineProps) {
                 Before we start
               </p>
               <p className="text-sm text-brand-taupe">
-                Four quick questions · {step + 1} of {QUESTIONS.length}
+                {informal ? 'A few more, if you like' : `Four quick questions · ${step + 1} of ${QUESTIONS.length}`}
               </p>
             </div>
           </div>
 
+          {informal ? (
+            <InformalCheckIn stage="baseline" size="page" onDone={onComplete} />
+          ) : (
+          <>
           <p className="text-sm leading-relaxed text-brand-taupe mb-6">
-            I want to know where things stand today — not to grade anything, just so
-            that later on we can both see what actually changed. There are no wrong
-            answers here.
+            I want to know where things stand today. Nothing is graded. Later on, you
+            can look back and see how your own answers changed. There are no wrong
+            answers here, and your answers stay private.
           </p>
 
           <AnimatePresence mode="wait">
@@ -137,6 +128,9 @@ export function CsiBaseline({ onComplete }: CsiBaselineProps) {
               Skip for now
             </button>
           </div>
+          <p className="mt-5 text-[11px] leading-relaxed text-brand-taupe">{CSI4_SOURCE_NOTE}</p>
+          </>
+          )}
         </div>
       </div>
     </div>

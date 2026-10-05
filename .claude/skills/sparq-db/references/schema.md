@@ -317,6 +317,8 @@ CREATE TABLE outcome_assessments (
 );
 ```
 
+Used since 2026-10-05 for the informal check-in (`src/lib/check-in.ts`, `/api/me/check-in`): `milestone` = `checkin_baseline` | `checkin_follow_up`, `responses` = `{ version, kind: 'informal', answers }`, `total_score` always 0 (answers are never summed).
+
 ### analytics_events (migration 20260302120000)
 ```sql
 CREATE TABLE analytics_events (
@@ -614,7 +616,7 @@ CREATE TABLE user_insights (
 **Usage in codebase:**
 - Upserted by: `src/pages/api/daily/session/start.ts` (sync onboarding_day), `src/pages/api/daily/session/complete.ts` (advance day cursor, unlock skill tree)
 - Updated by: `src/lib/server/profile-analysis.ts` (emotional_state + last_analysis_at)
-- Read by: `src/pages/api/daily/session/start.ts` (day cursor), `src/pages/api/daily/session/complete.ts` (guard against double-advance), `src/pages/api/profile/snapshot.ts` (progress + legacy trait display), `src/pages/api/admin/beta-testers.ts` (onboarding_day per user), `src/lib/server/relationship-score.ts` (emotional_state for safety score), `e2e/helpers/mock-supabase.ts` (mocked in E2E tests)
+- Read by: `src/pages/api/daily/session/start.ts` (day cursor), `src/pages/api/daily/session/complete.ts` (guard against double-advance), `src/pages/api/profile/snapshot.ts` (progress + legacy trait display), `src/pages/api/admin/beta-testers.ts` (onboarding_day per user), `e2e/helpers/mock-supabase.ts` (mocked in E2E tests)
 - Frontend reads: `src/pages/daily-growth.tsx`, `src/pages/skill-tree.tsx`, `src/pages/onboarding-flow.tsx`
 
 ### daily_entries
@@ -656,10 +658,7 @@ CREATE TABLE relationship_scores (
 );
 ```
 
-**Usage in codebase:**
-- Inserted by: `src/pages/api/me/relationship-score.ts` (stores snapshot after computation)
-- Read by: `src/pages/api/me/relationship-score.ts` (12-week history), `src/pages/api/admin/kpis.ts` (avg score across all users)
-- Computed by: `src/lib/server/relationship-score.ts` (weighted formula from daily_sessions, coach_usage_daily, conflict_episodes, user_insights, safety_events)
+**Usage in codebase:** **Retired 2026-10-05** (docs/METRICS.md "Outcome measurement"). The composite's inputs (reflection length, Peter usage, inferred mood, safety-event counts) did not measure relationship health. Nothing writes or shows it; historical rows stay and are included in the user's data export. Use `src/lib/server/progress-summary.ts` (practice / self-report / tentative, never combined).
 
 ### safety_events
 ```sql
@@ -679,7 +678,6 @@ CREATE TABLE safety_events (
 
 **Usage in codebase:**
 - Inserted by: `src/pages/api/peter/chat.ts` (fire-and-forget when `detectCrisisIntent()` triggers)
-- Read by: `src/lib/server/relationship-score.ts` (safety_events in last 30 days penalize emotional_safety sub-score)
 
 ### coach_usage_daily
 ```sql
@@ -697,7 +695,7 @@ CREATE TABLE coach_usage_daily (
 
 **Usage in codebase:**
 - Upserted by: `src/pages/api/peter/chat.ts` (increments message_count after each Peter response, `onConflict: 'user_id,usage_date'`)
-- Read by: `src/pages/api/peter/chat.ts` (check usage against `coach_message_limit_per_day` entitlement), `src/lib/server/relationship-score.ts` (coach engagement factor in communication_quality sub-score)
+- Read by: `src/pages/api/peter/chat.ts` (check usage against `coach_message_limit_per_day` entitlement)
 
 ### memories (migration 20260318000000)
 ```sql
