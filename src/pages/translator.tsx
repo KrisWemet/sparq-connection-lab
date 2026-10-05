@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import PeterTheOtter, { MascotStatus } from "../components/PeterTheOtter";
+import { buildAuthedHeaders } from "@/lib/api-auth";
 
 const partnerProfiles = [
   {
@@ -48,9 +49,9 @@ export default function Translator() {
     try {
       const response = await fetch("/api/translator", {
         method: "POST",
-        headers: {
+        headers: await buildAuthedHeaders({
           "Content-Type": "application/json",
-        },
+        }),
         body: JSON.stringify({
           draft,
           partnerContext,
@@ -61,6 +62,13 @@ export default function Translator() {
         suggestion?: string;
         error?: string;
       };
+
+      if (response.status === 401) {
+        setError("Please sign in so Peter can help with this.");
+        setPeterStatus("speaking");
+        setPeterMessage("Sign in first, and I'll be right here.");
+        return;
+      }
 
       if (!response.ok) {
         throw new Error(data?.error || "Something went wrong.");
