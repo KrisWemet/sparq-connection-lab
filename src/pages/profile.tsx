@@ -180,9 +180,7 @@ export default function ProfilePage() {
             <ChevronLeft className="h-5 w-5 text-brand-primary" />
           </button>
 
-          <span className="text-xs font-semibold uppercase tracking-widest text-brand-hover">
-            Profile
-          </span>
+          <span className="bar-title">Profile</span>
 
           <button
             onClick={() => setEditMode((current) => !current)}
@@ -227,8 +225,8 @@ export default function ProfilePage() {
                 className="mt-5 space-y-3 text-left"
               >
                 <div>
-                  <label className="mb-1 block text-xs font-semibold uppercase tracking-widest text-brand-hover">
-                    Your Name
+                  <label className="mb-1.5 block text-sm font-medium text-brand-text-primary">
+                    Your name
                   </label>
                   <input
                     type="text"
@@ -241,8 +239,8 @@ export default function ProfilePage() {
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs font-semibold uppercase tracking-widest text-brand-hover">
-                    Partner&apos;s Name
+                  <label className="mb-1.5 block text-sm font-medium text-brand-text-primary">
+                    Partner&apos;s name
                   </label>
                   <input
                     type="text"
@@ -255,7 +253,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs font-semibold uppercase tracking-widest text-brand-hover">
+                  <label className="mb-1.5 block text-sm font-medium text-brand-text-primary">
                     Bio
                   </label>
                   <textarea
@@ -295,9 +293,7 @@ export default function ProfilePage() {
             animate="visible"
             className="space-y-3"
           >
-            <p className="px-1 text-xs font-semibold uppercase tracking-widest text-brand-hover">
-              Secondary Access
-            </p>
+            <h2 className="section-title px-1">Your account</h2>
 
             <SecondaryAccessRow
               href="/settings"

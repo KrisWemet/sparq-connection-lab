@@ -45,7 +45,7 @@
 }
 .emotion-paper {
   background: linear-gradient(110deg, hsl(var(--popover) / .95), hsl(var(--background) / .94));
-  box-shadow: inset 3px 0 hsl(var(--primary) / .055), 0 8px 30px hsl(var(--shadow) / .025);
+  box-shadow: 0 1px 2px hsl(var(--shadow) / .03), 0 8px 30px hsl(var(--shadow) / .025);
 }
 .emotion-accomplishment { position: relative; isolation: isolate; }
 .emotion-accomplishment::before {

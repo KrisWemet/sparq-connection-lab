@@ -143,7 +143,7 @@ export default function JoinPartner() {
             className="w-10 h-10 rounded-full border border-brand-primary/10 bg-brand-parchment text-brand-primary flex items-center justify-center hover:bg-brand-primary/5">
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <span className={cn('text-xs font-semibold tracking-widest uppercase', TONE.connect.eyebrow)}>Link up</span>
+          <span className="bar-title">Link up</span>
           <div className="w-10 h-10" aria-hidden="true" />
         </div>
       </header>
@@ -196,7 +196,7 @@ export default function JoinPartner() {
         ) : (
           <>
             <section className={cn(card, 'space-y-3')}>
-              <p className={cn('text-xs font-semibold tracking-widest uppercase', TONE.connect.eyebrow)}>Have their code?</p>
+              <h2 className="section-title">Have their code?</h2>
               <input
                 value={code}
                 onChange={e => { setCode(e.target.value.toUpperCase()); setError(null); }}
@@ -214,7 +214,7 @@ export default function JoinPartner() {
             </section>
 
             <section className={cn(card, 'space-y-3')}>
-              <p className={cn('text-xs font-semibold tracking-widest uppercase', TONE.connect.eyebrow)}>Or send yours</p>
+              <h2 className="section-title">Or send yours</h2>
               {inviteActive && expiresAt ? (
                 <>
                   <p className="font-mono text-2xl tracking-[0.3em] text-brand-espresso text-center py-2">{myCode}</p>

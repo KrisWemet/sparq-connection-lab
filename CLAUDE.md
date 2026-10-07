@@ -30,6 +30,7 @@ Before working in any of these domains, read the corresponding skill file:
 | UI components, design tokens, layout | `.claude/skills/sparq-ui` |
 | Architecture decisions, API patterns | `.claude/skills/sparq-architecture` |
 | Frontend design quality | `.claude/skills/frontend-design` |
+| Design polish, critique, audits, "less AI-looking" (third-party, pbakaus/impeccable) | `.claude/skills/impeccable` — `sparq-ui` wins where they disagree |
 | Phone feel (tap, hover, viewport, inputs, safe areas) | `.claude/skills/mobile-native` |
 | Animation decisions, audits, reviews, where to add motion | `.claude/skills/emil-design-eng`, `improve-animations`, `review-animations`, `find-animation-opportunities` (Framer Motion still required) |
 | Toasts (Sonner) | `.claude/skills/ask-sonner` |

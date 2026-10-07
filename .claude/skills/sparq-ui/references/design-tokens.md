@@ -94,7 +94,7 @@ The existing `TONE` moment helper keeps its category logic. `brand-coral-soft`, 
 | Token | CSS | Stack |
 |---|---|---|
 | `font-serif` | `var(--font-serif)` | Georgia, Cambria, "Times New Roman", Times, serif |
-| `font-sans` | (Tailwind default) | Inter, system-ui, sans-serif |
+| `font-sans` | `var(--font-sans)` | Figtree, system-ui, sans-serif |
 
 > `--font-serif` CSS variable should be set in `_document.tsx` or `globals.css`. Currently falls back to Georgia.
 
@@ -103,7 +103,7 @@ The existing `TONE` moment helper keeps its category logic. `brand-coral-soft`, 
 | Class | Size | Line Height | Common Use |
 |---|---|---|---|
 | `text-[10px]` | 10px | — | Fine print (social proof, legal) |
-| `text-xs` | 12px | 16px | Labels, timestamps, section headers (uppercase) |
+| `text-xs` | 12px | 16px | Timestamps, metadata (sentence case) |
 | `text-sm` | 14px | 20px | Secondary body, descriptions, card metadata |
 | `text-[15px]` | 15px | — | Peter speech (custom size for reading comfort) |
 | `text-base` | 16px | 24px | Primary body text |

@@ -111,7 +111,7 @@ export default function Messaging() {
             {conversationStarters.map((starter) => (
               <Card key={starter.id}>
                 <CardContent className="p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-hover mb-2">
+                  <p className="note-label mb-2">
                     {starter.category}
                   </p>
                   <p className="text-sm text-foreground leading-relaxed mb-4">{starter.question}</p>

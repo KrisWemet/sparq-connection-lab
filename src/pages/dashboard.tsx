@@ -180,7 +180,7 @@ export default function Dashboard() {
     : needsEveningReflection
       ? '/daily-growth?mode=evening-checkin'
       : '/daily-growth';
-  const secondaryCtaLabel = needsEveningReflection ? "Restart Morning Practice" : 'Evening Check-in';
+  const secondaryCtaLabel = needsEveningReflection ? "Restart Morning Practice" : 'Evening check-in';
 
   return (
     <div className="emotion-page min-h-dvh bg-brand-linen pb-24">
@@ -194,9 +194,6 @@ export default function Dashboard() {
           className="flex items-center justify-between"
         >
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-brand-hover">
-              Home
-            </p>
             <SparqLogo />
           </div>
           <div className="flex items-center gap-3">

@@ -97,7 +97,7 @@ export default function Translator() {
           >
             ← Back to Connect
           </button>
-          <span className="text-xs uppercase tracking-wide text-brand-hover font-semibold">
+          <span className="bar-title">
             Translator
           </span>
         </div>

@@ -119,7 +119,7 @@ export function TimeOutOverlay() {
                   animate={{ opacity: 0.9, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.6, ease: 'easeOut' }}
-                  className="z-10 text-white text-2xl font-serif tracking-widest uppercase"
+                  className="z-10 text-white text-2xl font-serif italic"
                 >
                   {BREATH_LABELS[breathState]}
                 </motion.div>
@@ -128,7 +128,7 @@ export function TimeOutOverlay() {
 
             {/* Quick Action Text */}
             <div className="max-w-xs text-center space-y-8">
-              <p className="text-white/60 text-sm font-medium uppercase tracking-widest">
+              <p className="font-serif text-lg italic text-white/70">
                 Send to partner
               </p>
               <div className="bg-popover/10 p-5 rounded-2xl border border-popover/20">

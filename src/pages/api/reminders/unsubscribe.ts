@@ -34,6 +34,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 <div style="max-width:420px;margin:0 auto;padding:64px 24px;text-align:center">
 <p style="font-size:40px;margin:0 0 16px">🦦</p>
 <p style="font-size:18px;line-height:1.6">${message}</p>
-<p><a href="/settings" style="color:#4B2E57;font-family:Arial,sans-serif;font-weight:bold">Open Settings</a></p>
+<p><a href="/settings" style="color:#4B2E57;font-family:Georgia,serif;font-weight:bold">Open Settings</a></p>
 </div></body></html>`);
 }

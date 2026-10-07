@@ -41,7 +41,7 @@ function ReflectionCard({ reflection }: { reflection: Reflection }) {
           {formatDate(reflection.created_at)}
         </span>
         {reflection.trigger_source === 'state_tag' && (
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-brand-hover bg-brand-primary/8 px-2 py-0.5 rounded-full">
+          <span className="text-xs font-medium text-brand-hover bg-brand-primary/8 px-2 py-0.5 rounded-full">
             After conflict
           </span>
         )}
@@ -62,7 +62,7 @@ function ReflectionCard({ reflection }: { reflection: Reflection }) {
           >
             <div className="mt-4 space-y-4">
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-hover mb-1">
+                <p className="note-label mb-1">
                   The outside view
                 </p>
                 <p className="text-sm leading-relaxed text-brand-espresso">
@@ -70,7 +70,7 @@ function ReflectionCard({ reflection }: { reflection: Reflection }) {
                 </p>
               </div>
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-hover mb-1">
+                <p className="note-label mb-1">
                   What I noticed
                 </p>
                 <p className="text-sm leading-relaxed text-brand-espresso">
@@ -148,7 +148,7 @@ export default function ReflectionHistory() {
         </div>
 
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-brand-hover mb-1">
+          <p className="note-label mb-1">
             The Finkel Method
           </p>
           <h1 className="text-2xl font-serif text-brand-espresso">Your Reflections</h1>

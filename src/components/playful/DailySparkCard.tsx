@@ -97,8 +97,8 @@ export function DailySparkCard({ prompt, surface, onSwap }: DailySparkCardProps)
       <SceneAccent kind="bloom" area="games" className="-mt-3 mb-2 h-16 w-full" />
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="mb-2 text-xs font-semibold tracking-widest uppercase text-brand-hover">
-            Today&apos;s Spark
+          <p className="note-label mb-2">
+            Today&apos;s spark
           </p>
           <p className="mb-2 text-sm text-brand-taupe">
             Light, quick, and fully optional.

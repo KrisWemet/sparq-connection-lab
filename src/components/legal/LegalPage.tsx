@@ -40,7 +40,7 @@ export function LegalPage({ eyebrow, title, intro, children }: {
             className="w-10 h-10 rounded-full border border-brand-primary/10 bg-brand-parchment text-brand-primary flex items-center justify-center hover:bg-brand-primary/5 active:bg-brand-primary/10">
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <span className="text-xs font-semibold tracking-widest uppercase text-brand-hover">{eyebrow}</span>
+          <span className="bar-title">{eyebrow}</span>
           <div className="w-10 h-10" aria-hidden="true" />
         </div>
       </header>

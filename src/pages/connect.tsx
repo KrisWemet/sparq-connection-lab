@@ -70,9 +70,7 @@ export default function ConnectPage() {
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <span className="text-xs font-semibold tracking-widest uppercase text-brand-hover">
-              Connect
-            </span>
+            <span className="bar-title">Connect</span>
             <div className="w-10 h-10" aria-hidden="true" />
           </div>
         </header>
@@ -85,9 +83,6 @@ export default function ConnectPage() {
             className="emotion-opening relative overflow-hidden bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6"
           >
             <SceneAccent kind="bridge" className="-mt-3 mb-1 h-24 w-full" />
-            <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
-              Connect
-            </p>
             <h1 className="font-serif italic text-2xl leading-snug text-brand-text-primary">
               Open the tool that fits the real moment you are about to have.
             </h1>

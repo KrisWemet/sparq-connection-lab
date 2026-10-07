@@ -76,7 +76,7 @@ export function PeterGreeting({ firstName }: PeterGreetingProps) {
     >
       <PeterAvatar mood={getPeterMood()} size={50} />
       <div className="flex-1 pt-1">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-hover">
+        <p className="note-label">
           A note from Peter
         </p>
         <p className="pt-2 font-serif italic text-[17px] leading-relaxed text-brand-text-secondary">

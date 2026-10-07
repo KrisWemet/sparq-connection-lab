@@ -27,9 +27,7 @@ export default function JournalPage() {
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <span className="text-xs font-semibold tracking-widest uppercase text-brand-hover">
-              Journal
-            </span>
+            <span className="bar-title">Journal</span>
             <div className="w-10 h-10" aria-hidden="true" />
           </div>
         </header>
@@ -42,13 +40,9 @@ export default function JournalPage() {
             className="emotion-opening bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6 relative overflow-hidden"
           >
             <SceneAccent kind="bloom" className="-mt-3 mb-1 h-24 w-full" />
-            <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
-              Journal
-            </p>
-            <h1 className="font-serif font-medium text-brand-text-primary">Journal</h1>
-            <p className="font-serif italic text-2xl leading-snug text-brand-text-primary mt-3">
+            <h1 className="font-serif italic text-2xl leading-snug text-brand-text-primary">
               A quieter place to notice what is changing in you.
-            </p>
+            </h1>
             <p className="text-sm text-brand-text-secondary leading-relaxed mt-3 max-w-md">
               Keep your patterns, practice, and reflection history together so Home can stay focused on the next small step.
             </p>
@@ -70,9 +64,7 @@ export default function JournalPage() {
                 <Compass className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-1">
-                  Your interpretation
-                </p>
+                <p className="note-label mb-1">Your interpretation</p>
                 <h2 className="text-lg font-semibold text-brand-text-primary">
                   {archetype || 'Your journal is taking shape'}
                 </h2>
@@ -104,9 +96,7 @@ export default function JournalPage() {
                 <NotebookPen className="w-5 h-5" />
               </div>
               <div className="flex-1">
-                <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-1">
-                  Reflection history
-                </p>
+                <h2 className="text-lg font-semibold text-brand-text-primary mb-1">Reflection history</h2>
                 <p className="text-sm text-brand-text-secondary leading-relaxed">
                   Your recent moments stack up here so you can revisit what felt different, steady, or true.
                 </p>
@@ -128,7 +118,7 @@ export default function JournalPage() {
               <HeartHandshake className="w-5 h-5" />
             </div>
             <div className="flex-1">
-              <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-1">Your shared space</p>
+              <h2 className="text-lg font-semibold text-brand-text-primary mb-1">Your shared space</h2>
               <p className="text-sm text-brand-text-secondary leading-relaxed">
                 Only what you choose to share with your partner lives there.
               </p>

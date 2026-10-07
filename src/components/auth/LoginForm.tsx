@@ -164,7 +164,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
 
       {error && (
         <motion.div 
-          className="bg-destructive-subtle border-l-4 border-destructive p-4 mb-6"
+          className="bg-destructive-subtle border border-destructive/30 rounded-2xl p-4 mb-6"
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
@@ -175,7 +175,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
 
       {successMessage && (
         <motion.div 
-          className="bg-success-subtle border-l-4 border-success p-4 mb-6"
+          className="bg-success-subtle border border-success/30 rounded-2xl p-4 mb-6"
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}

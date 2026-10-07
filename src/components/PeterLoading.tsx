@@ -46,8 +46,7 @@ export function PeterLoading({ isLoading }: PeterLoadingProps) {
 
             {/* Tip Card */}
             <div className="bg-popover/80 shadow-sm border border-brand-primary/10 rounded-3xl p-6 relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-primary/40 to-brand-primary/10" />
-              <p className="text-sm font-semibold text-brand-hover mb-2 tracking-wider uppercase">Peter&apos;s Reminder</p>
+              <p className="note-label mb-2">Peter&apos;s reminder</p>
               <p className="text-brand-taupe leading-relaxed text-lg italic font-serif">
                 &quot;{TIPS[tipIndex]}&quot;
               </p>

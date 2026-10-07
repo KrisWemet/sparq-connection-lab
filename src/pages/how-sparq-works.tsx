@@ -11,7 +11,8 @@ import { PeterAvatar } from '@/components/dashboard/PeterAvatar';
  * no account data is read here.
  */
 const card = 'bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm p-6 space-y-3';
-const eyebrow = 'text-xs font-semibold tracking-widest uppercase text-brand-hover';
+// Reading page: sections are separated by space and a hairline, not boxed in cards.
+const section = 'space-y-3 border-t border-brand-primary/10 pt-8';
 const item = 'text-sm text-brand-espresso leading-relaxed';
 
 const DESIGNED: Array<[string, string]> = [
@@ -56,12 +57,12 @@ export default function HowSparqWorksPage() {
             className="w-10 h-10 rounded-full border border-brand-primary/10 bg-brand-parchment text-brand-primary flex items-center justify-center hover:bg-brand-primary/5">
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <span className={eyebrow}>How Sparq works</span>
+          <span className="bar-title">How Sparq works</span>
           <div className="w-10 h-10" aria-hidden="true" />
         </div>
       </header>
 
-      <main className="max-w-lg mx-auto px-4 space-y-5">
+      <main className="max-w-lg mx-auto px-4 space-y-8">
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className={card}>
           <div className="flex items-center gap-3">
             <PeterAvatar mood="afternoon" size={36} />
@@ -77,8 +78,8 @@ export default function HowSparqWorksPage() {
           </p>
         </motion.section>
 
-        <section className={card}>
-          <p className={eyebrow}>What we design on purpose</p>
+        <section className={section}>
+          <h2 className="section-title">What we design on purpose</h2>
           <ul className="space-y-3">
             {DESIGNED.map(([title, body]) => (
               <li key={title}>
@@ -89,15 +90,15 @@ export default function HowSparqWorksPage() {
           </ul>
         </section>
 
-        <section className={card}>
-          <p className={eyebrow}>What Sparq never does</p>
+        <section className={section}>
+          <h2 className="section-title">What Sparq never does</h2>
           <ul className="space-y-2 list-disc pl-5">
             {NEVER.map(line => <li key={line} className={item}>{line}</li>)}
           </ul>
         </section>
 
-        <section className={card}>
-          <p className={eyebrow}>How to say no</p>
+        <section className={section}>
+          <h2 className="section-title">How to say no</h2>
           <ul className="space-y-2">
             {SAY_NO.map(([what, where]) => (
               <li key={what} className={item}><span className="font-semibold">{what}</span> {where}</li>

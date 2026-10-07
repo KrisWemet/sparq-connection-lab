@@ -23,7 +23,7 @@ const OUTCOME_WORDS: Record<string, string> = { helped: 'it helped', mixed: 'it 
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="text-xs font-semibold uppercase tracking-wide text-brand-hover mb-1">{label}</p>
+      <p className="note-label mb-1">{label}</p>
       {children}
     </div>
   );
@@ -141,7 +141,7 @@ export function ThirtyDayMirrorCard({ compact = false }: { compact?: boolean }) 
       )}
 
       <div className="bg-brand-linen rounded-2xl p-4 border border-brand-primary/10">
-        <p className="text-xs font-semibold uppercase tracking-wide text-brand-hover mb-1">You write the ending</p>
+        <p className="note-label mb-1">You write the ending</p>
         <p className="font-serif text-brand-espresso text-[15px] leading-relaxed mb-3">
           Looking at all of this, what would you say about who you are becoming?
         </p>

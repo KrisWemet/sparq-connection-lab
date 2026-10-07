@@ -108,8 +108,8 @@ export function JourneyCompletion({ journeyId, journeyTitle }: JourneyCompletion
           <PeterAvatar mood="celebrating" size={80} />
           <div className="flex items-center gap-2">
             <Sparkles size={18} className="text-brand-gold-deep" />
-            <p className="text-xs font-semibold tracking-widest uppercase text-brand-gold-deep">
-              Journey Complete
+            <p className="note-label text-brand-gold-deep">
+              Journey complete
             </p>
             <Sparkles size={18} className="text-brand-gold-deep" />
           </div>
@@ -195,7 +195,7 @@ export function JourneyCompletion({ journeyId, journeyTitle }: JourneyCompletion
             transition={{ duration: 0.5 }}
             className="space-y-4"
           >
-            <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover pl-1">
+            <p className="note-label pl-1">
               Peter suggests
             </p>
 

@@ -109,7 +109,7 @@ export function FavoriteUsCard({ prompt, dateKey, surface }: FavoriteUsCardProps
       <SceneAccent kind="bridge" area="games" className="-mt-3 mb-2 h-16 w-full" />
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="mb-2 text-xs font-semibold tracking-widest uppercase text-brand-hover">
+          <p className="note-label mb-2">
             Favorite Us
           </p>
           <p className="mb-2 text-sm text-brand-taupe">

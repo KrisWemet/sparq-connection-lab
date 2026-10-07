@@ -2,7 +2,7 @@ import React, { useState, ReactNode } from 'react';
 import { useRouter } from 'next/router';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { ChevronLeft, ChevronRight, CheckCircle, Star, Lightbulb, Pencil } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle, Star, Lightbulb, Pencil, Sprout, Leaf, Flower2 } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -398,7 +398,7 @@ export function JourneyContentView({
 
   // Completed
   if (completed) {
-    const tierEmoji = tierId === 'bloom' ? '🌸' : tierId === 'growth' ? '🌿' : '🌱';
+    const TierIcon = tierId === 'bloom' ? Flower2 : tierId === 'growth' ? Leaf : Sprout;
     const nextTier: TierId | null = tierId === 'roots' ? 'growth' : tierId === 'growth' ? 'bloom' : null;
     const nextTierName = nextTier === 'growth' ? 'Growth' : nextTier === 'bloom' ? 'Bloom' : null;
 
@@ -429,7 +429,7 @@ export function JourneyContentView({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <p className="text-4xl mb-4">{tierEmoji}</p>
+          <TierIcon className="mx-auto mb-4 h-12 w-12 text-brand-gold-deep" strokeWidth={1.5} aria-hidden="true" />
           <h1 className="text-2xl font-serif font-bold text-brand-taupe mb-3">
             {tierName ? `${tierName} Complete!` : `You've completed ${title || 'this journey'}!`}
           </h1>
@@ -584,7 +584,7 @@ export function JourneyContentView({
                 {currentDayContent.conceptIcon}
               </div>
               <div>
-                <p className="text-xs font-semibold text-brand-hover uppercase tracking-widest">Day {currentDay}</p>
+                <p className="note-label">Day {currentDay}</p>
                 <h2 className="text-lg font-bold text-brand-taupe">{currentDayContent.title}</h2>
               </div>
             </motion.div>
@@ -600,7 +600,7 @@ export function JourneyContentView({
                 <div className="w-8 h-8 rounded-full bg-brand-sand/10 flex items-center justify-center">
                   <Lightbulb className="w-4 h-4 text-brand-gold-deep" />
                 </div>
-                <p className="text-xs font-bold text-brand-gold-deep uppercase tracking-[0.2em]">Today&apos;s Learning</p>
+                <p className="note-label text-brand-gold-deep">Today&apos;s learning</p>
               </div>
               <div className="text-sm text-foreground leading-relaxed space-y-3">
                 {currentDayContent.learning.split('\n\n').map((p, i) => (
@@ -640,7 +640,7 @@ export function JourneyContentView({
                   <div className="w-8 h-8 rounded-full bg-brand-primary/10 flex items-center justify-center">
                     <Pencil className="w-4 h-4 text-brand-primary" />
                   </div>
-                  <p className="text-xs font-bold text-brand-hover uppercase tracking-[0.2em]">Activity</p>
+                  <p className="note-label">Activity</p>
                 </div>
                 <h3 className="text-lg font-bold text-brand-taupe">{currentDayContent.activity.title}</h3>
               </div>
@@ -660,7 +660,7 @@ export function JourneyContentView({
                 {/* Reflection questions */}
                 {currentDayContent.activity.reflectionQuestions.length > 0 && (
                   <div className="mt-4 space-y-4">
-                    <p className="text-xs font-semibold text-brand-hover uppercase tracking-widest">
+                    <p className="note-label">
                       Reflection
                     </p>
                     {currentDayContent.activity.reflectionQuestions.map((question, index) => (

@@ -66,9 +66,7 @@ export function GrowthThread() {
       transition={{ duration: 0.4, delay: 0.2 }}
       className="space-y-3"
     >
-      <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover pl-1">
-        Growth Thread
-      </p>
+      <h2 className="section-title pl-1">Growth thread</h2>
 
       <div className="bg-brand-parchment rounded-3xl border border-brand-primary/10 shadow-sm overflow-hidden">
         <div className="p-4 space-y-3">

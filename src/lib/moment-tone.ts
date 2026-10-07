@@ -11,7 +11,7 @@ export type MomentTone = 'understand' | 'connect' | 'grow' | 'repair';
 type ToneClasses = {
   /** Card surface + border (add your own radius/padding). */
   card: string;
-  /** Small uppercase label / eyebrow text. */
+  /** Tone colour for small text and icons (pair with `note-label`). */
   eyebrow: string;
   /** Icons and small accents. */
   icon: string;

@@ -145,7 +145,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
         <p className="text-sm text-brand-text-secondary mb-6">{displayDuration} · Beginner · Starts today</p>
 
         <div className="bg-insight-subtle rounded-[20px] p-5 mb-4" style={{ border: '1px solid hsl(var(--growth) / 0.4)' }}>
-          <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
+          <p className="note-label mb-3">
             Solo-first path
           </p>
           <p className="text-sm text-brand-text-secondary leading-relaxed">
@@ -155,7 +155,7 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
 
         {/* What you'll be doing */}
         <div className="bg-popover rounded-[20px] p-5 mb-4" style={{ border: '1px solid hsl(var(--border))' }}>
-          <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-4">
+          <p className="note-label mb-4">
             Here&apos;s what you&apos;ll be doing
           </p>
           <div className="space-y-3">

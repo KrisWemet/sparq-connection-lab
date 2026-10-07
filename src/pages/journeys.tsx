@@ -128,9 +128,7 @@ export default function Journeys() {
                 <BookOpen className="h-5 w-5" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover">
-                  current practice
-                </p>
+                <p className="note-label">Your current practice</p>
                 <h2 className="mt-2 text-xl font-semibold text-brand-taupe">
                   {activeJourney.title}
                 </h2>
@@ -256,7 +254,7 @@ export default function Journeys() {
 
                     {/* Card text */}
                     <div className="p-4 bg-popover relative z-20">
-                      <p className="text-[10px] font-bold text-brand-hover uppercase tracking-[0.2em] mb-1.5">
+                      <p className="font-serif text-sm italic text-brand-hover mb-1">
                         {journey.category}
                       </p>
                       <h3 className="font-bold text-brand-taupe text-base leading-tight line-clamp-2 mix-blend-hard-light">

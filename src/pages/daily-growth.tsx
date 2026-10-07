@@ -717,7 +717,7 @@ export default function DailyGrowth() {
           >
             <PeterAvatar mood="afternoon" size={56} />
             <div className="flex-1 pt-1">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-hover">
+              <p className="note-label">
                 Peter&apos;s nudge
               </p>
               <p className="pt-2 font-serif italic text-[16px] leading-relaxed text-brand-text-secondary">
@@ -727,7 +727,7 @@ export default function DailyGrowth() {
           </motion.div>
 
           <div className="rounded-[28px] border border-brand-primary/10 bg-popover/60 p-5 shadow-[0_14px_34px_hsl(var(--shadow)/0.05)]">
-            <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
+            <p className="note-label mb-3">
               Solo-first reminder
             </p>
             <p className="text-sm leading-relaxed text-brand-taupe">
@@ -766,7 +766,7 @@ export default function DailyGrowth() {
             >
               <ChevronLeft size={20} />
             </button>
-            <span className="text-xs font-semibold tracking-widest uppercase text-brand-hover">
+            <span className="bar-title">
               Day {currentDay} &middot; Morning
             </span>
           </div>
@@ -814,8 +814,8 @@ export default function DailyGrowth() {
                 transition={{ type: 'spring', bounce: 0, duration: 0.6, delay: 0.15 }}
                 className="bg-brand-parchment rounded-3xl p-5 border border-brand-primary/10 shadow-sm"
               >
-                <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
-                  Today&apos;s Practice
+                <p className="note-label mb-3">
+                  Today&apos;s practice
                 </p>
                 <p className="text-brand-espresso font-medium leading-relaxed text-[15px]">
                   {morningAction}
@@ -824,7 +824,7 @@ export default function DailyGrowth() {
             )}
 
             <div className="bg-brand-parchment rounded-2xl border border-brand-primary/10 shadow-sm p-5">
-              <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
+              <p className="note-label mb-3">
                 Solo-first reminder
               </p>
               <p className="text-sm text-brand-taupe leading-relaxed">
@@ -857,7 +857,7 @@ export default function DailyGrowth() {
       {/* Header */}
       <div className="flex items-center justify-between px-5 pt-5 pb-3">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold tracking-widest uppercase text-brand-hover">
+          <span className="bar-title">
             Day {currentDay} &middot; {(phase === 'evening' || phase === 'evening-checkin') ? 'Evening reflection' : phase === 'journey-complete' ? 'Journey complete' : 'Day complete'}
           </span>
         </div>
@@ -885,7 +885,7 @@ export default function DailyGrowth() {
                   <div className="max-w-lg mx-auto px-4 py-8 space-y-6 text-center">
                     <PeterAvatar mood="morning" size={64} />
                     <div className="bg-brand-parchment rounded-2xl p-4 text-left border border-brand-primary/10">
-                      <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-1">Your step for today</p>
+                      <p className="note-label mb-1">Your step for today</p>
                       <p className="text-sm text-brand-taupe leading-relaxed">{morningAction}</p>
                     </div>
                     <p className="font-serif italic text-brand-taupe text-[15px] leading-relaxed">
@@ -916,7 +916,7 @@ export default function DailyGrowth() {
                     <div className="bg-brand-parchment rounded-2xl p-4 flex items-start gap-3 border border-brand-primary/10">
                       <Sun size={16} className="text-brand-hover mt-0.5 flex-shrink-0" />
                       <div>
-                        <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-1">
+                        <p className="note-label mb-1">
                           Morning step
                         </p>
                         <p className="text-sm text-brand-taupe leading-relaxed">{morningAction}</p>
@@ -929,7 +929,7 @@ export default function DailyGrowth() {
                       <p className="font-serif italic text-brand-taupe text-[15px] text-center leading-relaxed">
                         {practiceCopy.evening}
                       </p>
-                      <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover">
+                      <p className="note-label">
                         Next step: mark today&apos;s practice done
                       </p>
                     </div>

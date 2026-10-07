@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { AppProps } from 'next/app';
-import { Cormorant_Garamond, Inter } from 'next/font/google';
+import { Cormorant_Garamond, Figtree } from 'next/font/google';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { MotionConfig } from 'framer-motion';
@@ -18,11 +18,14 @@ import '../styles/emotion.css';
 import { VisualEmotionProvider } from '@/components/emotion/VisualEmotionProvider';
 import { EmotionalEnvironment } from '@/components/emotion/EmotionalEnvironment';
 
-const sans = Inter({ subsets: ['latin'], variable: '--font-sans' });
+const sans = Figtree({ subsets: ['latin'], variable: '--font-sans' });
 const editorialSerif = Cormorant_Garamond({
   subsets: ['latin'],
   variable: '--font-serif',
   weight: ['500', '600', '700'],
+  // Serif italic is Sparq's emotional voice — load the real italic so the
+  // browser never fakes a slant.
+  style: ['normal', 'italic'],
 });
 
 // Create a client

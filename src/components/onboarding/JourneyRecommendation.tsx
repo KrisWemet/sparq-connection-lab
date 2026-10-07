@@ -48,7 +48,7 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
         </motion.div>
 
         <div className="bg-insight-subtle border border-insight/40 rounded-2xl p-4 mb-6">
-          <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-2">
+          <p className="note-label mb-2">
             Solo-first start
           </p>
           <p className="text-sm text-brand-text-secondary leading-relaxed">
@@ -57,7 +57,7 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
         </div>
 
         {/* Primary recommendation */}
-        <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
+        <p className="note-label mb-3">
           Your starting point
         </p>
 
@@ -80,7 +80,7 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
               <SceneAccent kind="bloom" className="h-full w-full" />
             </div>
             <div className="p-4">
-              <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-1">
+              <p className="note-label mb-1">
                 Recommended for you
               </p>
               <p className="text-lg font-bold text-foreground mb-2">{primaryJourney.title}</p>
@@ -94,7 +94,7 @@ export function JourneyRecommendation({ profile, onSelectJourney }: JourneyRecom
         {/* Alternatives */}
         {alternativeJourneys.length > 0 && (
           <>
-            <p className="text-xs font-semibold tracking-widest uppercase text-brand-text-secondary mb-3">
+            <p className="note-label text-brand-text-secondary mb-3">
               Other paths that fit you
             </p>
             <div className="flex flex-col gap-2">
