@@ -1,6 +1,8 @@
 // rites.ts — milestones and rites of passage (constitution v1.2 §11C, §11D).
 // Every field is written by the user; Sparq supplies evidence, never meaning.
 
+import { SKILL_KEYS } from '@/lib/missions';
+
 export type RiteField =
   | 'used_to' | 'discovered' | 'practiced' | 'changed' | 'still_struggle'
   | 'now_believe' | 'carry_forward' | 'ready_next' | 'who_benefits';
@@ -18,7 +20,7 @@ export const RITE_FIELDS: Array<{ key: RiteField; prompt: string }> = [
   { key: 'who_benefits', prompt: 'Who else benefits when I am like this? (only if it matters to you)' },
 ];
 
-const ARC_KEY = /^(day_30|skill:(presence|appreciation|curiosity|repair))$/;
+const ARC_KEY = new RegExp(`^(day_30|skill:(${SKILL_KEYS.join('|')}))$`);
 
 export function isArcKey(value: unknown): value is string {
   return typeof value === 'string' && ARC_KEY.test(value);

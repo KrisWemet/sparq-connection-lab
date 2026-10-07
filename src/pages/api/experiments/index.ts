@@ -8,6 +8,7 @@ import { getActiveNorthStar } from '@/lib/server/north-star';
 import { withSchemaFallback } from '@/lib/server/schema-fallback';
 import {
   GOT_IN_THE_WAY_LABELS,
+  PRACTICE_META,
   capacityFromHistory,
   isDomain,
   isFelt,
@@ -18,6 +19,7 @@ import {
   suggestMission,
   type MissionHistoryRow,
   type MissionLearning,
+  type PracticeFit,
 } from '@/lib/missions';
 
 /**
@@ -66,7 +68,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'GET') {
     const today = isoDatePlus(0);
     const declined = typeof req.query.declined === 'string' ? req.query.declined.split(',').filter(Boolean) : [];
-    const [openRes, recentRes, historyRes, northStarLine, reasonRes, prefsRes] = await Promise.all([
+    const [openRes, recentRes, historyRes, northStarLine, reasonRes, prefsRes, insightsRes, checkInRes] = await Promise.all([
       withSchemaFallback<any[]>(
         () => db.from('experiments').select(V12_OPEN).eq('user_id', ctx.userId).eq('status', 'planned')
           .order('created_at', { ascending: false }).limit(10),
@@ -86,14 +88,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       db.from('user_reasons').select('reason_text').eq('user_id', ctx.userId).eq('still_true', true)
         .order('created_at', { ascending: false }).limit(1).maybeSingle(),
       db.from('user_preferences').select('conversation_prefs').eq('user_id', ctx.userId).maybeSingle(),
+      // Only ever used to go gentler (no step-ups in a hard stretch).
+      db.from('user_insights').select('emotional_state').eq('user_id', ctx.userId).maybeSingle(),
+      // The user's own answer to "how have the practices felt?" (informal check-in).
+      db.from('outcome_assessments').select('responses').eq('user_id', ctx.userId)
+        .eq('milestone', 'checkin_follow_up').order('completed_at', { ascending: false }).limit(1).maybeSingle(),
     ]);
+    const fit = (checkInRes as any)?.data?.responses?.answers?.practice_fit;
+    const practiceFit: PracticeFit = ['useful', 'okay', 'burden', 'not_helpful'].includes(fit) ? fit : null;
+    const readiness = (insightsRes as any)?.data?.emotional_state ?? null;
     // The user can turn mission ideas off ("Only when I ask") on their Insight Profile.
     const ideasOff = (prefsRes as any)?.data?.conversation_prefs?.ideas === 'ask_first';
 
     // Only a still-true reason is shown back to the user (retired ones are theirs to drop).
     const withReason = (openRes.data || []).map((e: any) => {
       const reason = Array.isArray(e.reason) ? e.reason[0] : e.reason;
-      return { ...e, reason: reason?.still_true ? reason.reason_text : null, reason_id: reason?.still_true ? reason.id : null };
+      const skill: unknown = e.skill_key;
+      const follow_up = isSkillKey(skill) ? PRACTICE_META[skill].followUp : null;
+      return { ...e, follow_up, reason: reason?.still_true ? reason.reason_text : null, reason_id: reason?.still_true ? reason.id : null };
     });
     const due = withReason.filter(e => !e.check_in_on || e.check_in_on <= today);
     // The history query needs the v1.2 columns; before the migration there is no history.
@@ -104,6 +116,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       openCount: withReason.length,
       history,
       declinedSkills: declined,
+      readiness,
+      practiceFit,
     });
     return res.status(200).json({
       due,

@@ -60,6 +60,8 @@ The app works at levels 1-2, not just level 4. Peter notices identity evidence a
 
 > **Still not used:** Polyvagal theory as a named basis (removed 2026-06 — somatic regulation is anchored in HRV research); "NLP" as a label (retired 2026-06 — techniques live on under validated construct names). Constitution §1B.
 
+> **Practices in the product:** the mission ladders in `src/lib/missions.ts` carry each practice's source approach, skill, outcome, context, intensity, limitations and follow-up question (`PRACTICE_META`; table in `docs/TRANSFORMATION_ENGINE.md` *Practice map*). Extend a ladder before writing a new exercise elsewhere.
+
 > **Deep reference**: `references/modalities-therapeutic.md` (modalities 1-6, plus DBT and TA in §7–8), `references/modalities-applied.md` (modalities 7-12)
 
 ---

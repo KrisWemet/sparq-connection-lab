@@ -29,6 +29,33 @@
 
 **Still open:** run the live Peter evals — `OPENROUTER_API_KEY=… npm run eval:peter` (21 calls on the current `PETER_MODELS`, i.e. free Gemma → Qwen; writes `docs/evals/results/<date>-peter.md` for a person to judge). Social reinforcement beyond the partner (§8A) and other domains (§12A) wait for explicit authorization.
 
+## Practice consistency (2026-10-05)
+
+**Problem (docs/PSYCHOLOGY_AUDIT.md §4):** the same few skills appeared in many places, but nothing carried a skill from one day to the next — the daily concept changed by day number, and `suggestMission` started a *new* skill once one had been tried, even before it felt easy. A "didn't help" result changed nothing.
+
+**What changed** — all on the existing mission ladders (`src/lib/missions.ts`), no new content store, no migration:
+
+- **Practice map.** Every ladder carries `PRACTICE_META`: source approach (internal only), skill, intended outcome, appropriate context, emotional intensity, limitations, and the follow-up question shown at check-in (`/api/experiments` returns it as `follow_up`).
+- **One skill across situations.** Each step has a second situation (`alt`). While a step isn't easy yet, the next idea is the *same* step in a new situation (`repeat`); if the moment never came or they forgot, the same step at a different moment (`new_moment`).
+- **Adjust, stop or change.** "Too much" steps back at once (or rests the practice at the easiest step); two "didn't help" tries rest the practice and offer a different one (`change`); "doesn't matter to me now" rests it; no step-up during a hard stretch (tier 3, approved 2026-10-07 — see `PRIMING_AUDIT.md`); the check-in answer "A burden" → no idea at all, "Not helpful" → change.
+- **Goal fit.** A first step is chosen from the skill closest to the user's own North Star or reason (keyword hints), not a fixed order.
+- **Daily loop link.** When the user chose a practice in the last 14 days, the AI morning story may show that same skill in a new everyday moment (`getMorningStoryPrompt` `practice`). Journey days are unchanged.
+- **Three ladders the doctrine named but never delivered:** a clear request (NVC, DBT-informed interpersonal effectiveness), pausing and coming back (Gottman self-soothing break, DBT-informed distress tolerance), one value-aligned action (ACT).
+
+### Practice map
+
+| Practice (`skill_key`) | Source approach (internal) | Skill | Intended outcome | Intensity | Limitation | Follow-up question |
+|---|---|---|---|---|---|---|
+| `presence` | Gottman, EFT, Mindfulness | Staying a little longer in a hard moment | Fewer walk-aways | medium | Never about putting up with harm; not while flooded | What happened in that extra minute? |
+| `appreciation` | Positive Psychology, Gottman | Noticing and saying what goes right | More attention on what works | low | Only sincere; not a way to skip a real problem | What did you notice, and what happened when you said it? |
+| `curiosity` | NVC, CBT, Gottman | Asking instead of assuming; listening without a rebuttal | Fewer misunderstandings | low | Understanding is not agreeing | What did you learn that you did not know before? |
+| `repair` | Gottman, EFT | A repair attempt | Getting back to each other sooner | medium | Owning your part is not taking all the blame or excusing harm | How did they respond, and how was it for you? |
+| `request` | NVC, DBT-informed | A clear, kind request | Needs said instead of hinted | medium | A request can get a no | What did you ask for, and what happened? |
+| `pause` | Gottman, DBT-informed | Pausing and agreeing when to return | Fewer things said in the heat | medium | Not the silent treatment; not the tool if unsafe | Did you come back to it? How did the second try go? |
+| `values` | ACT | One action that fits a chosen value | Living more like who you want to be | low | Directions, not rules to be perfect at | What did it feel like? Did it fit what you care about? |
+
+Context and full wording live in `PRACTICE_META`; update the table when the code changes. Missions remain optional and user-chosen: an idea needs a user-chosen target, "Not now" is respected for two weeks, and "Only when I ask" turns ideas off.
+
 This document answers four questions for the v1.2 amendment:
 
 1. Which v1.2 ideas already exist in Sparq, so we build on them instead of duplicating them?

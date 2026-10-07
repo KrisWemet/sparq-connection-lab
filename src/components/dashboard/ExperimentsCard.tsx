@@ -24,6 +24,7 @@ type Experiment = {
   reason?: string | null; // the user's own words for why it matters
   difficulty_level?: number | null;
   learning?: { felt?: Felt | null; what_got_in_way?: string | null } | null;
+  follow_up?: string | null; // the practice's own check-in question (PRACTICE_META)
 };
 
 type Outcome = 'helped' | 'mixed' | 'didnt_help';
@@ -321,7 +322,8 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
                   ))}
                 </div>
                 <textarea value={note} onChange={e => setNote(e.target.value)} rows={2} maxLength={500}
-                  placeholder="What did you notice? (optional)" aria-label="What did you notice?" className={field} />
+                  placeholder={current.follow_up ? `${current.follow_up} (optional)` : 'What did you notice? (optional)'}
+                  aria-label={current.follow_up || 'What did you notice?'} className={field} />
                 <textarea value={envNote} onChange={e => setEnvNote(e.target.value)} rows={2} maxLength={300}
                   placeholder="What made it easier or harder? (optional)" aria-label="What made it easier or harder?" className={field} />
                 <button type="button" disabled={!outcome || busy} onClick={saveTried} className={primaryBtn}>Save</button>
@@ -429,7 +431,7 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
               <p className="text-xs font-semibold text-brand-text-secondary">What you&apos;re practicing</p>
               {growing.map(c => (
                 <p key={c.skill} className="text-sm text-brand-espresso">
-                  {c.label} <span className="text-brand-text-secondary">· step {c.level} · tried {c.triedAtLevel}×</span>
+                  {c.label} <span className="text-brand-text-secondary">· step {c.level} · tried {c.triedAtLevel}×{c.paused ? ' · resting' : ''}</span>
                 </p>
               ))}
             </div>
@@ -454,7 +456,13 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
                   ? 'That step has gotten easier for you. Want to try the next one, or stay with it a while?'
                   : suggestion.kind === 'smaller_step'
                     ? 'Want to try a smaller version for now?'
-                    : suggestion.because.type === 'north_star'
+                    : suggestion.kind === 'repeat'
+                      ? 'Same thing you have been practicing, in a new moment. Want to try it here?'
+                      : suggestion.kind === 'new_moment'
+                        ? 'The moment never quite came. Want to try it at a different time?'
+                        : suggestion.kind === 'change'
+                          ? 'That last one didn\'t seem to help, so it can rest. Want to try something different?'
+                          : suggestion.because.type === 'north_star'
                       ? <>You said you want to be <span className="italic text-brand-espresso">{suggestion.because.text.replace(/[.!]+$/, '')}</span>. One small idea:</>
                       : <>You said: <span className="italic text-brand-espresso">&ldquo;{suggestion.because.text}&rdquo;</span>. One small idea:</>}
               </p>
