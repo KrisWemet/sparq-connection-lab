@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { toast } from 'sonner';
 import { JourneyContentView } from '@/components/journey/JourneyContentView';
 import { JourneyTierView, JourneyTier, TierId } from '@/components/journey/JourneyTierView';
@@ -57,6 +58,7 @@ export default function JourneyTemplate({
   conceptItems,
   completionCriteria,
 }: JourneyTemplateProps) {
+  const router = useRouter();
   const [activeTier, setActiveTier] = useState<TierId | null>(null);
   const journeyMeta = journeys.find((entry) => entry.id === journeyId);
 
@@ -65,7 +67,7 @@ export default function JourneyTemplate({
   const [loaded, setLoaded] = useState(false);
   const [record, setRecord] = useState<ClientJourney | null>(null);
   const [otherActive, setOtherActive] = useState<ClientJourney | null>(null);
-  const [pendingTier, setPendingTier] = useState<TierId | null>(null);
+  const [blockedOpen, setBlockedOpen] = useState(false);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -87,9 +89,10 @@ export default function JourneyTemplate({
   };
 
   // Opening a stage starts (or resumes) the journey. Moving between stages is
-  // the user's choice. Starting this journey while another is active pauses
-  // the other one — after asking — and keeps its place.
-  const openTier = async (tier: TierId, confirmedSwitch = false) => {
+  // the user's choice. One journey at a time (Chris, 2026-10-07): while
+  // another journey is active this one can't start; the user pauses or
+  // finishes that one first, from Journeys.
+  const openTier = async (tier: TierId) => {
     if (busy) return;
     if (record?.status === 'active') {
       if (record.stage !== tier) {
@@ -102,16 +105,21 @@ export default function JourneyTemplate({
       setActiveTier(tier);
       return;
     }
-    if (otherActive && !confirmedSwitch) {
-      setPendingTier(tier);
+    if (otherActive) {
+      setBlockedOpen(true);
       return;
     }
     setBusy(true);
     const result = await journeyAction({ action: 'activate', journey_id: journeyId, stage: tier });
     setBusy(false);
+    if (result.error === 'another_journey_active') {
+      // Started elsewhere (another tab or device) since this page loaded.
+      setOtherActive((prev) => prev ?? ({ journey_id: result.active_journey_id, title: result.active_title } as ClientJourney));
+      setBlockedOpen(true);
+      return;
+    }
     if (!result.ok || !result.journey) return showActionError(result.error, result.message);
     setRecord(result.journey);
-    setOtherActive(null);
     setActiveTier(tier);
   };
 
@@ -173,25 +181,18 @@ export default function JourneyTemplate({
         otherActive={otherActive}
         onSelectTier={(tier) => void openTier(tier)}
       />
-      <AlertDialog open={pendingTier !== null} onOpenChange={(open) => { if (!open) setPendingTier(null); }}>
+      <AlertDialog open={blockedOpen} onOpenChange={setBlockedOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Switch to {title}?</AlertDialogTitle>
+            <AlertDialogTitle>One journey at a time</AlertDialogTitle>
             <AlertDialogDescription>
-              Sparq keeps one journey in focus at a time. {otherActive?.title ?? 'Your current journey'} will be paused, and your place there is saved for when you want to go back.
+              You&apos;re on {otherActive?.title ?? 'another journey'} right now. To start {title}, pause or finish it first. Your place there is kept.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Stay on {otherActive?.title ?? 'my journey'}</AlertDialogCancel>
-            <AlertDialogAction
-              disabled={busy}
-              onClick={() => {
-                const tier = pendingTier;
-                setPendingTier(null);
-                if (tier) void openTier(tier, true);
-              }}
-            >
-              Pause it and start this one
+            <AlertDialogCancel>Not now</AlertDialogCancel>
+            <AlertDialogAction onClick={() => void router.push('/journeys')}>
+              Go to my journey
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

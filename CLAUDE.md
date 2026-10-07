@@ -638,7 +638,7 @@ Warm, golden-hour metaphor images only — never people (hands-only is allowed).
 
 ## Journeys
 
-**Journey state (2026-10-04, Phase 1 of the Journey spine):** Supabase is the only source of truth — `user_journeys` via `src/lib/server/journey-state.ts`, rules in `src/lib/journeys/progress.ts`, one catalog in `src/lib/journeys/catalog.ts` (9 daily starter journeys + 13 staged ones), browser access via `src/lib/journeys/client.ts` and `/api/journeys/state`. Never keep journey progress in localStorage (old browser progress is imported once). Switching journeys pauses the current one; pausing and leaving keep the user's place.
+**Journey state (2026-10-04, Phase 1 of the Journey spine):** Supabase is the only source of truth — `user_journeys` via `src/lib/server/journey-state.ts`, rules in `src/lib/journeys/progress.ts`, one catalog in `src/lib/journeys/catalog.ts` (9 daily starter journeys + 13 staged ones), browser access via `src/lib/journeys/client.ts` and `/api/journeys/state`. Never keep journey progress in localStorage (old browser progress is imported once). **One journey at a time (Chris, 2026-10-07):** a journey can't start while another is active (`another_journey_active`, 409); the user pauses or finishes the current one first (Pause lives on the "current practice" card on `/journeys`). Pausing and leaving keep the user's place.
 
 There are 13 staged journeys defined in `src/data/journeys.ts` (Long Distance has no content yet) with corresponding page components in `src/pages/journeys/`:
 

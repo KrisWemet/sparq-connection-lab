@@ -70,6 +70,13 @@ export function JourneyDetail({ journeyId, peterNote, profile: _profile, onBack,
         headers,
         body: JSON.stringify({ journey_id: journeyId }),
       });
+      if (activateResponse.status === 409) {
+        // One journey at a time: they already have one going.
+        const body = await activateResponse.json().catch(() => ({}));
+        const current = typeof body?.active_title === 'string' ? body.active_title : 'another journey';
+        setStartError(`You're already on ${current}. Pause or finish it from Journeys first. Your place there is kept.`);
+        return;
+      }
       await requireJourneyActivationSuccess(activateResponse, {
         journeyId,
         activationType: 'starter_activate',

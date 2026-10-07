@@ -188,7 +188,7 @@ export function JourneyTierView({
               ? 'You walked this whole journey. You can walk any stage again whenever you like.'
               : setAsideOn
                 ? `You set this journey aside on ${setAsideOn}. Your place is saved — pick any open stage to carry on.`
-                : `You're on ${otherActive?.title} right now. Starting this one pauses it, and your place there is kept.`}
+                : `You're on ${otherActive?.title} right now. Sparq keeps one journey at a time, so pause or finish it before you start this one. Your place there is kept.`}
           </div>
         )}
 

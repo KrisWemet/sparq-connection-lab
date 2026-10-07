@@ -29,7 +29,9 @@ export type JourneyActionResult = {
   error?: string;
   message?: string;
   journey?: ClientJourney;
-  paused_journey_id?: string | null;
+  /** Set when activation was refused because another journey is active. */
+  active_journey_id?: string | null;
+  active_title?: string | null;
   advanced?: boolean;
   stage_completed?: StageId | null;
   journey_completed?: boolean;

@@ -31,18 +31,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         limit: result.limit,
       });
     }
+    if (result.error === 'another_journey_active') {
+      return res.status(409).json({
+        error: 'another_journey_active',
+        message: 'Pause or finish the journey you are on first.',
+        active_journey_id: result.active?.journey_id ?? null,
+        active_title: result.active?.title ?? null,
+      });
+    }
     await trackPrimaryPathServerError(ctx.supabase, ctx.userId, 'journey_activate', new Error(result.error), {
       journey_id: journeyId,
     });
     return res.status(500).json({ error: 'Failed to activate journey' });
   }
 
-  const { journey, pausedJourneyId } = result.value;
+  const { journey } = result.value;
   return res.status(200).json({
     activated: true,
     journey_id: journey.journey_id,
     title: journey.title,
     journey,
-    paused_journey_id: pausedJourneyId,
   });
 }

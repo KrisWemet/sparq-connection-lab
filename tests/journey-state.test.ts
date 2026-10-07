@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 vi.mock('@/lib/server/entitlements', () => ({ resolveEntitlements: async () => ({ starter_quests_limit: null }) }));
 vi.mock('@/lib/server/analytics', () => ({ trackEvent: async () => {} }));
 
-import { activateJourney, getActiveJourney, recordJourneyStep } from '@/lib/server/journey-state';
+import { activateJourney, getActiveJourney, recordJourneyStep, setJourneyAside } from '@/lib/server/journey-state';
 import { getCatalogJourney, isDailyJourney, journeyCatalog } from '@/lib/journeys/catalog';
 import { newJourneyState, recordStep, transition, type JourneyShape } from '@/lib/journeys/progress';
 import { starterJourneyIds } from '@/data/starter-journeys';
@@ -103,7 +103,8 @@ describe('recordJourneyStep — mid-day switch', () => {
     const { db, tables } = fakeDb();
     const u = 'user-1';
     await activateJourney(db, u, 'shared-language');          // day 1 of A started this morning
-    await activateJourney(db, u, 'building-trust');           // switched to B before the evening
+    await setJourneyAside(db, u, 'shared-language', 'pause'); // paused A (one journey at a time)…
+    await activateJourney(db, u, 'building-trust');           // …and switched to B before the evening
 
     const step = await recordJourneyStep(db, u, 'shared-language', { day: 1 }, { creditSetAside: true });
     expect(step.ok && step.value.advanced).toBe(true);
@@ -127,6 +128,7 @@ describe('recordJourneyStep — mid-day switch', () => {
     if (length.kind !== 'daily') throw new Error('expected a daily journey');
     await activateJourney(db, u, 'shared-language');
     for (let day = 1; day < length.length; day++) await recordJourneyStep(db, u, 'shared-language', { day });
+    await setJourneyAside(db, u, 'shared-language', 'pause');
     await activateJourney(db, u, 'building-trust');
 
     const last = await recordJourneyStep(db, u, 'shared-language', { day: length.length }, { creditSetAside: true });
@@ -140,6 +142,7 @@ describe('recordJourneyStep — mid-day switch', () => {
   it('without the flag, a set-aside journey is not credited', async () => {
     const { db, tables } = fakeDb();
     await activateJourney(db, 'user-3', 'shared-language');
+    await setJourneyAside(db, 'user-3', 'shared-language', 'pause');
     await activateJourney(db, 'user-3', 'building-trust');
     const step = await recordJourneyStep(db, 'user-3', 'shared-language', { day: 1 });
     expect(step.ok && step.value.advanced).toBe(false);

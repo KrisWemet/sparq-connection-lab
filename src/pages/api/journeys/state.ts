@@ -1,6 +1,6 @@
 // /api/journeys/state — the user's journeys and every change to them.
 //   GET  → { journeys, active }
-//   POST { action: 'activate', journey_id, stage? }   start / resume / walk again
+//   POST { action: 'activate', journey_id, stage? }   start / resume / walk again (409 while another is active)
 //        { action: 'pause' | 'leave', journey_id }     set aside; place is kept
 //        { action: 'stage', journey_id, stage }        choose the stage to walk
 //        { action: 'step', journey_id, day, stage?, responses? }  practiced a day
@@ -23,6 +23,7 @@ import { isDailyJourney } from '@/lib/journeys/catalog';
 const STATUS: Record<JourneyError, number> = {
   unknown_journey: 404,
   not_found: 404,
+  another_journey_active: 409,
   journey_limit_reached: 403,
   stage_locked: 409,
   invalid_transition: 409,
@@ -32,6 +33,7 @@ const STATUS: Record<JourneyError, number> = {
 
 const MESSAGE: Partial<Record<JourneyError, string>> = {
   journey_limit_reached: 'You reached your free-plan journey limit.',
+  another_journey_active: 'Pause or finish the journey you are on first.',
   stage_locked: 'Finish the stage before this one first.',
 };
 
@@ -81,8 +83,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   switch (action) {
     case 'activate': {
       const result = await activateJourney(db, ctx.userId, journeyId, { stage });
-      if (!result.ok) return fail(result.error, result.limit != null ? { limit: result.limit } : {});
-      return res.status(200).json({ journey: result.value.journey, paused_journey_id: result.value.pausedJourneyId });
+      if (!result.ok) {
+        return fail(result.error, {
+          ...(result.limit != null ? { limit: result.limit } : {}),
+          ...(result.active ? { active_journey_id: result.active.journey_id, active_title: result.active.title } : {}),
+        });
+      }
+      return res.status(200).json({ journey: result.value.journey });
     }
     case 'pause':
     case 'leave': {

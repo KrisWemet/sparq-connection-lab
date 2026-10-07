@@ -39,13 +39,16 @@ export type JourneyRecord = JourneyState & {
 export type JourneyError =
   | 'unknown_journey'
   | 'not_found'
+  | 'another_journey_active'
   | 'journey_limit_reached'
   | 'stage_locked'
   | 'invalid_transition'
   | 'schema_not_ready'
   | 'db_error';
 
-export type JourneyResult<T> = { ok: true; value: T } | { ok: false; error: JourneyError; limit?: number };
+export type JourneyResult<T> =
+  | { ok: true; value: T }
+  | { ok: false; error: JourneyError; limit?: number; active?: { journey_id: string; title: string } };
 
 function fromRow(row: any): JourneyRecord | null {
   const entry = getCatalogJourney(row?.journey_id);
@@ -161,16 +164,18 @@ export async function getActiveJourney(db: Db, userId: string): Promise<JourneyR
 }
 
 /**
- * Start, resume, or walk again. Switching journeys pauses the current one —
- * its place is kept — rather than refusing. A free plan can start a limited
- * number of different journeys; resuming one never counts against it.
+ * Start, resume, or walk again. One journey at a time (Chris, 2026-10-07):
+ * while another journey is active this refuses with 'another_journey_active'.
+ * The user pauses or leaves that one first (their place is kept). A free plan
+ * can start a limited number of different journeys; resuming one never
+ * counts against it.
  */
 export async function activateJourney(
   db: Db,
   userId: string,
   journeyId: string,
   opts: { stage?: StageId | null } = {},
-): Promise<JourneyResult<{ journey: JourneyRecord; pausedJourneyId: string | null }>> {
+): Promise<JourneyResult<{ journey: JourneyRecord }>> {
   const entry = getCatalogJourney(journeyId);
   if (!entry) return { ok: false, error: 'unknown_journey' };
 
@@ -181,9 +186,14 @@ export async function activateJourney(
     await setInsightsPointer(db, userId, { active_journey_id: journeyId, journey_completion_state: null });
     const journey = await activeFromInsights(db, userId);
     if (!journey) return { ok: false, error: 'db_error' };
-    return { ok: true, value: { journey, pausedJourneyId: null } };
+    return { ok: true, value: { journey } };
   }
   if (!existing.ok) return existing;
+
+  const current = await getActiveJourney(db, userId);
+  if (current && current.journey_id !== journeyId) {
+    return { ok: false, error: 'another_journey_active', active: { journey_id: current.journey_id, title: current.title } };
+  }
 
   if (!existing.value) {
     const entitlements = await resolveEntitlements(db, userId);
@@ -208,19 +218,6 @@ export async function activateJourney(
     next = chosen;
   }
 
-  // Only one active journey: set the current one aside first.
-  let pausedJourneyId: string | null = null;
-  const current = await getActiveJourney(db, userId);
-  if (current && current.journey_id !== journeyId && current.id) {
-    const currentEntry = getCatalogJourney(current.journey_id)!;
-    const paused = transition(current, currentEntry.shape, 'pause', now);
-    if (paused.ok) {
-      const saved = await saveRow(db, userId, current, paused.state);
-      if (!saved.ok) return saved;
-      pausedJourneyId = current.journey_id;
-    }
-  }
-
   const saved = await saveRow(db, userId, existing.value, next.state);
   if (!saved.ok) return saved;
 
@@ -228,9 +225,8 @@ export async function activateJourney(
   await trackEvent(db, userId, existing.value ? 'journey_resumed' : 'journey_started', {
     journey_id: journeyId,
     from_status: existing.value?.status ?? null,
-    paused_journey_id: pausedJourneyId,
   });
-  return { ok: true, value: { journey: saved.value, pausedJourneyId } };
+  return { ok: true, value: { journey: saved.value } };
 }
 
 /** Pause (set aside for now) or leave (step away). Both keep their place and answers. */
