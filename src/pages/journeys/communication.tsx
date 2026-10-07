@@ -27,7 +27,7 @@ export default function CommunicationJourney() {
       concepts: [
         {
           id: "active-listening",
-          title: "Active Listening",
+          title: "Active listening",
           description: "Fully focusing on what your partner is saying rather than planning your response",
           icon: <Ear className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -36,7 +36,7 @@ export default function CommunicationJourney() {
         },
         {
           id: "nonverbal-communication",
-          title: "Nonverbal Communication",
+          title: "Nonverbal communication",
           description: "Understanding how body language, facial expressions, and tone convey meaning",
           icon: <Eye className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -45,7 +45,7 @@ export default function CommunicationJourney() {
         },
         {
           id: "clear-expression",
-          title: "Clear Expression",
+          title: "Clear expression",
           description: "Stating your thoughts, feelings, and needs directly and specifically",
           icon: <MessageSquare className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -54,7 +54,7 @@ export default function CommunicationJourney() {
         },
         {
           id: "timing-and-approach",
-          title: "Timing & Approach",
+          title: "Timing & approach",
           description: "Choosing the right moment and method to discuss sensitive topics",
           icon: <Users className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -63,7 +63,7 @@ export default function CommunicationJourney() {
         },
         {
           id: "expressing-appreciation",
-          title: "Expressing Appreciation",
+          title: "Expressing appreciation",
           description: "Regularly sharing specific, genuine appreciation for your partner",
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -72,7 +72,7 @@ export default function CommunicationJourney() {
         },
         {
           id: "repairing-miscommunication",
-          title: "Repairing Miscommunication",
+          title: "Repairing miscommunication",
           description: "Addressing communication breakdowns and misunderstandings promptly",
           icon: <CornerDownRight className="w-5 h-5 text-sky-500" />,
           color: "sky",
@@ -81,7 +81,7 @@ export default function CommunicationJourney() {
         },
         {
           id: "assertiveness",
-          title: "Healthy Assertiveness",
+          title: "Healthy assertiveness",
           description: "Expressing your needs confidently while respecting your partner's perspective",
           icon: <Megaphone className="w-5 h-5 text-orange-500" />,
           color: "orange",
@@ -90,7 +90,7 @@ export default function CommunicationJourney() {
         },
         {
           id: "vulnerability",
-          title: "Vulnerable Communication",
+          title: "Vulnerable communication",
           description: "Sharing your deeper feelings, fears, and hopes with openness and trust",
           icon: <User className="w-5 h-5 text-brand-primary/80" />,
           color: "indigo",
@@ -106,7 +106,7 @@ export default function CommunicationJourney() {
       concepts: [
         {
           id: "emotional-validation",
-          title: "Emotional Validation",
+          title: "Emotional validation",
           description: "Acknowledging your partner's feelings as real and understandable before problem-solving",
           icon: <HandHeart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -115,7 +115,7 @@ export default function CommunicationJourney() {
         },
         {
           id: "soft-startup",
-          title: "Soft Startup",
+          title: "Soft startup",
           description: "Beginning difficult conversations gently to prevent defensiveness",
           icon: <ShieldCheck className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -124,7 +124,7 @@ export default function CommunicationJourney() {
         },
         {
           id: "reflective-listening",
-          title: "Reflective Listening",
+          title: "Reflective listening",
           description: "Mirroring back what your partner said to confirm understanding before responding",
           icon: <Layers className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -133,7 +133,7 @@ export default function CommunicationJourney() {
         },
         {
           id: "meta-communication",
-          title: "Meta-Communication",
+          title: "Meta-communication",
           description: "Talking about how you communicate — noticing and naming patterns in real time",
           icon: <Waypoints className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -142,7 +142,7 @@ export default function CommunicationJourney() {
         },
         {
           id: "bids-for-connection",
-          title: "Recognizing Bids",
+          title: "Recognizing bids",
           description: "Noticing and responding to your partner's small attempts to connect",
           icon: <Sparkles className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -151,7 +151,7 @@ export default function CommunicationJourney() {
         },
         {
           id: "repair-under-pressure",
-          title: "Repair Under Pressure",
+          title: "Repair under pressure",
           description: "Making repair attempts during heated moments instead of waiting until you've calmed down",
           icon: <CornerDownRight className="w-5 h-5 text-sky-500" />,
           color: "sky",
@@ -160,7 +160,7 @@ export default function CommunicationJourney() {
         },
         {
           id: "needs-behind-complaints",
-          title: "Needs Behind Complaints",
+          title: "Needs behind complaints",
           description: "Translating criticisms and complaints into the unmet needs they represent",
           icon: <Brain className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -176,7 +176,7 @@ export default function CommunicationJourney() {
       concepts: [
         {
           id: "generative-dialogue",
-          title: "Generative Dialogue",
+          title: "Generative dialogue",
           description: "Having conversations that create new understanding neither partner had before",
           icon: <Sparkles className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -185,7 +185,7 @@ export default function CommunicationJourney() {
         },
         {
           id: "holding-space",
-          title: "Holding Space",
+          title: "Holding space",
           description: "Being fully present with your partner's experience without needing to fix, advise, or redirect",
           icon: <HandHeart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -194,7 +194,7 @@ export default function CommunicationJourney() {
         },
         {
           id: "narrative-co-creation",
-          title: "Shared Story-Making",
+          title: "Shared story-making",
           description: "Consciously creating and telling the story of your relationship together",
           icon: <Mic className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -203,7 +203,7 @@ export default function CommunicationJourney() {
         },
         {
           id: "communicating-across-difference",
-          title: "Bridging Differences",
+          title: "Bridging differences",
           description: "Communicating effectively across fundamental differences in personality, values, or style",
           icon: <Scale className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -212,7 +212,7 @@ export default function CommunicationJourney() {
         },
         {
           id: "courageous-conversations",
-          title: "Courageous Conversations",
+          title: "Courageous conversations",
           description: "Initiating and navigating the conversations you've been avoiding",
           icon: <ShieldCheck className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -221,7 +221,7 @@ export default function CommunicationJourney() {
         },
         {
           id: "relational-attunement",
-          title: "Relational Attunement",
+          title: "Relational attunement",
           description: "Sensing what your partner needs before they ask — and checking rather than assuming",
           icon: <Ear className="w-5 h-5 text-sky-500" />,
           color: "sky",

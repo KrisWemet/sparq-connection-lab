@@ -24,7 +24,7 @@ export default function EmotionalIntelligenceJourney() {
       concepts: [
         {
           id: "emotional-awareness",
-          title: "Emotional Awareness",
+          title: "Emotional awareness",
           description: "Tuning into what you're feeling in any given moment instead of running on autopilot",
           icon: <Eye className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -33,7 +33,7 @@ export default function EmotionalIntelligenceJourney() {
         },
         {
           id: "naming-emotions",
-          title: "Naming Emotions with Precision",
+          title: "Naming emotions with precision",
           description: "Moving beyond 'fine' and 'stressed' to identify exactly what you're experiencing",
           icon: <MessageSquare className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -42,7 +42,7 @@ export default function EmotionalIntelligenceJourney() {
         },
         {
           id: "recognizing-triggers",
-          title: "Recognizing Emotional Triggers",
+          title: "Recognizing emotional triggers",
           description: "Identifying the situations, words, or behaviors that reliably activate strong emotional responses",
           icon: <Thermometer className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -51,7 +51,7 @@ export default function EmotionalIntelligenceJourney() {
         },
         {
           id: "basic-regulation",
-          title: "Basic Emotion Regulation",
+          title: "Basic emotion regulation",
           description: "Developing tools to manage emotional intensity without suppressing or exploding",
           icon: <Shield className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -60,7 +60,7 @@ export default function EmotionalIntelligenceJourney() {
         },
         {
           id: "empathy-foundations",
-          title: "Empathy Foundations",
+          title: "Empathy foundations",
           description: "Building the ability to sense and understand what your partner is feeling",
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -69,7 +69,7 @@ export default function EmotionalIntelligenceJourney() {
         },
         {
           id: "self-compassion",
-          title: "Self-Compassion",
+          title: "Self-compassion",
           description: "Treating yourself with the same kindness you'd offer a good friend when emotions are hard",
           icon: <HandHeart className="w-5 h-5 text-sky-500" />,
           color: "sky",
@@ -78,7 +78,7 @@ export default function EmotionalIntelligenceJourney() {
         },
         {
           id: "emotional-vocabulary",
-          title: "Building Emotional Vocabulary",
+          title: "Building emotional vocabulary",
           description: "Expanding the range of emotions you can identify and express",
           icon: <Brain className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -94,7 +94,7 @@ export default function EmotionalIntelligenceJourney() {
       concepts: [
         {
           id: "co-regulation",
-          title: "Co-Regulation with Your Partner",
+          title: "Co-regulation with your partner",
           description: "Using each other's calm presence to regulate difficult emotions together",
           icon: <Users className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -103,7 +103,7 @@ export default function EmotionalIntelligenceJourney() {
         },
         {
           id: "emotional-bids",
-          title: "Emotional Bids & Turning Toward",
+          title: "Emotional bids & turning toward",
           description: "Recognizing and responding to your partner's small requests for emotional connection",
           icon: <Sparkles className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -112,7 +112,7 @@ export default function EmotionalIntelligenceJourney() {
         },
         {
           id: "sitting-with-discomfort",
-          title: "Sitting with Emotional Discomfort",
+          title: "Sitting with emotional discomfort",
           description: "Building tolerance for difficult feelings without rushing to fix, numb, or escape them",
           icon: <Compass className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -121,7 +121,7 @@ export default function EmotionalIntelligenceJourney() {
         },
         {
           id: "validating-without-fixing",
-          title: "Validating Without Fixing",
+          title: "Validating without fixing",
           description: "Acknowledging your partner's emotions without jumping to solutions or silver linings",
           icon: <HandHeart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -130,7 +130,7 @@ export default function EmotionalIntelligenceJourney() {
         },
         {
           id: "managing-flooding",
-          title: "Managing Emotional Flooding",
+          title: "Managing emotional flooding",
           description: "Recognizing when your emotional brain has hijacked your thinking brain — and what to do about it",
           icon: <Thermometer className="w-5 h-5 text-red-500" />,
           color: "red",
@@ -139,7 +139,7 @@ export default function EmotionalIntelligenceJourney() {
         },
         {
           id: "reading-subtext",
-          title: "Reading Emotional Subtext",
+          title: "Reading emotional subtext",
           description: "Understanding what your partner is really feeling beneath what they're saying",
           icon: <Eye className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -155,7 +155,7 @@ export default function EmotionalIntelligenceJourney() {
       concepts: [
         {
           id: "emotional-attunement",
-          title: "Emotional Attunement",
+          title: "Emotional attunement",
           description: "Sensing your partner's emotional state and responding with precision — almost before they ask",
           icon: <Layers className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -164,7 +164,7 @@ export default function EmotionalIntelligenceJourney() {
         },
         {
           id: "creating-emotional-safety",
-          title: "Creating Emotional Safety",
+          title: "Creating emotional safety",
           description: "Building an environment where both partners feel safe to feel anything without judgment",
           icon: <ShieldCheck className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -173,7 +173,7 @@ export default function EmotionalIntelligenceJourney() {
         },
         {
           id: "complex-emotions-together",
-          title: "Navigating Complex Emotions Together",
+          title: "Navigating complex emotions together",
           description: "Holding space when emotions are messy, contradictory, or hard to understand",
           icon: <Sparkles className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -182,7 +182,7 @@ export default function EmotionalIntelligenceJourney() {
         },
         {
           id: "emotional-resilience",
-          title: "Emotional Resilience as a Couple",
+          title: "Emotional resilience as a couple",
           description: "Bouncing back from emotional setbacks faster and stronger because you face them together",
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -200,7 +200,7 @@ export default function EmotionalIntelligenceJourney() {
         },
         {
           id: "emotional-leadership",
-          title: "Emotional Leadership",
+          title: "Emotional leadership",
           description: "Setting the emotional tone for your relationship through your own regulated, intentional presence",
           icon: <Lightbulb className="w-5 h-5 text-sky-500" />,
           color: "sky",

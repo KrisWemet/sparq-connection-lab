@@ -23,7 +23,7 @@ export default function FantasyExplorationJourney() {
       concepts: [
         {
           id: "normalizing-fantasy",
-          title: "Normalizing Fantasy",
+          title: "Normalizing fantasy",
           description: "Understanding that having fantasies is a universal, healthy part of human sexuality",
           icon: <Brain className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -32,7 +32,7 @@ export default function FantasyExplorationJourney() {
         },
         {
           id: "fantasy-vs-desire",
-          title: "Fantasy vs. Desire vs. Intent",
+          title: "Fantasy vs. desire vs. intent",
           description: "Distinguishing between what you imagine, what you want, and what you'd actually do",
           icon: <Eye className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -41,7 +41,7 @@ export default function FantasyExplorationJourney() {
         },
         {
           id: "building-safety-for-sharing",
-          title: "Building Safety for Sharing",
+          title: "Building safety for sharing",
           description: "Creating the conditions where both partners feel safe to reveal their inner world without judgment",
           icon: <Shield className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -50,7 +50,7 @@ export default function FantasyExplorationJourney() {
         },
         {
           id: "sharing-spectrum",
-          title: "The Sharing Spectrum",
+          title: "The sharing spectrum",
           description: "Understanding that vulnerability is graduated — you don't have to share everything at once",
           icon: <Compass className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -59,7 +59,7 @@ export default function FantasyExplorationJourney() {
         },
         {
           id: "receiving-disclosure",
-          title: "Receiving Your Partner's Disclosure",
+          title: "Receiving your partner's disclosure",
           description: "Responding to your partner's fantasy sharing with curiosity and warmth, even if it surprises you",
           icon: <HandHeart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -68,7 +68,7 @@ export default function FantasyExplorationJourney() {
         },
         {
           id: "consent-communication",
-          title: "Consent-Centered Communication",
+          title: "Consent-centered communication",
           description: "Building a vocabulary of enthusiastic consent that makes exploration feel safe",
           icon: <Lock className="w-5 h-5 text-sky-500" />,
           color: "sky",
@@ -84,7 +84,7 @@ export default function FantasyExplorationJourney() {
       concepts: [
         {
           id: "exploring-themes",
-          title: "Exploring Fantasy Themes",
+          title: "Exploring fantasy themes",
           description: "Understanding the emotional needs behind common fantasy categories",
           icon: <Lightbulb className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -93,7 +93,7 @@ export default function FantasyExplorationJourney() {
         },
         {
           id: "creative-incorporation",
-          title: "Creative Incorporation",
+          title: "Creative incorporation",
           description: "Finding ways to bring elements of fantasies into your relationship that feel good for both partners",
           icon: <Palette className="w-5 h-5 text-pink-500" />,
           color: "pink",
@@ -102,7 +102,7 @@ export default function FantasyExplorationJourney() {
         },
         {
           id: "navigating-differences",
-          title: "When Fantasies Don't Overlap",
+          title: "When fantasies don't overlap",
           description: "Gracefully handling the gap between what one partner wants to explore and the other's comfort zone",
           icon: <Users className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -111,7 +111,7 @@ export default function FantasyExplorationJourney() {
         },
         {
           id: "playfulness-and-humor",
-          title: "Bringing Playfulness to Exploration",
+          title: "Bringing playfulness to exploration",
           description: "Approaching sexual exploration with lightness, humor, and permission to laugh",
           icon: <Sparkles className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -120,7 +120,7 @@ export default function FantasyExplorationJourney() {
         },
         {
           id: "boundaries-as-care",
-          title: "Boundaries as Acts of Care",
+          title: "Boundaries as acts of care",
           description: "Understanding that clear boundaries make deeper exploration possible, not limited",
           icon: <Shield className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -129,7 +129,7 @@ export default function FantasyExplorationJourney() {
         },
         {
           id: "building-erotic-imagination",
-          title: "Building Erotic Imagination Together",
+          title: "Building erotic imagination together",
           description: "Developing a shared fantasy life that belongs to both of you",
           icon: <MessageSquare className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -145,7 +145,7 @@ export default function FantasyExplorationJourney() {
       concepts: [
         {
           id: "fantasy-as-intimacy-tool",
-          title: "Fantasy as an Intimacy Tool",
+          title: "Fantasy as an intimacy tool",
           description: "Using shared fantasy life to deepen emotional and physical connection",
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -154,7 +154,7 @@ export default function FantasyExplorationJourney() {
         },
         {
           id: "ongoing-disclosure",
-          title: "Ongoing Disclosure Practice",
+          title: "Ongoing disclosure practice",
           description: "Making fantasy sharing a regular, natural part of your relationship conversation",
           icon: <MessageSquare className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -163,7 +163,7 @@ export default function FantasyExplorationJourney() {
         },
         {
           id: "integration-identity",
-          title: "Integrating Fantasy into Identity",
+          title: "Integrating fantasy into identity",
           description: "Accepting your full erotic self without shame — and being fully accepted by your partner",
           icon: <Sparkles className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -172,7 +172,7 @@ export default function FantasyExplorationJourney() {
         },
         {
           id: "creative-erotic-life",
-          title: "Sustaining a Creative Erotic Life",
+          title: "Sustaining a creative erotic life",
           description: "Building habits that keep your shared sexual imagination vibrant and evolving",
           icon: <Palette className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -181,7 +181,7 @@ export default function FantasyExplorationJourney() {
         },
         {
           id: "trust-through-vulnerability",
-          title: "Deepened Trust Through Erotic Vulnerability",
+          title: "Deepened trust through erotic vulnerability",
           description: "Recognizing that sharing your most private inner world has built a bond that extends far beyond the bedroom",
           icon: <Lock className="w-5 h-5 text-emerald-500" />,
           color: "emerald",

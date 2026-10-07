@@ -1,4 +1,4 @@
-## Day 1: Understanding Your Attachment Style
+## Day 1: Understanding your attachment style
 
 ### Today's Learning
 Welcome to Day 1 of your Attachment Healing journey. Today, we'll begin exploring how early experiences shape our adult relationships.

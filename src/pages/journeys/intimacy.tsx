@@ -28,7 +28,7 @@ export default function IntimacyJourney() {
       concepts: [
         {
           id: "emotional-intimacy",
-          title: "Emotional Intimacy",
+          title: "Emotional intimacy",
           description: "Creating deep emotional connection through vulnerability and understanding",
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -37,7 +37,7 @@ export default function IntimacyJourney() {
         },
         {
           id: "physical-intimacy",
-          title: "Physical Intimacy",
+          title: "Physical intimacy",
           description: "Connecting through touch, physical affection, and sexual expression",
           icon: <Flame className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -46,7 +46,7 @@ export default function IntimacyJourney() {
         },
         {
           id: "intellectual-intimacy",
-          title: "Intellectual Intimacy",
+          title: "Intellectual intimacy",
           description: "Sharing ideas, thoughts, and meaningful conversations",
           icon: <MessageSquare className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -55,7 +55,7 @@ export default function IntimacyJourney() {
         },
         {
           id: "experiential-intimacy",
-          title: "Experiential Intimacy",
+          title: "Experiential intimacy",
           description: "Building connection through shared experiences and activities",
           icon: <Users className="w-5 h-5 text-green-500" />,
           color: "green",
@@ -64,7 +64,7 @@ export default function IntimacyJourney() {
         },
         {
           id: "spiritual-intimacy",
-          title: "Spiritual Intimacy",
+          title: "Spiritual intimacy",
           description: "Connecting through shared values, beliefs, and life purpose",
           icon: <Sparkles className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -73,7 +73,7 @@ export default function IntimacyJourney() {
         },
         {
           id: "self-intimacy",
-          title: "Self-Intimacy",
+          title: "Self-intimacy",
           description: "Developing a deep relationship with yourself as a foundation for connection",
           icon: <User className="w-5 h-5 text-orange-500" />,
           color: "orange",
@@ -82,7 +82,7 @@ export default function IntimacyJourney() {
         },
         {
           id: "vulnerability",
-          title: "Vulnerable Sharing",
+          title: "Vulnerable sharing",
           description: "Opening up about feelings, needs, and experiences that feel risky to share",
           icon: <BadgeCheck className="w-5 h-5 text-sky-500" />,
           color: "sky",
@@ -91,7 +91,7 @@ export default function IntimacyJourney() {
         },
         {
           id: "reciprocity",
-          title: "Balanced Reciprocity",
+          title: "Balanced reciprocity",
           description: "Creating mutual exchange of emotional giving and receiving",
           icon: <ArrowRightLeft className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -107,7 +107,7 @@ export default function IntimacyJourney() {
       concepts: [
         {
           id: "initiating-vulnerability",
-          title: "Initiating Vulnerability",
+          title: "Initiating vulnerability",
           description: "Choosing to go first in sharing something real, even when it feels risky",
           icon: <ShieldCheck className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -116,7 +116,7 @@ export default function IntimacyJourney() {
         },
         {
           id: "deepening-physical-presence",
-          title: "Deepening Physical Presence",
+          title: "Deepening physical presence",
           description: "Bringing intentional, attuned awareness to physical touch beyond routine",
           icon: <Fingerprint className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -125,7 +125,7 @@ export default function IntimacyJourney() {
         },
         {
           id: "creating-intimacy-rituals",
-          title: "Creating Intimacy Rituals",
+          title: "Creating intimacy rituals",
           description: "Building recurring practices that create reliable moments of closeness",
           icon: <Clock className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -134,7 +134,7 @@ export default function IntimacyJourney() {
         },
         {
           id: "navigating-intimacy-mismatches",
-          title: "Navigating Intimacy Mismatches",
+          title: "Navigating intimacy mismatches",
           description: "Working through different needs for closeness without shame or withdrawal",
           icon: <Layers className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -143,7 +143,7 @@ export default function IntimacyJourney() {
         },
         {
           id: "curiosity-over-assumption",
-          title: "Curiosity Over Assumption",
+          title: "Curiosity over assumption",
           description: "Staying genuinely curious about your partner's inner world instead of assuming you know it",
           icon: <Eye className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -152,7 +152,7 @@ export default function IntimacyJourney() {
         },
         {
           id: "emotional-risk-taking",
-          title: "Emotional Risk-Taking",
+          title: "Emotional risk-taking",
           description: "Expanding your comfort zone by sharing desires, fears, or truths you've held back",
           icon: <Compass className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -161,7 +161,7 @@ export default function IntimacyJourney() {
         },
         {
           id: "repairing-after-withdrawal",
-          title: "Repairing After Withdrawal",
+          title: "Repairing after withdrawal",
           description: "Bridging the gap when one or both partners have pulled away emotionally",
           icon: <HandHeart className="w-5 h-5 text-sky-500" />,
           color: "sky",
@@ -177,7 +177,7 @@ export default function IntimacyJourney() {
       concepts: [
         {
           id: "intimacy-through-transitions",
-          title: "Intimacy Through Life Transitions",
+          title: "Intimacy through life transitions",
           description: "Sustaining and deepening closeness during major life changes — parenthood, loss, career shifts",
           icon: <TreePine className="w-5 h-5 text-green-600" />,
           color: "green",
@@ -186,7 +186,7 @@ export default function IntimacyJourney() {
         },
         {
           id: "repairing-intimacy-ruptures",
-          title: "Repairing Intimacy Ruptures",
+          title: "Repairing intimacy ruptures",
           description: "Healing deeper wounds that have caused lasting distance between you",
           icon: <Puzzle className="w-5 h-5 text-amber-600" />,
           color: "amber",
@@ -195,7 +195,7 @@ export default function IntimacyJourney() {
         },
         {
           id: "creating-your-intimacy-language",
-          title: "Creating Your Intimacy Language",
+          title: "Creating your intimacy language",
           description: "Developing a private vocabulary of closeness unique to your relationship",
           icon: <MessageSquare className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -204,7 +204,7 @@ export default function IntimacyJourney() {
         },
         {
           id: "embodied-attunement",
-          title: "Embodied Attunement",
+          title: "Embodied attunement",
           description: "Reading your partner's emotional and physical state through subtle cues and responding with care",
           icon: <Eye className="w-5 h-5 text-sky-500" />,
           color: "sky",
@@ -213,7 +213,7 @@ export default function IntimacyJourney() {
         },
         {
           id: "integrating-all-dimensions",
-          title: "Integrating All Dimensions",
+          title: "Integrating all dimensions",
           description: "Weaving emotional, physical, intellectual, and spiritual intimacy into a unified experience",
           icon: <Layers className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -222,7 +222,7 @@ export default function IntimacyJourney() {
         },
         {
           id: "exploring-growing-edges",
-          title: "Exploring Growing Edges Together",
+          title: "Exploring growing edges together",
           description: "Identifying the frontiers where deeper intimacy is still possible and choosing to go there",
           icon: <Compass className="w-5 h-5 text-rose-500" />,
           color: "rose",

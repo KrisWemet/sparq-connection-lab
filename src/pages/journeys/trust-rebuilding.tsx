@@ -25,7 +25,7 @@ export default function TrustRebuildingJourney() {
       concepts: [
         {
           id: "acknowledging-the-breach",
-          title: "Acknowledging the Breach",
+          title: "Acknowledging the breach",
           description: "Facing what happened with honesty — without minimizing, defending, or rushing past the pain",
           icon: <Eye className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -34,7 +34,7 @@ export default function TrustRebuildingJourney() {
         },
         {
           id: "understanding-impact",
-          title: "Understanding the Full Impact",
+          title: "Understanding the full impact",
           description: "Letting the hurt partner express the breadth of how the breach affected them — even the parts that are hard to hear",
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -43,7 +43,7 @@ export default function TrustRebuildingJourney() {
         },
         {
           id: "types-of-trust",
-          title: "Understanding Types of Trust",
+          title: "Understanding types of trust",
           description: "Recognizing that trust operates on multiple dimensions — emotional, physical, financial, and more",
           icon: <Shield className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -52,7 +52,7 @@ export default function TrustRebuildingJourney() {
         },
         {
           id: "grief-and-anger",
-          title: "Processing Grief and Anger",
+          title: "Processing grief and anger",
           description: "Allowing the full range of emotions that come with broken trust without rushing to forgiveness",
           icon: <AlertTriangle className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -61,7 +61,7 @@ export default function TrustRebuildingJourney() {
         },
         {
           id: "transparency",
-          title: "Building Radical Transparency",
+          title: "Building radical transparency",
           description: "The trust-breaker voluntarily offering information, access, and honesty without being asked",
           icon: <Lock className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -70,7 +70,7 @@ export default function TrustRebuildingJourney() {
         },
         {
           id: "patience-with-process",
-          title: "Patience with the Process",
+          title: "Patience with the process",
           description: "Understanding that trust rebuilding is not linear and both partners will have hard days",
           icon: <Clock className="w-5 h-5 text-sky-500" />,
           color: "sky",
@@ -86,7 +86,7 @@ export default function TrustRebuildingJourney() {
       concepts: [
         {
           id: "consistent-actions",
-          title: "Consistent Trust-Building Actions",
+          title: "Consistent trust-building actions",
           description: "Replacing words with reliable, repeated behaviors that demonstrate change",
           icon: <RotateCcw className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -95,7 +95,7 @@ export default function TrustRebuildingJourney() {
         },
         {
           id: "repair-conversations",
-          title: "Having Repair Conversations",
+          title: "Having repair conversations",
           description: "Learning to revisit the breach productively when it resurfaces — without rehashing the same fight",
           icon: <MessageSquare className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -104,7 +104,7 @@ export default function TrustRebuildingJourney() {
         },
         {
           id: "accountability-without-shame",
-          title: "Accountability Without Shame",
+          title: "Accountability without shame",
           description: "Taking responsibility for the breach while maintaining enough self-worth to do the healing work",
           icon: <HandHeart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -113,7 +113,7 @@ export default function TrustRebuildingJourney() {
         },
         {
           id: "boundaries-and-safety",
-          title: "Setting Boundaries for Safety",
+          title: "Setting boundaries for safety",
           description: "The hurt partner establishing what they need to feel safe, and both partners honoring those boundaries",
           icon: <ShieldCheck className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -122,7 +122,7 @@ export default function TrustRebuildingJourney() {
         },
         {
           id: "understanding-why",
-          title: "Understanding the 'Why'",
+          title: "Understanding the 'why'",
           description: "Exploring what led to the breach — not to excuse it, but to prevent it from happening again",
           icon: <Compass className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -131,7 +131,7 @@ export default function TrustRebuildingJourney() {
         },
         {
           id: "rebuilding-emotional-intimacy",
-          title: "Rebuilding Emotional Intimacy",
+          title: "Rebuilding emotional intimacy",
           description: "Slowly reopening the emotional connection that the breach damaged",
           icon: <Heart className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -147,7 +147,7 @@ export default function TrustRebuildingJourney() {
       concepts: [
         {
           id: "forgiveness-process",
-          title: "The Forgiveness Process",
+          title: "The forgiveness process",
           description: "Moving toward forgiveness as a choice that frees you — not as something owed or rushed",
           icon: <Sparkles className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -156,7 +156,7 @@ export default function TrustRebuildingJourney() {
         },
         {
           id: "new-relationship-agreement",
-          title: "Creating a New Relationship Agreement",
+          title: "Creating a new relationship agreement",
           description: "Consciously defining the relationship you're building now — which is different from the one before",
           icon: <BookOpen className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -165,7 +165,7 @@ export default function TrustRebuildingJourney() {
         },
         {
           id: "post-traumatic-growth",
-          title: "Post-Traumatic Growth Together",
+          title: "Post-traumatic growth together",
           description: "Discovering that the painful process of rebuilding has created strengths that didn't exist before",
           icon: <Sparkles className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -174,7 +174,7 @@ export default function TrustRebuildingJourney() {
         },
         {
           id: "trust-as-practice",
-          title: "Trust as Ongoing Practice",
+          title: "Trust as ongoing practice",
           description: "Understanding that trust isn't a destination — it's a daily choice both partners make",
           icon: <RotateCcw className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -183,7 +183,7 @@ export default function TrustRebuildingJourney() {
         },
         {
           id: "vulnerability-after-betrayal",
-          title: "Choosing Vulnerability Again",
+          title: "Choosing vulnerability again",
           description: "The courageous act of opening your heart to someone who has hurt it before",
           icon: <HandHeart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -192,7 +192,7 @@ export default function TrustRebuildingJourney() {
         },
         {
           id: "your-trust-story",
-          title: "Writing Your Trust Story",
+          title: "Writing your trust story",
           description: "Creating a shared narrative of what happened, what you learned, and who you've become",
           icon: <Users className="w-5 h-5 text-brand-hover" />,
           color: "indigo",

@@ -32,7 +32,7 @@ export default function LoveLanguagesJourney() {
       concepts: [
         {
           id: "words-of-affirmation",
-          title: "Words of Affirmation",
+          title: "Words of affirmation",
           description: "Verbal expressions of love — compliments, encouragement, and spoken appreciation that make your partner feel seen and valued",
           icon: <MessageCircle className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -41,7 +41,7 @@ export default function LoveLanguagesJourney() {
         },
         {
           id: "quality-time",
-          title: "Quality Time",
+          title: "Quality time",
           description: "Giving your partner undivided, fully present attention — not just being in the same room, but being genuinely together",
           icon: <Calendar className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -50,7 +50,7 @@ export default function LoveLanguagesJourney() {
         },
         {
           id: "acts-of-service",
-          title: "Acts of Service",
+          title: "Acts of service",
           description: "Demonstrating love through thoughtful actions — easing your partner's burden and showing care through what you do, not just what you say",
           icon: <Handshake className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -59,7 +59,7 @@ export default function LoveLanguagesJourney() {
         },
         {
           id: "physical-touch",
-          title: "Physical Touch",
+          title: "Physical touch",
           description: "Communicating love through physical closeness — from gentle touches to embraces that create a felt sense of connection and safety",
           icon: <Hand className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -68,7 +68,7 @@ export default function LoveLanguagesJourney() {
         },
         {
           id: "receiving-gifts",
-          title: "Receiving Gifts",
+          title: "Receiving gifts",
           description: "The language of visual, tangible symbols of love — thoughtful tokens that show your partner was on your mind",
           icon: <Gift className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -77,7 +77,7 @@ export default function LoveLanguagesJourney() {
         },
         {
           id: "discovering-your-language",
-          title: "Discovering Your Language",
+          title: "Discovering your language",
           description: "Identifying which love language resonates most deeply with you — the one that fills your emotional tank fastest",
           icon: <Compass className="w-5 h-5 text-sky-500" />,
           color: "sky",
@@ -86,7 +86,7 @@ export default function LoveLanguagesJourney() {
         },
         {
           id: "mapping-your-partner",
-          title: "Mapping Your Partner's Language",
+          title: "Mapping your partner's language",
           description: "Learning to recognize which love language your partner speaks — often different from your own",
           icon: <Eye className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -102,7 +102,7 @@ export default function LoveLanguagesJourney() {
       concepts: [
         {
           id: "speaking-their-language",
-          title: "Speaking Their Language Daily",
+          title: "Speaking their language daily",
           description: "Deliberately expressing love in your partner's primary language, even when it doesn't come naturally to you",
           icon: <Repeat className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -111,7 +111,7 @@ export default function LoveLanguagesJourney() {
         },
         {
           id: "love-language-under-stress",
-          title: "Love Languages Under Stress",
+          title: "Love languages under stress",
           description: "Understanding how stress amplifies love language needs — and how unmet needs show up as conflict",
           icon: <ShieldCheck className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -120,7 +120,7 @@ export default function LoveLanguagesJourney() {
         },
         {
           id: "love-language-dialects",
-          title: "Love Language Dialects",
+          title: "Love language dialects",
           description: "Discovering the specific sub-expressions within each language that resonate most with your partner",
           icon: <Ear className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -129,7 +129,7 @@ export default function LoveLanguagesJourney() {
         },
         {
           id: "recognizing-language-shifts",
-          title: "When Your Language Shifts",
+          title: "When your language shifts",
           description: "Understanding that love languages can evolve over time — through life stages, healing, and growth",
           icon: <Waypoints className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -138,7 +138,7 @@ export default function LoveLanguagesJourney() {
         },
         {
           id: "filling-the-tank",
-          title: "The Emotional Tank",
+          title: "The emotional tank",
           description: "Learning to read and respond to your partner's emotional fullness — proactively filling before it runs empty",
           icon: <Heart className="w-5 h-5 text-sky-500" />,
           color: "sky",
@@ -147,7 +147,7 @@ export default function LoveLanguagesJourney() {
         },
         {
           id: "receiving-gracefully",
-          title: "Receiving Love Gracefully",
+          title: "Receiving love gracefully",
           description: "Learning to accept love in your partner's language — even when it's not how you'd naturally give it",
           icon: <HeartHandshake className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -156,7 +156,7 @@ export default function LoveLanguagesJourney() {
         },
         {
           id: "love-language-requests",
-          title: "Making Clear Requests",
+          title: "Making clear requests",
           description: "Asking for what you need in love language terms — specific, actionable, and without blame",
           icon: <Lightbulb className="w-5 h-5 text-orange-500" />,
           color: "orange",
@@ -172,7 +172,7 @@ export default function LoveLanguagesJourney() {
       concepts: [
         {
           id: "bilingual-love",
-          title: "Becoming Bilingual in Love",
+          title: "Becoming bilingual in love",
           description: "Achieving fluency in both your own and your partner's love language — switching naturally between them",
           icon: <Users className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -181,7 +181,7 @@ export default function LoveLanguagesJourney() {
         },
         {
           id: "custom-rituals",
-          title: "Creating Love Language Rituals",
+          title: "Creating love language rituals",
           description: "Designing recurring practices that honor both partners' love languages and become the rhythm of your relationship",
           icon: <Sparkles className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -190,7 +190,7 @@ export default function LoveLanguagesJourney() {
         },
         {
           id: "navigating-conflicts",
-          title: "Love Languages in Conflict",
+          title: "Love languages in conflict",
           description: "Using love language awareness to de-escalate disagreements and repair connection faster",
           icon: <Scale className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -199,7 +199,7 @@ export default function LoveLanguagesJourney() {
         },
         {
           id: "teaching-others",
-          title: "Teaching Love Languages",
+          title: "Teaching love languages",
           description: "Sharing your understanding with children, friends, or family — extending the framework beyond your partnership",
           icon: <BookOpen className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -208,7 +208,7 @@ export default function LoveLanguagesJourney() {
         },
         {
           id: "creative-expression",
-          title: "Creative Love Expression",
+          title: "Creative love expression",
           description: "Inventing entirely new ways to speak your partner's language that are unique to your relationship",
           icon: <Palette className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -217,7 +217,7 @@ export default function LoveLanguagesJourney() {
         },
         {
           id: "love-language-legacy",
-          title: "Your Love Language Legacy",
+          title: "Your love language legacy",
           description: "Understanding how your love language was shaped by your family of origin — and consciously choosing what you pass forward",
           icon: <Brain className="w-5 h-5 text-sky-500" />,
           color: "sky",
@@ -226,7 +226,7 @@ export default function LoveLanguagesJourney() {
         },
         {
           id: "integrated-love",
-          title: "Integrated Love Practice",
+          title: "Integrated love practice",
           description: "Moving beyond the framework itself — love languages become invisible because love has become your fluent, natural state",
           icon: <Flame className="w-5 h-5 text-orange-500" />,
           color: "orange",
