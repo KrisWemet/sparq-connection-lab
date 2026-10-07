@@ -98,6 +98,35 @@ function fakeDb() {
   return { db: { from } as any, tables };
 }
 
+// One journey at a time (approved by Chris 2026-10-07): a second journey
+// can't start while one is active; the user pauses or finishes it first.
+describe('activateJourney — one journey at a time', () => {
+  it('refuses a second journey until the first is paused, and keeps the first as it was', async () => {
+    const { db, tables } = fakeDb();
+    const u = 'user-4';
+    await activateJourney(db, u, 'shared-language');
+
+    const blocked = await activateJourney(db, u, 'building-trust');
+    expect(blocked.ok).toBe(false);
+    if (!blocked.ok) {
+      expect(blocked.error).toBe('another_journey_active');
+      expect(blocked.active?.journey_id).toBe('shared-language');
+    }
+    expect(tables.user_journeys.find(r => r.journey_id === 'shared-language').status).toBe('active');
+    expect(tables.user_journeys.some(r => r.journey_id === 'building-trust')).toBe(false);
+    expect(tables.user_insights[0].active_journey_id).toBe('shared-language');
+
+    // Re-opening the active journey itself is fine.
+    expect((await activateJourney(db, u, 'shared-language')).ok).toBe(true);
+
+    await setJourneyAside(db, u, 'shared-language', 'pause');
+    const started = await activateJourney(db, u, 'building-trust');
+    expect(started.ok).toBe(true);
+    expect(tables.user_journeys.find(r => r.journey_id === 'shared-language').status).toBe('paused');
+    expect((await getActiveJourney(db, u))?.journey_id).toBe('building-trust');
+  });
+});
+
 describe('recordJourneyStep — mid-day switch', () => {
   it('credits the day to the journey it was started on and leaves the new journey alone', async () => {
     const { db, tables } = fakeDb();

@@ -209,7 +209,7 @@ npm run lint         # Run ESLint (next lint)
 npm test             # Vitest unit tests (constitution guarantees, tests/)
 ```
 
-Unit tests (Vitest, `tests/`) cover the constitution guarantees Chris approved (2026-09-30, extended 2026-10-01): guess revision, Peter's mode picker (incl. setbacks vs. comfort-first), privacy boundaries, mission ideas and adaptive difficulty, identity-evidence timing, Deep Why layers, and journey progress and state (2026-10-04). They are pure logic — no network or database. Ask Chris before adding new tests. Playwright e2e scripts live in `e2e/`.
+Unit tests (Vitest, `tests/`) cover the constitution guarantees Chris approved (2026-09-30, extended 2026-10-01): guess revision, Peter's mode picker (incl. setbacks vs. comfort-first), privacy boundaries, mission ideas and adaptive difficulty, identity-evidence timing, Deep Why layers, journey progress and state (2026-10-04), and one journey at a time (2026-10-07). They are pure logic — no network or database. Ask Chris before adding new tests. Playwright e2e scripts live in `e2e/`.
 
 ---
 
