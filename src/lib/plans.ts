@@ -54,7 +54,7 @@ export const PLANS: Plan[] = [
     adds: [
       'Daily practice every day, not just 3',
       'Talk with Peter as much as you like',
-      'All 14 journeys',
+      'All 22 journeys',
     ],
     entitlement: 'premium',
   },
