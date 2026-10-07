@@ -29,7 +29,7 @@ export function MetaphorAnimation({ title, description, metaphorType, onComplete
         <DialogDescription className="mt-3 leading-relaxed">{description}</DialogDescription>
       </div>
       <MetaphorVisual kind={metaphorKinds[metaphorType]} />
-      <Button onClick={onComplete} className="w-full min-h-[48px] rounded-2xl">Continue Your Journey</Button>
+      <Button onClick={onComplete} className="w-full min-h-[48px] rounded-2xl">Continue your journey</Button>
     </DialogContent>
   </Dialog>;
 }

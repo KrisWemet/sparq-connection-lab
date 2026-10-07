@@ -234,7 +234,7 @@ export function Day14Graduation() {
                     onClick={() => router.push('/journeys')}
                     className="w-full flex items-center justify-center gap-2 bg-brand-primary text-white font-bold py-4 rounded-2xl hover:bg-brand-hover transition-colors"
                 >
-                    Explore Journeys
+                    Explore journeys
                     <ArrowRight size={18} />
                 </button>
             </motion.div>

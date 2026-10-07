@@ -389,7 +389,7 @@ export function JourneyContentView({
             onClick={() => onBackToTiers ? onBackToTiers() : router.push('/journeys')}
             className="mt-6 px-6 py-3 rounded-xl bg-brand-primary text-white font-bold hover:bg-brand-hover transition-colors"
           >
-            {onBackToTiers ? 'Back to Tiers' : 'Browse Journeys'}
+            {onBackToTiers ? 'Back to tiers' : 'Browse journeys'}
           </button>
         </div>
       </div>
@@ -465,7 +465,7 @@ export function JourneyContentView({
               onClick={() => router.push('/journeys')}
               className="w-full max-w-xs py-4 rounded-2xl bg-brand-primary text-white font-bold text-base mb-3 shadow-md hover:bg-brand-hover transition-colors"
             >
-              Explore More Journeys
+              Explore more journeys
             </button>
           )}
 
@@ -474,7 +474,7 @@ export function JourneyContentView({
               onClick={onBackToTiers}
               className="w-full max-w-xs py-3 rounded-2xl text-brand-text-secondary font-medium text-sm hover:text-brand-taupe transition-colors"
             >
-              Back to Journey Overview
+              Back to journey overview
             </button>
           )}
         </motion.div>
@@ -496,7 +496,7 @@ export function JourneyContentView({
             className="flex items-center gap-1.5 text-sm font-medium text-brand-text-secondary hover:text-brand-taupe transition-colors mb-4"
           >
             <ChevronLeft className="w-4 h-4" />
-            Journey Overview
+            Journey overview
           </motion.button>
         )}
 
@@ -566,7 +566,7 @@ export function JourneyContentView({
               onClick={() => router.push('/journeys')}
               className="bg-brand-primary text-white rounded-full px-8 py-6 shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-lg font-bold"
             >
-              Back to Journeys
+              Back to journeys
             </Button>
           </motion.div>
         ) : (
@@ -708,7 +708,7 @@ export function JourneyContentView({
           >
             {currentDay >= totalDays
               ? <>Complete <CheckCircle className="ml-1 h-5 w-5" /></>
-              : <>Next Day <ChevronRight className="ml-1 h-5 w-5" /></>
+              : <>Next day <ChevronRight className="ml-1 h-5 w-5" /></>
             }
           </Button>
         </div>

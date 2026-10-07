@@ -704,7 +704,7 @@ export default function DailyGrowth() {
                 onClick={() => setShowHome(false)}
                 className="rounded-[22px] bg-brand-primary px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
-                Start Morning Story
+                Start morning story
               </button>
             </div>
           </motion.section>
@@ -896,7 +896,7 @@ export default function DailyGrowth() {
                       onClick={() => router.push('/dashboard')}
                       className="press w-full rounded-2xl bg-brand-primary py-4 text-sm font-bold text-white"
                     >
-                      Back to Home
+                      Back to home
                     </button>
                     <button
                       type="button"
@@ -1126,7 +1126,7 @@ export default function DailyGrowth() {
                     onClick={() => router.push('/dashboard')}
                     className="w-full bg-brand-primary text-white font-bold py-4 rounded-2xl hover:bg-brand-hover transition-colors text-base mt-6"
                   >
-                    Return to Dashboard
+                    Return to dashboard
                   </button>
 
                   <div className="mt-4">

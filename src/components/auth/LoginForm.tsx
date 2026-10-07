@@ -238,7 +238,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
         {isRegisterMode && (
           <motion.div variants={itemVariants}>
             <label htmlFor="name" className="block text-sm font-medium text-foreground mb-1">
-              Your Name
+              Your name
             </label>
             <div className="relative">
               <input
@@ -353,7 +353,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
               <Loader className="h-5 w-5 animate-spin" />
             ) : (
               <>
-                {isRegisterMode ? 'Create Account' : 'Sign In'} 
+                {isRegisterMode ? 'Create account' : 'Sign in'} 
                 <ArrowRight className="ml-2 h-5 w-5" />
               </>
             )}
@@ -374,7 +374,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
             onClick={onToggleMode}
             className="press min-h-[44px] ml-1 text-brand-hover hover:text-brand-espresso font-medium"
           >
-            {isRegisterMode ? 'Sign In' : 'Create Account'}
+            {isRegisterMode ? 'Sign in' : 'Create account'}
           </button>
         </p>
       </motion.div>

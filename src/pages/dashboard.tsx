@@ -171,16 +171,16 @@ export default function Dashboard() {
         ? `Today's focus: ${activeJourney.title}`
         : "What is one small thing you can do today to show up better at home?";
   const primaryCtaLabel = isPostJourney
-    ? 'Choose Next Journey'
+    ? 'Choose next journey'
     : needsEveningReflection
-      ? 'Resume Evening Reflection'
+      ? 'Resume evening reflection'
       : "Start today's practice →";
   const primaryCtaHref = isPostJourney
     ? '/journeys'
     : needsEveningReflection
       ? '/daily-growth?mode=evening-checkin'
       : '/daily-growth';
-  const secondaryCtaLabel = needsEveningReflection ? "Restart Morning Practice" : 'Evening check-in';
+  const secondaryCtaLabel = needsEveningReflection ? "Restart morning practice" : 'Evening check-in';
 
   return (
     <div className="emotion-page min-h-dvh bg-brand-linen pb-24">

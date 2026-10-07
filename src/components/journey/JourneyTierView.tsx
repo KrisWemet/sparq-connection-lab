@@ -138,7 +138,7 @@ export function JourneyTierView({
           className="flex items-center gap-1.5 text-sm font-medium text-brand-text-secondary hover:text-brand-taupe transition-colors mb-6"
         >
           <ChevronLeft className="w-4 h-4" />
-          All Journeys
+          All journeys
         </motion.button>
 
         {/* Journey header */}

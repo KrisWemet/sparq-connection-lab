@@ -140,7 +140,7 @@ export function TimeOutOverlay() {
                 onClick={handleCopy}
                 className="w-full py-4 bg-popover text-foreground font-bold rounded-2xl text-lg hover:bg-border transition-colors"
               >
-                {copied ? 'Copied' : 'Copy Message'}
+                {copied ? 'Copied' : 'Copy message'}
               </button>
               <p className="text-sm text-white/70">
                 <Link href="/conflict-first-aid" onClick={() => setIsOpen(false)} className="underline">More calm-down steps</Link>

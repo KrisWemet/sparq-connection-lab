@@ -298,7 +298,7 @@ export default function DateIdeas() {
                     disabled={isLoading}
                     className="dark:bg-card dark:text-white dark:border-border"
                   >
-                    {isLoading ? "Generating..." : "Refresh Ideas"}
+                    {isLoading ? "Generating..." : "Refresh ideas"}
                   </Button>
                 </AnimatedContainer>
                 
@@ -441,7 +441,7 @@ export default function DateIdeas() {
                       onClick={() => setActiveTab("date-ideas")}
                       className="dark:bg-card dark:text-white dark:border-border"
                     >
-                      Browse Date Ideas
+                      Browse date ideas
                     </Button>
                   </AnimatedContainer>
                 ) : (
