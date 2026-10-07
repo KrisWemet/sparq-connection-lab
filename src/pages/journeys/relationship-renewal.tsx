@@ -196,7 +196,7 @@ export default function RelationshipRenewalJourney() {
   return (
     <JourneyTemplate
       journeyId="relationship-renewal"
-      title="Relationship Renewal"
+      title="Relationship renewal"
       description="Reignite connection and rediscover your partner after years together. Progress from recognizing autopilot to building a vibrant, evolving partnership."
       tiers={tiers}
     />

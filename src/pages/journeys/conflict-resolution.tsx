@@ -225,7 +225,7 @@ export default function ConflictResolutionJourney() {
   return (
     <JourneyTemplate
       journeyId="conflict-resolution"
-      title="Constructive Conflict Resolution"
+      title="Constructive conflict resolution"
       description="Turn disagreements into opportunities for deeper understanding. Progress from pattern recognition to masterful repair."
       tiers={tiers}
     />

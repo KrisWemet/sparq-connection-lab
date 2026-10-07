@@ -235,7 +235,7 @@ export default function CommunicationJourney() {
   return (
     <JourneyTemplate
       journeyId="communication"
-      title="Effective Communication"
+      title="Effective communication"
       description="Master the art of truly understanding each other through validated techniques. Progress from awareness to deep relational fluency."
       tiers={tiers}
     />

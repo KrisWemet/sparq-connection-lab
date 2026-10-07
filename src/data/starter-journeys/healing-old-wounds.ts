@@ -2,7 +2,7 @@ import type { StarterJourney } from './types';
 
 export const healingOldWounds: StarterJourney = {
   id: 'healing-old-wounds',
-  title: 'Healing Old Wounds, Gently',
+  title: 'Healing old wounds, gently',
   duration: 21,
   modalities: ['somatic', 'ifs'],
   modalityLabel: 'GENTLE HEALING',

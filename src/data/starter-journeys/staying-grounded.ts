@@ -2,7 +2,7 @@ import type { StarterJourney } from './types';
 
 export const stayingGrounded: StarterJourney = {
   id: 'staying-grounded',
-  title: 'Staying Grounded Through the Hard Stuff',
+  title: 'Staying grounded through the hard stuff',
   duration: 7,
   modalities: ['act', 'mindfulness'],
   modalityLabel: 'INNER STRENGTH',

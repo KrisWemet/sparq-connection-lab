@@ -206,7 +206,7 @@ export default function TrustRebuildingJourney() {
   return (
     <JourneyTemplate
       journeyId="trust-rebuilding"
-      title="Trust Rebuilding"
+      title="Trust rebuilding"
       description="Heal and rebuild trust after a breach through structured, compassionate steps. Progress from acknowledgment to renewed partnership."
       tiers={tiers}
     />

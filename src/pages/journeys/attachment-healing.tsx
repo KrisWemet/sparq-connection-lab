@@ -215,7 +215,7 @@ export default function AttachmentHealingJourney() {
   return (
     <JourneyTemplate
       journeyId="attachment-healing"
-      title="Feeling Safe Together"
+      title="Feeling safe together"
       description="Understand how you learned to love, and grow a steadier, safer bond — from first noticing to feeling secure together."
       tiers={tiers}
     />

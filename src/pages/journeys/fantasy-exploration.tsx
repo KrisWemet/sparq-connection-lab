@@ -195,7 +195,7 @@ export default function FantasyExplorationJourney() {
   return (
     <JourneyTemplate
       journeyId="fantasy-exploration"
-      title="Fantasy Exploration"
+      title="Fantasy exploration"
       description="Safely share and explore desires to deepen trust and playfulness. Progress from normalizing fantasy to building a vibrant shared erotic imagination."
       tiers={tiers}
     />

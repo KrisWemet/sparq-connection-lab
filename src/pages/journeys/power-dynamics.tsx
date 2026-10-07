@@ -205,7 +205,7 @@ export default function PowerDynamicsJourney() {
   return (
     <JourneyTemplate
       journeyId="power-dynamics"
-      title="Power Dynamics & Play"
+      title="Power dynamics & play"
       description="Understand and consciously navigate power dynamics in your relationship. Progress from pattern recognition to creating genuine equity."
       tiers={tiers}
     />

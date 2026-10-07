@@ -214,7 +214,7 @@ export default function EmotionalIntelligenceJourney() {
   return (
     <JourneyTemplate
       journeyId="emotional-intelligence"
-      title="Emotional Intelligence"
+      title="Emotional intelligence"
       description="Develop the emotional awareness and skills that transform relationships. Progress from recognition to relational mastery."
       tiers={tiers}
     />

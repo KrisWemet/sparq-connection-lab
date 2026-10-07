@@ -195,7 +195,7 @@ export default function MindfulSexualityJourney() {
   return (
     <JourneyTemplate
       journeyId="mindful-sexuality"
-      title="Mindful Sexuality"
+      title="Mindful sexuality"
       description="Bring presence, awareness, and deeper connection to your physical intimacy. Progress from basic mindfulness to embodied sexual presence."
       tiers={tiers}
     />

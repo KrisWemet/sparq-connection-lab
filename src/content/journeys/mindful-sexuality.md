@@ -1,7 +1,7 @@
 ## Day 1: Cultivating present-moment awareness
 
 ### Today's Learning
-Welcome to Day 1 of your Mindful Sexuality journey. Today, we'll explore the foundation of mindful intimacy: present-moment awareness.
+Welcome to Day 1 of your mindful sexuality journey. Today, we'll explore the foundation of mindful intimacy: present-moment awareness.
 
 Have you ever noticed how your mind wanders during intimate moments? Perhaps you're thinking about work, worrying about performance, or getting lost in self-judgment. This is completely normal, but learning to stay present can transform your intimate experiences.
 

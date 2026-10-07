@@ -236,7 +236,7 @@ export default function IntimacyJourney() {
   return (
     <JourneyTemplate
       journeyId="intimacy"
-      title="Building Deep Intimacy"
+      title="Building deep intimacy"
       description="Deepen your emotional, physical, and intellectual connection with your partner. Progress from understanding to embodied closeness."
       tiers={tiers}
     />

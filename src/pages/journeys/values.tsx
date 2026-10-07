@@ -217,7 +217,7 @@ export default function ValuesJourney() {
   return (
     <JourneyTemplate
       journeyId="values"
-      title="Values & Vision Alignment"
+      title="Values & vision alignment"
       description="Discover your core values and build a shared vision for your relationship. Progress from self-discovery to co-creating your future."
       tiers={tiers}
     />

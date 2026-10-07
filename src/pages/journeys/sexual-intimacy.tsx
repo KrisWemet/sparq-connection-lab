@@ -195,7 +195,7 @@ export default function SexualIntimacyJourney() {
   return (
     <JourneyTemplate
       journeyId="sexual-intimacy"
-      title="Sexual Intimacy & Desire"
+      title="Sexual intimacy & desire"
       description="Deepen sexual connection through communication, presence, and mutual exploration. Progress from understanding to vibrant sexual wellness."
       tiers={tiers}
     />

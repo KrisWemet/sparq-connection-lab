@@ -2,7 +2,7 @@ import type { StarterJourney } from './types';
 
 export const deepeningGood: StarterJourney = {
   id: 'deepening-good',
-  title: 'Deepening What\'s Already Good',
+  title: 'Deepening what\'s already good',
   duration: 7,
   modalities: ['positive-psychology', 'gottman'],
   modalityLabel: 'RELATIONSHIP STRENGTH',
