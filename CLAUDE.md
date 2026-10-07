@@ -5,7 +5,7 @@ This file provides comprehensive context for AI assistants working on this codeb
 > **Product constitution (v1.2):** [`docs/CONSTITUTION.md`](docs/CONSTITUTION.md) defines Sparq as a **guided transformation system** — "Sparq helps people discover who they want to become, understand why it matters, and practice becoming that person in the real world." It sets the governing principle (**Sparq leads the path; the user chooses the destination**), the Transformation Engine (UNDERSTAND → CHOOSE → ACT → REFLECT → ADAPT → REPEAT → BECOME), psychology modalities (incl. DBT-informed skills and Transactional Analysis) as the foundation with influence as a supplementary layer, hypotheses never diagnoses, Peter's conversation modes, memory discipline, and private/shared privacy boundaries. Read it before planning any feature. Its "Constitutional test" applies to every major feature. Implementation map: `docs/TRANSFORMATION_ENGINE.md` (engine map + v1.2 build status), `docs/CONSTITUTION_AUDIT.md` (status + §13 checklist), `docs/PERSON_MODEL.md`, `docs/RELATIONSHIP_MODEL.md`, `docs/METRICS.md`, `docs/INFLUENCE_AUDIT.md` (influence/doctrine conflicts: fixed, open decisions), `docs/evals/peter-behavior.md` + `docs/evals/resistance-handling.md` (Peter behavioral eval spec — run both before any Peter prompt change). It is the source of truth for everything it covers; where it is silent, the rest of this file and the Master PRD apply.
 >
 > **Doctrine map — which documents give instructions:**
-> - **Active rules:** `docs/CONSTITUTION.md` → `CLAUDE.md` → `docs/*.md` (Person Model, Relationship Model, Metrics, audits) and `docs/evals/` → the `.claude/skills/sparq-*` skills.
+> - **Active rules:** `docs/CONSTITUTION.md` → `CLAUDE.md` (with `.claude/rules/`) → `docs/*.md` (Person Model, Relationship Model, Metrics, audits) and `docs/evals/` → the `.claude/skills/sparq-*` skills.
 > - **Reference beneath the constitution:** `SPARQ_MASTER_SPEC.md` (product/repo/roadmap), `SPARQ-PSYCHOLOGY-MODALITIES.md` (modality background), `SPARQ-VISION.md` (brief).
 > - **Snapshots — status, not rules:** `HANDOFF.md`, `CURRENT_STATE.md`, `LAUNCH_CHECKLIST.md`, `IMPLEMENTATION_STATUS.md`.
 > - **Historical — never follow as instructions:** `OLD_PRD.md`, `REFERENCE_UNIFIED_PRD.md`, `Sparq_build_Spec.md`, `audit_report_sprint1.md`, `docs/superpowers/`, `.planning/`. They predate the constitution and contain superseded ideas (silent profiling, partner synthesis, "always presuppose", streak pressure).
@@ -125,12 +125,13 @@ Full Daily Loop structure, modality sequencing, and session architecture: see `s
 
 - User auth (email/password via Supabase)
 - Couple linking / partner invite system
-- Daily question flow (both partners answer privately; "Share with partner" button, never automatic)
+- Daily practice, `/daily-growth` (both partners answer privately; "Share with partner" button, never automatic)
 - Streak tracking — a forgiving count of days shown up (no reward streak; shallow gamification is out, constitution §10)
-- Journeys (existing 14 — no new ones for beta)
+- Journeys: the existing catalog (13 staged + 9 daily starter journeys, see Journeys below) — no new ones for beta
 - Peter (present, mood-driven, emotionally expressive)
 - Basic profile
 - Identity statement — stored in memory, displayed in hero placecard on dashboard
+- Daily reminders by phone notification (web push) and email, opt-in, off by default (Chris approved 2026-10-03; `docs/REMINDERS.md`)
 
 ---
 
@@ -144,9 +145,9 @@ Do not build, suggest, or stub these without explicit authorization from Chris:
 - Social sharing of relationship content
 - Leaderboards or competitive mechanics between couples
 - AI features that store/surface relationship data without an explicit consent flow
-- Push notifications
+- Other push notifications beyond the opt-in daily reminder
 - Payment/subscription enforcement (design it, don't enforce it)
-- New journeys (14 exist — no additions for beta)
+- New journeys (no additions to the existing catalog for beta)
 - Shared couple goals feature (post-beta, after individual onboarding is solid)
 
 ---
@@ -172,9 +173,11 @@ Do not relitigate these:
 2. **Restate before building.** Before writing code: what are you building, what files will you touch, what will you not touch.
 3. **One slice at a time.** Do not expand scope mid-implementation.
 4. **When filling a design gap,** consult the relevant skill — not generic SaaS patterns.
-5. **Flag ambiguity before working around it.** Ask. Don't invent.
+5. **Flag ambiguity before working around it.** Ask when it materially affects scope, behaviour, architecture, security, cost or an irreversible action; for routine choices, state the assumption and proceed. Don't invent.
 6. **Preserve existing architecture** unless Chris explicitly authorizes changes.
 7. **Small changes, explained.** Say why, not just what.
+
+How to scope, verify and report code changes (acceptance criteria, behaviour checks, diff review, honest reporting): [`.claude/rules/karpathy-guidelines.md`](.claude/rules/karpathy-guidelines.md).
 
 ---
 
@@ -194,7 +197,7 @@ Do not relitigate these:
 | State | React Context (Auth, Subscription) + TanStack React Query |
 | Icons | Lucide React |
 | Toasts | Sonner |
-| AI | OpenRouter → Claude Haiku 4.5 (Peter), OpenAI (embeddings, transcription), pgvector memory (`src/lib/server/memory.ts`) |
+| AI | OpenRouter → Claude Haiku 4.5 (Peter), OpenAI (embeddings, voice transcription, date ideas), pgvector memory (`src/lib/server/memory.ts`) |
 | Deployment | Vercel |
 
 ---
@@ -238,89 +241,64 @@ See `.env.example` for the full, commented list.
 
 ## Directory Structure
 
+Main folders (not every file):
+
 ```
 sparq-connection-lab/
 ├── src/
-│   ├── pages/                  # Next.js pages (file-based routing)
-│   │   ├── _app.tsx            # App wrapper (QueryClient + AuthProvider)
-│   │   ├── _document.tsx       # Custom HTML document
-│   │   ├── index.tsx           # Root redirect (→ dashboard or login)
-│   │   ├── login.tsx           # Login page
-│   │   ├── daily-questions.tsx # Re-export of DailyQuestions
-│   │   ├── DailyQuestions.tsx  # Main daily questions feature
-│   │   ├── Dashboard.tsx       # Main dashboard
-│   │   ├── Profile.tsx         # User profile
-│   │   ├── Settings.tsx        # App settings
-│   │   ├── Subscription.tsx    # Subscription management
-│   │   ├── Journeys.tsx        # Journeys listing
-│   │   ├── journeys/           # Individual journey pages (14 journeys)
-│   │   └── ...                 # Other feature pages
+│   ├── pages/                  # Next.js pages (file-based routing, lowercase file names)
+│   │   ├── _app.tsx            # App wrapper (QueryClient, AuthProvider, SubscriptionProvider, ErrorBoundary)
+│   │   ├── _document.tsx       # HTML document (icons, manifest, iOS home-screen tags)
+│   │   ├── index.tsx           # Public welcome page
+│   │   ├── dashboard.tsx, daily-growth.tsx, journeys.tsx, us.tsx, settings.tsx …
+│   │   ├── journeys/           # One page per staged journey + journey-template.tsx
+│   │   ├── neutral-observer/   # Neutral Observer sub-pages
+│   │   └── api/                # API routes (daily/, peter/, me/, journeys/, push/, cron/, reminders/ …)
 │   │
 │   ├── components/
-│   │   ├── ui/                 # shadcn/ui primitives + custom base components
-│   │   ├── dashboard/          # Dashboard section components
-│   │   ├── profile/            # Profile section components
-│   │   ├── journey/            # Journey view components
-│   │   ├── onboarding/         # Onboarding flow (4 steps)
-│   │   ├── auth/               # Auth-specific components (LoginForm, AuthLayout)
-│   │   └── ...                 # Shared feature components
+│   │   ├── ui/                 # shadcn/ui primitives (don't edit by hand)
+│   │   ├── dashboard/, daily/, journey/, onboarding/, profile/, peter/, emotion/, playful/ …
+│   │   ├── auth/               # LoginForm, AuthCardLayout
+│   │   ├── brand/SparqMark.tsx # The Sparq mark
+│   │   ├── legal/LegalPage.tsx # Shared layout for /privacy and /terms
+│   │   ├── bottom-nav.tsx, ErrorBoundary.tsx, ProtectedRoute.tsx
+│   │   └── PeterChat.tsx, PeterTheOtter.tsx, PeterLoading.tsx
 │   │
 │   ├── lib/
-│   │   ├── auth-context.tsx    # THE AuthProvider and useAuth (used by _app.tsx)
-│   │   ├── supabase.ts         # Supabase client + DB helpers (Next.js env vars)
-│   │   ├── subscription-provider.tsx  # Subscription state/context
-│   │   ├── server/             # API-route-only modules (memory, growth engine, auth middleware…)
-│   │   └── utils.ts            # cn() utility for Tailwind class merging
+│   │   ├── auth-context.tsx    # THE AuthProvider and useAuth
+│   │   ├── supabase.ts         # The one browser Supabase client
+│   │   ├── subscription-provider.tsx, plans.ts, product.ts   # plans and entitlements
+│   │   ├── openrouter.ts, peterService.ts                    # Peter's model calls and prompts
+│   │   ├── journeys/           # catalog.ts, progress.ts, client.ts (journey state rules)
+│   │   ├── push-client.ts, partner-invite.ts, welcome-back.ts …
+│   │   └── server/             # API-route-only modules: memory, growth engine, journey-state,
+│   │                           #   reminders, push, privacy, supabase-auth, supabase-admin …
 │   │
-│   ├── hooks/
-│   │   ├── useAuth.ts          # Re-export of lib/auth-context useAuth
-│   │   ├── useProfileTraits.ts # Trait labels for the current user
-│   │   └── use-mobile.tsx, use-toast.ts  # shadcn/ui support hooks
-│   │
-│   ├── services/
-│   │   ├── aiService.ts        # OpenAI date idea generation
-│   │   ├── partnerService.ts   # Partner invitation logic
-│   │   ├── journeyService.ts   # Journey CRUD operations
-│   │   ├── analyticsService.ts # User activity analytics
-│   │   └── ...
-│   │
-│   ├── types/
-│   │   ├── profile.ts          # Profile, UserBadge, DailyActivity types
-│   │   ├── journey.ts          # Journey types
-│   │   ├── memory.ts           # Memory types
-│   │   └── supabase.ts         # Generated Supabase DB types
-│   │
-│   ├── data/
-│   │   ├── journeys.ts         # Static journey definitions
-│   │   └── persuasiveContent.ts    # Psychological messaging content
-│   │
+│   ├── hooks/                  # useAuth (re-export), useProfileTraits, shadcn helpers
+│   ├── services/               # aiService (date ideas via /api/date-ideas/generate),
+│   │                           #   analyticsService, journeyContentService
+│   ├── types/                  # profile, journey, memory, generated supabase types
+│   ├── data/                   # journeys.ts, starter-journeys/, fallbackStories.json,
+│   │                           #   micro-primes.ts, playful-prompts.ts, persuasiveContent.ts
 │   ├── content/journeys/       # Markdown content for journey narratives
 │   └── styles/globals.css      # Global CSS / Tailwind base
 │
 ├── .claude/
-│   └── skills/                 # Skill files — load before working in each domain
-│       ├── sparq-psychology/   # Psychology frameworks, content rules, personalization
-│       ├── sparq-peter/        # Peter character, SVG, animations, voice
-│       ├── sparq-db/           # Database schema and Supabase patterns
-│       ├── sparq-ui/           # UI components and design tokens
-│       ├── sparq-architecture/ # Architecture decisions and API patterns
-│       └── frontend-design/    # Frontend design quality standards
+│   ├── rules/                  # Workflow rules (karpathy-guidelines.md)
+│   └── skills/                 # Skill files — load before working in each domain (table above)
 │
 ├── supabase/
-│   ├── schema.sql              # Full database schema (source of truth)
-│   ├── migrations/             # Incremental SQL migration files
-│   ├── functions/
-│   │   ├── memory-operations/  # Edge function: Mem0 memory CRUD
-│   │   └── send-partner-invite/ # Edge function: partner invitation emails
-│   └── config.toml             # Supabase CLI config
+│   ├── schema.sql              # Original schema; later changes live in migrations/
+│   ├── migrations/             # Incremental SQL migrations (newest are the truth)
+│   ├── functions/              # Old edge functions; nothing in src/ calls them
+│   └── config.toml
 │
-├── public/                     # Static assets
-├── package.json
-├── next-env.d.ts
-├── tsconfig.json
-├── tailwind.config.ts
+├── tests/                      # Vitest unit tests (approved guarantees only)
+├── e2e/                        # Playwright scripts
+├── docs/                       # Constitution, models, audits, evals, REMINDERS.md
+├── public/                     # Icons, manifest, service worker (sw.js), images
 ├── .eslintrc.json              # ESLint (next/core-web-vitals)
-└── vercel.json                 # Vercel deployment config (headers, install command)
+└── vercel.json                 # Vercel config (headers, install command)
 ```
 
 ---
@@ -331,16 +309,18 @@ All pages use **Next.js Pages Router**. Key routes:
 
 | URL | File | Notes |
 |---|---|---|
-| `/` | `src/pages/Index.tsx` | Redirect to `/dashboard` or `/login` |
-| `/login` | `src/pages/login.tsx` | |
-| `/dashboard` | `src/pages/Dashboard.tsx` | Protected |
-| `/daily-questions` | `src/pages/daily-questions.tsx` | Re-exports `DailyQuestions.tsx` |
-| `/journeys` | `src/pages/Journeys.tsx` | |
-| `/profile` | `src/pages/Profile.tsx` | Protected |
-| `/settings` | `src/pages/Settings.tsx` | |
-| `/subscription` | `src/pages/Subscription.tsx` | |
-| `/join-partner` | `src/pages/JoinPartner.tsx` | Partner invite acceptance |
-| `/date-ideas` | `src/pages/DateIdeas.tsx` | AI-powered date suggestions |
+| `/` | `src/pages/index.tsx` | Public welcome page |
+| `/login`, `/signup` | `src/pages/login.tsx`, `signup.tsx` | `/signup` redirects to `/login?mode=register` |
+| `/onboarding` | `src/pages/onboarding.tsx` | Dashboard sends users back here until it's finished |
+| `/dashboard` | `src/pages/dashboard.tsx` | Protected home |
+| `/daily-growth` | `src/pages/daily-growth.tsx` | The daily practice. `/daily-questions` and `/daily-activity` redirect here |
+| `/journeys` | `src/pages/journeys.tsx` | Journey catalog; staged journeys under `/journeys/<slug>` |
+| `/us` | `src/pages/us.tsx` | Shared couple space |
+| `/join-partner` | `src/pages/join-partner.tsx` | Make or enter a 24-hour partner code; unlink |
+| `/settings` | `src/pages/settings.tsx` | Reminders, data download, account delete |
+| `/trust-center` | `src/pages/trust-center.tsx` | Memory and privacy settings |
+| `/privacy`, `/terms` | `src/pages/privacy.tsx`, `terms.tsx` | Public |
+| `/help-now` | `src/pages/help-now.tsx` | Crisis resources, always free |
 
 ### Navigation
 
@@ -394,7 +374,7 @@ Each plan adds to the one before it. Only list features that exist in the app.
 | Plan | Price (USD) | Adds |
 |---|---|---|
 | Free | $0 | First 14 days = everything in Solo (trial); then daily practice 3 days/week, Peter 10 messages/day, 2 journeys, Insight Profile, partner linking. Conflict First Aid + crisis help always free |
-| Solo | $9.99/mo or $79.99/yr | Daily practice every day, unlimited Peter, all 14 journeys |
+| Solo | $9.99/mo or $79.99/yr | Daily practice every day, unlimited Peter, all 22 journeys |
 | Together | $14.99/mo or $119.99/yr, both partners | Solo for both + "Us" shared space, Shared Peter (something to talk about), patterns between you |
 
 Payments aren't built (design, don't enforce). Server entitlements stay two-level (`lib/product.ts`): Free = `FREE_ENTITLEMENTS` (enforced in daily session start, Peter chat and journey start); Solo and Together both map to `premium`. Together's couple features are open to everyone until payments launch. Never paywall safety tools or the user's view/control of their own data. The subscription provider's `features` block (dailyQuestions, etc.) is legacy — don't build on it.
@@ -417,7 +397,7 @@ Managed via Supabase. Schema defined in `supabase/schema.sql`.
 |---|---|
 | `profiles` | User profiles; `partner_id` links coupled users |
 | `user_roles` | RBAC — roles: `user`, `admin`, `partner` |
-| `partner_invitations` | Invite codes with 7-day expiry |
+| `partner_invitations` | Unused. Partner linking uses `profiles.partner_code` (valid 24 hours, single use) and the `link_partner` / `unlink_partner` RPCs |
 | `journeys` | Predefined journey definitions |
 | `journey_questions` | Steps within journeys |
 | `user_journeys` | One record per user per journey (all 22, text slug ids): `status` active/paused/completed/left (one active per user), `stage`, `journey_day` (per journey), `progress` (days practiced). Written only by `src/lib/server/journey-state.ts` |
@@ -451,10 +431,7 @@ Migration files are in `supabase/migrations/`. When modifying the schema, create
 
 ## Supabase Edge Functions
 
-Located in `supabase/functions/`:
-
-- **`memory-operations/`** — CRUD for Mem0-style relationship memories
-- **`send-partner-invite/`** — Sends invitation emails with invite codes
+`supabase/functions/` holds older edge functions (`generate-daily-insight`, `memory-operations`, `send-partner-invite`, `send-tonight-action`, `stripe-checkout`). Nothing in `src/` calls them; app logic lives in Next.js API routes (`src/pages/api/`). Scheduled work runs through Supabase `pg_cron` calling an API route (daily reminders: `docs/REMINDERS.md`).
 
 ---
 
@@ -510,19 +487,20 @@ import { Button } from "../../components/ui/button";
 
 | File | Lines | Notes |
 |---|---|---|
-| `src/services/supabaseService.ts` | ~1,000 | Legacy DB helpers — candidate for splitting by domain |
-| `src/components/MetaphorAnimation.tsx` | ~800 | Animated metaphor visualizations (bridge, flower, river) |
+| `src/pages/daily-growth.tsx` | ~1,150 | The daily practice page |
+| `src/components/journey/JourneyContentView.tsx` | ~700 | Staged journey day view |
+| `src/pages/rehearsal.tsx` | ~700 | Conversation rehearsal |
 
 ---
 
 ## Public Assets
 
 `public/` contains:
-- `og-image.jpg` — Open Graph image for social sharing
-- `favicon.ico` — App favicon
-- `Path to Together/` — Markdown educational content modules:
-  - `communication.md`, `conflict-resolution.md`, `emotional-intelligence.md`
-  - `love-languages.md`, `intimacy.md`
+- `icons/` — favicons, app icons, `badge-96.png` (notification badge); `favicon.ico`
+- `images/` — `brand/` (logo, flowing S), `journeys/`, `dates/`, `peter-default.png`
+- `manifest.webmanifest` + `sw.js` — installable app and the service worker for phone notifications (no caching)
+- `og-image.png` — Open Graph image
+- `Path to Together/` — old Markdown modules, read only by `src/services/journeyContentService.ts`, which nothing imports
 
 ---
 
@@ -532,7 +510,7 @@ import { Button } from "../../components/ui/button";
 2. **Missing Supabase env vars disable the backend (no longer a crash).** `src/lib/supabase.ts` falls back to a never-resolving placeholder host and exports `isSupabaseConfigured`, so pages render and data calls fail fast instead of every route 500ing. Still set the env vars before any real build.
 3. **Unused shadcn/ui primitives** remain in `src/components/ui/` by convention — harmless, leave them.
 4. **`run_dev.py` targets port 8085**, but Next.js defaults to 3000 — use `npm run dev`.
-5. **Palette: Plum / Coral / Gold (2026-09-30, Chris).** Plum = understand (buttons: white on `#4B2E57`, 11.5:1), coral = connect, gold = grow. Coral `#E97868` and gold `#F3B55A` are fills/accents only — white text on coral is 2.9:1, so text on them is dark plum; coral/gold-coloured words use `brand-coral-deep` / `brand-gold-deep`. Secondary text is mauve `#685C6A` (5.2:1 on stone). Full table: `sparq-ui` skill §3. The mark is `src/components/brand/SparqMark.tsx` + `public/favicon.svg`.
+5. **Palette: Plum / Coral / Gold (2026-09-30, Chris).** Plum = understand (buttons: white on `#4B2E57`, 11.5:1), coral = connect, gold = grow. Coral `#E97868` and gold `#F3B55A` are fills/accents only — white text on coral is 2.9:1, so text on them is dark plum; coral/gold-coloured words use `brand-coral-deep` / `brand-gold-deep`. Secondary text is mauve `#685C6A` (5.2:1 on stone). Full table: `sparq-ui` skill §3. The mark is the flowing S (2026-10-05): `src/components/brand/SparqMark.tsx`, `public/images/brand/`, icons in `public/icons/`.
 6. Don't use Tailwind `gray-`/`zinc-` 300–500 for text on the warm surfaces — use `text-brand-text-secondary`. Placeholders are the exception.
    **Phone baseline (2026-10-01, `mobile-native` skill):** use `min-h-dvh`/`h-dvh`, never `min-h-screen` (cut off under the browser bar); `hover:` only fires on hover-capable devices (`hoverOnlyWhenSupported`), so give touch users `active:` feedback; touch-screen inputs are forced to ≥16px (iOS zoom); never disable zoom. The CSS lives at the end of `globals.css`; viewport/theme-color meta and `MotionConfig reducedMotion="user"` are in `_app.tsx`.
 7. **Dark theme in `globals.css` is still the old violet.** Dormant: nothing enables dark mode today. Re-derive it from Plum/Coral/Gold before turning dark mode on.
