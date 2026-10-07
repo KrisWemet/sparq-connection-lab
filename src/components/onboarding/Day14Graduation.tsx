@@ -88,7 +88,7 @@ export function Day14Graduation() {
             >
                 <SceneAccent kind="bloom" className="-mt-4 mb-3 h-36 w-full" />
 
-                <h1 className="text-3xl font-bold text-foreground mb-2 text-center">You Did It.</h1>
+                <h1 className="text-3xl font-bold text-foreground mb-2 text-center">You did it.</h1>
                 <p className="text-brand-text-secondary mb-6 text-center">14 days of showing up.</p>
 
                 <div className="bg-gradient-to-br from-growth-subtle to-card rounded-2xl p-5 mb-6 text-left space-y-4">

@@ -113,7 +113,7 @@ export default function Admin() {
             <ChevronLeft className="w-6 h-6" />
           </button>
           <h1 className="text-xl font-semibold text-foreground ml-2">
-            Admin Dashboard
+            Admin dashboard
           </h1>
           <div className="ml-auto">
             <Badge variant="outline" className="bg-primary/10 text-brand-hover border-primary">
@@ -132,14 +132,14 @@ export default function Admin() {
             </TabsTrigger>
             <TabsTrigger value="beta">
               <FlaskConical className="w-4 h-4 mr-2" />
-              Beta Testers
+              Beta testers
             </TabsTrigger>
           </TabsList>
           
           <TabsContent value="discovery" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Meaningful Discovery Rate — last {discovery?.window_days ?? 28} days</CardTitle>
+                <CardTitle>Meaningful discovery rate — last {discovery?.window_days ?? 28} days</CardTitle>
                 <CardDescription>
                   Insights, self-chosen experiments and recognized growth per active user-week (constitution §10).
                   Counts only — no content is ever shown here.
@@ -151,7 +151,7 @@ export default function Admin() {
                 ) : (
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {[
-                      ['Meaningful Discovery Rate', discovery.meaningful_discovery_rate],
+                      ['Meaningful discovery rate', discovery.meaningful_discovery_rate],
                       ['Active user-weeks', discovery.active_user_weeks],
                       ['Self-discoveries', discovery.self_discoveries],
                       ['Mirror answers', discovery.mirror_discoveries],
@@ -216,7 +216,7 @@ export default function Admin() {
           <TabsContent value="beta" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Beta Testers</CardTitle>
+                <CardTitle>Beta testers</CardTitle>
                 <CardDescription>
                   Monitor therapist testers progressing through the 14-day loop
                 </CardDescription>

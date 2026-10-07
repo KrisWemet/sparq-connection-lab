@@ -103,7 +103,7 @@ export default function Translator() {
         </div>
 
         <h1 className="text-2xl font-bold text-brand-primary mb-2">
-          Peter’s Message Translator
+          Peter’s message translator
         </h1>
         <p className="text-sm text-muted-foreground mb-6">
           Turn a tense draft into something softer for your partner.

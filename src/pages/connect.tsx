@@ -101,7 +101,7 @@ export default function ConnectPage() {
           />
           <ConnectRow
             href="/go-connect"
-            title="Go Connect"
+            title="Go connect"
             icon={PersonStanding}
             purpose="Leave the app with one small real-world mission."
             moment="Use this when the right next move is to put the phone down and show up."
@@ -117,7 +117,7 @@ export default function ConnectPage() {
           />
           <ConnectRow
             href="/join-partner"
-            title="Join Partner"
+            title="Join partner"
             icon={HeartHandshake}
             purpose="Add shared prompts later without losing your solo practice."
             moment="Use this when you want to bring a partner into the same space."

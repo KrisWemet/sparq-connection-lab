@@ -245,7 +245,7 @@ export default function DateIdeas() {
             <ChevronLeft className="w-6 h-6 dark:text-foreground" />
           </button>
           <h1 className="text-xl font-semibold text-foreground dark:text-white mx-auto">
-            Date & Connection Ideas
+            Date & connection ideas
           </h1>
         </div>
       </header>
@@ -289,7 +289,7 @@ export default function DateIdeas() {
                 <AnimatedContainer variant="fadeIn" className="flex justify-between items-center mb-4">
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-primary" />
-                    <h2 className="text-lg font-semibold dark:text-white">AI-Powered Date Ideas</h2>
+                    <h2 className="text-lg font-semibold dark:text-white">AI-powered date ideas</h2>
                   </div>
                   <Button 
                     size="sm" 

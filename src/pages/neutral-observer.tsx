@@ -135,7 +135,7 @@ export default function NeutralObserver() {
                   <div className="flex items-start justify-between gap-3 mb-5">
                     <div>
                       <h1 className="font-serif text-[28px] leading-tight text-brand-espresso">
-                        A Different Pair of Eyes
+                        A different pair of eyes
                       </h1>
                       <p className="text-sm text-brand-taupe mt-1">
                         90 seconds, just you. No one else sees this.

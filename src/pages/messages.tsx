@@ -81,7 +81,7 @@ export default function Messaging() {
             <ChevronLeft className="w-6 h-6" />
           </button>
           <div className="mx-auto text-center">
-            <h1 className="text-lg font-semibold text-foreground">Talk Practice</h1>
+            <h1 className="text-lg font-semibold text-foreground">Talk practice</h1>
             <p className="text-xs text-brand-text-secondary">Solo-first help for real life</p>
           </div>
         </div>

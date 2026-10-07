@@ -431,7 +431,7 @@ export function JourneyContentView({
         >
           <TierIcon className="mx-auto mb-4 h-12 w-12 text-brand-gold-deep" strokeWidth={1.5} aria-hidden="true" />
           <h1 className="text-2xl font-serif font-bold text-brand-taupe mb-3">
-            {tierName ? `${tierName} Complete!` : `You've completed ${title || 'this journey'}!`}
+            {tierName ? `${tierName} complete!` : `You've completed ${title || 'this journey'}!`}
           </h1>
           <p className="text-brand-text-secondary text-sm leading-relaxed max-w-xs mb-8 mx-auto">
             {tierId === 'roots' && "You've built a strong foundation of awareness. You're ready to take these insights into active practice."}
@@ -558,7 +558,7 @@ export function JourneyContentView({
             <div className="w-24 h-24 bg-gradient-to-br from-brand-sand/20 to-brand-primary/10 rounded-full flex items-center justify-center mb-6 shadow-inner">
               <Star className="w-10 h-10 text-brand-primary" />
             </div>
-            <h2 className="text-3xl font-serif font-bold text-brand-taupe mb-4">Rest & Reflect</h2>
+            <h2 className="text-3xl font-serif font-bold text-brand-taupe mb-4">Rest & reflect</h2>
             <p className="text-muted-foreground text-lg leading-relaxed max-w-sm mb-8">
               You&apos;ve completed your session for today. 30 minutes of thoughtful focus builds a stronger foundation than rushing through. Let today&apos;s concepts sink in, and come back tomorrow to continue your growth!
             </p>

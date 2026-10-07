@@ -151,7 +151,7 @@ export default function ReflectionHistory() {
           <p className="note-label mb-1">
             The Finkel Method
           </p>
-          <h1 className="text-2xl font-serif text-brand-espresso">Your Reflections</h1>
+          <h1 className="text-2xl font-serif text-brand-espresso">Your reflections</h1>
         </div>
 
         {/* List */}

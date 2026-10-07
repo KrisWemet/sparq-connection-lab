@@ -159,7 +159,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
         className="font-serif text-4xl font-medium text-center text-brand-primary mb-7"
         variants={itemVariants}
       >
-        {isRegisterMode ? 'Create Your Account' : 'Welcome Back'}
+        {isRegisterMode ? 'Create your account' : 'Welcome back'}
       </motion.h1>
 
       {error && (
