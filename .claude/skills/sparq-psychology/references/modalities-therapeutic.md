@@ -1,4 +1,4 @@
-# Therapeutic Modalities Deep Reference (1-6, plus DBT and TA)
+# Therapeutic Modalities Deep Reference (1-6, plus DBT, TA, and IBCT-informed, self-compassion and solution-focused practices)
 
 These are the 6 core therapy-derived modalities that form the clinical backbone of Sparq's content. All are used educationally — never clinically.
 
@@ -247,3 +247,48 @@ Acceptance **and** change at the same time: "You're doing the best you can, and 
 - **Interaction cycles (§7)**: crossed transactions and the Drama Triangle help couples see "you two vs. the loop".
 - **Missions**: "Next time you feel the urge to rescue, ask one question instead of fixing."
 - **Never**: calling a partner "the Persecutor", telling a user they are "in Child", or using roles to blame. Roles describe moments, not people.
+
+---
+
+## 9. IBCT-informed practices (Integrative Behavioral Couple Therapy) — added 2026-10-05
+
+**Status:** authorized in the 2026-10-05 psychology-foundation brief as *educational, self-guided practices inside existing flows* — not IBCT as a therapy. Constitution repo note, 2026-10-05.
+
+**Sources.** Jacobson, N. S., & Christensen, A. (1996). *Integrative Couple Therapy: Promoting Acceptance and Change*. Norton. Christensen, A., Doss, B. D., & Jacobson, N. S. (2014). *Reconcilable Differences* (2nd ed.). Guilford — the self-help version. Doss, B. D., et al. (2016). A randomized controlled trial of the web-based OurRelationship program. *Journal of Consulting and Clinical Psychology*, 84(4), 285–296.
+
+**Core idea.** Recurring conflict is understood through **DEEP**: **D**ifferences between partners, **E**motional sensitivities each brings, **E**xternal stressors, and **P**atterns of interaction. Change comes from *both* acceptance of ordinary differences and chosen behavior change. "Unified detachment" means looking at the pattern together, from a little distance, instead of blaming.
+
+**Evidence, honestly.** IBCT has support from trials of therapist-delivered treatment, and OurRelationship — an online adaptation with coach contact — showed benefits against a waitlist in its own trials. **Those results belong to those programs.** Sparq borrows a few self-guided exercises; it does not deliver OurRelationship and makes no claim that its version works.
+
+**How Sparq uses it (2026-10-05):**
+- Peter, when "the same fight keeps coming back" (`recurring_conflict` → Explore): one DEEP question at a time — "What happens just before it turns?" — the loop as the focus.
+- Mission ladder `pattern` ("Seeing the loop, not a villain"): write down what happened just before it turned → notice my usual move → describe the loop for me without blame → treat a difference as a difference and decide what I still want to ask for.
+
+**Limits — non-negotiable:**
+- Never assign motives to an absent partner; ask what the user has seen or heard.
+- **Acceptance never means tolerating coercion, control, threats, abuse or boundary violations.** If the user describes those, Peter says so plainly and safety comes first (constitution §5 Safety). These are not "differences". Controlling behavior the crisis detector misses (phone checking, money control, cutting off friends) routes to the `control_concern` move, checked right after Stabilize and before any growth move.
+- Self-guided only; no joint-session protocol, no assessment of the couple.
+
+## 10. Self-compassion practices — added 2026-10-05
+
+**Sources.** Neff, K. D. (2003). Self-compassion: An alternative conceptualization of a healthy attitude toward oneself. *Self and Identity*, 2, 85–101 — three components: self-kindness, common humanity, mindfulness. Breines, J. G., & Chen, S. (2012). Self-compassion increases self-improvement motivation. *Personality and Social Psychology Bulletin*, 38(9), 1133–1143 — in lab experiments, a self-compassionate frame after a mistake or moral transgression increased motivation to make amends and improve, compared with self-esteem boosting.
+
+**Core idea for Sparq.** Kindness *and* responsibility after a setback or regret: notice what hurts → one mistake is not the whole self → name the impact honestly → choose a manageable repair or next try.
+
+**Evidence, honestly.** Lab and intervention studies support self-compassion's link to coping and motivation; Sparq's short prompts are an adaptation, not a tested program.
+
+**How Sparq uses it:** Peter's `regret` move (Reflect) and the setback rules; mission ladder `self_kindness`.
+
+**Limits:** never reassurance that skips the other person's hurt; never forced positive reinterpretation; not trauma work. Accountability stays.
+
+## 11. Solution-focused practices — added 2026-10-05
+
+**Sources.** de Shazer, S., et al. (1986). Brief therapy: Focused solution development. *Family Process*, 25, 207–221. Gingerich, W. J., & Peterson, L. T. (2013). Effectiveness of solution-focused brief therapy: A systematic qualitative review of controlled outcome studies. *Research on Social Work Practice*, 23(3), 266–283.
+
+**Core idea.** Look for **exceptions** — times the problem was smaller — and what the person did differently; identify strengths and conditions that helped; do a little more of what works. Scaling questions help name a next small step.
+
+**Evidence, honestly.** Controlled studies of therapist-delivered SFBT are mostly positive but uneven in quality; there is no evidence base for Sparq's brief prompts specifically.
+
+**How Sparq uses it:** Peter's `no_improvement` move (Explore — acknowledge first, then "when was it a little better?", then offer to change, shrink or pause the practice); the Follow-up mode; mission ladder `what_works`.
+
+**Limits:** pain is acknowledged before looking for solutions; never imply that attitude alone fixes a difficulty; "it's getting worse" can be a reason to change approach or seek real help, not to try harder.

@@ -16,9 +16,13 @@ export type ConversationMode =
 export type MomentSignal =
   | 'declines_help'
   | 'depleted'
+  | 'control_concern'
   | 'pushback'
   | 'mixed_feelings'
   | 'low_confidence'
+  | 'recurring_conflict'
+  | 'regret'
+  | 'no_improvement'
   | 'setback'
   | 'tried_it'
   | 'got_easy'
@@ -50,6 +54,12 @@ const REPORTED_ABSOLUTE = /\b(said|says|told me|tells me|accused me of)\b[^.!?]*
 const DEPLETED =
   /\b(can'?t (do|handle|deal with|take) (this|it|anything|any more|anymore)|too much( right now| tonight| today)?$|it'?s (all )?too much|falling apart|breaking down|(no|zero|barely any) sleep|haven'?t slept|can'?t (breathe|think( straight)?|stop shaking)|i'?m (shaking|panicking)|panicking|so flooded|completely overwhelmed|so overwhelmed|overwhelmed|i'?m done for (today|tonight)|running on empty)\b/i;
 
+// Acceptance is never tolerance of control (modalities-therapeutic §9 limits).
+// Controlling behavior the crisis detector (lib/safety.ts) does not catch:
+// Peter must not treat it as an ordinary difference.
+const CONTROL_CONCERN =
+  /\b((checks|goes through|reads|looks through) my (phone|texts|messages|email)|tracks (my location|where i am)|(won'?t|doesn'?t) let me (see|go|talk|leave|have|work|spend)|(says|told me) i (can'?t|am not allowed to|'?m not allowed to) (see|go|talk|leave|have|work|wear)|i'?m not allowed to (see|go|talk|leave|have|work|wear)|controls (all )?(the|my|our) (money|finances|bank)|takes my (phone|keys|money))\b/i;
+
 // Setbacks are data (constitution v1.2 §11A): they didn't follow through, or
 // an old pattern came back.
 const SETBACK =
@@ -75,6 +85,16 @@ const MIXED_FEELINGS =
 // Doubting they can do something they chose: explore confidence and barriers.
 const LOW_CONFIDENCE =
   /\b(i don'?t think i can|i'?m not sure i can|not sure i'?m able|i'?ll (probably |just |likely )+(fail|mess (it|this) up|forget)|i'?m (just )?not good at (this|that|it)|i never (stick|keep) (to|at|with) (anything|things|it))\b/i;
+// IBCT-informed (docs/PSYCHOLOGY_AUDIT.md, modalities-therapeutic §9): the
+// same fight keeps coming back — explore the loop, not either person.
+const RECURRING_CONFLICT =
+  /\b(we keep (fighting|arguing|having (the same|this) (fight|argument))|(the )?same (fight|argument)( again| every time| over and over)|every time we (talk|try to talk) about|we always (fight|argue) about|it always turns into a fight|we go (round and round|in circles))\b/i;
+// Self-compassion (§10): regret about something they did.
+const REGRET =
+  /\b(i (feel|felt) (terrible|awful|so bad|horrible|guilty) (about|for|that|because)|i regret|i shouldn'?t have (said|done|yelled|snapped|told)|i hate (that|what) i (said|did)|i said something (awful|terrible|horrible|mean|hurtful|cruel)|i'?m (so |really )?ashamed of)\b/i;
+// Solution-focused (§11): no improvement, or it is getting worse.
+const NO_IMPROVEMENT =
+  /\b(nothing (is |seems to be )?(working|helping|changing)|it'?s not (getting )?(any )?better|(things|it)('s| is| are)? getting worse|nothing has changed|not making (a|any) difference|this (isn'?t|is not) helping)\b/i;
 const SELF_DISCOVERY =
   /\b(i (just )?reali[sz]e|it (just )?hit me|i never noticed|now i see|i see now|that'?s why i|i think i (get|see|understand) (it|now|why)|i guess i('m| am| do| always)|maybe i('m| am) (the one|scared|afraid|worried)|i noticed (that )?i)\b/i;
 const INTENTION =
@@ -96,6 +116,7 @@ export function classifyMoment(message: string): MomentSignal {
   if (!text) return 'none';
   if (DECLINES_HELP.test(text)) return 'declines_help';
   if (DEPLETED.test(text)) return 'depleted';
+  if (CONTROL_CONCERN.test(text)) return 'control_concern';
   // A report on their own experiment ("No, I forgot") is not a rejection of
   // Peter's idea, so it is read before pushback.
   if (SETBACK.test(text)) return 'setback';
@@ -104,6 +125,9 @@ export function classifyMoment(message: string): MomentSignal {
   if (PUSHBACK.test(text)) return 'pushback';
   if (MIXED_FEELINGS.test(text)) return 'mixed_feelings';
   if (LOW_CONFIDENCE.test(text)) return 'low_confidence';
+  if (REGRET.test(text)) return 'regret';
+  if (NO_IMPROVEMENT.test(text)) return 'no_improvement';
+  if (RECURRING_CONFLICT.test(text)) return 'recurring_conflict';
   if (SELF_DISCOVERY.test(text)) return 'self_discovery';
   if (ASKS_FOR_HELP.test(text)) return 'asks_for_help';
   if (INTENTION.test(text)) return 'intention';
@@ -121,6 +145,10 @@ const INSTRUCTIONS: Record<Exclude<MomentSignal, 'none'>, { mode: ConversationMo
   depleted: {
     mode: 'stabilize',
     line: 'They have no room for growth right now. This is not the moment to push growth or anything else. Comfort them in a few plain words, offer at most one tiny optional grounding step (one slow breath, feet on the floor), and say nothing is due tonight. No questions about experiments, no lessons, no reframes, no new task, no pep talk.',
+  },
+  control_concern: {
+    mode: 'reflect',
+    line: 'They describe their partner controlling or watching them (phone, money, friends, where they go). This is not an ordinary difference to accept or a loop to explore. Say plainly and kindly that what they describe is not okay and is not their fault. Their safety and their choices come first. Mention that real help is available right here (the help link), without pressure. Ask one gentle question about how safe they feel. Do not explore the partner\'s side, do not suggest they adjust or compromise, and do not tell them to stay or leave — that choice is theirs.',
   },
   setback: {
     mode: 'follow_up',
@@ -145,6 +173,18 @@ const INSTRUCTIONS: Record<Exclude<MomentSignal, 'none'>, { mode: ConversationMo
   low_confidence: {
     mode: 'explore',
     line: 'They doubt they can do it. Do not reassure them that they can, and do not push. Name one real strength or effort you have seen, if there is one. Then ask one question about what would make it a little easier, or what is in the way. Making it smaller or not now are both fine answers.',
+  },
+  recurring_conflict: {
+    mode: 'explore',
+    line: 'The same fight keeps coming back. Keep the loop as the focus, never either person. Ask one question that helps them see it from one side: how the two of them are different, what is tender for each, what outside stress is in it, or what happens just before it turns. Never guess what their partner thinks or wants; ask what they have seen. Accepting a difference never means putting up with control, threats or being hurt — if they describe that, say so plainly and put their safety first.',
+  },
+  regret: {
+    mode: 'reflect',
+    line: 'They regret something they did. Be kind and honest at once. Reflect what hurts. Help them hold that one mistake is not all of who they are. If it fits, ask what it did to the other person, and then what one small repair or next try could look like. No reassurance that skips the impact, no piling on, no lecture.',
+  },
+  no_improvement: {
+    mode: 'explore',
+    line: 'They say it is not getting better, or it is getting worse. Take that seriously and do not argue with it or blame them. First reflect how discouraging that is. Then, only if it fits, ask about one time it was even a little better and what was different. Offer to change what they are practicing, make it smaller, or take a break — they choose. Never suggest a better attitude alone will fix it. If it sounds unsafe, safety comes first.',
   },
   self_discovery: {
     mode: 'listen',

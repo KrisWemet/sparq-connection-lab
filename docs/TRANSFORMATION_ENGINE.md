@@ -40,6 +40,7 @@
 - **Adjust, stop or change.** "Too much" steps back at once (or rests the practice at the easiest step); two "didn't help" tries rest the practice and offer a different one (`change`); "doesn't matter to me now" rests it; no step-up during a hard stretch (tier 3, approved 2026-10-07 — see `PRIMING_AUDIT.md`); the check-in answer "A burden" → no idea at all, "Not helpful" → change.
 - **Goal fit.** A first step is chosen from the skill closest to the user's own North Star or reason (keyword hints), not a fixed order.
 - **Daily loop link.** When the user chose a practice in the last 14 days, the AI morning story may show that same skill in a new everyday moment (`getMorningStoryPrompt` `practice`). Journey days are unchanged.
+- **Phase 5 (2026-10-05):** three more ladders — `pattern` (IBCT-informed), `self_kindness` (self-compassion), `what_works` (solution-focused) — and matching Peter moves (`recurring_conflict`, `regret`, `no_improvement`).
 - **Three ladders the doctrine named but never delivered:** a clear request (NVC, DBT-informed interpersonal effectiveness), pausing and coming back (Gottman self-soothing break, DBT-informed distress tolerance), one value-aligned action (ACT).
 
 ### Practice map
@@ -53,6 +54,9 @@
 | `request` | NVC, DBT-informed | A clear, kind request | Needs said instead of hinted | medium | A request can get a no | What did you ask for, and what happened? |
 | `pause` | Gottman, DBT-informed | Pausing and agreeing when to return | Fewer things said in the heat | medium | Not the silent treatment; not the tool if unsafe | Did you come back to it? How did the second try go? |
 | `values` | ACT | One action that fits a chosen value | Living more like who you want to be | low | Directions, not rules to be perfect at | What did it feel like? Did it fit what you care about? |
+| `pattern` | IBCT (DEEP, unified detachment), EFT | Seeing a recurring fight as a loop | Less blame; clearer what to accept and what to ask for | medium | Acceptance never means tolerating control, threats or harm; never assign motives to the partner | What did you notice about how the loop goes? |
+| `self_kindness` | Self-compassion (Neff), Gottman repair | Kindness and responsibility after a mistake | Less freezing shame; more repair | medium | Not an excuse; not trauma work | How was it to be kind to yourself and still own it? |
+| `what_works` | Solution-focused, Positive Psychology | Finding better moments and repeating what helped | More of what already works | low | Pain heard first; attitude alone fixes nothing | What was different in the better moment? |
 
 Context and full wording live in `PRACTICE_META`; update the table when the code changes. Missions remain optional and user-chosen: an idea needs a user-chosen target, "Not now" is respected for two weeks, and "Only when I ask" turns ideas off.
 
