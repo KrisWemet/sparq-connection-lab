@@ -332,7 +332,8 @@ export function suggestMission(input: {
   openCount: number;
   history: MissionHistoryRow[];
   declinedSkills?: string[];
-  /** Inferred from what the user shared; only ever used to go gentler. */
+  /** Inferred from what the user shared; only ever used to go gentler
+   *  (tier 3, approved 2026-10-07 — docs/PRIMING_AUDIT.md). */
   readiness?: 'struggling' | 'neutral' | 'thriving' | null;
   practiceFit?: PracticeFit;
 }): MissionSuggestion | null {
