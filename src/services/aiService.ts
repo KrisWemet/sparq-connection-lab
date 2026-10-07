@@ -71,7 +71,7 @@ export class AIService {
     return [
       {
         id: 1001,
-        title: "Picnic in the Park",
+        title: "Picnic in the park",
         description: "Pack a basket with your favorite snacks, a blanket, and head to a local park for a relaxing afternoon together.",
         category: "Outdoor",
         duration: "2-3 hours",
@@ -81,7 +81,7 @@ export class AIService {
       },
       {
         id: 1002,
-        title: "Home Cooking Challenge",
+        title: "Home cooking challenge",
         description: "Choose a new recipe neither of you has tried before and cook it together at home.",
         category: "Indoor",
         duration: "2-3 hours",
@@ -91,7 +91,7 @@ export class AIService {
       },
       {
         id: 1003,
-        title: "Local Museum Visit",
+        title: "Local museum visit",
         description: "Explore a local museum or art gallery you haven't visited before.",
         category: "Indoor",
         duration: "2-4 hours",
