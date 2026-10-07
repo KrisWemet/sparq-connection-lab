@@ -276,7 +276,7 @@ export function ExperimentsCard({ compact = false }: { compact?: boolean }) {
         <div className="w-10 h-10 rounded-full bg-brand-primary/10 text-brand-primary flex items-center justify-center flex-shrink-0">
           <FlaskConical className="w-5 h-5" />
         </div>
-        <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover">Out in your life</p>
+        <p className="note-label">Out in your life</p>
       </div>
 
       <AnimatePresence mode="wait">

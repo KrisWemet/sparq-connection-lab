@@ -15,8 +15,8 @@ export function PreviousReflectionCard({ quote, onViewJournal }: PreviousReflect
       className="bg-brand-parchment rounded-2xl border border-brand-primary/10 shadow-sm p-5"
     >
       {/* Label */}
-      <p className="text-xs font-semibold tracking-widest uppercase text-brand-taupe mb-3">
-        Yesterday&apos;s Reflection
+      <p className="note-label text-brand-taupe mb-3">
+        Yesterday&apos;s reflection
       </p>
 
       {/* Quoted reflection — serif italic, the user's own words */}
@@ -28,9 +28,9 @@ export function PreviousReflectionCard({ quote, onViewJournal }: PreviousReflect
       <div className="flex justify-end mt-3">
         <button
           onClick={onViewJournal}
-          className="text-xs font-semibold tracking-widest uppercase text-brand-hover hover:text-brand-espresso transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded"
+          className="text-sm font-semibold text-brand-hover underline-offset-4 hover:underline hover:text-brand-espresso transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded"
         >
-          View Journal
+          View journal
         </button>
       </div>
     </motion.div>

@@ -107,7 +107,7 @@ export default function InsightProfilePage() {
               className="w-10 h-10 rounded-full border border-brand-primary/10 bg-brand-parchment text-brand-primary flex items-center justify-center hover:bg-brand-primary/5">
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <span className="text-xs font-semibold tracking-widest uppercase text-brand-hover">About you</span>
+            <span className="bar-title">About you</span>
             <div className="w-10 h-10" aria-hidden="true" />
           </div>
         </header>
@@ -127,7 +127,7 @@ export default function InsightProfilePage() {
 
           {/* 1. Their own settings */}
           <section className={card}>
-            <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover">How you like Peter to talk with you</p>
+            <h2 className="section-title">How you like Peter to talk with you</h2>
             {PREFS.map(pref => (
               <div key={pref.key} className="space-y-2">
                 <p className="text-sm text-brand-espresso">{pref.label}</p>
@@ -151,7 +151,7 @@ export default function InsightProfilePage() {
 
           {/* 2. Peter's guesses */}
           <section className={card}>
-            <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover">Peter&apos;s guesses about you</p>
+            <h2 className="section-title">Peter&apos;s guesses about you</h2>
             {guesses.length === 0 ? (
               <p className="text-sm text-brand-text-secondary">Peter doesn&apos;t have any guesses yet. They&apos;ll show up here as you keep going.</p>
             ) : guesses.map(g => (
@@ -174,7 +174,7 @@ export default function InsightProfilePage() {
           {/* 3. What they said doesn't fit */}
           {(data?.rejected?.length ?? 0) > 0 && (
             <section className={card}>
-              <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover">Things you told Peter don&apos;t fit</p>
+              <h2 className="section-title">Things you told Peter don&apos;t fit</h2>
               <p className="text-sm text-brand-text-secondary">Peter won&apos;t bring these up again. If one actually does fit, you can bring it back.</p>
               {data!.rejected.map(r => (
                 <div key={r.id} className="border-b border-brand-border/60 pb-3 last:border-0 last:pb-0">
@@ -192,7 +192,7 @@ export default function InsightProfilePage() {
           {/* 5. What makes it easier or harder — their words (constitution v1.2 §3, §11A) */}
           {(data?.conditions?.length ?? 0) > 0 && (
             <section className={card}>
-              <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover">What makes it easier or harder</p>
+              <h2 className="section-title">What makes it easier or harder</h2>
               <p className="text-sm text-brand-text-secondary">
                 Things you noticed while trying something out there. They&apos;re just information — Peter may use them to
                 help you plan the next step, never to judge you.
@@ -213,7 +213,7 @@ export default function InsightProfilePage() {
           {/* 6. What they're practicing — built only from their own outcomes */}
           {(data?.practice?.length ?? 0) > 0 && (
             <section className={card}>
-              <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover">What you&apos;re practicing</p>
+              <h2 className="section-title">What you&apos;re practicing</h2>
               {data!.practice!.map(p => (
                 <p key={p.skill} className="text-sm text-brand-espresso">
                   {p.label} <span className="text-brand-text-secondary">· step {p.level} · tried {p.triedAtLevel}×</span>
@@ -228,7 +228,7 @@ export default function InsightProfilePage() {
           {/* 4. Their own reasons */}
           {(data?.reasons?.length ?? 0) > 0 && (
             <section className={card}>
-              <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover">Your reasons, in your words</p>
+              <h2 className="section-title">Your reasons, in your words</h2>
               <p className="text-sm text-brand-text-secondary">Peter only ever reminds you of reasons you gave. If one isn&apos;t true anymore, let it go.</p>
               {data!.reasons.map(r => (
                 <div key={r.id} className="border-b border-brand-border/60 pb-3 last:border-0 last:pb-0">

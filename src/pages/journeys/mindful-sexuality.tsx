@@ -23,7 +23,7 @@ export default function MindfulSexualityJourney() {
       concepts: [
         {
           id: "present-moment-awareness",
-          title: "Present Moment Awareness",
+          title: "Present moment awareness",
           description: "Cultivating the ability to be fully here — in your body, with your partner, right now",
           icon: <Brain className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -32,7 +32,7 @@ export default function MindfulSexualityJourney() {
         },
         {
           id: "body-awareness",
-          title: "Body Awareness",
+          title: "Body awareness",
           description: "Learning to listen to your body's signals, sensations, and responses without judgment",
           icon: <Hand className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -41,7 +41,7 @@ export default function MindfulSexualityJourney() {
         },
         {
           id: "slowing-down",
-          title: "The Power of Slowing Down",
+          title: "The power of slowing down",
           description: "Discovering that less speed and more attention transforms the quality of physical connection",
           icon: <Clock className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -50,7 +50,7 @@ export default function MindfulSexualityJourney() {
         },
         {
           id: "noticing-mental-chatter",
-          title: "Noticing Mental Chatter",
+          title: "Noticing mental chatter",
           description: "Becoming aware of the inner commentary that pulls you out of intimate moments",
           icon: <Eye className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -59,7 +59,7 @@ export default function MindfulSexualityJourney() {
         },
         {
           id: "breath-as-anchor",
-          title: "Breath as Anchor",
+          title: "Breath as anchor",
           description: "Using conscious breathing to stay present and deepen connection during physical intimacy",
           icon: <Compass className="w-5 h-5 text-sky-500" />,
           color: "sky",
@@ -68,7 +68,7 @@ export default function MindfulSexualityJourney() {
         },
         {
           id: "non-judgmental-awareness",
-          title: "Non-Judgmental Awareness",
+          title: "Non-judgmental awareness",
           description: "Observing your physical and emotional responses without labeling them as good or bad",
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -84,7 +84,7 @@ export default function MindfulSexualityJourney() {
       concepts: [
         {
           id: "sensory-exploration",
-          title: "Sensory Exploration",
+          title: "Sensory exploration",
           description: "Systematically awakening each sense to deepen physical connection and pleasure",
           icon: <Sparkles className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -93,7 +93,7 @@ export default function MindfulSexualityJourney() {
         },
         {
           id: "mindful-touch",
-          title: "Mindful Touch Practice",
+          title: "Mindful touch practice",
           description: "Touching and being touched with full awareness — neither rushing toward a goal nor drifting away",
           icon: <Hand className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -102,7 +102,7 @@ export default function MindfulSexualityJourney() {
         },
         {
           id: "letting-go-of-goals",
-          title: "Letting Go of Performance Goals",
+          title: "Letting go of performance goals",
           description: "Releasing the pressure of orgasm, duration, or 'success' to simply be present with what is",
           icon: <ShieldCheck className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -111,7 +111,7 @@ export default function MindfulSexualityJourney() {
         },
         {
           id: "emotional-attunement-in-touch",
-          title: "Emotional Attunement in Touch",
+          title: "Emotional attunement in touch",
           description: "Reading and responding to your partner's emotional state through physical connection",
           icon: <Users className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -120,7 +120,7 @@ export default function MindfulSexualityJourney() {
         },
         {
           id: "managing-distractions",
-          title: "Working with Distractions",
+          title: "Working with distractions",
           description: "Developing practical strategies for when the mind wanders during intimate moments",
           icon: <Brain className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -129,7 +129,7 @@ export default function MindfulSexualityJourney() {
         },
         {
           id: "communicating-in-the-moment",
-          title: "Communicating During Intimacy",
+          title: "Communicating during intimacy",
           description: "Using minimal, honest words to deepen connection without breaking presence",
           icon: <Lightbulb className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -145,7 +145,7 @@ export default function MindfulSexualityJourney() {
       concepts: [
         {
           id: "embodied-presence",
-          title: "Full Embodied Presence",
+          title: "Full embodied presence",
           description: "Bringing your complete, unguarded awareness to every physical interaction with your partner",
           icon: <Flame className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -154,7 +154,7 @@ export default function MindfulSexualityJourney() {
         },
         {
           id: "somatic-connection",
-          title: "Somatic Connection",
+          title: "Somatic connection",
           description: "Listening to and communicating through the body's deep intelligence during intimacy",
           icon: <Layers className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -163,7 +163,7 @@ export default function MindfulSexualityJourney() {
         },
         {
           id: "sustained-presence",
-          title: "Sustaining Presence Through Intensity",
+          title: "Sustaining presence through intensity",
           description: "Staying fully aware even as physical and emotional intensity increases",
           icon: <Eye className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -172,7 +172,7 @@ export default function MindfulSexualityJourney() {
         },
         {
           id: "intimacy-as-meditation",
-          title: "Intimacy as Meditation",
+          title: "Intimacy as meditation",
           description: "Treating physical connection as a joint contemplative practice — a shared meditation",
           icon: <Brain className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -181,7 +181,7 @@ export default function MindfulSexualityJourney() {
         },
         {
           id: "mindful-intimacy-practice",
-          title: "Building a Mindful Intimacy Practice",
+          title: "Building a mindful intimacy practice",
           description: "Creating sustainable habits that keep presence and awareness at the center of your physical relationship",
           icon: <Sparkles className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -195,7 +195,7 @@ export default function MindfulSexualityJourney() {
   return (
     <JourneyTemplate
       journeyId="mindful-sexuality"
-      title="Mindful Sexuality"
+      title="Mindful sexuality"
       description="Bring presence, awareness, and deeper connection to your physical intimacy. Progress from basic mindfulness to embodied sexual presence."
       tiers={tiers}
     />

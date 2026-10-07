@@ -30,6 +30,7 @@ Before working in any of these domains, read the corresponding skill file:
 | UI components, design tokens, layout | `.claude/skills/sparq-ui` |
 | Architecture decisions, API patterns | `.claude/skills/sparq-architecture` |
 | Frontend design quality | `.claude/skills/frontend-design` |
+| Design polish, critique, audits, "less AI-looking" (third-party, pbakaus/impeccable) | `.claude/skills/impeccable` — `sparq-ui` wins where they disagree |
 | Phone feel (tap, hover, viewport, inputs, safe areas) | `.claude/skills/mobile-native` |
 | Animation decisions, audits, reviews, where to add motion | `.claude/skills/emil-design-eng`, `improve-animations`, `review-animations`, `find-animation-opportunities` (Framer Motion still required) |
 | Toasts (Sonner) | `.claude/skills/ask-sonner` |
@@ -212,7 +213,7 @@ npm run lint         # Run ESLint (next lint)
 npm test             # Vitest unit tests (constitution guarantees, tests/)
 ```
 
-Unit tests (Vitest, `tests/`) cover the constitution guarantees Chris approved (2026-09-30, extended 2026-10-01): guess revision, Peter's mode picker (incl. setbacks vs. comfort-first), privacy boundaries, mission ideas and adaptive difficulty, identity-evidence timing, Deep Why layers, and journey progress and state (2026-10-04). They are pure logic — no network or database. Ask Chris before adding new tests. Playwright e2e scripts live in `e2e/`.
+Unit tests (Vitest, `tests/`) cover the constitution guarantees Chris approved (2026-09-30, extended 2026-10-01): guess revision, Peter's mode picker (incl. setbacks vs. comfort-first), privacy boundaries, mission ideas and adaptive difficulty, identity-evidence timing, Deep Why layers, journey progress and state (2026-10-04), and one journey at a time (2026-10-07). They are pure logic — no network or database. Ask Chris before adding new tests. Playwright e2e scripts live in `e2e/`.
 
 ---
 
@@ -616,7 +617,7 @@ Warm, golden-hour metaphor images only — never people (hands-only is allowed).
 
 ## Journeys
 
-**Journey state (2026-10-04, Phase 1 of the Journey spine):** Supabase is the only source of truth — `user_journeys` via `src/lib/server/journey-state.ts`, rules in `src/lib/journeys/progress.ts`, one catalog in `src/lib/journeys/catalog.ts` (9 daily starter journeys + 13 staged ones), browser access via `src/lib/journeys/client.ts` and `/api/journeys/state`. Never keep journey progress in localStorage (old browser progress is imported once). Switching journeys pauses the current one; pausing and leaving keep the user's place.
+**Journey state (2026-10-04, Phase 1 of the Journey spine):** Supabase is the only source of truth — `user_journeys` via `src/lib/server/journey-state.ts`, rules in `src/lib/journeys/progress.ts`, one catalog in `src/lib/journeys/catalog.ts` (9 daily starter journeys + 13 staged ones), browser access via `src/lib/journeys/client.ts` and `/api/journeys/state`. Never keep journey progress in localStorage (old browser progress is imported once). **One journey at a time (Chris, 2026-10-07):** a journey can't start while another is active (`another_journey_active`, 409); the user pauses or finishes the current one first (Pause lives on the "current practice" card on `/journeys`). Pausing and leaving keep the user's place.
 
 There are 13 staged journeys defined in `src/data/journeys.ts` (Long Distance has no content yet) with corresponding page components in `src/pages/journeys/`:
 

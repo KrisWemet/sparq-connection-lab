@@ -131,9 +131,9 @@ export function buildReminderEmail(opts: { name?: string | null; unsubscribeUrl:
   const html = `<!doctype html><html><body style="margin:0;background:#F7F2EC;font-family:Georgia,serif;color:#3A2A3F">
 <div style="max-width:480px;margin:0 auto;padding:32px 24px">
 ${lines.map(l => `<p style="font-size:16px;line-height:1.6;margin:0 0 16px">${escapeHtml(l)}</p>`).join('\n')}
-<p style="margin:24px 0"><a href="${practiceUrl}" style="display:inline-block;background:#4B2E57;color:#fff;text-decoration:none;font-family:Arial,sans-serif;font-weight:bold;font-size:15px;padding:12px 22px;border-radius:999px">Open today&#39;s practice</a></p>
+<p style="margin:24px 0"><a href="${practiceUrl}" style="display:inline-block;background:#4B2E57;color:#fff;text-decoration:none;font-family:Georgia,serif;font-weight:bold;font-size:15px;padding:12px 22px;border-radius:999px">Open today&#39;s practice</a></p>
 <p style="font-size:16px;margin:0 0 32px">— Peter 🦦</p>
-<p style="font-family:Arial,sans-serif;font-size:12px;color:#685C6A;line-height:1.6;margin:0">
+<p style="font-family:Georgia,serif;font-size:12px;color:#685C6A;line-height:1.6;margin:0">
 <a href="${settingsUrl}" style="color:#685C6A">Change your reminder time</a> · <a href="${escapeHtml(opts.unsubscribeUrl)}" style="color:#685C6A">Stop these emails</a>
 </p>
 </div></body></html>`;

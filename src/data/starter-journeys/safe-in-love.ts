@@ -2,7 +2,7 @@ import type { StarterJourney } from './types';
 
 export const safeInLove: StarterJourney = {
   id: 'safe-in-love',
-  title: 'Learning to Feel Safe in Love',
+  title: 'Learning to feel safe in love',
   duration: 14,
   modalities: ['eft', 'dbt'],
   modalityLabel: 'EMOTIONAL SAFETY',

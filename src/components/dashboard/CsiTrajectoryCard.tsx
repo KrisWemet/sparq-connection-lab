@@ -159,12 +159,12 @@ export function CsiTrajectoryCard() {
               <>
                 <div className="mb-4 flex items-end gap-4">
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.18em] text-brand-taupe">Day one</p>
+                    <p className="text-xs text-brand-taupe">Day one</p>
                     <p className="font-serif text-2xl text-brand-taupe">{view.baseline}</p>
                   </div>
                   <div className="pb-2 text-brand-taupe">→</div>
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.18em] text-brand-taupe">Today</p>
+                    <p className="text-xs text-brand-taupe">Today</p>
                     <p className="font-serif text-2xl text-brand-espresso">{view.latest}</p>
                   </div>
                 </div>

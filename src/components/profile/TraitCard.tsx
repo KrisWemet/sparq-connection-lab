@@ -87,7 +87,7 @@ export function TraitCard({ traits, accessToken, onUpdated }: TraitCardProps) {
 
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-semibold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider">
+      <h3 className="section-title">
         What Peter has learned about you
       </h3>
       {traits.map((trait) => {

@@ -88,7 +88,7 @@ export function Day14Graduation() {
             >
                 <SceneAccent kind="bloom" className="-mt-4 mb-3 h-36 w-full" />
 
-                <h1 className="text-3xl font-bold text-foreground mb-2 text-center">You Did It.</h1>
+                <h1 className="text-3xl font-bold text-foreground mb-2 text-center">You did it.</h1>
                 <p className="text-brand-text-secondary mb-6 text-center">14 days of showing up.</p>
 
                 <div className="bg-gradient-to-br from-growth-subtle to-card rounded-2xl p-5 mb-6 text-left space-y-4">
@@ -129,17 +129,17 @@ export function Day14Graduation() {
                         {/* Compound Reveal — the user's own words, then and now (spec §5.3) */}
                         {report.reveal?.narrative && (
                             <div className="rounded-2xl bg-popover border border-growth/20 p-4 shadow-sm">
-                                <p className="text-xs font-bold text-growth-emphasis uppercase tracking-wider mb-3">
+                                <p className="note-label text-growth-emphasis mb-3">
                                     Something I kept for you
                                 </p>
                                 {report.reveal.verified && report.reveal.before_quote && (
-                                    <blockquote className="mb-2 border-l-2 border-growth/40 pl-3 text-sm italic text-brand-text-secondary">
+                                    <blockquote className="mb-3 font-serif text-base italic leading-relaxed text-brand-text-secondary">
                                         &ldquo;{report.reveal.before_quote}&rdquo;
                                         <span className="mt-1 block not-italic text-xs text-brand-text-secondary">— you, when we started</span>
                                     </blockquote>
                                 )}
                                 {report.reveal.verified && report.reveal.after_quote && (
-                                    <blockquote className="mb-3 border-l-2 border-growth-emphasis pl-3 text-sm italic text-foreground">
+                                    <blockquote className="mb-3 font-serif text-lg italic leading-relaxed text-foreground">
                                         &ldquo;{report.reveal.after_quote}&rdquo;
                                         <span className="mt-1 block not-italic text-xs text-brand-text-secondary">— you, this week</span>
                                     </blockquote>
@@ -181,11 +181,11 @@ export function Day14Graduation() {
                             </div>
                         )}
 
-                        {/* What Peter Noticed */}
+                        {/* What Peter noticed */}
                         <div className="rounded-2xl bg-brand-linen border border-brand-primary/10 p-4">
-                            <p className="text-xs font-bold text-brand-hover uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <p className="note-label mb-2 flex items-center gap-1.5">
                                 <Sparkles size={12} />
-                                What Peter Noticed
+                                What Peter noticed
                             </p>
                             <p className="text-sm text-foreground leading-relaxed">{report.what_i_learned}</p>
                             <p className="text-xs text-brand-text-secondary mt-2">These are Peter&apos;s guesses. You&apos;re the judge of what fits.</p>
@@ -193,25 +193,25 @@ export function Day14Graduation() {
 
                         {/* Biggest Growth */}
                         <div className="rounded-2xl bg-growth-subtle border border-growth/20 p-4">
-                            <p className="text-xs font-bold text-growth-emphasis uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <p className="note-label text-growth-emphasis mb-2 flex items-center gap-1.5">
                                 <TrendingUp size={12} />
-                                A Change Peter Saw
+                                A change Peter saw
                             </p>
                             <p className="text-sm text-foreground leading-relaxed">{report.biggest_growth}</p>
                         </div>
 
                         {/* Superpower */}
                         <div className="rounded-2xl bg-insight-subtle border border-insight/20 p-4">
-                            <p className="text-xs font-bold text-growth-emphasis uppercase tracking-wider mb-2">
-                                ✨ One Strength Peter Saw
+                            <p className="note-label text-growth-emphasis mb-2">
+                                One strength Peter saw
                             </p>
                             <p className="text-sm text-foreground leading-relaxed">{report.relationship_superpower}</p>
                         </div>
 
                         {/* Next Focus */}
                         <div className="rounded-2xl bg-background border border-border p-4">
-                            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
-                                Something You Might Explore Next
+                            <p className="note-label text-muted-foreground mb-2">
+                                Something you might explore next
                             </p>
                             <p className="text-sm text-foreground leading-relaxed">{report.focus_next}</p>
                         </div>
@@ -219,8 +219,8 @@ export function Day14Graduation() {
                         {/* Recommended Track */}
                         {report.recommended_track && (
                             <div className="rounded-2xl bg-brand-primary p-4 text-white font-bold">
-                                <p className="text-xs font-bold uppercase tracking-wider mb-1 text-white/70">
-                                    Recommended Skill Track
+                                <p className="note-label mb-1 text-white/70">
+                                    Recommended skill track
                                 </p>
                                 <p className="font-semibold text-base">
                                     {TRACK_LABELS[report.recommended_track] || report.recommended_track}
@@ -234,7 +234,7 @@ export function Day14Graduation() {
                     onClick={() => router.push('/journeys')}
                     className="w-full flex items-center justify-center gap-2 bg-brand-primary text-white font-bold py-4 rounded-2xl hover:bg-brand-hover transition-colors"
                 >
-                    Explore Journeys
+                    Explore journeys
                     <ArrowRight size={18} />
                 </button>
             </motion.div>

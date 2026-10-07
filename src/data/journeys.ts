@@ -56,7 +56,7 @@ export const journeys: Journey[] = [
   },
   {
     id: "communication",
-    title: "Clear Connection",
+    title: "Clear connection",
     description: "Learn how to truly hear each other, so every word brings you closer",
     duration: "2 weeks",
     category: "Foundation",
@@ -85,7 +85,7 @@ export const journeys: Journey[] = [
   },
   {
     id: "conflict-resolution",
-    title: "Growing Through Hard Moments",
+    title: "Growing through hard moments",
     description: "Learn how to use small disagreements to build a stronger, deeper trust",
     duration: "2 weeks",
     category: "Foundation",
@@ -114,7 +114,7 @@ export const journeys: Journey[] = [
   },
   {
     id: "intimacy",
-    title: "Deepening Our Closeness",
+    title: "Deepening our closeness",
     description: "Feel safer, closer, and more deeply connected in every way",
     duration: "2 weeks",
     category: "Growth",
@@ -142,7 +142,7 @@ export const journeys: Journey[] = [
   },
   {
     id: "emotional-intelligence",
-    title: "Understanding Our Hearts",
+    title: "Understanding our hearts",
     description: "Learn to read your own heart and your partner's, making every day easier",
     duration: "2 weeks",
     category: "Growth",
@@ -170,7 +170,7 @@ export const journeys: Journey[] = [
   },
   {
     id: "values",
-    title: "Values & Vision Alignment",
+    title: "Values & vision alignment",
     description: "Discover your core values and build a shared vision for your relationship",
     duration: "3 weeks",
     category: "Growth",
@@ -197,7 +197,7 @@ export const journeys: Journey[] = [
   },
   {
     id: "attachment-healing",
-    title: "Feeling Safe Together",
+    title: "Feeling safe together",
     description: "Understand how you learned to love, and grow a steadier, safer bond",
     duration: "6 weeks",
     category: "Advanced",
@@ -225,7 +225,7 @@ export const journeys: Journey[] = [
   },
   {
     id: "trust-rebuilding",
-    title: "Trust Rebuilding",
+    title: "Trust rebuilding",
     description: "Heal and rebuild trust after a breach through structured, compassionate steps",
     duration: "6 weeks",
     category: "Advanced",
@@ -253,7 +253,7 @@ export const journeys: Journey[] = [
   },
   {
     id: "relationship-renewal",
-    title: "Relationship Renewal",
+    title: "Relationship renewal",
     description: "Reignite connection and rediscover your partner after years together",
     duration: "5 weeks",
     category: "Growth",
@@ -281,7 +281,7 @@ export const journeys: Journey[] = [
   },
   {
     id: "sexual-intimacy",
-    title: "Sexual Intimacy & Desire",
+    title: "Sexual intimacy & desire",
     description: "Deepen sexual connection through communication, presence, and mutual exploration",
     duration: "4 weeks",
     category: "Intimacy",
@@ -309,7 +309,7 @@ export const journeys: Journey[] = [
   },
   {
     id: "mindful-sexuality",
-    title: "Mindful Sexuality",
+    title: "Mindful sexuality",
     description: "Bring presence, awareness, and deeper connection to your physical intimacy",
     duration: "4 weeks",
     category: "Intimacy",
@@ -337,7 +337,7 @@ export const journeys: Journey[] = [
   },
   {
     id: "fantasy-exploration",
-    title: "Fantasy Exploration",
+    title: "Fantasy exploration",
     description: "Safely share and explore desires to deepen trust and playfulness",
     duration: "3 weeks",
     category: "Intimacy",
@@ -364,7 +364,7 @@ export const journeys: Journey[] = [
   },
   {
     id: "power-dynamics",
-    title: "Power Dynamics & Play",
+    title: "Power dynamics & play",
     description: "Understand and consciously navigate power dynamics in your relationship",
     duration: "4 weeks",
     category: "Intimacy",

@@ -5,13 +5,13 @@ import { EditorialEyebrow, EditorialQuietSurface } from "@/components/editorial/
 const destinations = [
   {
     href: "/journeys",
-    label: "Journey Progress",
+    label: "Journey progress",
     description: "See your active lane",
     icon: BookOpen,
   },
   {
     href: "/connect",
-    label: "Shared Connection",
+    label: "Shared connection",
     description: "Open shared tools",
     icon: HeartHandshake,
   },
@@ -23,7 +23,7 @@ const destinations = [
   },
   {
     href: "/neutral-observer",
-    label: "Fresh Eyes",
+    label: "Fresh eyes",
     description: "See it from outside",
     icon: Eye,
   },

@@ -81,7 +81,7 @@ export function DailyTimeline({ phase, actionVerified = false }: DailyTimelinePr
                   <Icon size={20} />
                 )}
               </motion.div>
-              <span className={`text-[10px] font-bold mt-2 uppercase tracking-tight ${
+              <span className={`text-xs font-medium mt-2 ${
                 status === 'active' ? 'text-brand-hover' : 'text-brand-text-secondary'
               }`}>
                 {step.label.split(' ')[1]}

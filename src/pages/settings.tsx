@@ -226,9 +226,7 @@ export default function SettingsPage() {
   };
 
   const SectionLabel = ({ children }: { children: React.ReactNode }) => (
-    <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover px-1 mb-2">
-      {children}
-    </p>
+    <h2 className="section-title text-lg px-1 mb-2">{children}</h2>
   );
 
   // Row inside a card
@@ -270,9 +268,7 @@ export default function SettingsPage() {
         >
           <ChevronLeft className="w-5 h-5 text-brand-primary" />
         </button>
-        <span className="text-xs font-semibold tracking-widest uppercase text-brand-hover">
-          Settings
-        </span>
+        <span className="bar-title">Settings</span>
         {/* Spacer to center title */}
         <div className="w-9" />
       </div>

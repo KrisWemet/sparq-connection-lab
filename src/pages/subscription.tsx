@@ -59,7 +59,7 @@ export default function Subscription() {
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
-          <span className="text-xs font-semibold uppercase tracking-widest text-brand-text-secondary">Plans</span>
+          <span className="bar-title">Plans</span>
           <div className="h-10 w-10" aria-hidden="true" />
         </div>
 
@@ -120,7 +120,7 @@ export default function Subscription() {
               >
                 <div className="flex items-baseline justify-between">
                   <h2 id={`plan-${plan.id}`} className="font-serif text-2xl text-brand-espresso">{plan.name}</h2>
-                  <span className={cn("text-xs font-semibold uppercase tracking-widest", tone.eyebrow)}>{plan.covers}</span>
+                  <span className={cn("font-serif text-base italic", tone.eyebrow)}>{plan.covers}</span>
                 </div>
                 <p className="mt-1 text-sm text-brand-text-secondary">{plan.tagline}</p>
 
@@ -144,7 +144,7 @@ export default function Subscription() {
                   )}
                 </div>
 
-                <p className={cn("mt-5 text-xs font-semibold uppercase tracking-widest", tone.eyebrow)}>
+                <p className="mt-5 text-sm font-semibold text-brand-text-primary">
                   {prev ? `Everything in ${prev.name}, plus` : "Includes"}
                 </p>
                 <ul className="mt-2 flex-1 space-y-2.5">

@@ -49,9 +49,7 @@ export default function GoConnect() {
 
         {/* Mission Text */}
         <div className="space-y-4">
-          <h2 className="text-brand-hover text-sm font-semibold tracking-widest uppercase">
-            Real World Mission
-          </h2>
+          <h2 className="note-label text-lg">Your real-world mission</h2>
           <p className="text-2xl font-serif italic leading-relaxed text-foreground px-4">
             &quot;{mission}&quot;
           </p>
@@ -61,7 +59,7 @@ export default function GoConnect() {
         <div className="bg-card/50 p-6 rounded-3xl border border-border w-full backdrop-blur-md">
           <div className="flex items-center justify-center gap-3 mb-3 text-brand-text-secondary">
             <Lock size={16} />
-            <span className="text-sm font-medium uppercase tracking-wider">App Paused</span>
+            <span className="text-sm font-medium">App paused</span>
           </div>
           <div className="text-5xl font-mono tracking-widest text-white/90">
             {formatTime(timeLeft)}

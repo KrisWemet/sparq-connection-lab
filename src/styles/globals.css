@@ -142,6 +142,15 @@
     outline-offset: 3px;
   }
 
+  /* Browser surfaces carry the palette too: selection, caret, scrollbars,
+     link underlines and numerals. */
+  ::selection { background: hsl(var(--primary) / 0.18); color: hsl(var(--foreground)); }
+  input, textarea, [contenteditable] { caret-color: hsl(var(--primary)); }
+  html { scrollbar-color: hsl(var(--primary) / 0.28) transparent; }
+  a { text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+  h1, h2, h3 { text-wrap: balance; }
+  p { text-wrap: pretty; }
+
   /* Portaled menus use the same semantic surface in either mode. */
   [data-radix-popper-content-wrapper] > div {
     @apply bg-popover text-popover-foreground border-border;
@@ -221,6 +230,22 @@
   }
 }
 
+@layer components {
+  /* A section's own heading — replaces the old ALL-CAPS label used as a title. */
+  .section-title {
+    @apply font-serif text-xl font-semibold leading-snug text-foreground;
+  }
+  /* The centred title in a page's top bar. */
+  .bar-title {
+    @apply font-serif text-lg font-semibold leading-none text-foreground;
+  }
+  /* A small note that carries real information (Day 3, "Your step for today").
+     Quiet serif italic, sentence case — never tracked capitals. */
+  .note-label {
+    @apply font-serif text-base italic leading-snug text-brand-hover;
+  }
+}
+
 @layer utilities {
   .animate-fade-in {
     animation: fadeIn 0.5s ease-out forwards;
@@ -236,10 +261,6 @@
   
   .animate-scale {
     animation: scale 0.5s ease-out forwards;
-  }
-  
-  .animate-bounce {
-    animation: bounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
   }
   
   .animate-pulse {

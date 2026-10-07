@@ -4,7 +4,7 @@ import type { StarterJourney } from './types';
 
 export const mixedFeelings: StarterJourney = {
   id: 'mixed-feelings',
-  title: 'Making Sense of Mixed Feelings',
+  title: 'Making sense of mixed feelings',
   duration: 14,
   modalities: ['ifs', 'eft'],
   modalityLabel: 'SELF-UNDERSTANDING',

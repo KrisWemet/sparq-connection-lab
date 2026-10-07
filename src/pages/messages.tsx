@@ -81,7 +81,7 @@ export default function Messaging() {
             <ChevronLeft className="w-6 h-6" />
           </button>
           <div className="mx-auto text-center">
-            <h1 className="text-lg font-semibold text-foreground">Talk Practice</h1>
+            <h1 className="text-lg font-semibold text-foreground">Talk practice</h1>
             <p className="text-xs text-brand-text-secondary">Solo-first help for real life</p>
           </div>
         </div>
@@ -111,7 +111,7 @@ export default function Messaging() {
             {conversationStarters.map((starter) => (
               <Card key={starter.id}>
                 <CardContent className="p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-hover mb-2">
+                  <p className="note-label mb-2">
                     {starter.category}
                   </p>
                   <p className="text-sm text-foreground leading-relaxed mb-4">{starter.question}</p>

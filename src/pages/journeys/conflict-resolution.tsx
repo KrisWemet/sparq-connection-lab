@@ -26,7 +26,7 @@ export default function ConflictResolutionJourney() {
       concepts: [
         {
           id: "conflict-patterns",
-          title: "Recognizing Conflict Patterns",
+          title: "Recognizing conflict patterns",
           description: "Identifying the recurring cycles you and your partner fall into during disagreements",
           icon: <Waypoints className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -35,7 +35,7 @@ export default function ConflictResolutionJourney() {
         },
         {
           id: "triggers",
-          title: "Understanding Triggers",
+          title: "Understanding triggers",
           description: "Recognizing what activates your fight-or-flight response during disagreements",
           icon: <AlertTriangle className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -44,7 +44,7 @@ export default function ConflictResolutionJourney() {
         },
         {
           id: "flooding",
-          title: "Emotional Flooding",
+          title: "Emotional flooding",
           description: "Recognizing when your nervous system is overwhelmed and you can no longer think clearly",
           icon: <Thermometer className="w-5 h-5 text-red-500" />,
           color: "red",
@@ -62,7 +62,7 @@ export default function ConflictResolutionJourney() {
         },
         {
           id: "repair-attempts",
-          title: "Basic Repair Attempts",
+          title: "Basic repair attempts",
           description: "Making small gestures during conflict that signal 'we're still on the same team'",
           icon: <RotateCcw className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -71,7 +71,7 @@ export default function ConflictResolutionJourney() {
         },
         {
           id: "taking-breaks",
-          title: "Taking Effective Breaks",
+          title: "Taking effective breaks",
           description: "Learning to pause a conflict productively without abandoning your partner",
           icon: <Pause className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -80,7 +80,7 @@ export default function ConflictResolutionJourney() {
         },
         {
           id: "listening-in-conflict",
-          title: "Listening During Disagreements",
+          title: "Listening during disagreements",
           description: "Hearing your partner's perspective even when your body wants to defend or attack",
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -96,7 +96,7 @@ export default function ConflictResolutionJourney() {
       concepts: [
         {
           id: "soft-startup",
-          title: "Soft Startup",
+          title: "Soft startup",
           description: "Beginning difficult conversations gently so your partner can hear you without becoming defensive",
           icon: <MessageSquare className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -114,7 +114,7 @@ export default function ConflictResolutionJourney() {
         },
         {
           id: "gridlocked-problems",
-          title: "Managing Gridlocked Problems",
+          title: "Managing gridlocked problems",
           description: "Navigating the perpetual problems that never fully resolve because they reflect fundamental differences",
           icon: <Waypoints className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -123,7 +123,7 @@ export default function ConflictResolutionJourney() {
         },
         {
           id: "turning-toward",
-          title: "Turning Toward During Conflict",
+          title: "Turning toward during conflict",
           description: "Choosing connection over self-protection in the heat of the moment",
           icon: <HandHeart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -132,7 +132,7 @@ export default function ConflictResolutionJourney() {
         },
         {
           id: "meta-conflict",
-          title: "Talking About How You Fight",
+          title: "Talking about how you fight",
           description: "Having calm conversations about your conflict patterns when you're not in conflict",
           icon: <Brain className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -141,7 +141,7 @@ export default function ConflictResolutionJourney() {
         },
         {
           id: "repair-under-pressure",
-          title: "Repair Under Pressure",
+          title: "Repair under pressure",
           description: "Making and accepting repair attempts during the most heated moments",
           icon: <RotateCcw className="w-5 h-5 text-sky-500" />,
           color: "sky",
@@ -150,7 +150,7 @@ export default function ConflictResolutionJourney() {
         },
         {
           id: "underneath-the-fight",
-          title: "The Fight Underneath the Fight",
+          title: "The fight underneath the fight",
           description: "Identifying the deeper attachment needs driving surface-level disagreements",
           icon: <Eye className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -166,7 +166,7 @@ export default function ConflictResolutionJourney() {
       concepts: [
         {
           id: "generative-conflict",
-          title: "Generative Conflict",
+          title: "Generative conflict",
           description: "Using disagreement as a catalyst for deeper understanding and creative solutions",
           icon: <Sparkles className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -175,7 +175,7 @@ export default function ConflictResolutionJourney() {
         },
         {
           id: "conflict-as-intimacy",
-          title: "Conflict as Intimacy Builder",
+          title: "Conflict as intimacy builder",
           description: "Understanding that well-navigated conflict deepens trust and connection",
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -184,7 +184,7 @@ export default function ConflictResolutionJourney() {
         },
         {
           id: "custom-repair-rituals",
-          title: "Creating Your Repair Rituals",
+          title: "Creating your repair rituals",
           description: "Developing personalized ways to reconnect after disagreements that reflect who you are as a couple",
           icon: <RotateCcw className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -193,7 +193,7 @@ export default function ConflictResolutionJourney() {
         },
         {
           id: "perpetual-with-grace",
-          title: "Dancing with Perpetual Problems",
+          title: "Dancing with perpetual problems",
           description: "Navigating your unresolvable differences with humor, acceptance, and genuine affection",
           icon: <Scale className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -202,7 +202,7 @@ export default function ConflictResolutionJourney() {
         },
         {
           id: "teaching-repair",
-          title: "Teaching Repair to Each Other",
+          title: "Teaching repair to each other",
           description: "Helping your partner learn what repair looks like for you, and learning what it looks like for them",
           icon: <MessageSquare className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -211,7 +211,7 @@ export default function ConflictResolutionJourney() {
         },
         {
           id: "conflict-resilience",
-          title: "Conflict Resilience",
+          title: "Conflict resilience",
           description: "Building the capacity to recover faster and more completely after disagreements",
           icon: <Compass className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -225,7 +225,7 @@ export default function ConflictResolutionJourney() {
   return (
     <JourneyTemplate
       journeyId="conflict-resolution"
-      title="Constructive Conflict Resolution"
+      title="Constructive conflict resolution"
       description="Turn disagreements into opportunities for deeper understanding. Progress from pattern recognition to masterful repair."
       tiers={tiers}
     />

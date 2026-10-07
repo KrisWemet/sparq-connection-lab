@@ -131,18 +131,18 @@ export function WeeklyMirrorCard() {
       {mirror?.strength ? (
         <div className="space-y-4 mb-4 relative z-10">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-brand-hover mb-1">Something you did well</p>
+            <p className="note-label mb-1">Something you did well</p>
             <p className="font-serif text-brand-espresso text-[15px] leading-relaxed">{mirror.strength}</p>
           </div>
           {mirror.emerging_pattern && (
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-brand-hover mb-1">Something I&apos;m wondering about</p>
+              <p className="note-label mb-1">Something I&apos;m wondering about</p>
               <p className="font-serif italic text-brand-espresso text-[15px] leading-relaxed">{mirror.emerging_pattern}</p>
             </div>
           )}
           {mirror.mirror_question && (
             <div className="bg-brand-linen rounded-2xl p-4 border border-brand-primary/10">
-              <p className="text-xs font-semibold uppercase tracking-wide text-brand-hover mb-1">Your turn</p>
+              <p className="note-label mb-1">Your turn</p>
               <p className="font-serif text-brand-espresso text-[15px] leading-relaxed mb-3">{mirror.mirror_question}</p>
               {mirror.user_reflection ? (
                 <>

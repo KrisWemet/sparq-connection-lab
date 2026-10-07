@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import PeterTheOtter, { MascotStatus } from "../components/PeterTheOtter";
+import { buildAuthedHeaders } from "@/lib/api-auth";
 
 const partnerProfiles = [
   {
@@ -48,9 +49,9 @@ export default function Translator() {
     try {
       const response = await fetch("/api/translator", {
         method: "POST",
-        headers: {
+        headers: await buildAuthedHeaders({
           "Content-Type": "application/json",
-        },
+        }),
         body: JSON.stringify({
           draft,
           partnerContext,
@@ -61,6 +62,13 @@ export default function Translator() {
         suggestion?: string;
         error?: string;
       };
+
+      if (response.status === 401) {
+        setError("Please sign in so Peter can help with this.");
+        setPeterStatus("speaking");
+        setPeterMessage("Sign in first, and I'll be right here.");
+        return;
+      }
 
       if (!response.ok) {
         throw new Error(data?.error || "Something went wrong.");
@@ -89,13 +97,13 @@ export default function Translator() {
           >
             ← Back to Connect
           </button>
-          <span className="text-xs uppercase tracking-wide text-brand-hover font-semibold">
+          <span className="bar-title">
             Translator
           </span>
         </div>
 
         <h1 className="text-2xl font-bold text-brand-primary mb-2">
-          Peter’s Message Translator
+          Peter’s message translator
         </h1>
         <p className="text-sm text-muted-foreground mb-6">
           Turn a tense draft into something softer for your partner.

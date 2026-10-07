@@ -124,7 +124,7 @@ export function IdentityArcCard() {
       {/* Organic blur accent */}
       <div className="absolute top-0 right-0 w-28 h-28 bg-brand-primary/6 rounded-full blur-2xl pointer-events-none" />
 
-      <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-4">
+      <p className="note-label mb-4">
         Your arc
       </p>
 

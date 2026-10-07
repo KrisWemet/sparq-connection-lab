@@ -13,7 +13,6 @@ const animatedContainerVariants = cva("", {
       slideLeft: "animate-slide-left",
       slideRight: "animate-slide-right",
       pulse: "animate-pulse",
-      bounce: "animate-bounce",
       spin: "animate-spin",
     },
     duration: {

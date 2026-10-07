@@ -180,9 +180,7 @@ export default function ProfilePage() {
             <ChevronLeft className="h-5 w-5 text-brand-primary" />
           </button>
 
-          <span className="text-xs font-semibold uppercase tracking-widest text-brand-hover">
-            Profile
-          </span>
+          <span className="bar-title">Profile</span>
 
           <button
             onClick={() => setEditMode((current) => !current)}
@@ -227,8 +225,8 @@ export default function ProfilePage() {
                 className="mt-5 space-y-3 text-left"
               >
                 <div>
-                  <label className="mb-1 block text-xs font-semibold uppercase tracking-widest text-brand-hover">
-                    Your Name
+                  <label className="mb-1.5 block text-sm font-medium text-brand-text-primary">
+                    Your name
                   </label>
                   <input
                     type="text"
@@ -241,8 +239,8 @@ export default function ProfilePage() {
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs font-semibold uppercase tracking-widest text-brand-hover">
-                    Partner&apos;s Name
+                  <label className="mb-1.5 block text-sm font-medium text-brand-text-primary">
+                    Partner&apos;s name
                   </label>
                   <input
                     type="text"
@@ -255,7 +253,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs font-semibold uppercase tracking-widest text-brand-hover">
+                  <label className="mb-1.5 block text-sm font-medium text-brand-text-primary">
                     Bio
                   </label>
                   <textarea
@@ -295,9 +293,7 @@ export default function ProfilePage() {
             animate="visible"
             className="space-y-3"
           >
-            <p className="px-1 text-xs font-semibold uppercase tracking-widest text-brand-hover">
-              Secondary Access
-            </p>
+            <h2 className="section-title px-1">Your account</h2>
 
             <SecondaryAccessRow
               href="/settings"
@@ -313,7 +309,7 @@ export default function ProfilePage() {
             />
             <SecondaryAccessRow
               href="/subscription"
-              label="Billing & Subscription"
+              label="Billing & subscription"
               hint="Manage your current plan and upgrade options."
               icon={CreditCard}
             />
@@ -329,14 +325,14 @@ export default function ProfilePage() {
             <button
               onClick={handleLogout}
               className="flex w-full items-center justify-between rounded-2xl px-2 py-2 text-left transition-colors hover:bg-brand-primary/5"
-              aria-label="Logout"
+              aria-label="Log out"
             >
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-primary/10 text-brand-primary">
                   <LogOut className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-brand-text-primary">Logout</p>
+                  <p className="text-sm font-semibold text-brand-text-primary">Log out</p>
                   <p className="text-xs text-brand-text-secondary">Sign out and return to the login screen.</p>
                 </div>
               </div>

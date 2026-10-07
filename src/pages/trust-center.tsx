@@ -180,7 +180,7 @@ export default function TrustCenterPage() {
 
       <main className="mx-auto max-w-3xl px-4 py-6 space-y-4">
         <section className="rounded-2xl border border-border bg-popover p-5">
-          <h2 className="text-sm font-semibold text-foreground">Consent Status</h2>
+          <h2 className="text-sm font-semibold text-foreground">Consent status</h2>
           <p className="mt-1 text-xs text-muted-foreground">
             Peter only uses your data after you say yes.
           </p>
@@ -203,7 +203,7 @@ export default function TrustCenterPage() {
         </section>
 
         <section className="rounded-2xl border border-border bg-popover p-5">
-          <h2 className="text-sm font-semibold text-foreground">Personalization Controls</h2>
+          <h2 className="text-sm font-semibold text-foreground">Personalization controls</h2>
           <p className="text-xs text-muted-foreground mt-1">
             Journals stay private by default. These settings change how Peter learns from you.
           </p>
@@ -225,7 +225,7 @@ export default function TrustCenterPage() {
         </section>
 
         <section className="rounded-2xl border border-border bg-popover p-5">
-          <h2 className="text-sm font-semibold text-foreground">AI Memory Window</h2>
+          <h2 className="text-sm font-semibold text-foreground">AI memory window</h2>
           <div className="mt-3 grid gap-2 sm:grid-cols-3">
             <MemoryOption
               active={prefs.ai_memory_mode === 'off'}
@@ -249,7 +249,7 @@ export default function TrustCenterPage() {
         </section>
 
         <section className="rounded-2xl border border-border bg-popover p-5">
-          <h2 className="text-sm font-semibold text-foreground">Relationship Mode</h2>
+          <h2 className="text-sm font-semibold text-foreground">Relationship mode</h2>
           <p className="text-xs text-muted-foreground mt-1">Solo is the full default. Partnered mode just adds shared tools later.</p>
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
             <ModeOption
@@ -268,7 +268,7 @@ export default function TrustCenterPage() {
         </section>
 
         <section className="rounded-2xl border border-warning/40 bg-warning-subtle p-5">
-          <h2 className="text-sm font-semibold text-warning-emphasis">Safety & Data Boundaries</h2>
+          <h2 className="text-sm font-semibold text-warning-emphasis">Safety & data boundaries</h2>
           <ul className="mt-2 text-xs text-warning-emphasis space-y-1">
             <li>Journals stay private unless you explicitly share an item.</li>
             <li>Sparq is not therapy and does not provide diagnosis.</li>
@@ -378,7 +378,7 @@ function ModeOption({
   );
 }
 
-// The Science section (science upgrade spec §6, condensed for Trust Center).
+// The science section (science upgrade spec §6, condensed for Trust Center).
 // Honesty rules baked in: never claim d > 0.5, never claim parity with
 // therapy, never guarantee outcomes, no claims about unbuilt features.
 const SCIENCE_PILLARS: Array<{ name: string; founder: string; note: string }> = [
@@ -395,7 +395,7 @@ const SCIENCE_PILLARS: Array<{ name: string; founder: string; note: string }> = 
 function ScienceSection() {
   return (
     <section className="rounded-2xl border border-border bg-popover p-5">
-      <h2 className="text-sm font-semibold text-foreground">The Science</h2>
+      <h2 className="text-sm font-semibold text-foreground">The science</h2>
       <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
         Sparq is built on decades of relationship science from Harvard, Stanford, Northwestern,
         University of Washington, University of Rochester, UCLA, and UNC Chapel Hill — translated

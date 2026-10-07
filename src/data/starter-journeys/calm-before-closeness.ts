@@ -2,7 +2,7 @@ import type { StarterJourney } from './types';
 
 export const calmBeforeCloseness: StarterJourney = {
   id: 'calm-before-closeness',
-  title: 'Finding Calm Before Closeness',
+  title: 'Finding calm before closeness',
   duration: 14,
   modalities: ['act', 'dbt'],
   modalityLabel: 'INNER CALM',

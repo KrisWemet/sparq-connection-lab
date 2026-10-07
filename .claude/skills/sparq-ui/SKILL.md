@@ -112,16 +112,16 @@ Keep coral and gold rare: they mean something only because most of the app is pl
 
 | Token | CSS | Stack |
 |---|---|---|
-| `font-serif` | `var(--font-serif)` | Georgia, Cambria, "Times New Roman", Times, serif |
-| `font-sans` | (Tailwind default) | Inter, system-ui, sans-serif |
+| `font-serif` | `var(--font-serif)` | Cormorant Garamond (500–700, normal + italic), then Georgia |
+| `font-sans` | `var(--font-sans)` | Figtree, then system-ui |
 
-> `--font-serif` CSS variable set in `_document.tsx` or `globals.css`. Falls back to Georgia.
+> Both load through `next/font/google` in `_app.tsx`. Cormorant's real italic is loaded on purpose — serif italic is Sparq's emotional voice, so never let the browser fake the slant. Figtree replaced Inter (2026-10-07) because Inter is the default face of AI-built apps.
 
 ### Scale and Usage
 
 | Class | Size | Usage |
 |---|---|---|
-| `text-xs` | 12px | Labels, timestamps, metadata — always small caps with `tracking-widest` |
+| `text-xs` | 12px | Timestamps, metadata, chart axes — sentence case, never tracked capitals |
 | `text-sm` | 14px | Secondary body, card descriptions |
 | `text-[15px]` | 15px | Peter speech — custom size for reading comfort |
 | `text-base` | 16px | Primary body text |
@@ -137,19 +137,27 @@ Keep coral and gold rare: they mean something only because most of the app is pl
 - `font-serif italic` — Peter quotes, emotional questions, reflective content, shared partner responses — **the most important typographic rule**
 - `font-bold` — Streak numbers, strong emphasis (use sparingly)
 
-### Label Pattern
+### Label Pattern (changed 2026-10-07)
 
-All category labels, modality names, section headers:
-```
-text-xs font-semibold tracking-widest uppercase text-brand-primary
-```
-Never sentence case for labels. Always small caps.
+No ALL-CAPS, wide-tracked "eyebrow" labels. They were on nearly every card and were the single biggest reason the app looked AI-built. Use one of three shared classes from `globals.css` instead:
+
+| Class | Use |
+|---|---|
+| `bar-title` | The centred title in a page's top bar ("Journal", "Plans") |
+| `section-title` | A section's own heading inside a page or card — use an `h2` |
+| `note-label` | A small note that carries real information ("Day 3", "Your step for today", "Something you did well") — quiet serif italic |
+
+Rules:
+- If a label only repeats the heading under it (or the top bar), delete it.
+- Sentence case everywhere: "Your name", not "Your Name".
+- Form labels are `text-sm font-medium text-brand-text-primary`.
+- A label may take a tone colour (`text-brand-gold-deep`, `text-brand-coral-deep`) on top of `note-label`.
 
 ### The Typography Hierarchy on Any Screen
 
 1. **Serif italic headline** — Large, emotional. The thing they should feel.
 2. **Body text** — Humanist sans, generous line height, one idea per sentence
-3. **Small caps label** — Context, never the focus
+3. **Quiet note** (`note-label`) — context, never the focus; often not needed at all
 4. **Peter's voice** — Italic, warm, personal. No container around it.
 
 ### Line Heights
@@ -509,7 +517,7 @@ When building a new Sparq component:
 3. **Border**: `border border-brand-primary/10` for warm tinted borders
 4. **Text**: `brand-espresso` for headings, `brand-text-primary` for body, `brand-text-secondary` for supporting copy
 5. **Emotional text**: Always `font-serif italic` for questions, quotes, reflections
-6. **Labels**: Always `text-xs font-semibold tracking-widest uppercase text-brand-primary`
+6. **Labels**: No ALL-CAPS eyebrows — use `bar-title`, `section-title` or `note-label` (see §4 Label Pattern)
 7. **Animation entrance**: `motion.div` with `initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}`
 8. **Interactive**: `whileHover={{ scale: 1.01 }}` and `whileTap={{ scale: 0.98 }}`
 9. **Organic depth**: `absolute w-32 h-32 bg-brand-primary/5 rounded-full blur-2xl` in corner

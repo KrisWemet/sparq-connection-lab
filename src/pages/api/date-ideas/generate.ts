@@ -58,7 +58,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (location) prompt += ` for couples in ${location}`;
     if (preferences.length > 0) prompt += ` who enjoy ${preferences.join(', ')}`;
     if (budget) prompt += ` with a ${budget.toLowerCase()} budget`;
-    prompt += `. For each idea, provide a title, detailed description, category, estimated duration, cost level (Free, Low, Medium, High), and a rating out of 5. If applicable, include a specific location name and address. Format the response as a JSON array.`;
+    prompt += `. For each idea, provide a short title in sentence case (like "Stargazing picnic", not "Stargazing Picnic"), detailed description, category, estimated duration, cost level (Free, Low, Medium, High), and a rating out of 5. If applicable, include a specific location name and address. Format the response as a JSON array.`;
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',

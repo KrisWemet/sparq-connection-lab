@@ -236,7 +236,7 @@ When building a new Sparq component, follow these patterns:
 1. **Cards**: Start with `rounded-3xl`, add `border border-brand-primary/10` for warmth
 2. **Backgrounds**: Use `bg-brand-linen` or gradient, not flat white
 3. **Text hierarchy**: Serif for headings/emotional text, sans for UI/labels
-4. **Uppercase labels**: `text-xs font-semibold text-brand-primary uppercase tracking-widest`
+4. **Labels**: `bar-title`, `section-title` or `note-label` from `globals.css` — never ALL-CAPS tracked labels
 5. **Animation**: Wrap in `motion.div` with `initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}`
 6. **Interactive**: Add `whileHover={{ scale: 1.01 }}` and `whileTap={{ scale: 0.98 }}`
 7. **Organic shapes**: Add a `absolute w-32 h-32 bg-brand-primary/5 rounded-full blur-2xl` in a corner

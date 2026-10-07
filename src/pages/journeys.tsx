@@ -6,8 +6,19 @@ import { ArrowRight, BookOpen, Crown, Lock, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
-import { fetchJourneyState, type ClientJourney } from "@/lib/journeys/client";
+import { fetchJourneyState, journeyAction, type ClientJourney } from "@/lib/journeys/client";
 import { useEffect } from "react";
+import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const CARD_COLORS = [
   "bg-brand-primary/5",
@@ -46,6 +57,8 @@ export default function Journeys() {
   const [activeCategory, setActiveCategory] = useState("All");
   // The active journey, from the user's account (any device).
   const [activeJourney, setActiveJourney] = useState<ClientJourney | null>(null);
+  const [pauseOpen, setPauseOpen] = useState(false);
+  const [pausing, setPausing] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -63,6 +76,22 @@ export default function Journeys() {
       activeCategory === "All" || j.category === activeCategory;
     return matchesSearch && matchesCategory;
   });
+
+  // One journey at a time: pausing here is how the user makes room for a
+  // different one. Their place is kept for when they come back.
+  const pauseActive = async () => {
+    if (!activeJourney || pausing) return;
+    setPausing(true);
+    const result = await journeyAction({ action: "pause", journey_id: activeJourney.journey_id });
+    setPausing(false);
+    setPauseOpen(false);
+    if (!result.ok) {
+      toast.error("That didn't save. Please try again.");
+      return;
+    }
+    toast.success(`${activeJourney.title} is paused. Your place is saved.`);
+    setActiveJourney(null);
+  };
 
   // Daily journeys continue in the Daily Loop; staged ones on their own page.
   const continueHref = activeJourney
@@ -99,9 +128,7 @@ export default function Journeys() {
                 <BookOpen className="h-5 w-5" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover">
-                  current practice
-                </p>
+                <p className="note-label">Your current practice</p>
                 <h2 className="mt-2 text-xl font-semibold text-brand-taupe">
                   {activeJourney.title}
                 </h2>
@@ -118,10 +145,34 @@ export default function Journeys() {
                   Continue {activeJourney.title}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
+                <button
+                  type="button"
+                  onClick={() => setPauseOpen(true)}
+                  className="press mt-3 block min-h-11 text-sm font-medium text-brand-text-secondary underline underline-offset-4 hover:text-brand-espresso"
+                >
+                  Pause this journey
+                </button>
               </div>
             </div>
           </motion.section>
         )}
+
+        <AlertDialog open={pauseOpen} onOpenChange={setPauseOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Pause {activeJourney?.title}?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Your place is saved, so you can pick it up again any time. Pausing it also lets you start a different journey.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Keep going</AlertDialogCancel>
+              <AlertDialogAction disabled={pausing} onClick={(e) => { e.preventDefault(); void pauseActive(); }}>
+                {pausing ? "Saving…" : "Pause it"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         <div className="relative mb-4">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-text-secondary" />
@@ -203,7 +254,7 @@ export default function Journeys() {
 
                     {/* Card text */}
                     <div className="p-4 bg-popover relative z-20">
-                      <p className="text-[10px] font-bold text-brand-hover uppercase tracking-[0.2em] mb-1.5">
+                      <p className="font-serif text-sm italic text-brand-hover mb-1">
                         {journey.category}
                       </p>
                       <h3 className="font-bold text-brand-taupe text-base leading-tight line-clamp-2 mix-blend-hard-light">

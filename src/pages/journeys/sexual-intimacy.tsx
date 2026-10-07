@@ -23,7 +23,7 @@ export default function SexualIntimacyJourney() {
       concepts: [
         {
           id: "desire-types",
-          title: "Understanding Desire",
+          title: "Understanding desire",
           description: "Learning the difference between spontaneous and responsive desire — and why both are normal",
           icon: <Flame className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -32,7 +32,7 @@ export default function SexualIntimacyJourney() {
         },
         {
           id: "sexual-communication",
-          title: "Talking About Sex",
+          title: "Talking about sex",
           description: "Building the vocabulary and safety to discuss sexual needs, desires, and boundaries openly",
           icon: <MessageSquare className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -41,7 +41,7 @@ export default function SexualIntimacyJourney() {
         },
         {
           id: "desire-discrepancy",
-          title: "Navigating Desire Differences",
+          title: "Navigating desire differences",
           description: "Understanding that mismatched libidos are the norm, not the exception — and learning to bridge the gap",
           icon: <Users className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -50,7 +50,7 @@ export default function SexualIntimacyJourney() {
         },
         {
           id: "context-matters",
-          title: "Creating the Right Context",
+          title: "Creating the right context",
           description: "Understanding that desire depends heavily on context — stress, environment, emotional safety",
           icon: <Brain className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -59,7 +59,7 @@ export default function SexualIntimacyJourney() {
         },
         {
           id: "presence-in-intimacy",
-          title: "Being Present During Intimacy",
+          title: "Being present during intimacy",
           description: "Bringing your full attention to physical connection instead of performing or mentally checking out",
           icon: <Eye className="w-5 h-5 text-sky-500" />,
           color: "sky",
@@ -68,7 +68,7 @@ export default function SexualIntimacyJourney() {
         },
         {
           id: "emotional-foundation",
-          title: "The Emotional Foundation of Sex",
+          title: "The emotional foundation of sex",
           description: "Understanding that great sex is built on emotional safety, not just physical technique",
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -84,7 +84,7 @@ export default function SexualIntimacyJourney() {
       concepts: [
         {
           id: "initiating-with-care",
-          title: "Initiating with Care",
+          title: "Initiating with care",
           description: "Learning to express sexual interest in ways that feel inviting rather than pressuring",
           icon: <HandHeart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -93,7 +93,7 @@ export default function SexualIntimacyJourney() {
         },
         {
           id: "sensate-focus",
-          title: "Sensate Focus Practice",
+          title: "Sensate focus practice",
           description: "Using Masters and Johnson's technique of non-goal-oriented touch to rebuild physical connection",
           icon: <Lightbulb className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -102,7 +102,7 @@ export default function SexualIntimacyJourney() {
         },
         {
           id: "accepting-no-gracefully",
-          title: "Accepting 'No' Gracefully",
+          title: "Accepting 'no' gracefully",
           description: "Responding to sexual rejection without punishment, withdrawal, or guilt — which paradoxically increases desire",
           icon: <Shield className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -111,7 +111,7 @@ export default function SexualIntimacyJourney() {
         },
         {
           id: "expanding-definition",
-          title: "Expanding Your Definition of Intimacy",
+          title: "Expanding your definition of intimacy",
           description: "Moving beyond intercourse as the only 'real' sex to embrace a full spectrum of physical connection",
           icon: <Compass className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -120,7 +120,7 @@ export default function SexualIntimacyJourney() {
         },
         {
           id: "addressing-blocks",
-          title: "Addressing Sexual Blocks",
+          title: "Addressing sexual blocks",
           description: "Identifying and gently working through the mental and emotional barriers to sexual connection",
           icon: <Brain className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -129,7 +129,7 @@ export default function SexualIntimacyJourney() {
         },
         {
           id: "pleasure-mapping",
-          title: "Pleasure Mapping",
+          title: "Pleasure mapping",
           description: "Exploring what feels good for each partner with curiosity and without assumptions",
           icon: <Sparkles className="w-5 h-5 text-pink-500" />,
           color: "pink",
@@ -145,7 +145,7 @@ export default function SexualIntimacyJourney() {
       concepts: [
         {
           id: "erotic-intelligence",
-          title: "Developing Erotic Intelligence",
+          title: "Developing erotic intelligence",
           description: "Cultivating the creative, playful, curious energy that keeps desire alive long-term",
           icon: <Flame className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -154,7 +154,7 @@ export default function SexualIntimacyJourney() {
         },
         {
           id: "desire-as-practice",
-          title: "Desire as an Ongoing Practice",
+          title: "Desire as an ongoing practice",
           description: "Understanding that long-term desire requires cultivation, not just chemistry",
           icon: <Clock className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -163,7 +163,7 @@ export default function SexualIntimacyJourney() {
         },
         {
           id: "vulnerability-in-bed",
-          title: "Deep Vulnerability in Intimacy",
+          title: "Deep vulnerability in intimacy",
           description: "Bringing your full, unguarded self to physical connection — sharing desires, fears, and raw presence",
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -172,7 +172,7 @@ export default function SexualIntimacyJourney() {
         },
         {
           id: "sexual-wellness-habits",
-          title: "Building Sexual Wellness Habits",
+          title: "Building sexual wellness habits",
           description: "Creating sustainable practices that keep your sexual connection vibrant through all of life's seasons",
           icon: <Sparkles className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -181,7 +181,7 @@ export default function SexualIntimacyJourney() {
         },
         {
           id: "integration-whole-relationship",
-          title: "Integrating Sex into Your Whole Relationship",
+          title: "Integrating sex into your whole relationship",
           description: "Seeing sexual intimacy not as separate from but deeply woven into the fabric of your partnership",
           icon: <Users className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -195,7 +195,7 @@ export default function SexualIntimacyJourney() {
   return (
     <JourneyTemplate
       journeyId="sexual-intimacy"
-      title="Sexual Intimacy & Desire"
+      title="Sexual intimacy & desire"
       description="Deepen sexual connection through communication, presence, and mutual exploration. Progress from understanding to vibrant sexual wellness."
       tiers={tiers}
     />

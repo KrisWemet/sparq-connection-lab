@@ -5,6 +5,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/lib/auth-context';
 
+// 4-7-8 breathing: seconds per phase, and what the circle says.
+const BREATH_SECONDS = { inhale: 4, hold: 7, exhale: 8 } as const;
+const BREATH_LABELS = { inhale: 'Breathe in', hold: 'Hold', exhale: 'Breathe out' } as const;
+
 // Pages where the floating button would cover a form or duplicate a
 // calm-down tool the page already has.
 const HIDDEN_ON = new Set(['/', '/login', '/signup', '/onboarding', '/forgot-password', '/reset-password', '/help-now', '/how-sparq-works', '/conflict-first-aid']);
@@ -30,9 +34,9 @@ export function TimeOutOverlay() {
           setBreathState('exhale');
           timeout = setTimeout(() => {
             runBreathingCycle();
-          }, 8000); // Exhale 8s
-        }, 7000); // Hold 7s
-      }, 4000); // Inhale 4s
+          }, BREATH_SECONDS.exhale * 1000);
+        }, BREATH_SECONDS.hold * 1000);
+      }, BREATH_SECONDS.inhale * 1000);
     };
 
     runBreathingCycle();
@@ -56,10 +60,11 @@ export function TimeOutOverlay() {
 
   return (
     <>
-      {/* Floating Action Button */}
+      {/* Floating Action Button: sits above the bottom nav (~93px + the
+          phone's home-bar inset), never under it. */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-[88px] right-4 md:right-8 bg-primary text-primary-foreground p-3 rounded-full shadow-lg border border-border z-[40] hover:scale-105 transition-transform"
+        className="fixed bottom-[calc(6.5rem+env(safe-area-inset-bottom))] right-4 md:right-8 bg-primary text-primary-foreground p-3 rounded-full shadow-lg border border-border z-[40] hover:scale-105 transition-transform"
         aria-label="Emergency Time Out"
       >
         <HandHelping size={24} />
@@ -82,41 +87,48 @@ export function TimeOutOverlay() {
               <X size={32} />
             </button>
 
-            {/* Minimalist Breathing Circle */}
-            <div className="relative w-64 h-64 flex items-center justify-center mb-16">
+            {/* Breathing circle: grows as they breathe in, rests full while
+                they hold (a slow glow), and shrinks as they breathe out.
+                Reduced-motion users get the fades without the scaling. */}
+            <div className="relative w-64 h-64 flex items-center justify-center mb-16" aria-live="polite">
               <motion.div
-                className="absolute bg-popover/20 rounded-full mix-blend-screen"
+                className="absolute inset-0 rounded-full bg-brand-primary/40 blur-2xl"
+                initial={{ scale: 0.5, opacity: 0.15 }}
                 animate={{
-                  scale: breathState === 'inhale' ? 1 : breathState === 'hold' ? 1 : 0.4,
-                  opacity: breathState === 'inhale' ? 0.8 : breathState === 'hold' ? 0.6 : 0.2,
+                  scale: breathState === 'exhale' ? 0.5 : 1.15,
+                  opacity: breathState === 'hold' ? [0.45, 0.65, 0.45] : breathState === 'inhale' ? 0.45 : 0.15,
                 }}
                 transition={{
-                  duration: breathState === 'inhale' ? 4 : breathState === 'hold' ? 7 : 8,
-                  ease: "easeInOut"
+                  scale: { duration: BREATH_SECONDS[breathState], ease: 'easeInOut' },
+                  opacity: breathState === 'hold'
+                    ? { duration: 3.5, ease: 'easeInOut', repeat: 1 }
+                    : { duration: BREATH_SECONDS[breathState], ease: 'easeInOut' },
                 }}
-                style={{ width: '100%', height: '100%' }}
               />
               <motion.div
-                className="absolute bg-brand-primary/40 rounded-full mix-blend-screen blur-xl"
-                animate={{
-                  scale: breathState === 'inhale' ? 1.2 : breathState === 'hold' ? 1.2 : 0.6,
-                  opacity: breathState === 'inhale' ? 0.5 : breathState === 'hold' ? 0.4 : 0.1,
-                }}
-                transition={{
-                  duration: breathState === 'inhale' ? 4 : breathState === 'hold' ? 7 : 8,
-                  ease: "easeInOut"
-                }}
-                style={{ width: '80%', height: '80%' }}
+                className="absolute inset-0 rounded-full border border-popover/25 bg-popover/15"
+                initial={{ scale: 0.55 }}
+                animate={{ scale: breathState === 'exhale' ? 0.55 : 1 }}
+                transition={{ duration: BREATH_SECONDS[breathState], ease: 'easeInOut' }}
               />
-              
-              <div className="z-10 text-white text-2xl font-serif tracking-widest uppercase opacity-90">
-                {breathState}
-              </div>
+
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={breathState}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 0.9, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.6, ease: 'easeOut' }}
+                  className="z-10 text-white text-2xl font-serif italic"
+                >
+                  {BREATH_LABELS[breathState]}
+                </motion.div>
+              </AnimatePresence>
             </div>
 
             {/* Quick Action Text */}
             <div className="max-w-xs text-center space-y-8">
-              <p className="text-white/60 text-sm font-medium uppercase tracking-widest">
+              <p className="font-serif text-lg italic text-white/70">
                 Send to partner
               </p>
               <div className="bg-popover/10 p-5 rounded-2xl border border-popover/20">
@@ -128,7 +140,7 @@ export function TimeOutOverlay() {
                 onClick={handleCopy}
                 className="w-full py-4 bg-popover text-foreground font-bold rounded-2xl text-lg hover:bg-border transition-colors"
               >
-                {copied ? 'Copied' : 'Copy Message'}
+                {copied ? 'Copied' : 'Copy message'}
               </button>
               <p className="text-sm text-white/70">
                 <Link href="/conflict-first-aid" onClick={() => setIsOpen(false)} className="underline">More calm-down steps</Link>

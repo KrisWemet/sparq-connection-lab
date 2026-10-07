@@ -1,9 +1,24 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { PETER_MODELS } from "@/lib/openrouter";
+import { peterChat } from "@/lib/openrouter";
+import { buildPeterInstruction } from "@/lib/peterService";
+import { getAuthedContext } from "@/lib/server/supabase-auth";
+import { resolveEntitlements } from "@/lib/server/entitlements";
+import { stripMarkdown } from "@/lib/strip-markdown";
 
 type TranslatorResponse =
   | { suggestion: string }
-  | { error: string };
+  | { error: string; limit_reached?: boolean };
+
+// The partner-context chips the page offers. Anything else is ignored, so
+// the request body can't inject free text into the prompt through it.
+const PARTNER_CONTEXTS: Record<string, string> = {
+  Avoidant: "They can go quiet or shut down when things feel intense. They may need space.",
+  Anxious: "They want calm and closeness, and worry about being pushed away. They may need reassurance.",
+  Secure: "They feel fairly steady and like things said clearly.",
+};
+
+// Bounds what one request can cost.
+const MAX_DRAFT_CHARS = 2000;
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,7 +29,10 @@ export default async function handler(
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
-  const { draft, partnerContext } = req.body as {
+  const authed = await getAuthedContext(req);
+  if (!authed) return res.status(401).json({ error: "Unauthorized" });
+
+  const { draft, partnerContext } = (req.body || {}) as {
     draft?: string;
     partnerContext?: string;
   };
@@ -22,68 +40,83 @@ export default async function handler(
   if (!draft || typeof draft !== "string" || !draft.trim()) {
     return res.status(400).json({ error: "Draft message is required." });
   }
-
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  if (!apiKey) {
-    return res.status(500).json({ error: "Missing OpenRouter API key." });
+  if (draft.length > MAX_DRAFT_CHARS) {
+    return res.status(400).json({ error: "That draft is a bit long. Try a shorter one." });
   }
 
-  const profile =
-    typeof partnerContext === "string" && partnerContext.trim()
-      ? partnerContext.trim()
-      : "Unknown";
+  // Shares Peter chat's free-tier daily cap (coach_usage_daily): a rephrase
+  // is a Peter message.
+  const today = new Date().toISOString().slice(0, 10);
+  const entitlements = await resolveEntitlements(authed.supabase, authed.userId);
+  const cap = entitlements.coach_message_limit_per_day;
+  if (cap != null) {
+    const { data: usageRow } = await authed.supabase
+      .from("coach_usage_daily")
+      .select("message_count")
+      .eq("user_id", authed.userId)
+      .eq("usage_date", today)
+      .maybeSingle();
+    const used = usageRow?.message_count || 0;
+    if (used >= cap) {
+      return res.status(429).json({
+        error: "You've used today's Peter messages on the free plan. Your next one opens tomorrow.",
+        limit_reached: true,
+      });
+    }
+  }
 
-  const systemPrompt =
-    "You are Peter the Otter, a warm and friendly relationship coach. " +
-    "Speak at a 4th-grade reading level. Offer a gentle, less triggering way " +
-    "to say the message. Keep it kind, short, and supportive.";
+  const partnerLine =
+    (typeof partnerContext === "string" && PARTNER_CONTEXTS[partnerContext]) ||
+    "Unknown. Keep it gentle and clear.";
 
-  const userPrompt = `Partner context: ${profile}\nDraft message: ${draft}\n\nRewrite the draft in a softer, less triggering way. Provide only the rephrased message.`;
+  const systemPrompt = buildPeterInstruction(
+    "Rewrite the user's draft message to their partner in a softer, less triggering way. " +
+      "Keep their meaning and their voice. Keep it kind and short. " +
+      "Reply with only the rephrased message: no greeting, no explanation, no questions."
+  );
+
+  const userPrompt = `What my partner might need right now: ${partnerLine}\nMy draft message: ${draft.trim()}`;
 
   try {
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-        "HTTP-Referer": req.headers.origin || "http://localhost:3000",
-        "X-Title": "Sparq Connection Lab",
-      },
-      body: JSON.stringify({
-        models: PETER_MODELS,
-        route: "fallback",
-        reasoning: { enabled: false },
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-        temperature: 0.7,
-        max_tokens: 200,
-      }),
+    const raw = await peterChat({
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt },
+      ],
+      maxTokens: 200,
+      temperature: 0.7,
     });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      return res
-        .status(response.status)
-        .json({ error: `OpenRouter error: ${errorText}` });
-    }
-
-    const data = (await response.json()) as {
-      choices?: Array<{ message?: { content?: string } }>;
-    };
-
-    const suggestion = data?.choices?.[0]?.message?.content?.trim();
+    const suggestion = stripMarkdown(raw).trim();
 
     if (!suggestion) {
-      return res
-        .status(500)
-        .json({ error: "No suggestion returned from OpenRouter." });
+      return res.status(502).json({ error: "Peter couldn't find the words this time. Try again?" });
     }
+
+    // Count the message after success (fire-and-forget, like Peter chat).
+    void (async () => {
+      try {
+        const { data: usageRow } = await authed.supabase
+          .from("coach_usage_daily")
+          .select("message_count")
+          .eq("user_id", authed.userId)
+          .eq("usage_date", today)
+          .maybeSingle();
+        await authed.supabase.from("coach_usage_daily").upsert(
+          {
+            user_id: authed.userId,
+            usage_date: today,
+            message_count: (usageRow?.message_count || 0) + 1,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: "user_id,usage_date" }
+        );
+      } catch {}
+    })();
 
     return res.status(200).json({ suggestion });
   } catch (error) {
-    console.error("Translator API error:", error);
-    return res.status(500).json({ error: "Failed to reach OpenRouter." });
+    const errMsg = error instanceof Error ? error.message : String(error);
+    console.error("Translator API error:", errMsg);
+    return res.status(500).json({ error: "Peter is taking a nap. Try again in a moment." });
   }
 }

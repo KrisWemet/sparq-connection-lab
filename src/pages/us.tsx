@@ -103,7 +103,7 @@ export default function UsPage() {
               className="w-10 h-10 rounded-full border border-brand-primary/10 bg-brand-parchment text-brand-primary flex items-center justify-center hover:bg-brand-primary/5">
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <span className="text-xs font-semibold tracking-widest uppercase text-brand-coral-deep">Us</span>
+            <span className="bar-title">Us</span>
             <div className="w-10 h-10" aria-hidden="true" />
           </div>
         </header>
@@ -152,7 +152,7 @@ export default function UsPage() {
               </section>
 
               <section className={cn(card, 'space-y-3')}>
-                <p className="text-xs font-semibold tracking-widest uppercase text-brand-coral-deep">Share something</p>
+                <h2 className="section-title">Share something</h2>
                 <div className="flex flex-wrap gap-2">
                   {SHARE_KINDS.map(k => (
                     <button key={k} type="button" onClick={() => setKind(k)}
@@ -172,7 +172,7 @@ export default function UsPage() {
 
               {items.length > 0 && (
                 <section className={cn(card, 'space-y-4')}>
-                  <p className="text-xs font-semibold tracking-widest uppercase text-brand-coral-deep">What you&apos;ve shared</p>
+                  <h2 className="section-title">What you&apos;ve shared</h2>
                   {items.map(item => (
                     <div key={item.id} className="border-b border-brand-border/60 pb-3 last:border-0 last:pb-0">
                       <p className="text-xs text-brand-text-secondary mb-1">
@@ -191,7 +191,7 @@ export default function UsPage() {
               )}
 
               <section className={cn(card, 'space-y-3')}>
-                <p className="text-xs font-semibold tracking-widest uppercase text-brand-coral-deep">Patterns between you</p>
+                <h2 className="section-title">Patterns between you</h2>
                 <p className="text-sm text-brand-text-secondary">
                   Name a loop you both fall into, like &ldquo;one of us reaches, one of us steps back.&rdquo; The loop is the problem, never either of you. It only becomes &ldquo;ours&rdquo; when you both agree.
                 </p>

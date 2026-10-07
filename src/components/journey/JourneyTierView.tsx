@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Lock, CheckCircle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Lock, CheckCircle, Sprout, Leaf, Flower2, type LucideIcon } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
 import type { ClientJourney } from '@/lib/journeys/client';
@@ -72,10 +72,10 @@ const TIER_META: Record<TierId, { name: string; tagline: string; color: string; 
   },
 };
 
-const TIER_ICONS: Record<TierId, string> = {
-  roots: '🌱',
-  growth: '🌿',
-  bloom: '🌸',
+const TIER_ICONS: Record<TierId, LucideIcon> = {
+  roots: Sprout,
+  growth: Leaf,
+  bloom: Flower2,
 };
 
 function tierProgress(record: ClientJourney | null | undefined, tierId: TierId, totalDays: number) {
@@ -138,7 +138,7 @@ export function JourneyTierView({
           className="flex items-center gap-1.5 text-sm font-medium text-brand-text-secondary hover:text-brand-taupe transition-colors mb-6"
         >
           <ChevronLeft className="w-4 h-4" />
-          All Journeys
+          All journeys
         </motion.button>
 
         {/* Journey header */}
@@ -151,7 +151,7 @@ export function JourneyTierView({
           <h1 className="text-3xl font-serif font-bold text-brand-taupe tracking-tight mb-2">{title}</h1>
           <p className="text-brand-text-secondary leading-relaxed">{description}</p>
           <div className="mt-4 rounded-[1.5rem] bg-popover/80 border border-brand-primary/10 p-5 shadow-sm">
-            <p className="text-xs font-bold text-brand-hover uppercase tracking-[0.2em] mb-2">Before You Start</p>
+            <p className="note-label mb-2">Before you start</p>
             <p className="text-sm text-brand-taupe leading-relaxed mb-3">
               {overview || description}
             </p>
@@ -165,7 +165,7 @@ export function JourneyTierView({
             </div>
             {benefits && benefits.length > 0 && (
               <div className="space-y-1.5">
-                <p className="text-xs font-semibold uppercase tracking-widest text-brand-text-secondary">What You Will Practice</p>
+                <p className="note-label text-brand-text-secondary">What you&apos;ll practice</p>
                 {benefits.slice(0, 3).map((benefit) => (
                   <p key={benefit} className="text-sm text-muted-foreground leading-relaxed">
                     {benefit}
@@ -188,7 +188,7 @@ export function JourneyTierView({
               ? 'You walked this whole journey. You can walk any stage again whenever you like.'
               : setAsideOn
                 ? `You set this journey aside on ${setAsideOn}. Your place is saved — pick any open stage to carry on.`
-                : `You're on ${otherActive?.title} right now. Starting this one pauses it, and your place there is kept.`}
+                : `You're on ${otherActive?.title} right now. Sparq keeps one journey at a time, so pause or finish it before you start this one. Your place there is kept.`}
           </div>
         )}
 
@@ -200,7 +200,7 @@ export function JourneyTierView({
           <div className="space-y-4">
             {tiers.map((tier, idx) => {
               const meta = TIER_META[tier.id];
-              const icon = TIER_ICONS[tier.id];
+              const TierIcon = TIER_ICONS[tier.id];
               const unlocked = isStageOpen(record ?? { stage_progress: {} }, tier.id);
               const progress = tierProgress(record, tier.id, tier.totalDays);
               const isComplete = progress.completed;
@@ -230,7 +230,7 @@ export function JourneyTierView({
                         {isComplete ? (
                           <CheckCircle className="w-7 h-7 text-success-emphasis" />
                         ) : unlocked ? (
-                          icon
+                          <TierIcon className="w-7 h-7 text-brand-hover" strokeWidth={1.75} aria-hidden="true" />
                         ) : (
                           <Lock className="w-5 h-5 text-brand-text-secondary" />
                         )}

@@ -2,7 +2,7 @@ import type { StarterJourney } from './types';
 
 export const sharedLanguage: StarterJourney = {
   id: 'shared-language',
-  title: 'Finding Your Shared Language',
+  title: 'Finding your shared language',
   duration: 10,
   modalities: ['gottman', 'nvc'],
   modalityLabel: 'COMMUNICATION',

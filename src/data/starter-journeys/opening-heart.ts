@@ -2,7 +2,7 @@ import type { StarterJourney } from './types';
 
 export const openingHeart: StarterJourney = {
   id: 'opening-heart',
-  title: 'Opening Your Heart Safely',
+  title: 'Opening your heart safely',
   duration: 10,
   modalities: ['act', 'ifs'],
   modalityLabel: 'INNER WORLD',

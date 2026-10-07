@@ -25,7 +25,7 @@ export default function AttachmentHealingJourney() {
       concepts: [
         {
           id: "attachment-styles",
-          title: "How We Learned to Love",
+          title: "How we learned to love",
           description: "Seeing the few common ways people reach for closeness — and which ones feel like you",
           icon: <Brain className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -34,7 +34,7 @@ export default function AttachmentHealingJourney() {
         },
         {
           id: "your-attachment-map",
-          title: "Mapping Your Pattern",
+          title: "Mapping your pattern",
           description: "Noticing how you tend to move toward or away from your partner when things feel shaky",
           icon: <Compass className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -43,7 +43,7 @@ export default function AttachmentHealingJourney() {
         },
         {
           id: "attachment-origins",
-          title: "Where It Started",
+          title: "Where it started",
           description: "Seeing how the way you were cared for early on shaped the way you love now",
           icon: <TreePine className="w-5 h-5 text-amber-600" />,
           color: "amber",
@@ -52,7 +52,7 @@ export default function AttachmentHealingJourney() {
         },
         {
           id: "attachment-triggers",
-          title: "Spotting Your Triggers",
+          title: "Spotting your triggers",
           description: "Catching the moments when an old hurt shows up in a new situation",
           icon: <AlertTriangle className="w-5 h-5 text-red-500" />,
           color: "red",
@@ -61,7 +61,7 @@ export default function AttachmentHealingJourney() {
         },
         {
           id: "protest-behaviors",
-          title: "What You Do When You Feel Far Apart",
+          title: "What you do when you feel far apart",
           description: "Noticing the automatic moves you make when you feel disconnected",
           icon: <Shield className="w-5 h-5 text-slate-500" />,
           color: "slate",
@@ -70,7 +70,7 @@ export default function AttachmentHealingJourney() {
         },
         {
           id: "secure-base",
-          title: "What Feeling Secure Looks Like",
+          title: "What feeling secure looks like",
           description: "Getting a clear picture of the steady, safe bond you're building toward",
           icon: <Home className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -79,7 +79,7 @@ export default function AttachmentHealingJourney() {
         },
         {
           id: "partner-attachment",
-          title: "Understanding Your Partner's Needs",
+          title: "Understanding your partner's needs",
           description: "Seeing what your partner does as a sign of what they need — not as an attack on you",
           icon: <Users className="w-5 h-5 text-sky-500" />,
           color: "sky",
@@ -95,7 +95,7 @@ export default function AttachmentHealingJourney() {
       concepts: [
         {
           id: "earned-security",
-          title: "Building Earned Security",
+          title: "Building earned security",
           description: "Growing a steady, secure bond through practice — even if you didn't start there",
           icon: <ShieldCheck className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -104,7 +104,7 @@ export default function AttachmentHealingJourney() {
         },
         {
           id: "interrupting-cycles",
-          title: "Breaking the Chase-and-Retreat Loop",
+          title: "Breaking the chase-and-retreat loop",
           description: "Recognizing and disrupting the pursue-withdraw pattern that keeps couples stuck",
           icon: <Layers className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -113,7 +113,7 @@ export default function AttachmentHealingJourney() {
         },
         {
           id: "vulnerability-practice",
-          title: "Practicing Vulnerable Reaching",
+          title: "Practicing vulnerable reaching",
           description: "Saying what you need out loud, instead of showing it through a fight or silence",
           icon: <HandHeart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -122,7 +122,7 @@ export default function AttachmentHealingJourney() {
         },
         {
           id: "holding-and-responding",
-          title: "Holding and Responding",
+          title: "Holding and responding",
           description: "Being the steady place your partner can come back to — present, warm, and there",
           icon: <Anchor className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -131,7 +131,7 @@ export default function AttachmentHealingJourney() {
         },
         {
           id: "self-soothing",
-          title: "Self-Soothing Without Shutting Down",
+          title: "Self-soothing without shutting down",
           description: "Calming your worry without pulling away from your partner",
           icon: <Brain className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -140,7 +140,7 @@ export default function AttachmentHealingJourney() {
         },
         {
           id: "repairing-attachment-ruptures",
-          title: "Coming Back After a Hard Moment",
+          title: "Coming back after a hard moment",
           description: "Finding your way back to each other after a moment that shook you",
           icon: <Heart className="w-5 h-5 text-sky-500" />,
           color: "sky",
@@ -156,7 +156,7 @@ export default function AttachmentHealingJourney() {
       concepts: [
         {
           id: "secure-functioning",
-          title: "Being a Team",
+          title: "Being a team",
           description: "Working as a team where both of you feel safe with each other",
           icon: <Home className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -165,7 +165,7 @@ export default function AttachmentHealingJourney() {
         },
         {
           id: "attachment-under-stress",
-          title: "Maintaining Security Under Stress",
+          title: "Maintaining security under stress",
           description: "Keeping your bond strong when life gets hard",
           icon: <Shield className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -174,7 +174,7 @@ export default function AttachmentHealingJourney() {
         },
         {
           id: "reparenting-together",
-          title: "Giving Each Other What Was Missing",
+          title: "Giving each other what was missing",
           description: "Offering each other the steady, loving care you may not have had growing up",
           icon: <HandHeart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -183,7 +183,7 @@ export default function AttachmentHealingJourney() {
         },
         {
           id: "attachment-narrative",
-          title: "Rewriting Your Story",
+          title: "Rewriting your story",
           description: "Telling the story of how you love — where you started, and how far you've come",
           icon: <Sparkles className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -192,7 +192,7 @@ export default function AttachmentHealingJourney() {
         },
         {
           id: "interdependence",
-          title: "Healthy Interdependence",
+          title: "Healthy interdependence",
           description: "Finding the sweet spot between independence and dependence — needing your partner without losing yourself",
           icon: <Eye className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -201,7 +201,7 @@ export default function AttachmentHealingJourney() {
         },
         {
           id: "legacy-of-security",
-          title: "Creating a Legacy of Security",
+          title: "Creating a legacy of security",
           description: "Growing a sense of safety that spreads to your family and the people around you",
           icon: <TreePine className="w-5 h-5 text-green-600" />,
           color: "green",
@@ -215,7 +215,7 @@ export default function AttachmentHealingJourney() {
   return (
     <JourneyTemplate
       journeyId="attachment-healing"
-      title="Feeling Safe Together"
+      title="Feeling safe together"
       description="Understand how you learned to love, and grow a steadier, safer bond — from first noticing to feeling secure together."
       tiers={tiers}
     />

@@ -134,11 +134,8 @@ export default function NeutralObserver() {
                   <SceneAccent kind="flow" quiet className="-mt-4 mb-2 h-20 w-full" />
                   <div className="flex items-start justify-between gap-3 mb-5">
                     <div>
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-hover mb-1">
-                        A quiet practice
-                      </p>
                       <h1 className="font-serif text-[28px] leading-tight text-brand-espresso">
-                        A Different Pair of Eyes
+                        A different pair of eyes
                       </h1>
                       <p className="text-sm text-brand-taupe mt-1">
                         90 seconds, just you. No one else sees this.
@@ -237,7 +234,7 @@ export default function NeutralObserver() {
               <motion.div key="screen_1" {...slide} className="space-y-5">
                 <ProgressDots current={0} total={3} />
                 <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-7 shadow-[0_20px_50px_hsl(var(--shadow)/0.10)]">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-hover mb-4">
+                  <p className="note-label mb-4">
                     Step 1 of 3
                   </p>
                   <p className="text-sm leading-relaxed text-brand-espresso mb-5">
@@ -273,7 +270,7 @@ export default function NeutralObserver() {
               <motion.div key="screen_2" {...slide} className="space-y-5">
                 <ProgressDots current={1} total={3} />
                 <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-7 shadow-[0_20px_50px_hsl(var(--shadow)/0.10)]">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-hover mb-4">
+                  <p className="note-label mb-4">
                     Step 2 of 3
                   </p>
                   <p className="text-sm leading-relaxed text-brand-espresso mb-3">
@@ -309,7 +306,7 @@ export default function NeutralObserver() {
               <motion.div key="screen_3" {...slide} className="space-y-5">
                 <ProgressDots current={2} total={3} />
                 <div className="rounded-[28px] border border-brand-primary/12 bg-brand-parchment px-7 py-7 shadow-[0_20px_50px_hsl(var(--shadow)/0.10)]">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-hover mb-4">
+                  <p className="note-label mb-4">
                     Step 3 of 3
                   </p>
                   <p className="text-sm leading-relaxed text-brand-espresso mb-2">

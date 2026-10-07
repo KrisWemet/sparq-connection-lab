@@ -2,7 +2,7 @@ import type { StarterJourney } from './types';
 
 export const buildingTrust: StarterJourney = {
   id: 'building-trust',
-  title: 'Building Trust in Connection',
+  title: 'Building trust in connection',
   duration: 10,
   modalities: ['eft'],
   modalityLabel: 'EMOTIONAL CONNECTION',

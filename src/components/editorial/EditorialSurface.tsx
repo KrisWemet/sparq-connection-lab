@@ -72,7 +72,7 @@ export function EditorialEyebrow({ className, ...props }: EditorialEyebrowProps)
   return (
     <p
       className={cn(
-        'text-xs font-semibold uppercase tracking-widest text-brand-hover',
+        'note-label',
         className,
       )}
       {...props}

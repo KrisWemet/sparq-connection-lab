@@ -41,7 +41,7 @@ export default function LoginPage() {
   return (
     <>
       <Head>
-        <title>{`${isRegisterMode ? 'Join Sparq' : 'Welcome Back'} - Sparq Relationship Lab`}</title>
+        <title>{`${isRegisterMode ? 'Join Sparq' : 'Welcome back'} - Sparq Relationship Lab`}</title>
         <meta
           name="description"
           content="Build calmer habits and better talks with simple daily support from Sparq."

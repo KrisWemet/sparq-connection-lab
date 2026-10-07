@@ -565,7 +565,7 @@ export default function RehearsalRoom() {
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-brand-espresso font-semibold text-sm">{opt.label}</span>
                   {opt.default && (
-                    <span className="text-xs text-brand-hover font-semibold tracking-widest uppercase">Default</span>
+                    <span className="text-xs font-medium text-brand-hover">Default</span>
                   )}
                 </div>
                 <span className="text-brand-text-secondary text-xs">{opt.desc}</span>
@@ -600,7 +600,7 @@ export default function RehearsalRoom() {
             {/* Anchor card */}
             {peterAnchor && (
               <div className="bg-popover border border-brand-primary/15 rounded-2xl p-5 mb-6 shadow-sm">
-                <p className="text-xs font-semibold tracking-widest uppercase text-brand-hover mb-3">
+                <p className="note-label mb-3">
                   Your anchor
                 </p>
                 <p className="text-brand-espresso font-serif italic leading-relaxed mb-4">

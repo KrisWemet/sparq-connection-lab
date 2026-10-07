@@ -1,7 +1,7 @@
 .journey { position: relative; isolation: isolate; padding: 5rem 1.5rem 2rem; scroll-margin-top: 5rem; }
 .journey::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, transparent, hsl(var(--connection) / .055) 25%, hsl(var(--growth) / .09) 55%, hsl(var(--calm) / .075) 86%, transparent); }
 .intro { position: relative; max-width: 720px; margin: 0 auto 2.5rem; text-align: center; }
-.eyebrow { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; font-size: 10px; font-weight: 600; line-height: 1.6; letter-spacing: .15em; text-transform: uppercase; color: hsl(var(--primary-emphasis)); }
+.eyebrow { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; font-family: var(--font-serif), Georgia, serif; font-size: 18px; font-style: italic; font-weight: 500; line-height: 1.4; color: hsl(var(--primary-emphasis)); }
 .intro > .eyebrow { justify-content: center; }
 .intro h2 { margin: 1rem 0; font-family: var(--font-serif), Georgia, serif; font-size: clamp(2.3rem, 5vw, 3.5rem); line-height: 1.1; font-weight: 500; }
 .intro > p:last-child { font-size: 15px; color: hsl(var(--muted-foreground)); line-height: 1.7; }
@@ -12,7 +12,7 @@
 .mobileVisual { width: min(100%, 520px); margin: 0 auto -1rem; }
 .copy { position: relative; padding-left: 1.2rem; max-width: 440px; margin: auto; }
 .seed { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; background: hsl(var(--connection)); box-shadow: 0 0 0 5px hsl(var(--connection) / .08); }
-.role { color: hsl(var(--muted-foreground)); font-size: 9px; letter-spacing: .09em; }
+.role { color: hsl(var(--muted-foreground)); font-size: 15px; }
 .chapter h3 { margin: 1.25rem 0; font-family: var(--font-serif), Georgia, serif; font-weight: 500; font-size: clamp(2.25rem, 4vw, 3.45rem); line-height: 1.1; letter-spacing: -.025em; color: hsl(var(--foreground)); }
 .body { color: hsl(var(--muted-foreground)); font-size: 15px; line-height: 1.85; }
 .note { font-family: var(--font-serif), Georgia, serif; font-style: italic; font-size: 21px; line-height: 1.4; margin-top: 1.4rem; color: hsl(var(--primary-emphasis)); }

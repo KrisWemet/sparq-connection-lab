@@ -2,7 +2,7 @@ import React, { useState, ReactNode } from 'react';
 import { useRouter } from 'next/router';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { ChevronLeft, ChevronRight, CheckCircle, Star, Lightbulb, Pencil } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle, Star, Lightbulb, Pencil, Sprout, Leaf, Flower2 } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -389,7 +389,7 @@ export function JourneyContentView({
             onClick={() => onBackToTiers ? onBackToTiers() : router.push('/journeys')}
             className="mt-6 px-6 py-3 rounded-xl bg-brand-primary text-white font-bold hover:bg-brand-hover transition-colors"
           >
-            {onBackToTiers ? 'Back to Tiers' : 'Browse Journeys'}
+            {onBackToTiers ? 'Back to tiers' : 'Browse journeys'}
           </button>
         </div>
       </div>
@@ -398,7 +398,7 @@ export function JourneyContentView({
 
   // Completed
   if (completed) {
-    const tierEmoji = tierId === 'bloom' ? '🌸' : tierId === 'growth' ? '🌿' : '🌱';
+    const TierIcon = tierId === 'bloom' ? Flower2 : tierId === 'growth' ? Leaf : Sprout;
     const nextTier: TierId | null = tierId === 'roots' ? 'growth' : tierId === 'growth' ? 'bloom' : null;
     const nextTierName = nextTier === 'growth' ? 'Growth' : nextTier === 'bloom' ? 'Bloom' : null;
 
@@ -429,9 +429,9 @@ export function JourneyContentView({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <p className="text-4xl mb-4">{tierEmoji}</p>
+          <TierIcon className="mx-auto mb-4 h-12 w-12 text-brand-gold-deep" strokeWidth={1.5} aria-hidden="true" />
           <h1 className="text-2xl font-serif font-bold text-brand-taupe mb-3">
-            {tierName ? `${tierName} Complete!` : `You've completed ${title || 'this journey'}!`}
+            {tierName ? `${tierName} complete!` : `You've completed ${title || 'this journey'}!`}
           </h1>
           <p className="text-brand-text-secondary text-sm leading-relaxed max-w-xs mb-8 mx-auto">
             {tierId === 'roots' && "You've built a strong foundation of awareness. You're ready to take these insights into active practice."}
@@ -465,7 +465,7 @@ export function JourneyContentView({
               onClick={() => router.push('/journeys')}
               className="w-full max-w-xs py-4 rounded-2xl bg-brand-primary text-white font-bold text-base mb-3 shadow-md hover:bg-brand-hover transition-colors"
             >
-              Explore More Journeys
+              Explore more journeys
             </button>
           )}
 
@@ -474,7 +474,7 @@ export function JourneyContentView({
               onClick={onBackToTiers}
               className="w-full max-w-xs py-3 rounded-2xl text-brand-text-secondary font-medium text-sm hover:text-brand-taupe transition-colors"
             >
-              Back to Journey Overview
+              Back to journey overview
             </button>
           )}
         </motion.div>
@@ -496,7 +496,7 @@ export function JourneyContentView({
             className="flex items-center gap-1.5 text-sm font-medium text-brand-text-secondary hover:text-brand-taupe transition-colors mb-4"
           >
             <ChevronLeft className="w-4 h-4" />
-            Journey Overview
+            Journey overview
           </motion.button>
         )}
 
@@ -558,7 +558,7 @@ export function JourneyContentView({
             <div className="w-24 h-24 bg-gradient-to-br from-brand-sand/20 to-brand-primary/10 rounded-full flex items-center justify-center mb-6 shadow-inner">
               <Star className="w-10 h-10 text-brand-primary" />
             </div>
-            <h2 className="text-3xl font-serif font-bold text-brand-taupe mb-4">Rest & Reflect</h2>
+            <h2 className="text-3xl font-serif font-bold text-brand-taupe mb-4">Rest & reflect</h2>
             <p className="text-muted-foreground text-lg leading-relaxed max-w-sm mb-8">
               You&apos;ve completed your session for today. 30 minutes of thoughtful focus builds a stronger foundation than rushing through. Let today&apos;s concepts sink in, and come back tomorrow to continue your growth!
             </p>
@@ -566,7 +566,7 @@ export function JourneyContentView({
               onClick={() => router.push('/journeys')}
               className="bg-brand-primary text-white rounded-full px-8 py-6 shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-lg font-bold"
             >
-              Back to Journeys
+              Back to journeys
             </Button>
           </motion.div>
         ) : (
@@ -584,7 +584,7 @@ export function JourneyContentView({
                 {currentDayContent.conceptIcon}
               </div>
               <div>
-                <p className="text-xs font-semibold text-brand-hover uppercase tracking-widest">Day {currentDay}</p>
+                <p className="note-label">Day {currentDay}</p>
                 <h2 className="text-lg font-bold text-brand-taupe">{currentDayContent.title}</h2>
               </div>
             </motion.div>
@@ -600,7 +600,7 @@ export function JourneyContentView({
                 <div className="w-8 h-8 rounded-full bg-brand-sand/10 flex items-center justify-center">
                   <Lightbulb className="w-4 h-4 text-brand-gold-deep" />
                 </div>
-                <p className="text-xs font-bold text-brand-gold-deep uppercase tracking-[0.2em]">Today&apos;s Learning</p>
+                <p className="note-label text-brand-gold-deep">Today&apos;s learning</p>
               </div>
               <div className="text-sm text-foreground leading-relaxed space-y-3">
                 {currentDayContent.learning.split('\n\n').map((p, i) => (
@@ -640,7 +640,7 @@ export function JourneyContentView({
                   <div className="w-8 h-8 rounded-full bg-brand-primary/10 flex items-center justify-center">
                     <Pencil className="w-4 h-4 text-brand-primary" />
                   </div>
-                  <p className="text-xs font-bold text-brand-hover uppercase tracking-[0.2em]">Activity</p>
+                  <p className="note-label">Activity</p>
                 </div>
                 <h3 className="text-lg font-bold text-brand-taupe">{currentDayContent.activity.title}</h3>
               </div>
@@ -660,7 +660,7 @@ export function JourneyContentView({
                 {/* Reflection questions */}
                 {currentDayContent.activity.reflectionQuestions.length > 0 && (
                   <div className="mt-4 space-y-4">
-                    <p className="text-xs font-semibold text-brand-hover uppercase tracking-widest">
+                    <p className="note-label">
                       Reflection
                     </p>
                     {currentDayContent.activity.reflectionQuestions.map((question, index) => (
@@ -708,7 +708,7 @@ export function JourneyContentView({
           >
             {currentDay >= totalDays
               ? <>Complete <CheckCircle className="ml-1 h-5 w-5" /></>
-              : <>Next Day <ChevronRight className="ml-1 h-5 w-5" /></>
+              : <>Next day <ChevronRight className="ml-1 h-5 w-5" /></>
             }
           </Button>
         </div>

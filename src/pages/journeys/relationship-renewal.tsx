@@ -24,7 +24,7 @@ export default function RelationshipRenewalJourney() {
       concepts: [
         {
           id: "seeing-fresh",
-          title: "Seeing Your Partner with Fresh Eyes",
+          title: "Seeing your partner with fresh eyes",
           description: "Breaking through the familiarity filter to rediscover who your partner actually is right now",
           icon: <Eye className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -33,7 +33,7 @@ export default function RelationshipRenewalJourney() {
         },
         {
           id: "appreciation-revival",
-          title: "Reviving Appreciation",
+          title: "Reviving appreciation",
           description: "Rebuilding the habit of noticing and expressing what you love about your partner",
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -42,7 +42,7 @@ export default function RelationshipRenewalJourney() {
         },
         {
           id: "autopilot-awareness",
-          title: "Recognizing Autopilot",
+          title: "Recognizing autopilot",
           description: "Noticing the routines and assumptions that have made your relationship feel predictable",
           icon: <RefreshCw className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -51,7 +51,7 @@ export default function RelationshipRenewalJourney() {
         },
         {
           id: "nostalgia-connection",
-          title: "Reconnecting Through Your Story",
+          title: "Reconnecting through your story",
           description: "Revisiting the early days of your relationship to remember what drew you together",
           icon: <Star className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -60,7 +60,7 @@ export default function RelationshipRenewalJourney() {
         },
         {
           id: "novelty-seeking",
-          title: "Introducing Novelty",
+          title: "Introducing novelty",
           description: "Breaking routine with new shared experiences that create excitement and fresh memories",
           icon: <Zap className="w-5 h-5 text-orange-500" />,
           color: "orange",
@@ -69,7 +69,7 @@ export default function RelationshipRenewalJourney() {
         },
         {
           id: "curiosity-revival",
-          title: "Reviving Curiosity",
+          title: "Reviving curiosity",
           description: "Asking your partner questions you've never asked — or asking old questions again with genuine interest",
           icon: <Lightbulb className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -85,7 +85,7 @@ export default function RelationshipRenewalJourney() {
       concepts: [
         {
           id: "breaking-patterns",
-          title: "Breaking Routine Intentionally",
+          title: "Breaking routine intentionally",
           description: "Deliberately disrupting the patterns that have made your relationship feel stale",
           icon: <RefreshCw className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -94,7 +94,7 @@ export default function RelationshipRenewalJourney() {
         },
         {
           id: "date-reinvention",
-          title: "Reinventing Date Night",
+          title: "Reinventing date night",
           description: "Moving beyond dinner-and-a-movie to create dates that actually generate connection",
           icon: <Sparkles className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -103,7 +103,7 @@ export default function RelationshipRenewalJourney() {
         },
         {
           id: "micro-connections",
-          title: "Building Micro-Connections",
+          title: "Building micro-connections",
           description: "Creating small, consistent moments of connection throughout the day",
           icon: <Clock className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -112,7 +112,7 @@ export default function RelationshipRenewalJourney() {
         },
         {
           id: "playfulness",
-          title: "Rediscovering Playfulness",
+          title: "Rediscovering playfulness",
           description: "Bringing humor, lightness, and fun back into your relationship",
           icon: <Palette className="w-5 h-5 text-pink-500" />,
           color: "pink",
@@ -121,7 +121,7 @@ export default function RelationshipRenewalJourney() {
         },
         {
           id: "growth-conversations",
-          title: "Having Growth Conversations",
+          title: "Having growth conversations",
           description: "Talking about who you're becoming — not just who you are",
           icon: <MessageSquare className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -130,7 +130,7 @@ export default function RelationshipRenewalJourney() {
         },
         {
           id: "shared-projects",
-          title: "Creating Shared Projects",
+          title: "Creating shared projects",
           description: "Working toward a goal together that requires collaboration and creates shared meaning",
           icon: <Users className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -146,7 +146,7 @@ export default function RelationshipRenewalJourney() {
       concepts: [
         {
           id: "creating-rituals",
-          title: "Creating Your Connection Rituals",
+          title: "Creating your connection rituals",
           description: "Designing recurring practices that sustain renewal long-term — not as obligations, but as gifts",
           icon: <Star className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -155,7 +155,7 @@ export default function RelationshipRenewalJourney() {
         },
         {
           id: "evolving-together",
-          title: "Supporting Each Other's Evolution",
+          title: "Supporting each other's evolution",
           description: "Encouraging individual growth as fuel for relationship growth, not a threat to it",
           icon: <TreePine className="w-5 h-5 text-green-600" />,
           color: "green",
@@ -164,7 +164,7 @@ export default function RelationshipRenewalJourney() {
         },
         {
           id: "renewed-commitment",
-          title: "Renewing Your Commitment",
+          title: "Renewing your commitment",
           description: "Choosing your partner again — not out of obligation, but from the deepest place of knowing",
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -173,7 +173,7 @@ export default function RelationshipRenewalJourney() {
         },
         {
           id: "embracing-seasons",
-          title: "Embracing Relationship Seasons",
+          title: "Embracing relationship seasons",
           description: "Understanding that every relationship has seasons of closeness and distance — and both are normal",
           icon: <Compass className="w-5 h-5 text-sky-500" />,
           color: "sky",
@@ -182,7 +182,7 @@ export default function RelationshipRenewalJourney() {
         },
         {
           id: "legacy-of-love",
-          title: "Building Your Love Legacy",
+          title: "Building your love legacy",
           description: "Consciously creating the story of your relationship that will inspire others",
           icon: <Sparkles className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -196,7 +196,7 @@ export default function RelationshipRenewalJourney() {
   return (
     <JourneyTemplate
       journeyId="relationship-renewal"
-      title="Relationship Renewal"
+      title="Relationship renewal"
       description="Reignite connection and rediscover your partner after years together. Progress from recognizing autopilot to building a vibrant, evolving partnership."
       tiers={tiers}
     />

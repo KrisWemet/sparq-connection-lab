@@ -24,7 +24,7 @@ export default function PowerDynamicsJourney() {
       concepts: [
         {
           id: "recognizing-power",
-          title: "Recognizing Power in Your Relationship",
+          title: "Recognizing power in your relationship",
           description: "Seeing the often-invisible ways power flows between you and your partner in daily life",
           icon: <Eye className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -33,7 +33,7 @@ export default function PowerDynamicsJourney() {
         },
         {
           id: "types-of-power",
-          title: "Understanding Types of Power",
+          title: "Understanding types of power",
           description: "Recognizing that power operates through money, emotion, information, sex, social connections, and more",
           icon: <Scale className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -42,7 +42,7 @@ export default function PowerDynamicsJourney() {
         },
         {
           id: "emotional-labor",
-          title: "The Invisible Load: Emotional Labor",
+          title: "The invisible load: emotional labor",
           description: "Recognizing the unseen work of managing the household, family, and relationship emotional needs",
           icon: <Brain className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -51,7 +51,7 @@ export default function PowerDynamicsJourney() {
         },
         {
           id: "demand-withdraw",
-          title: "The Demand-Withdraw Pattern",
+          title: "The demand-withdraw pattern",
           description: "Understanding the power dynamic hidden in who pursues and who retreats during conflict",
           icon: <ArrowRightLeft className="w-5 h-5 text-red-500" />,
           color: "red",
@@ -60,7 +60,7 @@ export default function PowerDynamicsJourney() {
         },
         {
           id: "cultural-influences",
-          title: "Cultural Power Scripts",
+          title: "Cultural power scripts",
           description: "Recognizing how gender roles, cultural norms, and family patterns shape power expectations",
           icon: <Users className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -69,7 +69,7 @@ export default function PowerDynamicsJourney() {
         },
         {
           id: "consent-as-power-sharing",
-          title: "Consent as Power Sharing",
+          title: "Consent as power sharing",
           description: "Understanding that genuine consent is the foundation of equitable power in all areas of relationship",
           icon: <Lock className="w-5 h-5 text-sky-500" />,
           color: "sky",
@@ -85,7 +85,7 @@ export default function PowerDynamicsJourney() {
       concepts: [
         {
           id: "power-conversations",
-          title: "Having Power Conversations",
+          title: "Having power conversations",
           description: "Learning to talk about power directly without it becoming an accusation or a fight",
           icon: <MessageSquare className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -94,7 +94,7 @@ export default function PowerDynamicsJourney() {
         },
         {
           id: "redistributing-labor",
-          title: "Redistributing Invisible Labor",
+          title: "Redistributing invisible labor",
           description: "Creating fair systems for sharing the mental and emotional load of running a life together",
           icon: <Scale className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -103,7 +103,7 @@ export default function PowerDynamicsJourney() {
         },
         {
           id: "using-power-well",
-          title: "Using Power Responsibly",
+          title: "Using power responsibly",
           description: "When you hold more power in some area, using it to uplift your partner rather than maintain advantage",
           icon: <HandHeart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -112,7 +112,7 @@ export default function PowerDynamicsJourney() {
         },
         {
           id: "reclaiming-voice",
-          title: "Reclaiming Your Voice",
+          title: "Reclaiming your voice",
           description: "For the partner who tends to defer — learning to express opinions, needs, and disagreements directly",
           icon: <Compass className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -121,7 +121,7 @@ export default function PowerDynamicsJourney() {
         },
         {
           id: "making-space",
-          title: "Making Space for Your Partner",
+          title: "Making space for your partner",
           description: "For the partner who tends to dominate — learning to pause, ask, and truly defer",
           icon: <Shield className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -130,7 +130,7 @@ export default function PowerDynamicsJourney() {
         },
         {
           id: "decision-making-models",
-          title: "Shared Decision-Making Models",
+          title: "Shared decision-making models",
           description: "Creating explicit systems for how you make decisions together — big and small",
           icon: <Lightbulb className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -146,7 +146,7 @@ export default function PowerDynamicsJourney() {
       concepts: [
         {
           id: "conscious-power-flow",
-          title: "Conscious Power Flow",
+          title: "Conscious power flow",
           description: "Letting power shift naturally between partners depending on context, strength, and situation",
           icon: <ArrowRightLeft className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -155,7 +155,7 @@ export default function PowerDynamicsJourney() {
         },
         {
           id: "power-in-intimacy",
-          title: "Power Dynamics in Intimacy",
+          title: "Power dynamics in intimacy",
           description: "Consciously navigating who leads, who follows, and how power plays out in physical connection",
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -164,7 +164,7 @@ export default function PowerDynamicsJourney() {
         },
         {
           id: "equitable-partnership",
-          title: "Building an Equitable Partnership",
+          title: "Building an equitable partnership",
           description: "Creating a relationship where both partners feel they have genuine voice, choice, and agency",
           icon: <Scale className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -173,7 +173,7 @@ export default function PowerDynamicsJourney() {
         },
         {
           id: "power-under-stress",
-          title: "Power Dynamics Under Stress",
+          title: "Power dynamics under stress",
           description: "Maintaining equitable patterns when life gets hard and old defaults want to return",
           icon: <Shield className="w-5 h-5 text-amber-500" />,
           color: "amber",
@@ -182,7 +182,7 @@ export default function PowerDynamicsJourney() {
         },
         {
           id: "modeling-equity",
-          title: "Modeling Equity for Others",
+          title: "Modeling equity for others",
           description: "Recognizing that your equitable relationship becomes a model for your children, friends, and community",
           icon: <Sparkles className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -191,7 +191,7 @@ export default function PowerDynamicsJourney() {
         },
         {
           id: "power-as-generativity",
-          title: "Power as Generativity",
+          title: "Power as generativity",
           description: "Using shared power to create something greater than either partner could alone",
           icon: <Users className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -205,7 +205,7 @@ export default function PowerDynamicsJourney() {
   return (
     <JourneyTemplate
       journeyId="power-dynamics"
-      title="Power Dynamics & Play"
+      title="Power dynamics & play"
       description="Understand and consciously navigate power dynamics in your relationship. Progress from pattern recognition to creating genuine equity."
       tiers={tiers}
     />

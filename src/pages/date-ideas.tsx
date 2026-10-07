@@ -16,7 +16,7 @@ import { AnimatedContainer, AnimatedList } from "@/components/ui/animated-contai
 const dateIdeas = [
   {
     id: 1,
-    title: "Stargazing Picnic",
+    title: "Stargazing picnic",
     description: "Pack a cozy blanket, some snacks, and head to a spot with minimal light pollution for a romantic evening under the stars.",
     category: "Outdoor",
     duration: "2-3 hours",
@@ -27,7 +27,7 @@ const dateIdeas = [
   },
   {
     id: 2,
-    title: "Cooking Class for Two",
+    title: "Cooking class for two",
     description: "Learn to make a new cuisine together. Many cooking schools offer special couples classes that are both fun and educational.",
     category: "Indoor",
     duration: "3-4 hours",
@@ -38,7 +38,7 @@ const dateIdeas = [
   },
   {
     id: 3,
-    title: "Couple's Massage",
+    title: "Couple's massage",
     description: "Book a relaxing couple's massage at a local spa for some quality relaxation time together.",
     category: "Wellness",
     duration: "1-2 hours",
@@ -49,7 +49,7 @@ const dateIdeas = [
   },
   {
     id: 4,
-    title: "Sunset Beach Walk",
+    title: "Sunset beach walk",
     description: "Take a leisurely stroll along the beach at sunset, collecting shells and enjoying the peaceful atmosphere.",
     category: "Outdoor",
     duration: "1-2 hours",
@@ -60,7 +60,7 @@ const dateIdeas = [
   },
   {
     id: 5,
-    title: "Board Game Night",
+    title: "Board game night",
     description: "Stay in with some fun board games, snacks, and your favorite drinks for a cozy night of friendly competition.",
     category: "Indoor",
     duration: "2-3 hours",
@@ -75,7 +75,7 @@ const dateIdeas = [
 const intimateIdeas = [
   {
     id: 101,
-    title: "Love Letter Exchange",
+    title: "Love letter exchange",
     description: "Write heartfelt letters to each other expressing your feelings and read them together over a glass of wine.",
     category: "Romance",
     duration: "1 hour",
@@ -85,7 +85,7 @@ const intimateIdeas = [
   },
   {
     id: 102,
-    title: "Couple's Bucket List Creation",
+    title: "Couple's bucket list creation",
     description: "Spend an evening creating a shared bucket list of experiences you want to have together.",
     category: "Connection",
     duration: "1-2 hours",
@@ -95,7 +95,7 @@ const intimateIdeas = [
   },
   {
     id: 103,
-    title: "Romantic Movie Marathon",
+    title: "Romantic movie marathon",
     description: "Select your favorite romantic movies and spend the day cuddled up watching them together.",
     category: "Indoor",
     duration: "4-6 hours",
@@ -105,7 +105,7 @@ const intimateIdeas = [
   },
   {
     id: 104,
-    title: "Partner Appreciation Day",
+    title: "Partner appreciation day",
     description: "Dedicate a day to showing appreciation for your partner through small gestures, compliments, and acts of service.",
     category: "Connection",
     duration: "All day",
@@ -115,7 +115,7 @@ const intimateIdeas = [
   },
   {
     id: 105,
-    title: "Dance Lesson at Home",
+    title: "Dance lesson at home",
     description: "Follow an online dance tutorial together in your living room, learning a romantic dance style like salsa or waltz.",
     category: "Active",
     duration: "1-2 hours",
@@ -245,7 +245,7 @@ export default function DateIdeas() {
             <ChevronLeft className="w-6 h-6 dark:text-foreground" />
           </button>
           <h1 className="text-xl font-semibold text-foreground dark:text-white mx-auto">
-            Date & Connection Ideas
+            Date & connection ideas
           </h1>
         </div>
       </header>
@@ -289,7 +289,7 @@ export default function DateIdeas() {
                 <AnimatedContainer variant="fadeIn" className="flex justify-between items-center mb-4">
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-primary" />
-                    <h2 className="text-lg font-semibold dark:text-white">AI-Powered Date Ideas</h2>
+                    <h2 className="text-lg font-semibold dark:text-white">AI-powered date ideas</h2>
                   </div>
                   <Button 
                     size="sm" 
@@ -298,7 +298,7 @@ export default function DateIdeas() {
                     disabled={isLoading}
                     className="dark:bg-card dark:text-white dark:border-border"
                   >
-                    {isLoading ? "Generating..." : "Refresh Ideas"}
+                    {isLoading ? "Generating..." : "Refresh ideas"}
                   </Button>
                 </AnimatedContainer>
                 
@@ -441,7 +441,7 @@ export default function DateIdeas() {
                       onClick={() => setActiveTab("date-ideas")}
                       className="dark:bg-card dark:text-white dark:border-border"
                     >
-                      Browse Date Ideas
+                      Browse date ideas
                     </Button>
                   </AnimatedContainer>
                 ) : (

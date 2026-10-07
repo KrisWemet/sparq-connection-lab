@@ -219,7 +219,7 @@ export default function ConflictFirstAidPage() {
               className={`absolute rounded-full bg-calm/30 mix-blend-multiply blur-lg transition-all ease-in-out delay-75 ${breathState === 'inhale' ? 'w-40 h-40 duration-[4000ms]' : 'w-16 h-16 duration-[6000ms]'
                 }`}
             />
-            <p className="z-10 text-[10px] font-bold tracking-[0.3em] uppercase text-muted-foreground">
+            <p className="z-10 font-serif text-lg italic capitalize text-muted-foreground">
               {breathState}
             </p>
           </div>
@@ -272,7 +272,7 @@ export default function ConflictFirstAidPage() {
 
       <main className="mx-auto max-w-3xl px-4 py-8 space-y-6">
         <section className="rounded-3xl border border-destructive/30 bg-destructive-subtle p-6 shadow-sm">
-          <h2 className="text-sm font-bold text-destructive-emphasis uppercase tracking-wider">If there is immediate danger</h2>
+          <h2 className="text-lg font-semibold text-destructive-emphasis">If there is immediate danger</h2>
           <p className="text-base text-destructive-emphasis mt-2 leading-relaxed">
             Stop this exercise and call emergency services now. Your physical safety is paramount.
           </p>
@@ -280,7 +280,7 @@ export default function ConflictFirstAidPage() {
 
         <section className="emotion-paper relative overflow-hidden rounded-3xl border border-brand-border bg-popover/70 p-6">
           <SceneAccent kind="flow" quiet className="-mt-3 mb-2 h-16 w-full opacity-60" />
-          <h2 className="text-[11px] font-bold uppercase tracking-wider text-brand-text-secondary mb-4">2-10 Minute Reset Protocol</h2>
+          <h2 className="section-title mb-4">2-10 minute reset protocol</h2>
           <ol className="mt-3 space-y-3 text-base text-foreground">
             {RESET_PROTOCOL.map((step, idx) => (
               <li key={step} className="rounded-2xl bg-brand-quiet px-5 py-4 leading-relaxed flex items-start">
@@ -294,13 +294,13 @@ export default function ConflictFirstAidPage() {
         {/* Personalized dynamic section */}
         {personalizedGuidance && (
           <section className="rounded-3xl border border-brand-border bg-popover/70 p-6">
-            <h2 className="text-[11px] font-bold uppercase tracking-wider text-brand-text-secondary mb-3">Your Dynamic Right Now</h2>
+            <h2 className="section-title mb-3">Your dynamic right now</h2>
             <p className="text-base text-foreground leading-relaxed">{personalizedGuidance.dynamic}</p>
           </section>
         )}
 
         <section className="rounded-3xl border border-brand-border bg-popover/70 p-6">
-          <h2 className="text-[11px] font-bold uppercase tracking-wider text-brand-text-secondary mb-4">Repair Starters</h2>
+          <h2 className="section-title mb-4">Repair starters</h2>
           <div className="mt-3 space-y-3">
             {allRepairStarters.map((starter, i) => (
               <p key={i} className="rounded-2xl bg-brand-quiet px-5 py-4 text-base text-foreground italic">

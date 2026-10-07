@@ -93,7 +93,7 @@ function parseJourneyContent(markdown: string, journeyId: string): JourneyConten
 
     if (activityMatch && activityMatch[1]) {
       activity = {
-        title: "Today's Activity",
+        title: "Today's activity",
         instructions: activityMatch[1].trim(),
         reflectionQuestions
       };

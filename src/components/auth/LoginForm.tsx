@@ -159,12 +159,12 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
         className="font-serif text-4xl font-medium text-center text-brand-primary mb-7"
         variants={itemVariants}
       >
-        {isRegisterMode ? 'Create Your Account' : 'Welcome Back'}
+        {isRegisterMode ? 'Create your account' : 'Welcome back'}
       </motion.h1>
 
       {error && (
         <motion.div 
-          className="bg-destructive-subtle border-l-4 border-destructive p-4 mb-6"
+          className="bg-destructive-subtle border border-destructive/30 rounded-2xl p-4 mb-6"
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
@@ -175,7 +175,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
 
       {successMessage && (
         <motion.div 
-          className="bg-success-subtle border-l-4 border-success p-4 mb-6"
+          className="bg-success-subtle border border-success/30 rounded-2xl p-4 mb-6"
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
@@ -238,7 +238,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
         {isRegisterMode && (
           <motion.div variants={itemVariants}>
             <label htmlFor="name" className="block text-sm font-medium text-foreground mb-1">
-              Your Name
+              Your name
             </label>
             <div className="relative">
               <input
@@ -353,7 +353,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
               <Loader className="h-5 w-5 animate-spin" />
             ) : (
               <>
-                {isRegisterMode ? 'Create Account' : 'Sign In'} 
+                {isRegisterMode ? 'Create account' : 'Sign in'} 
                 <ArrowRight className="ml-2 h-5 w-5" />
               </>
             )}
@@ -374,7 +374,7 @@ export function LoginForm({ onToggleMode, isRegisterMode = false }: LoginFormPro
             onClick={onToggleMode}
             className="press min-h-[44px] ml-1 text-brand-hover hover:text-brand-espresso font-medium"
           >
-            {isRegisterMode ? 'Sign In' : 'Create Account'}
+            {isRegisterMode ? 'Sign in' : 'Create account'}
           </button>
         </p>
       </motion.div>

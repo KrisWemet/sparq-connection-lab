@@ -27,7 +27,7 @@ export default function ValuesJourney() {
       concepts: [
         {
           id: "core-values-discovery",
-          title: "Discovering Your Core Values",
+          title: "Discovering your core values",
           description: "Identifying the 5-7 principles that truly guide your life, beyond what you think you 'should' value",
           icon: <Compass className="w-5 h-5 text-emerald-500" />,
           color: "emerald",
@@ -36,7 +36,7 @@ export default function ValuesJourney() {
         },
         {
           id: "value-origins",
-          title: "Where Your Values Come From",
+          title: "Where your values come from",
           description: "Tracing how family, culture, and pivotal life experiences shaped what you hold dear",
           icon: <TreePine className="w-5 h-5 text-amber-600" />,
           color: "amber",
@@ -45,7 +45,7 @@ export default function ValuesJourney() {
         },
         {
           id: "values-vs-goals",
-          title: "Values Are Not Goals",
+          title: "Values are not goals",
           description: "Learning the crucial difference between a direction you walk (value) and a destination you reach (goal)",
           icon: <Target className="w-5 h-5 text-blue-500" />,
           color: "blue",
@@ -54,7 +54,7 @@ export default function ValuesJourney() {
         },
         {
           id: "lived-values-audit",
-          title: "The Lived Values Audit",
+          title: "The lived values audit",
           description: "Honestly examining whether your daily life reflects what you say matters most",
           icon: <Fingerprint className="w-5 h-5 text-brand-primary" />,
           color: "purple",
@@ -63,7 +63,7 @@ export default function ValuesJourney() {
         },
         {
           id: "partner-value-exploration",
-          title: "Exploring Your Partner's Values",
+          title: "Exploring your partner's values",
           description: "Moving beyond assumptions to genuinely understand what drives your partner's choices",
           icon: <Users className="w-5 h-5 text-teal-500" />,
           color: "teal",
@@ -72,7 +72,7 @@ export default function ValuesJourney() {
         },
         {
           id: "finding-alignment",
-          title: "Finding Natural Alignment",
+          title: "Finding natural alignment",
           description: "Discovering the shared values that already form the invisible foundation of your relationship",
           icon: <Handshake className="w-5 h-5 text-green-500" />,
           color: "green",
@@ -81,7 +81,7 @@ export default function ValuesJourney() {
         },
         {
           id: "recognizing-tensions",
-          title: "Recognizing Value Tensions",
+          title: "Recognizing value tensions",
           description: "Naming the places where your values genuinely diverge — without making either person wrong",
           icon: <AlertTriangle className="w-5 h-5 text-orange-500" />,
           color: "orange",
@@ -97,7 +97,7 @@ export default function ValuesJourney() {
       concepts: [
         {
           id: "navigating-value-conflicts",
-          title: "Navigating Value Conflicts",
+          title: "Navigating value conflicts",
           description: "Practical frameworks for when your values pull you in opposite directions on a real decision",
           icon: <Scale className="w-5 h-5 text-amber-600" />,
           color: "amber",
@@ -106,7 +106,7 @@ export default function ValuesJourney() {
         },
         {
           id: "values-based-decisions",
-          title: "Values-Based Decision Making",
+          title: "Values-based decision making",
           description: "Using your shared values as a compass for choices big and small",
           icon: <Compass className="w-5 h-5 text-brand-hover" />,
           color: "indigo",
@@ -115,7 +115,7 @@ export default function ValuesJourney() {
         },
         {
           id: "living-values-daily",
-          title: "Living Values in the Ordinary",
+          title: "Living values in the ordinary",
           description: "Translating abstract values into concrete daily behaviors your partner can see and feel",
           icon: <Heart className="w-5 h-5 text-rose-500" />,
           color: "rose",
@@ -124,7 +124,7 @@ export default function ValuesJourney() {
         },
         {
           id: "shared-rituals",
-          title: "Creating Rituals from Values",
+          title: "Creating rituals from values",
           description: "Designing recurring practices that celebrate and reinforce what matters most to you both",
           icon: <Sparkles className="w-5 h-5 text-pink-500" />,
           color: "pink",
@@ -133,7 +133,7 @@ export default function ValuesJourney() {
         },
         {
           id: "values-conversations",
-          title: "Having Values Conversations",
+          title: "Having values conversations",
           description: "Learning to talk about what matters without it becoming a lecture, argument, or guilt trip",
           icon: <MessageSquare className="w-5 h-5 text-brand-primary" />,
           color: "violet",
@@ -142,7 +142,7 @@ export default function ValuesJourney() {
         },
         {
           id: "flexibility-vs-nonnegotiables",
-          title: "Flexibility vs. Non-Negotiables",
+          title: "Flexibility vs. non-negotiables",
           description: "Distinguishing between values you can express flexibly and boundaries that protect your integrity",
           icon: <ShieldCheck className="w-5 h-5 text-slate-600" />,
           color: "slate",
@@ -158,7 +158,7 @@ export default function ValuesJourney() {
       concepts: [
         {
           id: "co-creating-vision",
-          title: "Co-Creating a Relationship Vision",
+          title: "Co-creating a relationship vision",
           description: "Building a vivid, compelling picture of the future you're actively choosing together",
           icon: <Telescope className="w-5 h-5 text-blue-600" />,
           color: "blue",
@@ -167,7 +167,7 @@ export default function ValuesJourney() {
         },
         {
           id: "values-life-design",
-          title: "Values-Based Life Design",
+          title: "Values-based life design",
           description: "Structuring your finances, time, home, and social life to genuinely reflect your shared values",
           icon: <Fingerprint className="w-5 h-5 text-cyan-500" />,
           color: "cyan",
@@ -176,7 +176,7 @@ export default function ValuesJourney() {
         },
         {
           id: "evolving-values",
-          title: "Evolving Values Together",
+          title: "Evolving values together",
           description: "Embracing that values shift across life stages and learning to grow alongside each other",
           icon: <TreePine className="w-5 h-5 text-green-600" />,
           color: "green",
@@ -185,7 +185,7 @@ export default function ValuesJourney() {
         },
         {
           id: "legacy-meaning",
-          title: "Legacy and Meaning-Making",
+          title: "Legacy and meaning-making",
           description: "Exploring the lasting impact your relationship creates — for each other, your family, and your world",
           icon: <BookOpen className="w-5 h-5 text-amber-700" />,
           color: "amber",
@@ -194,7 +194,7 @@ export default function ValuesJourney() {
         },
         {
           id: "values-under-pressure",
-          title: "Values Under Pressure",
+          title: "Values under pressure",
           description: "Maintaining alignment with your values during crisis, grief, stress, and life's hardest moments",
           icon: <Flame className="w-5 h-5 text-red-500" />,
           color: "red",
@@ -203,7 +203,7 @@ export default function ValuesJourney() {
         },
         {
           id: "values-aligned-partners",
-          title: "Becoming Values-Aligned Partners",
+          title: "Becoming values-aligned partners",
           description: "The ongoing practice of being partners who call each other toward your best selves",
           icon: <Crown className="w-5 h-5 text-yellow-600" />,
           color: "yellow",
@@ -217,7 +217,7 @@ export default function ValuesJourney() {
   return (
     <JourneyTemplate
       journeyId="values"
-      title="Values & Vision Alignment"
+      title="Values & vision alignment"
       description="Discover your core values and build a shared vision for your relationship. Progress from self-discovery to co-creating your future."
       tiers={tiers}
     />
