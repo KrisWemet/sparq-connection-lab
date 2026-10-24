@@ -11,6 +11,7 @@ The Spark Between: two halves of one spark, split by an S. See `GUIDELINES.md` f
 | `png/` | Transparent PNGs of every lockup (1200 px wide horizontal, 800 px stacked) and symbol (1024 px) |
 | `app-icon/` | 1024 px app icon: full-bleed square for app stores, rounded preview, Android maskable (SVG + PNG) |
 | `web/` | `favicon.ico` (16/32/48), `favicon.svg`, favicon PNGs, `apple-touch-icon.png`, `icon-192/512.png`, `icon-maskable-512.png`, `site.webmanifest`, `head-snippet.html` |
+| `social/` | Facebook-ready PNGs on solid backgrounds: profile picture 1080×1080 (circle-safe), cover photo 1640×624, square posts 1080×1080 |
 | `presentation/` | `board.png` (overview, mockups, recommendation) and its source |
 
 **Schemes:**
