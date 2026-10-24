@@ -66,6 +66,10 @@ On photos, put the logo on a calm area, or place it on a plum or linen panel.
 - **Licence:** both fonts use the SIL Open Font License, which allows logo use. Never retype the wordmark; always
   use the files.
 
+**Tagline:** "Stronger individuals create stronger relationships". Set it in Cormorant Garamond Medium Italic, in
+sentence case with no full stop, centred under the lockup with a short coral rule between them. The tagline can go
+with the logo but is never part of it, so keep it off the app icon and anything under 400 px wide.
+
 ## 6. Don'ts
 
 - **Don't distort it.** No stretching, squashing or rotating. The spark is always upright.
